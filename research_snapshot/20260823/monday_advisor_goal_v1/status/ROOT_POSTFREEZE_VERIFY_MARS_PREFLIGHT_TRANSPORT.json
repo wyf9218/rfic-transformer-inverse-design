@@ -1,0 +1,33 @@
+{
+  "schema_version": "1.0",
+  "verified_utc": "2026-08-23T05:11:31Z",
+  "verifier_role": "primary_agent_postfreeze_closure_check",
+  "candidate_root": "reports/monday_advisor_20260824_goal_v1/stage07_08_result_free_preflight_transport_v1_prepared_20260823T045809Z",
+  "candidate_status": "AWAITING_FRESH_INDEPENDENT_QA_NOT_AUTHORIZED",
+  "independent_go_issued": false,
+  "checks": {
+    "sha256_index_all_entries": "58/58 PASS",
+    "total_regular_file_count": {"expected": 59, "observed": 59, "pass": true},
+    "payload_file_count": {"expected": 56, "observed": 56, "pass": true},
+    "index_exactly_matches_all_files_except_index_itself": true,
+    "unique_manifest_roles": {"expected": 56, "observed": 56, "pass": true},
+    "unique_manifest_path_sha_identities": {"expected": 56, "observed": 56, "pass": true},
+    "nested_directory_count_excluding_root": {"expected": 5, "observed": 5, "pass": true},
+    "symbolic_links": 0,
+    "all_directories_mode": "0555",
+    "all_files_mode": "0444",
+    "all_files_nlink": 1,
+    "all_authority_fields_false": true,
+    "all_scope_action_fields_false": true,
+    "unregistered_enrollment_allowed": false
+  },
+  "core_sha256": {
+    "PACKAGE_MANIFEST.json": "cd154bab231bea9b922ce6f131c8782b162e69e4b864d3253ffc2e32cf965577",
+    "PREPARED_RECEIPT.json": "aef78f35948090a32283bffe0f8a9f17eb165a85e50c11d4cc5d7634378421b8",
+    "MARS_STAGE07_08_RESUME_ONLY_CONTRACT.json": "ebcde51ab17d1a18fd540f41fa11dfc3c0d56a2235d137105feae4a3fcf6c4a1",
+    "SHA256SUMS.txt": "ffcf4f7d59e0ab598a0ad89f606ae85707d11bab185d4cca0d00549282b6411a"
+  },
+  "important_boundary": "even a later fresh QA GO only enables separately authorized exact-scope transport/native-preflight work; it does not itself authorize SIGCONT",
+  "outcome": "POSTFREEZE_CLOSURE_PASS_BUT_NOT_INDEPENDENT_GO",
+  "next_legal_action": "fresh independent result-blind QA against these exact immutable bytes"
+}

@@ -1,0 +1,62 @@
+{
+  "schema_version": "1.0",
+  "created_utc": "2026-08-23T05:13:17Z",
+  "phase": "PHASE1_FROZEN_CANDIDATES_READY",
+  "result_blind": true,
+  "fresh_emx_numeric_result_access_authorized": false,
+  "mars_access_authorized": false,
+  "process_signal_authorized": false,
+  "stage07_or_stage08_execution_authorized": false,
+  "candidates": [
+    {
+      "id": "REPORT_INTERFACE_V8",
+      "path": "reports/monday_advisor_20260824_goal_v1/report_interface_compatibility_v8_prepared_20260823T045542Z",
+      "status": "AWAITING_FRESH_INDEPENDENT_QA",
+      "top_level_regular_files": 23,
+      "manifest_sha256": "36b175a32d5cd5ad2cb9e37f303fe07eaba1dd572734a3833fbe08230fb109f4",
+      "prepared_receipt_sha256": "6d8d835ebdce1dd88177a74247bcf51d83dd71d34a310a38d176f56c73293db3",
+      "sha256_index_sha256": "8ab40d357f94a3d4e10bc1bbebe8884259e57a9ec840594c33b376a78b54f45f",
+      "primary_agent_postfreeze_verification_sha256": "602b006173680705965b69384397b89df24a9961456c0c60532de60832a642a0"
+    },
+    {
+      "id": "MARS_STAGE07_08_RESULT_FREE_PREFLIGHT_TRANSPORT",
+      "path": "reports/monday_advisor_20260824_goal_v1/stage07_08_result_free_preflight_transport_v1_prepared_20260823T045809Z",
+      "status": "AWAITING_FRESH_INDEPENDENT_QA_NOT_AUTHORIZED",
+      "total_regular_files": 59,
+      "manifest_sha256": "cd154bab231bea9b922ce6f131c8782b162e69e4b864d3253ffc2e32cf965577",
+      "prepared_receipt_sha256": "aef78f35948090a32283bffe0f8a9f17eb165a85e50c11d4cc5d7634378421b8",
+      "resume_only_contract_sha256": "ebcde51ab17d1a18fd540f41fa11dfc3c0d56a2235d137105feae4a3fcf6c4a1",
+      "sha256_index_sha256": "ffcf4f7d59e0ab598a0ad89f606ae85707d11bab185d4cca0d00549282b6411a",
+      "primary_agent_postfreeze_verification_sha256": "944a5ea32a0e54073b92d16e2b4ded4992249d78b9039fc04eae6fadc51ae076"
+    }
+  ],
+  "independent_auditor_must": [
+    "work from these exact frozen paths and verify the listed core hashes before any test",
+    "remain result-blind and perform no MARS login, process inspection, transport, native preflight, Stage07/08 action, or signal",
+    "verify package closure, file counts, manifest uniqueness, SHA index closure, modes, nlink, symlink absence, no extras, and authority=false boundaries",
+    "run fresh hostile and compatibility tests from a separate no-clobber audit directory without modifying candidates",
+    "preserve every failure and issue an exact-hash GO or NO_GO receipt"
+  ],
+  "required_decision_scope": {
+    "REPORT_INTERFACE_V8": "eligibility for later exact frozen producer-to-report interface consumption only",
+    "MARS_STAGE07_08_RESULT_FREE_PREFLIGHT_TRANSPORT": "at most eligibility for a separately authorized exact-scope transport and MARS-native result-free preflight"
+  },
+  "go_does_not_authorize": [
+    "fresh EMX numeric result access",
+    "new watcher creation",
+    "SIGCONT or any other process signal",
+    "EMX rerun",
+    "Stage07 or Stage08 execution",
+    "manual launch of controlled experiment arms"
+  ],
+  "post_go_mandatory_fail_closed_checks": [
+    "recompute all candidate hashes",
+    "confirm watcher PID and process identity exactly match the frozen contract",
+    "reject watcher absence, PID drift, identity drift, children greater than zero, or duplicate watchers",
+    "reject pre-existing or changed Stage07/Stage08 outputs",
+    "obtain separate explicit authorization for exact transport and native preflight",
+    "obtain a further separate authorization before resuming the existing watcher"
+  ],
+  "allowed_decisions": ["GO_EXACT_FROZEN_BYTES_WITH_SCOPE", "NO_GO_WITH_FINDINGS"],
+  "current_decision": "PENDING_INDEPENDENT_QA"
+}

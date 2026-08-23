@@ -1,0 +1,50 @@
+{
+  "schema_version": "1.0",
+  "created_utc": "2026-08-23T05:18:29Z",
+  "repository": "wyf9218/rfic-transformer-inverse-design",
+  "base_commit": "f3892c0",
+  "status": "READY_FOR_GIT_COMMIT",
+  "published_scope": {
+    "exact_public_safe_status_files": 6,
+    "sanitized_python_review_sources": 18,
+    "raw_candidate_packages_published": false,
+    "report_shell_wip_published": false,
+    "fresh_emx_numeric_results_published": false
+  },
+  "source_candidate_identities": {
+    "report_interface_v8": {
+      "local_status": "AWAITING_FRESH_INDEPENDENT_QA",
+      "manifest_sha256": "36b175a32d5cd5ad2cb9e37f303fe07eaba1dd572734a3833fbe08230fb109f4",
+      "receipt_sha256": "6d8d835ebdce1dd88177a74247bcf51d83dd71d34a310a38d176f56c73293db3",
+      "sha256_index_sha256": "8ab40d357f94a3d4e10bc1bbebe8884259e57a9ec840594c33b376a78b54f45f"
+    },
+    "mars_preflight_transport": {
+      "local_status": "AWAITING_FRESH_INDEPENDENT_QA_NOT_AUTHORIZED",
+      "manifest_sha256": "cd154bab231bea9b922ce6f131c8782b162e69e4b864d3253ffc2e32cf965577",
+      "receipt_sha256": "aef78f35948090a32283bffe0f8a9f17eb165a85e50c11d4cc5d7634378421b8",
+      "sha256_index_sha256": "ffcf4f7d59e0ab598a0ad89f606ae85707d11bab185d4cca0d00549282b6411a"
+    }
+  },
+  "sanitization": {
+    "replacements": [
+      "site hostname to ${MARS_HOST}/${MARS_HOST_PREFIX}",
+      "site username to ${MARS_USER}",
+      "MARS storage root to ${MARS_RESEARCH_ROOT}",
+      "local workspace/home to ${LOCAL_WORKSPACE}/${LOCAL_HOME}"
+    ],
+    "public_sources_are_exact_frozen_bytes": false,
+    "public_sources_can_issue_independent_go": false,
+    "purpose": "GPT code review and task planning only"
+  },
+  "validation": {
+    "public_python_in_memory_compile": "18/18 PASS",
+    "public_code_sha256_index": "18/18 PASS",
+    "snapshot_sha256_index": "27/27 PASS",
+    "json_syntax_checks": "PASS",
+    "git_diff_check": "PASS",
+    "credential_pattern_scan": "PASS_NO_MATCH",
+    "private_identity_path_scan": "PASS_NO_MATCH"
+  },
+  "boundary": "The public review sources are not executable deployment packages and do not replace exact local frozen-byte QA.",
+  "next_action": "regenerate snapshot and repository manifests, validate, explicitly stage only this snapshot and its documentation links, commit, and push"
+}

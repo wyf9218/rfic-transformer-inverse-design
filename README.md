@@ -25,6 +25,10 @@ goals, completion status, blocked claims, and next legal actions is the
 The latest live read-only observation recorded in that handoff is
 `2026-08-23T04:10:07Z`; machine-readable status is available in
 [HANDOFF_STATE_20260823.json](docs/research/HANDOFF_STATE_20260823.json).
+The newest incremental, GPT-readable Monday-report snapshot is
+[Monday Advisor Goal v1](research_snapshot/20260823/monday_advisor_goal_v1/README.md);
+its exact status and public-sanitized review-code boundary are summarized in
+[MONDAY_ADVISOR_SYNC_STATUS_20260823_CN.md](docs/research/MONDAY_ADVISOR_SYNC_STATUS_20260823_CN.md).
 
 ## Documentation
 
@@ -32,6 +36,8 @@ The latest live read-only observation recorded in that handoff is
 |---|---|
 | Current goals, status, and Chinese research handoff | [当前情况、目标与科研工程交接](docs/research/ENGINEERING_HANDOFF_20260823_CN.md) |
 | Machine-readable handoff state | [Handoff JSON](docs/research/HANDOFF_STATE_20260823.json) |
+| Latest Monday-report code/status snapshot | [Monday Advisor Goal v1](research_snapshot/20260823/monday_advisor_goal_v1/README.md) |
+| Latest GitHub sync status | [周一汇报同步状态](docs/research/MONDAY_ADVISOR_SYNC_STATUS_20260823_CN.md) |
 | Known failed gates | [NO-GO register](docs/research/KNOWN_NO_GO_20260823.md) |
 | Useful-code map | [Code map](docs/research/CODE_MAP_20260823.md) |
 | Snapshot integrity | [Repository SHA-256 manifest](CODE_SNAPSHOT_SHA256.txt) |

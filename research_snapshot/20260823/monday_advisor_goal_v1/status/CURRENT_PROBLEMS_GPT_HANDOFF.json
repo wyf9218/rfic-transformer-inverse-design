@@ -1,0 +1,140 @@
+{
+  "schema_version": "1.0",
+  "updated_utc": "2026-08-23T05:06:04Z",
+  "purpose": "machine-readable problem and handoff state for another GPT",
+  "deadline": "2026-08-23T20:00:00-05:00",
+  "overall_status": "PHASE1_RESULT_BLIND_FREEZE_IN_PROGRESS",
+  "fresh_emx_numeric_access": false,
+  "fixed_identities": {
+    "fixed10k_design": "deterministic_centered_lhs_finite_frame_not_iid",
+    "fixed10k_sha256": "c9d7d8bc7f65a488be0805969389a01ef049534eefdfdea71cbd640ee27d6407",
+    "fixed10k_total": 10000,
+    "legacy": 8000,
+    "extension": 2000,
+    "historical_200k_rows": {
+      "source_table": 200000,
+      "gradient_train": 161446,
+      "validation": 19135,
+      "test": 19419
+    },
+    "fresh_emx_survivors": {
+      "total": 7298,
+      "legacy": 5992,
+      "extension": 1306,
+      "missingness": "MNAR"
+    }
+  },
+  "model_architectures": {
+    "historical_200k": {
+      "inverse": "4-128-128-10",
+      "inverse_parameters": 18442,
+      "forward": "10-128-128-4",
+      "forward_parameters": 18436,
+      "total_parameters": 36878,
+      "constraint": "independent_sigmoid"
+    },
+    "deployed_100k": {
+      "inverse": "4-512-512-256-10",
+      "inverse_parameters": 399114,
+      "forward": "10-256-256-128-4",
+      "forward_parameters": 102020,
+      "total_parameters": 501134,
+      "constraint": "hard_feasible_Q_guardband"
+    }
+  },
+  "proxy_results": {
+    "joint_normalized_rmse": {
+      "all10k": {"deployed_100k": 0.245843, "historical_200k": 0.202643},
+      "legacy": {"deployed_100k": 0.221335, "historical_200k": 0.184191},
+      "extension": {"deployed_100k": 0.325940, "historical_200k": 0.263850}
+    },
+    "historical_200k_mae": {
+      "Lp_nH": 0.24884,
+      "Ls_nH": 0.30137,
+      "Q": 3.92985,
+      "K": 0.14731
+    },
+    "interpretation": "descriptive_engineering_comparison_only_not_causal"
+  },
+  "physical_funnel": {
+    "counts": [10000, 7926, 7373, 7298, 7298],
+    "failures_by_transition": [2074, 553, 75, 0]
+  },
+  "open_problems": [
+    {
+      "id": "P1_UNCONTROLLED_100K_200K",
+      "severity": "CRITICAL_INTERPRETATION",
+      "status": "OPEN",
+      "problem": "architecture, parameter count, constraint/decoder, and inference differ in addition to data size",
+      "allowed_claim": "descriptive difference",
+      "forbidden_claim": "improvement caused by increasing data from 100k to 200k",
+      "closure_gate": "nested controlled experiment reaches 10_of_10_terminal_arms and 5_of_5_complete_pairs"
+    },
+    {
+      "id": "P2_FRESH_EMX_NOT_RELEASED",
+      "severity": "CRITICAL_EVIDENCE",
+      "status": "OPEN",
+      "problem": "Stage07 and Stage08 formal result interfaces are absent",
+      "allowed_claim": "funnel and survivor denominators only",
+      "forbidden_claim": "any target_to_EMX or proxy_to_EMX numeric accuracy",
+      "closure_gate": "immutable result-free candidates plus independent GO plus exact MARS state validation plus resume_existing_watcher_only"
+    },
+    {
+      "id": "P3_SURVIVOR_SELECTION_BIAS",
+      "severity": "HIGH",
+      "status": "PERMANENT_LIMITATION",
+      "problem": "7298 survivors are an MNAR subset of fixed10k",
+      "allowed_claim": "survivor-only statistics with funnel and stratification",
+      "forbidden_claim": "fresh EMX accuracy generalizes to all 10000 targets"
+    },
+    {
+      "id": "P4_CONTROLLED_EXPERIMENT_INCOMPLETE",
+      "severity": "HIGH",
+      "status": "WAITING_EXISTING_SUPERVISOR",
+      "latest_observation_utc": "2026-08-23T04:35:03Z",
+      "terminal_arms": "7/10",
+      "complete_pairs": "3/5",
+      "load1": 60.67,
+      "prelaunch_threshold": "<40",
+      "forbidden_action": "manual launch or manual completion"
+    },
+    {
+      "id": "P5_RELEASE_GATES",
+      "severity": "HIGH",
+      "status": "IN_PROGRESS",
+      "problem": "immutable packaging, independent QA, watcher state validation, and result-interface generation remain",
+      "current_workstreams": [
+        "freeze_report_interface_v8",
+        "freeze_result_free_mars_preflight_transport",
+        "build_result_blind_report_shell"
+      ]
+    }
+  ],
+  "error_chains": [
+    {"name": "target_to_proxy", "status": "AVAILABLE"},
+    {"name": "target_to_fresh_EMX", "status": "NOT_FORMALLY_RELEASED"},
+    {"name": "proxy_to_fresh_EMX", "status": "NOT_FORMALLY_RELEASED"}
+  ],
+  "normalization_spans": {"Lp_nH": 2.5, "Ls_nH": 2.5, "Q": 20.0, "K": 1.0},
+  "primary_Q_metric": "one_sided_shortfall",
+  "do_not_repeat": [
+    "do_not_regenerate_fixed10k",
+    "do_not_retrain_historical_models",
+    "do_not_rerun_completed_EMX",
+    "do_not_manually_launch_controlled_arms",
+    "do_not_resume_or_create_a_watcher_before_independent_GO_and_exact_state_checks",
+    "do_not_merge_three_error_chains",
+    "do_not_hide_FAIL_or_NO_GO_evidence"
+  ],
+  "next_legal_sequence": [
+    "freeze_and_verify_exact_candidates",
+    "write_INDEPENDENT_QA_REQUIRED_json",
+    "obtain_independent_GO_or_NO_GO_for_exact_hashes",
+    "perform_read_only_MARS_watcher_and_output_state_checks",
+    "resume_existing_stopped_watcher_only_if_all_gates_pass",
+    "generate_and_verify_Stage07_Stage08",
+    "compute_three_chain_statistics_with_explicit_denominators",
+    "render_and_QA_figures_PPTX_HTML_notes_QA_CSV_receipts_and_SHA256"
+  ],
+  "source_of_truth_rule": "latest_receipt_and_read_only_process_state_override_this_snapshot"
+}

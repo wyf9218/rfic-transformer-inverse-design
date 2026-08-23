@@ -2,6 +2,8 @@
 
 This directory contains selected, sanitized production-source snapshots that document how the historical-200k fixed10k physical chain was audited, gated, and prepared for fresh EMX statistics.
 
+The incremental [Monday Advisor Goal v1 snapshot](monday_advisor_goal_v1/README.md) adds the latest GPT-readable problem/state handoff plus sanitized review mirrors of all 18 completed Python sources from the frozen report-interface and result-free MARS preflight/transport candidates.
+
 It is **not a standalone production environment**. Some scripts import modules, site tools, simulator binaries, data manifests, or sibling programs that are intentionally absent from this public-safe repository. Use it for review, provenance, and porting only. Do not run it against a foundry environment without rebuilding an explicit site contract.
 
 ## Files and original production SHA-256
