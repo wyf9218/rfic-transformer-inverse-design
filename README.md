@@ -12,6 +12,10 @@ to one million real EM simulations with a fixed model test at every cumulative
 > This repository contains code, synthetic examples, templates, and tests. It
 > intentionally excludes foundry PDK files, licenses, credentials, real
 > Touchstone datasets, model weights, tapeout layouts, and site-specific paths.
+>
+> **Visibility:** this sanitized research handoff is intentionally public so
+> external GPT/research tools can read it. The repository owner authorized the
+> public release on 2026-08-23.
 
 ## Documentation
 
@@ -154,5 +158,7 @@ toolbox. See [NOTICE.md](NOTICE.md) and [LICENSE](LICENSE).
 
 ## Publishing
 
-The repository should remain private until publication is approved. See
-[docs/PUBLISHING.md](docs/PUBLISHING.md) for the reviewed push procedure.
+Public release was approved by the repository owner on 2026-08-23 so external
+GPT/research tools can read this sanitized handoff. See
+[docs/PUBLISHING.md](docs/PUBLISHING.md) for the reviewed publication scope and
+push procedure.

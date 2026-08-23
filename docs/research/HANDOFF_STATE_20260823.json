@@ -2,7 +2,8 @@
   "schema_version": "1.0",
   "snapshot_date": "2026-08-23",
   "repository_scope": {
-    "visibility": "private",
+    "visibility": "public",
+    "public_release_authorized_on": "2026-08-23",
     "contains": [
       "sanitized reusable code",
       "tests",

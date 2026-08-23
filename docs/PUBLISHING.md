@@ -1,10 +1,16 @@
 # Publishing To GitHub
 
-## Recommended Visibility
+## Current Visibility
 
-Create the repository as **private** until the research supervisor approves a
-public release. The source is sanitized, but research timing and unpublished
-methods may still be sensitive.
+This sanitized handoff is intentionally **public**. The repository owner
+authorized public visibility on 2026-08-23 so external GPT/research tools can
+read the code, contracts, status, and evidence summaries without GitHub account
+access.
+
+For a new fork or a snapshot with additional artifacts, start private until its
+own publication scope has been reviewed. Do not infer that this approval covers
+real solver data, weights, GDS, Touchstone files, PDK files, licenses,
+credentials, or site-specific paths; those remain outside this repository.
 
 ## GitHub CLI
 
@@ -13,12 +19,12 @@ After installing and authenticating `gh`:
 ```bash
 gh auth login
 gh repo create wyf9218/rfic-transformer-inverse-design \
-  --private --source=. --remote=origin --push
+  --public --source=. --remote=origin --push
 ```
 
 ## Existing Empty Repository
 
-If an empty private repository is created in the GitHub web interface:
+If an empty repository is created in the GitHub web interface:
 
 ```bash
 git remote add origin git@github.com:wyf9218/rfic-transformer-inverse-design.git

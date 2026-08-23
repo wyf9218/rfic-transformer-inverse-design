@@ -2,7 +2,7 @@
 
 ## Purpose
 
-This private GitHub snapshot was assembled as a durable handoff for future GPT-assisted research. It consolidates reusable code, tests, research contracts, verified numerical summaries, evidence hashes, failed-gate records, and explicit next actions without waiting for the still-running remote experiment.
+This public, sanitized GitHub snapshot was assembled as a durable handoff for future GPT-assisted research. It consolidates reusable code, tests, research contracts, verified numerical summaries, evidence hashes, failed-gate records, and explicit next actions without waiting for the still-running remote experiment. The repository owner authorized public visibility on 2026-08-23 so external GPT/research tools can read it without GitHub account access.
 
 ## Added for this handoff
 

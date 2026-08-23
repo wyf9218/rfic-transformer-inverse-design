@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0",
   "snapshot_date": "2026-08-23",
-  "release_target": "private_github_repository",
+  "release_target": "public_github_repository",
   "test_environment": {
     "python": "3.12.13",
     "isolated_virtual_environment": true,
