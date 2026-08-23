@@ -1,0 +1,34 @@
+{
+  "schema_version": "1.0",
+  "completed_utc": "2026-08-23T05:21:37Z",
+  "repository": "https://github.com/wyf9218/rfic-transformer-inverse-design",
+  "branch": "main",
+  "base_commit": "f3892c0",
+  "pushed_commit": "6ab7d73e248b02114355b03bfdf036af3e08ab24",
+  "local_head_matches_origin_main": true,
+  "commit_subject": "Publish Monday advisor GPT review snapshot",
+  "commit_file_count": 33,
+  "commit_insertions": 35723,
+  "commit_deletions": 7,
+  "published_entry": "research_snapshot/20260823/monday_advisor_goal_v1/README.md",
+  "published_scope": {
+    "sanitized_python_review_sources": 18,
+    "exact_public_safe_status_files": 6,
+    "raw_private_candidate_packages": 0,
+    "fresh_emx_numeric_result_files": 0
+  },
+  "validation": {
+    "python_in_memory_compile": "18/18 PASS",
+    "public_code_sha256": "18/18 PASS",
+    "snapshot_sha256": "27/27 PASS",
+    "json_syntax": "PASS",
+    "credential_and_private_identity_scan": "PASS_NO_MATCH",
+    "git_diff_check": "PASS",
+    "push": "PASS"
+  },
+  "public_code_boundary": "SANITIZED_NON_AUTHORITATIVE_REVIEW_COPY_NOT_EXECUTABLE_NOT_INDEPENDENT_GO",
+  "public_code_sha256_index_sha256": "13557e44a8c326e311e7a143d329aa4dfc5cc67249a28d8628e86debba51e7be",
+  "snapshot_sha256_index_sha256": "4d9901ce82bab00be5c6d9d4d9255ccaeed513913247a16affc2769bbd4d34b4",
+  "repository_manifest_sha256": "5316298c269ac80b34629cc2f3974bfbfd9ac9873776b776d1844338a363a452",
+  "next_incremental_sync": "corrected result-blind advisor report shell v2 after primary-agent QA"
+}
