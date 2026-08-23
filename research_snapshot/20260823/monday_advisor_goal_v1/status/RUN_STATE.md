@@ -3,9 +3,9 @@
 - Deadline: `2026-08-23 20:00 America/Chicago`
 - Started UTC: `2026-08-23T04:53:17Z`
 - Started local: `2026-08-22T23:53:17-05:00`
-- Status: `MILESTONE_COMPLETE_AWAITING_INDEPENDENT_QA`
+- Status: `MILESTONE_COMPLETE_INDEPENDENT_GO_EXACT_FROZEN_BYTES_SCOPE_ONLY`
 - Fresh-EMX numerical result access: `NOT_AUTHORIZED / NOT_PERFORMED`
-- Independent-QA exact GO receipt: `ABSENT / PENDING`
+- Independent-QA exact GO receipt: `PRESENT`; `independent_result_blind_audit_v3_20260823T055223Z/INDEPENDENT_AUDIT_RECEIPT.json`; SHA-256 `6191c94215732583de8160f393f2f37117e21d85c0032bf99b6d94b447104635`
 - Existing EMX rerun: `NO`
 - Controlled training manual launch: `NO`
 
@@ -23,6 +23,7 @@
 2. MARS preflight: `stage07_08_result_free_preflight_transport_v1_prepared_20260823T045809Z`; manifest `cd154bab231bea9b922ce6f131c8782b162e69e4b864d3253ffc2e32cf965577`; receipt `aef78f35948090a32283bffe0f8a9f17eb165a85e50c11d4cc5d7634378421b8`; index `ffcf4f7d59e0ab598a0ad89f606ae85707d11bab185d4cca0d00549282b6411a`.
 3. QA request: `INDEPENDENT_QA_REQUIRED.json`; SHA-256 `2ba0796aa0b839fd09aeef35d0416724caf6272914e9414bd7f43885cf375210`.
 4. Machine state: `RUN_STATE.json`; contains exact paths, counts, permissions, safety flags, and hashes.
+5. Independent audit: `independent_result_blind_audit_v3_20260823T055223Z`; report `c38fe7690a7de01cb5a09174ed498c416d386ae8eb661f7712befd04dd4105d0`; receipt `6191c94215732583de8160f393f2f37117e21d85c0032bf99b6d94b447104635`; GO `f4a246d56eb0f2776ea227f4a347691a01c66de37f4ebcf2fee4a9c9c20573bd`; commands `3aa3c4610dfcb0f5231c8d1972c97f793d0e799e76618bb1f0e3067ea185460b`; index `0f4992e6b7ccfdfd99104d9bd95ac718a6694a96a8b903e23ab84cc5ead96cb0` (`4/4 PASS`).
 
 ## Current external observations
 
@@ -55,3 +56,8 @@
 - `2026-08-23T05:20:18Z`: pushed commit `6ab7d73e248b02114355b03bfdf036af3e08ab24` to `origin/main`; local `HEAD` and `origin/main` match. GitHub batch-1 sync PASS.
 - `2026-08-23T05:21:37Z`: primary-agent closure/visual review of result-blind report shell v1 found one stale status field: slide 11 used the earlier `2026-08-23T04:10:07Z / load1=231.03` observation instead of the current mandated `2026-08-23T04:35:03Z / load1=60.67`. V1 remains preserved but is superseded for publication; a new no-clobber v2 correction was commissioned. This is a report-status freshness issue, not a model/EMX result issue.
 - `2026-08-23T05:29:01Z`: user narrowed the current milestone to candidate preparation/freeze only. The independent-QA run and report-shell v2 work were interrupted; neither produced an accepted milestone artifact. Both frozen candidate SHA indices were reverified exactly PASS. No GO exists, so execution stops at the independent-QA gate.
+- `2026-08-23T06:02:29Z`: fresh result-blind MARS-candidate audit completed with scoped GO; closure `58/58`, manifest uniqueness `56/56`, targeted assertions `435/435` unique and `462/462` executed, compile `11/11`; native Linux fixtures remain `NOT_RUN_NON_LINUX`. No MARS/process/result/signal access occurred.
+- `2026-08-23T06:05:01Z`: fresh result-blind v8 audit completed with scoped GO; unit `39/39`, hostile `151/151`, static `22/22`, compile `5/5`, and V8F01/V8F02/V8F03 rejected `3/3`; candidate bytes remained unchanged.
+- `2026-08-23T20:12:29Z`: integrated both independent receipts into exact-byte `GO_EXACT_FROZEN_BYTES_WITH_SCOPE`; froze the accepted audit root at `0555` and its files at `0444/nlink1`. This GO is not authorization for MARS, result access, process inspection, signal/resume, transport/native preflight, Stage07/08, EMX rerun, or controlled-arm launch.
+- `2026-08-23T20:21:00Z`: preserved three publication-environment failures (system Python 3.9 syntax incompatibility, bundled Python without pytest, and mixed-version binary packages). In an isolated supported Python 3.12 environment, the full public suite produced `1072 passed / 44 failed / 52 skipped / 1 deselected`; all 44 failures are the intentionally incomplete, declared non-executable sanitized mirrors (`39 v8 + 5 MARS`), not exact-candidate failures.
+- `2026-08-23T20:24:51Z`: core public suite excluding that declared non-executable mirror passed `1050/1050`, with `52 skipped` and `1 deselected`; no candidate or audit byte was modified.

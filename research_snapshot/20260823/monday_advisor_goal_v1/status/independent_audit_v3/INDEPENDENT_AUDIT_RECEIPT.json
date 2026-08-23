@@ -1,0 +1,117 @@
+{
+  "schema": "monday_advisor_independent_result_blind_audit_receipt_v1",
+  "schema_version": "1.0",
+  "audit_id": "independent_result_blind_audit_v3_20260823T055223Z",
+  "completed_utc": "2026-08-23T20:12:29Z",
+  "decision": "GO_EXACT_FROZEN_BYTES_WITH_SCOPE",
+  "result_blind": true,
+  "qa_request": {
+    "path": "github_release/rfic-transformer-inverse-design/research_snapshot/20260823/monday_advisor_goal_v1/status/INDEPENDENT_QA_REQUIRED.json",
+    "sha256": "2ba0796aa0b839fd09aeef35d0416724caf6272914e9414bd7f43885cf375210"
+  },
+  "candidates": [
+    {
+      "id": "REPORT_INTERFACE_V8",
+      "path": "reports/monday_advisor_20260824_goal_v1/report_interface_compatibility_v8_prepared_20260823T045542Z",
+      "core_sha256": {
+        "PACKAGE_MANIFEST.json": "36b175a32d5cd5ad2cb9e37f303fe07eaba1dd572734a3833fbe08230fb109f4",
+        "PREPARED_RECEIPT.json": "6d8d835ebdce1dd88177a74247bcf51d83dd71d34a310a38d176f56c73293db3",
+        "SHA256SUMS.txt": "8ab40d357f94a3d4e10bc1bbebe8884259e57a9ec840594c33b376a78b54f45f"
+      },
+      "closure": {
+        "sha256_index": "22/22 PASS",
+        "regular_files": "23/23 PASS",
+        "manifest_unique_paths_roles_identities": "21/21 PASS",
+        "root_mode": "0555",
+        "file_mode_nlink": "23/23 0444 nlink1 PASS",
+        "symlinks": 0,
+        "nested_directories": 0,
+        "post_test_bytes_unchanged": true
+      },
+      "tests": {
+        "direct_unit": "39/39 PASS",
+        "hostile_matrix": "151/151 PASS",
+        "static_contract": "22/22 PASS",
+        "in_memory_compile": "5/5 PASS",
+        "V8F01_V8F02_V8F03": "3/3 REJECTED_PASS"
+      }
+    },
+    {
+      "id": "MARS_STAGE07_08_RESULT_FREE_PREFLIGHT_TRANSPORT",
+      "path": "reports/monday_advisor_20260824_goal_v1/stage07_08_result_free_preflight_transport_v1_prepared_20260823T045809Z",
+      "core_sha256": {
+        "PACKAGE_MANIFEST.json": "cd154bab231bea9b922ce6f131c8782b162e69e4b864d3253ffc2e32cf965577",
+        "PREPARED_RECEIPT.json": "aef78f35948090a32283bffe0f8a9f17eb165a85e50c11d4cc5d7634378421b8",
+        "MARS_STAGE07_08_RESUME_ONLY_CONTRACT.json": "ebcde51ab17d1a18fd540f41fa11dfc3c0d56a2235d137105feae4a3fcf6c4a1",
+        "SHA256SUMS.txt": "ffcf4f7d59e0ab598a0ad89f606ae85707d11bab185d4cca0d00549282b6411a"
+      },
+      "closure": {
+        "sha256_index": "58/58 PASS",
+        "regular_files": "59/59 PASS",
+        "manifest_unique_paths_roles_identities": "56/56 PASS",
+        "directory_mode": "6/6 0555 PASS",
+        "file_mode_nlink": "59/59 0444 nlink1 PASS",
+        "symlinks": 0,
+        "post_test_bytes_unchanged": true
+      },
+      "tests": {
+        "unique_targeted_assertions": "435/435 PASS",
+        "actual_targeted_assertion_executions": "462/462 PASS",
+        "in_memory_compile": "11/11 PASS",
+        "author_runner_invocations": "5/5 PASS",
+        "native_linux_fixtures": "NOT_RUN_NON_LINUX"
+      }
+    }
+  ],
+  "independent_evidence": {
+    "v8": {
+      "directory": "reports/monday_advisor_20260824_goal_v1/independent_result_blind_audit_v3_20260823T055223Z/v8_evidence",
+      "report_sha256": "c326c6ff4017fb5efb4e468d0cf9832022940d3e8cb2c31edfd329acec73c17a",
+      "receipt_sha256": "5a3b4b8fba4e62c01a0356538c2b064b34f4db31639825db2c8f791830306a1f",
+      "commands_sha256": "eed404ac760329d82aadcd6baed30ff2314f19071d3b1593ca89728d9c1fa022",
+      "sha256_index_sha256": "08a6a2485c4dd570e59e36e26a81f4cc790e9a626fa3a15091daa45c6bbbfc2e",
+      "index_verification": "3/3 PASS",
+      "recommendation": "GO_EXACT_FROZEN_BYTES_WITH_SCOPE"
+    },
+    "mars": {
+      "directory": "reports/monday_advisor_20260824_goal_v1/independent_result_blind_audit_v3_20260823T055223Z/mars_evidence",
+      "report_sha256": "852c8a6f490059e6a2dafbe819814f43e5412855eb86363530035ed7212e0268",
+      "receipt_sha256": "c7ecd11ca4a203c5207c35cd00fcf661c738d3af105ea417b556d80a271b67f4",
+      "commands_sha256": "3fa7899a67ee2777e13e61476bfdfb2709fc25bc2a2ce192e93546e315ac403a",
+      "sha256_index_sha256": "3b3ee7eff3db9f0f371503ae61c2001aa1d9c1e7a4894817615a82f8b1cffd6b",
+      "index_verification": "3/3 PASS",
+      "recommendation": "GO_EXACT_FROZEN_BYTES_WITH_SCOPE"
+    }
+  },
+  "findings": {
+    "P0": 0,
+    "P1": 0,
+    "P2": 0,
+    "P3": 0
+  },
+  "preserved_non_product_failures": [
+    "V8 C02 guessed absent filenames; corrected without writes",
+    "V8 C06 invalid shell/aggregate verifier attempt; rejected and corrected",
+    "MARS topology-only historical FileNotFoundError retained; exact-byte sibling replay passed",
+    "root integration first evidence-index check used wrong working directory; corrected checks passed",
+    "decision-integration task was canceled after read-only checks and before writes; root repeated checks"
+  ],
+  "scope": {
+    "v8_maximum_effect": "ELIGIBLE_FOR_LATER_SEPARATELY_AUTHORIZED_EXACT_FROZEN_INTERFACE_CONSUMPTION_ONLY",
+    "mars_maximum_effect": "ELIGIBLE_FOR_LATER_SEPARATELY_AUTHORIZED_EXACT_SCOPE_TRANSPORT_AND_MARS_NATIVE_RESULT_FREE_PREFLIGHT_ONLY",
+    "fresh_emx_numeric_result_access_authorized": false,
+    "mars_access_authorized": false,
+    "watcher_or_process_inspection_authorized": false,
+    "new_watcher_authorized": false,
+    "process_signal_or_sigcont_authorized": false,
+    "watcher_resume_authorized": false,
+    "transport_authorized": false,
+    "native_preflight_authorized": false,
+    "stage07_or_stage08_authorized": false,
+    "emx_rerun_authorized": false,
+    "controlled_arm_manual_launch_authorized": false
+  },
+  "candidate_modified": false,
+  "public_safe": true,
+  "outcome": "INDEPENDENT_GO_EXACT_FROZEN_BYTES_SCOPE_ONLY"
+}

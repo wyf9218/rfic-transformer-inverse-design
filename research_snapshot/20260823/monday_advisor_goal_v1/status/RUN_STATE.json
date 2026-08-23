@@ -1,13 +1,18 @@
 {
   "schema_version": "1.0",
-  "updated_utc": "2026-08-23T05:29:01Z",
+  "updated_utc": "2026-08-23T20:24:51Z",
   "deadline": "2026-08-23T20:00:00-05:00",
-  "milestone": "FREEZE_REPORT_INTERFACE_V8_AND_MARS_RESUME_PREFLIGHT_CANDIDATES",
-  "status": "MILESTONE_COMPLETE_AWAITING_INDEPENDENT_QA",
+  "milestone": "FRESH_INDEPENDENT_RESULT_BLIND_AUDIT_OF_EXACT_FROZEN_CANDIDATES",
+  "status": "MILESTONE_COMPLETE_INDEPENDENT_GO_EXACT_FROZEN_BYTES_SCOPE_ONLY",
   "independent_qa": {
-    "exact_go_receipt_present": false,
-    "decision": "PENDING",
-    "next_action": "STOP_AND_REQUEST_INDEPENDENT_QA_OF_EXACT_FROZEN_BYTES"
+    "exact_go_receipt_present": true,
+    "decision": "GO_EXACT_FROZEN_BYTES_WITH_SCOPE",
+    "audit_path": "reports/monday_advisor_20260824_goal_v1/independent_result_blind_audit_v3_20260823T055223Z",
+    "receipt_path": "reports/monday_advisor_20260824_goal_v1/independent_result_blind_audit_v3_20260823T055223Z/INDEPENDENT_AUDIT_RECEIPT.json",
+    "receipt_sha256": "6191c94215732583de8160f393f2f37117e21d85c0032bf99b6d94b447104635",
+    "go_path": "reports/monday_advisor_20260824_goal_v1/independent_result_blind_audit_v3_20260823T055223Z/INDEPENDENT_AUDIT_GO.json",
+    "go_sha256": "f4a246d56eb0f2776ea227f4a347691a01c66de37f4ebcf2fee4a9c9c20573bd",
+    "next_action": "STOP; GO DOES NOT AUTHORIZE MARS, RESULTS, PROCESS INSPECTION, SIGNAL, TRANSPORT, NATIVE PREFLIGHT, OR STAGE07_08"
   },
   "safety": {
     "fixed10k_regenerated": false,
@@ -18,6 +23,30 @@
     "mars_accessed_in_this_milestone": false,
     "stage07_or_stage08_executed": false,
     "watcher_signal_sent": false
+  },
+  "publication_validation": {
+    "script_catalog_regenerated": true,
+    "environment_failures_preserved": [
+      "system Python 3.9: 156 collection errors because project requires Python >=3.10 syntax",
+      "bundled Python 3.12: pytest absent",
+      "bundled Python 3.12 with Python 3.9 site-packages: 172 binary-extension collection errors"
+    ],
+    "full_public_suite_in_supported_isolated_python": {
+      "python": "3.12.13",
+      "passed": 1072,
+      "failed": 44,
+      "skipped": 52,
+      "deselected": 1,
+      "failure_scope": "39 v8 and 5 MARS tests inside intentionally incomplete non-executable sanitized review mirrors",
+      "candidate_audit_affected": false
+    },
+    "core_public_suite_excluding_declared_non_executable_sanitized_mirror": {
+      "passed": 1050,
+      "failed": 0,
+      "skipped": 52,
+      "deselected": 1,
+      "status": "PASS"
+    }
   },
   "artifacts": {
     "report_interface_v8": {
@@ -76,12 +105,54 @@
     "independent_qa_request": {
       "path": "reports/monday_advisor_20260824_goal_v1/INDEPENDENT_QA_REQUIRED.json",
       "sha256": "2ba0796aa0b839fd09aeef35d0416724caf6272914e9414bd7f43885cf375210"
+    },
+    "independent_result_blind_audit": {
+      "path": "reports/monday_advisor_20260824_goal_v1/independent_result_blind_audit_v3_20260823T055223Z",
+      "decision": "GO_EXACT_FROZEN_BYTES_WITH_SCOPE",
+      "report": {
+        "path": "INDEPENDENT_AUDIT_REPORT.md",
+        "sha256": "c38fe7690a7de01cb5a09174ed498c416d386ae8eb661f7712befd04dd4105d0"
+      },
+      "receipt": {
+        "path": "INDEPENDENT_AUDIT_RECEIPT.json",
+        "sha256": "6191c94215732583de8160f393f2f37117e21d85c0032bf99b6d94b447104635"
+      },
+      "go": {
+        "path": "INDEPENDENT_AUDIT_GO.json",
+        "sha256": "f4a246d56eb0f2776ea227f4a347691a01c66de37f4ebcf2fee4a9c9c20573bd"
+      },
+      "commands": {
+        "path": "COMMANDS_USED.txt",
+        "sha256": "3aa3c4610dfcb0f5231c8d1972c97f793d0e799e76618bb1f0e3067ea185460b"
+      },
+      "sha256_index": {
+        "path": "SHA256SUMS.txt",
+        "entries": 4,
+        "verification": "4/4 PASS",
+        "sha256": "0f4992e6b7ccfdfd99104d9bd95ac718a6694a96a8b903e23ab84cc5ead96cb0"
+      },
+      "v8_evidence": {
+        "receipt_sha256": "5a3b4b8fba4e62c01a0356538c2b064b34f4db31639825db2c8f791830306a1f",
+        "sha256_index_sha256": "08a6a2485c4dd570e59e36e26a81f4cc790e9a626fa3a15091daa45c6bbbfc2e",
+        "tests": "39/39 unit; 151/151 hostile; 22/22 static; 5/5 compile; V8F01-03 rejected 3/3"
+      },
+      "mars_evidence": {
+        "receipt_sha256": "c7ecd11ca4a203c5207c35cd00fcf661c738d3af105ea417b556d80a271b67f4",
+        "sha256_index_sha256": "3b3ee7eff3db9f0f371503ae61c2001aa1d9c1e7a4894817615a82f8b1cffd6b",
+        "tests": "435/435 unique targeted; 462/462 executed; 11/11 compile; native Linux fixtures NOT_RUN_NON_LINUX"
+      },
+      "immutability": "root_and_subdirs_0555_files_0444_nlink1_no_symlinks"
     }
   },
   "scope_control": {
-    "independent_qa_run_interrupted_before_acceptance": true,
+    "independent_qa_run_interrupted_before_acceptance": false,
+    "accepted_independent_qa_present": true,
+    "prior_empty_or_partial_attempt_directories_preserved": true,
+    "decision_integration_task_canceled_after_read_only_checks_before_writes": true,
+    "root_repeated_integration_checks": true,
     "report_shell_v2_work_interrupted": true,
-    "reason": "user narrowed current milestone to candidate preparation and freeze only",
-    "unaccepted_partial_outputs_are_not_milestone_artifacts": true
+    "unaccepted_partial_outputs_are_not_milestone_artifacts": true,
+    "go_is_execution_authority": false,
+    "separate_authorization_still_required": true
   }
 }

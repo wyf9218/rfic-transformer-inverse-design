@@ -1,6 +1,6 @@
 # 当前问题与 GPT 交接摘要
 
-更新时间：`2026-08-23T05:06:04Z`
+更新时间：`2026-08-23T20:12:29Z`
 
 ## 1. 用户真正要完成的目标
 
@@ -29,7 +29,7 @@
 
 ### P2 — fresh EMX 数值尚未被正式释放到报告链
 
-7298 个真实 EMX survivor 已形成冻结人口，但 Stage07/Stage08 正式结果接口目录仍未生成。现阶段只允许使用漏斗和分母，不能填写 target→EMX 或 proxy→EMX 的数值。必须先冻结 result-free 接口与 MARS 原生预检候选，再由独立审计给出 GO，之后只能恢复既有 stopped watcher，禁止新开或重跑 EMX。
+7298 个真实 EMX survivor 已形成冻结人口，但 Stage07/Stage08 正式结果接口目录仍未生成。现阶段只允许使用漏斗和分母，不能填写 target→EMX 或 proxy→EMX 的数值。两个 result-blind 冻结候选已取得精确字节范围的独立 GO；该 GO 仅证明后续资格，不授权访问 MARS、检查进程、传输、原生预检、发送信号或恢复 watcher。
 
 ### P3 — survivor 统计存在选择偏差，不能代表原始 10,000
 
@@ -41,7 +41,7 @@
 
 ### P5 — 当前瓶颈是证据发布门禁，而不是画图能力
 
-代理统计、模型结构、样本分母和物理漏斗已经足够搭建结果盲态报告；真正未完成的是：候选包不可变冻结、独立 QA、精确哈希复核、只恢复既有 watcher、Stage07/08 正式接口生成、随后三条误差链的最终统计与报告渲染。
+候选包不可变冻结、独立 QA 和精确哈希复核已经完成，结论为 `GO_EXACT_FROZEN_BYTES_WITH_SCOPE`。仍未完成且未获本里程碑授权的是：重新核验精确状态、单独授权的 transport/原生 result-free preflight、进一步单独授权后只恢复既有 watcher、Stage07/08 正式接口生成，以及随后三条误差链的最终统计与报告渲染。
 
 ## 4. 三条误差链必须分开
 
@@ -54,20 +54,19 @@
 ## 5. 已采取的安全推进方式
 
 - 已创建 no-clobber 目标目录与 `RUN_STATE.md`；没有覆盖历史结果。
-- 正在并行冻结 report-interface-v8、result-free MARS preflight/transport 候选和结果盲态报告壳层。
+- report-interface-v8 与 result-free MARS preflight/transport 候选已冻结并通过 fresh result-blind 独立审计；审计报告、收据、GO、命令记录和 SHA-256 索引均已封存。
 - 未访问 fresh EMX 正式数值、未发送 watcher 恢复信号、未重跑 EMX、未重新生成 fixed10k、未重新训练 historical 模型、未手工启动 controlled arms。
 - 所有 FAIL/NO-GO 继续保留，不会改名成成功或静默覆盖。
 
 ## 6. 后续 GPT 的唯一合法执行顺序
 
-1. 验证两个候选包的 manifest、receipt、SHA256SUMS、文件权限、无符号链接、无未登记文件；
-2. 写出 `INDEPENDENT_QA_REQUIRED.json` 并保持 fresh-result-blind；
-3. 由独立审计者对精确候选哈希给出 GO/NO-GO；
-4. 只有 GO 后才重新只读检查 MARS watcher PID、状态、子进程、输出目录和重复运行风险；
-5. 所有门禁通过后，仅恢复 PID `2901805` 对应的既有 stopped watcher；不得启动新 watcher 或重算 EMX；
-6. Stage07/08 生成后分别统计三条误差链，并按 7298、5992、1306 的明确分母报告；
-7. 渲染并视觉复核图表、PPTX、HTML、讲稿、Q&A、CSV、manifest、receipt 与 SHA-256 索引；
-8. controlled experiment 只做状态跟踪；不到 `10/10 + 5/5` 不做因果归因。
+1. 保留并在任何后续动作前重算独立 GO 所绑定的两个候选包精确哈希；
+2. 取得对 exact-scope transport 与 MARS 原生 result-free preflight 的单独明确授权；
+3. 授权后才允许重新只读检查 watcher PID、状态、子进程、输出目录和重复运行风险；
+4. 所有门禁通过后仍须取得进一步单独授权，才可仅恢复冻结合同绑定的既有 stopped watcher；不得启动新 watcher 或重算 EMX；
+5. Stage07/08 生成后分别统计三条误差链，并按 7298、5992、1306 的明确分母报告；
+6. 渲染并视觉复核图表、PPTX、HTML、讲稿、Q&A、CSV、manifest、receipt 与 SHA-256 索引；
+7. controlled experiment 只做状态跟踪；不到 `10/10 + 5/5` 不做因果归因。
 
 ## 7. 导师可能追问时的最短回答
 

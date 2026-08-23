@@ -1,0 +1,47 @@
+{
+  "schema": "monday_advisor_independent_result_blind_audit_go_v1",
+  "schema_version": "1.0",
+  "issued_utc": "2026-08-23T20:12:29Z",
+  "audit_id": "independent_result_blind_audit_v3_20260823T055223Z",
+  "decision": "GO_EXACT_FROZEN_BYTES_WITH_SCOPE",
+  "bindings": [
+    {
+      "id": "REPORT_INTERFACE_V8",
+      "path": "reports/monday_advisor_20260824_goal_v1/report_interface_compatibility_v8_prepared_20260823T045542Z",
+      "manifest_sha256": "36b175a32d5cd5ad2cb9e37f303fe07eaba1dd572734a3833fbe08230fb109f4",
+      "prepared_receipt_sha256": "6d8d835ebdce1dd88177a74247bcf51d83dd71d34a310a38d176f56c73293db3",
+      "sha256_index_sha256": "8ab40d357f94a3d4e10bc1bbebe8884259e57a9ec840594c33b376a78b54f45f",
+      "scope": "later separately authorized exact frozen producer-to-report interface consumption only"
+    },
+    {
+      "id": "MARS_STAGE07_08_RESULT_FREE_PREFLIGHT_TRANSPORT",
+      "path": "reports/monday_advisor_20260824_goal_v1/stage07_08_result_free_preflight_transport_v1_prepared_20260823T045809Z",
+      "manifest_sha256": "cd154bab231bea9b922ce6f131c8782b162e69e4b864d3253ffc2e32cf965577",
+      "prepared_receipt_sha256": "aef78f35948090a32283bffe0f8a9f17eb165a85e50c11d4cc5d7634378421b8",
+      "resume_only_contract_sha256": "ebcde51ab17d1a18fd540f41fa11dfc3c0d56a2235d137105feae4a3fcf6c4a1",
+      "sha256_index_sha256": "ffcf4f7d59e0ab598a0ad89f606ae85707d11bab185d4cca0d00549282b6411a",
+      "scope": "later separately authorized exact-scope transport and MARS-native result-free preflight eligibility only"
+    }
+  ],
+  "go_does_not_authorize": {
+    "fresh_emx_numeric_result_access": false,
+    "mars_access_or_write": false,
+    "watcher_or_process_inspection": false,
+    "new_or_replacement_watcher": false,
+    "sigcont_or_any_process_signal": false,
+    "watcher_resume": false,
+    "transport": false,
+    "native_preflight": false,
+    "stage07_or_stage08": false,
+    "emx_rerun": false,
+    "manual_controlled_arm_launch": false
+  },
+  "mandatory_before_any_later_action": [
+    "recompute every bound candidate hash and fail closed on any mismatch",
+    "perform the exact post-GO checks listed in INDEPENDENT_QA_REQUIRED.json",
+    "obtain separate explicit authorization for exact transport and native result-free preflight",
+    "obtain a further separate authorization before any existing-watcher resume"
+  ],
+  "receipt_path": "reports/monday_advisor_20260824_goal_v1/independent_result_blind_audit_v3_20260823T055223Z/INDEPENDENT_AUDIT_RECEIPT.json",
+  "public_safe": true
+}

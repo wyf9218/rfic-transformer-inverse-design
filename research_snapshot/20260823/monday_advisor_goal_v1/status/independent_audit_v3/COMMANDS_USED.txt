@@ -1,0 +1,41 @@
+Independent result-blind audit command record
+Audit ID: independent_result_blind_audit_v3_20260823T055223Z
+
+Entry order
+1. Read only the public INDEPENDENT_QA_REQUIRED.json and local RUN_STATE.md before candidate inspection.
+2. Rehash exact candidate core files with `shasum -a 256 <paths>`.
+3. Verify each frozen candidate index from its own root with `shasum -a 256 -c SHA256SUMS.txt`.
+4. Verify each evidence index from its own evidence directory with `shasum -a 256 -c SHA256SUMS.txt`.
+5. Validate receipts and decision JSON with `python3 -m json.tool <file>`.
+6. Run read-only Python closure verification with `PYTHONDONTWRITEBYTECODE=1`: exact index-set equality, safe relative paths, file hashes, counts, modes, nlink, symlink absence, manifest path/role/path-hash uniqueness, authority=false fields, evidence index closure, and recommendation equality.
+7. Scan top-level decision artifacts for local absolute paths, usernames, host/site values, secrets, tokens, credentials, and numerical-result material before publication.
+8. Rehash candidates and verify top-level audit index after freezing.
+
+Exact V8 targeted commands
+- `PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v test_report_interface_compatibility_v8.py` -> 39/39 PASS.
+- `PYTHONDONTWRITEBYTECODE=1 python3 run_report_interface_v8_hostile_matrix.py` -> 151/151 PASS.
+- `PYTHONDONTWRITEBYTECODE=1 python3 check_v8_against_frozen_v8_producer.py` -> 22/22 PASS.
+- In-memory `compile(Path(name).read_bytes(), name, 'exec')` for five candidate Python targets -> 5/5 PASS; no bytecode written.
+- Focused unittest invocation of tests 37, 38, and 39 -> V8F01/V8F02/V8F03 rejected 3/3.
+- Full exact transcript: `v8_evidence/COMMANDS_USED.txt`, SHA-256 `eed404ac760329d82aadcd6baed30ff2314f19071d3b1593ca89728d9c1fa022`.
+
+Exact MARS result-free targeted commands
+- Candidate verifier -> 1/1 PASS.
+- Direct meta/static/future-watcher hostile suite -> 27/27 PASS.
+- Candidate-supplied author targeted runner -> five invocations PASS; 462/462 executed targeted assertions, 435/435 unique assertions.
+- In-memory compile -> 11/11 PASS; no bytecode written.
+- Full exact transcript: `mars_evidence/COMMANDS_USED.txt`, SHA-256 `3fa7899a67ee2777e13e61476bfdfb2709fc25bc2a2ce192e93546e315ac403a`.
+
+Preserved command-level failures
+- V8 C02: guessed absent filenames; no writes; corrected command passed.
+- V8 C06: reserved-shell-variable collision and wrong textual aggregate ordering; rejected; corrected verifier passed.
+- MARS historical topology-only replay: preserved FileNotFoundError; authoritative-sibling exact-byte replay passed; not fresh GO authority.
+- Root integration I01: evidence SHA index first ran from the workspace root and reported three missing relative files; rerun from each evidence directory passed 3/3.
+- Decision-integration task: read-only checks completed, then automatic goal continuation canceled it before top-level writes; candidate/evidence bytes unchanged and root independently repeated checks.
+
+Prohibited commands/actions not run
+- No network or MARS connection.
+- No process or watcher inspection.
+- No signal, SIGCONT, resume, launch, or replacement.
+- No transport/native-preflight/Stage07/Stage08 execution.
+- No EMX rerun, numerical-result access, or controlled-arm action.

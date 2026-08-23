@@ -1,9 +1,9 @@
 {
   "schema_version": "1.0",
-  "updated_utc": "2026-08-23T05:06:04Z",
+  "updated_utc": "2026-08-23T20:12:29Z",
   "purpose": "machine-readable problem and handoff state for another GPT",
   "deadline": "2026-08-23T20:00:00-05:00",
-  "overall_status": "PHASE1_RESULT_BLIND_FREEZE_IN_PROGRESS",
+  "overall_status": "PHASE1_INDEPENDENT_GO_EXACT_FROZEN_BYTES_SCOPE_ONLY",
   "fresh_emx_numeric_access": false,
   "fixed_identities": {
     "fixed10k_design": "deterministic_centered_lhs_finite_frame_not_iid",
@@ -101,12 +101,12 @@
     {
       "id": "P5_RELEASE_GATES",
       "severity": "HIGH",
-      "status": "IN_PROGRESS",
-      "problem": "immutable packaging, independent QA, watcher state validation, and result-interface generation remain",
+      "status": "INDEPENDENT_GO_EXACT_FROZEN_BYTES_SCOPE_ONLY",
+      "problem": "both immutable candidates passed fresh result-blind independent QA; this scoped GO is eligibility only and grants no MARS, process, result, signal, transport, native-preflight, or Stage07/08 authority",
       "current_workstreams": [
-        "freeze_report_interface_v8",
-        "freeze_result_free_mars_preflight_transport",
-        "build_result_blind_report_shell"
+        "stop_after_independent_qa_milestone",
+        "await_separate_authorization_for_post_go_exact_state_checks",
+        "correct_result_blind_report_shell_v2"
       ]
     }
   ],
@@ -122,16 +122,15 @@
     "do_not_retrain_historical_models",
     "do_not_rerun_completed_EMX",
     "do_not_manually_launch_controlled_arms",
-    "do_not_resume_or_create_a_watcher_before_independent_GO_and_exact_state_checks",
+    "do_not_resume_or_create_a_watcher_before_exact_state_checks_and_separate_authorization",
     "do_not_merge_three_error_chains",
     "do_not_hide_FAIL_or_NO_GO_evidence"
   ],
   "next_legal_sequence": [
-    "freeze_and_verify_exact_candidates",
-    "write_INDEPENDENT_QA_REQUIRED_json",
-    "obtain_independent_GO_or_NO_GO_for_exact_hashes",
+    "preserve_independent_GO_receipt_and_recompute_bound_hashes_before_any_later_action",
+    "obtain_separate_explicit_authorization_for_exact_transport_and_native_result_free_preflight",
     "perform_read_only_MARS_watcher_and_output_state_checks",
-    "resume_existing_stopped_watcher_only_if_all_gates_pass",
+    "obtain_further_separate_authorization_and_resume_existing_stopped_watcher_only_if_all_gates_pass",
     "generate_and_verify_Stage07_Stage08",
     "compute_three_chain_statistics_with_explicit_denominators",
     "render_and_QA_figures_PPTX_HTML_notes_QA_CSV_receipts_and_SHA256"
