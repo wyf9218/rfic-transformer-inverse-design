@@ -3,8 +3,9 @@
 - Deadline: `2026-08-23 20:00 America/Chicago`
 - Started UTC: `2026-08-23T04:53:17Z`
 - Started local: `2026-08-22T23:53:17-05:00`
-- Status: `FROZEN_CANDIDATES_READY`
+- Status: `MILESTONE_COMPLETE_AWAITING_INDEPENDENT_QA`
 - Fresh-EMX numerical result access: `NOT_AUTHORIZED / NOT_PERFORMED`
+- Independent-QA exact GO receipt: `ABSENT / PENDING`
 - Existing EMX rerun: `NO`
 - Controlled training manual launch: `NO`
 
@@ -16,11 +17,12 @@
 - fresh-EMX numerical population after release: `7298 survivors only`
 - survivor panels: `5992 legacy + 1306 extension`
 
-## Phase 1 workstreams
+## Frozen milestone artifacts
 
-1. `report-interface-v8`: preparing a new immutable no-clobber candidate from the repaired v8 WIP; author tests only.
-2. `mars-preflight-transport`: preparing a new immutable result-free candidate for resuming only the existing stopped watcher.
-3. `report-shell`: building architecture/proxy/funnel/methods/limitations material without unreleased fresh-EMX values.
+1. v8: `report_interface_compatibility_v8_prepared_20260823T045542Z`; manifest `36b175a32d5cd5ad2cb9e37f303fe07eaba1dd572734a3833fbe08230fb109f4`; receipt `6d8d835ebdce1dd88177a74247bcf51d83dd71d34a310a38d176f56c73293db3`; index `8ab40d357f94a3d4e10bc1bbebe8884259e57a9ec840594c33b376a78b54f45f`.
+2. MARS preflight: `stage07_08_result_free_preflight_transport_v1_prepared_20260823T045809Z`; manifest `cd154bab231bea9b922ce6f131c8782b162e69e4b864d3253ffc2e32cf965577`; receipt `aef78f35948090a32283bffe0f8a9f17eb165a85e50c11d4cc5d7634378421b8`; index `ffcf4f7d59e0ab598a0ad89f606ae85707d11bab185d4cca0d00549282b6411a`.
+3. QA request: `INDEPENDENT_QA_REQUIRED.json`; SHA-256 `2ba0796aa0b839fd09aeef35d0416724caf6272914e9414bd7f43885cf375210`.
+4. Machine state: `RUN_STATE.json`; contains exact paths, counts, permissions, safety flags, and hashes.
 
 ## Current external observations
 
@@ -52,4 +54,4 @@
 - `2026-08-23T05:19:57Z`: committed the first public GPT-review sync as Git commit `6ab7d73e248b02114355b03bfdf036af3e08ab24`: 18 sanitized review sources, six exact public-safe status files, documentation links, and SHA indices. Raw site-bound candidates and unreleased results were not published.
 - `2026-08-23T05:20:18Z`: pushed commit `6ab7d73e248b02114355b03bfdf036af3e08ab24` to `origin/main`; local `HEAD` and `origin/main` match. GitHub batch-1 sync PASS.
 - `2026-08-23T05:21:37Z`: primary-agent closure/visual review of result-blind report shell v1 found one stale status field: slide 11 used the earlier `2026-08-23T04:10:07Z / load1=231.03` observation instead of the current mandated `2026-08-23T04:35:03Z / load1=60.67`. V1 remains preserved but is superseded for publication; a new no-clobber v2 correction was commissioned. This is a report-status freshness issue, not a model/EMX result issue.
-- `2026-08-23T05:08:30Z`: froze report-interface v8 candidate at `report_interface_compatibility_v8_prepared_20260823T045542Z`; author gates compile/direct/hostile×2/static=`5/5, 39/39, 151/151×2, 22/22` PASS. Frozen package index SHA-256=`8ab40d357f94a3d4e10bc1bbebe8884259e57a9ec840594c33b376a78b54f45f`; status remains `AWAITING_FRESH_INDEPENDENT_QA`, not GO. No MARS/result/Stage07/08 access or watcher signal occurred.
+- `2026-08-23T05:29:01Z`: user narrowed the current milestone to candidate preparation/freeze only. The independent-QA run and report-shell v2 work were interrupted; neither produced an accepted milestone artifact. Both frozen candidate SHA indices were reverified exactly PASS. No GO exists, so execution stops at the independent-QA gate.

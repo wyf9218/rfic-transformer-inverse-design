@@ -1,0 +1,87 @@
+{
+  "schema_version": "1.0",
+  "updated_utc": "2026-08-23T05:29:01Z",
+  "deadline": "2026-08-23T20:00:00-05:00",
+  "milestone": "FREEZE_REPORT_INTERFACE_V8_AND_MARS_RESUME_PREFLIGHT_CANDIDATES",
+  "status": "MILESTONE_COMPLETE_AWAITING_INDEPENDENT_QA",
+  "independent_qa": {
+    "exact_go_receipt_present": false,
+    "decision": "PENDING",
+    "next_action": "STOP_AND_REQUEST_INDEPENDENT_QA_OF_EXACT_FROZEN_BYTES"
+  },
+  "safety": {
+    "fixed10k_regenerated": false,
+    "historical_model_retrained": false,
+    "completed_emx_rerun": false,
+    "controlled_arms_manually_launched": false,
+    "fresh_emx_numerical_statistics_accessed_or_released": false,
+    "mars_accessed_in_this_milestone": false,
+    "stage07_or_stage08_executed": false,
+    "watcher_signal_sent": false
+  },
+  "artifacts": {
+    "report_interface_v8": {
+      "path": "reports/monday_advisor_20260824_goal_v1/report_interface_compatibility_v8_prepared_20260823T045542Z",
+      "status": "AWAITING_FRESH_INDEPENDENT_QA",
+      "regular_files": 23,
+      "manifest": {
+        "path": "PACKAGE_MANIFEST.json",
+        "sha256": "36b175a32d5cd5ad2cb9e37f303fe07eaba1dd572734a3833fbe08230fb109f4"
+      },
+      "receipt": {
+        "path": "PREPARED_RECEIPT.json",
+        "sha256": "6d8d835ebdce1dd88177a74247bcf51d83dd71d34a310a38d176f56c73293db3"
+      },
+      "sha256_index": {
+        "path": "SHA256SUMS.txt",
+        "entries": 22,
+        "verification": "22/22 PASS",
+        "sha256": "8ab40d357f94a3d4e10bc1bbebe8884259e57a9ec840594c33b376a78b54f45f"
+      },
+      "immutability": "root_0555_files_0444_nlink1_no_symlinks_no_subdirectories",
+      "primary_postfreeze_verification": {
+        "path": "reports/monday_advisor_20260824_goal_v1/ROOT_POSTFREEZE_VERIFY_REPORT_INTERFACE_V8.json",
+        "sha256": "602b006173680705965b69384397b89df24a9961456c0c60532de60832a642a0"
+      }
+    },
+    "mars_resume_preflight": {
+      "path": "reports/monday_advisor_20260824_goal_v1/stage07_08_result_free_preflight_transport_v1_prepared_20260823T045809Z",
+      "status": "AWAITING_FRESH_INDEPENDENT_QA_NOT_AUTHORIZED",
+      "regular_files": 59,
+      "payload_files": 56,
+      "manifest": {
+        "path": "PACKAGE_MANIFEST.json",
+        "sha256": "cd154bab231bea9b922ce6f131c8782b162e69e4b864d3253ffc2e32cf965577"
+      },
+      "receipt": {
+        "path": "PREPARED_RECEIPT.json",
+        "sha256": "aef78f35948090a32283bffe0f8a9f17eb165a85e50c11d4cc5d7634378421b8"
+      },
+      "resume_only_contract": {
+        "path": "MARS_STAGE07_08_RESUME_ONLY_CONTRACT.json",
+        "sha256": "ebcde51ab17d1a18fd540f41fa11dfc3c0d56a2235d137105feae4a3fcf6c4a1"
+      },
+      "sha256_index": {
+        "path": "SHA256SUMS.txt",
+        "entries": 58,
+        "verification": "58/58 PASS",
+        "sha256": "ffcf4f7d59e0ab598a0ad89f606ae85707d11bab185d4cca0d00549282b6411a"
+      },
+      "immutability": "all_directories_0555_all_files_0444_nlink1_no_symlinks",
+      "primary_postfreeze_verification": {
+        "path": "reports/monday_advisor_20260824_goal_v1/ROOT_POSTFREEZE_VERIFY_MARS_PREFLIGHT_TRANSPORT.json",
+        "sha256": "944a5ea32a0e54073b92d16e2b4ded4992249d78b9039fc04eae6fadc51ae076"
+      }
+    },
+    "independent_qa_request": {
+      "path": "reports/monday_advisor_20260824_goal_v1/INDEPENDENT_QA_REQUIRED.json",
+      "sha256": "2ba0796aa0b839fd09aeef35d0416724caf6272914e9414bd7f43885cf375210"
+    }
+  },
+  "scope_control": {
+    "independent_qa_run_interrupted_before_acceptance": true,
+    "report_shell_v2_work_interrupted": true,
+    "reason": "user narrowed current milestone to candidate preparation and freeze only",
+    "unaccepted_partial_outputs_are_not_milestone_artifacts": true
+  }
+}

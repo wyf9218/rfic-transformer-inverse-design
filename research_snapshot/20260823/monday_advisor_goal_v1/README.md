@@ -7,12 +7,13 @@ This directory is the public, GPT-readable snapshot of the work completed for th
 1. [`status/CURRENT_PROBLEMS_GPT_HANDOFF_CN.md`](status/CURRENT_PROBLEMS_GPT_HANDOFF_CN.md) — concise scientific problem statement, current evidence, invalid claims, and next legal sequence;
 2. [`status/CURRENT_PROBLEMS_GPT_HANDOFF.json`](status/CURRENT_PROBLEMS_GPT_HANDOFF.json) — the same state in machine-readable form;
 3. [`status/RUN_STATE.md`](status/RUN_STATE.md) — append-only execution trace;
-4. [`status/INDEPENDENT_QA_REQUIRED.json`](status/INDEPENDENT_QA_REQUIRED.json) — exact frozen-candidate hashes and the independent-QA boundary.
-5. [`status/GITHUB_SYNC_RECEIPT_BATCH1.json`](status/GITHUB_SYNC_RECEIPT_BATCH1.json) — verified commit/push identity for the first incremental sync.
+4. [`status/RUN_STATE.json`](status/RUN_STATE.json) — machine-readable milestone status and exact artifact identities;
+5. [`status/INDEPENDENT_QA_REQUIRED.json`](status/INDEPENDENT_QA_REQUIRED.json) — exact frozen-candidate hashes and the independent-QA boundary;
+6. [`status/GITHUB_SYNC_RECEIPT_BATCH1.json`](status/GITHUB_SYNC_RECEIPT_BATCH1.json) — verified commit/push identity for the first incremental sync.
 
 ## What is included
 
-- `status/`: seven exact, public-safe status, postfreeze-verification, and GitHub-sync files;
+- `status/`: eight exact, public-safe status, postfreeze-verification, and GitHub-sync files;
 - `public_code/report_interface_v8/`: all six completed Python sources for the v8 report-interface candidate;
 - `public_code/mars_preflight_transport/`: all twelve completed Python sources for the result-free MARS preflight/transport candidate, preserving their relative subdirectories;
 - `PUBLIC_CODE_SHA256.txt`: SHA-256 index of the 18 public review sources;
