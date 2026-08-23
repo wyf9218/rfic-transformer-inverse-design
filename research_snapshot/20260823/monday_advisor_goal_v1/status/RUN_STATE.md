@@ -3,9 +3,9 @@
 - Deadline: `2026-08-23 20:00 America/Chicago`
 - Started UTC: `2026-08-23T04:53:17Z`
 - Started local: `2026-08-22T23:53:17-05:00`
-- Status: `MILESTONE_COMPLETE_INDEPENDENT_GO_EXACT_FROZEN_BYTES_SCOPE_ONLY`
+- Status: `MILESTONE_TERMINAL_NO_GO_RESULT_BLIND_PREFLIGHT`
 - Fresh-EMX numerical result access: `NOT_AUTHORIZED / NOT_PERFORMED`
-- Independent-QA exact GO receipt: `PRESENT`; `independent_result_blind_audit_v3_20260823T055223Z/INDEPENDENT_AUDIT_RECEIPT.json`; SHA-256 `6191c94215732583de8160f393f2f37117e21d85c0032bf99b6d94b447104635`
+- Independent-QA exact GO receipt: `PRESENT / BOUND TO THIS PREFLIGHT`; `independent_result_blind_audit_v3_20260823T055223Z/INDEPENDENT_AUDIT_RECEIPT.json`; SHA-256 `6191c94215732583de8160f393f2f37117e21d85c0032bf99b6d94b447104635`
 - Existing EMX rerun: `NO`
 - Controlled training manual launch: `NO`
 
@@ -24,15 +24,16 @@
 3. QA request: `INDEPENDENT_QA_REQUIRED.json`; SHA-256 `2ba0796aa0b839fd09aeef35d0416724caf6272914e9414bd7f43885cf375210`.
 4. Machine state: `RUN_STATE.json`; contains exact paths, counts, permissions, safety flags, and hashes.
 5. Independent audit: `independent_result_blind_audit_v3_20260823T055223Z`; report `c38fe7690a7de01cb5a09174ed498c416d386ae8eb661f7712befd04dd4105d0`; receipt `6191c94215732583de8160f393f2f37117e21d85c0032bf99b6d94b447104635`; GO `f4a246d56eb0f2776ea227f4a347691a01c66de37f4ebcf2fee4a9c9c20573bd`; commands `3aa3c4610dfcb0f5231c8d1972c97f793d0e799e76618bb1f0e3067ea185460b`; index `0f4992e6b7ccfdfd99104d9bd95ac718a6694a96a8b903e23ab84cc5ead96cb0` (`4/4 PASS`).
+6. MARS exact-transport/native preflight: `mars_exact_transport_native_preflight_v1_20260823T231837Z`; `PRELIGHT_NO_GO.json` `36c26f571e86df0456ebbb7871fff49800230bc144634b52e3ef42f104f291c4`; receipt `fbba31409f6f7d274d582f36577ab93c711fbde8b7125ffbf7b47ce9a93d8c3d`; index `3b130fbbe0de90f359f30bf06b5dd966cdd26667e5f82d515d9801a2a3174cc8` (`16/16 PASS`).
 
 ## Current external observations
 
-- MARS observation UTC: `2026-08-23T04:35:03Z`
+- MARS result-blind observation UTC: `2026-08-23T23:34:39Z`
 - Stage07 output directory: `ABSENT`
 - Stage08 output directory: `ABSENT`
-- existing watcher PID `2901805`: state `T` (stopped), no resume signal sent
-- controlled supervisor PID `2793874`: alive; terminal arms `7/10`, complete pairs `3/5`
-- load1 at observation: `60.67`; frozen prelaunch threshold: `<40`; no manual arm launch
+- Frozen watcher: exact singleton, state `T`, one direct child in state `Z`; contract requires zero, so `NO_GO`; no signal sent.
+- Raw-result closure: `7298/7298` Touchstone path/SHA/inode identities exact; mismatch `0`; numerical values not parsed.
+- Native tests: meta `27/27`, preflight-v3 `164/164`, held-bootstrap `PASS`; native-origin `NOT_RUN_LINUX_PYTHON_HEADERS_UNAVAILABLE`, so `NO_GO`.
 
 ## Permanent boundaries
 
@@ -61,3 +62,6 @@
 - `2026-08-23T20:12:29Z`: integrated both independent receipts into exact-byte `GO_EXACT_FROZEN_BYTES_WITH_SCOPE`; froze the accepted audit root at `0555` and its files at `0444/nlink1`. This GO is not authorization for MARS, result access, process inspection, signal/resume, transport/native preflight, Stage07/08, EMX rerun, or controlled-arm launch.
 - `2026-08-23T20:21:00Z`: preserved three publication-environment failures (system Python 3.9 syntax incompatibility, bundled Python without pytest, and mixed-version binary packages). In an isolated supported Python 3.12 environment, the full public suite produced `1072 passed / 44 failed / 52 skipped / 1 deselected`; all 44 failures are the intentionally incomplete, declared non-executable sanitized mirrors (`39 v8 + 5 MARS`), not exact-candidate failures.
 - `2026-08-23T20:24:51Z`: core public suite excluding that declared non-executable mirror passed `1050/1050`, with `52 skipped` and `1 deselected`; no candidate or audit byte was modified.
+- `2026-08-23T23:33:18Z`: preserved two failed no-clobber transport roots caused by frozen `0555` extraction ordering; a third new root transported all 59 exact files, verified `58/58` index entries, and recorded stable remote inode identity set `4ee139e326a9960275db88e9bc582354821cf92453a9a2481ea9fbd6bcf477f5` before/after tests.
+- `2026-08-23T23:38:05Z`: terminal result-blind preflight froze `NO_GO`: watcher direct children `1` versus required `0`, and Linux native-origin was not executed because exact runtime `Python.h` is absent. Stage07/08 remained absent, no signal/result access occurred, and all `7298` raw Touchstone identities matched.
+- `2026-08-23T23:51:45Z`: publication revalidation preserved the expected system-Python-3.9 collection failure; supported Python 3.12 full suite reproduced only the declared sanitized-mirror failures (`1072 pass / 44 fail / 52 skip / 1 deselect`), while the core suite passed `1050/1050` with `52 skip / 1 deselect`. Snapshot and repository SHA manifests passed `38/38` and `745/745` before final regeneration.

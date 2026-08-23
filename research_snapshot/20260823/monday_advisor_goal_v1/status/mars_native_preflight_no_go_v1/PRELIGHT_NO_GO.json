@@ -1,0 +1,64 @@
+{
+  "schema": "monday_advisor_public_safe_mars_native_preflight_terminal_v1",
+  "status": "NO_GO",
+  "created_utc": "2026-08-23T23:38:05Z",
+  "scope": "PUBLIC_SAFE_RESULT_BLIND_STATUS_ONLY",
+  "bound_independent_qa": {
+    "go_sha256": "f4a246d56eb0f2776ea227f4a347691a01c66de37f4ebcf2fee4a9c9c20573bd",
+    "receipt_sha256": "6191c94215732583de8160f393f2f37117e21d85c0032bf99b6d94b447104635"
+  },
+  "exact_candidate_bindings": {
+    "mars_manifest_sha256": "cd154bab231bea9b922ce6f131c8782b162e69e4b864d3253ffc2e32cf965577",
+    "mars_prepared_receipt_sha256": "aef78f35948090a32283bffe0f8a9f17eb165a85e50c11d4cc5d7634378421b8",
+    "mars_resume_only_contract_sha256": "ebcde51ab17d1a18fd540f41fa11dfc3c0d56a2235d137105feae4a3fcf6c4a1",
+    "mars_sha256_index_sha256": "ffcf4f7d59e0ab598a0ad89f606ae85707d11bab185d4cca0d00549282b6411a"
+  },
+  "terminal_blockers": [
+    {
+      "id": "WATCHER_DIRECT_CHILD_COUNT_NONZERO",
+      "required": 0,
+      "observed": 1,
+      "observed_child_state": "Z"
+    },
+    {
+      "id": "LINUX_NATIVE_ORIGIN_FIXTURE_NOT_EXECUTED",
+      "required_status": "PASS_LINUX_REAL_HELD_EXTENSION_ORIGIN_FIXTURE",
+      "observed_status": "NOT_RUN_LINUX_PYTHON_HEADERS_UNAVAILABLE",
+      "exact_runtime_python_h_exists": false
+    }
+  ],
+  "passed_checks": {
+    "exact_remote_package_regular_files": 59,
+    "exact_remote_sha256_index_entries": 58,
+    "remote_identity_stable_before_after_tests": true,
+    "meta_candidate_unittest": "27/27 PASS",
+    "preflight_v3_synthetic": "164/164 PASS",
+    "linux_held_bootstrap": "PASS",
+    "watcher_remains_stopped_and_singleton": true,
+    "active_post_stage06_chain_process_count": 0,
+    "stage07_output_absent": true,
+    "stage08_output_absent": true,
+    "touchstone_identity_match": "7298/7298",
+    "touchstone_sha256_mismatch_count": 0,
+    "touchstone_sha256_set_digest": "d8482b294b093eaa35037b29ab09457c91ec11f99efa8cb67f4bcaea4e86d589"
+  },
+  "canonical_private_evidence_sha256": {
+    "preflight_no_go": "36c26f571e86df0456ebbb7871fff49800230bc144634b52e3ef42f104f291c4",
+    "preflight_receipt": "fbba31409f6f7d274d582f36577ab93c711fbde8b7125ffbf7b47ce9a93d8c3d",
+    "mars_result_blind_preflight": "2fb29a9e23e5eada409ca64aa45da4852491f37023cb31e26588f23277f304eb",
+    "native_runtime_smoke": "05fe313df90043848be222172646c5b7a3207900dbc8e8890091ea661ea275b9",
+    "touchstone_identity_manifest": "51b79ea82e49a3adf05cc530fcfa6ba499cef75579c7894e87be5b72ace1f3fe",
+    "local_sha256_index": "3b130fbbe0de90f359f30bf06b5dd966cdd26667e5f82d515d9801a2a3174cc8"
+  },
+  "public_safety": {
+    "server_identity_or_private_storage_path_published": false,
+    "raw_touchstone_or_dataset_rows_published": false,
+    "fresh_emx_numerical_metrics_accessed_or_published": false,
+    "signals_sent": false,
+    "watcher_resumed_or_replaced": false,
+    "stage07_or_stage08_executed": false,
+    "emx_rerun": false,
+    "controlled_arm_launched": false
+  },
+  "next_legal_entry": "SEPARATELY_AUTHORIZED_AND_INDEPENDENTLY_QA_REMEDIATION_THEN_NEW_NO_CLOBBER_PREFLIGHT"
+}

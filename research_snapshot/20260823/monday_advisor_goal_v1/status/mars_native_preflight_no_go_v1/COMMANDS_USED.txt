@@ -1,0 +1,15 @@
+Public-safe command summary for MARS exact-transport/native-preflight milestone
+Created UTC: 2026-08-23T23:38:05Z
+
+1. Recomputed both frozen candidate SHA-256 indices and the accepted independent GO/receipt hashes: PASS.
+2. Performed authorized read-only watcher/process and Stage07/08 existence checks: watcher stopped/singleton, outputs absent, one direct zombie child found.
+3. Preserved two failed no-clobber transport attempts caused by 0555 extraction ordering.
+4. Transported the exact 59-file package to a third new no-clobber root, restored 0444/0555 modes, and verified all 58 indexed hashes: PASS.
+5. Recorded remote device/inode/size/mode/nlink/SHA identities before and after tests: stable.
+6. Ran candidate-only meta unittest: 27/27 PASS.
+7. Ran preflight-v3 synthetic matrix: 164/164 PASS.
+8. Ran Linux runtime smoke: held-bootstrap PASS; native-origin NOT_RUN_LINUX_PYTHON_HEADERS_UNAVAILABLE.
+9. Rechecked 7,298 Touchstone files by frozen path/SHA and inode identity only: 7,298/7,298 match, zero mismatches; no numerical values parsed.
+10. Froze terminal NO_GO. No signal, watcher resume/replacement, Stage07/08, EMX rerun, result release, or controlled-arm launch occurred.
+
+Private hostnames, usernames, storage roots, process identifiers, raw results, and exact private command lines are intentionally excluded. Their canonical evidence is bound by SHA-256 in PRELIGHT_NO_GO.json and PRELIGHT_RECEIPT.json.

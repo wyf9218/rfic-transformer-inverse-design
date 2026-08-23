@@ -1,6 +1,6 @@
 # 当前问题与 GPT 交接摘要
 
-更新时间：`2026-08-23T20:12:29Z`
+更新时间：`2026-08-23T23:38:05Z`
 
 ## 1. 用户真正要完成的目标
 
@@ -29,7 +29,7 @@
 
 ### P2 — fresh EMX 数值尚未被正式释放到报告链
 
-7298 个真实 EMX survivor 已形成冻结人口，但 Stage07/Stage08 正式结果接口目录仍未生成。现阶段只允许使用漏斗和分母，不能填写 target→EMX 或 proxy→EMX 的数值。两个 result-blind 冻结候选已取得精确字节范围的独立 GO；该 GO 仅证明后续资格，不授权访问 MARS、检查进程、传输、原生预检、发送信号或恢复 watcher。
+7298 个真实 EMX survivor 已形成冻结人口，但 Stage07/Stage08 正式结果接口目录仍未生成。精确字节 GO 后另有一次明确授权的 MARS exact transport/result-blind native preflight，终态为 `NO_GO`：watcher 直接子进程数为 1（合同要求 0，子进程为 zombie），exact runtime 又缺少 `Python.h`，导致 native-origin fixture 未执行。现阶段仍只能使用漏斗与分母，不能填写 target→EMX 或 proxy→EMX 数值。
 
 ### P3 — survivor 统计存在选择偏差，不能代表原始 10,000
 
@@ -39,9 +39,9 @@
 
 最近一次只读 MARS 观察为 terminal arms=`7/10`、complete pairs=`3/5`；监督进程存活但没有可安全手工接管的子任务，load1=`60.67`，高于冻结启动阈值 `<40`。禁止手工补跑，以免破坏预注册训练预算和配对关系。只有达到 `10/10 arms + 5/5 pairs` 才允许正式配对统计。
 
-### P5 — 当前瓶颈是证据发布门禁，而不是画图能力
+### P5 — MARS 预检已终态 NO-GO，不得进入 resume/release
 
-候选包不可变冻结、独立 QA 和精确哈希复核已经完成，结论为 `GO_EXACT_FROZEN_BYTES_WITH_SCOPE`。仍未完成且未获本里程碑授权的是：重新核验精确状态、单独授权的 transport/原生 result-free preflight、进一步单独授权后只恢复既有 watcher、Stage07/08 正式接口生成，以及随后三条误差链的最终统计与报告渲染。
+候选包 exact transport、`58/58` 哈希闭匈、远程 inode 身份稳定、meta `27/27`、preflight-v3 `164/164`、held-bootstrap PASS 以及 `7298/7298` Touchstone 路径/SHA/inode 身份均已通过。但 children-zero 门和 Linux native-origin 门均未通过；因此终态收据是 `TERMINAL_NO_GO`，不授权 signal/resume、Stage07/08、fresh-EMX 数值读取或 report-interface release。
 
 ## 4. 三条误差链必须分开
 
@@ -55,18 +55,18 @@
 
 - 已创建 no-clobber 目标目录与 `RUN_STATE.md`；没有覆盖历史结果。
 - report-interface-v8 与 result-free MARS preflight/transport 候选已冻结并通过 fresh result-blind 独立审计；审计报告、收据、GO、命令记录和 SHA-256 索引均已封存。
+- 获授权的 exact transport/result-blind native preflight 已使用全新 no-clobber 路径完成；两个传输失败路径与一个成功路径全部保留，终态 `NO_GO` 与两个硬阻断已封存。
 - 未访问 fresh EMX 正式数值、未发送 watcher 恢复信号、未重跑 EMX、未重新生成 fixed10k、未重新训练 historical 模型、未手工启动 controlled arms。
 - 所有 FAIL/NO-GO 继续保留，不会改名成成功或静默覆盖。
 
 ## 6. 后续 GPT 的唯一合法执行顺序
 
-1. 保留并在任何后续动作前重算独立 GO 所绑定的两个候选包精确哈希；
-2. 取得对 exact-scope transport 与 MARS 原生 result-free preflight 的单独明确授权；
-3. 授权后才允许重新只读检查 watcher PID、状态、子进程、输出目录和重复运行风险；
-4. 所有门禁通过后仍须取得进一步单独授权，才可仅恢复冻结合同绑定的既有 stopped watcher；不得启动新 watcher 或重算 EMX；
-5. Stage07/08 生成后分别统计三条误差链，并按 7298、5992、1306 的明确分母报告；
-6. 渲染并视觉复核图表、PPTX、HTML、讲稿、Q&A、CSV、manifest、receipt 与 SHA-256 索引；
-7. controlled experiment 只做状态跟踪；不到 `10/10 + 5/5` 不做因果归因。
+1. 保留 stopped watcher、三个 no-clobber transport roots、terminal `NO_GO` 收据与所有 FAIL 证据；
+2. 先准备一个不会触发 Stage07/08 的 zombie-child result-blind remediation，以及带 matching Python headers 的 exact runtime identity；
+3. 对上述 remediation 做 fresh independent QA；任何 signal、runtime 修改、watcher 动作或 release 都须新 exact-scope 授权；
+4. 仅在新 no-clobber 目录重跑全部 result-blind preflight；所有门通过之前不得 resume；
+5. 未来 Stage07/08 合法生成后，再分别统计三条误差链，并按 7298、5992、1306 明确分母报告；
+6. 渲染并视觉复核图表、PPTX、HTML、讲稿、Q&A、CSV、manifest、receipt 与 SHA-256 索引；controlled experiment 不到 `10/10 + 5/5` 不做因果归因。
 
 ## 7. 导师可能追问时的最短回答
 

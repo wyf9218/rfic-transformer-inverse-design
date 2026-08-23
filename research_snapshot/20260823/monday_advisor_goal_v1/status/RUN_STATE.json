@@ -1,9 +1,9 @@
 {
   "schema_version": "1.0",
-  "updated_utc": "2026-08-23T20:24:51Z",
+  "updated_utc": "2026-08-23T23:51:45Z",
   "deadline": "2026-08-23T20:00:00-05:00",
-  "milestone": "FRESH_INDEPENDENT_RESULT_BLIND_AUDIT_OF_EXACT_FROZEN_CANDIDATES",
-  "status": "MILESTONE_COMPLETE_INDEPENDENT_GO_EXACT_FROZEN_BYTES_SCOPE_ONLY",
+  "milestone": "MARS_EXACT_TRANSPORT_AND_NATIVE_RESULT_FREE_PREFLIGHT",
+  "status": "MILESTONE_TERMINAL_NO_GO_RESULT_BLIND_PREFLIGHT",
   "independent_qa": {
     "exact_go_receipt_present": true,
     "decision": "GO_EXACT_FROZEN_BYTES_WITH_SCOPE",
@@ -12,7 +12,7 @@
     "receipt_sha256": "6191c94215732583de8160f393f2f37117e21d85c0032bf99b6d94b447104635",
     "go_path": "reports/monday_advisor_20260824_goal_v1/independent_result_blind_audit_v3_20260823T055223Z/INDEPENDENT_AUDIT_GO.json",
     "go_sha256": "f4a246d56eb0f2776ea227f4a347691a01c66de37f4ebcf2fee4a9c9c20573bd",
-    "next_action": "STOP; GO DOES NOT AUTHORIZE MARS, RESULTS, PROCESS INSPECTION, SIGNAL, TRANSPORT, NATIVE PREFLIGHT, OR STAGE07_08"
+    "next_action": "SCOPED GO WAS CONSUMED ONLY FOR EXACT TRANSPORT, READ-ONLY PROCESS/IDENTITY INSPECTION, AND NATIVE SYNTHETIC PREFLIGHT; TERMINAL NO_GO; NO RESUME, SIGNAL, RESULT ACCESS, OR STAGE07_08"
   },
   "safety": {
     "fixed10k_regenerated": false,
@@ -20,12 +20,23 @@
     "completed_emx_rerun": false,
     "controlled_arms_manually_launched": false,
     "fresh_emx_numerical_statistics_accessed_or_released": false,
-    "mars_accessed_in_this_milestone": false,
+    "mars_accessed_in_this_milestone": true,
+    "mars_exact_transport_performed": true,
+    "mars_result_blind_process_inspection_performed": true,
+    "native_synthetic_tests_performed": true,
     "stage07_or_stage08_executed": false,
     "watcher_signal_sent": false
   },
   "publication_validation": {
     "script_catalog_regenerated": true,
+    "latest_revalidation": {
+      "finished_utc": "2026-08-23T23:51:45Z",
+      "system_python_3_9": "EXPECTED_ENVIRONMENT_FAIL_156_COLLECTION_ERRORS",
+      "supported_python_3_12_full": "1072 passed / 44 declared-sanitized-mirror failures / 52 skipped / 1 deselected",
+      "supported_python_3_12_core": "1050 passed / 0 failed / 52 skipped / 1 deselected",
+      "snapshot_sha256_index": "38/38 PASS",
+      "repository_manifest": "745/745 PASS"
+    },
     "environment_failures_preserved": [
       "system Python 3.9: 156 collection errors because project requires Python >=3.10 syntax",
       "bundled Python 3.12: pytest absent",
@@ -51,7 +62,7 @@
   "artifacts": {
     "report_interface_v8": {
       "path": "reports/monday_advisor_20260824_goal_v1/report_interface_compatibility_v8_prepared_20260823T045542Z",
-      "status": "AWAITING_FRESH_INDEPENDENT_QA",
+      "status": "INDEPENDENT_GO_EXACT_BYTES_NOT_RELEASED",
       "regular_files": 23,
       "manifest": {
         "path": "PACKAGE_MANIFEST.json",
@@ -75,7 +86,7 @@
     },
     "mars_resume_preflight": {
       "path": "reports/monday_advisor_20260824_goal_v1/stage07_08_result_free_preflight_transport_v1_prepared_20260823T045809Z",
-      "status": "AWAITING_FRESH_INDEPENDENT_QA_NOT_AUTHORIZED",
+      "status": "INDEPENDENT_GO_EXACT_BYTES_PREFLIGHT_TERMINAL_NO_GO",
       "regular_files": 59,
       "payload_files": 56,
       "manifest": {
@@ -142,6 +153,53 @@
         "tests": "435/435 unique targeted; 462/462 executed; 11/11 compile; native Linux fixtures NOT_RUN_NON_LINUX"
       },
       "immutability": "root_and_subdirs_0555_files_0444_nlink1_no_symlinks"
+    },
+    "mars_exact_transport_native_preflight": {
+      "path": "reports/monday_advisor_20260824_goal_v1/mars_exact_transport_native_preflight_v1_20260823T231837Z",
+      "status": "TERMINAL_NO_GO",
+      "verdict": {
+        "path": "PRELIGHT_NO_GO.json",
+        "sha256": "36c26f571e86df0456ebbb7871fff49800230bc144634b52e3ef42f104f291c4"
+      },
+      "receipt": {
+        "path": "PRELIGHT_RECEIPT.json",
+        "sha256": "fbba31409f6f7d274d582f36577ab93c711fbde8b7125ffbf7b47ce9a93d8c3d"
+      },
+      "commands": {
+        "path": "COMMANDS_USED.txt",
+        "sha256": "75cf553cff0c75d6458d716a38909af3f68c3dbb0a844a84c8d51d6e2a8bb96f"
+      },
+      "sha256_index": {
+        "path": "SHA256SUMS.txt",
+        "entries": 16,
+        "verification": "16/16 PASS",
+        "sha256": "3b130fbbe0de90f359f30bf06b5dd966cdd26667e5f82d515d9801a2a3174cc8"
+      },
+      "remote_transport": {
+        "regular_files": 59,
+        "sha256_index_entries": 58,
+        "remote_identity_set_sha256": "4ee139e326a9960275db88e9bc582354821cf92453a9a2481ea9fbd6bcf477f5",
+        "identity_stable_before_after_tests": true,
+        "failed_no_clobber_attempts_preserved": 2
+      },
+      "result_blind_closure": {
+        "touchstone_identities_checked": 7298,
+        "touchstone_sha256_mismatches": 0,
+        "touchstone_sha256_set_digest": "d8482b294b093eaa35037b29ab09457c91ec11f99efa8cb67f4bcaea4e86d589",
+        "fresh_emx_numerical_metrics_accessed": false
+      },
+      "native_tests": {
+        "meta_unittest": "27/27 PASS",
+        "preflight_v3_synthetic": "164/164 PASS",
+        "held_bootstrap": "PASS",
+        "native_origin": "NOT_RUN_LINUX_PYTHON_HEADERS_UNAVAILABLE"
+      },
+      "terminal_blockers": [
+        "WATCHER_DIRECT_CHILD_COUNT_NONZERO: expected 0, observed 1 zombie",
+        "LINUX_NATIVE_ORIGIN_FIXTURE_NOT_EXECUTED: exact runtime Python.h absent"
+      ],
+      "release_authorized": false,
+      "resume_or_signal_authorized": false
     }
   },
   "scope_control": {
@@ -153,6 +211,8 @@
     "report_shell_v2_work_interrupted": true,
     "unaccepted_partial_outputs_are_not_milestone_artifacts": true,
     "go_is_execution_authority": false,
+    "scoped_user_authorization_for_this_preflight_was_present": true,
+    "preflight_terminal_no_go": true,
     "separate_authorization_still_required": true
   }
 }

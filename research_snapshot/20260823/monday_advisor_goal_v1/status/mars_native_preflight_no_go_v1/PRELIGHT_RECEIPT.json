@@ -1,0 +1,34 @@
+{
+  "schema": "monday_advisor_public_safe_mars_native_preflight_receipt_v1",
+  "status": "TERMINAL_NO_GO",
+  "finished_utc": "2026-08-23T23:38:05Z",
+  "verdict": {
+    "path": "PRELIGHT_NO_GO.json",
+    "sha256": "753539671f700c2ead5043b0c8138bb376ccb8ac14a125de40e6cc76d6694db3",
+    "blocker_count": 2
+  },
+  "commands": {
+    "path": "COMMANDS_USED.txt",
+    "sha256": "9a2fcb51a17137352c200ece83354264e1754645e22374438d6791f2542fbb6d"
+  },
+  "canonical_private_receipt_sha256": "fbba31409f6f7d274d582f36577ab93c711fbde8b7125ffbf7b47ce9a93d8c3d",
+  "canonical_private_index_sha256": "3b130fbbe0de90f359f30bf06b5dd966cdd26667e5f82d515d9801a2a3174cc8",
+  "scientific_identity": {
+    "touchstone_denominator": 7298,
+    "touchstone_identity_matches": 7298,
+    "touchstone_identity_mismatches": 0,
+    "touchstone_sha256_set_digest": "d8482b294b093eaa35037b29ab09457c91ec11f99efa8cb67f4bcaea4e86d589",
+    "fresh_emx_numeric_statistics_released": false
+  },
+  "terminal_decision": {
+    "resume_or_signal": "DENIED",
+    "stage07_or_stage08": "DENIED",
+    "fresh_emx_numerical_statistics": "DENIED",
+    "report_interface_release": "DENIED"
+  },
+  "public_safety": {
+    "private_host_process_or_storage_identity_included": false,
+    "raw_results_included": false,
+    "credentials_or_secrets_included": false
+  }
+}
