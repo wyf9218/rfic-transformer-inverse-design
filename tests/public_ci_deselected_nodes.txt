@@ -1,0 +1,3 @@
+# Optional optimizer smoke is stochastic with the installed CMA implementation.
+# The deterministic optimizer contract tests remain enabled.
+tests/test_transformer_optimizer.py::TransformerOptimizerTest::test_optimizer_smoke_cma_es_with_fake_evaluator

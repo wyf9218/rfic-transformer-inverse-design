@@ -1,0 +1,51 @@
+# Synthetic RFIC transformer stackup for examples and tests.
+#
+# This file is intentionally not a foundry process file. It only preserves the
+# logical layer names and public example GDS layer numbers used by the toolkit's
+# default configuration.
+
+assume microns
+assume ohms/sq
+assume ohms/via
+
+define metal1 = l31t0+l131t0
+define metal2 = l32t0+l132t0
+define metal3 = l33t0+l133t0
+define metal4 = l34t0+l134t0
+define metal5 = l35t0+l135t0
+define metal6 = l36t0+l136t0
+define metal7 = l37t0+l137t0
+define metal8 = l38t40+l138t0
+define metal9 = l39t60+l139t0
+define metal10 = l74t0+l126t0
+
+define via1 = l51t0
+define via2 = l52t0
+define via3 = l53t0
+define via4 = l54t0
+define via5 = l55t0
+define via6 = l56t0
+define via7 = l57t40
+define via8 = l58t40
+define via9 = l85t0
+
+layer 700.0 4.0 # synthetic substrate
+conductor 0.20 0.120 metal1
+layer 0.60 3.9 # dielectric_1
+conductor 0.24 0.100 metal2
+layer 0.70 3.9 # dielectric_2
+conductor 0.24 0.095 metal3
+layer 0.70 3.9 # dielectric_3
+conductor 0.24 0.090 metal4
+layer 0.80 3.9 # dielectric_4
+conductor 0.22 0.080 metal5
+layer 0.85 3.9 # dielectric_5
+conductor 0.36 0.060 metal6
+layer 0.90 3.9 # dielectric_6
+conductor 0.36 0.055 metal7
+layer 1.00 3.9 # dielectric_7
+conductor 0.80 0.030 metal8
+layer 1.40 3.9 # dielectric_8
+conductor 3.40 0.012 metal9
+layer 2.00 3.9 # dielectric_9
+conductor 2.80 0.010 metal10

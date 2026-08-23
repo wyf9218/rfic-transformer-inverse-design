@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+set -euo pipefail
+base64 -d next_gen_s8p_mars_sync_packet_20260626_final_candidate_gate.tar.gz.b64 > next_gen_s8p_mars_sync_packet_20260626_final_candidate_gate.tar.gz
+tar -xzf next_gen_s8p_mars_sync_packet_20260626_final_candidate_gate.tar.gz
+bash next_gen_s8p_mars_sync_packet_20260626_final_candidate_gate/INSTALL_ON_MARS.sh

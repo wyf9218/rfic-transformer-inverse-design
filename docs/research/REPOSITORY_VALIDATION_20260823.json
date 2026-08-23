@@ -1,0 +1,58 @@
+{
+  "schema_version": "1.0",
+  "snapshot_date": "2026-08-23",
+  "release_target": "private_github_repository",
+  "test_environment": {
+    "python": "3.12.13",
+    "isolated_virtual_environment": true,
+    "virtual_environment_committed": false
+  },
+  "public_test_suite": {
+    "status": "PASS",
+    "passed": 1050,
+    "skipped": 52,
+    "deselected": 1,
+    "failed": 0,
+    "elapsed_seconds": 71.30
+  },
+  "pre_final_diagnostics": [
+    {
+      "status": "ENVIRONMENT_FAIL",
+      "environment": "system Python 3.9.6",
+      "cause": "repository requires Python 3.10 or newer"
+    },
+    {
+      "status": "ENVIRONMENT_FAIL",
+      "environment": "bundled Python 3.12.13 before dependency installation",
+      "cause": "pytest was not installed"
+    },
+    {
+      "status": "PACKAGING_GAP_FIXED",
+      "cause": "two controlled-evaluation dependencies were absent from the release copy"
+    },
+    {
+      "status": "API_COMPATIBILITY_FIXED",
+      "cause": "multi-head trainer used an older shared tandem API"
+    }
+  ],
+  "focused_tests_after_repairs": {
+    "controlled_data_scale_and_evaluator": "12 passed",
+    "multihead_tandem": "9 passed"
+  },
+  "integrity": {
+    "manifest_path": "CODE_SNAPSHOT_SHA256.txt",
+    "manifest_self_excluded": true,
+    "manifest_generation_deterministic": true
+  },
+  "final_release_checks": {
+    "publishable_file_count_before_manifest_refresh": 706,
+    "direct_credential_pattern_files": 0,
+    "embedded_payloads_scanned": 54,
+    "embedded_payload_sensitive_pattern_hits": 0,
+    "publishable_files_over_5MiB": 0,
+    "publishable_symlinks": 0,
+    "invalid_json_documents": 0,
+    "broken_relative_markdown_links": 0,
+    "status": "PASS"
+  }
+}

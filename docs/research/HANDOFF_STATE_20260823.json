@@ -1,0 +1,176 @@
+{
+  "schema_version": "1.0",
+  "snapshot_date": "2026-08-23",
+  "repository_scope": {
+    "visibility": "private",
+    "contains": [
+      "sanitized reusable code",
+      "tests",
+      "research contracts",
+      "evidence summaries",
+      "selected provenance snapshots"
+    ],
+    "excludes": [
+      "real EMX datasets",
+      "model weights",
+      "GDS and Touchstone artifacts",
+      "foundry PDK files",
+      "licenses and credentials",
+      "server identities and private paths"
+    ]
+  },
+  "progress": {
+    "milestones_total": 8,
+    "complete": 4,
+    "running": 1,
+    "pending_or_blocked": 3,
+    "final_monday_deliverable_ready": false
+  },
+  "models": {
+    "deployed_100k": {
+      "comparison_class": "historical_uncontrolled_descriptive",
+      "source_table_rows": 100000,
+      "gradient_training_rows": 78891,
+      "validation_rows": 9740,
+      "test_rows": 11369,
+      "inverse_layers": [4, 512, 512, 256, 10],
+      "forward_layers": [10, 256, 256, 128, 4],
+      "inverse_parameters": 399114,
+      "forward_parameters": 102020,
+      "total_parameters": 501134,
+      "decoder": "hard_feasible_with_q_minimum_guardband"
+    },
+    "historical_200k": {
+      "comparison_class": "historical_uncontrolled_descriptive",
+      "source_table_rows": 200000,
+      "gradient_training_rows": 161446,
+      "validation_rows": 19135,
+      "test_rows": 19419,
+      "inverse_layers": [4, 128, 128, 10],
+      "forward_layers": [10, 128, 128, 4],
+      "inverse_parameters": 18442,
+      "forward_parameters": 18436,
+      "total_parameters": 36878,
+      "decoder": "independent_sigmoid"
+    }
+  },
+  "fixed10k": {
+    "definition": "deterministic_centered_latin_hypercube_finite_coverage_frame",
+    "iid_random_sample": false,
+    "emx_label_count": 0,
+    "seed": 20260810,
+    "target_count": 10000,
+    "unique_target_count": 10000,
+    "legacy_count": 8000,
+    "extension_count": 2000,
+    "target_sha256": "c9d7d8bc7f65a488be0805969389a01ef049534eefdfdea71cbd640ee27d6407"
+  },
+  "historical_fixed10k_proxy_comparison": {
+    "causal_data_scale_claim_allowed": false,
+    "panels": {
+      "all_10000": {
+        "deployed_100k_joint_proxy_rmse": 0.245843,
+        "historical_200k_joint_proxy_rmse": 0.202643,
+        "historical_200k_relative_reduction_percent": 17.57
+      },
+      "legacy_8000": {
+        "deployed_100k_joint_proxy_rmse": 0.221335,
+        "historical_200k_joint_proxy_rmse": 0.184191,
+        "historical_200k_relative_reduction_percent": 16.78
+      },
+      "extension_2000": {
+        "deployed_100k_joint_proxy_rmse": 0.32594,
+        "historical_200k_joint_proxy_rmse": 0.26385,
+        "historical_200k_relative_reduction_percent": 19.05
+      }
+    },
+    "all10k_physical_mae": {
+      "deployed_100k": {
+        "Lp_nH": 0.44947,
+        "Ls_nH": 0.39612,
+        "Q": 4.43261,
+        "abs_K": 0.1784
+      },
+      "historical_200k": {
+        "Lp_nH": 0.24884,
+        "Ls_nH": 0.30137,
+        "Q": 3.92985,
+        "abs_K": 0.14731
+      }
+    },
+    "q_metrics": {
+      "deployed_100k_target_met_percent": 37.83,
+      "historical_200k_target_met_percent": 29.84,
+      "target_met_difference_percentage_points": -7.99,
+      "deployed_100k_shortfall": 3.6103,
+      "historical_200k_shortfall": 3.3478
+    }
+  },
+  "fresh_emx_funnel": {
+    "original_targets": 10000,
+    "analytically_feasible": 7926,
+    "cadence_success": 7373,
+    "calibre_pass": 7298,
+    "fresh_emx_success": 7298,
+    "analytical_failures": 2074,
+    "cadence_failures": 553,
+    "calibre_failures": 75,
+    "fresh_emx_failed_shards": 0,
+    "survivor_legacy": 5992,
+    "survivor_extension": 1306,
+    "missingness": "MNAR_selection_funnel",
+    "all_10000_accuracy_extrapolation_allowed": false
+  },
+  "controlled_nested_100k_200k": {
+    "status": "running",
+    "terminal_arms": 7,
+    "total_arms": 10,
+    "complete_seed_pairs": 3,
+    "total_seed_pairs": 5,
+    "last_observed_terminal_arms": [
+      "rep1_small",
+      "rep1_large",
+      "rep2_small",
+      "rep2_large",
+      "rep3_small",
+      "rep3_large",
+      "rep4_small"
+    ],
+    "causal_claim_allowed_before_completion": false,
+    "manual_duplicate_launch_allowed": false
+  },
+  "formal_gates": {
+    "rq_i_fixed10k_release_v7": {
+      "status": "NO_GO",
+      "severity_counts_P0_P1_P2_P3": [0, 2, 0, 0],
+      "checks_passed": 69,
+      "checks_total": 71
+    },
+    "report_interface_compatibility_v7": {
+      "status": "NO_GO",
+      "severity_counts_P0_P1_P2_P3": [0, 3, 0, 0]
+    },
+    "monday_report_partial_v3": {
+      "status": "VISUAL_NO_GO"
+    }
+  },
+  "milestones": [
+    {"id": 1, "name": "historical_model_architecture_evidence", "status": "complete"},
+    {"id": 2, "name": "frozen_10000_target_generation", "status": "complete"},
+    {"id": 3, "name": "historical_fixed10k_proxy_comparison", "status": "complete"},
+    {"id": 4, "name": "physical_funnel_and_7298_fresh_emx", "status": "complete"},
+    {"id": 5, "name": "controlled_nested_100k_200k_training", "status": "running"},
+    {"id": 6, "name": "formal_fresh_emx_statistics_and_charts", "status": "blocked_interface_no_go"},
+    {"id": 7, "name": "final_monday_html_pptx", "status": "not_finalized"},
+    {"id": 8, "name": "current_contract_200k_300k_400k_500k_absK_lt_1_learning_curve", "status": "not_complete"}
+  ],
+  "next_actions": [
+    "allow the existing supervisor to complete the remaining controlled arms",
+    "repair release and report interfaces in no-clobber successors",
+    "repeat independent QA",
+    "publish survivor-conditioned fresh-EMX statistics only after a GO",
+    "publish paired data-scale statistics after all five seed pairs complete",
+    "run current-contract 200k/300k/400k/500k learning curve with frozen controls",
+    "finalize Monday HTML/PPTX from accepted evidence"
+  ]
+}

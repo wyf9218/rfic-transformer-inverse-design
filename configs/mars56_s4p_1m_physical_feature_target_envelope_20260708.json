@@ -1,0 +1,46 @@
+{
+  "schema": "physical_feature_target_envelope.v1",
+  "name": "mars56_s4p_1m_official_physical_feature_envelope_20260708",
+  "status": "ACTIVE",
+  "physical_feature_target_envelope": {
+    "feature_columns": [
+      "lp_nh_center",
+      "ls_nh_center",
+      "q_center",
+      "k_abs_center"
+    ],
+    "features": {
+      "lp_nh_center": {
+        "min": 0.5,
+        "max": 3.0,
+        "unit": "nH"
+      },
+      "ls_nh_center": {
+        "min": 0.5,
+        "max": 3.0,
+        "unit": "nH"
+      },
+      "q_center": {
+        "min": 5.0,
+        "max": 25.0,
+        "unit": "dimensionless"
+      },
+      "k_abs_center": {
+        "min": 0.0,
+        "max": 0.8,
+        "unit": "dimensionless"
+      }
+    },
+    "bins": 4,
+    "target_count_per_bin": 391,
+    "desired_total_count": 100000,
+    "next_count": 8000,
+    "max_bin_count": 4096,
+    "notes": [
+      "This is the formal response-space envelope for the 1M MARS56 S4P campaign.",
+      "Adaptive acquisition must target sparse Lp/Ls/Q/|K| bins inside these fixed physical ranges, not only the observed pilot-data min/max range.",
+      "The per-bin target is ceil(100000 / 4^4) = 391 so each 100k checkpoint is guided toward uniform 4D physical-feature occupancy, not merely one-sample coverage.",
+      "Uniformity acceptance is still measured from real EMX-derived labels at each 100k checkpoint."
+    ]
+  }
+}

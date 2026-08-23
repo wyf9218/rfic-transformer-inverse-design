@@ -1,0 +1,130 @@
+# MARS/Cadence/EMX template for the next 500-sample .s8p physical-feature pilot.
+# This file is intentionally NOT runnable until every TODO below is replaced.
+# It should fail preflight until port numbering/differential pairs and real
+# MARS/PDK paths are confirmed.
+
+target:
+  topology_mode: 1t1t
+  f0_hz: 15000000000.0
+  lp_h: 1.0e-9
+  ls_h: 1.0e-9
+  k_target: 0.5
+  q_target_mode: max
+  # Required wideband training label grid: 5 GHz to 60 GHz inclusive, 0.5 GHz step.
+  frequency_start_hz: 5000000000.0
+  frequency_stop_hz: 60000000000.0
+  frequency_step_hz: 500000000.0
+  band_points: 111
+  fractional_bandwidth: 0.20
+
+transformer:
+  shield:
+    enabled: true
+    kind: ring
+    margin_um: 100.0
+    width_um: 10.0
+
+topology:
+  primary:
+    turns: 1
+    center_tap: true
+    vdd_bar:
+      enabled: true
+      # Same layer as the primary M10/AP winding.
+      bar_layer: 74
+      width_um: 10.0
+      offset_um: 12.0
+  secondary:
+    turns: 1
+    center_tap: true
+    vdd_bar:
+      enabled: true
+      # Same layer as the secondary M9 winding.
+      bar_layer: 39
+      width_um: 10.0
+      offset_um: 12.0
+
+emx:
+  emx_binary: /REPLACE/WITH/REAL/EMX/BINARY
+  emx_process_file: /REPLACE/WITH/REAL/TSMC65_OR_EMX_PROC_FILE.proc
+
+  license_file:
+  cdslmd_license_file:
+
+  cadence_install_root: /REPLACE/WITH/REAL/CADENCE/IC/ROOT
+  cadence_pdk_cds_lib: /REPLACE/WITH/REAL/PDK/cds.lib
+  cadence_tech_lib: REPLACE_WITH_REAL_TECH_LIB_NAME
+  cadence_layer_map: /REPLACE/WITH/REAL/PDK/layers.layermap
+
+  port_mode: single_ended_shield_grounded
+  cadence_pin_purpose: 51
+  execution_mode: local
+
+  # TODO: replace this with the final confirmed 8-port differential pair map.
+  # The current HFSS reference order from "The best.s8p" uses primary pair
+  # 1,4 and secondary pair 5,6. Do not launch EMX until the approval packet
+  # records the same order.
+  differential_port_pairs: TODO_CONFIRM_P001_TO_P008
+  # For the 8-port power-line topology, P002/P003/P007/P008 are supply/tap
+  # ports and are AC-grounded during physical-feature extraction. P001/P004
+  # and P005/P006 remain the active RF differential signal pairs.
+  ground_unused_s8p_ports: true
+
+  power_line_8port:
+    enabled: true
+    # User-confirmed bridge width: same as each vertical power-line width.
+    bridge_width_um: 10.0
+    # Kept under the historical key name for compatibility; current geometry
+    # interprets this as max(primary/secondary outer_height_um) * 1.5.
+    vertical_length_diameter_ratio: 1.5
+    bridge_y_policy: center
+    bridge_motion_axis: x_only
+    port_ground_reference: shield
+    # Touchstone output order. For the current "The best.s8p" reference this
+    # should be P001..P008 in the exact exported port order.
+    port_map:
+      - TODO_P001_PRIMARY_TOP
+      - TODO_P002_LEFT_POWER_TOP
+      - TODO_P003_LEFT_POWER_BOTTOM
+      - TODO_P004_PRIMARY_BOTTOM
+      - TODO_P005_SECONDARY_BOTTOM
+      - TODO_P006_SECONDARY_TOP
+      - TODO_P007_RIGHT_POWER_TOP
+      - TODO_P008_RIGHT_POWER_BOTTOM
+    # Physical role mapping. This decouples Touchstone output order from the
+    # internal layout role order; keep it explicit when the two are different.
+    role_labels:
+      primary_top: TODO_P001_PRIMARY_TOP
+      left_power_top: TODO_P002_LEFT_POWER_TOP
+      left_power_bottom: TODO_P003_LEFT_POWER_BOTTOM
+      primary_bottom: TODO_P004_PRIMARY_BOTTOM
+      secondary_bottom: TODO_P005_SECONDARY_BOTTOM
+      secondary_top: TODO_P006_SECONDARY_TOP
+      right_power_top: TODO_P007_RIGHT_POWER_TOP
+      right_power_bottom: TODO_P008_RIGHT_POWER_BOTTOM
+
+  primary_bridge_layer:
+  primary_bridge_via_layer:
+  primary_bridge_lower_layer:
+  primary_bridge_lower_via_layer:
+  secondary_bridge_layer:
+  secondary_bridge_via_layer:
+  secondary_bridge_lower_layer:
+  secondary_bridge_lower_via_layer:
+
+bounds:
+  primary:
+    outer_width_um: [160.0, 520.0]
+    outer_height_um: [160.0, 520.0]
+    trace_width_um: [1.0, 14.0]
+    spacing_um: [2.0, 14.0]
+    terminal_y_span_um: [20.0, 90.0]
+    feed_extension_um: [100.0, 320.0]
+  secondary:
+    outer_width_um: [160.0, 520.0]
+    outer_height_um: [160.0, 520.0]
+    trace_width_um: [1.0, 14.0]
+    spacing_um: [2.0, 14.0]
+    terminal_y_span_um: [20.0, 90.0]
+    feed_extension_um: [100.0, 320.0]
+  offset_um: [-90.0, 90.0]

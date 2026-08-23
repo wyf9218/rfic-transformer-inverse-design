@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+set -euo pipefail
+base64 -d next_gen_s8p_mars_sync_packet_20260620_aligned_evidence_fix.tar.gz.b64 > next_gen_s8p_mars_sync_packet_20260620_aligned_evidence_fix.tar.gz
+tar -xzf next_gen_s8p_mars_sync_packet_20260620_aligned_evidence_fix.tar.gz
+bash next_gen_s8p_mars_sync_packet_20260620_aligned_evidence_fix/INSTALL_ON_MARS.sh

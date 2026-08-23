@@ -1,0 +1,68 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "rfic-transformer-inverse-design"
+version = "0.1.0"
+description = "RFIC transformer layout, EMX evaluation, and optimization toolkit"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { file = "LICENSE" }
+keywords = ["rfic", "transformer", "emx", "layout", "optimization"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Science/Research",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Topic :: Scientific/Engineering",
+]
+dependencies = [
+  "gdstk",
+  "matplotlib",
+  "numpy",
+  "PyYAML",
+  "scipy",
+]
+
+[project.optional-dependencies]
+gui = [
+  "PySide6",
+  "pyvista",
+  "pyvistaqt",
+]
+opt = [
+  "botorch",
+  "cma",
+  "gpytorch",
+  "torch",
+]
+test = [
+  "pytest",
+  "pytest-mock",
+  "pytest-rerunfailures",
+]
+
+[project.scripts]
+rfic-transformer-inverse-design = "rfic_transformer_inverse_design.interfaces.cli:main"
+rfic-transformer-inverse-design-gui = "rfic_transformer_inverse_design.interfaces:gui_main"
+
+[project.urls]
+Repository = "https://github.com/wyf9218/rfic-transformer-inverse-design"
+Issues = "https://github.com/wyf9218/rfic-transformer-inverse-design/issues"
+
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.packages.find]
+include = ["rfic_transformer_inverse_design*"]
+
+[tool.setuptools.package-data]
+rfic_transformer_inverse_design = ["process/assets/proc/*.proc"]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]

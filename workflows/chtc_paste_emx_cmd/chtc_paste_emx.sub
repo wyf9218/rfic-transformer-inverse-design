@@ -1,0 +1,25 @@
+universe = vanilla
+
+executable = run_chtc_paste_emx.sh
+arguments = emx_job_paste.sh
+
+log = logs/chtc_paste_emx_$(Cluster)_$(Process).log
+output = logs/chtc_paste_emx_$(Cluster)_$(Process).out
+error = logs/chtc_paste_emx_$(Cluster)_$(Process).err
+
+transfer_input_files = run_chtc_paste_emx.sh,emx_job_paste.sh,example_emx_work.zip,example.proc
+transfer_output_files = emx_paste_cmd/
+should_transfer_files = YES
+when_to_transfer_output = ON_EXIT
+
+request_cpus = 32
+request_memory = 300GB
+request_disk = 8GB
+requirements = (HasCHTCSoftware == true)
+concurrency_limits = CADENCE:1
+
++ProjectName = "ExampleProject"
++AccountingGroup = "group.username"
++JobBatchName = "chtc_paste_emx"
+
+queue 1

@@ -1,0 +1,32 @@
+{
+  "schema": "response_target_envelopes.v1",
+  "name": "fill_before_claiming_response_coverage",
+  "purpose": "Reusable response-space target envelopes for K/Qp and Lp/Ls coverage audits.",
+  "status": "TEMPLATE_ONLY_DO_NOT_USE_FOR_PASS_CLAIMS",
+  "response_target_envelopes": {
+    "target_count_per_bin": 1,
+    "k_qp": {
+      "k_min": null,
+      "k_max": null,
+      "qp_min": null,
+      "qp_max": null,
+      "min_area_fraction": null,
+      "min_occupied_2d_bins": null,
+      "max_outside_fraction": null
+    },
+    "lp_ls": {
+      "lp_min_nh": null,
+      "lp_max_nh": null,
+      "ls_min_nh": null,
+      "ls_max_nh": null,
+      "min_area_fraction": null,
+      "min_occupied_2d_bins": null,
+      "max_outside_fraction": null
+    }
+  },
+  "notes": [
+    "Fill K/Qp and Lp/Ls bounds from project requirements before using this file.",
+    "Keep the same filled file for pilot, final-500, and 248k audits so response coverage claims are comparable.",
+    "audit_response_feature_coverage.py must still see real extracted response labels; this config alone is not evidence."
+  ]
+}

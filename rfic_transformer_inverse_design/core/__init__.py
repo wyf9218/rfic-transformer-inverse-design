@@ -1,0 +1,92 @@
+"""Core transformer EMX models and helpers."""
+
+from .adapter import TransformerOptimizationAdapter
+from .bounds import InductorBounds, TransformerSearchSpace
+from .defaults import default_bounds, default_run_config, default_target_spec, load_run_config
+from .topology import TransformerSpec, default_topology_fields
+from .types import (
+    BridgeSectionBounds,
+    BridgeSectionConfig,
+    BridgeSectionSpec,
+    CMAESOptimizerConfig,
+    InductorFixedSpec,
+    InductorGeometry,
+    InductorSpec,
+    PowerLine8PortSpec,
+    QTargetMode,
+    ShieldSpec,
+    TopologyMode,
+    TransformerEmxConfig,
+    TransformerEmxPortMode,
+    TransformerEvalResult,
+    TransformerLayoutExport,
+    TransformerMetrics,
+    TransformerObjectiveBreakdown,
+    TransformerOptimizerConfig,
+    TransformerRunConfig,
+    TransformerTargetSpec,
+    TuRBOOptimizerConfig,
+    ViaFamilyRule,
+    ViaLayerRule,
+    ViaPlateThresholds,
+    ViaSpacingOption,
+    ViaWideMetalRequirement,
+    VddBarSpec,
+    _coerce_topology_mode,
+    _coerce_emx_port_mode,
+    topology_mode_from_turns,
+)
+from ..sim import SParameterResult, SolverType
+
+InductorGeometrySpec = InductorGeometry
+TransformerGeometrySpec = TransformerSpec
+TransformerBounds = TransformerSearchSpace
+TransformerGeometryBounds = TransformerSearchSpace
+
+__all__ = [
+    "BridgeSectionBounds",
+    "BridgeSectionConfig",
+    "BridgeSectionSpec",
+    "CMAESOptimizerConfig",
+    "InductorBounds",
+    "InductorFixedSpec",
+    "InductorGeometry",
+    "InductorGeometrySpec",
+    "InductorSpec",
+    "PowerLine8PortSpec",
+    "QTargetMode",
+    "ShieldSpec",
+    "SolverType",
+    "TopologyMode",
+    "TransformerBounds",
+    "TransformerEmxConfig",
+    "TransformerEmxPortMode",
+    "TransformerEvalResult",
+    "TransformerGeometryBounds",
+    "TransformerGeometrySpec",
+    "TransformerLayoutExport",
+    "TransformerMetrics",
+    "TransformerObjectiveBreakdown",
+    "TransformerOptimizationAdapter",
+    "TransformerOptimizerConfig",
+    "TransformerRunConfig",
+    "TransformerSearchSpace",
+    "TransformerSpec",
+    "TransformerTargetSpec",
+    "TuRBOOptimizerConfig",
+    "ViaFamilyRule",
+    "ViaLayerRule",
+    "ViaPlateThresholds",
+    "ViaSpacingOption",
+    "ViaWideMetalRequirement",
+    "VddBarSpec",
+    "_coerce_topology_mode",
+    "_coerce_emx_port_mode",
+    "default_bounds",
+    "default_run_config",
+    "default_target_spec",
+    "default_topology_fields",
+    "load_run_config",
+    "topology_mode_from_turns",
+    "SParameterResult",
+]

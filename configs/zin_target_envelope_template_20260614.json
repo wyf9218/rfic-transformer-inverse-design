@@ -1,0 +1,21 @@
+{
+  "schema": "zin_target_envelope.v1",
+  "name": "fill_before_claiming_zin_coverage",
+  "purpose": "Reusable Re/Im Zin target envelope for final-500, wideband-500, and 248k dataset audits.",
+  "status": "TEMPLATE_ONLY_DO_NOT_USE_FOR_PASS_CLAIMS",
+  "zin_target_envelope": {
+    "real_min_ohm": null,
+    "real_max_ohm": null,
+    "imag_min_ohm": null,
+    "imag_max_ohm": null,
+    "min_area_fraction": null,
+    "min_occupied_2d_bins": null,
+    "max_outside_fraction": null,
+    "target_count_per_bin": 1
+  },
+  "notes": [
+    "Fill the four Re/Im bounds from the professor/project target impedance space before using this file.",
+    "Keep the same filled file for pilot, final-500, and 248k audits so Zin coverage claims are comparable.",
+    "audit_zin_coverage.py must still see real extracted Zin labels; this config alone is not evidence."
+  ]
+}

@@ -1,0 +1,82 @@
+# MARS/Cadence/EMX template for a constrained 10-sample smoke run.
+# Start from a one-sample config that already passes `eval`, then fill in the
+# real MARS paths below. The bounds are intentionally narrow so the first batch
+# tests Cadence/EMX throughput instead of a broad, partially invalid search space.
+
+target:
+  topology_mode: 1t1t
+  f0_hz: 15000000000.0
+  lp_h: 1.155247e-9
+  ls_h: 1.39977e-9
+  k_target: 0.759752
+  q_target_mode: max
+  # Full training sweep: 5 GHz to 50 GHz inclusive, 0.1 GHz step.
+  # f0_hz remains the center target used for objective/summary metrics.
+  frequency_start_hz: 5000000000.0
+  frequency_stop_hz: 50000000000.0
+  frequency_step_hz: 100000000.0
+  band_points: 451
+  fractional_bandwidth: 0.20
+
+transformer:
+  shield:
+    enabled: true
+    kind: ring
+    margin_um: 100.0
+    width_um: 10.0
+
+emx:
+  emx_binary: /REPLACE/WITH/REAL/EMX/BINARY
+  emx_process_file: /REPLACE/WITH/REAL/TSMC65_OR_EMX_PROC_FILE.proc
+
+  # Optional: fill these when the interactive shell does not already provide
+  # Cadence license variables.
+  license_file:
+  cdslmd_license_file:
+
+  cadence_install_root: /REPLACE/WITH/REAL/CADENCE/IC/ROOT
+  cadence_pdk_cds_lib: /REPLACE/WITH/REAL/PDK/cds.lib
+  cadence_tech_lib: REPLACE_WITH_REAL_TECH_LIB_NAME
+  cadence_layer_map: /REPLACE/WITH/REAL/PDK/layers.layermap
+
+  port_mode: single_ended_shield_grounded
+  cadence_pin_purpose: 51
+  execution_mode: local
+
+  # This template targets 1t1t. Leave bridge routing unset so placeholder proc
+  # paths can still be loaded before real MARS paths are filled in.
+  primary_bridge_layer:
+  primary_bridge_via_layer:
+  primary_bridge_lower_layer:
+  primary_bridge_lower_via_layer:
+  secondary_bridge_layer:
+  secondary_bridge_via_layer:
+  secondary_bridge_lower_layer:
+  secondary_bridge_lower_via_layer:
+
+bounds:
+  primary:
+    outer_width_um: [240.0, 300.0]
+    outer_height_um: [240.0, 300.0]
+    trace_width_um: [4.0, 8.0]
+    spacing_um: [4.0, 8.0]
+    terminal_y_span_um: [80.0, 120.0]
+    feed_extension_um: [80.0, 160.0]
+  secondary:
+    outer_width_um: [240.0, 300.0]
+    outer_height_um: [240.0, 300.0]
+    trace_width_um: [4.0, 8.0]
+    spacing_um: [4.0, 8.0]
+    terminal_y_span_um: [80.0, 120.0]
+    feed_extension_um: [80.0, 160.0]
+  offset_um: [-20.0, 20.0]
+
+optimizer:
+  name: cma_es
+  max_evaluations: 10
+  warm_start_samples: 10
+  seed: 20260611
+  cma_es:
+    population_size: 4
+    sigma0: 5.0
+    verbose: -9
