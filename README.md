@@ -17,11 +17,20 @@ to one million real EM simulations with a fixed model test at every cumulative
 > external GPT/research tools can read it. The repository owner authorized the
 > public release on 2026-08-23.
 
+## Start Here: Current Goals And Status
+
+The primary handoff for the current research state, the owner's Monday-report
+goals, completion status, blocked claims, and next legal actions is the
+[Chinese current-goals and engineering handoff](docs/research/ENGINEERING_HANDOFF_20260823_CN.md).
+The latest live read-only observation recorded in that handoff is
+`2026-08-23T04:10:07Z`; machine-readable status is available in
+[HANDOFF_STATE_20260823.json](docs/research/HANDOFF_STATE_20260823.json).
+
 ## Documentation
 
 | Area | Entry point |
 |---|---|
-| 2026-08-23 Chinese research handoff | [科研与工程交接](docs/research/ENGINEERING_HANDOFF_20260823_CN.md) |
+| Current goals, status, and Chinese research handoff | [当前情况、目标与科研工程交接](docs/research/ENGINEERING_HANDOFF_20260823_CN.md) |
 | Machine-readable handoff state | [Handoff JSON](docs/research/HANDOFF_STATE_20260823.json) |
 | Known failed gates | [NO-GO register](docs/research/KNOWN_NO_GO_20260823.md) |
 | Useful-code map | [Code map](docs/research/CODE_MAP_20260823.md) |

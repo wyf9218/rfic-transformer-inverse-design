@@ -1,6 +1,12 @@
 # Current Evidence Status
 
-Snapshot date: 2026-08-23. This repository records a sanitized research state; it does not bundle private data or simulator artifacts.
+Snapshot date: 2026-08-23. Latest live read-only observation: `2026-08-23T04:10:07Z`. This repository records a sanitized research state; it does not bundle private data or simulator artifacts.
+
+## Primary goals
+
+- Monday report: explain the historical-200k architecture and exact row denominators; compare it with deployed-100k without causal overclaiming; complete fixed10k statistics/charts; release the five-pair controlled 100k/200k effect; release survivor-conditioned fresh-EMX three-chain errors; and finalize an advisor-ready HTML/PPTX plus question-and-answer material.
+- Post-Monday mainline: build a current-contract, strict-`|K|<1`, controlled 200k/300k/400k/500k learning curve.
+- Long term: map `[Lp,Ls,Qmin,|K|]` to manufacturable 10-D geometry and close proxy, layout, EMX, and sampled HFSS/measurement evidence.
 
 ## Complete evidence blocks
 
@@ -12,7 +18,8 @@ Snapshot date: 2026-08-23. This repository records a sanitized research state; i
 
 ## Running
 
-- The strict nested 100k/200k paired experiment has 7/10 terminal arms and 3/5 complete seed pairs at the last read-only observation.
+- The strict nested 100k/200k paired experiment has 7/10 terminal arms and 3/5 complete seed pairs at `2026-08-23T04:10:07Z`.
+- The existing supervisor was alive with zero active children. Observed load1 was `231.03`, above the frozen prelaunch threshold `40`; rep4-large remained staged with no launch or terminal receipt. Do not launch it manually.
 - It holds architecture, decoder, source, split, budget, seed contract, forward reference, and fixed-target inference constant.
 - No historical comparison may substitute for this experiment's eventual causal data-scale result.
 

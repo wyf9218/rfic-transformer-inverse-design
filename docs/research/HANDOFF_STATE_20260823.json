@@ -1,6 +1,7 @@
 {
   "schema_version": "1.0",
   "snapshot_date": "2026-08-23",
+  "status_observed_utc": "2026-08-23T04:10:07Z",
   "repository_scope": {
     "visibility": "public",
     "public_release_authorized_on": "2026-08-23",
@@ -19,6 +20,19 @@
       "licenses and credentials",
       "server identities and private paths"
     ]
+  },
+  "goal_hierarchy": {
+    "primary_scientific_goal": "map target [Lp,Ls,Qmin,abs_K] to a 10-D manufacturable geometry and close the result through analytical, Cadence, Calibre, fresh EMX, and sampled HFSS or measurement evidence",
+    "monday_report_priority": [
+      "historical 200k architecture and exact source/train/validation/test denominators",
+      "controlled interpretation of deployed-100k versus historical-200k differences",
+      "fixed10k large-scale proxy statistics and traceable charts",
+      "five-pair nested 100k/200k controlled data-scale effect",
+      "survivor-conditioned fresh-EMX three-chain statistics and physical funnel",
+      "final advisor-ready HTML/PPTX plus evidence-backed question-and-answer material"
+    ],
+    "post_monday_mainline": "current-contract strict abs_K<1 nested 200k/300k/400k/500k learning curve with frozen controls",
+    "long_term": "larger-scale real-EM data campaign with manufacturability, solver correlation, uncertainty, and physical closure"
   },
   "progress": {
     "milestones_total": 8,
@@ -124,6 +138,7 @@
   },
   "controlled_nested_100k_200k": {
     "status": "running",
+    "last_observed_utc": "2026-08-23T04:10:07Z",
     "terminal_arms": 7,
     "total_arms": 10,
     "complete_seed_pairs": 3,
@@ -137,6 +152,12 @@
       "rep3_large",
       "rep4_small"
     ],
+    "supervisor_alive": true,
+    "active_child_count": 0,
+    "observed_load1": 231.03,
+    "frozen_prelaunch_load_threshold": 40,
+    "rep4_large_state": "command_frozen_launch_and_terminal_absent",
+    "remaining_arms": ["rep4_large", "rep5_small", "rep5_large"],
     "causal_claim_allowed_before_completion": false,
     "manual_duplicate_launch_allowed": false
   },
@@ -147,12 +168,22 @@
       "checks_passed": 69,
       "checks_total": 71
     },
+    "rq_i_fixed10k_release_v8_wip": {
+      "status": "UNFROZEN_WIP_NOT_GO",
+      "observed_regular_files": 3,
+      "prepared_receipt_present": false,
+      "independent_qa_present": false
+    },
     "report_interface_compatibility_v7": {
       "status": "NO_GO",
       "severity_counts_P0_P1_P2_P3": [0, 3, 0, 0]
     },
     "monday_report_partial_v3": {
       "status": "VISUAL_NO_GO"
+    },
+    "monday_report_partial_v4_scaffold": {
+      "status": "RESULT_BLIND_SCAFFOLD_NOT_FINAL",
+      "formal_delivery_receipt_present": false
     }
   },
   "milestones": [

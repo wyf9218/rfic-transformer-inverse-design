@@ -1,6 +1,42 @@
-# 模拟变压器 AI 反向建模：科研与工程交接（2026-08-23）
+# 模拟变压器 AI 反向建模：当前情况、目标与科研工程交接（2026-08-23）
 
 本文件是后续研究者或 GPT 的首要中文入口。它总结本轮工作已经形成的可复核证据、尚未完成的目标、禁止越界的结论，以及本仓库内可直接复用的代码。仓库是脱敏代码与科研状态快照；真实 EMX 数据、模型权重、GDS、PDK、许可证、服务器身份和私有运行路径不在仓库中。
+
+## 状态基准
+
+本节的最新 MARS 状态来自 `2026-08-23T04:10:07Z` 的只读核验；它是带时间戳的观察值，不是永久状态。
+
+| 项目 | 当前事实 | 可否作为正式结论 |
+|---|---|---|
+| GitHub 交接仓库 | `PUBLIC`；外部未登录访问已验证 | 可以作为代码、合同和状态交接入口 |
+| 八个科研里程碑 | 4 COMPLETE、1 RUNNING、3 BLOCKED/INCOMPLETE | 可以按项汇报，不能合成模糊“总准确率” |
+| nested 100k/200k 训练 | 7/10 terminal arms；3/5 complete pairs | 不能报告数据量效应方向或幅度 |
+| 当前训练资源门 | supervisor 存活、children=0；load1=`231.03`，高于冻结启动门 `40` | 只能继续等待；禁止手动并发或重跑 |
+| rep4-large | command 已冻结；launch/terminal/phase summary 均不存在 | STAGED，不能称运行中或完成 |
+| fixed10k 代理对照 | 历史两条 pipeline 的同一冻结目标统计已完成 | 只能称非受控、proxy、描述性对照 |
+| fresh EMX 物理链 | `10,000→7,926→7,373→7,298→7,298` | 只能对 7,298 survivors 作条件性描述 |
+| RQ-I 结果释放 | v7 正式 NO-GO `0/2/0/0`；v8 仅 3 个未冻结 WIP 文件 | 不得解封受控实验结果 |
+| fresh-EMX 报告接口 | v7 正式 NO-GO `0/3/0/0` | 不得发布正式 EMX 误差图表 |
+| 周一报告 | partial v3 视觉 NO-GO；v4 仅结果盲 scaffold、无正式交付收据 | 不能作为最终 HTML/PPTX 交付 |
+
+## 用户目标分层
+
+### A. 周一汇报的近期目标（最高优先级）
+
+1. **解释历史 200k 模型结构。** 明确 inverse/forward 网络、参数量、decoder、source-table/gradient-training/validation/test 四类分母。
+2. **与 deployed 100k 做专业对照。** 报告同一 fixed10k 上的 proxy 误差、Q 权衡和结构差异；同时明确该历史对照不是纯数据量消融。
+3. **完成严格控制变量的 100k→200k 结论。** 五个 paired seeds、十个训练臂全部终态后，才发布 paired delta、均值、样本 SD、t4 区间和方向一致性。
+4. **完成 10,000 物理目标的大规模统计和柱状图。** 当前冻结集合是可复现的 centered-LHS finite-coverage frame，不是 iid 随机样本；图表必须分 all/legacy/high-K panel、误差单位、分母和证据等级。
+5. **完成模型几何的 fresh real-EMX 对比。** 分开 target→EMX、target→proxy、proxy→EMX 三条误差链，并把 2,702 个门禁失败保留在原始 10,000 分母中。
+6. **形成可答辩的最终材料。** 最终 HTML/PPTX、图表源数据、SHA-256、方法、限制、负结果和导师问答必须一致，不能把 proxy 或 survivor 指标说成原始 10,000 的物理准确率。
+
+### B. 周一之后的数据规模主线
+
+在同一当前合同、严格 `|K|<1`、固定模型/decoder/split/训练预算/seed/测试框架下，依次完成 200k、300k、400k、500k 数据与训练检查点，形成精度、尾部误差、Q guardrail、覆盖均匀性和训练成本的学习曲线。
+
+### C. 长期科研目标
+
+把目标物理特征 `[Lp, Ls, Qmin, |K|]` 稳健映射到 10 维可制造几何；通过 analytical、Cadence、Calibre、fresh EMX 以及抽样 HFSS/测量相关性闭合代理误差、版图可实现性和真实电磁性能，最终支持更大规模数据 campaign，而不是只追求单一 proxy loss。
 
 ## 一句话结论
 
@@ -93,7 +129,7 @@ fresh EMX 幸存集合中 legacy=5,992、extension=1,306。Stage06 已终态 PAS
 
 正在运行的是 nested 100k/200k paired experiment。唯一目标是隔离“实际 gradient-training rows 的数据规模”影响；架构、decoder、数据源、split、训练预算、seed 和推理流程必须冻结。
 
-最近一次只读状态：10 个训练臂中 7 个终态，5 个 seed-pair 中 3 对完整；rep4-small 已完成，rep4-large 待资源负载满足冻结阈值后启动，rep5-small/large 尚未启动。监督进程仍存活并按 no-clobber 合同等待，禁止手动绕过或重复启动。
+最近一次只读状态（`2026-08-23T04:10:07Z`）：10 个训练臂中 7 个终态，5 个 seed-pair 中 3 对完整；rep4-small 已完成，rep4-large 待资源负载满足冻结阈值后启动，rep5-small/large 尚未启动。监督进程仍存活但当前没有 child，load1=`231.03` 高于冻结门 `40`；必须继续按 no-clobber 合同等待，禁止手动绕过或重复启动。
 
 完成后必须使用 paired replicate statistics，至少报告每个 seed 的差值、均值/中位数、bootstrap 或配对区间、效应方向一致性，以及失败臂。只有这个实验可以支持“由于数据规模增加而提升”的因果表述。
 
