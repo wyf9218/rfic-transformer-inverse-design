@@ -22,8 +22,8 @@ to one million real EM simulations with a fixed model test at every cumulative
 The primary handoff for the current research state, the owner's Monday-report
 goals, completion status, blocked claims, and next legal actions is the
 [Chinese current-goals and engineering handoff](docs/research/ENGINEERING_HANDOFF_20260823_CN.md).
-The latest architecture-matched engineering-run observation is
-`2026-08-24T01:19:41Z`; see the
+The architecture-matched engineering diagnostic completed at
+`2026-08-24T03:45:26Z`; see the
 [deployed-100k exact-contract on historical-200k status](docs/research/DEPLOYED100K_EXACT_CONTRACT_ON_200K_STATUS_20260824.json)
 and its [100k reference-selection identity audit](docs/research/REFERENCE_100K_SELECTION_UNPROVEN.json).
 The broader machine-readable handoff state is available in
@@ -38,7 +38,7 @@ its exact status and public-sanitized review-code boundary are summarized in
 | Area | Entry point |
 |---|---|
 | Current goals, status, and Chinese research handoff | [当前情况、目标与科研工程交接](docs/research/ENGINEERING_HANDOFF_20260823_CN.md) |
-| Architecture-matched 200k engineering-run status | [Launch and evidence JSON](docs/research/DEPLOYED100K_EXACT_CONTRACT_ON_200K_STATUS_20260824.json) |
+| Architecture-matched 200k engineering-run status | [Terminal status, proxy metrics, and evidence JSON](docs/research/DEPLOYED100K_EXACT_CONTRACT_ON_200K_STATUS_20260824.json) |
 | Deployed/presented 100k selection identity | [Reference identity audit](docs/research/REFERENCE_100K_SELECTION_UNPROVEN.json) |
 | Machine-readable handoff state | [Handoff JSON](docs/research/HANDOFF_STATE_20260823.json) |
 | Latest Monday-report code/status snapshot | [Monday Advisor Goal v1](research_snapshot/20260823/monday_advisor_goal_v1/README.md) |
@@ -168,7 +168,11 @@ As of 2026-08-23, historical-model evidence, the frozen 10,000-target proxy
 comparison, and 7,298 fresh-EMX survivor runs are available. The controlled
 nested 100k/200k experiment is still running, while formal EMX statistics and
 figures remain blocked by an independently confirmed reporting-interface
-NO-GO. Do not interpret the repository as a finalized Monday report.
+NO-GO. A separate architecture-matched historical-population engineering
+diagnostic completed on the fixed legacy 8,000-target panel, but its deployed
+100k reference is not the historical final winner and its scores are
+own-forward-proxy metrics rather than physical accuracy. Do not interpret the
+repository as a finalized Monday report.
 
 ## Attribution
 
