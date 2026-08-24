@@ -17,6 +17,7 @@
     "compliant_corrective_launch_available_without_changing_another_frozen_field": false,
     "duplicate_or_corrective_run_launched": false,
     "blocker_sha256": "c9dcb8b8546a3f1ad00e8a169182ee498e345b7a3e32705cecfe2e872312cdee",
+    "public_detail": "DEPLOYED100K_EXACT_CONTRACT_ON_200K_STRICT_BLOCKER_20260824.json",
     "decision_required": "The project leader must either accept method-identical population-refit normalization as the intended contract or authorize a different explicit fixed-normalization trainer contract."
   },
   "claim_scope": {

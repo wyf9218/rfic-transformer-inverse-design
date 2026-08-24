@@ -25,7 +25,8 @@ goals, completion status, blocked claims, and next legal actions is the
 The architecture-matched engineering diagnostic completed at
 `2026-08-24T03:45:26Z`; see the
 [deployed-100k exact-contract on historical-200k status](docs/research/DEPLOYED100K_EXACT_CONTRACT_ON_200K_STATUS_20260824.json)
-and its [100k reference-selection identity audit](docs/research/REFERENCE_100K_SELECTION_UNPROVEN.json).
+and its [strict completion blocker](docs/research/DEPLOYED100K_EXACT_CONTRACT_ON_200K_STRICT_BLOCKER_20260824.json)
+and [100k reference-selection identity audit](docs/research/REFERENCE_100K_SELECTION_UNPROVEN.json).
 Its strict literal-contract completion remains blocked: the frozen trainer
 refits normalization, empirical geometry envelopes, and dimension weights from
 the selected population and exposes no native reference-array input.
@@ -42,6 +43,7 @@ its exact status and public-sanitized review-code boundary are summarized in
 |---|---|
 | Current goals, status, and Chinese research handoff | [当前情况、目标与科研工程交接](docs/research/ENGINEERING_HANDOFF_20260823_CN.md) |
 | Architecture-matched 200k engineering-run status | [Terminal status, proxy metrics, and evidence JSON](docs/research/DEPLOYED100K_EXACT_CONTRACT_ON_200K_STATUS_20260824.json) |
+| Strict exact-contract completion blocker | [Frozen-trainer and array-identity blocker JSON](docs/research/DEPLOYED100K_EXACT_CONTRACT_ON_200K_STRICT_BLOCKER_20260824.json) |
 | Deployed/presented 100k selection identity | [Reference identity audit](docs/research/REFERENCE_100K_SELECTION_UNPROVEN.json) |
 | Machine-readable handoff state | [Handoff JSON](docs/research/HANDOFF_STATE_20260823.json) |
 | Latest Monday-report code/status snapshot | [Monday Advisor Goal v1](research_snapshot/20260823/monday_advisor_goal_v1/README.md) |

@@ -1,0 +1,91 @@
+{
+  "schema": "deployed100k_exact_contract_on_200k_public_strict_blocker_v1",
+  "created_utc": "2026-08-24T04:15:28Z",
+  "status": "BLOCKED_LITERAL_NORMALIZATION_AND_GEOMETRY_CONTRACT_UNSATISFIABLE_WITH_FROZEN_TRAINER",
+  "blocking_requirement": "The requested 200k model must literally match deployed-100k normalization and geometry bounds while only the training population changes.",
+  "existing_run": {
+    "run_id": "deployed100k_exact_contract_on_200k_20260824T005653Z",
+    "execution_status": "COMPLETE_PASS",
+    "engineering_diagnostic_usable": true,
+    "strict_literal_goal_completion_eligible": false,
+    "advisor_comparison_eligible": false,
+    "evidence_class": "architecture_matched_own_forward_proxy_engineering_only"
+  },
+  "frozen_trainer": {
+    "sha256": "fbfda2023f862af2f0b185e41c4bf899f97cb79b0d0d763d20501c03525e8a4f",
+    "exact_train_argv_sha256": "de5650c947cf0e98e4658bc525135ff095e5374f90f0211393476123d8169990",
+    "findings": [
+      {
+        "source_lines": "130-136,1773-1800",
+        "finding": "The training path unconditionally recomputes x/y mean-scale and geometry lower/upper arrays from the current train split."
+      },
+      {
+        "source_lines": "1814,1858-1864,3929-3931",
+        "finding": "Response-loss dimension weights are derived from current normalization and consumed with the current geometry envelope."
+      },
+      {
+        "source_lines": "618-964,894",
+        "finding": "The parser exposes only normalization-floor and has no reference-normalization, geometry-envelope or dimension-weight artifact input."
+      },
+      {
+        "source_lines": "660-673,721-732,2876-2971,3150-3220",
+        "finding": "Transported fine-tuning moves weights into current train-split normalization, ignores reference envelopes/weights, and changes the frozen random-initialization field."
+      },
+      {
+        "source_lines": "1434-1497",
+        "finding": "Exact resume binds training data, normalization, initialization and arguments, so it rejects a population change."
+      }
+    ],
+    "native_reference_array_input_supported": false,
+    "compliant_corrective_launch_available": false
+  },
+  "array_identity": {
+    "hash_method": "SHA-256 of each little-endian float64 C-order array byte sequence",
+    "reference": {
+      "x_mean": "174a9bb5ae6798d600bb4c28dd14905b91c48e84c805ea0e9d444672af0cf86f",
+      "x_scale": "4bd6148d7c4857d34b9f8086fabfb6e0c8f8b24eb6d0e82569b8cf3b421a2b8a",
+      "y_mean": "af6cf1e80d1de8232e72e9c45a1095acf04d38749f31926e6c5fdcd7dc61508a",
+      "y_scale": "ed0e63a280b69128e904bf70e819beddee3d223c23d1e16a64ca79edf49efbb7",
+      "geometry_lower": "c73cd6130f088a7fd909defb87e54e222d6ba83bd16c8f00bb5f8d24e4aff3b5",
+      "geometry_upper": "023b5b83d205282fb30512347bebe33258d8e3c837a4fdb8beacc360781fd92e",
+      "response_loss_dimension_weights": "4183628ee9b63b401b13831dc8643381d8109056fd766872d4495d5977a367b5"
+    },
+    "candidate": {
+      "x_mean": "d91af7fe738e439b65a12ba4a440a7f2d8e0105d74ebba7c4f3ea105007ee43b",
+      "x_scale": "6075fb6498a435ea660747edf1d9e037b46cbf14cce93cefe92bb469bb3e5ae9",
+      "y_mean": "57ea7ea171c3516ecf65233d8c82630ead7a45cad483f8e3e5b047013aa6a0d9",
+      "y_scale": "989c00814f442332a4db71b8305b41a9a59431fb1a0026bdeb395e3bb288f6a4",
+      "geometry_lower": "ed0fc3de26e3510ed21829961b644e6eb2781a882c71830c1787bc8a3204210d",
+      "geometry_upper": "75399152c598c3375c66752a2c9535a6e2564badb26e846a88a90e997f428547",
+      "response_loss_dimension_weights": "b6cd6d368184cca0bcda0fac67c58e711c7c52214e0b16291321079d872c7888"
+    },
+    "all_seven_arrays_exactly_equal": false,
+    "reference_normalization_sha256": "f92f91c0a311082a1eb54aba959e6b1de9c19346ad7b6c23e49bfca4bc0b3e8b",
+    "candidate_normalization_sha256": "d3b733f932ad7587af55529a9394b8009f63aecf0f59ca133bb4bfb860ef042a"
+  },
+  "logical_conflict": "Changing the training population changes the train-split values. The frozen trainer deterministically recomputes all seven arrays and exposes no native override. Reusing the 100k arrays would require changing trainer/wrapper behavior, changing training values rather than only their population, or changing initialization/transport semantics; each violates another frozen requirement.",
+  "decision_required": {
+    "owner": "project_leader",
+    "option_accept_existing": "Accept method-identical population-refit normalization as the intended interpretation and retain the completed engineering diagnostic.",
+    "option_new_contract": "Authorize a different explicit fixed-normalization trainer contract and a new no-clobber run, acknowledging that this changes the implementation contract.",
+    "decision_assumed": false
+  },
+  "evidence_identity": {
+    "private_blocker_sha256": "c9dcb8b8546a3f1ad00e8a169182ee498e345b7a3e32705cecfe2e872312cdee",
+    "candidate_stage_contract_sha256": "ec7e2acb9ec22cb0c230948498a9d656e0f651ea28d46a71c13db6ba0e7b8bf0",
+    "candidate_summary_sha256": "9c7ebd32c4ddf807a0b0e7235355268b886892242da033083e2b29e839c9e24c",
+    "reference_weights_sha256": "c61a93d56136ad21686863aae72984c49eb0d33ce766923c8ec2d03d9c3177dd"
+  },
+  "safety": {
+    "duplicate_or_corrective_run_launched": false,
+    "process_signal_sent": false,
+    "fixed_targets_regenerated": false,
+    "emx_run": false,
+    "fresh_emx_accessed": false,
+    "stage07_or_stage08_touched": false,
+    "stopped_watcher_or_zombie_touched": false,
+    "controlled_paired_experiment_touched": false,
+    "private_paths_in_this_file": false,
+    "raw_weights_data_predictions_or_logs_in_this_file": false
+  }
+}
