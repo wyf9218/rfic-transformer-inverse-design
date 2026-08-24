@@ -1,0 +1,176 @@
+{
+  "schema": "controlled_real10k_20k_independent_code_qa_findings_v5",
+  "generated_utc": "2026-08-24T14:07:32Z",
+  "candidate": {
+    "candidate_id": "controlled_real10k_20k_code_candidate_v5_20260824T133543Z",
+    "candidate_root": "reports/controlled_real10k_20k_nested_20260824/code_candidate_v5_20260824T133543Z",
+    "candidate_sha256sums_sha256": "e03e74a9fd9578a2ac3b653fa7ea65a62cc0820057401d0534a3becf442d034e",
+    "candidate_manifest_sha256": "58f5878044884f443aed91b5aeeed66f79c38c5ff4745a7078efd7bb6452bc6d",
+    "head": "0b23ca5a3bf026c65aa86dc4fca07ac61dafe34d"
+  },
+  "open_findings": [
+    {
+      "id": "QA5-EV001",
+      "severity": "P1",
+      "scope": "ONE_TIME_EVALUATOR_MATERIALIZATION_TO_TRAINING_AUTHORITY_CHAIN",
+      "title": "Evaluator exact21 audit accepts a candidate role set detached from the package role graph and frozen materialization semantics",
+      "evidence": [
+        "scripts/evaluate_controlled_real10k_20k_common.py:310-332",
+        "scripts/evaluate_controlled_real10k_20k_common.py:4013-4115",
+        "scripts/evaluate_controlled_real10k_20k_common.py:4511-4589",
+        "scripts/evaluate_controlled_real10k_20k_common.py:4590-4634",
+        "scripts/run_controlled_real10k_20k_materialization.py:210-220",
+        "scripts/run_controlled_real10k_20k_materialization.py:1661-1665",
+        "tests/test_evaluate_controlled_real10k_20k_common.py:1996-2048",
+        "tests/test_evaluate_controlled_real10k_20k_common.py:2241-2256",
+        "tests/test_evaluate_controlled_real10k_20k_common.py:2491-2511",
+        "tests/test_evaluate_controlled_real10k_20k_common.py:2905-2923"
+      ],
+      "direct_proof": {
+        "method": "Invoke the production _audit_singleton_transmission_closure against the repository's local synthetic singleton-transmission fixture in a disposable temporary directory.",
+        "observed": {
+          "closure_accepted": true,
+          "candidate_bound_role_count": 21,
+          "package_required_role_count": 11,
+          "package_role_identity_count": 11,
+          "candidate_materialization_contract": {},
+          "candidate_host_constraints_asserted": {},
+          "candidate_result_or_row_access": {},
+          "candidate_roles_not_semantically_package_bound": [
+            "authoritative_100k_csv",
+            "historical_10k_csv",
+            "historical_model_summary_json",
+            "materialization_builder_code",
+            "preregistration_addendum_v1_1",
+            "preregistration_addendum_v1_2",
+            "preregistration_v1",
+            "shared_contract_code",
+            "splitter_code",
+            "wrapper_code"
+          ]
+        }
+      },
+      "analysis": "The evaluator establishes an exact 21-key candidate/reduced set and recomputes each live file SHA, but it does not require the package manifest itself to contain the frozen exact 21-role graph. After making the preflight package proof self-consistent with the package manifest, it cross-binds only the process-singleton contract and the two runtime-closure roles. It omits the ten-role package-to-materialization mapping that the materializer applies. It also accepts the candidate's static materialization contract, host-constraint declaration, and result/row-access declaration by upstream hash self-consistency without independently validating their frozen semantics.",
+      "impact": "A self-consistent upstream candidate, GO, COMPLETE, and package receipt chain can reach the one-time evaluator even though the materialization wrapper, builder, shared contract, splitter, preregistrations, source CSV identities, and historical summary are not shown to be the package roles that passed preflight. This defeats the required direct exact21 re-audit and makes the final test-release authority depend on upstream assertions rather than an independent provenance proof.",
+      "required_fix": "In the evaluator, freeze and require the exact package 21-role keyset and destinations; compare every applicable candidate binding to package role_identity through the complete materializer mapping; independently validate the frozen source/protocol SHA identities, static materialization contract and its canonical SHA, challenge nonce, authority/access declarations, and host/runtime constraints. Add a hostile evaluator test that supplies an 11-role or one-role-substituted package and empty semantic declarations and requires rejection.",
+      "blocking": true
+    },
+    {
+      "id": "QA5-SCI001",
+      "severity": "P1",
+      "scope": "COMMON_REAL_EMX_902_PRIMARY_FORWARD_EXACT_LABEL_ESTIMAND",
+      "title": "One-sided inverse-target Q metrics can reward Q overprediction in the primary common-forward exact-label estimand",
+      "evidence": [
+        "reports/controlled_real10k_20k_nested_20260824/CONTROLLED_EXPERIMENT_PREREGISTRATION_V1.json:70",
+        "reports/controlled_real10k_20k_nested_20260824/CONTROLLED_EXPERIMENT_PREREGISTRATION_V1.json:117-120",
+        "reports/controlled_real10k_20k_nested_20260824/CONTROLLED_EXPERIMENT_PREREGISTRATION_V1.json:142-156",
+        "scripts/evaluate_controlled_real10k_20k_common.py:6375-6450",
+        "scripts/evaluate_controlled_real10k_20k_common.py:6578-6590",
+        "scripts/evaluate_controlled_real10k_20k_common.py:6817-6864",
+        "scripts/evaluate_controlled_real10k_20k_common.py:7017-7022",
+        "scripts/evaluate_controlled_real10k_20k_common.py:7386-7409",
+        "scripts/evaluate_controlled_real10k_20k_common.py:7482-7487"
+      ],
+      "direct_proof": {
+        "method": "Apply the production response-metric definitions to a local scalar counterexample, without using project data or results.",
+        "counterexample": {
+          "stored_real_emx_Q_label": 10.0,
+          "small_forward_Q_prediction": 9.0,
+          "large_forward_Q_prediction": 100.0,
+          "small_exact_absolute_error": 1.0,
+          "large_exact_absolute_error": 90.0,
+          "small_one_sided_shortfall": 1.0,
+          "large_one_sided_shortfall": 0.0,
+          "small_target_met": false,
+          "large_target_met": true
+        },
+        "observed": "The large arm is much worse for exact forward-label fidelity, yet the one-sided shortfall and target-met metrics favor it; the engineering-joint Q component is also zero for the large overprediction. The paired and bootstrap layers preserve that conflicting direction."
+      },
+      "analysis": "The common 902-row primary estimand is preregistered as forward prediction error against stored real-EMX geometry/response labels, and the frozen Q training semantics are exact-Q. Production evaluation calls the same _response_metrics helper for this exact-label forward task and for inverse target-to-own-forward proxy tasks. That helper clips Q overprediction to zero engineering error, calls predicted_Q >= true_Q a target-met event, and assigns positive-favors-large direction to the rate. Those one-sided semantics are legitimate for an inverse target specification evaluated through a predicted response, but they do not measure forward regression fidelity to a stored label.",
+      "impact": "A data-size arm that is more optimistically biased in forward Q can appear better in preregistered paired and bootstrap guardrail/engineering metrics while being worse at the primary exact-label prediction task. Retaining symmetric MAE, RMSE and NRMSE does not remove the conflicting causal direction from other formally reported primary-frame metrics.",
+      "required_fix": "Before any result access, freeze a pre-result clarification and change the evaluator so common_forward_primary uses symmetric exact-Q error and signed-bias diagnostics for accuracy. Restrict Q target-met, one-sided shortfall and one-sided engineering-joint semantics to inverse target-spec proxy/fixed frames, or label them as explicit secondary directional diagnostics and exclude them from common-forward accuracy/direction claims. Update paired-statistic keys, bootstrap scalar keys, row labels and hostile direction tests.",
+      "blocking": true
+    },
+    {
+      "id": "QA5-EV002",
+      "severity": "P2",
+      "scope": "EVALUATOR_EXACT21_LIVE_FILE_IDENTITY_AND_PARSE_CONTINUITY",
+      "title": "Evaluator reopens audited paths without held-descriptor continuity",
+      "evidence": [
+        "scripts/evaluate_controlled_real10k_20k_common.py:412-417",
+        "scripts/evaluate_controlled_real10k_20k_common.py:557-565",
+        "scripts/evaluate_controlled_real10k_20k_common.py:1357-1374",
+        "scripts/evaluate_controlled_real10k_20k_common.py:2887-2933",
+        "scripts/evaluate_controlled_real10k_20k_common.py:4056-4063"
+      ],
+      "direct_proof": {
+        "method": "Use two same-length mode-0444, nlink-1 regular files in a disposable directory and schedule os.replace(replacement, target) immediately after the production _sha256 path read but before _audit_materialization_candidate_record returns.",
+        "observed": {
+          "audit_accepted": true,
+          "returned_sha_is_pre_replace": true,
+          "live_sha_is_replacement": true,
+          "returned_inode_is_pre_replace": true,
+          "live_inode_changed": true
+        }
+      },
+      "analysis": "_audit_materialization_candidate_record takes lstat metadata, then _sha256 opens the lexical path, and constructs the accepted record from the earlier metadata without a final path/descriptor continuity check. More generally, _binding hashes a path and callers later reopen the same path through _json or CSV readers. No held O_NOFOLLOW descriptor supplies both the verified bytes and the parsed bytes for this exact21 layer.",
+      "impact": "A concurrent same-owner rename/alias substitution can make the bytes later parsed or consumed differ from the inode and bytes represented by the accepted exact21 record. The current mode, nlink, canonical-path, and SHA checks do not close the inter-open window.",
+      "required_fix": "Single-open every authority and exact21 member with O_NOFOLLOW; fstat before and after reading; hash and parse the held bytes; retain the descriptors for the full audit/consumption lifetime; and verify lexical path-to-descriptor continuity at the final boundary. Add deterministic rename interleaving tests for role records and binding-to-JSON/CSV consumers.",
+      "blocking": false
+    }
+  ],
+  "scientific_contract_review": [
+    {
+      "item": "exact ordered 10K subset/prefix of 20K with appended train-only rows",
+      "status": "PASS_STATIC_CODE_REVIEW"
+    },
+    {
+      "item": "common sealed validation/test identities and complete-cell isolation",
+      "status": "PASS_STATIC_CODE_REVIEW"
+    },
+    {
+      "item": "shared declared-domain midpoint/half-range normalization",
+      "status": "PASS_STATIC_CODE_REVIEW"
+    },
+    {
+      "item": "forward 10-256-256-256-4 and inverse 4-256-256-256-10, GELU, independent-sigmoid decoder",
+      "status": "PASS_STATIC_CODE_REVIEW"
+    },
+    {
+      "item": "paired seeds and equal 1200/1200 optimizer-update budgets with validation every 20 updates",
+      "status": "PASS_STATIC_CODE_REVIEW"
+    },
+    {
+      "item": "validation-only checkpoint selection, zero training-time test access, six-arm closure",
+      "status": "PASS_STATIC_CODE_REVIEW"
+    },
+    {
+      "item": "fixed10k reuse without regeneration and no fresh-EMX generation",
+      "status": "PASS_STATIC_CODE_REVIEW"
+    },
+    {
+      "item": "historical stored real-EMX common-holdout forward-label error separated from own-forward proxy and geometry-label secondary evidence",
+      "status": "PASS_STATIC_CODE_REVIEW"
+    },
+    {
+      "item": "common-forward primary exact-label Q metric direction",
+      "status": "FAIL_QA5_SCI001"
+    },
+    {
+      "item": "three-seed paired delta, df=2 t interval, and four-frame PCG64 physical-cell cluster bootstrap with retained denominators",
+      "status": "PASS_STATIC_CODE_REVIEW"
+    },
+    {
+      "item": "materialization to training to one-time evaluator authority chain and evaluator direct exact21 re-audit",
+      "status": "FAIL_QA5_EV001_AND_QA5_EV002"
+    }
+  ],
+  "severity_counts": {
+    "p0": 0,
+    "p1": 2,
+    "p2": 1,
+    "p3": 0
+  },
+  "verdict": "NO_GO",
+  "code_go_created": false
+}

@@ -1,9 +1,9 @@
 {
   "schema": "monday_advisor_goal_run_state_v3",
-  "updated_utc": "2026-08-24T13:35:43Z",
+  "updated_utc": "2026-08-24T14:16:05Z",
   "goal": "Strict controlled nested real-EMX 10K/20K paired training with the frozen real10K 3x256 topology, common holdout and declared normalization, exact paired seeds and optimizer budget, one-time common evaluation, traceable statistics, charts and GitHub evidence.",
-  "status": "CODE_CANDIDATE_V5_FROZEN_AWAITING_FRESH_INDEPENDENT_QA",
-  "phase": "independent_result_blind_code_qa_gate",
+  "status": "INDEPENDENT_QA_V5_NO_GO",
+  "phase": "candidate_v6_repair_required_before_fresh_reaudit",
   "result_blind": true,
   "training_launch_authorized": false,
   "common_test_access_authorized": false,
@@ -11,8 +11,8 @@
   "fresh_emx_authorized": false,
   "mars": {
     "connected": true,
-    "last_readonly_check_utc": "2026-08-24T13:31:18Z",
-    "last_observed_load_average": [52.17, 59.06, 117.83],
+    "last_readonly_check_utc": "2026-08-24T14:05:36Z",
+    "last_observed_load_average": [231.99, 227.03, 213.18],
     "controlled_real10k_20k_process_count": 0,
     "load_caused_by_this_task": false,
     "load_gate_max_1m": 40.0,
@@ -51,10 +51,18 @@
   },
   "latest_authoritative_independent_gate": {
     "verdict": "NO_GO",
-    "version": "v4",
-    "receipt_path": "reports/controlled_real10k_20k_nested_20260824/independent_code_qa_v4_20260824T110825Z/RECEIPT.json",
-    "receipt_sha256": "a55003f0a69a3ffc73d14a246d50b76dc48114c7a8cb82cce36af4e4664d4748",
-    "severity": {"P0": 0, "P1": 6, "P2": 2, "P3": 0},
+    "version": "v5",
+    "receipt_path": "reports/controlled_real10k_20k_nested_20260824/independent_code_qa_v5_20260824T140732Z/RECEIPT.json",
+    "receipt_sha256": "259850691cbf70f88e2e5434e335da38d6b705677519d2a2112e637e2c23e5f1",
+    "findings_path": "reports/controlled_real10k_20k_nested_20260824/independent_code_qa_v5_20260824T140732Z/FINDINGS.json",
+    "findings_sha256": "8dfddfa6ca3cda393e4f4c3c2e63011854145f98c9c082730707701653ce9c0c",
+    "report_path": "reports/controlled_real10k_20k_nested_20260824/independent_code_qa_v5_20260824T140732Z/REPORT.md",
+    "report_sha256": "11a68cf901d0ca0fc594ef65f083b5b3e9f2e28fd1c607ed511a1c580bcfe543",
+    "test_matrix_path": "reports/controlled_real10k_20k_nested_20260824/independent_code_qa_v5_20260824T140732Z/TEST_MATRIX.json",
+    "test_matrix_sha256": "88eb78172b0a5589fa9a70f4ff673308b46e68b7b3621bfe1cb56d7400984f71",
+    "sha256sums_path": "reports/controlled_real10k_20k_nested_20260824/independent_code_qa_v5_20260824T140732Z/SHA256SUMS.txt",
+    "sha256sums_sha256": "1120a2f3f9c3ff416398ce270759984a7acd35c8540e935dadbc16b9b6998e47",
+    "severity": {"P0": 0, "P1": 2, "P2": 1, "P3": 0},
     "authority_released": false
   },
   "fresh_candidate": {
@@ -67,7 +75,7 @@
     "sha256sums_sha256": "e03e74a9fd9578a2ac3b653fa7ea65a62cc0820057401d0534a3becf442d034e",
     "root_tests": {"passed": 331, "failed": 0, "errors": 0, "skipped_mars_native_linux": 2},
     "source_compile": {"passed": 20, "failed": 0},
-    "status": "AUTHOR_ROOT_PASS_FRESH_INDEPENDENT_QA_REQUIRED"
+    "status": "INDEPENDENT_QA_V5_NO_GO_NEW_NO_CLOBBER_V6_REQUIRED"
   },
   "preserved_intermediate_integration_failure": {
     "result": "1 failed, 282 passed, 2 skipped, 45 errors",
@@ -89,5 +97,5 @@
     "latest_observed_read_status": "TIMEOUT_UNREADABLE",
     "inference_made": false
   },
-  "next_safe_action": "Obtain a fresh independent result-blind QA of the exact candidate. Only an exact GO may authorize preparation of package-v5 and a separately gated MARS-native preflight; materialization, training, test release and metrics remain unauthorized."
+  "next_safe_action": "Preserve candidate-v5 and its independent NO-GO. Build a new no-clobber candidate-v6 that closes QA5-EV001, QA5-SCI001 and QA5-EV002, then require another fresh independent result-blind QA. MARS transport/native tests/materialization/training/test release/metrics remain unauthorized."
 }

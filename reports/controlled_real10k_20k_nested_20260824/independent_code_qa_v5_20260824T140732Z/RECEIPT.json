@@ -1,0 +1,130 @@
+{
+  "schema": "controlled_real10k_20k_independent_code_qa_receipt_v5",
+  "generated_utc": "2026-08-24T14:07:32Z",
+  "status": "COMPLETE_NO_GO_FROZEN_RESULT_BLIND",
+  "verdict": "NO_GO",
+  "severity_counts": {
+    "p0": 0,
+    "p1": 2,
+    "p2": 1,
+    "p3": 0
+  },
+  "candidate": {
+    "candidate_id": "controlled_real10k_20k_code_candidate_v5_20260824T133543Z",
+    "path": "reports/controlled_real10k_20k_nested_20260824/code_candidate_v5_20260824T133543Z",
+    "sha256sums": {
+      "path": "reports/controlled_real10k_20k_nested_20260824/code_candidate_v5_20260824T133543Z/SHA256SUMS.txt",
+      "sha256": "e03e74a9fd9578a2ac3b653fa7ea65a62cc0820057401d0534a3becf442d034e",
+      "indexed_members_verified": 4,
+      "indexed_members_failed": 0
+    },
+    "manifest": {
+      "path": "reports/controlled_real10k_20k_nested_20260824/code_candidate_v5_20260824T133543Z/CANDIDATE_MANIFEST.json",
+      "sha256": "58f5878044884f443aed91b5aeeed66f79c38c5ff4745a7078efd7bb6452bc6d"
+    },
+    "declared_implementation_test_dependency_identities_verified": 22,
+    "declared_implementation_test_dependency_identity_failures": 0,
+    "identity_before_after_tests_unchanged": true
+  },
+  "worktree": {
+    "root": "/Users/wyf/Documents/模拟变压器AI反向建模/github_worktrees/controlled-real10k-20k",
+    "branch": "codex/controlled-real10k-20k",
+    "head": "0b23ca5a3bf026c65aa86dc4fca07ac61dafe34d",
+    "origin_main": "0b23ca5a3bf026c65aa86dc4fca07ac61dafe34d",
+    "candidate_manifest_base_head": "36e8a7667ad3c4c64aea8d5322312f728fcf5640",
+    "base_head_interpretation": "36e8a7667ad3c4c64aea8d5322312f728fcf5640 is the candidate commit's starting parent baseline; it is not the frozen candidate commit and is not a finding.",
+    "candidate_commit_parent": "36e8a7667ad3c4c64aea8d5322312f728fcf5640",
+    "candidate_commit_subject": "Freeze controlled real10k/20k package-v5 candidate",
+    "tracked_diff_clean_before_qa_publication": true,
+    "index_clean_before_qa_publication": true,
+    "untracked_file_count_before_qa_publication": 0
+  },
+  "review": {
+    "identity": "codex_fresh_independent_scientific_contract_and_evaluation_gate_qa_v5",
+    "role": "fresh_independent_result_blind_code_qa",
+    "independent_of_candidate_implementation": true,
+    "result_blind": true,
+    "author_or_root_receipts_used_as_release_authority": false,
+    "transformer_inverse_modeling_semantic_layer_used": true,
+    "candidate_code_modified": false,
+    "network_or_mars_accessed": false,
+    "scientific_csv_rows_accessed": false,
+    "weights_accessed": false,
+    "test_or_performance_values_accessed": false,
+    "fresh_emx_values_accessed": false,
+    "numerical_metrics_interpreted": false,
+    "host": "Mac.lan"
+  },
+  "warnings_as_errors_suite": {
+    "scope_file_count": 10,
+    "passed": 331,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 2,
+    "duration_seconds": 17.32,
+    "exit_code": 0,
+    "skips_linux_only": [
+      "exact memfd/ELF launch is MARS-native Linux QA",
+      "SystemExit attestation needs Linux sealed descriptors"
+    ]
+  },
+  "independent_hostile_proofs": {
+    "evaluator_exact21_semantic_package_binding": "FAIL_P1_REPRODUCED",
+    "evaluator_exact21_live_path_continuity": "FAIL_P2_REPRODUCED",
+    "common_forward_exact_label_q_metric_direction": "FAIL_P1_REPRODUCED"
+  },
+  "scientific_review_summary": {
+    "nested_10k_20k_identity": "PASS_STATIC_CODE_REVIEW",
+    "common_holdout_and_test_seal": "PASS_STATIC_CODE_REVIEW",
+    "shared_declared_normalization": "PASS_STATIC_CODE_REVIEW",
+    "exact_architecture_gelu_decoder": "PASS_STATIC_CODE_REVIEW",
+    "paired_seeds_equal_optimizer_updates": "PASS_STATIC_CODE_REVIEW",
+    "validation_only_model_selection": "PASS_STATIC_CODE_REVIEW",
+    "six_arm_complete_closure": "PASS_STATIC_CODE_REVIEW",
+    "fixed10k_not_regenerated": "PASS_STATIC_CODE_REVIEW",
+    "real_emx_and_proxy_evidence_separated": "PASS_STATIC_CODE_REVIEW",
+    "common_forward_primary_exact_label_q_metric_direction": "FAIL_QA5_SCI001",
+    "paired_statistics_and_cluster_bootstrap": "PASS_MECHANICS_WITH_QA5_SCI001_METRIC_SEMANTICS_OPEN",
+    "materialization_training_evaluator_authority_chain": "FAIL_OPEN_P1_P2"
+  },
+  "scope": {
+    "go_eligibility_rule": {
+      "required_p0": 0,
+      "required_p1": 0
+    },
+    "go_eligibility_satisfied": false,
+    "code_go_created": false,
+    "go_or_authority_artifact_created": false,
+    "authorities_released": {
+      "mars_transport": false,
+      "mars_native_preflight": false,
+      "data_materialization": false,
+      "training": false,
+      "common_test_access": false,
+      "numerical_metric_access": false,
+      "fresh_emx": false,
+      "process_signal": false
+    }
+  },
+  "actions_not_performed": [
+    "MARS or network access",
+    "CSV data-row access",
+    "weight access",
+    "test/performance/fresh-EMX value access",
+    "fixed10k regeneration",
+    "new EMX generation",
+    "materialization",
+    "training",
+    "evaluation",
+    "process signaling",
+    "GO or authority publication"
+  ],
+  "audit_artifacts_expected": [
+    "FINDINGS.json",
+    "RECEIPT.json",
+    "REPORT.md",
+    "TEST_MATRIX.json",
+    "SHA256SUMS.txt"
+  ],
+  "next_legal_action": "PRESERVE_THIS_NO_GO_AND_PREPARE_A_NEW_NO_CLOBBER_CANDIDATE_THAT_CLOSES_QA5_EV001_QA5_SCI001_AND_QA5_EV002_THEN_REQUIRE_FRESH_INDEPENDENT_RESULT_BLIND_QA"
+}

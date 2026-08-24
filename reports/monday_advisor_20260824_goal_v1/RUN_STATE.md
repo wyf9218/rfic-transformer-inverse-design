@@ -1,13 +1,13 @@
 # RUN STATE
 
-Updated: `2026-08-24T13:35:43Z`
+Updated: `2026-08-24T14:16:05Z`
 
-- Status: `CODE_CANDIDATE_V5_FROZEN_AWAITING_FRESH_INDEPENDENT_QA`
-- Phase: independent result-blind code-QA gate
+- Status: `INDEPENDENT_QA_V5_NO_GO`
+- Phase: candidate-v6 repair required before fresh re-audit
 - MARS connected: yes, read-only
 - MARS training/common-test/metrics/fresh-EMX authority: no/no/no/no
 - Controlled 10K/20K process count: `0`
-- Last MARS load: `52.17 / 59.06 / 117.83`; launch gate is load1 `<=40`, currently FAIL
+- Last MARS load: `231.99 / 227.03 / 213.18`; launch gate is load1 `<=40`, currently FAIL
 - Current high load is not this task; no remote process was modified
 
 Frozen comparison:
@@ -23,9 +23,13 @@ Frozen comparison:
 
 Latest authoritative independent gate:
 
-- QA v4 remains `NO_GO`, P0/P1/P2/P3=`0/6/2/0`
-- Receipt: `reports/controlled_real10k_20k_nested_20260824/independent_code_qa_v4_20260824T110825Z/RECEIPT.json`
-- Receipt SHA: `a55003f0…4748`; no authority was released
+- QA v5 is `NO_GO`, P0/P1/P2/P3=`0/2/1/0`; no authority was released
+- Root: `reports/controlled_real10k_20k_nested_20260824/independent_code_qa_v5_20260824T140732Z`
+- Receipt/FINDINGS/REPORT SHA: `25985069…e5f1 / 8dfddfa6…9c0c / 11a68cf9…e543`
+- TEST_MATRIX/SHA256SUMS SHA: `88eb7817…4f71 / 1120a2f3…e47`
+- P1 `QA5-EV001`: evaluator does not directly bind all exact21 roles to the frozen package/source/protocol graph
+- P1 `QA5-SCI001`: one-sided inverse-target Q semantics can reward Q overprediction in the 902-row forward exact-label estimand
+- P2 `QA5-EV002`: evaluator exact21 path hash/parse continuity is TOCTOU-prone
 
 Fresh code candidate:
 
@@ -40,6 +44,7 @@ Fresh code candidate:
 - Source compile: `20/20 PASS`
 - Frozen splitter/trainer baseline: `30 passed`, `87` known local NumPy warning fixtures
 - Intermediate integration result `1 failed / 282 passed / 2 skipped / 45 errors` is preserved; stale fixture and runner pin were fixed without weakening production checks
+- Independent WAE replay: `331 passed / 0 failed / 2 Linux-only skips`; candidate index and manifest stayed byte-identical
 
 Package/runtime interface:
 
@@ -53,4 +58,4 @@ No-repeat record:
 - No data or fixed10k regeneration, historical retraining, EMX rerun, materialization, training, evaluation, metric access, or signal occurred
 - Referenced task `019eb52f-9739-73b2-8483-af70553603a8` remains timeout/unreadable; no status inferred
 
-Next safe action: fresh independent result-blind QA of the exact candidate. Only exact GO may permit package-v5 preparation and a separately gated MARS-native preflight. Materialization, training, test release and metrics remain unauthorized.
+Next safe action: preserve v5 NO-GO; build a new no-clobber v6 closing `QA5-EV001`, `QA5-SCI001`, and `QA5-EV002`, then require fresh result-blind QA. MARS transport/native tests/materialization/training/test release/metrics remain unauthorized.

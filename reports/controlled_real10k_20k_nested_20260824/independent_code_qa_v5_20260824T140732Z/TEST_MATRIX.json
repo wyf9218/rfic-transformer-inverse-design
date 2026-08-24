@@ -1,0 +1,145 @@
+{
+  "schema": "controlled_real10k_20k_independent_code_qa_test_matrix_v5",
+  "generated_utc": "2026-08-24T14:07:32Z",
+  "result_blind": true,
+  "candidate_code_modified": false,
+  "tests": [
+    {
+      "id": "CANDIDATE-IDENTITY-001",
+      "method": "Recompute SHA-256 for the candidate SHA index, candidate manifest, all four indexed candidate metadata members, and every implementation/test/frozen-dependency identity declared by the candidate manifest.",
+      "observed": {
+        "candidate_sha256sums_sha256": "e03e74a9fd9578a2ac3b653fa7ea65a62cc0820057401d0534a3becf442d034e",
+        "candidate_manifest_sha256": "58f5878044884f443aed91b5aeeed66f79c38c5ff4745a7078efd7bb6452bc6d",
+        "candidate_index_members_matched": "4/4",
+        "declared_implementation_test_dependency_identities_matched": "22/22",
+        "head": "0b23ca5a3bf026c65aa86dc4fca07ac61dafe34d",
+        "origin_main": "0b23ca5a3bf026c65aa86dc4fca07ac61dafe34d"
+      },
+      "result": "PASS"
+    },
+    {
+      "id": "LOCAL-WAE-001",
+      "command": "PYTHONDONTWRITEBYTECODE=1 PYTHONWARNINGS=error python3 -B -m pytest -p no:cacheprovider -q tests/test_build_controlled_real10k_20k_nested.py tests/test_build_controlled_real10k_20k_mars_package.py tests/test_build_controlled_real10k_20k_runtime_bundle.py tests/test_controlled_real10k_20k_runtime_bootstrap.py tests/test_preflight_controlled_real10k_20k_mars.py tests/test_run_controlled_real10k_20k_materialization.py tests/test_run_controlled_real10k_20k_paired.py tests/test_evaluate_controlled_real10k_20k_common.py tests/test_controlled_real10k_20k_interface_alignment.py tests/controlled_real10k_20k_mars_native_smoke.py",
+      "observed": {
+        "passed": 331,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 2,
+        "duration_seconds": 17.32,
+        "exit_code": 0,
+        "skips": [
+          {
+            "test": "tests/test_controlled_real10k_20k_runtime_bootstrap.py::test_linux_venv_site_poison_hostile_package_and_terminal_attestation",
+            "reason": "exact memfd/ELF launch is MARS-native Linux QA"
+          },
+          {
+            "test": "tests/test_controlled_real10k_20k_runtime_bootstrap.py::test_linux_system_exit_records_terminal_failure",
+            "reason": "SystemExit attestation needs Linux sealed descriptors"
+          }
+        ]
+      },
+      "result": "PASS_WITH_TWO_EXPECTED_LINUX_ONLY_SKIPS"
+    },
+    {
+      "id": "HOSTILE-EVALUATOR-EXACT21-001",
+      "method": "Run production _audit_singleton_transmission_closure on the repository's synthetic closure after observing that the fixture supplies only 11 package role identities, 21 candidate bindings with dummy regular files for otherwise unbound roles, and empty materialization/access/host semantic declarations.",
+      "observed": {
+        "closure_accepted": true,
+        "candidate_bound_role_count": 21,
+        "package_required_role_count": 11,
+        "package_role_identity_count": 11,
+        "materialization_contract_empty": true,
+        "host_constraints_asserted_empty": true,
+        "result_or_row_access_empty": true,
+        "unbound_semantic_candidate_role_count": 10
+      },
+      "result": "FAIL_P1_REPRODUCED"
+    },
+    {
+      "id": "HOSTILE-EVALUATOR-TOCTOU-001",
+      "method": "Deterministically interleave os.replace between the production exact21 path hash and record return using same-length mode-0444, nlink-1 regular files in a disposable local directory.",
+      "observed": {
+        "audit_accepted": true,
+        "returned_sha_is_pre_replace": true,
+        "live_sha_is_replacement": true,
+        "returned_inode_is_pre_replace": true,
+        "live_inode_changed": true
+      },
+      "result": "FAIL_P2_REPRODUCED"
+    },
+    {
+      "id": "HOSTILE-COMMON-FORWARD-Q-DIRECTION-001",
+      "method": "Evaluate the production one-sided Q definitions on a result-blind scalar counterexample: stored label Q=10, small prediction Q=9, large prediction Q=100.",
+      "observed": {
+        "small_exact_absolute_error": 1.0,
+        "large_exact_absolute_error": 90.0,
+        "small_one_sided_shortfall": 1.0,
+        "large_one_sided_shortfall": 0.0,
+        "small_target_met": false,
+        "large_target_met": true,
+        "paired_rate_direction": "positive_favors_large",
+        "engineering_joint_large_q_component": 0.0,
+        "exact_forward_fidelity_and_one_sided_guardrail_direction_conflict": true
+      },
+      "result": "FAIL_P1_REPRODUCED"
+    },
+    {
+      "id": "SCIENTIFIC-CONTRACT-STATIC-001",
+      "method": "Independent line-by-line review of preregistration v1, addenda v1.1/v1.2, shared contract, nested builder, materialization validator, paired runner, frozen trainer and one-time evaluator without accessing scientific rows, weights, test results or numerical metrics.",
+      "observed": {
+        "nested_identity": "PASS",
+        "common_holdout_and_test_seal": "PASS",
+        "declared_normalization": "PASS",
+        "architecture_activation_decoder": "PASS",
+        "paired_seeds_equal_updates": "PASS",
+        "validation_only_selection": "PASS",
+        "six_arm_closure": "PASS",
+        "fixed10k_no_regeneration": "PASS",
+        "real_emx_vs_proxy_labels": "PASS",
+        "common_forward_primary_exact_label_q_metric_direction": "FAIL_QA5_SCI001",
+        "paired_statistics_and_cluster_bootstrap": "PASS",
+        "direct_evaluator_exact21_authority": "FAIL_QA5_EV001",
+        "exact21_path_continuity": "FAIL_QA5_EV002"
+      },
+      "result": "NO_GO"
+    },
+    {
+      "id": "RESULT-BLIND-001",
+      "observed": {
+        "network_or_mars_accessed": false,
+        "csv_data_rows_accessed": false,
+        "weights_accessed": false,
+        "common_test_or_performance_values_accessed": false,
+        "fresh_emx_values_accessed": false,
+        "materialization_performed": false,
+        "training_performed": false,
+        "evaluation_performed": false,
+        "fixed10k_regenerated": false,
+        "emx_generated": false,
+        "process_started_stopped_or_signaled": false,
+        "go_or_authority_created": false
+      },
+      "result": "PASS"
+    },
+    {
+      "id": "CANDIDATE-INTEGRITY-AFTER-001",
+      "method": "Recompute candidate SHA index and manifest after WAE and hostile synthetic checks, then check tracked/index diffs and untracked files before QA publication.",
+      "observed": {
+        "candidate_sha256sums_sha256_after": "e03e74a9fd9578a2ac3b653fa7ea65a62cc0820057401d0534a3becf442d034e",
+        "candidate_manifest_sha256_after": "58f5878044884f443aed91b5aeeed66f79c38c5ff4745a7078efd7bb6452bc6d",
+        "candidate_unchanged": true,
+        "tracked_diff_clean_before_qa_publication": true,
+        "index_clean_before_qa_publication": true,
+        "untracked_file_count_before_qa_publication": 0
+      },
+      "result": "PASS"
+    }
+  ],
+  "severity_counts": {
+    "p0": 0,
+    "p1": 2,
+    "p2": 1,
+    "p3": 0
+  },
+  "verdict": "NO_GO"
+}
