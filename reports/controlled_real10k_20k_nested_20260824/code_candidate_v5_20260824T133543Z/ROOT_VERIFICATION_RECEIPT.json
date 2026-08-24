@@ -1,0 +1,108 @@
+{
+  "schema": "controlled_real10k_20k_root_verification_receipt_v5",
+  "candidate_id": "controlled_real10k_20k_code_candidate_v5_20260824T133543Z",
+  "generated_utc": "2026-08-24T13:35:43Z",
+  "status": "PASS_AUTHOR_ROOT_VERIFIED_AWAITING_FRESH_INDEPENDENT_QA",
+  "result_blind": true,
+  "verification": {
+    "complete_controlled_warnings_as_errors": {
+      "command_scope": [
+        "tests/test_build_controlled_real10k_20k_nested.py",
+        "tests/test_build_controlled_real10k_20k_mars_package.py",
+        "tests/test_build_controlled_real10k_20k_runtime_bundle.py",
+        "tests/test_controlled_real10k_20k_runtime_bootstrap.py",
+        "tests/test_preflight_controlled_real10k_20k_mars.py",
+        "tests/test_run_controlled_real10k_20k_materialization.py",
+        "tests/test_run_controlled_real10k_20k_paired.py",
+        "tests/test_evaluate_controlled_real10k_20k_common.py",
+        "tests/test_controlled_real10k_20k_interface_alignment.py",
+        "tests/controlled_real10k_20k_mars_native_smoke.py"
+      ],
+      "environment": "PYTHONWARNINGS=error",
+      "passed": 331,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 2,
+      "duration_seconds": 17.48,
+      "skips": [
+        "exact memfd/ELF launch is MARS-native Linux QA",
+        "SystemExit attestation needs Linux sealed descriptors"
+      ]
+    },
+    "source_compile_without_bytecode": {
+      "passed": 20,
+      "failed": 0,
+      "python_flags": ["-I", "-B", "-S"]
+    },
+    "frozen_splitter_and_trainer_baseline": {
+      "passed": 30,
+      "failed": 0,
+      "warnings": 87,
+      "classification": "UNCHANGED_HISTORICAL_LOCAL_NUMPY_WARNING_FIXTURES_NOT_A_CANDIDATE_REGRESSION"
+    },
+    "focused_owner_results": {
+      "package_builder": "49 passed",
+      "runtime_bundle_runner_interface": "76 passed",
+      "preflight": "56 passed",
+      "materializer": "52 passed",
+      "evaluator": "83 passed"
+    },
+    "interface_alignment": {
+      "package_version": "v5",
+      "package_roles": 21,
+      "package_go_bindings": 23,
+      "materialization_direct_roles": 21,
+      "runner_sha_bound_by_evaluator": "06d3658f94b1964b2dab4154f6db4065a00e2bc3c1174e4d7deb2912952a6f31",
+      "status": "PASS"
+    }
+  },
+  "preserved_failed_integration_evidence": {
+    "result": "1 failed, 282 passed, 2 skipped, 45 errors",
+    "classification": "INTERMEDIATE_INTEGRATION_FAILURE_FIXED_BEFORE_CANDIDATE_FREEZE",
+    "causes": [
+      "45 fixture setup errors: new exact package-attempt invocation validator correctly rejected stale fixture invocation={fixture:true}",
+      "1 evaluator failure: stale pinned runner SHA after runner hardening"
+    ],
+    "resolution": [
+      "fixture now creates the full exact invocation object; production validator was not weakened",
+      "evaluator now pins the final runner SHA exactly"
+    ]
+  },
+  "latest_readonly_mars_observation": {
+    "utc": "2026-08-24T13:31:18Z",
+    "host": "mars-0002.ece.wisc.edu",
+    "load_average": [52.17, 59.06, 117.83],
+    "controlled_real10k_20k_process_count": 0,
+    "load_caused_by_this_task": false,
+    "load_gate_max_1m": 40.0,
+    "process_modified": false
+  },
+  "referenced_task": {
+    "thread_id": "019eb52f-9739-73b2-8483-af70553603a8",
+    "latest_observed_read_status": "TIMEOUT_UNREADABLE",
+    "inference_made": false
+  },
+  "authorities": {
+    "mars_transport": false,
+    "mars_native_preflight": false,
+    "data_materialization": false,
+    "training": false,
+    "common_test_access": false,
+    "numerical_metric_access": false,
+    "fresh_emx": false,
+    "process_signal": false
+  },
+  "actions_not_performed": [
+    "fixed10k regeneration",
+    "historical model retraining",
+    "real-EMX data generation",
+    "completed EMX rerun",
+    "MARS native controlled tests",
+    "data materialization",
+    "training",
+    "evaluation",
+    "numerical metric access",
+    "process signal"
+  ],
+  "next_legal_action": "FRESH_INDEPENDENT_RESULT_BLIND_CODE_QA_OF_EXACT_CANDIDATE_ONLY"
+}

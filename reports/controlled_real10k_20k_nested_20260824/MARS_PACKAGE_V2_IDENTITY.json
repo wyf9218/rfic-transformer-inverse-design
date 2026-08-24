@@ -1,0 +1,92 @@
+{
+  "schema": "controlled_real10k_20k_mars_package_identity_v2",
+  "generated_utc": "2026-08-24T10:11:49Z",
+  "status": "PASS_PREPARED_IMMUTABLE_RESULT_BLIND_AWAITING_INDEPENDENT_QA",
+  "mars": {
+    "host": "mars-0002.ece.wisc.edu",
+    "uid": 2259579,
+    "handoff_root": "/volumes/research-localdata/ywang3652/controlled_real10k_20k_handoff_20260824T100826Z",
+    "package_dir": "/volumes/research-localdata/ywang3652/controlled_real10k_20k_handoff_20260824T100826Z/package_v2",
+    "build_started_utc": "2026-08-24T10:10:27+00:00",
+    "build_completed_utc": "2026-08-24T10:10:27+00:00",
+    "controlled_process_count_before_build": 0,
+    "load1_before_build": 44.25
+  },
+  "immutable_identity": {
+    "manifest": {
+      "path": "/volumes/research-localdata/ywang3652/controlled_real10k_20k_handoff_20260824T100826Z/package_v2/MANIFEST.json",
+      "sha256": "2b1acc29d9accbc9a612c1d4fa3e95fd7b1d9f73a2156e83e5b05f4b0c04c0b2"
+    },
+    "receipt": {
+      "path": "/volumes/research-localdata/ywang3652/controlled_real10k_20k_handoff_20260824T100826Z/package_v2/RECEIPT.json",
+      "sha256": "7bcbe238a25f35e785af42714c9f1e1b4e108e5a1277ff70bcaad54e31078422"
+    },
+    "sha256sums": {
+      "path": "/volumes/research-localdata/ywang3652/controlled_real10k_20k_handoff_20260824T100826Z/package_v2/SHA256SUMS.txt",
+      "sha256": "7408446655081d717aabfdbb8dfdab786c37e4c35faa6fba7c69939876d5e7fc"
+    },
+    "independent_qa_required": {
+      "path": "/volumes/research-localdata/ywang3652/controlled_real10k_20k_handoff_20260824T100826Z/package_v2/INDEPENDENT_QA_REQUIRED.json",
+      "sha256": "0012ba3c6ca59d3a0d0f5378a4eb89582062ef7cbb01380bf6c243bc9e57bea7"
+    },
+    "build_attempt_receipt": {
+      "path": "/volumes/research-localdata/ywang3652/controlled_real10k_20k_handoff_20260824T100826Z/package_build_attempts/attempt_0001/PACKAGE_BUILD_ATTEMPT_RECEIPT.json",
+      "sha256": "c4718a123df6967ca25d63d44a163d8dab5201766b1c74db5ebabffa67d05b4c"
+    },
+    "indexed_members_checked": 18,
+    "indexed_members_passed": 18,
+    "payload_roles": 15,
+    "package_root_mode": "0555",
+    "file_mode": "0444",
+    "file_nlink": 1,
+    "symlinks": 0
+  },
+  "role_sha256": {
+    "authoritative_100k_csv": "68468eb2d3678aa0793157c1c647e975f60e8ec1673c259050ababe9fd1ff08a",
+    "historical_10k_csv": "3027290eb1b4c229a23f0676f970ff9d13762677a897a0d7e2aed959075c85c8",
+    "historical_model_summary_json": "90a81532f7342ae7348248ea45889368fbb13ed2b6ee8f89e789f80f6811a3fa",
+    "materialization_builder_code": "e5c25b79e76343c77a88a7e6837b8547bd1a8ad8b8aaa277e61b3d487e9a8cfc",
+    "materialization_gate_code": "9e7efe71111daeb2c954ffcd8b57a41c6b17384f2a8451dfb0964f83152f9746",
+    "native_smoke_test": "7f1cdd03fa0be778fbf419e1018ffb11bc6dbdde73596d6ea56e7083a4a7635a",
+    "package_builder_code": "c4b9f496bda460e201958280a5a09c4aa2aaed36ffd265abd633ac8f5ef7b0b1",
+    "preflight_code": "bf77000ae2e1bb934050b26fa630fa405dc7e418a3da3102cf8a7bbe8a5c840a",
+    "preregistration_addendum_v1_1_json": "9f1eb0e071ade0e5a42597b4242409282ed8d34cf159104f71df2d4d0d0a8633",
+    "preregistration_addendum_v1_2_json": "fb7c7d0f9e206e3743cf795a544004e570842f26495903ad0eafdd5f909f37a9",
+    "preregistration_v1_json": "19aca7778f4974fd3e7eadaca8b291783e8e08e99a53a9dca70b070a4bf16417",
+    "runner_code": "33049b3f2fc28752d93f9f8b19665eb8d7ed6f5fdff48dcac621de1387fc1a91",
+    "shared_contract_code": "ca6824e5d47fc037c856044ad74b0dec26844fed19d09bbfee42d44fbd3969c0",
+    "splitter_code": "9db4b7f1ed9435f73e95e49c558003bdaaf153579c5c44f04fb779aa31e0ef8a",
+    "trainer_code": "92988524b08b15a2388f655f6239070889098024e49ee184832f69876f7db3be"
+  },
+  "frozen_future_paths": {
+    "preflight_receipt_dir": "/volumes/research-localdata/ywang3652/controlled_real10k_20k_handoff_20260824T100826Z/preflight_receipts/attempt_0001",
+    "candidate_output_dirs": [
+      "/volumes/research-localdata/ywang3652/controlled_real10k_20k_handoff_20260824T100826Z/materialization_gate_candidate_v1",
+      "/volumes/research-localdata/ywang3652/controlled_real10k_20k_handoff_20260824T100826Z/materialization_output_v1",
+      "/volumes/research-localdata/ywang3652/controlled_real10k_20k_handoff_20260824T100826Z/materialization_execution_receipt_v1"
+    ]
+  },
+  "reuse_and_no_repeat": {
+    "authoritative_real_emx_source_reused": true,
+    "historical_10k_source_reused": true,
+    "historical_model_summary_reused": true,
+    "data_regenerated": false,
+    "historical_model_retrained": false,
+    "emx_rerun": false,
+    "materialization_run": false,
+    "training_run": false,
+    "evaluation_run": false,
+    "numerical_metrics_accessed": false,
+    "process_signal_sent": false
+  },
+  "authorities": {
+    "native_linux_test_execution": false,
+    "data_materialization": false,
+    "training": false,
+    "common_test_access": false,
+    "numerical_metric_access": false,
+    "fresh_emx": false,
+    "process_signal": false
+  },
+  "next_legal_action": "FRESH_EXTERNAL_RESULT_BLIND_CODE_QA_ONLY"
+}

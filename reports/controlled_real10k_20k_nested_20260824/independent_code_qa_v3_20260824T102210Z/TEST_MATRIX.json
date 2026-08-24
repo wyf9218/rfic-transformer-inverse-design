@@ -1,0 +1,207 @@
+{
+  "schema": "controlled_real10k_20k_independent_code_qa_test_matrix_v3",
+  "generated_utc": "2026-08-24T10:22:10Z",
+  "verdict": "NO_GO",
+  "result_blind": true,
+  "candidate_code_modified": false,
+  "rows_weights_or_numerical_results_interpreted": false,
+  "tests": [
+    {
+      "id": "LOCAL-WAE-001",
+      "scope": "all reviewed candidate units",
+      "method": "local synthetic author suite with warnings as errors",
+      "command": "PYTHONWARNINGS=error python3 -m pytest -q tests/test_build_controlled_real10k_20k_nested.py tests/test_run_controlled_real10k_20k_materialization.py tests/test_run_controlled_real10k_20k_paired.py tests/test_build_controlled_real10k_20k_mars_package.py tests/test_preflight_controlled_real10k_20k_mars.py tests/test_evaluate_controlled_real10k_20k_common.py",
+      "result": "PASS",
+      "summary": "150 passed in 8.43s"
+    },
+    {
+      "id": "C001",
+      "scope": "preflight",
+      "requirement": "No pytest configuration/plugin/collect-only false PASS",
+      "method": "static trace plus author tests",
+      "result": "PASS_CLOSED",
+      "evidence": "Direct reviewed native script executes once under -I -B -S, minimal env, exact PASS schema, executed_test_count=1."
+    },
+    {
+      "id": "C002",
+      "scope": "preflight",
+      "requirement": "GO/package/runtime byte and inode continuity",
+      "method": "static descriptor-flow audit plus author hostile tests",
+      "result": "PASS_CLOSED",
+      "evidence": "Verified descriptors are retained, code/test bytes use sealed snapshots, runtime executes from /proc/self/fd, and final continuity is rechecked."
+    },
+    {
+      "id": "C101",
+      "scope": "preflight",
+      "requirement": "Attempt evidence directory-durable and terminalized",
+      "method": "static exception-boundary audit and local fsync-failure fixture",
+      "result": "FAIL_P2",
+      "evidence": "Receipt setup is outside main try; a failure after mkdir can leave no terminal receipt."
+    },
+    {
+      "id": "C102",
+      "scope": "package and preflight",
+      "requirement": "Exact package role set; no extra roles",
+      "method": "static keyset audit plus live MARS manifest and filesystem closure",
+      "result": "PASS_CLOSED",
+      "evidence": "Exactly 15 required roles and 18 non-index members were observed; no extra role or indexed path exists."
+    },
+    {
+      "id": "R001",
+      "scope": "paired training runner",
+      "requirement": "Frozen production provenance and deep outer materialization authority",
+      "method": "static schema and binding trace plus author hostile tests",
+      "result": "PASS_CLOSED"
+    },
+    {
+      "id": "R002",
+      "scope": "paired training runner",
+      "requirement": "Every catchable post-intent failure terminalized",
+      "method": "static exception-flow audit plus author hostile tests",
+      "result": "PASS_CLOSED"
+    },
+    {
+      "id": "R003",
+      "scope": "paired training runner",
+      "requirement": "GO-bound package index and all bindings rechecked per arm",
+      "method": "static launch-boundary trace plus author hostile tests",
+      "result": "PASS_CLOSED"
+    },
+    {
+      "id": "R004",
+      "scope": "paired training runner",
+      "requirement": "Runner GO carries exact zero P0/P1 findings",
+      "method": "exact keyset/schema audit",
+      "result": "PASS_CLOSED"
+    },
+    {
+      "id": "MAT-HELD-IMPORT-001",
+      "scope": "materialization gate",
+      "requirement": "Execute exactly the frozen builder/shared/splitter bytes",
+      "method": "static import-flow audit and temporary same-path substitution fixture",
+      "result": "FAIL_P1",
+      "evidence": "post-rehash matched frozen SHA while the already-loaded callable returned the substituted sentinel"
+    },
+    {
+      "id": "RUN-ENV-001",
+      "scope": "paired training runner",
+      "requirement": "Exact isolated trainer environment",
+      "method": "static Popen environment audit and benign temporary sitecustomize marker",
+      "result": "FAIL_P1",
+      "evidence": "INHERITED_SITE_EXECUTED=yes; ISOLATED_SITE_EXECUTED=None"
+    },
+    {
+      "id": "E001",
+      "scope": "common evaluator",
+      "requirement": "Shared contract, exact runtime, paired runner, evaluator and model identities release-bound",
+      "method": "static prepare/execute held-snapshot trace",
+      "result": "PASS_CLOSED"
+    },
+    {
+      "id": "E002",
+      "scope": "common evaluator",
+      "requirement": "One-time claim durability and released-byte continuity",
+      "method": "static descriptor/durability audit plus temporary output-root replacement fixture",
+      "result": "FAIL_P1_NEW_ROOT_LEASE_DEFECT",
+      "evidence": "held inputs and claim fsync are fixed; replaceable lexical output root allowed two successful claims with one GO"
+    },
+    {
+      "id": "E003",
+      "scope": "common evaluator",
+      "requirement": "Byte-semantic exact external GO",
+      "method": "static hash/parse/type audit plus temporary GO substitution and malformed-type fixtures",
+      "result": "FAIL_P1_TWO_DEFECTS",
+      "evidence": "separate path opens accepted substituted bytes; Python bool/int equality accepted wrong JSON types"
+    },
+    {
+      "id": "E101",
+      "scope": "common evaluator",
+      "requirement": "Reject symlink/hardlink/unsafe mode and consume held pinned inputs",
+      "method": "static path/FD trace plus author hostile tests",
+      "result": "PASS_CLOSED"
+    },
+    {
+      "id": "E102",
+      "scope": "common evaluator",
+      "requirement": "Final evaluation closure immutable and directory-durable",
+      "method": "static success/failure terminal-flow audit plus temporary post-claim failure fixture",
+      "result": "FAIL_P1_FAILURE_CLOSURE",
+      "evidence": "successful closure passes; post-claim FATAL closure stays 0755/0644, unindexed, deletable, and replayable"
+    },
+    {
+      "id": "MARS-CONNECT-001",
+      "scope": "MARS live identity",
+      "method": "existing SSH control socket; read only",
+      "result": "PASS",
+      "observed": {
+        "hostname": "mars-0002.ece.wisc.edu",
+        "uid": 2259579,
+        "boot_id": "4801efc4-eba0-4b79-91b2-4b082f238271",
+        "observed_utc": "2026-08-24T10:17:51Z"
+      }
+    },
+    {
+      "id": "MARS-RUNTIME-001",
+      "scope": "MARS frozen Python/NumPy runtime",
+      "method": "read-only isolated runtime identity probe",
+      "result": "PASS",
+      "observed": {
+        "python_version": "3.12.13",
+        "python_executable_sha256": "8c515a32b1a5d3d807e53359901a4d09ec06819b488736641aabd6a12eefba63",
+        "numpy_version": "2.5.0",
+        "numpy_core_sha256": "471db15840ca5bb0b32158eddca6d3e42545611055d6a4a4dee6e0d8a315a442",
+        "numpy_config_file_sha256": "eca5779c26589580219ef7f949eb28f5eaad7ad44febc8444ea17d53ff92a947",
+        "numpy_show_config_sha256": "1007c12980046a08a6661242d1d73fd28ac080e20908fc7e0ea65f6ec165688d"
+      }
+    },
+    {
+      "id": "MARS-PACKAGE-001",
+      "scope": "MARS package_v2 immutable closure",
+      "method": "read-only stat and sha256sum --strict -c",
+      "result": "PASS_ALL_18_INDEXED_MEMBERS",
+      "observed": {
+        "manifest_sha256": "2b1acc29d9accbc9a612c1d4fa3e95fd7b1d9f73a2156e83e5b05f4b0c04c0b2",
+        "receipt_sha256": "7bcbe238a25f35e785af42714c9f1e1b4e108e5a1277ff70bcaad54e31078422",
+        "sha_index_sha256": "7408446655081d717aabfdbb8dfdab786c37e4c35faa6fba7c69939876d5e7fc",
+        "qa_required_sha256": "0012ba3c6ca59d3a0d0f5378a4eb89582062ef7cbb01380bf6c243bc9e57bea7",
+        "build_attempt_receipt_sha256": "c4718a123df6967ca25d63d44a163d8dab5201766b1c74db5ebabffa67d05b4c",
+        "role_count": 15,
+        "native_test_roles": [
+          "native_smoke_test"
+        ],
+        "package_directory_mode": "0555",
+        "payload_file_mode": "0444",
+        "payload_file_nlink": 1
+      }
+    },
+    {
+      "id": "MARS-NO-DUPLICATE-001",
+      "scope": "MARS current UID processes and future paths",
+      "method": "read-only current-UID ps token scan and filesystem existence checks",
+      "result": "PASS",
+      "observed": {
+        "controlled_process_matches": 0,
+        "materialization_gate_candidate_v1_absent": true,
+        "materialization_output_v1_absent": true,
+        "materialization_execution_receipt_v1_absent": true,
+        "preflight_receipts_attempt_0001_absent": true
+      }
+    },
+    {
+      "id": "RESULT-BLIND-001",
+      "scope": "review boundary",
+      "method": "audit trail",
+      "result": "PASS",
+      "observed": {
+        "training_started_stopped_or_signaled": false,
+        "materialization_started": false,
+        "evaluation_started": false,
+        "emx_started": false,
+        "numerical_metrics_interpreted": false,
+        "data_rows_interpreted": false,
+        "weights_interpreted": false,
+        "mars_write_performed": false
+      }
+    }
+  ]
+}

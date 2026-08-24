@@ -1,0 +1,57 @@
+{
+  "schema": "controlled_real10k_20k_code_candidate_independent_qa_required_v5",
+  "candidate_id": "controlled_real10k_20k_code_candidate_v5_20260824T133543Z",
+  "generated_utc": "2026-08-24T13:35:43Z",
+  "status": "INDEPENDENT_QA_REQUIRED_NOT_AUTHORIZED",
+  "reviewer_requirements": {
+    "fresh": true,
+    "independent_of_candidate_implementation": true,
+    "result_blind": true,
+    "must_recompute_all_candidate_member_sha256": true,
+    "must_run_complete_warnings_as_errors_suite": true,
+    "must_review_all_qa4_and_root5_closure_items": true,
+    "must_use_hostile_tests_or_direct_proofs_for_each_security_or_exact_once_claim": true,
+    "may_not_accept_author_or_root_test results as release authority": true
+  },
+  "exact_candidate_bindings": {
+    "candidate_manifest": "CANDIDATE_MANIFEST.json",
+    "qa4_closure_matrix": "QA4_CLOSURE_MATRIX.json",
+    "root_verification_receipt": "ROOT_VERIFICATION_RECEIPT.json"
+  },
+  "go_eligibility": {
+    "required_p0": 0,
+    "required_p1": 0,
+    "all_exact_sha_checks_must_pass": true,
+    "all_required_tests_must_pass": true,
+    "no_unresolved_identity_or_authority_ambiguity": true
+  },
+  "maximum_go_validity_hours": 6.0,
+  "if_go": {
+    "required_receipt_status": "COMPLETE_GO_FROZEN_RESULT_BLIND",
+    "required_verdict": "GO",
+    "initial_authorized_scope_only": "PREPARE_EXACT_PACKAGE_V5_AND_REQUEST_SEPARATE_MARS_NATIVE_PREFLIGHT_AUTHORITY",
+    "does_not_authorize": [
+      "data materialization",
+      "training",
+      "common test access",
+      "numerical metric access",
+      "fresh EMX",
+      "process signaling"
+    ]
+  },
+  "if_no_go": {
+    "required_receipt_status": "COMPLETE_NO_GO_FROZEN_RESULT_BLIND",
+    "preserve_all_findings_and_failed_test_evidence": true,
+    "code_go_must_not_be_created": true
+  },
+  "authority": {
+    "mars_transport": false,
+    "mars_native_preflight": false,
+    "data_materialization": false,
+    "training": false,
+    "common_test_access": false,
+    "numerical_metric_access": false,
+    "fresh_emx": false,
+    "process_signal": false
+  }
+}

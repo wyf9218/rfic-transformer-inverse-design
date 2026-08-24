@@ -1,0 +1,460 @@
+{
+  "schema": "controlled_real10k_20k_independent_code_qa_matrix_v2",
+  "generated_utc": "2026-08-24T09:23:08Z",
+  "review": {
+    "independent": true,
+    "result_blind": true,
+    "implementation_modified": false,
+    "mars_write_performed": false,
+    "production_or_research_target_process_started_stopped_or_signaled": false,
+    "production_research_training_or_evaluation_performed": false,
+    "production_research_numerical_results_accessed": false,
+    "production_scientific_data_rows_accessed": false,
+    "production_real_weights_accessed": false,
+    "local_synthetic_fixture_tests_performed": true,
+    "mars_read_only_python_binding_recompute_performed": true
+  },
+  "verdict": "NO_GO",
+  "code_go_created": false,
+  "severity_counts": {
+    "p0": 0,
+    "p1": 9,
+    "p2": 6,
+    "p3": 0
+  },
+  "scope_counts": {
+    "mars_native_preflight_and_reviewed_native_tests": {
+      "p0": 0,
+      "p1": 2,
+      "p2": 4
+    },
+    "future_training_runner_gate": {
+      "p0": 0,
+      "p1": 4,
+      "p2": 0
+    },
+    "future_common_test_evaluator_gate": {
+      "p0": 0,
+      "p1": 3,
+      "p2": 2
+    }
+  },
+  "prior_finding_closure": [
+    {
+      "id": "F001",
+      "status": "PASS_ORIGINAL_DEFECT_CLOSED",
+      "evidence": [
+        "scripts/run_controlled_real10k_20k_paired.py:1181",
+        "scripts/run_controlled_real10k_20k_paired.py:2213",
+        "scripts/run_controlled_real10k_20k_paired.py:2242",
+        "scripts/run_controlled_real10k_20k_paired.py:2275",
+        "scripts/run_controlled_real10k_20k_paired.py:2550"
+      ],
+      "note": "An external exact-GO is required before execute and is revalidated before each trainer spawn; QA2-R004 is a separate new schema contradiction."
+    },
+    {
+      "id": "F002",
+      "status": "PASS",
+      "evidence": [
+        "rfic_transformer_inverse_design/controlled_real10k_20k_contract.py:79",
+        "scripts/build_controlled_real10k_20k_nested.py:589",
+        "scripts/run_controlled_real10k_20k_paired.py:393"
+      ],
+      "note": "Builder and runner use the same colon-delimited canonical physical-cell encoder."
+    },
+    {
+      "id": "F003",
+      "status": "PASS",
+      "evidence": [
+        "scripts/run_controlled_real10k_20k_paired.py:242",
+        "scripts/run_controlled_real10k_20k_paired.py:2554"
+      ],
+      "note": "The exact ordered three-seed tuple is mandatory."
+    },
+    {
+      "id": "F004",
+      "status": "PASS",
+      "evidence": [
+        "scripts/run_controlled_real10k_20k_paired.py:1964",
+        "scripts/run_controlled_real10k_20k_paired.py:2183"
+      ],
+      "note": "Terminal and ambiguous attempt states prohibit duplicate retry or resume."
+    },
+    {
+      "id": "F005",
+      "status": "PASS",
+      "evidence": [
+        "scripts/run_controlled_real10k_20k_paired.py:459",
+        "scripts/run_controlled_real10k_20k_paired.py:968"
+      ],
+      "note": "Declared midpoint/half-range vectors and no-arm-statistics flags are exact and SHA-bound."
+    },
+    {
+      "id": "F006",
+      "status": "PASS",
+      "evidence": [
+        "scripts/run_controlled_real10k_20k_paired.py:74",
+        "scripts/run_controlled_real10k_20k_paired.py:186",
+        "scripts/run_controlled_real10k_20k_paired.py:836"
+      ],
+      "note": "Production trainer/runtime identities are hard-frozen and architecture is tied to the reviewed trainer SHA."
+    },
+    {
+      "id": "F007",
+      "status": "FAIL_NOT_FULLY_CLOSED",
+      "blocking_finding": "QA2-R003",
+      "evidence": [
+        "scripts/run_controlled_real10k_20k_paired.py:295",
+        "scripts/run_controlled_real10k_20k_paired.py:1143",
+        "scripts/run_controlled_real10k_20k_paired.py:1243"
+      ],
+      "note": "Scientific input bytes are rehashed, but the GO-bound package SHA-index bytes are not compared to their originally authorized SHA before each arm."
+    },
+    {
+      "id": "F008",
+      "status": "FAIL_NOT_FULLY_CLOSED",
+      "blocking_finding": "QA2-R002",
+      "evidence": [
+        "scripts/run_controlled_real10k_20k_paired.py:2273",
+        "scripts/run_controlled_real10k_20k_paired.py:2316",
+        "scripts/run_controlled_real10k_20k_paired.py:2611"
+      ],
+      "note": "Named common failures are receipted, but other post-intent exceptions can leave an unterminalized attempt."
+    }
+  ],
+  "findings": [
+    {
+      "id": "QA2-C001",
+      "severity": "P1",
+      "scope": "MARS_NATIVE_PREFLIGHT_AND_REVIEWED_TESTS_ONLY",
+      "title": "Native pytest can false-PASS without executing the reviewed test",
+      "evidence": [
+        "scripts/preflight_controlled_real10k_20k_mars.py:705",
+        "scripts/preflight_controlled_real10k_20k_mars.py:720",
+        "scripts/preflight_controlled_real10k_20k_mars.py:743"
+      ],
+      "proof": "With PYTEST_ADDOPTS=--collect-only and deliberately nonexistent manifest/index environment paths, pytest collected one test, executed zero test bodies, and returned 0. The preflight accepts return code 0 as PASS.",
+      "impact": "A hostile or inherited environment can bypass reviewed native assertions or load unreviewed pytest/plugin code while producing a passing preflight receipt.",
+      "required_fix": "Use an isolated, sanitized environment; disable addopts/config/plugin autoload; invoke the exact reviewed test under isolated Python; and assert executed-test count/outcome rather than return code alone."
+    },
+    {
+      "id": "QA2-C002",
+      "severity": "P1",
+      "scope": "MARS_NATIVE_PREFLIGHT_AND_REVIEWED_TESTS_ONLY",
+      "title": "GO/package/runtime hash checks lack descriptor and inode continuity",
+      "evidence": [
+        "scripts/preflight_controlled_real10k_20k_mars.py:270",
+        "scripts/preflight_controlled_real10k_20k_mars.py:331",
+        "scripts/preflight_controlled_real10k_20k_mars.py:623",
+        "scripts/preflight_controlled_real10k_20k_mars.py:699",
+        "scripts/preflight_controlled_real10k_20k_mars.py:812",
+        "scripts/preflight_controlled_real10k_20k_mars.py:973",
+        "tests/test_preflight_controlled_real10k_20k_mars.py:485"
+      ],
+      "proof": "Hashing, JSON parsing, and later native execution reopen mutable user-owned paths. Modes 0555/0444 and nlink=1 do not prevent the owning UID from chmod plus atomic replacement and restoration before the post-audit.",
+      "impact": "A concurrent same-UID writer can cause the preflight to consume a different GO or execute unreviewed test/runtime bytes while both surrounding path-hash audits observe authorized bytes.",
+      "required_fix": "Hold verified descriptors through consumption, verify dev/ino/stat continuity, execute via a verified immutable descriptor or protected copied snapshot, and bind post-consumption identities."
+    },
+    {
+      "id": "QA2-R001",
+      "severity": "P1",
+      "scope": "FUTURE_TRAINING_RUNNER_GATE",
+      "title": "Runner accepts self-consistent material without frozen production provenance",
+      "evidence": [
+        "scripts/run_controlled_real10k_20k_paired.py:570",
+        "scripts/run_controlled_real10k_20k_paired.py:591",
+        "scripts/run_controlled_real10k_20k_paired.py:604",
+        "scripts/run_controlled_real10k_20k_paired.py:762",
+        "scripts/run_controlled_real10k_20k_paired.py:1143",
+        "tests/test_run_controlled_real10k_20k_paired.py:223"
+      ],
+      "proof": "The accepted synthetic fixture declares only shared_contract, only a historical-summary source, and an arbitrary all-true fixture_exact_production_gate check; _audit_material accepts it. Exact builder/splitter/source identities and the outer materialization COMPLETE receipt are not required.",
+      "impact": "Arbitrary self-consistent 10K/20K rows can become the GO-bound training contract without proof that the frozen MARS materialization gate produced them from the preregistered sources.",
+      "required_fix": "Require exact implementation/source role keysets and SHAs, exact production check keyset, and the exact outer materialization COMPLETE receipt bound to package manifest/index/GO/output closure."
+    },
+    {
+      "id": "QA2-R002",
+      "severity": "P1",
+      "scope": "FUTURE_TRAINING_RUNNER_GATE",
+      "title": "Post-intent exception classes can leave no FAIL receipt",
+      "maps_prior_finding": "F008",
+      "evidence": [
+        "scripts/run_controlled_real10k_20k_paired.py:2273",
+        "scripts/run_controlled_real10k_20k_paired.py:2316",
+        "scripts/run_controlled_real10k_20k_paired.py:2611"
+      ],
+      "proof": "A temp-only hostile probe forced subprocess.Popen to raise subprocess.SubprocessError. INTENT/stdout/stderr existed, but FAIL_RECEIPT.json did not.",
+      "impact": "The attempt is fail-closed on a later run, but the promised durable terminal failure evidence and exact failure denominator are incomplete.",
+      "required_fix": "Terminalize every catchable BaseException after INTENT, preserve ambiguous child identity when applicable, and fsync the attempt and parent directory."
+    },
+    {
+      "id": "QA2-R003",
+      "severity": "P1",
+      "scope": "FUTURE_TRAINING_RUNNER_GATE",
+      "title": "GO-bound package SHA-index bytes are not reverified before each arm",
+      "maps_prior_finding": "F007",
+      "evidence": [
+        "scripts/run_controlled_real10k_20k_paired.py:295",
+        "scripts/run_controlled_real10k_20k_paired.py:1143",
+        "scripts/run_controlled_real10k_20k_paired.py:1237",
+        "scripts/run_controlled_real10k_20k_paired.py:1243"
+      ],
+      "proof": "A temp-only probe uppercased all index digests, changing the index-file SHA while preserving its normalized semantic contents; _verify_closure still passed.",
+      "impact": "A byte identity explicitly authorized by external GO may drift between arm launches without fail-before-spawn.",
+      "required_fix": "Rehash package_sha_index and every GO binding against the frozen GO-authorized SHA immediately before every arm spawn."
+    },
+    {
+      "id": "QA2-R004",
+      "severity": "P1",
+      "scope": "FUTURE_TRAINING_RUNNER_GATE",
+      "title": "Material QA contract requires zero P0/P1 findings but runner GO cannot carry them",
+      "evidence": [
+        "scripts/build_controlled_real10k_20k_nested.py:457",
+        "scripts/run_controlled_real10k_20k_paired.py:663",
+        "scripts/run_controlled_real10k_20k_paired.py:1190"
+      ],
+      "proof": "The material INDEPENDENT_QA_REQUIRED record says an exact GO must report zero P0/P1 findings. The runner's exact GO top-level keyset omits findings and rejects it as an extra key.",
+      "impact": "The only GO schema accepted by the runner cannot machine-prove the prerequisite declared by the frozen material contract.",
+      "required_fix": "Define one exact GO schema that includes findings={p0:0,p1:0}, binds the QA-required receipt, and is enforced identically by material and runner gates."
+    },
+    {
+      "id": "QA2-E001",
+      "severity": "P1",
+      "scope": "FUTURE_COMMON_TEST_EVALUATOR_GATE",
+      "title": "Evaluator omits shared scientific contract and numerical runtime from release bindings",
+      "evidence": [
+        "scripts/evaluate_controlled_real10k_20k_common.py:42",
+        "scripts/evaluate_controlled_real10k_20k_common.py:924",
+        "scripts/evaluate_controlled_real10k_20k_common.py:1448",
+        "scripts/evaluate_controlled_real10k_20k_common.py:1691"
+      ],
+      "proof": "The evaluator dynamically imports the shared encoder/bounds/seeds and uses NumPy, but neither the imported shared-contract SHA nor exact Python/NumPy runtime is release/GO-bound; it also does not compare the paired run contract's shared binding to the imported module.",
+      "impact": "Cell grouping, bootstrap denominators, inference, and released statistics can change while all declared evaluator release bindings remain unchanged.",
+      "required_fix": "Bind and verify the exact shared-contract source, Python executable/version, NumPy version/core/config, and imported module identity before prepare and immediately before release."
+    },
+    {
+      "id": "QA2-E002",
+      "severity": "P1",
+      "scope": "FUTURE_COMMON_TEST_EVALUATOR_GATE",
+      "title": "One-time claim durability and released-byte continuity are incomplete",
+      "evidence": [
+        "scripts/evaluate_controlled_real10k_20k_common.py:218",
+        "scripts/evaluate_controlled_real10k_20k_common.py:1730",
+        "scripts/evaluate_controlled_real10k_20k_common.py:3016",
+        "scripts/evaluate_controlled_real10k_20k_common.py:3032"
+      ],
+      "proof": "The irreversible claim fsyncs only its file, not the directory entry, and trainer/CSV/holdout/targets/weights are hashed and then reopened through paths without held-descriptor or final inode continuity.",
+      "impact": "A crash can lose the one-time claim and permit a second release; a same-UID replacement race can substitute unreviewed code, data, or weights after authorization.",
+      "required_fix": "Fsync claim directory and parent before any test read, retain an unambiguous recovery marker, and consume verified held descriptors or immutable snapshots with final dev/ino/SHA checks."
+    },
+    {
+      "id": "QA2-E003",
+      "severity": "P1",
+      "scope": "FUTURE_COMMON_TEST_EVALUATOR_GATE",
+      "title": "Evaluator exact-GO semantics are not exact",
+      "evidence": [
+        "scripts/evaluate_controlled_real10k_20k_common.py:1666",
+        "scripts/evaluate_controlled_real10k_20k_common.py:1700",
+        "scripts/evaluate_controlled_real10k_20k_common.py:1712"
+      ],
+      "proof": "The GO has no exact top-level keyset, nonce, zero-P0/P1 finding counts, or QA-required SHA binding; any nonempty all-true checks dictionary passes.",
+      "impact": "A syntactically self-asserted receipt can open the irreversible numerical release gate without the machine-checkable independent-QA evidence contract used elsewhere.",
+      "required_fix": "Require an exact external GO schema with nonce/freshness/reviewer/findings/check keyset/QA-required binding and exact authorities."
+    },
+    {
+      "id": "QA2-C101",
+      "severity": "P2",
+      "scope": "MARS_NATIVE_PREFLIGHT_AND_REVIEWED_TESTS_ONLY",
+      "title": "Preflight attempt evidence is not directory-durable or catchably terminalized",
+      "evidence": [
+        "scripts/preflight_controlled_real10k_20k_mars.py:1033",
+        "scripts/preflight_controlled_real10k_20k_mars.py:1048",
+        "scripts/preflight_controlled_real10k_20k_mars.py:1087"
+      ]
+    },
+    {
+      "id": "QA2-C102",
+      "severity": "P2",
+      "scope": "MARS_NATIVE_PREFLIGHT_AND_REVIEWED_TESTS_ONLY",
+      "title": "Package role validation accepts extra roles",
+      "evidence": [
+        "scripts/build_controlled_real10k_20k_mars_package.py:188",
+        "scripts/preflight_controlled_real10k_20k_mars.py:345",
+        "tests/controlled_real10k_20k_mars_native_smoke.py:92"
+      ],
+      "mitigation_in_frozen_package": "The live remote package was independently proven to have exactly 15 expected roles and no extras."
+    },
+    {
+      "id": "QA2-C103",
+      "severity": "P2",
+      "scope": "MARS_NATIVE_PREFLIGHT_AND_REVIEWED_TESTS_ONLY",
+      "title": "Candidate paths are caller-selected and absence is only a snapshot",
+      "evidence": [
+        "scripts/preflight_controlled_real10k_20k_mars.py:530",
+        "scripts/preflight_controlled_real10k_20k_mars.py:926"
+      ],
+      "mitigation_in_frozen_binding": "The live binding recomputation used the exact required three paths in exact order and proved all absent."
+    },
+    {
+      "id": "QA2-C104",
+      "severity": "P2",
+      "scope": "MARS_NATIVE_PREFLIGHT_AND_REVIEWED_TESTS_ONLY",
+      "title": "Singleton detection can miss renamed or module-launched equivalents",
+      "evidence": [
+        "scripts/preflight_controlled_real10k_20k_mars.py:554"
+      ]
+    },
+    {
+      "id": "QA2-E101",
+      "severity": "P2",
+      "scope": "FUTURE_COMMON_TEST_EVALUATOR_GATE",
+      "title": "Evaluator path canonicalization masks symlink provenance and does not require nlink/mode",
+      "evidence": [
+        "scripts/evaluate_controlled_real10k_20k_common.py:193"
+      ]
+    },
+    {
+      "id": "QA2-E102",
+      "severity": "P2",
+      "scope": "FUTURE_COMMON_TEST_EVALUATOR_GATE",
+      "title": "Final evaluation output tree is not frozen or directory-durable",
+      "evidence": [
+        "scripts/evaluate_controlled_real10k_20k_common.py:3280"
+      ]
+    }
+  ],
+  "local_verification": {
+    "warnings_as_errors_exact_suite": {
+      "command": "PYTHONWARNINGS=error python3 -m pytest -q tests/test_build_controlled_real10k_20k_nested.py tests/test_run_controlled_real10k_20k_materialization.py tests/test_run_controlled_real10k_20k_paired.py tests/test_build_controlled_real10k_20k_mars_package.py tests/test_preflight_controlled_real10k_20k_mars.py tests/test_evaluate_controlled_real10k_20k_common.py",
+      "result": "PASS",
+      "summary": "105 passed in 5.04s"
+    },
+    "targeted_runner_suite": {
+      "result": "PASS",
+      "summary": "49 passed in 2.57s"
+    },
+    "targeted_package_preflight_evaluator_suite": {
+      "result": "PASS",
+      "summary": "56 passed in 3.17s"
+    },
+    "py_compile": {
+      "result": "PASS",
+      "bytecode_destination": "temporary local pycache only"
+    },
+    "git_diff_check": "PASS",
+    "static_hostile_gate": {
+      "result": "PASS_WITH_FINDINGS_REPORTED_ABOVE",
+      "forbidden_dynamic_eval_exec_pickle_allow_true_shell_signal": "No unintended primitive found",
+      "intended_subprocess_sites": [
+        "preflight runtime probe",
+        "preflight native pytest",
+        "paired runner exact trainer launch"
+      ]
+    },
+    "hostile_probes": [
+      {
+        "id": "PYTEST_COLLECT_ONLY_FALSE_PASS",
+        "result": "FINDING_REPRODUCED",
+        "details": "1 test collected; deliberately nonexistent manifest/index were never opened; return code 0"
+      },
+      {
+        "id": "RUNNER_SELF_CONSISTENT_NONPRODUCTION_MATERIAL",
+        "result": "FINDING_REPRODUCED"
+      },
+      {
+        "id": "RUNNER_POPEN_SUBPROCESSERROR_NO_FAIL_RECEIPT",
+        "result": "FINDING_REPRODUCED",
+        "details": "INTENT present; FAIL_RECEIPT absent"
+      },
+      {
+        "id": "RUNNER_GO_BOUND_INDEX_BYTE_DRIFT",
+        "result": "FINDING_REPRODUCED",
+        "details": "Uppercased digest text changed index SHA; _verify_closure passed"
+      }
+    ]
+  },
+  "frozen_local_identities": {
+    "rfic_transformer_inverse_design/controlled_real10k_20k_contract.py": "ca6824e5d47fc037c856044ad74b0dec26844fed19d09bbfee42d44fbd3969c0",
+    "scripts/build_controlled_real10k_20k_nested.py": "f3e3faff0992afaa78460423517bc9df27dd2e58641aff6854df3741f517dd88",
+    "scripts/run_controlled_real10k_20k_materialization.py": "7be95f81ed98f6cb45a8913e09727bc88828806b969a3ad516fa8830c49cf41f",
+    "scripts/run_controlled_real10k_20k_paired.py": "376558917092edb03173a638e762bec05a1559a1ee8967332d08e92f236d9ad2",
+    "scripts/build_controlled_real10k_20k_mars_package.py": "bb5c3c12d8d871ef1e61f21bf9787c501fc44b4d0130b8f96c2a26d24fc09508",
+    "scripts/preflight_controlled_real10k_20k_mars.py": "78ce50bd3834edbe20107f92ee7aadb7bdf5a43faa0641b4788fe2a95ffd4919",
+    "scripts/evaluate_controlled_real10k_20k_common.py": "20fd8dd6057158d189410c9fff48eb48b3033a18d660b2017ec3e8f63dc812f1",
+    "tests/controlled_real10k_20k_mars_native_smoke.py": "4fd749899123f20300c2254393d274a7189004a0ff8d4eb5571ced6631111f17",
+    "tests/test_build_controlled_real10k_20k_nested.py": "6fa7b2b6f428b4bc6862a595a85c9ce9e69a448cdebee11ea6fb08b0c3402636",
+    "tests/test_run_controlled_real10k_20k_materialization.py": "a096b0ded34a748466374d1c68ecf4d9ad97e7de9876dc2f9edbe4dbfe39e012",
+    "tests/test_run_controlled_real10k_20k_paired.py": "260d363f94f8b286970137ce1b716cb251085730984a75e32b268525b2ba10a9",
+    "tests/test_build_controlled_real10k_20k_mars_package.py": "bc32caed805897b2beca143ec73276f1a14c11d83fd00224428733befc814ee8",
+    "tests/test_preflight_controlled_real10k_20k_mars.py": "40597d3d8f8f53df654a24f6dc123acaf9e84cadd4e5ad7a70e53a3d52a656de",
+    "tests/test_evaluate_controlled_real10k_20k_common.py": "02064d0a1b143b4bf75a4f305146345f4bae8e8251035ad8e00f39957308adcb",
+    "trainer_code": "92988524b08b15a2388f655f6239070889098024e49ee184832f69876f7db3be",
+    "splitter_code": "9db4b7f1ed9435f73e95e49c558003bdaaf153579c5c44f04fb779aa31e0ef8a",
+    "preregistration_v1_json": "19aca7778f4974fd3e7eadaca8b291783e8e08e99a53a9dca70b070a4bf16417",
+    "preregistration_addendum_v1_1_json": "9f1eb0e071ade0e5a42597b4242409282ed8d34cf159104f71df2d4d0d0a8633",
+    "preregistration_addendum_v1_2_json": "fb7c7d0f9e206e3743cf795a544004e570842f26495903ad0eafdd5f909f37a9"
+  },
+  "mars_read_only_verification": {
+    "connected": true,
+    "package_root": "/volumes/research-localdata/ywang3652/controlled_real10k_20k_handoff_20260824T085115Z/package_v1",
+    "hostname": "mars-0002.ece.wisc.edu",
+    "uid": 2259579,
+    "boot_id": "4801efc4-eba0-4b79-91b2-4b082f238271",
+    "package_root_mode": "0555",
+    "payload_file_mode": "0444",
+    "payload_file_nlink": 1,
+    "manifest_sha256": "ef52a3ab99273d7bd1c0c0d5c38c0558dd99eed4637fb2912debdc792d34d374",
+    "sha_index_sha256": "f82edc7e82dac1fdb24e41aaf878e8dcc7323b253da788eb6c37bbfda090667a",
+    "receipt_sha256": "4fb9e59b54fd83147002926ede2a39873babbfca6a2a2b0e385f3b28631a01ae",
+    "qa_required_sha256": "48825948a18f3e24133532569f866fc63dab9e883ccd3bb7f863254640b48b2c",
+    "sha256sum_check": "PASS_ALL_18_INDEXED_MEMBERS",
+    "role_count": 15,
+    "role_set_exact": true,
+    "package_local_frozen_bytes_match": true,
+    "candidate_output_dirs": [
+      "/volumes/research-localdata/ywang3652/controlled_real10k_20k_handoff_20260824T085115Z/materialization_gate_candidate_v1",
+      "/volumes/research-localdata/ywang3652/controlled_real10k_20k_handoff_20260824T085115Z/materialization_output_v1",
+      "/volumes/research-localdata/ywang3652/controlled_real10k_20k_handoff_20260824T085115Z/materialization_execution_receipt_v1"
+    ],
+    "candidate_output_dirs_absent": [
+      true,
+      true,
+      true
+    ],
+    "preflight_receipt_dir": "/volumes/research-localdata/ywang3652/controlled_real10k_20k_handoff_20260824T085115Z/preflight_receipts/attempt_0001",
+    "preflight_receipt_dir_absent": true,
+    "native_test_roles": [
+      "native_smoke_test"
+    ],
+    "live_binding_recompute": {
+      "method": "packaged preflight _audit_package plus _expected_go_bindings",
+      "canonical_json_sha256": "f215d62e71e5a563a51b4ac42f336efb538ec554c3607483cd0b202ecb1d4bda",
+      "canonical_json_size_bytes": 4596,
+      "package_role_sha256": {
+        "authoritative_100k_csv": "68468eb2d3678aa0793157c1c647e975f60e8ec1673c259050ababe9fd1ff08a",
+        "historical_10k_csv": "3027290eb1b4c229a23f0676f970ff9d13762677a897a0d7e2aed959075c85c8",
+        "historical_model_summary_json": "90a81532f7342ae7348248ea45889368fbb13ed2b6ee8f89e789f80f6811a3fa",
+        "materialization_builder_code": "f3e3faff0992afaa78460423517bc9df27dd2e58641aff6854df3741f517dd88",
+        "materialization_gate_code": "7be95f81ed98f6cb45a8913e09727bc88828806b969a3ad516fa8830c49cf41f",
+        "native_smoke_test": "4fd749899123f20300c2254393d274a7189004a0ff8d4eb5571ced6631111f17",
+        "package_builder_code": "bb5c3c12d8d871ef1e61f21bf9787c501fc44b4d0130b8f96c2a26d24fc09508",
+        "preflight_code": "78ce50bd3834edbe20107f92ee7aadb7bdf5a43faa0641b4788fe2a95ffd4919",
+        "preregistration_addendum_v1_1_json": "9f1eb0e071ade0e5a42597b4242409282ed8d34cf159104f71df2d4d0d0a8633",
+        "preregistration_addendum_v1_2_json": "fb7c7d0f9e206e3743cf795a544004e570842f26495903ad0eafdd5f909f37a9",
+        "preregistration_v1_json": "19aca7778f4974fd3e7eadaca8b291783e8e08e99a53a9dca70b070a4bf16417",
+        "runner_code": "376558917092edb03173a638e762bec05a1559a1ee8967332d08e92f236d9ad2",
+        "shared_contract_code": "ca6824e5d47fc037c856044ad74b0dec26844fed19d09bbfee42d44fbd3969c0",
+        "splitter_code": "9db4b7f1ed9435f73e95e49c558003bdaaf153579c5c44f04fb779aa31e0ef8a",
+        "trainer_code": "92988524b08b15a2388f655f6239070889098024e49ee184832f69876f7db3be"
+      },
+      "runtime_expected": {
+        "python_version": "3.12.13",
+        "python_executable_sha256": "8c515a32b1a5d3d807e53359901a4d09ec06819b488736641aabd6a12eefba63",
+        "numpy_version": "2.5.0",
+        "numpy_core_sha256": "471db15840ca5bb0b32158eddca6d3e42545611055d6a4a4dee6e0d8a315a442",
+        "numpy_config_file_sha256": "eca5779c26589580219ef7f949eb28f5eaad7ad44febc8444ea17d53ff92a947",
+        "numpy_show_config_sha256": "1007c12980046a08a6661242d1d73fd28ac080e20908fc7e0ea65f6ec165688d"
+      }
+    }
+  }
+}

@@ -1,0 +1,190 @@
+{
+  "schema": "controlled_real10k_20k_nested_preregistration_v1",
+  "generated_utc": "2026-08-24T07:35:00Z",
+  "status": "PRE_RESULT_PROTOCOL_FROZEN_CODE_AND_DATA_BINDINGS_PENDING",
+  "result_blind": true,
+  "research_question": "Under one frozen 3x256 tandem architecture and one frozen training/evaluation contract, what changes when the real-EMX source table grows from an exact nested 10000 rows to 20000 rows?",
+  "causal_estimand": {
+    "contrast": "large_minus_small_within_paired_seed",
+    "only_intended_independent_variable": "real_emx_source_and_gradient_training_row_count",
+    "scope": "Conditional on the frozen existing source pool, deterministic nested-row selection, architecture, trainer bytes, normalization, holdout, optimizer-update budget, paired seeds, and evaluation implementation.",
+    "not_claimed": [
+      "fresh-EMX accuracy of newly predicted inverse geometries",
+      "deployment-population performance",
+      "current strict-|K|<1 checkpoint performance",
+      "effect of architecture, decoder, optimizer, or inference search"
+    ]
+  },
+  "frozen_source_identities": {
+    "historical_real10k_training_csv_sha256": "3027290eb1b4c229a23f0676f970ff9d13762677a897a0d7e2aed959075c85c8",
+    "historical_real10k_model_summary_sha256": "90a81532f7342ae7348248ea45889368fbb13ed2b6ee8f89e789f80f6811a3fa",
+    "historical_real10k_weights_sha256_descriptive_anchor_only": "ffea66dfdd0bb252e402e1ade70f5e8768511e26f2978b1d73b1817a0221e42a",
+    "authoritative_existing_real_emx_100k_csv_sha256": "68468eb2d3678aa0793157c1c647e975f60e8ec1673c259050ababe9fd1ff08a",
+    "fixed_physical_target_frame_10000_sha256": "c9d7d8bc7f65a488be0805969389a01ef049534eefdfdea71cbd640ee27d6407"
+  },
+  "rejected_uncontrolled_candidate": {
+    "selected20k_csv_sha256": "5525307b3a5736f1da9efc21b8e7102557c5b566107db2fee8512c282de726b5",
+    "reason": "It is not an exact superset of the historical real10k table; using it would confound selection and sample size.",
+    "eligible_for_causal_conclusion": false
+  },
+  "nested_materialization": {
+    "new_emx_generation": false,
+    "selection_seed": 20260824,
+    "selection_method": "stable_sha256_rank_within_proportional_historical_train_cell_quotas_v1",
+    "small_is_exact_ordered_prefix_of_large": true,
+    "all_10000_added_rows_must_be_unique": true,
+    "added_rows_must_be_from_historical_train_cells_only": true,
+    "added_rows_must_not_overlap_historical_geometry_or_touchstone_identity": true,
+    "arms": {
+      "small": {
+        "source_table_rows": 10000,
+        "gradient_train_rows": 7871,
+        "validation_rows": 1227,
+        "test_rows": 902
+      },
+      "large": {
+        "source_table_rows": 20000,
+        "gradient_train_rows": 17871,
+        "validation_rows": 1227,
+        "test_rows": 902
+      }
+    }
+  },
+  "frozen_model_contract": {
+    "model_family": "physical_feature_tandem_inverse",
+    "inputs": [
+      "Lp_nH_at_15GHz",
+      "Ls_nH_at_15GHz",
+      "Qmin_at_15GHz",
+      "K_abs_at_15GHz"
+    ],
+    "geometry_outputs": 10,
+    "forward_layers": [10, 256, 256, 256, 4],
+    "inverse_layers": [4, 256, 256, 256, 10],
+    "forward_parameter_count": 135428,
+    "inverse_parameter_count": 135434,
+    "total_parameter_count": 270862,
+    "hidden_activation": "GELU",
+    "decoder": "independent_sigmoid",
+    "local_refinement_steps": 0,
+    "q_training_semantics": "exact_Qmin",
+    "geometry_anchor_weight": 0.01,
+    "topology_feasibility_weight": 0.0
+  },
+  "frozen_training_contract": {
+    "paired_seeds": [20260711, 20260712, 20260713],
+    "initialization": "fresh_same_seed_within_pair",
+    "batch_size": 1024,
+    "batch_sampler": "row_uniform",
+    "exact_update_batch_mode": "continuous_permutation_full_batch",
+    "forward_optimizer_updates": 1200,
+    "inverse_optimizer_updates": 1200,
+    "validation_every_optimizer_updates": 20,
+    "learning_rate": 0.001,
+    "learning_rate_schedule": "constant",
+    "weight_decay": 0.000001,
+    "response_loss_family": "mse",
+    "response_loss_scaling": "declared_range",
+    "response_weight": 1.0,
+    "response_weight_schedule": "warmup_ramp_adaptive_ema",
+    "response_schedule_domain": "optimizer_update",
+    "response_warmup_optimizer_updates": 60,
+    "response_ramp_optimizer_updates": 300,
+    "early_stopping": false,
+    "checkpoint_selection": "validation_only",
+    "training_phase_evaluation_mode": "validation_only",
+    "test_access_events_before_all_six_arms_complete": 0
+  },
+  "common_contracts": {
+    "validation_and_test_identity_lists_must_be_exactly_common": true,
+    "physical_cell_train_validation_test_overlap": 0,
+    "normalization": "one exact declared midpoint/half-range contract for both arms",
+    "arm_specific_empirical_normalization_forbidden": true,
+    "arm_specific_decoder_envelope_forbidden": true,
+    "test_release": "one separately frozen evaluator after all six validation-only arm receipts pass independent QA"
+  },
+  "resource_and_resume_contract": {
+    "execution": "serial_one_child_at_a_time",
+    "arm_order_within_seed": ["small", "large"],
+    "load_average_1m_max_before_each_launch": 40.0,
+    "nice": 19,
+    "blas_threads": 4,
+    "unfinished_attempt_policy": "AMBIGUOUS_NO_AUTOMATIC_RETRY",
+    "recorded_failure_policy": "NO_AUTOMATIC_RETRY",
+    "execution_requires_fresh_independent_exact_go": true
+  },
+  "evaluation_plan": {
+    "common_real_emx_holdout": {
+      "rows": 902,
+      "primary_estimand": "forward prediction error on common real-EMX geometry/response rows",
+      "inverse_geometry_label_distance": "secondary diagnostic because inverse solutions are non-unique"
+    },
+    "fixed_target_frame": {
+      "rows": 10000,
+      "panels": {
+        "legacy_K_abs_le_0p8": 8000,
+        "extension_K_abs_gt_0p8": 2000,
+        "full10k": 10000
+      },
+      "primary_panel": "legacy_K_abs_le_0p8",
+      "extension_role": "out-of-support stress test",
+      "evidence_class": "own-forward tandem proxy self-consistency, not fresh EMX"
+    },
+    "required_feature_metrics": [
+      "MAE",
+      "RMSE",
+      "P50_absolute_error",
+      "P90_absolute_error",
+      "P95_absolute_error",
+      "P99_absolute_error",
+      "maximum_absolute_error"
+    ],
+    "required_joint_and_guardrail_metrics": [
+      "declared_range_joint_NRMSE",
+      "fixed_span_engineering_joint_error",
+      "Q_target_met_rate",
+      "Q_one_sided_shortfall"
+    ],
+    "K_near_zero_rule": "Target-relative K percentage error is diagnostic only; absolute and fixed-span K error are primary.",
+    "failure_denominators_must_be_reported": true
+  },
+  "statistical_plan": {
+    "replicate_unit": "paired_training_seed",
+    "replicate_count": 3,
+    "paired_delta_definition": "metric_large_minus_metric_small",
+    "error_metric_direction": "negative_favors_large",
+    "rate_metric_direction": "positive_favors_large",
+    "summary": [
+      "all three seed-level arm values",
+      "all three paired deltas",
+      "mean paired delta",
+      "sample standard deviation of paired deltas",
+      "two-sided Student-t 95 percent interval with df=2"
+    ],
+    "small_n_warning_required": true,
+    "spatial_sensitivity": {
+      "method": "physical-cell cluster bootstrap on the frozen finite frame",
+      "replicates": 2000,
+      "seed": 2026082402,
+      "interpretation": "spatial sensitivity only, not deployment-population uncertainty"
+    },
+    "missing_or_failed_arm_policy": "No complete paired-effect claim; retain and report the failed denominator."
+  },
+  "chart_contract": {
+    "show_seed_points_and_pairing": true,
+    "mean_only_bar_chart_forbidden": true,
+    "raw_units_must_use_separate_axes_or_panels": true,
+    "cross_feature_chart_uses_fixed_span_normalization": true,
+    "zero_baseline_for_bars": true,
+    "negative_results_and_tail_metrics_must_not_be_hidden": true,
+    "every_chart_binds_source_data_script_and_image_sha256": true
+  },
+  "release_rules": {
+    "causal_language_allowed_only_if_every_frozen_control_and_all_three_pairs_pass": true,
+    "fresh_emx_claim_allowed": false,
+    "historical_weights_are_not_a_paired_baseline": true,
+    "fixed10k_must_not_be_regenerated": true,
+    "completed_emx_must_not_be_rerun": true,
+    "code_and_data_sha_bindings_will_be_added_by_immutable_receipts": true
+  }
+}

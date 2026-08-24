@@ -1,0 +1,56 @@
+{
+  "schema": "controlled_real10k_20k_root_code_freeze_receipt_v3",
+  "generated_utc": "2026-08-24T10:11:49Z",
+  "status": "PASS_AUTHOR_ROOT_VERIFIED_AWAITING_FRESH_INDEPENDENT_QA",
+  "candidate_sha256": {
+    "rfic_transformer_inverse_design/controlled_real10k_20k_contract.py": "ca6824e5d47fc037c856044ad74b0dec26844fed19d09bbfee42d44fbd3969c0",
+    "scripts/build_controlled_real10k_20k_mars_package.py": "c4b9f496bda460e201958280a5a09c4aa2aaed36ffd265abd633ac8f5ef7b0b1",
+    "scripts/build_controlled_real10k_20k_nested.py": "e5c25b79e76343c77a88a7e6837b8547bd1a8ad8b8aaa277e61b3d487e9a8cfc",
+    "scripts/evaluate_controlled_real10k_20k_common.py": "1196e4c480ddfe4f355834f0ba27cc379032f4bddb4273c6a60de36c147af964",
+    "scripts/preflight_controlled_real10k_20k_mars.py": "bf77000ae2e1bb934050b26fa630fa405dc7e418a3da3102cf8a7bbe8a5c840a",
+    "scripts/run_controlled_real10k_20k_materialization.py": "9e7efe71111daeb2c954ffcd8b57a41c6b17384f2a8451dfb0964f83152f9746",
+    "scripts/run_controlled_real10k_20k_paired.py": "33049b3f2fc28752d93f9f8b19665eb8d7ed6f5fdff48dcac621de1387fc1a91",
+    "tests/controlled_real10k_20k_mars_native_smoke.py": "7f1cdd03fa0be778fbf419e1018ffb11bc6dbdde73596d6ea56e7083a4a7635a",
+    "tests/test_build_controlled_real10k_20k_mars_package.py": "f1e972e10e480f8382e9bbf8079629359418b428b17bca1bfe8e78241d6aec7e",
+    "tests/test_build_controlled_real10k_20k_nested.py": "6fa7b2b6f428b4bc6862a595a85c9ce9e69a448cdebee11ea6fb08b0c3402636",
+    "tests/test_evaluate_controlled_real10k_20k_common.py": "8f13fa264519ac1a1239571bea50dbfaee24a9ce90fae94fe02c63e43d61efed",
+    "tests/test_preflight_controlled_real10k_20k_mars.py": "534684dc624e4dae3ccb5b2ec404ed5eeb1b7153c2df19960b469e90e484d358",
+    "tests/test_run_controlled_real10k_20k_materialization.py": "44da18e80c3153718c017c8147bed78312accfcbbb5ea50956fccb468b0eaf94",
+    "tests/test_run_controlled_real10k_20k_paired.py": "48a4e004445b520b87b95e6443456d972f293ffe65455b2b29283c9c6f79c87b"
+  },
+  "frozen_dependency_sha256": {
+    "rfic_transformer_inverse_design/model_splitting.py": "9db4b7f1ed9435f73e95e49c558003bdaaf153579c5c44f04fb779aa31e0ef8a",
+    "scripts/train_physical_feature_tandem_inverse.py": "92988524b08b15a2388f655f6239070889098024e49ee184832f69876f7db3be"
+  },
+  "root_verification": {
+    "controlled_component_warnings_as_errors": {
+      "passed": 150,
+      "failed": 0
+    },
+    "frozen_splitter_and_trainer_baseline": {
+      "passed": 30,
+      "failed": 0,
+      "warnings": 87
+    },
+    "expanded_all_warnings_as_errors_attempt": {
+      "passed": 173,
+      "failed": 7,
+      "classification": "PRESERVED_NEGATIVE_ENVIRONMENTAL_EVIDENCE",
+      "reason": "The unchanged historical trainer emits NumPy matmul RuntimeWarning values in seven synthetic legacy tests on the local macOS runtime; the normal frozen-dependency baseline passes 30/30."
+    },
+    "python_compile_files": 14,
+    "python_compile_pass": true,
+    "trailing_whitespace_pass": true,
+    "git_diff_check_pass": true
+  },
+  "authorities": {
+    "mars_native_preflight": false,
+    "data_materialization": false,
+    "training": false,
+    "common_test_access": false,
+    "numerical_metric_access": false,
+    "fresh_emx": false,
+    "process_signal": false
+  },
+  "next_legal_action": "FRESH_INDEPENDENT_RESULT_BLIND_CODE_QA_OF_EXACT_BYTES"
+}

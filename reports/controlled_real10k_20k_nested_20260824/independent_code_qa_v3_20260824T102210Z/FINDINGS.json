@@ -1,0 +1,258 @@
+{
+  "schema": "controlled_real10k_20k_independent_code_qa_findings_v3",
+  "generated_utc": "2026-08-24T10:22:10Z",
+  "verdict": "NO_GO",
+  "code_go_created": false,
+  "severity_counts": {
+    "p0": 0,
+    "p1": 6,
+    "p2": 3,
+    "p3": 0
+  },
+  "prior_qa_v2_required_closure": [
+    {
+      "id": "QA2-C001",
+      "status": "PASS_CLOSED",
+      "evidence": [
+        "scripts/preflight_controlled_real10k_20k_mars.py:906-936",
+        "scripts/preflight_controlled_real10k_20k_mars.py:1115-1245"
+      ],
+      "note": "Reviewed native smoke runs directly under verified CPython with exact -I -B -S, a minimal environment, exact result schema, and executed_test_count=1; pytest is not invoked."
+    },
+    {
+      "id": "QA2-C002",
+      "status": "PASS_CLOSED",
+      "evidence": [
+        "scripts/preflight_controlled_real10k_20k_mars.py:218-318",
+        "scripts/preflight_controlled_real10k_20k_mars.py:488-575",
+        "scripts/preflight_controlled_real10k_20k_mars.py:847-922",
+        "scripts/preflight_controlled_real10k_20k_mars.py:1496-1498"
+      ],
+      "note": "Package, GO, and runtime files remain held by verified descriptors; Linux execution consumes the verified runtime inode and sealed snapshots; final descriptor continuity is checked."
+    },
+    {
+      "id": "QA2-R001",
+      "status": "PASS_CLOSED",
+      "evidence": [
+        "scripts/run_controlled_real10k_20k_paired.py:725-805",
+        "scripts/run_controlled_real10k_20k_paired.py:1010-1265"
+      ],
+      "note": "The runner now requires exact implementation/source role closures and the deep outer materialization COMPLETE authority bound to the package and material output."
+    },
+    {
+      "id": "QA2-R002",
+      "status": "PASS_CLOSED",
+      "evidence": [
+        "scripts/run_controlled_real10k_20k_paired.py:2712-2754",
+        "scripts/run_controlled_real10k_20k_paired.py:2857-3046"
+      ],
+      "note": "Post-intent environment, spawn, wait, and terminalization failures are caught through BaseException handling and durable FAIL receipts."
+    },
+    {
+      "id": "QA2-R003",
+      "status": "PASS_CLOSED",
+      "evidence": [
+        "scripts/run_controlled_real10k_20k_paired.py:1659-1795",
+        "scripts/run_controlled_real10k_20k_paired.py:2792-2836",
+        "scripts/run_controlled_real10k_20k_paired.py:2883-2894"
+      ],
+      "note": "The GO and all current bindings, including package SHA-index bytes, are recomputed before intent and again immediately before each arm spawn."
+    },
+    {
+      "id": "QA2-R004",
+      "status": "PASS_CLOSED",
+      "evidence": [
+        "scripts/run_controlled_real10k_20k_paired.py:1510-1553",
+        "scripts/run_controlled_real10k_20k_paired.py:1700-1751"
+      ],
+      "note": "Training GO v2 has an exact schema and requires findings={p0:0,p1:0}, consistent with the material QA gate."
+    },
+    {
+      "id": "QA2-E001",
+      "status": "PASS_CLOSED",
+      "evidence": [
+        "scripts/evaluate_controlled_real10k_20k_common.py:52-149",
+        "scripts/evaluate_controlled_real10k_20k_common.py:729-824",
+        "scripts/evaluate_controlled_real10k_20k_common.py:1428-1499",
+        "scripts/evaluate_controlled_real10k_20k_common.py:1966-2069",
+        "scripts/evaluate_controlled_real10k_20k_common.py:4051-4078"
+      ],
+      "note": "Shared scientific contract, paired runner, exact Python/NumPy runtime, evaluator, and model identities are release-bound and reverified from held snapshots."
+    },
+    {
+      "id": "QA2-E002",
+      "status": "PARTIAL_NEW_P1_BLOCKER",
+      "evidence": [
+        "scripts/evaluate_controlled_real10k_20k_common.py:515-581",
+        "scripts/evaluate_controlled_real10k_20k_common.py:4032-4120"
+      ],
+      "note": "Claim durability and held input continuity were fixed, but QA3-EV001 proves the prepared output-root directory itself is not held or inode-bound through claim."
+    },
+    {
+      "id": "QA2-E003",
+      "status": "PARTIAL_NEW_P1_BLOCKERS",
+      "evidence": [
+        "scripts/evaluate_controlled_real10k_20k_common.py:2384-2511"
+      ],
+      "note": "The GO now has the intended fields and semantic content, but QA3-EV002 and QA3-EV003 prove byte-continuity and exact JSON-type defects."
+    },
+    {
+      "id": "QA2-C101",
+      "status": "FAIL_P2_REMAINS",
+      "maps_current_finding": "QA3-C101",
+      "evidence": [
+        "scripts/preflight_controlled_real10k_20k_mars.py:1562-1586",
+        "scripts/preflight_controlled_real10k_20k_mars.py:1658-1664"
+      ]
+    },
+    {
+      "id": "QA2-C102",
+      "status": "PASS_CLOSED",
+      "evidence": [
+        "scripts/build_controlled_real10k_20k_mars_package.py:26-44",
+        "scripts/build_controlled_real10k_20k_mars_package.py:188-205",
+        "scripts/preflight_controlled_real10k_20k_mars.py:535-543"
+      ],
+      "note": "Builder and preflight both require the same exact 15-role set; the live package has exactly those roles."
+    },
+    {
+      "id": "QA2-E101",
+      "status": "PASS_CLOSED",
+      "evidence": [
+        "scripts/evaluate_controlled_real10k_20k_common.py:326-383",
+        "scripts/evaluate_controlled_real10k_20k_common.py:429-571"
+      ],
+      "note": "Lexical symlink-chain rejection, regular-file/nlink/mode checks, O_NOFOLLOW, and held dev/ino/SHA continuity are enforced."
+    },
+    {
+      "id": "QA2-E102",
+      "status": "PARTIAL_NEW_P1_BLOCKER",
+      "maps_current_finding": "QA3-EV004",
+      "evidence": [
+        "scripts/evaluate_controlled_real10k_20k_common.py:3951-4028",
+        "scripts/evaluate_controlled_real10k_20k_common.py:4519-4541"
+      ],
+      "note": "The successful final closure is fixed and immutable, but the post-claim fatal closure remains mutable and unindexed."
+    }
+  ],
+  "open_findings": [
+    {
+      "id": "QA3-MAT001",
+      "severity": "P1",
+      "scope": "FUTURE_MATERIALIZATION_AND_TRAINING_GATE",
+      "title": "Materialization imports re-opened paths instead of frozen descriptors",
+      "evidence": [
+        "scripts/run_controlled_real10k_20k_materialization.py:1397-1450",
+        "scripts/run_controlled_real10k_20k_materialization.py:1972-2004",
+        "scripts/run_controlled_real10k_20k_materialization.py:2024",
+        "scripts/run_controlled_real10k_20k_materialization.py:2030-2034"
+      ],
+      "synthetic_proof": "A local result-blind fixture changed the path bytes only during import and restored them before the post-import rehash. The post-rehash matched the frozen SHA while the already-loaded callable returned the substituted sentinel value.",
+      "impact": "The materialization gate can execute unreviewed builder/shared/splitter bytes while every path SHA recorded before and after invocation remains authorized.",
+      "required_fix": "Load builder, shared contract, and splitter from verified held descriptors or sealed snapshots, and prove the executed module bytes are the same frozen bytes."
+    },
+    {
+      "id": "QA3-RUN001",
+      "severity": "P1",
+      "scope": "FUTURE_TRAINING_RUNNER_GATE",
+      "title": "Trainer inherits unbounded parent Python and numerical environment",
+      "evidence": [
+        "scripts/run_controlled_real10k_20k_paired.py:1397-1407",
+        "scripts/run_controlled_real10k_20k_paired.py:2861-2864",
+        "scripts/run_controlled_real10k_20k_paired.py:2895-2903",
+        "scripts/run_controlled_real10k_20k_paired.py:2918-2922"
+      ],
+      "synthetic_proof": "With a temporary PYTHONPATH containing a benign sitecustomize marker, ordinary Python executed the marker before the requested body; the same probe under -I -B did not. The runner copies os.environ and launches the trainer without -I or a clean allowlisted environment.",
+      "impact": "Unreviewed sitecustomize/plugin paths and uncontrolled PYTHON/NumPy/BLAS variables can alter the frozen training program or numerical behavior without changing the bound Python/trainer SHAs.",
+      "required_fix": "Launch the trainer with an exact allowlisted environment and isolated Python flags compatible with the frozen trainer, record the complete effective environment, and reject any unbound startup customization."
+    },
+    {
+      "id": "QA3-EV001",
+      "severity": "P1",
+      "scope": "FUTURE_COMMON_TEST_EVALUATOR_GATE",
+      "title": "Prepared output root has no held directory-FD or inode lease",
+      "evidence": [
+        "scripts/evaluate_controlled_real10k_20k_common.py:2044",
+        "scripts/evaluate_controlled_real10k_20k_common.py:3827",
+        "scripts/evaluate_controlled_real10k_20k_common.py:4032-4038",
+        "scripts/evaluate_controlled_real10k_20k_common.py:4082-4116"
+      ],
+      "synthetic_proof": "A local result-blind fixture replaced the prepared root at the same lexical path after preparation. Two execute calls with the same GO both returned zero and produced separate claim/terminal closures.",
+      "impact": "The one-time release can be consumed more than once at one authorized path, invalidating the release count and denominator.",
+      "required_fix": "Bind and hold the prepared output-root directory descriptor and dev/ino from prepare through claim and terminalization; make the one-time lease external to any replaceable root."
+    },
+    {
+      "id": "QA3-EV002",
+      "severity": "P1",
+      "scope": "FUTURE_COMMON_TEST_EVALUATOR_GATE",
+      "title": "Evaluator hashes and parses exact GO through separate path opens",
+      "evidence": [
+        "scripts/evaluate_controlled_real10k_20k_common.py:2399-2400"
+      ],
+      "synthetic_proof": "A local hook replaced GO bytes between the SHA check and JSON parse. Execute returned zero, the claim recorded the substituted reviewer, and the recorded authorized GO SHA differed from the live GO bytes consumed.",
+      "impact": "A different authorization document can be consumed from the document whose SHA was reviewed.",
+      "required_fix": "Open GO once with no-follow and pinned inode checks, hash and parse the same held bytes, and preserve that descriptor identity through claim."
+    },
+    {
+      "id": "QA3-EV003",
+      "severity": "P1",
+      "scope": "FUTURE_COMMON_TEST_EVALUATOR_GATE",
+      "title": "Exact GO accepts JSON bool/int type confusion",
+      "evidence": [
+        "scripts/evaluate_controlled_real10k_20k_common.py:2443-2446",
+        "scripts/evaluate_controlled_real10k_20k_common.py:2489-2500"
+      ],
+      "synthetic_proof": "Malformed findings/checks/authorities using JSON booleans where integers were required and integers where booleans were required passed because Python False == 0 and 1 == True; the claim normalized the malformed input.",
+      "impact": "The supposedly byte-semantic exact GO schema accepts documents with incorrect JSON types and conceals the original malformed authority in downstream evidence.",
+      "required_fix": "Validate exact JSON types recursively before value comparison and record the exact held GO binding without lossy normalization."
+    },
+    {
+      "id": "QA3-EV004",
+      "severity": "P1",
+      "scope": "FUTURE_COMMON_TEST_EVALUATOR_GATE",
+      "title": "Post-claim fatal closure is mutable, unindexed, and replayable",
+      "evidence": [
+        "scripts/evaluate_controlled_real10k_20k_common.py:4519-4541"
+      ],
+      "synthetic_proof": "After a post-claim failure, the fixture left a 0755 root with 0644 claim/FATAL files and no failure SHA index. Removing those mutable files allowed the same GO to execute successfully.",
+      "impact": "Irreversible failure evidence can be deleted and the same authorized release replayed, violating no-retry semantics and denominator integrity.",
+      "required_fix": "Create an exact terminal failure closure with index, 0444 files, 0555 directory, nlink=1, file/directory/parent fsync, and an external non-replaceable claim lease."
+    },
+    {
+      "id": "QA3-C101",
+      "severity": "P2",
+      "scope": "MARS_NATIVE_PREFLIGHT_AND_REVIEWED_TESTS_ONLY",
+      "title": "Receipt-directory preparation can fail outside terminalization",
+      "evidence": [
+        "scripts/preflight_controlled_real10k_20k_mars.py:1562-1586",
+        "scripts/preflight_controlled_real10k_20k_mars.py:1658-1664"
+      ],
+      "synthetic_proof": "A local fsync-failure fixture after mkdir left the attempt directory present without PREFLIGHT_RECEIPT.json because _prepare_receipt_dir executes before main's try block.",
+      "impact": "A partial preflight attempt can lack a terminal PASS/FAIL receipt, requiring manual ambiguous-state handling.",
+      "required_fix": "Make setup itself an atomic/catchably terminalized phase or write a durable parent-level failure marker when receipt-directory setup cannot complete."
+    },
+    {
+      "id": "QA3-C103",
+      "severity": "P2",
+      "scope": "MARS_NATIVE_PREFLIGHT_AND_REVIEWED_TESTS_ONLY",
+      "title": "Candidate output paths remain caller-selected",
+      "evidence": [
+        "scripts/preflight_controlled_real10k_20k_mars.py:778-799",
+        "scripts/preflight_controlled_real10k_20k_mars.py:1648"
+      ],
+      "impact": "The code accepts arbitrary non-overlapping future paths; this audit used only the three externally frozen paths, so the live candidate is operationally mitigated but the generic interface remains broader than the frozen contract.",
+      "required_fix": "Bind an exact path tuple in a frozen contract or require a signed binding generated outside caller-controlled CLI selection."
+    },
+    {
+      "id": "QA3-C104",
+      "severity": "P2",
+      "scope": "MARS_NATIVE_PREFLIGHT_AND_REVIEWED_TESTS_ONLY",
+      "title": "Process singleton scan recognizes filename substrings only",
+      "evidence": [
+        "scripts/preflight_controlled_real10k_20k_mars.py:802-821"
+      ],
+      "impact": "Renamed or module-launched equivalent controlled processes may not be classified as duplicates.",
+      "required_fix": "Use immutable executable/script identities, explicit run locks, and contract-bound process metadata instead of substring discovery alone."
+    }
+  ]
+}

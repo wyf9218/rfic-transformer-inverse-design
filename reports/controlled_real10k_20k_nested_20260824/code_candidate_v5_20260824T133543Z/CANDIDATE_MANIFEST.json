@@ -1,0 +1,127 @@
+{
+  "schema": "controlled_real10k_20k_code_candidate_manifest_v5",
+  "candidate_id": "controlled_real10k_20k_code_candidate_v5_20260824T133543Z",
+  "generated_utc": "2026-08-24T13:35:43Z",
+  "status": "PASS_ROOT_VERIFIED_AWAITING_FRESH_INDEPENDENT_QA",
+  "result_blind": true,
+  "worktree": {
+    "branch": "codex/controlled-real10k-20k",
+    "base_head": "36e8a7667ad3c4c64aea8d5322312f728fcf5640"
+  },
+  "superseded_candidate_evidence_preserved": {
+    "root_freeze_receipt_v4": "reports/controlled_real10k_20k_nested_20260824/ROOT_CODE_FREEZE_RECEIPT_V4.json",
+    "independent_qa_v4_receipt": "reports/controlled_real10k_20k_nested_20260824/independent_code_qa_v4_20260824T110825Z/RECEIPT.json",
+    "independent_qa_v4_receipt_sha256": "a55003f0a69a3ffc73d14a246d50b76dc48114c7a8cb82cce36af4e4664d4748",
+    "verdict": "NO_GO",
+    "severity": {"P0": 0, "P1": 6, "P2": 2, "P3": 0}
+  },
+  "scientific_contract": {
+    "estimand": "controlled effect of nested real-EMX training source size with all declared model and evaluation variables fixed",
+    "only_intended_arm_difference": "source and gradient-training row count",
+    "model_id_boundary": "newly trained controlled 10K versus newly trained controlled 20K; historical 10K weights are descriptive architecture evidence only",
+    "architecture": {
+      "forward": [10, 256, 256, 256, 4],
+      "inverse": [4, 256, 256, 256, 10],
+      "hidden_activation": "GELU",
+      "decoder": "independent_sigmoid",
+      "normalization": "one shared declared-domain midpoint/half-range contract"
+    },
+    "arm_denominators": {
+      "small": {"source": 10000, "gradient_train": 7871, "validation": 1227, "test": 902},
+      "large": {"source": 20000, "gradient_train": 17871, "validation": 1227, "test": 902}
+    },
+    "paired_seeds": [20260711, 20260712, 20260713],
+    "optimizer_budget_each_arm": {
+      "batch_size": 1024,
+      "forward_optimizer_updates": 1200,
+      "inverse_optimizer_updates": 1200,
+      "validation_every_optimizer_updates": 20,
+      "early_stopping_enabled": false,
+      "evaluation_mode_during_training": "validation_only",
+      "test_access_authorized": false
+    },
+    "fixed_target_10000_sha256": "c9d7d8bc7f65a488be0805969389a01ef049534eefdfdea71cbd640ee27d6407"
+  },
+  "protocol_evidence": {
+    "preregistration_v1": {
+      "path": "reports/controlled_real10k_20k_nested_20260824/CONTROLLED_EXPERIMENT_PREREGISTRATION_V1.json",
+      "sha256": "19aca7778f4974fd3e7eadaca8b291783e8e08e99a53a9dca70b070a4bf16417"
+    },
+    "preregistration_addendum_v1_1": {
+      "path": "reports/controlled_real10k_20k_nested_20260824/CONTROLLED_EXPERIMENT_PREREGISTRATION_ADDENDUM_V1_1.json",
+      "sha256": "9f1eb0e071ade0e5a42597b4242409282ed8d34cf159104f71df2d4d0d0a8633"
+    },
+    "preregistration_addendum_v1_2": {
+      "path": "reports/controlled_real10k_20k_nested_20260824/CONTROLLED_EXPERIMENT_PREREGISTRATION_ADDENDUM_V1_2.json",
+      "sha256": "fb7c7d0f9e206e3743cf795a544004e570842f26495903ad0eafdd5f909f37a9"
+    },
+    "historical_architecture_boundary_proof": {
+      "path": "reports/controlled_real10k_20k_nested_20260824/HISTORICAL_10K_ARCHITECTURE_BOUNDARY_PROOF_V1.json",
+      "sha256": "712af2d7b8e445c901c1bc02bc9f107683ff209199ff2e8378390226ce3200e5"
+    }
+  },
+  "implementation_identities": {
+    "rfic_transformer_inverse_design/controlled_real10k_20k_contract.py": {"sha256": "ca6824e5d47fc037c856044ad74b0dec26844fed19d09bbfee42d44fbd3969c0", "lines": 125},
+    "rfic_transformer_inverse_design/controlled_real10k_20k_runtime_bootstrap.py": {"sha256": "0654b6399510e9b3427c885f5e9b07b9d5f27ae28d8236792253c3add4af95db", "lines": 1409},
+    "rfic_transformer_inverse_design/controlled_real10k_20k_runtime_init.py": {"sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", "lines": 0},
+    "scripts/build_controlled_real10k_20k_mars_package.py": {"sha256": "0b2c7d3382817a9a0647ce284dcc81334f0f60364ee38cecf0fb4a1cad1824d3", "lines": 2207},
+    "scripts/build_controlled_real10k_20k_nested.py": {"sha256": "c47e75d11ca16dc551c43220bc679f94f5fe93339f304b5a256fda76d4e96057", "lines": 1629},
+    "scripts/build_controlled_real10k_20k_runtime_bundle.py": {"sha256": "262b8e059a9043f76f821bf5607e3505a514a631a588e1e7408716720729f474", "lines": 1983},
+    "scripts/evaluate_controlled_real10k_20k_common.py": {"sha256": "4c6899f6554e457d836c90f37a799770e625148fc39dc9d2d9c9b9481e1474d4", "lines": 8678},
+    "scripts/preflight_controlled_real10k_20k_mars.py": {"sha256": "75dfe660c12898b1c0cd2643fc6ef102ee7b664e4096266742c96720dec0a089", "lines": 4070},
+    "scripts/run_controlled_real10k_20k_materialization.py": {"sha256": "56e7ccaec475117be04633ce5468639d283c72d01c864f16f4a348c44cd489e2", "lines": 4408},
+    "scripts/run_controlled_real10k_20k_paired.py": {"sha256": "06d3658f94b1964b2dab4154f6db4065a00e2bc3c1174e4d7deb2912952a6f31", "lines": 5197}
+  },
+  "test_identities": {
+    "tests/controlled_real10k_20k_mars_native_smoke.py": {"sha256": "76017b675385f9a0ab6a476caac041df949a03a4eb53a90469c5e3edb90693ca", "lines": 963},
+    "tests/test_build_controlled_real10k_20k_mars_package.py": {"sha256": "cda9bd30576085aa34a06f667cf4cd2b2d1259d91c65c4261d53ee4574f9f9d1", "lines": 1137},
+    "tests/test_build_controlled_real10k_20k_nested.py": {"sha256": "55b6186667fb7e5daac6d732f073f149229a9c7f1ae7ef159b0ac0ac37d1f39a", "lines": 681},
+    "tests/test_build_controlled_real10k_20k_runtime_bundle.py": {"sha256": "8e626796447e504d9b80b4fcd9e057b2eb8d11f74e7c960cdf27fa4ee10e514d", "lines": 647},
+    "tests/test_controlled_real10k_20k_interface_alignment.py": {"sha256": "58f5d08990d92e98bcc9bfd05502ac5954131898c73445f86886c031700eef5a", "lines": 197},
+    "tests/test_controlled_real10k_20k_runtime_bootstrap.py": {"sha256": "eee27ae86744eaaaf18dac3721872f34c2f1e5a81f9d429057a5645b10d38656", "lines": 392},
+    "tests/test_evaluate_controlled_real10k_20k_common.py": {"sha256": "206ca0aa95ac06c34b374672015198b57772abf6cbfdc279122827b485109d85", "lines": 3236},
+    "tests/test_preflight_controlled_real10k_20k_mars.py": {"sha256": "c06bbc0c50d09c165181e9bb8e0b2be7fde0ec0c2c07f9d4ecb64dcd137b080a", "lines": 1656},
+    "tests/test_run_controlled_real10k_20k_materialization.py": {"sha256": "fed1ca0de56beb7c8dbd4d943476513b24903764e6eba01a0cd5c3bd52251d11", "lines": 1740},
+    "tests/test_run_controlled_real10k_20k_paired.py": {"sha256": "b50c3631f2b95160cb04830aa01878267b72dcf0b01d5446c88cb0bc7eb32ec2", "lines": 2308}
+  },
+  "frozen_dependency_identities": {
+    "rfic_transformer_inverse_design/model_splitting.py": "9db4b7f1ed9435f73e95e49c558003bdaaf153579c5c44f04fb779aa31e0ef8a",
+    "scripts/train_physical_feature_tandem_inverse.py": "92988524b08b15a2388f655f6239070889098024e49ee184832f69876f7db3be"
+  },
+  "interface_versions": {
+    "package": "v5",
+    "package_manifest_schema": "controlled_real10k_20k_mars_package_v2",
+    "package_commit_schema": "controlled_real10k_20k_mars_package_commit_v2",
+    "package_build_attempt_body_schema": "controlled_real10k_20k_mars_package_build_attempt_body_v3",
+    "package_build_attempt_committed_schema": "controlled_real10k_20k_mars_package_build_attempt_committed_v1",
+    "package_role_count": 21,
+    "package_go_binding_count": 23,
+    "mars_code_go_schema": "controlled_real10k_20k_mars_code_go_v3",
+    "materialization_binding_role_count": 21,
+    "materialization_candidate_schema": "controlled_real10k_20k_materialization_gate_manifest_v2",
+    "materialization_go_schema": "controlled_real10k_20k_materialization_exact_go_v2",
+    "materialization_complete_schema": "controlled_real10k_20k_materialization_complete_v3"
+  },
+  "authority": {
+    "mars_transport": false,
+    "mars_native_preflight": false,
+    "data_materialization": false,
+    "training": false,
+    "common_test_access": false,
+    "numerical_metric_access": false,
+    "fresh_emx": false,
+    "process_signal": false
+  },
+  "no_repeat_attestation": {
+    "fixed10k_regenerated": false,
+    "historical_model_retrained": false,
+    "real_emx_data_generated": false,
+    "completed_emx_rerun": false,
+    "materialization_run": false,
+    "training_run": false,
+    "evaluation_run": false,
+    "numerical_metrics_accessed": false,
+    "process_signal_sent": false
+  },
+  "next_legal_action": "FRESH_INDEPENDENT_RESULT_BLIND_CODE_QA_OF_EXACT_CANDIDATE_ONLY"
+}

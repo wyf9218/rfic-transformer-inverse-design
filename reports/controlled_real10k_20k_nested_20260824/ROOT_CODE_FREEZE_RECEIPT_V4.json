@@ -1,0 +1,84 @@
+{
+  "schema": "controlled_real10k_20k_root_code_freeze_receipt_v4",
+  "generated_utc": "2026-08-24T10:51:09Z",
+  "status": "PASS_AUTHOR_ROOT_VERIFIED_AWAITING_FRESH_INDEPENDENT_QA",
+  "supersedes_candidate_receipt_only": "reports/controlled_real10k_20k_nested_20260824/ROOT_CODE_FREEZE_RECEIPT_V3.json",
+  "preserved_no_go_evidence": "reports/controlled_real10k_20k_nested_20260824/independent_code_qa_v3_20260824T102210Z/RECEIPT.json",
+  "candidate_sha256": {
+    "rfic_transformer_inverse_design/controlled_real10k_20k_contract.py": "ca6824e5d47fc037c856044ad74b0dec26844fed19d09bbfee42d44fbd3969c0",
+    "scripts/build_controlled_real10k_20k_mars_package.py": "c4b9f496bda460e201958280a5a09c4aa2aaed36ffd265abd633ac8f5ef7b0b1",
+    "scripts/build_controlled_real10k_20k_nested.py": "39aa1a380e6c23e6c6684113e118509702b4e37c2ec20f4662e472c2cfa21dcd",
+    "scripts/evaluate_controlled_real10k_20k_common.py": "a54b18523c5a4192237c0f96bfb4ad8d43a4c662d3004c35e3960219c22bc6f6",
+    "scripts/preflight_controlled_real10k_20k_mars.py": "f5470c7574248c0956eae61a61ab87ab08d11f568ac10405bc8c75a3da99e738",
+    "scripts/run_controlled_real10k_20k_materialization.py": "5dc071589de8788691167a357e7b361e87def1f26c0bb2e3796b2088a0819bef",
+    "scripts/run_controlled_real10k_20k_paired.py": "c9123f56cd21d9c3f271f72360bc97b10f13e3b80043b74df559c1a0772823b0",
+    "tests/controlled_real10k_20k_mars_native_smoke.py": "7f1cdd03fa0be778fbf419e1018ffb11bc6dbdde73596d6ea56e7083a4a7635a",
+    "tests/test_build_controlled_real10k_20k_mars_package.py": "f1e972e10e480f8382e9bbf8079629359418b428b17bca1bfe8e78241d6aec7e",
+    "tests/test_build_controlled_real10k_20k_nested.py": "da184b9ddf9c6f770f3e56f402c9a7286bc2b141807d5906d08fb400c2a7cfc2",
+    "tests/test_evaluate_controlled_real10k_20k_common.py": "6c7205761023316be43b829c4bf4cbfe16d86a6f22c53efa02a597da8dd2843f",
+    "tests/test_preflight_controlled_real10k_20k_mars.py": "9972837c7a8dc967b9acbdd07cd3dcffb97f9372df02323beca3dba82c3f7191",
+    "tests/test_run_controlled_real10k_20k_materialization.py": "6861ad5cbc1a59196c211c6e0097d4dec4720561fb5ff7434f1f9e6b62306ef0",
+    "tests/test_run_controlled_real10k_20k_paired.py": "6254ada5bcf776664873dfcf7fbc7e2a7d1ebbb644f07cd9c8521ce69f5a6c65"
+  },
+  "frozen_dependency_sha256": {
+    "rfic_transformer_inverse_design/model_splitting.py": "9db4b7f1ed9435f73e95e49c558003bdaaf153579c5c44f04fb779aa31e0ef8a",
+    "scripts/train_physical_feature_tandem_inverse.py": "92988524b08b15a2388f655f6239070889098024e49ee184832f69876f7db3be"
+  },
+  "qa_v3_p1_closure": {
+    "QA3_MAT001": "single-open verified byte snapshots are consumed for builder/shared/splitter, source CSV/summary, candidate manifest/index/QA/prepared receipt, GO and preflight receipt",
+    "QA3_RUN001": "trainer uses exact -I -B argv and a rebuilt exact allowlisted child environment bound through GO/INTENT/RUNNING/COMPLETE",
+    "QA3_EV001": "output-root inode and external one-use lease are held and bound",
+    "QA3_EV002": "GO SHA and parse consume one O_NOFOLLOW held byte snapshot",
+    "QA3_EV003": "recursive exact JSON type equality rejects bool/int aliases",
+    "QA3_EV004": "success and post-claim failure create immutable indexed one-use terminal closures"
+  },
+  "root_verification": {
+    "controlled_six_component_warnings_as_errors": {
+      "passed": 172,
+      "failed": 0,
+      "duration_seconds": 10.74
+    },
+    "frozen_splitter_and_trainer_baseline": {
+      "passed": 34,
+      "failed": 0,
+      "warnings": 87,
+      "classification": "UNCHANGED_HISTORICAL_LOCAL_NUMPY_WARNINGS"
+    },
+    "python_compile_pass": true,
+    "git_diff_check_pass": true,
+    "preflight_root_redteam": {
+      "p0": 0,
+      "p1": 0,
+      "p2": 1,
+      "p3": 0,
+      "closed": [
+        "QA3-C103"
+      ],
+      "retained_nonblocking": [
+        "QA3-C101: persistent storage failure or setup-directory replacement can still leave an ambiguous setup closure",
+        "QA3-C104: singleton discovery remains filename-token based"
+      ]
+    }
+  },
+  "reuse_and_no_repeat": {
+    "fixed10k_regenerated": false,
+    "historical_model_retrained": false,
+    "data_generated": false,
+    "emx_rerun": false,
+    "materialization_run": false,
+    "training_run": false,
+    "evaluation_run": false,
+    "numerical_metrics_accessed": false,
+    "process_signal_sent": false
+  },
+  "authorities": {
+    "mars_native_preflight": false,
+    "data_materialization": false,
+    "training": false,
+    "common_test_access": false,
+    "numerical_metric_access": false,
+    "fresh_emx": false,
+    "process_signal": false
+  },
+  "next_legal_action": "BUILD_FRESH_NO_CLOBBER_MARS_PACKAGE_V3_THEN_FRESH_INDEPENDENT_RESULT_BLIND_QA"
+}

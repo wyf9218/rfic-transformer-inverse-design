@@ -1,0 +1,139 @@
+{
+  "schema": "controlled_real10k_20k_independent_code_qa_receipt_v3",
+  "generated_utc": "2026-08-24T10:22:10Z",
+  "status": "COMPLETE_NO_GO_FROZEN_RESULT_BLIND",
+  "verdict": "NO_GO",
+  "code_go_created": false,
+  "code_go_absence_reason": "Final independent review has nonzero P1 findings; exact GO creation is forbidden.",
+  "review": {
+    "role": "independent_result_blind_code_qa",
+    "identity": "codex_independent_qa_v3",
+    "independent_of_candidate_implementation": true,
+    "result_blind": true,
+    "candidate_code_modified": false,
+    "mars_write_performed": false,
+    "production_or_research_target_process_started_stopped_or_signaled": false,
+    "materialization_performed": false,
+    "training_performed": false,
+    "evaluation_performed": false,
+    "emx_performed": false,
+    "production_numerical_results_interpreted": false,
+    "production_data_rows_interpreted": false,
+    "production_weights_interpreted": false,
+    "local_synthetic_fixture_tests_performed": true,
+    "mars_read_only_identity_checks_performed": true
+  },
+  "severity_counts": {
+    "p0": 0,
+    "p1": 6,
+    "p2": 3,
+    "p3": 0
+  },
+  "scope": {
+    "requested_go_schema": "controlled_real10k_20k_mars_code_go_v1",
+    "requested_go_scope": "MARS_NATIVE_PREFLIGHT_AND_REVIEWED_TESTS_ONLY",
+    "requested_native_test_roles": [
+      "native_smoke_test"
+    ],
+    "go_eligibility_rule": {
+      "p0": 0,
+      "p1": 0
+    },
+    "go_eligibility_satisfied": false,
+    "authorities_released": {
+      "mars_native_preflight": false,
+      "reviewed_native_tests": false,
+      "data_materialization": false,
+      "training": false,
+      "common_test_access": false,
+      "numerical_metric_access": false,
+      "fresh_emx": false,
+      "process_signal": false
+    }
+  },
+  "worktree": {
+    "root": "/Users/wyf/Documents/模拟变压器AI反向建模/github_worktrees/controlled-real10k-20k",
+    "branch": "codex/controlled-real10k-20k",
+    "head": "36e8a7667ad3c4c64aea8d5322312f728fcf5640"
+  },
+  "candidate_identities": {
+    "rfic_transformer_inverse_design/controlled_real10k_20k_contract.py": "ca6824e5d47fc037c856044ad74b0dec26844fed19d09bbfee42d44fbd3969c0",
+    "scripts/build_controlled_real10k_20k_nested.py": "e5c25b79e76343c77a88a7e6837b8547bd1a8ad8b8aaa277e61b3d487e9a8cfc",
+    "scripts/run_controlled_real10k_20k_materialization.py": "9e7efe71111daeb2c954ffcd8b57a41c6b17384f2a8451dfb0964f83152f9746",
+    "scripts/run_controlled_real10k_20k_paired.py": "33049b3f2fc28752d93f9f8b19665eb8d7ed6f5fdff48dcac621de1387fc1a91",
+    "scripts/build_controlled_real10k_20k_mars_package.py": "c4b9f496bda460e201958280a5a09c4aa2aaed36ffd265abd633ac8f5ef7b0b1",
+    "scripts/preflight_controlled_real10k_20k_mars.py": "bf77000ae2e1bb934050b26fa630fa405dc7e418a3da3102cf8a7bbe8a5c840a",
+    "scripts/evaluate_controlled_real10k_20k_common.py": "1196e4c480ddfe4f355834f0ba27cc379032f4bddb4273c6a60de36c147af964",
+    "tests/controlled_real10k_20k_mars_native_smoke.py": "7f1cdd03fa0be778fbf419e1018ffb11bc6dbdde73596d6ea56e7083a4a7635a",
+    "tests/test_build_controlled_real10k_20k_nested.py": "6fa7b2b6f428b4bc6862a595a85c9ce9e69a448cdebee11ea6fb08b0c3402636",
+    "tests/test_run_controlled_real10k_20k_materialization.py": "44da18e80c3153718c017c8147bed78312accfcbbb5ea50956fccb468b0eaf94",
+    "tests/test_run_controlled_real10k_20k_paired.py": "48a4e004445b520b87b95e6443456d972f293ffe65455b2b29283c9c6f79c87b",
+    "tests/test_build_controlled_real10k_20k_mars_package.py": "f1e972e10e480f8382e9bbf8079629359418b428b17bca1bfe8e78241d6aec7e",
+    "tests/test_preflight_controlled_real10k_20k_mars.py": "534684dc624e4dae3ccb5b2ec404ed5eeb1b7153c2df19960b469e90e484d358",
+    "tests/test_evaluate_controlled_real10k_20k_common.py": "8f13fa264519ac1a1239571bea50dbfaee24a9ce90fae94fe02c63e43d61efed"
+  },
+  "mars": {
+    "connected": true,
+    "access_mode": "READ_ONLY_EXISTING_SSH_MUX",
+    "hostname": "mars-0002.ece.wisc.edu",
+    "uid": 2259579,
+    "boot_id": "4801efc4-eba0-4b79-91b2-4b082f238271",
+    "identity_observed_utc": "2026-08-24T10:17:51Z",
+    "handoff_root": "/volumes/research-localdata/ywang3652/controlled_real10k_20k_handoff_20260824T100826Z",
+    "package_root": "/volumes/research-localdata/ywang3652/controlled_real10k_20k_handoff_20260824T100826Z/package_v2",
+    "package": {
+      "manifest_sha256": "2b1acc29d9accbc9a612c1d4fa3e95fd7b1d9f73a2156e83e5b05f4b0c04c0b2",
+      "receipt_sha256": "7bcbe238a25f35e785af42714c9f1e1b4e108e5a1277ff70bcaad54e31078422",
+      "sha_index_sha256": "7408446655081d717aabfdbb8dfdab786c37e4c35faa6fba7c69939876d5e7fc",
+      "independent_qa_required_sha256": "0012ba3c6ca59d3a0d0f5378a4eb89582062ef7cbb01380bf6c243bc9e57bea7",
+      "build_attempt_receipt_sha256": "c4718a123df6967ca25d63d44a163d8dab5201766b1c74db5ebabffa67d05b4c",
+      "sha_index_check": "PASS_ALL_18_INDEXED_MEMBERS",
+      "required_role_count": 15,
+      "role_set_exact": true,
+      "native_test_roles_exact": [
+        "native_smoke_test"
+      ],
+      "root_mode": "0555",
+      "payload_files_mode": "0444",
+      "payload_files_nlink": 1
+    },
+    "runtime": {
+      "python_path": "/volumes/research-localdata/ywang3652/rfic-transformer-inverse-design-mars56-s4p-20260702/.venv/bin/python",
+      "python_sha256": "8c515a32b1a5d3d807e53359901a4d09ec06819b488736641aabd6a12eefba63",
+      "python_version": "3.12.13",
+      "numpy_version": "2.5.0",
+      "numpy_core_sha256": "471db15840ca5bb0b32158eddca6d3e42545611055d6a4a4dee6e0d8a315a442",
+      "numpy_config_file_sha256": "eca5779c26589580219ef7f949eb28f5eaad7ad44febc8444ea17d53ff92a947",
+      "numpy_show_config_sha256": "1007c12980046a08a6661242d1d73fd28ac080e20908fc7e0ea65f6ec165688d"
+    },
+    "candidate_paths": {
+      "/volumes/research-localdata/ywang3652/controlled_real10k_20k_handoff_20260824T100826Z/materialization_gate_candidate_v1": "ABSENT",
+      "/volumes/research-localdata/ywang3652/controlled_real10k_20k_handoff_20260824T100826Z/materialization_output_v1": "ABSENT",
+      "/volumes/research-localdata/ywang3652/controlled_real10k_20k_handoff_20260824T100826Z/materialization_execution_receipt_v1": "ABSENT",
+      "/volumes/research-localdata/ywang3652/controlled_real10k_20k_handoff_20260824T100826Z/preflight_receipts/attempt_0001": "ABSENT"
+    },
+    "matching_current_uid_controlled_process_count": 0
+  },
+  "local_test_summary": {
+    "warnings_as_errors_suite": "150 passed in 8.43s",
+    "evaluator_independent_targeted_suite": "43 passed in 3.82s",
+    "hostile_result_blind_fixtures": {
+      "materialization_path_import_continuity": "FINDING_REPRODUCED",
+      "runner_inherited_python_environment": "FINDING_REPRODUCED",
+      "evaluator_output_root_single_use": "FINDING_REPRODUCED",
+      "evaluator_go_hash_parse_continuity": "FINDING_REPRODUCED",
+      "evaluator_go_json_exact_types": "FINDING_REPRODUCED",
+      "evaluator_post_claim_failure_closure": "FINDING_REPRODUCED",
+      "preflight_setup_terminal_receipt": "FINDING_REPRODUCED"
+    }
+  },
+  "audit_artifacts_expected": [
+    "FINDINGS.json",
+    "RECEIPT.json",
+    "REPORT.md",
+    "TEST_MATRIX.json",
+    "SHA256SUMS.txt"
+  ],
+  "code_go_json_expected": false,
+  "next_legal_action": "PRESERVE_NO_GO_AND_REQUIRE_A_NEW_NO_CLOBBER_CANDIDATE_PLUS_FRESH_INDEPENDENT_RESULT_BLIND_QA"
+}

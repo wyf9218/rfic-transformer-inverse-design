@@ -1,0 +1,114 @@
+{
+  "audit_artifacts_expected": [
+    "FINDINGS.json",
+    "RECEIPT.json",
+    "REPORT.md",
+    "TEST_MATRIX.json",
+    "SHA256SUMS.txt"
+  ],
+  "candidate_identities": {
+    "rfic_transformer_inverse_design/controlled_real10k_20k_contract.py": "ca6824e5d47fc037c856044ad74b0dec26844fed19d09bbfee42d44fbd3969c0",
+    "scripts/build_controlled_real10k_20k_mars_package.py": "c4b9f496bda460e201958280a5a09c4aa2aaed36ffd265abd633ac8f5ef7b0b1",
+    "scripts/build_controlled_real10k_20k_nested.py": "39aa1a380e6c23e6c6684113e118509702b4e37c2ec20f4662e472c2cfa21dcd",
+    "scripts/evaluate_controlled_real10k_20k_common.py": "a54b18523c5a4192237c0f96bfb4ad8d43a4c662d3004c35e3960219c22bc6f6",
+    "scripts/preflight_controlled_real10k_20k_mars.py": "f5470c7574248c0956eae61a61ab87ab08d11f568ac10405bc8c75a3da99e738",
+    "scripts/run_controlled_real10k_20k_materialization.py": "5dc071589de8788691167a357e7b361e87def1f26c0bb2e3796b2088a0819bef",
+    "scripts/run_controlled_real10k_20k_paired.py": "c9123f56cd21d9c3f271f72360bc97b10f13e3b80043b74df559c1a0772823b0",
+    "tests/controlled_real10k_20k_mars_native_smoke.py": "7f1cdd03fa0be778fbf419e1018ffb11bc6dbdde73596d6ea56e7083a4a7635a",
+    "tests/test_build_controlled_real10k_20k_mars_package.py": "f1e972e10e480f8382e9bbf8079629359418b428b17bca1bfe8e78241d6aec7e",
+    "tests/test_build_controlled_real10k_20k_nested.py": "da184b9ddf9c6f770f3e56f402c9a7286bc2b141807d5906d08fb400c2a7cfc2",
+    "tests/test_evaluate_controlled_real10k_20k_common.py": "6c7205761023316be43b829c4bf4cbfe16d86a6f22c53efa02a597da8dd2843f",
+    "tests/test_preflight_controlled_real10k_20k_mars.py": "9972837c7a8dc967b9acbdd07cd3dcffb97f9372df02323beca3dba82c3f7191",
+    "tests/test_run_controlled_real10k_20k_materialization.py": "6861ad5cbc1a59196c211c6e0097d4dec4720561fb5ff7434f1f9e6b62306ef0",
+    "tests/test_run_controlled_real10k_20k_paired.py": "6254ada5bcf776664873dfcf7fbc7e2a7d1ebbb644f07cd9c8521ce69f5a6c65"
+  },
+  "code_go_absence_reason": "Independent QA found six P1 authorization/runtime/package defects; exact eligibility requires P0=0 and P1=0.",
+  "code_go_created": false,
+  "code_go_json_expected": false,
+  "generated_utc": "2026-08-24T11:08:25Z",
+  "local_code_freeze": {
+    "path": "reports/controlled_real10k_20k_nested_20260824/ROOT_CODE_FREEZE_RECEIPT_V4.json",
+    "sha256": "95dc16da3d541ea9d77a55acdff067bed09156a127be2b3b2217db7a675085e7"
+  },
+  "local_test_summary": {
+    "hostile_qa3_closure": "14 passed in 2.93s",
+    "warnings_as_errors_suite": "172 passed in 10.85s"
+  },
+  "mars": {
+    "access_mode": "READ_ONLY_EXISTING_SSH_MUX",
+    "boot_id": "4801efc4-eba0-4b79-91b2-4b082f238271",
+    "candidate_paths_all_absent": true,
+    "connected": true,
+    "controlled_python_process_matches": 0,
+    "hostname": "mars-0002.ece.wisc.edu",
+    "package": {
+      "directory_count": 17,
+      "file_count": 19,
+      "filesystem_metadata_pass": true,
+      "independent_qa_required_sha256": "5aed34d7816cc654e767f3c794700f2ece6dd2d9932d9e57e5772f3dc45e165d",
+      "manifest_sha256": "d293aaed839459f17ec706bd2d363000b7b8b075dbad96f63e9b758a673fced4",
+      "package_root": "/volumes/research-localdata/ywang3652/controlled_real10k_20k_handoff_20260824T105300Z/package_v3",
+      "receipt_sha256": "857d314e81d4970d092e81b2ce29e8b42a45deb8299a35d7d2caf52c233a2d4c",
+      "role_count": 15,
+      "sha_index_check": "PASS_ALL_18_INDEXED_MEMBERS",
+      "sha_index_sha256": "d6e872ed0c3131c2b7831c7a89d15987a3955834991bd8d0a864c416ee9835df"
+    },
+    "uid": 2259579
+  },
+  "next_legal_action": "PRESERVE_PACKAGE_V3_NO_GO_AND_BUILD_A_NEW_NO_CLOBBER_CANDIDATE_THEN_FRESH_INDEPENDENT_RESULT_BLIND_QA",
+  "operator_scope_deviations": [
+    {
+      "actor": "auxiliary_package_redteam",
+      "id": "QA4-OPS001",
+      "mars_path": "/tmp/SHOULD_NOT_WRITE_THIS",
+      "path_confirmed_absent_after_unlink": true,
+      "persistent_state": false,
+      "transient_write_occurred": true
+    }
+  ],
+  "review": {
+    "auxiliary_redteam_transient_mars_write_detected": true,
+    "auxiliary_redteam_transient_path_confirmed_absent": true,
+    "candidate_code_modified": false,
+    "identity": "codex_independent_code_qa_v4",
+    "independent_of_candidate_implementation": true,
+    "mars_read_only_metadata_checks_performed": true,
+    "primary_reviewer_mars_write_performed": false,
+    "result_blind": true,
+    "role": "fresh_independent_result_blind_code_qa",
+    "scientific_rows_weights_metrics_interpreted": false
+  },
+  "schema": "controlled_real10k_20k_independent_code_qa_receipt_v4",
+  "scope": {
+    "authorities_released": {
+      "common_test_access": false,
+      "data_materialization": false,
+      "fresh_emx": false,
+      "mars_native_preflight": false,
+      "numerical_metric_access": false,
+      "process_signal": false,
+      "reviewed_native_tests": false,
+      "training": false
+    },
+    "go_eligibility_rule": {
+      "p0": 0,
+      "p1": 0
+    },
+    "go_eligibility_satisfied": false,
+    "requested_go_schema": "controlled_real10k_20k_mars_code_go_v1",
+    "requested_go_scope": "MARS_NATIVE_PREFLIGHT_AND_REVIEWED_TESTS_ONLY"
+  },
+  "severity_counts": {
+    "p0": 0,
+    "p1": 6,
+    "p2": 2,
+    "p3": 0
+  },
+  "status": "COMPLETE_NO_GO_FROZEN_RESULT_BLIND",
+  "verdict": "NO_GO",
+  "worktree": {
+    "branch": "codex/controlled-real10k-20k",
+    "head": "36e8a7667ad3c4c64aea8d5322312f728fcf5640",
+    "root": "/Users/wyf/Documents/模拟变压器AI反向建模/github_worktrees/controlled-real10k-20k"
+  }
+}

@@ -1,0 +1,121 @@
+{
+  "schema": "controlled_real10k_20k_qa4_closure_matrix_v1",
+  "candidate_id": "controlled_real10k_20k_code_candidate_v5_20260824T133543Z",
+  "generated_utc": "2026-08-24T13:35:43Z",
+  "source_no_go_receipt": {
+    "path": "reports/controlled_real10k_20k_nested_20260824/independent_code_qa_v4_20260824T110825Z/RECEIPT.json",
+    "sha256": "a55003f0a69a3ffc73d14a246d50b76dc48114c7a8cb82cce36af4e4664d4748"
+  },
+  "closure_claim_is_author_evidence_only": true,
+  "findings": [
+    {
+      "id": "QA4-RT001",
+      "prior_severity": "P1",
+      "candidate_status": "IMPLEMENTED_AWAITING_INDEPENDENT_VERIFICATION",
+      "closure": "All runtime consumers use exact -I -B -S startup and a descriptor-consumed, hash-bound runtime dependency closure; hostile .pth/sitecustomize execution is rejected.",
+      "evidence": [
+        "rfic_transformer_inverse_design/controlled_real10k_20k_runtime_bootstrap.py",
+        "scripts/build_controlled_real10k_20k_runtime_bundle.py",
+        "scripts/preflight_controlled_real10k_20k_mars.py",
+        "tests/test_controlled_real10k_20k_runtime_bootstrap.py",
+        "tests/test_preflight_controlled_real10k_20k_mars.py"
+      ]
+    },
+    {
+      "id": "QA4-GO001",
+      "prior_severity": "P1",
+      "candidate_status": "IMPLEMENTED_AWAITING_INDEPENDENT_VERIFICATION",
+      "closure": "Preflight, materialization, runner and evaluator use recursive exact JSON type-and-value checks and reject bool/int aliases.",
+      "evidence": [
+        "scripts/preflight_controlled_real10k_20k_mars.py",
+        "scripts/run_controlled_real10k_20k_materialization.py",
+        "scripts/run_controlled_real10k_20k_paired.py",
+        "scripts/evaluate_controlled_real10k_20k_common.py"
+      ]
+    },
+    {
+      "id": "QA4-REC001",
+      "prior_severity": "P1",
+      "candidate_status": "IMPLEMENTED_AWAITING_INDEPENDENT_VERIFICATION",
+      "closure": "Preflight holds the receipt-root descriptor and identity through publication, consumes an external one-use lease, writes dirfd-relative, and rejects root replacement or replay.",
+      "evidence": [
+        "scripts/preflight_controlled_real10k_20k_mars.py",
+        "tests/test_preflight_controlled_real10k_20k_mars.py"
+      ]
+    },
+    {
+      "id": "QA4-REC002",
+      "prior_severity": "P1",
+      "candidate_status": "IMPLEMENTED_AWAITING_INDEPENDENT_VERIFICATION",
+      "closure": "Preflight PASS is a two-phase BODY plus COMMITTED transaction; downstream gates require the committed marker after file/root/parent durability and continuity.",
+      "evidence": [
+        "scripts/preflight_controlled_real10k_20k_mars.py",
+        "scripts/run_controlled_real10k_20k_materialization.py",
+        "scripts/run_controlled_real10k_20k_paired.py",
+        "tests/test_preflight_controlled_real10k_20k_mars.py"
+      ]
+    },
+    {
+      "id": "QA4-RUN001",
+      "prior_severity": "P1",
+      "candidate_status": "IMPLEMENTED_AWAITING_INDEPENDENT_VERIFICATION",
+      "closure": "Trainer execution is exact -I -B -S through a sealed bootstrap/request/archive descriptor graph with an exact child environment and runtime attestations.",
+      "evidence": [
+        "rfic_transformer_inverse_design/controlled_real10k_20k_runtime_bootstrap.py",
+        "scripts/run_controlled_real10k_20k_paired.py",
+        "tests/test_run_controlled_real10k_20k_paired.py"
+      ]
+    },
+    {
+      "id": "QA4-PKG001",
+      "prior_severity": "P1",
+      "candidate_status": "IMPLEMENTED_AWAITING_INDEPENDENT_VERIFICATION",
+      "closure": "Package-v5 contains an exact 21-role importable consumer graph, inert package init, trainer splitter, runtime closure inventory/tree and native consumer-graph smoke TEST_ID descriptor_closed_package_consumer_graph_v5.",
+      "evidence": [
+        "scripts/build_controlled_real10k_20k_mars_package.py",
+        "scripts/build_controlled_real10k_20k_runtime_bundle.py",
+        "tests/controlled_real10k_20k_mars_native_smoke.py",
+        "tests/test_build_controlled_real10k_20k_mars_package.py",
+        "tests/test_build_controlled_real10k_20k_runtime_bundle.py"
+      ]
+    },
+    {
+      "id": "QA4-IF001",
+      "prior_severity": "P2",
+      "candidate_status": "IMPLEMENTED_AWAITING_INDEPENDENT_VERIFICATION",
+      "closure": "Package-v5 QA-required interface declares the exact 23 GO binding keys and six-hour reviewer lifetime used by preflight.",
+      "evidence": [
+        "scripts/build_controlled_real10k_20k_mars_package.py",
+        "scripts/preflight_controlled_real10k_20k_mars.py",
+        "tests/test_controlled_real10k_20k_interface_alignment.py"
+      ]
+    },
+    {
+      "id": "QA4-C104",
+      "prior_severity": "P2",
+      "candidate_status": "IMPLEMENTED_AWAITING_INDEPENDENT_VERIFICATION",
+      "closure": "Substring discovery is replaced by exact current-UID /proc argv/executable/script/sealed-FD identities plus a package-bound singleton flock held across terminal publication.",
+      "evidence": [
+        "scripts/build_controlled_real10k_20k_mars_package.py",
+        "scripts/preflight_controlled_real10k_20k_mars.py",
+        "scripts/run_controlled_real10k_20k_materialization.py",
+        "scripts/run_controlled_real10k_20k_paired.py"
+      ]
+    },
+    {
+      "id": "ROOT5-PKG-ATTEMPT001",
+      "prior_severity": "P1_ROOT_REDTEAM_AFTER_QA4",
+      "candidate_status": "IMPLEMENTED_AWAITING_INDEPENDENT_VERIFICATION",
+      "closure": "Package build attempts now publish a nonterminal BODY and a distinct create-once COMMITTED marker only after durability/freeze/continuity; downstream gates require exact BODY+COMMITTED closure and reject FAILED, AMBIGUOUS, or extra attempt members.",
+      "evidence": [
+        "scripts/build_controlled_real10k_20k_mars_package.py",
+        "scripts/preflight_controlled_real10k_20k_mars.py",
+        "scripts/run_controlled_real10k_20k_materialization.py",
+        "scripts/run_controlled_real10k_20k_paired.py",
+        "scripts/evaluate_controlled_real10k_20k_common.py"
+      ]
+    }
+  ],
+  "authority_released": false,
+  "next_legal_action": "FRESH_INDEPENDENT_RESULT_BLIND_QA_MUST_CONFIRM_OR_REOPEN_EACH_ITEM"
+}

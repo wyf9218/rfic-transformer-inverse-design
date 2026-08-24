@@ -1,0 +1,93 @@
+{
+  "schema": "monday_advisor_goal_run_state_v3",
+  "updated_utc": "2026-08-24T13:35:43Z",
+  "goal": "Strict controlled nested real-EMX 10K/20K paired training with the frozen real10K 3x256 topology, common holdout and declared normalization, exact paired seeds and optimizer budget, one-time common evaluation, traceable statistics, charts and GitHub evidence.",
+  "status": "CODE_CANDIDATE_V5_FROZEN_AWAITING_FRESH_INDEPENDENT_QA",
+  "phase": "independent_result_blind_code_qa_gate",
+  "result_blind": true,
+  "training_launch_authorized": false,
+  "common_test_access_authorized": false,
+  "numerical_metric_access_authorized": false,
+  "fresh_emx_authorized": false,
+  "mars": {
+    "connected": true,
+    "last_readonly_check_utc": "2026-08-24T13:31:18Z",
+    "last_observed_load_average": [52.17, 59.06, 117.83],
+    "controlled_real10k_20k_process_count": 0,
+    "load_caused_by_this_task": false,
+    "load_gate_max_1m": 40.0,
+    "load_gate_pass": false,
+    "remote_existing_real_emx_100k_csv_sha256": "68468eb2d3678aa0793157c1c647e975f60e8ec1673c259050ababe9fd1ff08a",
+    "python_executable_sha256": "8c515a32b1a5d3d807e53359901a4d09ec06819b488736641aabd6a12eefba63",
+    "python_version": "3.12.13",
+    "numpy_version": "2.5.0"
+  },
+  "frozen_research_identities": {
+    "historical_architecture_model_id": "real10k_center15ghz_seed20260711",
+    "historical_summary_sha256": "90a81532f7342ae7348248ea45889368fbb13ed2b6ee8f89e789f80f6811a3fa",
+    "historical_weights_sha256_descriptive_only": "ffea66dfdd0bb252e402e1ade70f5e8768511e26f2978b1d73b1817a0221e42a",
+    "historical_training_csv_sha256": "3027290eb1b4c229a23f0676f970ff9d13762677a897a0d7e2aed959075c85c8",
+    "fixed_target_10000_sha256": "c9d7d8bc7f65a488be0805969389a01ef049534eefdfdea71cbd640ee27d6407",
+    "authoritative_existing_100k_csv_sha256": "68468eb2d3678aa0793157c1c647e975f60e8ec1673c259050ababe9fd1ff08a",
+    "architecture": {
+      "forward": [10, 256, 256, 256, 4],
+      "inverse": [4, 256, 256, 256, 10],
+      "activation": "GELU",
+      "decoder": "independent_sigmoid"
+    },
+    "paired_seeds": [20260711, 20260712, 20260713]
+  },
+  "arm_denominators": {
+    "small": {"source": 10000, "gradient_train": 7871, "validation": 1227, "test": 902},
+    "large": {"source": 20000, "gradient_train": 17871, "validation": 1227, "test": 902}
+  },
+  "optimizer_budget_each_arm": {
+    "batch_size": 1024,
+    "forward_optimizer_updates": 1200,
+    "inverse_optimizer_updates": 1200,
+    "validation_every_optimizer_updates": 20,
+    "early_stopping_enabled": false,
+    "training_evaluation_mode": "validation_only"
+  },
+  "latest_authoritative_independent_gate": {
+    "verdict": "NO_GO",
+    "version": "v4",
+    "receipt_path": "reports/controlled_real10k_20k_nested_20260824/independent_code_qa_v4_20260824T110825Z/RECEIPT.json",
+    "receipt_sha256": "a55003f0a69a3ffc73d14a246d50b76dc48114c7a8cb82cce36af4e4664d4748",
+    "severity": {"P0": 0, "P1": 6, "P2": 2, "P3": 0},
+    "authority_released": false
+  },
+  "fresh_candidate": {
+    "candidate_id": "controlled_real10k_20k_code_candidate_v5_20260824T133543Z",
+    "path": "reports/controlled_real10k_20k_nested_20260824/code_candidate_v5_20260824T133543Z",
+    "manifest_sha256": "58f5878044884f443aed91b5aeeed66f79c38c5ff4745a7078efd7bb6452bc6d",
+    "qa_required_sha256": "1dbdcc0576d41bd1e564ce9e625af40f1198845dfcfcc74f184d1ccfe90ca2f7",
+    "closure_matrix_sha256": "312154d6b2846187a80e6581c1ef65684bd7520ff34d9b85c90afac9e397799d",
+    "root_verification_receipt_sha256": "24cfa07f7575467f8cff31d50c12ed9d924dc9a9bbe2346bd0e731048746ee7f",
+    "sha256sums_sha256": "e03e74a9fd9578a2ac3b653fa7ea65a62cc0820057401d0534a3becf442d034e",
+    "root_tests": {"passed": 331, "failed": 0, "errors": 0, "skipped_mars_native_linux": 2},
+    "source_compile": {"passed": 20, "failed": 0},
+    "status": "AUTHOR_ROOT_PASS_FRESH_INDEPENDENT_QA_REQUIRED"
+  },
+  "preserved_intermediate_integration_failure": {
+    "result": "1 failed, 282 passed, 2 skipped, 45 errors",
+    "fixed_before_freeze": true,
+    "production_validation_weakened": false
+  },
+  "reuse_and_no_repeat": {
+    "fixed10k_regenerated": false,
+    "historical_model_retrained": false,
+    "real_emx_data_generated": false,
+    "completed_emx_rerun": false,
+    "materialization_run": false,
+    "training_run": false,
+    "evaluation_run": false,
+    "numerical_metrics_accessed": false,
+    "process_signal_sent": false
+  },
+  "referenced_task_019eb52f_9739_73b2_8483_af70553603a8": {
+    "latest_observed_read_status": "TIMEOUT_UNREADABLE",
+    "inference_made": false
+  },
+  "next_safe_action": "Obtain a fresh independent result-blind QA of the exact candidate. Only an exact GO may authorize preparation of package-v5 and a separately gated MARS-native preflight; materialization, training, test release and metrics remain unauthorized."
+}

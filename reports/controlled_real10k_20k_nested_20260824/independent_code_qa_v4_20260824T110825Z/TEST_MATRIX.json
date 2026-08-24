@@ -1,0 +1,123 @@
+{
+  "candidate_code_modified": false,
+  "generated_utc": "2026-08-24T11:08:25Z",
+  "result_blind": true,
+  "schema": "controlled_real10k_20k_independent_code_qa_test_matrix_v4",
+  "tests": [
+    {
+      "command": "PYTHONWARNINGS=error python3 -m pytest -q <six controlled component test files>",
+      "id": "LOCAL-WAE-001",
+      "result": "PASS",
+      "summary": "172 passed in 10.85s"
+    },
+    {
+      "command": "PYTHONWARNINGS=error python3 -m pytest -q <14 QA3 closure cases>",
+      "id": "QA3-CLOSURE-001",
+      "result": "PASS_WITH_RUN001_SCOPE_LIMIT",
+      "summary": "14 passed in 2.93s; evaluator/MAT closures pass, but the runner test covers PYTHONPATH rather than venv site initialization"
+    },
+    {
+      "id": "HOSTILE-VENV-SITE-001",
+      "method": "disposable local venv with a benign sitecustomize marker",
+      "observed": {
+        "python_I_B_no_site_flag": 0,
+        "python_I_B_sitecustomize_executed": true,
+        "python_I_B_S_no_site_flag": 1,
+        "python_I_B_S_sitecustomize_executed": false
+      },
+      "result": "FAIL_P1_REPRODUCED",
+      "scope": "preflight runtime probe and trainer child"
+    },
+    {
+      "id": "HOSTILE-GO-TYPE-001",
+      "method": "call actual preflight validator with a SHA-matched malformed JSON authority",
+      "observed": "review bools as 1, findings zeros as false, and authority bools as 0/1 were accepted",
+      "result": "FAIL_P1_REPRODUCED"
+    },
+    {
+      "id": "HOSTILE-TRAIN-GO-TYPE-002",
+      "method": "call actual training GO validator with exact bindings and malformed JSON scalar types",
+      "observed": "findings zeros as false and required check booleans as integer 1 were accepted",
+      "result": "FAIL_P1_REPRODUCED"
+    },
+    {
+      "id": "HOSTILE-PACKAGE-IMPORT-001",
+      "method": "copy exact runner/shared roles into the manifest's role-separated layout and invoke runner --help from a clean directory",
+      "observed": "ModuleNotFoundError: No module named 'rfic_transformer_inverse_design'",
+      "result": "FAIL_P1_REPRODUCED"
+    },
+    {
+      "id": "RUNNER-EVALUATOR-BINDING-001",
+      "method": "static/imported constant cross-check",
+      "observed": {
+        "all_cross_bindings_pass": true,
+        "environment_contract_sha256": "ae52267ee9c72adf9012c699a57d5ca09dc7107ff2dadd490441295b9f5c674f",
+        "frozen_runner_sha256": "c9123f56cd21d9c3f271f72360bc97b10f13e3b80043b74df559c1a0772823b0",
+        "schemas_and_paired_seeds_exact": true
+      },
+      "result": "PASS_STATIC_BINDING_BUT_RUNTIME_BLOCKED"
+    },
+    {
+      "id": "MARS-PACKAGE-001",
+      "method": "read-only SSH stat/find and sha256sum --strict -c",
+      "observed": {
+        "directories_mode_0555": true,
+        "directory_count": 17,
+        "file_count": 19,
+        "files_mode_0444_nlink1": true,
+        "indexed_members_pass": "18/18",
+        "manifest_sha256": "d293aaed839459f17ec706bd2d363000b7b8b075dbad96f63e9b758a673fced4",
+        "package_root": "/volumes/research-localdata/ywang3652/controlled_real10k_20k_handoff_20260824T105300Z/package_v3",
+        "receipt_sha256": "857d314e81d4970d092e81b2ce29e8b42a45deb8299a35d7d2caf52c233a2d4c",
+        "role_count": 15,
+        "sha_index_sha256": "d6e872ed0c3131c2b7831c7a89d15987a3955834991bd8d0a864c416ee9835df",
+        "special_count": 0,
+        "symlink_count": 0
+      },
+      "result": "PASS_METADATA_CLOSURE_ONLY"
+    },
+    {
+      "id": "MARS-NO-REPEAT-001",
+      "method": "read-only exact user-process and future-path audit",
+      "observed": {
+        "code_go_absent": true,
+        "controlled_python_process_matches": 0,
+        "materialization_execution_receipt_absent": true,
+        "materialization_gate_candidate_absent": true,
+        "materialization_output_absent": true,
+        "preflight_receipt_attempt_absent": true
+      },
+      "result": "PASS"
+    },
+    {
+      "id": "OPERATOR-SCOPE-001",
+      "method": "auxiliary red-team self-report followed by absence confirmation",
+      "observed": {
+        "actor": "auxiliary_package_redteam",
+        "mars_path": "/tmp/SHOULD_NOT_WRITE_THIS",
+        "path_confirmed_absent_after_unlink": true,
+        "persistent_state": false,
+        "transient_write_occurred": true
+      },
+      "result": "SCOPE_VIOLATION_NO_PERSISTENT_STATE"
+    },
+    {
+      "id": "RESULT-BLIND-001",
+      "observed": {
+        "auxiliary_redteam_transient_mars_write_detected": true,
+        "auxiliary_redteam_transient_path_confirmed_absent": true,
+        "data_rows_interpreted": false,
+        "emx_performed": false,
+        "evaluation_performed": false,
+        "materialization_performed": false,
+        "numerical_metrics_interpreted": false,
+        "primary_reviewer_mars_write_performed": false,
+        "process_started_stopped_or_signaled": false,
+        "training_performed": false,
+        "weights_interpreted": false
+      },
+      "result": "PASS"
+    }
+  ],
+  "verdict": "NO_GO"
+}

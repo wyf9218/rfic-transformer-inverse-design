@@ -1,0 +1,30 @@
+{
+  "schema": "controlled_real10k_20k_nested_preregistration_addendum_v1_1",
+  "generated_utc": "2026-08-24T08:00:00Z",
+  "status": "PRE_RESULT_ADDITIVE_CLARIFICATION_FROZEN",
+  "result_blind": true,
+  "base_preregistration": {
+    "path": "CONTROLLED_EXPERIMENT_PREREGISTRATION_V1.json",
+    "sha256": "19aca7778f4974fd3e7eadaca8b291783e8e08e99a53a9dca70b070a4bf16417"
+  },
+  "reason": "Static trainer-source audit found adaptive-schedule defaults that affect training but were not explicit in the base pre-registration. They are frozen here before data materialization, training, evaluation, or result access; no base field is changed.",
+  "additive_frozen_training_fields": {
+    "response_warmup_fraction": 0.05,
+    "response_ramp_fraction": 0.25,
+    "response_adaptive_ema_decay": 0.95,
+    "response_adaptive_min_multiplier": 0.25,
+    "response_adaptive_max_multiplier": 4.0
+  },
+  "interaction_with_base": {
+    "response_schedule": "warmup_ramp_adaptive_ema",
+    "response_schedule_domain": "optimizer_update",
+    "response_warmup_optimizer_updates": 60,
+    "response_ramp_optimizer_updates": 300,
+    "interpretation": "The explicit update counts remain primary. Fractions and adaptive-EMA constants are also pinned so no hidden default can drift."
+  },
+  "scientific_contract_changed": false,
+  "results_or_metrics_accessed_before_freeze": false,
+  "materialization_started_before_freeze": false,
+  "training_started_before_freeze": false,
+  "fresh_emx_started_before_freeze": false
+}

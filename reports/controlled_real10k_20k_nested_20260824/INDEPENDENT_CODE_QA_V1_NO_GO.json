@@ -1,0 +1,43 @@
+{
+  "schema": "controlled_real10k_20k_public_code_qa_status_v1",
+  "generated_utc": "2026-08-24T07:48:29Z",
+  "verdict": "NO_GO",
+  "authorization": "MARS_NOT_AUTHORIZED",
+  "review_mode": "INDEPENDENT_RESULT_BLIND_CODE_QA",
+  "authoritative_private_evidence": {
+    "relative_path": "reports/controlled_real10k_20k_nested_20260824/independent_code_qa_v1_20260824T072831Z",
+    "receipt_sha256": "37637f1373381a2f16695eeacbfcd9da0190bd5bc0b24ae08ba53b13b9993410",
+    "report_sha256": "ce5d9301a54fdd668c54a77acfaa2e487a23f9f3f691bbb4dfadf8c6f8f18793",
+    "matrix_sha256": "4f773503ed772b74e9b1377788e0fc7e3564334175ea565393013d8e6bb86107",
+    "sha256s_sha256": "481c8c21be93808ecea1250b76116b3ea484ca08e8595ca6c08ed8c5f53dcb97"
+  },
+  "frozen_candidate_sha256": {
+    "scripts/build_controlled_real10k_20k_nested.py": "fb985e2a84f1d1a6203dd6edfac597751f1d63b3f42eb2642693285a8b299553",
+    "scripts/run_controlled_real10k_20k_paired.py": "0503559536d3c5261467c2665185330b636ce207fac2f1da4ea3c0b5663526c7",
+    "tests/test_build_controlled_real10k_20k_nested.py": "47482edeaad57d3e5240e783bdfeaa3e50bb48b8ce5899de43efa7b3d0ad50ed",
+    "tests/test_run_controlled_real10k_20k_paired.py": "014edfb309bf335d07ce34d6ad2527efec5fc1432be8625dbee0a26bc18c7632"
+  },
+  "severity_counts": {
+    "P0": 1,
+    "P1": 7,
+    "P2": 3,
+    "P3": 0
+  },
+  "blocking_findings": [
+    "F001_NO_EXTERNAL_EXACT_GO_BEFORE_SUBPROCESS",
+    "F002_BUILDER_RUNNER_CELL_ENCODING_MISMATCH",
+    "F003_EXACT_THREE_PAIRED_SEEDS_NOT_ENFORCED",
+    "F004_UNFINISHED_LAUNCH_CAN_DUPLICATE_AN_ACTIVE_CHILD",
+    "F005_NORMALIZATION_ARRAYS_NOT_EXACTLY_FROZEN",
+    "F006_TRAINER_IDENTITY_AND_GELU_NOT_EXTERNALLY_AUTHORIZED",
+    "F007_LAUNCH_INPUTS_NOT_REHASHED_AT_EVERY_ARM_BOUNDARY",
+    "F008_PREPARE_PREFLIGHT_LOCK_INTERRUPT_AMBIGUOUS_FAILURES_NOT_FULLY_RECEIPTED"
+  ],
+  "result_blindness": {
+    "training_started": false,
+    "model_performance_metrics_accessed": false,
+    "fresh_emx_metrics_accessed": false,
+    "mars_connected_by_independent_reviewer": false
+  },
+  "next_legal_gate": "FREEZE_NEW_BYTES_THEN_FRESH_INDEPENDENT_CODE_QA"
+}

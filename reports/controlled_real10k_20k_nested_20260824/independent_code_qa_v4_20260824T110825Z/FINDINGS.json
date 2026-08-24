@@ -1,0 +1,159 @@
+{
+  "code_go_created": false,
+  "generated_utc": "2026-08-24T11:08:25Z",
+  "operator_scope_deviations": [
+    {
+      "id": "QA4-OPS001",
+      "persistent_state": false,
+      "record": "An auxiliary package red-team reviewer accidentally created /tmp/SHOULD_NOT_WRITE_THIS on MARS, immediately unlinked it, and confirmed the path absent. This violated the MARS metadata/read-only operator contract even though no persistent state remained.",
+      "severity_class": "OPERATOR_SCOPE_DEVIATION_NOT_CODE_FINDING"
+    }
+  ],
+  "open_findings": [
+    {
+      "evidence": [
+        "scripts/preflight_controlled_real10k_20k_mars.py:1002-1024",
+        "scripts/preflight_controlled_real10k_20k_mars.py:1093-1103",
+        "scripts/preflight_controlled_real10k_20k_mars.py:1311-1318"
+      ],
+      "hostile_proof": "A disposable venv sitecustomize marker executed before a child body under -I -B (sys.flags.no_site=0); the same marker did not execute under -I -B -S (sys.flags.no_site=1).",
+      "id": "QA4-RT001",
+      "impact": "Unreviewed venv .pth/sitecustomize code can run before the runtime probe imports NumPy or consumes reviewed snapshots, while all package and Python executable hashes still appear valid.",
+      "required_fix": "Use a startup path that disables site initialization and then imports NumPy only from a separately hash-bound, descriptor-consumed closure; add a real venv .pth/sitecustomize hostile test.",
+      "scope": "MARS_NATIVE_PREFLIGHT_AND_REVIEWED_TESTS_ONLY",
+      "severity": "P1",
+      "title": "Runtime probe executes unbound venv site initialization"
+    },
+    {
+      "evidence": [
+        "scripts/preflight_controlled_real10k_20k_mars.py:1364-1373",
+        "scripts/run_controlled_real10k_20k_paired.py:1840-1852"
+      ],
+      "hostile_proof": "The actual preflight validator accepted review booleans encoded as integer 1, findings integers encoded as false, and authority booleans encoded as 0/1. The actual training validator separately accepted findings encoded as false and all required checks encoded as integer 1.",
+      "id": "QA4-GO001",
+      "impact": "Documents advertised as exact external authority receipts are accepted with incorrect JSON types, so the recorded schema is not byte-semantic and QA3-R004 is not fully closed.",
+      "required_fix": "Use recursive exact JSON type-and-value comparison for every external GO field in preflight, materialization, and training validators; add bool/int hostile cases.",
+      "scope": "PREFLIGHT_AND_FUTURE_MATERIALIZATION_TRAINING_GO",
+      "severity": "P1",
+      "title": "Exact GO validators accept JSON bool/int aliases"
+    },
+    {
+      "evidence": [
+        "scripts/preflight_controlled_real10k_20k_mars.py:1451-1578",
+        "scripts/preflight_controlled_real10k_20k_mars.py:1581-1667"
+      ],
+      "hostile_proof": "During a result-blind fixture the prepared receipt directory was renamed and replaced after setup. PASS was published into the replacement; after deleting that owner-controlled closure, the same GO, nonce, SHA, and lexical path produced another PASS on a third inode.",
+      "id": "QA4-REC001",
+      "impact": "One reviewed GO can yield multiple accepted PASS receipts at one lexical path, defeating no-clobber, exact-once, and receipt-denominator integrity.",
+      "required_fix": "Hold and bind the receipt-root directory FD and dev/inode for the entire preflight, use an external one-use lease, write only through dir_fd, and consume the lease before PASS publication.",
+      "scope": "MARS_NATIVE_PREFLIGHT_AND_REVIEWED_TESTS_ONLY",
+      "severity": "P1",
+      "title": "Receipt root is replaceable and the same GO is replayable"
+    },
+    {
+      "evidence": [
+        "scripts/preflight_controlled_real10k_20k_mars.py:1626-1667",
+        "scripts/preflight_controlled_real10k_20k_mars.py:1758"
+      ],
+      "hostile_proof": "A parent-directory fsync failure after PASS file write/fchmod and receipt-directory freeze raised from main while leaving an otherwise downstream-acceptable immutable PASS file and no separate committed terminal marker.",
+      "id": "QA4-REC002",
+      "impact": "Process exit says failure but the remaining PASS can be consumed as success, creating a split-brain terminal state.",
+      "required_fix": "Publish a separately committed terminal marker only after file, directory, and parent durability succeeds, and require downstream gates to bind that marker; ambiguous publication must be an immutable failure closure.",
+      "scope": "MARS_NATIVE_PREFLIGHT_AND_REVIEWED_TESTS_ONLY",
+      "severity": "P1",
+      "title": "PASS publication is visible before the durability transaction commits"
+    },
+    {
+      "evidence": [
+        "scripts/run_controlled_real10k_20k_paired.py:175-274",
+        "scripts/run_controlled_real10k_20k_paired.py:1485-1500",
+        "scripts/run_controlled_real10k_20k_paired.py:3065-3071"
+      ],
+      "hostile_proof": "The exact child environment blocks inherited PYTHONPATH, but disposable-venv evidence shows CPython -I -B still executes venv sitecustomize/.pth before the frozen trainer; -S is absent from the trainer prefix.",
+      "id": "QA4-RUN001",
+      "impact": "Unbound startup code can change the frozen training program or numerical runtime even though argv, environment, Python executable SHA, and trainer SHA all match. QA3-RUN001 is therefore not closed.",
+      "required_fix": "Disable site initialization for the trainer and provide a separately hash-bound import closure for NumPy and the exact splitter, or bind every executable .pth/sitecustomize dependency and prove it with native hostile tests.",
+      "scope": "FUTURE_TRAINING_RUNNER_GATE",
+      "severity": "P1",
+      "title": "Trainer isolation still permits unbound venv site initialization"
+    },
+    {
+      "evidence": [
+        "reports/controlled_real10k_20k_nested_20260824/mars_package_v3_20260824T105300Z/MANIFEST.json",
+        "scripts/run_controlled_real10k_20k_paired.py:39-50",
+        "scripts/train_physical_feature_tandem_inverse.py:20-27",
+        "tests/controlled_real10k_20k_mars_native_smoke.py:169-229"
+      ],
+      "hostile_proof": "An isolated local copy of the exact role-separated package layout and an auxiliary read-only check of the immutable MARS package both failed runner --help with ModuleNotFoundError for rfic_transformer_inverse_design.controlled_real10k_20k_contract. The trainer instead resolved model_splitting from an external package path outside package_v3; its current bytes happened to match but that path and future bytes are not held or import-bound. Native smoke compiles runner/trainer but does not import their controlled dependency graph.",
+      "id": "QA4-PKG001",
+      "impact": "The package is either not executable as its own reviewed closure or can silently consume an externally installed, unbound rfic_transformer_inverse_design/model_splitting package.",
+      "required_fix": "Package an exact importable module tree (or descriptor-execute the verified module graph), bind the trainer's actually imported splitter bytes, and make native smoke import the real runner/trainer consumer graph under the production startup contract.",
+      "scope": "MARS_PACKAGE_AND_FUTURE_TRAINING",
+      "severity": "P1",
+      "title": "Role-separated package does not close runner/trainer imports"
+    },
+    {
+      "evidence": [
+        "reports/controlled_real10k_20k_nested_20260824/mars_package_v3_20260824T105300Z/INDEPENDENT_QA_REQUIRED.json:13-15",
+        "scripts/preflight_controlled_real10k_20k_mars.py:1280-1323"
+      ],
+      "id": "QA4-IF001",
+      "impact": "The public QA-required record says only preflight_receipt_dir is a required binding, while the actual validator requires package, runtime, host/boot, candidate paths, and native role bindings.",
+      "required_fix": "Declare the complete exact GO binding keyset and the current six-hour reviewer lifetime policy in the frozen QA-required artifact.",
+      "scope": "PACKAGE_INTERFACE",
+      "severity": "P2",
+      "title": "QA-required interface underdeclares exact GO bindings"
+    },
+    {
+      "evidence": [
+        "scripts/preflight_controlled_real10k_20k_mars.py:829-848"
+      ],
+      "id": "QA4-C104",
+      "impact": "Renamed/module-launched equivalents can be missed, argument text can false-match, and a process can appear after the post-scan.",
+      "required_fix": "Use exact /proc argv/executable/script identities plus a contract-bound singleton lock/lease that remains held through terminal publication.",
+      "scope": "MARS_NATIVE_PREFLIGHT_AND_REVIEWED_TESTS_ONLY",
+      "severity": "P2",
+      "title": "Singleton discovery remains substring-based and TOCTOU-prone"
+    }
+  ],
+  "prior_qa_v3_p1_closure": [
+    {
+      "id": "QA3-MAT001",
+      "status": "PASS_CLOSED",
+      "evidence": "Builder/shared/splitter and source/protocol inputs are consumed from one held byte closure; targeted hostile tests passed."
+    },
+    {
+      "id": "QA3-RUN001",
+      "status": "FAIL_NOT_CLOSED",
+      "evidence": "Parent PYTHONPATH inheritance is closed, but QA4-RUN001 proves venv sitecustomize/.pth still executes under -I -B."
+    },
+    {
+      "id": "QA3-EV001",
+      "status": "PASS_CLOSED",
+      "evidence": "Prepared root dev/inode and external one-use lease are held and hostile replacement/second-claim tests pass."
+    },
+    {
+      "id": "QA3-EV002",
+      "status": "PASS_CLOSED",
+      "evidence": "Evaluator GO SHA and parse consume one held O_NOFOLLOW byte snapshot."
+    },
+    {
+      "id": "QA3-EV003",
+      "status": "PASS_CLOSED",
+      "evidence": "Evaluator recursively rejects JSON bool/int aliases before claim."
+    },
+    {
+      "id": "QA3-EV004",
+      "status": "PASS_CLOSED",
+      "evidence": "Post-claim failure creates an immutable indexed consumed-lease closure and cannot replay."
+    }
+  ],
+  "schema": "controlled_real10k_20k_independent_code_qa_findings_v4",
+  "severity_counts": {
+    "p0": 0,
+    "p1": 6,
+    "p2": 2,
+    "p3": 0
+  },
+  "verdict": "NO_GO"
+}

@@ -1,0 +1,81 @@
+{
+  "schema": "controlled_real10k_20k_nested_preregistration_addendum_v1_2",
+  "generated_utc": "2026-08-24T08:10:33Z",
+  "status": "PRE_RESULT_ADDITIVE_SPATIAL_SENSITIVITY_CONTRACT_FROZEN",
+  "result_blind": true,
+  "base_preregistration": {
+    "path": "CONTROLLED_EXPERIMENT_PREREGISTRATION_V1.json",
+    "sha256": "19aca7778f4974fd3e7eadaca8b291783e8e08e99a53a9dca70b070a4bf16417"
+  },
+  "preceding_addendum": {
+    "path": "CONTROLLED_EXPERIMENT_PREREGISTRATION_ADDENDUM_V1_1.json",
+    "sha256": "9f1eb0e071ade0e5a42597b4242409282ed8d34cf159104f71df2d4d0d0a8633"
+  },
+  "reason": "The base preregistration fixed the cluster-bootstrap method, replicate count, seed, and interpretation but did not operationally freeze the exact resampling unit, cross-model pairing, high-K clustering rule, reported statistic, or interval construction. This addendum fixes those details before materialization, training, evaluation, or result access without changing any base field.",
+  "spatial_sensitivity_contract": {
+    "method": "physical_cell_cluster_bootstrap_on_each_frozen_finite_frame",
+    "replicates": 2000,
+    "master_seed": 2026082402,
+    "random_generator": "numpy.random.Generator(PCG64)",
+    "frame_specific_seed_derivation": "unsigned_first_8_bytes_big_endian_of_SHA256(utf8(master_seed:frame_id))",
+    "frames": [
+      "common_real_emx_holdout_902",
+      "fixed_target_full10k",
+      "fixed_target_legacy_K_abs_le_0p8_8000",
+      "fixed_target_highK_K_abs_gt_0p8_2000"
+    ],
+    "physical_cell_definition": {
+      "encoder": "canonical_physical_cell_id_from_shared_contract",
+      "dimensions": [
+        "Lp_nH",
+        "Ls_nH",
+        "Q_min",
+        "K_abs_for_clustering_only"
+      ],
+      "bins_per_dimension": 4,
+      "declared_lower": [
+        0.5,
+        0.5,
+        5.0,
+        0.0
+      ],
+      "declared_upper": [
+        3.0,
+        3.0,
+        25.0,
+        0.8
+      ],
+      "common_and_legacy_K_rule": "use exact K_abs",
+      "highK_and_full10k_K_rule": "use min(K_abs,0.8) for cluster assignment only",
+      "metric_K_rule": "always retain and evaluate the original unclipped K_abs",
+      "highK_interpretation": "Clipping is only a deterministic clustering extension of the frozen in-support cell partition; it is not model input clipping and does not convert high-K rows into in-support evidence."
+    },
+    "resampling": {
+      "observed_cells_drawn_per_replicate": "C draws with replacement from the C distinct cells observed within the reported frame or panel",
+      "row_policy": "include every member row of each drawn cell with the draw multiplicity",
+      "cross_model_pairing": "use the identical resampled row multiset for both arms and all three paired seeds",
+      "panel_policy": "cluster membership and resampling are computed separately within each reported frame or panel",
+      "empty_frame_or_missing_arm_policy": "fail closed and retain the failed denominator"
+    },
+    "reported_statistic": {
+      "per_replicate": "for every preregistered scalar metric, recompute each seed-level large-minus-small delta on the resampled row multiset and take the arithmetic mean across the three paired seeds",
+      "point_estimate": "unbootstrapped arithmetic mean of the three paired seed deltas",
+      "interval": "2.5th and 97.5th percentiles of the 2000 replicate statistics",
+      "p_values": false,
+      "minimum_complete_pairs": 3
+    },
+    "scope": {
+      "meaning": "finite-frame spatial-composition sensitivity conditional on the six frozen trained models",
+      "not_training_seed_uncertainty": true,
+      "not_deployment_population_uncertainty": true,
+      "not_fresh_emx_evidence": true,
+      "not_a_substitute_for_df2_paired_seed_interval": true
+    }
+  },
+  "scientific_contract_changed": false,
+  "results_or_metrics_accessed_before_freeze": false,
+  "materialization_started_before_freeze": false,
+  "training_started_before_freeze": false,
+  "evaluation_started_before_freeze": false,
+  "fresh_emx_started_before_freeze": false
+}

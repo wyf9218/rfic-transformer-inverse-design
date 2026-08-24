@@ -1,0 +1,65 @@
+{
+  "schema": "controlled_real10k_20k_independent_code_qa_v2_receipt_v1",
+  "generated_utc": "2026-08-24T09:23:08Z",
+  "status": "FAIL_NO_GO",
+  "verdict": "NO_GO",
+  "review": {
+    "independent": true,
+    "result_blind": true
+  },
+  "findings": {
+    "p0": 0,
+    "p1": 9,
+    "p2": 6,
+    "p3": 0,
+    "current_preflight_scope_p1": 2,
+    "future_training_runner_p1": 4,
+    "future_common_test_evaluator_p1": 3
+  },
+  "prior_findings": {
+    "f001": "PASS_ORIGINAL_DEFECT_CLOSED",
+    "f002": "PASS",
+    "f003": "PASS",
+    "f004": "PASS",
+    "f005": "PASS",
+    "f006": "PASS",
+    "f007": "FAIL_NOT_FULLY_CLOSED",
+    "f008": "FAIL_NOT_FULLY_CLOSED"
+  },
+  "local_tests": {
+    "warnings_as_errors_exact_suite": "105 passed in 5.04s",
+    "py_compile": "PASS",
+    "git_diff_check": "PASS",
+    "hostile_false_pass_reproduced": true,
+    "hostile_runner_gaps_reproduced": true
+  },
+  "mars_package": {
+    "root": "/volumes/research-localdata/ywang3652/controlled_real10k_20k_handoff_20260824T085115Z/package_v1",
+    "manifest_sha256": "ef52a3ab99273d7bd1c0c0d5c38c0558dd99eed4637fb2912debdc792d34d374",
+    "sha_index_sha256": "f82edc7e82dac1fdb24e41aaf878e8dcc7323b253da788eb6c37bbfda090667a",
+    "exact_role_count": 15,
+    "closure_check": "PASS",
+    "live_expected_go_bindings_canonical_sha256": "f215d62e71e5a563a51b4ac42f336efb538ec554c3607483cd0b202ecb1d4bda",
+    "candidate_dirs_absent": true,
+    "future_preflight_receipt_dir_absent": true
+  },
+  "authorities": {
+    "native_preflight_authorized": false,
+    "reviewed_native_tests_authorized": false,
+    "direct_data_materialization_authorized": false,
+    "training_authorized": false,
+    "common_test_access_authorized": false,
+    "numerical_metric_access_authorized": false,
+    "fresh_emx_authorized": false,
+    "process_signal_authorized": false
+  },
+  "code_go_created": false,
+  "expected_code_go_path": null,
+  "output_closure_members": [
+    "QA_MATRIX.json",
+    "QA_RECEIPT.json",
+    "QA_REPORT.md"
+  ],
+  "sha_index_self_hash_included": false,
+  "next_legal_action": "FREEZE_CORRECTED_BYTES_THEN_FRESH_INDEPENDENT_RESULT_BLIND_CODE_QA"
+}

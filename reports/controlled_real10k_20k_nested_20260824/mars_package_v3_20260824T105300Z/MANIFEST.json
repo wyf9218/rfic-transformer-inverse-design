@@ -1,0 +1,181 @@
+{
+  "artifact_role_sha256": {
+    "authoritative_100k_csv": "68468eb2d3678aa0793157c1c647e975f60e8ec1673c259050ababe9fd1ff08a",
+    "historical_10k_csv": "3027290eb1b4c229a23f0676f970ff9d13762677a897a0d7e2aed959075c85c8",
+    "historical_model_summary_json": "90a81532f7342ae7348248ea45889368fbb13ed2b6ee8f89e789f80f6811a3fa",
+    "materialization_builder_code": "39aa1a380e6c23e6c6684113e118509702b4e37c2ec20f4662e472c2cfa21dcd",
+    "materialization_gate_code": "5dc071589de8788691167a357e7b361e87def1f26c0bb2e3796b2088a0819bef",
+    "native_smoke_test": "7f1cdd03fa0be778fbf419e1018ffb11bc6dbdde73596d6ea56e7083a4a7635a",
+    "package_builder_code": "c4b9f496bda460e201958280a5a09c4aa2aaed36ffd265abd633ac8f5ef7b0b1",
+    "preflight_code": "f5470c7574248c0956eae61a61ab87ab08d11f568ac10405bc8c75a3da99e738",
+    "preregistration_addendum_v1_1_json": "9f1eb0e071ade0e5a42597b4242409282ed8d34cf159104f71df2d4d0d0a8633",
+    "preregistration_addendum_v1_2_json": "fb7c7d0f9e206e3743cf795a544004e570842f26495903ad0eafdd5f909f37a9",
+    "preregistration_v1_json": "19aca7778f4974fd3e7eadaca8b291783e8e08e99a53a9dca70b070a4bf16417",
+    "runner_code": "c9123f56cd21d9c3f271f72360bc97b10f13e3b80043b74df559c1a0772823b0",
+    "shared_contract_code": "ca6824e5d47fc037c856044ad74b0dec26844fed19d09bbfee42d44fbd3969c0",
+    "splitter_code": "9db4b7f1ed9435f73e95e49c558003bdaaf153579c5c44f04fb779aa31e0ef8a",
+    "trainer_code": "92988524b08b15a2388f655f6239070889098024e49ee184832f69876f7db3be"
+  },
+  "artifacts": [
+    {
+      "mode_octal": "0444",
+      "nlink": 1,
+      "path": "payload/authoritative_100k_csv/physical_feature_inverse_training_table.csv",
+      "role": "authoritative_100k_csv",
+      "sha256": "68468eb2d3678aa0793157c1c647e975f60e8ec1673c259050ababe9fd1ff08a",
+      "size_bytes": 63369027,
+      "source_path_at_build": "/volumes/research-localdata/ywang3652/controlled_real10k_20k_handoff_20260824T100826Z/package_v2/payload/authoritative_100k_csv/physical_feature_inverse_training_table.csv"
+    },
+    {
+      "mode_octal": "0444",
+      "nlink": 1,
+      "path": "payload/historical_10k_csv/multifrequency_physical_feature_training_table.csv",
+      "role": "historical_10k_csv",
+      "sha256": "3027290eb1b4c229a23f0676f970ff9d13762677a897a0d7e2aed959075c85c8",
+      "size_bytes": 11764101,
+      "source_path_at_build": "/volumes/research-localdata/ywang3652/controlled_real10k_20k_handoff_20260824T100826Z/package_v2/payload/historical_10k_csv/multifrequency_physical_feature_training_table.csv"
+    },
+    {
+      "mode_octal": "0444",
+      "nlink": 1,
+      "path": "payload/historical_model_summary_json/physical_feature_tandem_inverse_summary.json",
+      "role": "historical_model_summary_json",
+      "sha256": "90a81532f7342ae7348248ea45889368fbb13ed2b6ee8f89e789f80f6811a3fa",
+      "size_bytes": 34332,
+      "source_path_at_build": "/volumes/research-localdata/ywang3652/controlled_real10k_20k_handoff_20260824T100826Z/package_v2/payload/historical_model_summary_json/physical_feature_tandem_inverse_summary.json"
+    },
+    {
+      "mode_octal": "0444",
+      "nlink": 1,
+      "path": "payload/materialization_builder_code/build_controlled_real10k_20k_nested.py",
+      "role": "materialization_builder_code",
+      "sha256": "39aa1a380e6c23e6c6684113e118509702b4e37c2ec20f4662e472c2cfa21dcd",
+      "size_bytes": 62805,
+      "source_path_at_build": "/volumes/research-localdata/ywang3652/controlled_real10k_20k_handoff_20260824T105300Z/upload_v4/build_controlled_real10k_20k_nested.py"
+    },
+    {
+      "mode_octal": "0444",
+      "nlink": 1,
+      "path": "payload/materialization_gate_code/run_controlled_real10k_20k_materialization.py",
+      "role": "materialization_gate_code",
+      "sha256": "5dc071589de8788691167a357e7b361e87def1f26c0bb2e3796b2088a0819bef",
+      "size_bytes": 111379,
+      "source_path_at_build": "/volumes/research-localdata/ywang3652/controlled_real10k_20k_handoff_20260824T105300Z/upload_v4/run_controlled_real10k_20k_materialization.py"
+    },
+    {
+      "mode_octal": "0444",
+      "nlink": 1,
+      "path": "payload/native_smoke_test/controlled_real10k_20k_mars_native_smoke.py",
+      "role": "native_smoke_test",
+      "sha256": "7f1cdd03fa0be778fbf419e1018ffb11bc6dbdde73596d6ea56e7083a4a7635a",
+      "size_bytes": 10387,
+      "source_path_at_build": "/volumes/research-localdata/ywang3652/controlled_real10k_20k_handoff_20260824T100826Z/package_v2/payload/native_smoke_test/controlled_real10k_20k_mars_native_smoke.py"
+    },
+    {
+      "mode_octal": "0444",
+      "nlink": 1,
+      "path": "payload/package_builder_code/build_controlled_real10k_20k_mars_package.py",
+      "role": "package_builder_code",
+      "sha256": "c4b9f496bda460e201958280a5a09c4aa2aaed36ffd265abd633ac8f5ef7b0b1",
+      "size_bytes": 22113,
+      "source_path_at_build": "/volumes/research-localdata/ywang3652/controlled_real10k_20k_handoff_20260824T100826Z/package_v2/payload/package_builder_code/build_controlled_real10k_20k_mars_package.py"
+    },
+    {
+      "mode_octal": "0444",
+      "nlink": 1,
+      "path": "payload/preflight_code/preflight_controlled_real10k_20k_mars.py",
+      "role": "preflight_code",
+      "sha256": "f5470c7574248c0956eae61a61ab87ab08d11f568ac10405bc8c75a3da99e738",
+      "size_bytes": 69694,
+      "source_path_at_build": "/volumes/research-localdata/ywang3652/controlled_real10k_20k_handoff_20260824T105300Z/upload_v4/preflight_controlled_real10k_20k_mars.py"
+    },
+    {
+      "mode_octal": "0444",
+      "nlink": 1,
+      "path": "payload/preregistration_addendum_v1_1_json/CONTROLLED_EXPERIMENT_PREREGISTRATION_ADDENDUM_V1_1.json",
+      "role": "preregistration_addendum_v1_1_json",
+      "sha256": "9f1eb0e071ade0e5a42597b4242409282ed8d34cf159104f71df2d4d0d0a8633",
+      "size_bytes": 1501,
+      "source_path_at_build": "/volumes/research-localdata/ywang3652/controlled_real10k_20k_handoff_20260824T100826Z/package_v2/payload/preregistration_addendum_v1_1_json/CONTROLLED_EXPERIMENT_PREREGISTRATION_ADDENDUM_V1_1.json"
+    },
+    {
+      "mode_octal": "0444",
+      "nlink": 1,
+      "path": "payload/preregistration_addendum_v1_2_json/CONTROLLED_EXPERIMENT_PREREGISTRATION_ADDENDUM_V1_2.json",
+      "role": "preregistration_addendum_v1_2_json",
+      "sha256": "fb7c7d0f9e206e3743cf795a544004e570842f26495903ad0eafdd5f909f37a9",
+      "size_bytes": 4027,
+      "source_path_at_build": "/volumes/research-localdata/ywang3652/controlled_real10k_20k_handoff_20260824T100826Z/package_v2/payload/preregistration_addendum_v1_2_json/CONTROLLED_EXPERIMENT_PREREGISTRATION_ADDENDUM_V1_2.json"
+    },
+    {
+      "mode_octal": "0444",
+      "nlink": 1,
+      "path": "payload/preregistration_v1_json/CONTROLLED_EXPERIMENT_PREREGISTRATION_V1.json",
+      "role": "preregistration_v1_json",
+      "sha256": "19aca7778f4974fd3e7eadaca8b291783e8e08e99a53a9dca70b070a4bf16417",
+      "size_bytes": 8274,
+      "source_path_at_build": "/volumes/research-localdata/ywang3652/controlled_real10k_20k_handoff_20260824T100826Z/package_v2/payload/preregistration_v1_json/CONTROLLED_EXPERIMENT_PREREGISTRATION_V1.json"
+    },
+    {
+      "mode_octal": "0444",
+      "nlink": 1,
+      "path": "payload/runner_code/run_controlled_real10k_20k_paired.py",
+      "role": "runner_code",
+      "sha256": "c9123f56cd21d9c3f271f72360bc97b10f13e3b80043b74df559c1a0772823b0",
+      "size_bytes": 162844,
+      "source_path_at_build": "/volumes/research-localdata/ywang3652/controlled_real10k_20k_handoff_20260824T105300Z/upload_v4/run_controlled_real10k_20k_paired.py"
+    },
+    {
+      "mode_octal": "0444",
+      "nlink": 1,
+      "path": "payload/shared_contract_code/controlled_real10k_20k_contract.py",
+      "role": "shared_contract_code",
+      "sha256": "ca6824e5d47fc037c856044ad74b0dec26844fed19d09bbfee42d44fbd3969c0",
+      "size_bytes": 3459,
+      "source_path_at_build": "/volumes/research-localdata/ywang3652/controlled_real10k_20k_handoff_20260824T100826Z/package_v2/payload/shared_contract_code/controlled_real10k_20k_contract.py"
+    },
+    {
+      "mode_octal": "0444",
+      "nlink": 1,
+      "path": "payload/splitter_code/model_splitting.py",
+      "role": "splitter_code",
+      "sha256": "9db4b7f1ed9435f73e95e49c558003bdaaf153579c5c44f04fb779aa31e0ef8a",
+      "size_bytes": 12569,
+      "source_path_at_build": "/volumes/research-localdata/ywang3652/controlled_real10k_20k_handoff_20260824T100826Z/package_v2/payload/splitter_code/model_splitting.py"
+    },
+    {
+      "mode_octal": "0444",
+      "nlink": 1,
+      "path": "payload/trainer_code/train_physical_feature_tandem_inverse.py",
+      "role": "trainer_code",
+      "sha256": "92988524b08b15a2388f655f6239070889098024e49ee184832f69876f7db3be",
+      "size_bytes": 285749,
+      "source_path_at_build": "/volumes/research-localdata/ywang3652/controlled_real10k_20k_handoff_20260824T100826Z/package_v2/payload/trainer_code/train_physical_feature_tandem_inverse.py"
+    }
+  ],
+  "emx_performed": false,
+  "execution_authorized": false,
+  "generated_utc": "2026-08-24T10:54:00+00:00",
+  "package_layout_root": ".",
+  "required_roles": [
+    "authoritative_100k_csv",
+    "historical_10k_csv",
+    "historical_model_summary_json",
+    "materialization_builder_code",
+    "materialization_gate_code",
+    "native_smoke_test",
+    "package_builder_code",
+    "preflight_code",
+    "preregistration_addendum_v1_1_json",
+    "preregistration_addendum_v1_2_json",
+    "preregistration_v1_json",
+    "runner_code",
+    "shared_contract_code",
+    "splitter_code",
+    "trainer_code"
+  ],
+  "result_accessed": false,
+  "schema": "controlled_real10k_20k_mars_package_v1",
+  "status": "PASS_PREPARED_IMMUTABLE_RESULT_BLIND",
+  "training_performed": false
+}
