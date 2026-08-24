@@ -22,8 +22,11 @@ to one million real EM simulations with a fixed model test at every cumulative
 The primary handoff for the current research state, the owner's Monday-report
 goals, completion status, blocked claims, and next legal actions is the
 [Chinese current-goals and engineering handoff](docs/research/ENGINEERING_HANDOFF_20260823_CN.md).
-The latest live read-only observation recorded in that handoff is
-`2026-08-23T04:10:07Z`; machine-readable status is available in
+The latest architecture-matched engineering-run observation is
+`2026-08-24T01:19:41Z`; see the
+[deployed-100k exact-contract on historical-200k status](docs/research/DEPLOYED100K_EXACT_CONTRACT_ON_200K_STATUS_20260824.json)
+and its [100k reference-selection identity audit](docs/research/REFERENCE_100K_SELECTION_UNPROVEN.json).
+The broader machine-readable handoff state is available in
 [HANDOFF_STATE_20260823.json](docs/research/HANDOFF_STATE_20260823.json).
 The newest incremental, GPT-readable Monday-report snapshot is
 [Monday Advisor Goal v1](research_snapshot/20260823/monday_advisor_goal_v1/README.md);
@@ -35,6 +38,8 @@ its exact status and public-sanitized review-code boundary are summarized in
 | Area | Entry point |
 |---|---|
 | Current goals, status, and Chinese research handoff | [当前情况、目标与科研工程交接](docs/research/ENGINEERING_HANDOFF_20260823_CN.md) |
+| Architecture-matched 200k engineering-run status | [Launch and evidence JSON](docs/research/DEPLOYED100K_EXACT_CONTRACT_ON_200K_STATUS_20260824.json) |
+| Deployed/presented 100k selection identity | [Reference identity audit](docs/research/REFERENCE_100K_SELECTION_UNPROVEN.json) |
 | Machine-readable handoff state | [Handoff JSON](docs/research/HANDOFF_STATE_20260823.json) |
 | Latest Monday-report code/status snapshot | [Monday Advisor Goal v1](research_snapshot/20260823/monday_advisor_goal_v1/README.md) |
 | Latest GitHub sync status | [周一汇报同步状态](docs/research/MONDAY_ADVISOR_SYNC_STATUS_20260823_CN.md) |

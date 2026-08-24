@@ -1,6 +1,8 @@
 # Tests that require private project-root scripts, generated reports, MARS/HFSS
 # return bundles, or other non-redistributable evidence. They remain in the
 # repository but are excluded from public CI.
+research_snapshot/20260823/monday_advisor_goal_v1/public_code/mars_preflight_transport
+research_snapshot/20260823/monday_advisor_goal_v1/public_code/report_interface_v8
 tests/test_ads_style_curve_plausibility_audit_script.py
 tests/test_audit_delivery_package_script.py
 tests/test_audit_hfss_s8p_global_intake_script.py

@@ -1,0 +1,101 @@
+{
+  "schema": "deployed100k_exact_contract_on_historical200k_public_status_v1",
+  "updated_utc": "2026-08-24T01:19:41Z",
+  "run_id": "deployed100k_exact_contract_on_200k_20260824T005653Z",
+  "execution_status": "LAUNCHED_TRAINING",
+  "training_status": "RUNNING",
+  "launched_utc": "2026-08-24T01:11:44Z",
+  "evaluation_status": "AUTOMATED_PENDING_TRAINING_AND_RELEASE_GATES",
+  "reference_identity": {
+    "model_id": "current_foundry_qmin_response_only_seed20260713",
+    "role": "deployed_and_previous_advisor_presentation_reference",
+    "selection_status": "MISMATCH_FINAL_GLOBAL_WINNER",
+    "advisor_comparison_eligible": false,
+    "engineering_evaluation_allowed": true,
+    "boundary": "This reference is not the final global winner among the historical 100k experiments. The run is an engineering diagnostic and is ineligible for the formal advisor 100k-versus-200k comparison."
+  },
+  "training_population": {
+    "source_table_rows": 200000,
+    "accepted_rows": 200000,
+    "gradient_training_rows": 161446,
+    "validation_rows": 19135,
+    "test_rows": 19419,
+    "source_table_sha256": "1537290bb3fd214cdd94e435c825e84b8f70c4e51e15702a99b805ba2443ffbe",
+    "source_manifest_sha256": "3a515a44e4879d2bec6da5381d577a26084771b2c42f3e1bdee7be19d9248d81"
+  },
+  "frozen_model_contract": {
+    "input_features": 4,
+    "geometry_outputs": 10,
+    "forward_architecture": [10, 256, 256, 128, 4],
+    "inverse_architecture": [4, 512, 512, 256, 10],
+    "forward_parameter_count": 102020,
+    "inverse_parameter_count": 399114,
+    "total_parameter_count": 501134,
+    "decoder": "hard_feasible_topology_v1",
+    "seed": 20260713,
+    "split_seed": 20260711,
+    "fixed_forward_optimizer_updates": 3600,
+    "fixed_inverse_optimizer_updates": 3600,
+    "thread_limit": 1,
+    "trainer_sha256": "fbfda2023f862af2f0b185e41c4bf899f97cb79b0d0d763d20501c03525e8a4f",
+    "trainer_helper_sha256": "9db4b7f1ed9435f73e95e49c558003bdaaf153579c5c44f04fb779aa31e0ef8a"
+  },
+  "implementation_identities": {
+    "controller_sha256": "158cedf30c33c60d74f610bcabd0f15aa3d30a222a5aa5b90f62d4077ba3aa4f",
+    "finite_observer_sha256": "c854eb226f37409cba8aff87003e89140efab813f6bcb3c6b78263a548d70c85",
+    "legacy8k_evaluator_sha256": "5d5fdb21e37a3abf2a18fc546c2cf2174886adbb198f0164ca0a84cec1a8cef1",
+    "reference_contract_sha256": "8f295451a5e1ae8b7e0b4f6a1c3304201fa4f0703bf8d67b5bd564e9e8af938f",
+    "dataset_binding_sha256": "85bcbe3f697ad9bee8e2c56ef4dfabb28f6cdd30c6f18e4e9d3e16dfc36645cd",
+    "exact_train_argv_sha256": "de5650c947cf0e98e4658bc525135ff095e5374f90f0211393476123d8169990",
+    "evaluation_template_argv_sha256": "fea0312c21632bd1336c0373a85f77f3e4f84717bbd106a9603ff101d31fa66a",
+    "private_package_sha256_index_sha256": "f0c4ba46166056dda8671342cd21f9d9eb6533665f8a7dc8dbadd721fae52a82",
+    "independent_qa_go_sha256": "4b2600514110e90cab23274f918325295fc4eb8fac9c94c4b637d221c2aa3b35"
+  },
+  "launch_evidence": {
+    "remote_preflight_receipt_sha256": "5bb64a1c9caa56c58cb2562fe63f156a0886f912122d841322624b1d7601b277",
+    "remote_launch_receipt_sha256": "a2571e7599c8db4bf3eb7a95caa3dcff91581bc1f5302c2e1e00b485ea02e980",
+    "first_update_receipt_snapshot_sha256": "2090b30e30b9f6cd6016428c20e5e6876f5bf4327f5d8e35ac82ae0e3c3a357a",
+    "first_update_receipt_snapshot_status": "FORWARD_FIRST_UPDATES_PASS_INVERSE_NOT_STARTED",
+    "forward_observed_optimizer_updates": 5,
+    "forward_parameters_finite": true,
+    "forward_gradients_finite": true,
+    "forward_adam_state_finite": true,
+    "python_numpy_core_blas_thread_identity_checks_pass": true,
+    "stage_checkpoint_contract_sha256": "ec7e2acb9ec22cb0c230948498a9d656e0f651ea28d46a71c13db6ba0e7b8bf0",
+    "training_log_size_and_mtime_advanced": true,
+    "focused_test_suite": "26 passed",
+    "public_core_suite": "1076 passed / 0 failed / 52 skipped / 1 deselected",
+    "full_public_tree_suite": "1098 passed / 44 declared non-executable sanitized-mirror failures / 52 skipped / 1 deselected",
+    "independent_code_qa": "GO",
+    "independent_package_gate": "GO",
+    "independent_evaluator_gate": "GO"
+  },
+  "automated_evaluation_contract": {
+    "target_artifact_reused": true,
+    "target_artifact_regenerated": false,
+    "fixed10k_sha256": "c9d7d8bc7f65a488be0805969389a01ef049534eefdfdea71cbd640ee27d6407",
+    "selection_filter": "K_abs <= 0.8",
+    "evaluation_rows": 8000,
+    "high_k_extension_included": false,
+    "evidence_class": "architecture_matched_own_forward_proxy_engineering_only",
+    "fresh_emx_run": false,
+    "performance_metrics_accessed_at_this_status": false,
+    "release_gates": [
+      "trainer exit code zero",
+      "candidate summary and weights nonempty and SHA-bound",
+      "forward and inverse first five optimizer updates finite",
+      "runtime identities reverified",
+      "evaluator executable SHA reverified immediately before launch"
+    ]
+  },
+  "safety": {
+    "duplicate_run_launched": false,
+    "process_signal_sent": false,
+    "historical_model_retrained": false,
+    "completed_emx_rerun": false,
+    "fresh_emx_statistics_accessed": false,
+    "stage07_or_stage08_touched": false,
+    "stopped_watcher_touched": false,
+    "controlled_paired_experiment_touched": false
+  }
+}

@@ -1,0 +1,79 @@
+{
+  "schema": "reference_100k_selection_identity_public_audit_v1",
+  "generated_utc": "2026-08-24T00:19:50Z",
+  "overall_status": "MISMATCH",
+  "decision": {
+    "presentation_selected_model_matches_deployed_reference": true,
+    "final_historical_100k_selection_matches_deployed_reference": false,
+    "advisor_comparison_eligible": false,
+    "engineering_evaluation_allowed": true,
+    "reason": "The previous advisor presentation is hash-bound to deployed seed20260713, while the authoritative historical 100k global registry selects seed20260714 with different artifact and validation-result identities."
+  },
+  "deployed_and_presented_reference": {
+    "model_id": "current_foundry_qmin_response_only_seed20260713",
+    "candidate_id": "E1_qmargin2_semantic1_1_2_4",
+    "seed": 20260713,
+    "stage_identity": "stage1/seed_20260713",
+    "summary_sha256": "f05c4c0b3937bf9107f95d38d14679995aedc936071852ac7696f9838c5d43c1",
+    "weights_sha256": "c61a93d56136ad21686863aae72984c49eb0d33ce766923c8ec2d03d9c3177dd",
+    "training_log_sha256": "326f92571f3959f63161b6a2231e20a756f7e18654bb05b5764d45748347c89a",
+    "trainer_sha256": "fbfda2023f862af2f0b185e41c4bf899f97cb79b0d0d763d20501c03525e8a4f",
+    "validation_metrics_canonical_sha256": "48c4b1616fee3d10f16f1689e769766a1275b533453345fc6f6aec2caeed08ba",
+    "architecture": {
+      "forward": [10, 256, 256, 128, 4],
+      "inverse": [4, 512, 512, 256, 10],
+      "total_parameter_count": 501134
+    },
+    "decoder": "hard_feasible_topology_v1",
+    "checkpoint_selection_metric": "physical_cell_tail_strict_pass_rate"
+  },
+  "previous_advisor_presentation_evidence": {
+    "deck_file_name": "Advisor_Three_GDS_Real_EMX_Validation_20260805.pptx",
+    "deck_sha256": "269b53d9a901f01540a9182f31b1d25169a97f2dc7ca6c0347114aba1373ca31",
+    "hash_bound_queue_summary_sha256": "ab6faea5a4aa362963f60e4dbd615de21cf848b6d8c7fed5b55be844702be02b",
+    "evaluation_result_sha256": "8680c1ecb254c615781858d018640ae914d101c3a25b973d20294c37f9723b38",
+    "bound_seed": 20260713,
+    "bound_summary_sha256": "f05c4c0b3937bf9107f95d38d14679995aedc936071852ac7696f9838c5d43c1",
+    "bound_weights_sha256": "c61a93d56136ad21686863aae72984c49eb0d33ce766923c8ec2d03d9c3177dd",
+    "exact_match_to_deployed_reference": {
+      "model_id_via_manifest_to_hash_chain": true,
+      "weights_sha256": true,
+      "architecture": true,
+      "decoder": true,
+      "run_identity": true,
+      "evaluation_model_binding": true
+    }
+  },
+  "historical_final_global_selection": {
+    "authoritative_registry_sha256": "6970af09cbc3eecafb6be2c28b90ad908adf30162d91e1e12fb18ca04e15c560",
+    "comparison_state_sha256": "d589f41f676d754167a0a089e24b181fbc3a78fdf993488f176315bb72cd0f67",
+    "declared_model_id": null,
+    "candidate_id": "E1_qmargin2_semantic1_1_2_4",
+    "seed": 20260714,
+    "stage_identity": "stage2/seed_20260714",
+    "summary_sha256": "63eb75e8ae325651e23db99da9e1310cc292a14592b1d8f645924b42eed2270f",
+    "weights_sha256": "0fb78e2bcb135431bfb1bea35b4d59dad718662b6dc6874beaa6146b9ff59002",
+    "training_log_sha256": "8ee94fed9eaea393c7ed1a7be0de775ffebbe1239cf98d4c067b8645e61cc21d",
+    "validation_metrics_canonical_sha256": "4f177e922b5d7360d8e3a5d6ee66355914ba6031a8c08101c21677a80008fe93",
+    "architecture": {
+      "forward": [10, 256, 256, 128, 4],
+      "inverse": [4, 512, 512, 256, 10]
+    },
+    "decoder": "hard_feasible_topology_v1",
+    "checkpoint_selection_metric": "physical_cell_tail_strict_pass_rate"
+  },
+  "required_exact_match_audit": {
+    "model_id": "UNPROVEN_FINAL_REGISTRY_HAS_NO_MODEL_ID_AND_SELECTS_DIFFERENT_SEED",
+    "weights_sha256": "MISMATCH",
+    "architecture": "MATCH",
+    "decoder": "MATCH",
+    "run_identity": "MISMATCH",
+    "evaluation_result": "MISMATCH",
+    "identity_inferred_from_architecture_alone": false
+  },
+  "training_command_evidence": {
+    "literal_json_argv_recorded": true,
+    "historical_log_sha256": "326f92571f3959f63161b6a2231e20a756f7e18654bb05b5764d45748347c89a",
+    "trainer_sha256": "fbfda2023f862af2f0b185e41c4bf899f97cb79b0d0d763d20501c03525e8a4f"
+  }
+}
