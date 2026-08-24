@@ -1,16 +1,29 @@
 {
-  "schema": "deployed100k_exact_contract_on_historical200k_public_status_v2",
-  "updated_utc": "2026-08-24T03:51:14Z",
+  "schema": "deployed100k_exact_contract_on_historical200k_public_status_v3",
+  "updated_utc": "2026-08-24T04:15:28Z",
   "run_id": "deployed100k_exact_contract_on_200k_20260824T005653Z",
   "execution_status": "COMPLETE_ENGINEERING_DIAGNOSTIC",
   "training_status": "COMPLETE_PASS",
   "launched_utc": "2026-08-24T01:11:44Z",
   "completed_utc": "2026-08-24T03:45:26Z",
   "evaluation_status": "COMPLETE_PASS_LEGACY8K_OWN_FORWARD_PROXY",
+  "strict_goal_completion": {
+    "status": "BLOCKED_LITERAL_NORMALIZATION_AND_GEOMETRY_CONTRACT",
+    "engineering_run_remains_complete": true,
+    "literal_goal_completion_eligible": false,
+    "frozen_trainer_supports_reference_normalization_arrays": false,
+    "frozen_trainer_supports_reference_geometry_envelopes": false,
+    "frozen_trainer_supports_reference_dimension_weights": false,
+    "compliant_corrective_launch_available_without_changing_another_frozen_field": false,
+    "duplicate_or_corrective_run_launched": false,
+    "blocker_sha256": "c9dcb8b8546a3f1ad00e8a169182ee498e345b7a3e32705cecfe2e872312cdee",
+    "decision_required": "The project leader must either accept method-identical population-refit normalization as the intended contract or authorize a different explicit fixed-normalization trainer contract."
+  },
   "claim_scope": {
     "advisor_comparison_eligible": false,
     "engineering_evaluation_allowed": true,
     "formal_model_acceptance": false,
+    "strict_literal_goal_completion_eligible": false,
     "physical_accuracy_claim_allowed": false,
     "fresh_emx_evidence": false,
     "boundary": "This is an engineering-only own-forward-proxy diagnostic. It is neither the formal advisor 100k-versus-200k comparison nor fresh-EMX or measured physical accuracy evidence."
@@ -70,6 +83,7 @@
     "geometry_envelope_method_equal": true,
     "literal_normalization_arrays_equal": false,
     "literal_empirical_geometry_envelopes_equal": false,
+    "literal_response_loss_dimension_weights_equal": false,
     "reference_normalization_sha256": "f92f91c0a311082a1eb54aba959e6b1de9c19346ad7b6c23e49bfca4bc0b3e8b",
     "candidate_normalization_sha256": "d3b733f932ad7587af55529a9394b8009f63aecf0f59ca133bb4bfb860ef042a",
     "interpretation": "Normalization statistics, empirical geometry envelopes, and response-loss dimension weights are deterministically refit from each training population. They are population-mediated values, not fixed identical arrays. This historical-population diagnostic is not a nested pure sample-size causal arm."

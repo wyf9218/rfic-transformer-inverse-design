@@ -26,6 +26,9 @@ The architecture-matched engineering diagnostic completed at
 `2026-08-24T03:45:26Z`; see the
 [deployed-100k exact-contract on historical-200k status](docs/research/DEPLOYED100K_EXACT_CONTRACT_ON_200K_STATUS_20260824.json)
 and its [100k reference-selection identity audit](docs/research/REFERENCE_100K_SELECTION_UNPROVEN.json).
+Its strict literal-contract completion remains blocked: the frozen trainer
+refits normalization, empirical geometry envelopes, and dimension weights from
+the selected population and exposes no native reference-array input.
 The broader machine-readable handoff state is available in
 [HANDOFF_STATE_20260823.json](docs/research/HANDOFF_STATE_20260823.json).
 The newest incremental, GPT-readable Monday-report snapshot is
@@ -171,7 +174,10 @@ figures remain blocked by an independently confirmed reporting-interface
 NO-GO. A separate architecture-matched historical-population engineering
 diagnostic completed on the fixed legacy 8,000-target panel, but its deployed
 100k reference is not the historical final winner and its scores are
-own-forward-proxy metrics rather than physical accuracy. Do not interpret the
+own-forward-proxy metrics rather than physical accuracy. A strict completion
+audit also found that the numerical normalization/envelope fields do not match
+the 100k reference, so this result cannot satisfy a literal only-population-
+changed contract without a project-leader decision. Do not interpret the
 repository as a finalized Monday report.
 
 ## Attribution
