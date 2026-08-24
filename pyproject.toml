@@ -50,6 +50,8 @@ test = [
 [project.scripts]
 rfic-transformer-inverse-design = "rfic_transformer_inverse_design.interfaces.cli:main"
 rfic-transformer-inverse-design-gui = "rfic_transformer_inverse_design.interfaces:gui_main"
+rfic-transformer-q-sweep = "rfic_transformer_inverse_design.synthesis.q_sweep_cli:main"
+rfic-transformer-q-sweep-gui = "rfic_transformer_inverse_design.synthesis.q_sweep_gui:main"
 
 [project.urls]
 Repository = "https://github.com/wyf9218/rfic-transformer-inverse-design"
@@ -62,7 +64,10 @@ include-package-data = true
 include = ["rfic_transformer_inverse_design*"]
 
 [tool.setuptools.package-data]
-rfic_transformer_inverse_design = ["process/assets/proc/*.proc"]
+rfic_transformer_inverse_design = [
+  "process/assets/proc/*.proc",
+  "synthesis/*.json",
+]
 
 [tool.pytest.ini_options]
 pythonpath = ["."]

@@ -1,0 +1,58 @@
+{
+  "schema": "rfic_frozen_tandem_mlp_public_contract.v1",
+  "model_id": "real10k_center15ghz_seed20260711",
+  "training_label_count": 10000,
+  "model_seed": 20260711,
+  "target_frequency_ghz": 15.0,
+  "q_training_definition": "min(Qp, Qs)",
+  "input_columns": [
+    "input__lp_nh_center",
+    "input__ls_nh_center",
+    "input__q_center",
+    "input__k_abs_center"
+  ],
+  "geometry_columns": [
+    "geom__primary_outer_width_um",
+    "geom__primary_outer_height_um",
+    "geom__secondary_outer_width_um",
+    "geom__secondary_outer_height_um",
+    "geom__line_width_um",
+    "geom__primary_terminal_y_span_um",
+    "geom__secondary_terminal_y_span_um",
+    "geom__offset_um",
+    "geom__primary_feed_extension_um",
+    "geom__secondary_feed_extension_um"
+  ],
+  "declared_support_lower": [0.5, 0.5, 5.0, 0.0],
+  "declared_support_upper": [3.0, 3.0, 25.0, 0.8],
+  "architecture": {
+    "inverse_mlp": [4, 256, 256, 256, 10],
+    "forward_surrogate": [10, 256, 256, 256, 4],
+    "hidden_activation": "gelu",
+    "geometry_projection": "sigmoid_to_training_envelope"
+  },
+  "artifacts": {
+    "summary": {
+      "filename": "physical_feature_tandem_inverse_summary.json",
+      "sha256": "90a81532f7342ae7348248ea45889368fbb13ed2b6ee8f89e789f80f6811a3fa"
+    },
+    "weights": {
+      "filename": "physical_feature_tandem_inverse_weights.npz",
+      "sha256": "ffea66dfdd0bb252e402e1ade70f5e8768511e26f2978b1d73b1817a0221e42a"
+    },
+    "training_table": {
+      "sha256": "3027290eb1b4c229a23f0676f970ff9d13762677a897a0d7e2aed959075c85c8"
+    }
+  },
+  "validation_only_metrics": {
+    "range_normalized_rmse": 0.009268715258338223,
+    "range_normalized_mae": 0.005963796658521595,
+    "per_feature_mae": {
+      "Lp_nH": 0.014188436810105481,
+      "Ls_nH": 0.013037747381761902,
+      "Q_scalar": 0.11407980861533448,
+      "K_abs": 0.00580857802125816
+    }
+  },
+  "scientific_boundary": "The frozen forward surrogate is a candidate ranker, not real-EM evidence. Physical selection requires fresh EMX for every Q candidate. Model weights and private foundry assets are intentionally excluded from the public repository."
+}

@@ -15,6 +15,8 @@
 
 ## Workflows
 
+- [Three-input MLP Q sweep and MARS web application](workflows/MLP_Q_SWEEP_GUI.md)
+- [Three-input application release receipt](research/MLP_Q_SWEEP_GUI_RELEASE_20260824.json)
 - [EMX/HFSS cross-solver validation](workflows/EMX_HFSS_VALIDATION.md)
 - [Experiment contract](reproducibility/EXPERIMENT_CONTRACT.md)
 - [Testing policy](reproducibility/TESTING_POLICY.md)

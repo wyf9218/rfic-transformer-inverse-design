@@ -59,6 +59,7 @@ its exact status and public-sanitized review-code boundary are summarized in
 | Million-sample campaign | [Campaign protocol](docs/workflows/MILLION_DATA_CAMPAIGN.md) |
 | 100k checkpoint tests | [Checkpoint protocol](docs/workflows/CHECKPOINT_MODEL_TESTS.md) |
 | EMX/HFSS validation | [Cross-solver validation](docs/workflows/EMX_HFSS_VALIDATION.md) |
+| Three-input MLP Q sweep and MARS GUI | [Exact-Q synthesis application](docs/workflows/MLP_Q_SWEEP_GUI.md) |
 | Neural-network models | [Model catalog](docs/models/MODEL_CATALOG.md) |
 | Research roadmap | [Literature-driven roadmap](docs/research/LITERATURE_ROADMAP.md) |
 | Every command-line script | [Script catalog](docs/SCRIPT_CATALOG.md) |
@@ -161,6 +162,21 @@ python scripts/train_physical_feature_multihead_tandem_inverse.py \
   --out-dir /path/to/multihead \
   --head-count 4
 ```
+
+Run the three-input frozen-MLP Q sweep (`Lp`, `Ls`, and `|K|`; exact
+`Q=10..20`):
+
+```bash
+rfic-transformer-q-sweep \
+  --model-dir /private/path/to/hash-bound-model \
+  --out-dir /new/no-clobber/run \
+  --design-id demo_001 \
+  --lp-nh 1.15 --ls-nh 1.40 --k-abs 0.76
+```
+
+The default command reports proxy diagnostics only. Selecting the final GDS by
+physical error requires the private MARS backend to run fresh EMX for all eleven
+Q candidates; see the workflow documentation above.
 
 ## Scientific Status
 
