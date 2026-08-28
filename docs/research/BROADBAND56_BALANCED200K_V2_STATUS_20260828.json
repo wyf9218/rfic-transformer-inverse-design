@@ -1,0 +1,58 @@
+{
+  "generated_date": "2026-08-28",
+  "campaign_id": "broadband56_real_emx_balanced200k_tsmc65_v2",
+  "branch": "codex/broadband56-balanced200k-v2",
+  "base_commit": "85a0b96be7d2227a44d00d046f972f2a9bfbeaa0",
+  "overall_status": "LOCAL_CONTRACT_AND_AUDIT_CODE_READY_REMOTE_GATES_PENDING",
+  "current_accepted": 0,
+  "current_feature_rows": 0,
+  "current_phase": "PREPARATION",
+  "real_emx_started": false,
+  "calibre_started": false,
+  "frozen_public_contract": {
+    "path": "configs/broadband56_real_emx_balanced200k_tsmc65_v2.json",
+    "validation": "PASS",
+    "private_inherited_evidence": "REVERIFY"
+  },
+  "verified_local_results": [
+    {
+      "scope": "focused contract, queue, preparation, and synthetic checkpoint tests",
+      "result": "6 passed"
+    },
+    {
+      "scope": "candidate queue and parallel runner regression tests after identity/fail-on-error hardening",
+      "result": "18 passed"
+    },
+    {
+      "scope": "32-row exact 10-D Sobol geometry-only queue",
+      "result": "PASS; 32 canonical unique rows; no response labels"
+    }
+  ],
+  "preserved_negative_result": {
+    "scope": "local 32-row create-only attempt using sanitized placeholder config",
+    "classification": "EXPECTED_FAIL_DO_NOT_USE_AS_GOLDEN",
+    "actual_result": "0 of 32 layout exports succeeded because the public proc path is an intentional placeholder",
+    "old_wrapper_hazard": "outer row-accounting summary could show PASS without --fail-on-error",
+    "remediation": "parallel runner now preserves queue identity and rejects failed merged rows when --fail-on-error is active",
+    "physical_evidence": false
+  },
+  "public_suite": {
+    "first_run": "1420 passed, 54 skipped, 1 failed",
+    "failure": "one unrelated test hard-coded the repository directory name and failed only in a differently named worktree",
+    "fix": "resolve the script from the current repository root",
+    "focused_retest": "1 passed",
+    "full_retest": "1421 passed, 54 skipped, 1 deselected, 1 warning in 97.35s",
+    "full_retest_status": "PASS",
+    "compileall": "PASS"
+  },
+  "remote_state": {
+    "mars_host": "PRIVATE_NOT_RECORDED",
+    "web_session": "USER_AUTHENTICATED_THEN_REMOTE_DESKTOP_RETURNED_TO_LOCK_SCREEN",
+    "user_instruction": "DO_NOT_TRIGGER_REPEATED_RECONNECTIONS",
+    "previous_v1_contract_hash": "UNKNOWN",
+    "private_production_config": "REVERIFY",
+    "private_calibre_emx_backend": "REVERIFY",
+    "resource_and_license_gate": "REVERIFY"
+  },
+  "next_legal_action": "After one user unlock, read-only locate and hash the previous V1 contract/config/backend receipts; do not launch EMX until preparation, golden, and resource gates pass."
+}

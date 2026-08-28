@@ -44,6 +44,12 @@ from rfic_transformer_inverse_design.sim.touchstone import load_touchstone
 
 GEOMETRY_PREFIX_CANDIDATES = ("candidate__geom__", "geom__", "candidate__")
 QUEUE_METADATA_COLUMNS = (
+    "campaign_id",
+    "campaign_contract_fingerprint",
+    "campaign_phase",
+    "acquisition_source",
+    "geometry_id",
+    "geometry_sha256",
     "selection_rank",
     "candidate_index",
     "candidate_id",

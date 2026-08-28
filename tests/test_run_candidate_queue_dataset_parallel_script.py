@@ -52,6 +52,40 @@ def test_split_rows_uses_requested_worker_count_when_rows_exceed_jobs() -> None:
     assert [row["candidate_id"] for shard in shards for row in shard] == [f"c{index}" for index in range(20)]
 
 
+def test_fail_on_error_rejects_merged_rows_with_failed_layout_or_emx(tmp_path: Path) -> None:
+    mod = _load_parallel_module()
+    candidate_csv = tmp_path / "queue.csv"
+    _write_candidate_csv(candidate_csv, 1)
+    run = mod.ShardRun(
+        index=0,
+        row_count=1,
+        csv_path=candidate_csv,
+        out_dir=tmp_path / "shard",
+        command=["fake"],
+        returncode=0,
+        stdout="",
+        stderr="",
+        summary_path=tmp_path / "summary.json",
+        summary={"overall_status": "PASS"},
+    )
+
+    checks = mod._parallel_checks(
+        candidate_csv=candidate_csv,
+        rows=[{"candidate_id": "c0"}],
+        runs=[run],
+        merged_rows=[{"queue__candidate_id": "c0", "ok": "false"}],
+        jobs=1,
+        expected_shards=1,
+        expected_count=1,
+        expected_jobs=1,
+        fail_on_error=True,
+    )
+
+    by_name = {item["name"]: item for item in checks}
+    assert by_name["merged_candidate_identity_matches_input"]["pass"]
+    assert not by_name["all_merged_rows_ok_when_fail_on_error"]["pass"]
+
+
 def test_parallel_runner_splits_shards_and_merges_dataset_rows() -> None:
     mod = _load_parallel_module()
 

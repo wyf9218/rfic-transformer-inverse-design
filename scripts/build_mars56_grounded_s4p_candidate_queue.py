@@ -320,8 +320,16 @@ def _write_csv(path: Path, rows: list[dict[str, Any]]) -> None:
 
 
 def _parallel_run_hint(candidate_csv: Path, config: Path, args: argparse.Namespace) -> str:
+    step = float(args.expected_frequency_step_ghz)
+    points = int(args.expected_frequency_points)
+    if abs(step - 1.0) <= 1.0e-12 and points == 56:
+        frequency_override = "--force-wideband-5-60-1p0"
+    elif abs(step - 0.5) <= 1.0e-12 and points == 111:
+        frequency_override = "--force-wideband-5-60-0p5"
+    else:
+        frequency_override = ""
     return " ".join(
-        [
+        [item for item in [
             "python3",
             "scripts/run_candidate_queue_dataset_parallel.py",
             "--candidate-csv",
@@ -334,7 +342,15 @@ def _parallel_run_hint(candidate_csv: Path, config: Path, args: argparse.Namespa
             str(int(args.expected_count)),
             "--expected-count",
             str(int(args.expected_count)),
-            "--force-wideband-5-60-0p5",
+            frequency_override,
+            "--expected-frequency-start-ghz",
+            str(float(args.expected_frequency_start_ghz)),
+            "--expected-frequency-stop-ghz",
+            str(float(args.expected_frequency_stop_ghz)),
+            "--expected-frequency-step-ghz",
+            str(step),
+            "--expected-frequency-points",
+            str(points),
             "--expected-touchstone-extension",
             ".s4p",
             "--expected-ports",
@@ -343,7 +359,7 @@ def _parallel_run_hint(candidate_csv: Path, config: Path, args: argparse.Namespa
             "single_ended_shield_grounded",
             "--expected-pin-purpose",
             "51",
-        ]
+        ] if item]
     )
 
 

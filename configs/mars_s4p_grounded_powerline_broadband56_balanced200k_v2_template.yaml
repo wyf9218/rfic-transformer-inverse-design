@@ -1,0 +1,98 @@
+# Sanitized template only. Production must inherit the approved private V1
+# process/layout contract and pass the V2 hash preflight before use.
+
+target:
+  topology_mode: 1t1t
+  f0_hz: 15000000000.0
+  lp_h: 1.0e-9
+  ls_h: 1.0e-9
+  k_target: 0.5
+  q_target_mode: max
+  frequency_start_hz: 5000000000.0
+  frequency_stop_hz: 60000000000.0
+  frequency_step_hz: 1000000000.0
+  band_points: 56
+  fractional_bandwidth: 0.20
+
+transformer:
+  shield:
+    enabled: true
+    kind: ring
+    margin_um: 100.0
+    width_um: 10.0
+
+topology:
+  primary:
+    turns: 1
+    center_tap: true
+    vdd_bar:
+      enabled: true
+      bar_layer: 74
+      width_um: 10.0
+      offset_um: 12.0
+  secondary:
+    turns: 1
+    center_tap: true
+    vdd_bar:
+      enabled: true
+      bar_layer: 39
+      width_um: 10.0
+      offset_um: 12.0
+
+emx:
+  emx_binary: /REPLACE/WITH/APPROVED/PRIVATE/EMX/BINARY
+  emx_process_file: /REPLACE/WITH/APPROVED/PRIVATE/TSMC65.proc
+  license_file:
+  cdslmd_license_file:
+  cadence_install_root: /REPLACE/WITH/APPROVED/PRIVATE/CADENCE/ROOT
+  cadence_pdk_cds_lib: /REPLACE/WITH/APPROVED/PRIVATE/PDK/cds.lib
+  cadence_tech_lib: REPLACE_WITH_APPROVED_PRIVATE_TECH_LIB
+  cadence_layer_map: /REPLACE/WITH/APPROVED/PRIVATE/PDK/layers.layermap
+  port_mode: single_ended_shield_grounded
+  cadence_pin_purpose: 51
+  execution_mode: local
+  differential_port_pairs: 1,2:3,4
+  ground_unused_s8p_ports: false
+  power_line_8port:
+    enabled: true
+    touchstone_mode: signal_4_grounded_aux
+    bridge_width_um: 10.0
+    vertical_length_diameter_ratio: 1.5
+    bridge_y_policy: center
+    bridge_motion_axis: x_only
+    port_ground_reference: shield
+    port_map: [P001, P002, P003, P004]
+    role_labels:
+      primary_top: P001
+      primary_bottom: P002
+      secondary_top: P003
+      secondary_bottom: P004
+      left_power_top: P005
+      left_power_bottom: P006
+      right_power_top: P007
+      right_power_bottom: P008
+  primary_bridge_layer:
+  primary_bridge_via_layer:
+  primary_bridge_lower_layer:
+  primary_bridge_lower_via_layer:
+  secondary_bridge_layer:
+  secondary_bridge_via_layer:
+  secondary_bridge_lower_layer:
+  secondary_bridge_lower_via_layer:
+
+bounds:
+  primary:
+    outer_width_um: [160.0, 520.0]
+    outer_height_um: [160.0, 520.0]
+    trace_width_um: [3.0, 12.0]
+    spacing_um: [2.0, 14.0]
+    terminal_y_span_um: [20.0, 90.0]
+    feed_extension_um: [100.0, 320.0]
+  secondary:
+    outer_width_um: [160.0, 520.0]
+    outer_height_um: [160.0, 520.0]
+    trace_width_um: [3.0, 12.0]
+    spacing_um: [2.0, 14.0]
+    terminal_y_span_um: [20.0, 90.0]
+    feed_extension_um: [100.0, 320.0]
+  offset_um: [-90.0, 90.0]

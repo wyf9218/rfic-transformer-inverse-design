@@ -1,0 +1,200 @@
+{
+  "schema": "rfic_transformer.broadband56_balanced200k_contract.v2",
+  "campaign_id": "broadband56_real_emx_balanced200k_tsmc65_v2",
+  "contract_status": "FROZEN_PUBLIC_OVERRIDE_REQUIRES_PRIVATE_INHERITED_EVIDENCE",
+  "terminal_goal": {
+    "accepted_geometries": 200000,
+    "s4p_artifacts": 200000,
+    "geometry_frequency_rows": 11200000,
+    "independent_design_count": 200000
+  },
+  "frequency_grid": {
+    "start_ghz": 5.0,
+    "stop_ghz": 60.0,
+    "step_ghz": 1.0,
+    "points": 56,
+    "exact_hz": [
+      5000000000, 6000000000, 7000000000, 8000000000,
+      9000000000, 10000000000, 11000000000, 12000000000,
+      13000000000, 14000000000, 15000000000, 16000000000,
+      17000000000, 18000000000, 19000000000, 20000000000,
+      21000000000, 22000000000, 23000000000, 24000000000,
+      25000000000, 26000000000, 27000000000, 28000000000,
+      29000000000, 30000000000, 31000000000, 32000000000,
+      33000000000, 34000000000, 35000000000, 36000000000,
+      37000000000, 38000000000, 39000000000, 40000000000,
+      41000000000, 42000000000, 43000000000, 44000000000,
+      45000000000, 46000000000, 47000000000, 48000000000,
+      49000000000, 50000000000, 51000000000, 52000000000,
+      53000000000, 54000000000, 55000000000, 56000000000,
+      57000000000, 58000000000, 59000000000, 60000000000
+    ]
+  },
+  "touchstone_extension": ".s4p",
+  "touchstone_ports": 4,
+  "label_source": "FRESH_REAL_EMX_ONLY",
+  "geometry_identity": {
+    "algorithm": "sha256(canonical ordered 10-D geometry rounded to 9 decimal places in micrometres)",
+    "decimal_places": 9,
+    "fields": [
+      "primary_outer_width_um",
+      "primary_outer_height_um",
+      "secondary_outer_width_um",
+      "secondary_outer_height_um",
+      "line_width_um",
+      "primary_terminal_y_span_um",
+      "secondary_terminal_y_span_um",
+      "offset_um",
+      "primary_feed_extension_um",
+      "secondary_feed_extension_um"
+    ]
+  },
+  "broad_response_envelope": {
+    "lp_nh": [0.03, 8.0],
+    "ls_nh": [0.03, 8.0],
+    "xp_ohm": [10.0, 250.0],
+    "xs_ohm": [10.0, 250.0],
+    "qp": [2.0, 35.0],
+    "qs": [2.0, 35.0],
+    "k_abs": [0.05, 0.85],
+    "ls_over_lp": [0.25, 4.0]
+  },
+  "literature_practical_panel": {
+    "k_abs": [0.10, 0.85],
+    "ls_over_lp": [0.50, 2.0]
+  },
+  "validity_levels": {
+    "broadband_descriptor_valid": [
+      "finite_values",
+      "positive_primary_resistance",
+      "positive_secondary_resistance",
+      "positive_primary_inductive_reactance",
+      "positive_secondary_inductive_reactance",
+      "parseable_s_matrix",
+      "parseable_z_matrix",
+      "passivity_audit_completed",
+      "reciprocity_audit_completed",
+      "no_severe_extraction_discontinuity"
+    ],
+    "strict_lumped_valid": [
+      "broadband_descriptor_valid",
+      "frequency_no_greater_than_approximately_srf_over_2"
+    ]
+  },
+  "primary_uniformity": {
+    "bands_ghz": [[5, 11], [12, 18], [19, 25], [26, 32], [33, 39], [40, 46], [47, 53], [54, 60]],
+    "anchors_ghz": [8, 15, 22, 29, 36, 43, 50, 57],
+    "audit_edges_ghz": [5, 60],
+    "response_vector": ["xp_ohm", "xs_ohm", "qmin", "k_abs"],
+    "bins_per_dimension": 6,
+    "cells_per_anchor": 1296,
+    "frequency_conditioned_cells": 10368,
+    "primary_counting": "geometry_unique_anchor_coverage",
+    "secondary_counting": "record_weighted_coverage",
+    "bin_edges": {
+      "xp_ohm": [10.0, 17.09975946676697, 29.24017738212866, 50.0, 85.49879733383484, 146.2008869106433, 250.0],
+      "xs_ohm": [10.0, 17.09975946676697, 29.24017738212866, 50.0, 85.49879733383484, 146.2008869106433, 250.0],
+      "qmin": [2.0, 7.5, 13.0, 18.5, 24.0, 29.5, 35.0],
+      "k_abs": [0.05, 0.18333333333333335, 0.31666666666666665, 0.44999999999999996, 0.5833333333333334, 0.7166666666666667, 0.85]
+    }
+  },
+  "phase_plan": {
+    "seed": 20260828,
+    "checkpoints": [100, 1000, 5000, 20000, 50000, 75000, 100000, 125000, 150000, 175000, 200000],
+    "phase_a": {
+      "accepted_start": 0,
+      "accepted_target": 50000,
+      "sampler_preference": ["lhs_optimized", "sobol"],
+      "targeted_acquisition_allowed": false
+    },
+    "phase_b": {
+      "accepted_start": 50000,
+      "accepted_target": 150000,
+      "accepted_batch_size": 5000,
+      "round_count": 20,
+      "mixture_fractions": {
+        "underfilled_response_repair": 0.60,
+        "ensemble_uncertainty": 0.20,
+        "maximin_geometry_exploration": 0.20
+      }
+    },
+    "phase_c": {
+      "accepted_start": 150000,
+      "accepted_target": 200000,
+      "accepted_batch_size": 5000,
+      "round_count": 10,
+      "mixture_fractions": {
+        "rare_or_underfilled_response_repair": 0.65,
+        "ensemble_uncertainty": 0.20,
+        "maximin_geometry_exploration": 0.15
+      }
+    }
+  },
+  "acquisition_surrogate": {
+    "role": "candidate_priority_only",
+    "minimum_ensemble_members": 5,
+    "training_labels": "completed fresh real EMX only",
+    "split_unit": "canonical geometry identity",
+    "fallback": "maximin optimized-LHS or Sobol",
+    "predictions_are_final_labels": false
+  },
+  "required_acceptance_gates": [
+    "canonical_geometry_unique",
+    "analytical_geometry_pass",
+    "topology_pass",
+    "cadence_gds_pass",
+    "calibre_zero_blocking_violations",
+    "fresh_real_emx_pass",
+    "parseable_s4p",
+    "exact_56_point_frequency_vector",
+    "finite_s_and_z",
+    "complete_provenance",
+    "exact_campaign_contract_fingerprint"
+  ],
+  "completion_status": "COMPLETE_200K",
+  "coverage_status_vocabulary": [
+    "COVERAGE_PASS",
+    "COVERAGE_PARTIAL",
+    "COVERAGE_PHYSICALLY_LIMITED",
+    "COVERAGE_AUDIT_FAIL"
+  ],
+  "coverage_cell_status_vocabulary": [
+    "observed",
+    "underfilled",
+    "unobserved_under_current_geometry_contract",
+    "prediction_only_candidate",
+    "attempted_but_not_observed"
+  ],
+  "inherited_contract": {
+    "required": true,
+    "sha256_required": true,
+    "public_repository_embeds_private_hash": false,
+    "verification_status": "REVERIFY_ON_MARS_BEFORE_PREPARATION",
+    "unchanged_items": [
+      "foundry_process",
+      "proc_file",
+      "pdk",
+      "metal_and_via_stack",
+      "m10_m9_winding_implementation",
+      "m4_cutout_and_keepout",
+      "topology",
+      "ten_geometry_variables",
+      "geometry_bounds",
+      "port_mode",
+      "pin_purposes",
+      "grounding",
+      "gds_generation",
+      "analytical_gates",
+      "cadence",
+      "calibre_drc",
+      "emx_except_frequency_grid",
+      "s_z_conversion",
+      "physical_feature_equations",
+      "provenance_and_no_clobber"
+    ]
+  },
+  "public_repository_boundary": {
+    "allow": ["sanitized_code", "contracts", "tests", "aggregate_metrics", "aggregate_plots", "source_hashes_without_private_paths"],
+    "deny": ["pdk", "proc_bytes", "license_information", "private_hostnames", "credentials", "gds", "raw_s4p", "private_runtime_paths", "foundry_sensitive_data"]
+  }
+}

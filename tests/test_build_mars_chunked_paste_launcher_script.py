@@ -5,8 +5,8 @@ import os
 import subprocess
 
 
-ROOT = Path(__file__).resolve().parents[2]
-SCRIPT = ROOT / "rfic-transformer-inverse-design" / "scripts" / "build_mars_chunked_paste_launcher.py"
+ROOT = Path(__file__).resolve().parents[1]
+SCRIPT = ROOT / "scripts" / "build_mars_chunked_paste_launcher.py"
 
 
 class BuildMarsChunkedPasteLauncherScriptTest(TransformerToolboxTestBase):

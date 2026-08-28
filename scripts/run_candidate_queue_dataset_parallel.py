@@ -105,6 +105,7 @@ def main(argv: list[str] | None = None) -> int:
         expected_shards=len(shard_specs),
         expected_count=args.expected_count,
         expected_jobs=args.expected_jobs,
+        fail_on_error=bool(args.fail_on_error),
     ) + touchstone_contract["checks"]
     status = "PASS" if all(item["pass"] for item in checks) else "FAIL"
     elapsed_seconds = max(0.0, time.perf_counter() - started_at)
@@ -330,7 +331,7 @@ def _existing_shard_run(index: int, row_count: int, csv_path: Path, out_dir: Pat
 
 def _candidate_ids_match(input_rows: list[dict[str, str]], dataset_rows: list[dict[str, str]]) -> bool:
     input_ids = [str(row.get("candidate_id", "")).strip() for row in input_rows]
-    output_ids = [str(row.get("candidate_id", "")).strip() for row in dataset_rows]
+    output_ids = [str(row.get("queue__candidate_id") or row.get("candidate_id") or "").strip() for row in dataset_rows]
     if all(input_ids) and all(output_ids):
         return input_ids == output_ids
     return True
@@ -444,6 +445,7 @@ def _parallel_checks(
     expected_shards: int,
     expected_count: int | None,
     expected_jobs: int | None,
+    fail_on_error: bool,
 ) -> list[dict[str, Any]]:
     input_count = len(rows)
     merged_count = len(merged_rows)
@@ -486,6 +488,16 @@ def _parallel_checks(
             "merged_count_matches_expected",
             expected_count is None or merged_count == int(expected_count),
             f"merged_rows={merged_count}, expected_count={expected_count}",
+        ),
+        _check(
+            "merged_candidate_identity_matches_input",
+            _candidate_ids_match(rows, merged_rows),
+            "queue__candidate_id preserves input ordering and identity",
+        ),
+        _check(
+            "all_merged_rows_ok_when_fail_on_error",
+            (not fail_on_error) or (bool(merged_rows) and all(_truthy(row.get("ok")) for row in merged_rows)),
+            f"fail_on_error={fail_on_error}, ok_rows={sum(_truthy(row.get('ok')) for row in merged_rows)}, merged_rows={merged_count}",
         ),
     ]
 
