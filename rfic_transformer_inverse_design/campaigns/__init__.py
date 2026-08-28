@@ -9,6 +9,8 @@ from .broadband56_balanced200k import (
     canonical_geometry_sha256,
     contract_fingerprint,
     primary_bin_edges,
+    secondary_bin_edges,
+    secondary_coverage_contract,
     validate_contract,
 )
 
@@ -21,5 +23,7 @@ __all__ = [
     "canonical_geometry_sha256",
     "contract_fingerprint",
     "primary_bin_edges",
+    "secondary_bin_edges",
+    "secondary_coverage_contract",
     "validate_contract",
 ]

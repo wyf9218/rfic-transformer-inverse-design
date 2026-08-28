@@ -24,6 +24,7 @@ if __package__ in {None, ""}:
     sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from rfic_transformer_inverse_design.campaigns.broadband56_balanced200k import (  # noqa: E402
+    ACQUISITION_SOURCES_BY_PHASE,
     ANCHOR_FREQUENCIES_GHZ,
     CAMPAIGN_ID,
     FREQUENCY_GRID_HZ,
@@ -35,9 +36,14 @@ from rfic_transformer_inverse_design.campaigns.broadband56_balanced200k import (
     contract_fingerprint,
     matrix_columns,
     occupancy_metrics,
+    phase_for_accepted_sequence,
     primary_bin_edges,
     primary_cell_for_values,
     validate_contract,
+)
+from rfic_transformer_inverse_design.campaigns.broadband56_coverage import (  # noqa: E402
+    StreamingPhysicalCoverage,
+    population_memberships,
 )
 from rfic_transformer_inverse_design.sim.touchstone import load_touchstone  # noqa: E402
 
@@ -108,6 +114,7 @@ def main(argv: list[str] | None = None) -> int:
         features_path,
         accepted["geometry_ids"],
         accepted["geometry_hashes"],
+        accepted["geometry_phases"],
         fingerprint,
         int(args.expected_accepted),
         checks,
@@ -138,6 +145,12 @@ def main(argv: list[str] | None = None) -> int:
 
     cells_path = out_dir / "physical_coverage_cells_by_anchor.csv"
     _write_cell_table(cells_path, coverage["anchor_counts"], int(args.expected_accepted))
+    by_frequency_path = out_dir / "physical_coverage_by_frequency.csv"
+    marginals_path = out_dir / "physical_coverage_marginals.csv"
+    pairwise_path = out_dir / "physical_coverage_pairwise.csv"
+    _write_csv_rows(by_frequency_path, coverage["secondary_coverage"].frequency_summary_rows())
+    _write_csv_rows(marginals_path, coverage["secondary_coverage"].marginal_rows())
+    _write_csv_rows(pairwise_path, coverage["secondary_coverage"].pairwise_rows())
     coverage_summary_path = out_dir / "COVERAGE_SUMMARY.json"
     coverage_summary = {
         "campaign_id": CAMPAIGN_ID,
@@ -147,6 +160,7 @@ def main(argv: list[str] | None = None) -> int:
         "by_anchor_ghz": coverage["anchor_metrics"],
         "feature_row_count": coverage["feature_row_count"],
         "validity_counts": coverage["validity_counts"],
+        "record_weighted_secondary_coverage": coverage["secondary_coverage"].summary(),
         "coverage_status": coverage_status,
         "coverage_gate": gate_evidence,
         "scientific_boundary": "Each geometry contributes at most one cell per anchor; no surrogate prediction is counted.",
@@ -190,6 +204,9 @@ def main(argv: list[str] | None = None) -> int:
         },
         "outputs": {
             "coverage_cells": _file_evidence(cells_path),
+            "coverage_by_frequency": _file_evidence(by_frequency_path),
+            "coverage_marginals": _file_evidence(marginals_path),
+            "coverage_pairwise": _file_evidence(pairwise_path),
             "coverage_summary": _file_evidence(coverage_summary_path),
             "checkpoint_status": _file_evidence(status_path),
             "failure_funnel": _file_evidence(funnel_copy),
@@ -231,6 +248,9 @@ def _audit_accepted_geometries(
         "geometry_id",
         "geometry_sha256",
         "campaign_contract_fingerprint",
+        "accepted_sequence",
+        "campaign_phase",
+        "acquisition_source",
         "calibre_blocking_violations",
         *(f"geom__{name}" for name in GEOMETRY_FIELDS),
         *ACCEPTANCE_STATUS_FIELDS,
@@ -238,6 +258,9 @@ def _audit_accepted_geometries(
     checks.append(_check("accepted_geometries_required_columns", required.issubset(fieldnames), sorted(required - fieldnames)))
     ids: set[str] = set()
     hashes: dict[str, str] = {}
+    phases: dict[str, str] = {}
+    acquisition_sources: dict[str, str] = {}
+    sequences: list[int] = []
     row_errors: list[str] = []
     for index, row in enumerate(rows, start=2):
         geometry_id = str(row.get("geometry_id") or "").strip()
@@ -248,6 +271,28 @@ def _audit_accepted_geometries(
         ids.add(geometry_id)
         if str(row.get("campaign_contract_fingerprint") or "") != fingerprint:
             row_errors.append(f"line {index}: contract fingerprint mismatch")
+        sequence = _as_int(row.get("accepted_sequence"))
+        phase = str(row.get("campaign_phase") or "").strip()
+        source = str(row.get("acquisition_source") or "").strip()
+        if sequence is None:
+            row_errors.append(f"line {index}: invalid accepted_sequence")
+        else:
+            sequences.append(sequence)
+            try:
+                expected_phase = phase_for_accepted_sequence(sequence)
+            except ValueError as exc:
+                row_errors.append(f"line {index}: {exc}")
+            else:
+                if phase != expected_phase:
+                    row_errors.append(
+                        f"line {index}: campaign_phase={phase!r}, expected={expected_phase!r}"
+                    )
+                elif source not in ACQUISITION_SOURCES_BY_PHASE[phase]:
+                    row_errors.append(
+                        f"line {index}: acquisition_source={source!r} is not allowed for {phase}"
+                    )
+        phases[geometry_id] = phase
+        acquisition_sources[geometry_id] = source
         values = {name: row.get(f"geom__{name}") for name in GEOMETRY_FIELDS}
         try:
             actual_hash = canonical_geometry_sha256(values)
@@ -266,10 +311,21 @@ def _audit_accepted_geometries(
         [
             _check("accepted_geometry_count_exact", len(rows) == expected_count, f"actual={len(rows)}, expected={expected_count}"),
             _check("accepted_geometry_ids_unique", len(ids) == len(rows), f"unique={len(ids)}, rows={len(rows)}"),
+            _check(
+                "accepted_sequence_exact_contiguous_order",
+                sequences == list(range(1, expected_count + 1)),
+                f"sequence_count={len(sequences)}, expected={expected_count}",
+            ),
             _check("accepted_geometry_contract_and_gates", not row_errors, row_errors[:20]),
         ]
     )
-    return {"geometry_ids": ids, "geometry_hashes": hashes, "row_count": len(rows)}
+    return {
+        "geometry_ids": ids,
+        "geometry_hashes": hashes,
+        "geometry_phases": phases,
+        "acquisition_sources": acquisition_sources,
+        "row_count": len(rows),
+    }
 
 
 def _audit_artifact_index(
@@ -345,6 +401,7 @@ def _audit_long_features(
     path: Path,
     accepted_ids: set[str],
     geometry_hashes: dict[str, str],
+    geometry_phases: dict[str, str],
     fingerprint: str,
     expected_accepted: int,
     checks: list[dict[str, Any]],
@@ -362,6 +419,7 @@ def _audit_long_features(
     if require_matrix_columns:
         required.update(matrix_columns())
     anchor_counts = {anchor: np.zeros(PRIMARY_CELLS_PER_ANCHOR, dtype=np.int64) for anchor in ANCHOR_FREQUENCIES_GHZ}
+    secondary_coverage = StreamingPhysicalCoverage()
     validity_counts = {
         "parseable_rows": 0,
         "broadband_descriptor_valid": 0,
@@ -425,6 +483,24 @@ def _audit_long_features(
                 validity_counts["inside_broad_response_envelope"] += int(broad_inside)
                 validity_counts["inside_literature_practical_panel"] += int(practical_inside)
                 _validate_feature_equations(values, frequency_hz, line, errors)
+                phase = geometry_phases.get(geometry_id)
+                if phase is None:
+                    errors.append(f"line {line}: geometry has no accepted campaign phase")
+                else:
+                    try:
+                        secondary_coverage.add_record(
+                            frequency_hz=frequency_hz,
+                            values={name: float(values[name]) for name in FEATURE_COLUMNS},
+                            populations=population_memberships(
+                                broadband_descriptor_valid=broadband_valid,
+                                strict_lumped_valid=strict_valid,
+                                inside_broad_response_envelope=broad_inside,
+                                inside_literature_practical_panel=practical_inside,
+                            ),
+                            campaign_phase=phase,
+                        )
+                    except (KeyError, ValueError) as exc:
+                        errors.append(f"line {line}: secondary coverage accounting failed: {exc}")
                 anchor_ghz = frequency_hz // 1_000_000_000
                 if broadband_valid and anchor_ghz in ANCHOR_FREQUENCIES_GHZ:
                     cell = primary_cell_for_values(
@@ -443,6 +519,7 @@ def _audit_long_features(
         errors.append(f"long feature parse failed: {type(exc).__name__}: {exc}")
 
     expected_rows = expected_accepted * len(FREQUENCY_GRID_HZ)
+    errors.extend(secondary_coverage.internal_errors())
     checks.extend(
         [
             _check("long_feature_row_count_exact", feature_rows == expected_rows, f"actual={feature_rows}, expected={expected_rows}"),
@@ -458,6 +535,7 @@ def _audit_long_features(
         "anchor_counts": anchor_counts,
         "anchor_metrics": {str(anchor): occupancy_metrics(anchor_counts[anchor], accepted_count=expected_accepted) for anchor in ANCHOR_FREQUENCIES_GHZ},
         "overall_metrics": occupancy_metrics(flattened, accepted_count=expected_accepted * len(ANCHOR_FREQUENCIES_GHZ)),
+        "secondary_coverage": secondary_coverage,
     }
 
 
@@ -593,7 +671,18 @@ def _empty_coverage(anchor_counts: dict[int, np.ndarray], validity_counts: dict[
         "anchor_counts": anchor_counts,
         "anchor_metrics": {str(anchor): occupancy_metrics(anchor_counts[anchor], accepted_count=1) for anchor in ANCHOR_FREQUENCIES_GHZ},
         "overall_metrics": occupancy_metrics(flattened, accepted_count=8),
+        "secondary_coverage": StreamingPhysicalCoverage(),
     }
+
+
+def _write_csv_rows(path: Path, rows: list[dict[str, Any]]) -> None:
+    if not rows:
+        path.write_text("", encoding="utf-8")
+        return
+    with path.open("w", newline="", encoding="utf-8") as handle:
+        writer = csv.DictWriter(handle, fieldnames=list(rows[0]))
+        writer.writeheader()
+        writer.writerows(rows)
 
 
 def _read_csv(path: Path, checks: list[dict[str, Any]], name: str) -> tuple[list[dict[str, str]], set[str]]:

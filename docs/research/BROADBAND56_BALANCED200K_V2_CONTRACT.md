@@ -21,6 +21,9 @@ private PDK, process, license, hostname, GDS, S4P, or runtime-path data.
 - Eight acquisition anchors: 8, 15, 22, 29, 36, 43, 50, and 57 GHz.
 - Primary vector: `[Xp, Xs, Qmin, |K|]`.
 - Six fixed bins per dimension: 1,296 cells per anchor and 10,368 conditioned cells.
+- Nine secondary physical features use six frozen bins plus explicit underflow
+  and overflow categories; no valid real-EMX record is dropped for leaving the
+  broad envelope.
 - Phase A: 0-50k, exact 10-D optimized-LHS/Sobol space filling, seed 20260828.
 - Phase B: 50k-150k in 5k accepted batches, fixed 60/20/20 repair/uncertainty/maximin mixture.
 - Phase C: 150k-200k in 5k accepted batches, frozen 65/20/15 rare-repair/uncertainty/maximin mixture.
@@ -54,7 +57,16 @@ only the four frequency-grid fields.
   canonical duplicate rejection.
 - `scripts/audit_broadband56_balanced200k_checkpoint.py`:
   streaming accepted/S4P/56-point/S-Z/feature/fingerprint audit plus required
-  checkpoint receipt, coverage table, failure funnel, and SHA-256 index.
+  checkpoint receipt, coverage table, failure funnel, and SHA-256 index. It
+  also writes `physical_coverage_by_frequency.csv`,
+  `physical_coverage_marginals.csv`, and `physical_coverage_pairwise.csv` for
+  all five frozen validity/panel populations and `ALL`/Phase A/B/C scopes.
+
+The secondary tables are explicitly record-weighted. They retain all exact
+frequency rows but never replace the primary geometry-unique anchor metric.
+Accepted geometry rows must carry a contiguous one-based acceptance sequence,
+the phase implied by that sequence, and an acquisition source allowed by the
+frozen phase mixture.
 
 The exact private Calibre/EMX batch adapter and authoritative V1 evidence are
 not in this public repository. Their current MARS identities must be reverified
@@ -86,7 +98,7 @@ Full public regression suite (verified on 2026-08-28):
 python tools/run_public_tests.py
 ```
 
-Verified result: `1421 passed, 54 skipped, 1 deselected`.  This is a software
+Verified result: `1423 passed, 54 skipped, 1 deselected`.  This is a software
 regression result only; it is not Calibre, EMX, or physical campaign evidence.
 
 Queue construction after a frozen private preparation receipt exists:

@@ -29,6 +29,7 @@ from rfic_transformer_inverse_design.campaigns.broadband56_balanced200k import (
     build_phase_plan,
     contract_fingerprint,
     primary_bin_edges,
+    secondary_coverage_contract,
     validate_contract,
 )
 
@@ -105,6 +106,7 @@ def main(argv: list[str] | None = None) -> int:
 
     frozen_path = out_dir / "campaign_contract_frozen.json"
     bins_path = out_dir / "PRIMARY_BINS_FROZEN.json"
+    secondary_bins_path = out_dir / "SECONDARY_COVERAGE_FROZEN.json"
     phase_path = out_dir / "PHASE_PLAN_FROZEN.json"
     receipt_path = out_dir / "PREPARATION_RECEIPT.json"
     frozen_path.write_text(json.dumps(frozen_contract, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
@@ -115,6 +117,20 @@ def main(argv: list[str] | None = None) -> int:
                 "contract_fingerprint_sha256": frozen_contract["contract_fingerprint_sha256"],
                 "frozen_before_production": True,
                 "bin_edges": primary_bin_edges(),
+            },
+            indent=2,
+            ensure_ascii=False,
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    secondary_bins_path.write_text(
+        json.dumps(
+            {
+                "campaign_id": CAMPAIGN_ID,
+                "contract_fingerprint_sha256": frozen_contract["contract_fingerprint_sha256"],
+                "frozen_before_production": True,
+                "secondary_coverage": secondary_coverage_contract(),
             },
             indent=2,
             ensure_ascii=False,
@@ -145,6 +161,7 @@ def main(argv: list[str] | None = None) -> int:
         "artifacts": {
             "frozen_contract": _file_evidence(frozen_path),
             "primary_bins": _file_evidence(bins_path),
+            "secondary_coverage": _file_evidence(secondary_bins_path),
             "phase_plan": _file_evidence(phase_path),
         },
     }

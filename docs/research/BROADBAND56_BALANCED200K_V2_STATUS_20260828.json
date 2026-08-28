@@ -17,7 +17,7 @@
   "verified_local_results": [
     {
       "scope": "focused contract, queue, preparation, and synthetic checkpoint tests",
-      "result": "6 passed"
+      "result": "8 passed"
     },
     {
       "scope": "candidate queue and parallel runner regression tests after identity/fail-on-error hardening",
@@ -26,6 +26,14 @@
     {
       "scope": "32-row exact 10-D Sobol geometry-only queue",
       "result": "PASS; 32 canonical unique rows; no response labels"
+    },
+    {
+      "scope": "streaming fixed-bin physical coverage accounting",
+      "result": "PASS; exact-frequency marginals, pairwise tables, five populations, and ALL/Phase A/B/C scopes"
+    },
+    {
+      "scope": "streaming accumulator microbenchmark",
+      "result": "10000 records in 0.593723 s (16842.87 records/s), internal_errors=0; performance evidence only"
     }
   ],
   "preserved_negative_result": {
@@ -41,7 +49,7 @@
     "failure": "one unrelated test hard-coded the repository directory name and failed only in a differently named worktree",
     "fix": "resolve the script from the current repository root",
     "focused_retest": "1 passed",
-    "full_retest": "1421 passed, 54 skipped, 1 deselected, 1 warning in 97.35s",
+    "full_retest": "1423 passed, 54 skipped, 1 deselected, 1 warning in 97.68s",
     "full_retest_status": "PASS",
     "compileall": "PASS"
   },

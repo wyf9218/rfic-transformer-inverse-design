@@ -27,6 +27,47 @@ AUDIT_EDGE_FREQUENCIES_GHZ = (5, 60)
 PRIMARY_BINS_PER_DIMENSION = 6
 PRIMARY_CELLS_PER_ANCHOR = PRIMARY_BINS_PER_DIMENSION**4
 PRIMARY_FREQUENCY_CONDITIONED_CELLS = len(ANCHOR_FREQUENCIES_GHZ) * PRIMARY_CELLS_PER_ANCHOR
+SECONDARY_BINS_PER_FEATURE = 6
+
+SECONDARY_FEATURES = (
+    "xp_ohm",
+    "xs_ohm",
+    "lp_nh",
+    "ls_nh",
+    "qp",
+    "qs",
+    "qmin",
+    "k_abs",
+    "ls_over_lp",
+)
+SECONDARY_PAIRWISE_FEATURES = (
+    ("xp_ohm", "xs_ohm"),
+    ("lp_nh", "ls_nh"),
+    ("qp", "qs"),
+    ("qmin", "k_abs"),
+    ("ls_over_lp", "k_abs"),
+)
+COVERAGE_POPULATIONS = (
+    "all_parseable_emx_records",
+    "broadband_descriptor_valid",
+    "strict_lumped_valid",
+    "inside_broad_response_envelope",
+    "inside_literature_practical_panel",
+)
+COVERAGE_PHASES = ("ALL", "PHASE_A", "PHASE_B", "PHASE_C")
+ACQUISITION_SOURCES_BY_PHASE = {
+    "PHASE_A": ("base_space_filling",),
+    "PHASE_B": (
+        "underfilled_response_repair",
+        "ensemble_uncertainty",
+        "maximin_geometry_exploration",
+    ),
+    "PHASE_C": (
+        "rare_or_underfilled_response_repair",
+        "ensemble_uncertainty",
+        "maximin_geometry_exploration",
+    ),
+}
 
 GEOMETRY_FIELDS = (
     "primary_outer_width_um",
@@ -137,6 +178,47 @@ def primary_bin_edges() -> dict[str, tuple[float, ...]]:
     return {"xp_ohm": reactance, "xs_ohm": reactance, "qmin": qmin, "k_abs": k_abs}
 
 
+def secondary_bin_edges() -> dict[str, tuple[float, ...]]:
+    """Return fixed six-bin edges for secondary physical-coverage audits.
+
+    Values below and above these edges are retained in explicit underflow and
+    overflow categories by the coverage accumulator.  The edges therefore do
+    not discard otherwise valid real-EMX records.
+    """
+
+    inductance = tuple(0.03 * ((8.0 / 0.03) ** (index / 6.0)) for index in range(7))
+    reactance = tuple(10.0 * (25.0 ** (index / 6.0)) for index in range(7))
+    quality = tuple(2.0 + (35.0 - 2.0) * index / 6.0 for index in range(7))
+    coupling = tuple(0.05 + (0.85 - 0.05) * index / 6.0 for index in range(7))
+    ratio = tuple(0.25 * (16.0 ** (index / 6.0)) for index in range(7))
+    return {
+        "xp_ohm": reactance,
+        "xs_ohm": reactance,
+        "lp_nh": inductance,
+        "ls_nh": inductance,
+        "qp": quality,
+        "qs": quality,
+        "qmin": quality,
+        "k_abs": coupling,
+        "ls_over_lp": ratio,
+    }
+
+
+def secondary_coverage_contract() -> dict[str, Any]:
+    """Return the pre-production, target-independent secondary audit contract."""
+
+    return {
+        "bins_per_feature": SECONDARY_BINS_PER_FEATURE,
+        "underflow_and_overflow_bins_retained": True,
+        "feature_order": list(SECONDARY_FEATURES),
+        "pairwise_feature_order": [list(pair) for pair in SECONDARY_PAIRWISE_FEATURES],
+        "populations": list(COVERAGE_POPULATIONS),
+        "campaign_phases": list(COVERAGE_PHASES),
+        "counting_bases": ["record_weighted_coverage", "geometry_unique_anchor_coverage"],
+        "bin_edges": {name: list(edges) for name, edges in secondary_bin_edges().items()},
+    }
+
+
 def phase_for_accepted_count(accepted_count: int) -> str:
     count = int(accepted_count)
     if count < 0 or count > TARGET_ACCEPTED_GEOMETRIES:
@@ -148,6 +230,19 @@ def phase_for_accepted_count(accepted_count: int) -> str:
     if count < 200_000:
         return "PHASE_C"
     return "COMPLETE_200K"
+
+
+def phase_for_accepted_sequence(accepted_sequence: int) -> str:
+    """Map the one-based terminal acceptance sequence to its frozen phase."""
+
+    sequence = int(accepted_sequence)
+    if sequence < 1 or sequence > TARGET_ACCEPTED_GEOMETRIES:
+        raise ValueError(f"accepted_sequence outside [1,{TARGET_ACCEPTED_GEOMETRIES}]: {sequence}")
+    if sequence <= 50_000:
+        return "PHASE_A"
+    if sequence <= 150_000:
+        return "PHASE_B"
+    return "PHASE_C"
 
 
 def build_phase_plan() -> dict[str, Any]:
@@ -225,6 +320,8 @@ def validate_contract(contract: Mapping[str, Any]) -> list[str]:
             and all(math.isclose(float(left), float(right), rel_tol=0.0, abs_tol=1.0e-12) for left, right in zip(actual, expected)),
             f"{name} bin edges mismatch",
         )
+
+    require(contract.get("secondary_coverage") == secondary_coverage_contract(), "secondary coverage contract mismatch")
 
     phase_plan = contract.get("phase_plan") or {}
     require(phase_plan == build_phase_plan(), "phase plan or acquisition mixture mismatch")
