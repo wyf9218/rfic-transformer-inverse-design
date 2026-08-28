@@ -68,6 +68,14 @@ Accepted geometry rows must carry a contiguous one-based acceptance sequence,
 the phase implied by that sequence, and an acquisition source allowed by the
 frozen phase mixture.
 
+Private preparation also freezes `GEOMETRY_BOUNDS_FROZEN.json` from the exact
+production search space. Checkpoint audit uses those bounds, never observed
+sample minima/maxima, to produce `GEOMETRY_COVERAGE_SUMMARY.json`,
+`geometry_coverage_marginals.csv`, and `geometry_coverage_pairwise.csv`.
+These report ten one-dimensional occupancies, all 45 geometry pairs, boundary
+occupancy, canonical duplicates, and normalized 10-D nearest-neighbor distance.
+Geometry coverage is not physical-response coverage or simulator evidence.
+
 The exact private Calibre/EMX batch adapter and authoritative V1 evidence are
 not in this public repository. Their current MARS identities must be reverified
 before a golden geometry is launched.
@@ -98,7 +106,7 @@ Full public regression suite (verified on 2026-08-28):
 python tools/run_public_tests.py
 ```
 
-Verified result: `1423 passed, 54 skipped, 1 deselected`.  This is a software
+Verified result: `1424 passed, 54 skipped, 1 deselected`.  This is a software
 regression result only; it is not Calibre, EMX, or physical campaign evidence.
 
 Queue construction after a frozen private preparation receipt exists:

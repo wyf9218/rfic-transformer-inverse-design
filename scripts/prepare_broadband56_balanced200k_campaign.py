@@ -22,15 +22,19 @@ from typing import Any
 if __package__ in {None, ""}:
     sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from rfic_transformer_inverse_design.api import load_run_config  # noqa: E402
+from rfic_transformer_inverse_design.api import TransformerOptimizationAdapter, load_run_config  # noqa: E402
 from rfic_transformer_inverse_design.campaigns.broadband56_balanced200k import (  # noqa: E402
     CAMPAIGN_ID,
     FREQUENCY_GRID_HZ,
     build_phase_plan,
+    canonical_geometry_bounds,
     contract_fingerprint,
     primary_bin_edges,
     secondary_coverage_contract,
     validate_contract,
+)
+from rfic_transformer_inverse_design.campaigns.broadband56_geometry_coverage import (  # noqa: E402
+    geometry_bounds_payload,
 )
 
 
@@ -67,9 +71,30 @@ def main(argv: list[str] | None = None) -> int:
 
     previous_cfg = _load_config(previous_config_path, checks, "previous_config")
     production_cfg = _load_config(production_config_path, checks, "production_config")
+    geometry_bounds: dict[str, tuple[float, float]] = {}
     if previous_cfg is not None and production_cfg is not None:
         _validate_inherited_configuration(checks, previous_cfg, production_cfg)
         _validate_private_runtime_paths(checks, production_cfg)
+        try:
+            geometry_bounds = canonical_geometry_bounds(
+                TransformerOptimizationAdapter(production_cfg.bounds)
+            )
+        except Exception as exc:  # noqa: BLE001
+            checks.append(
+                _check(
+                    "canonical_geometry_bounds_freeze",
+                    False,
+                    f"{type(exc).__name__}: {exc}",
+                )
+            )
+        else:
+            checks.append(
+                _check(
+                    "canonical_geometry_bounds_freeze",
+                    True,
+                    "exact normalized 10-D bounds derived from production config",
+                )
+            )
 
     previous_campaign_id = str(previous_contract.get("campaign_id") or "")
     checks.append(
@@ -107,6 +132,7 @@ def main(argv: list[str] | None = None) -> int:
     frozen_path = out_dir / "campaign_contract_frozen.json"
     bins_path = out_dir / "PRIMARY_BINS_FROZEN.json"
     secondary_bins_path = out_dir / "SECONDARY_COVERAGE_FROZEN.json"
+    geometry_bounds_path = out_dir / "GEOMETRY_BOUNDS_FROZEN.json"
     phase_path = out_dir / "PHASE_PLAN_FROZEN.json"
     receipt_path = out_dir / "PREPARATION_RECEIPT.json"
     frozen_path.write_text(json.dumps(frozen_contract, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
@@ -138,6 +164,25 @@ def main(argv: list[str] | None = None) -> int:
         + "\n",
         encoding="utf-8",
     )
+    if geometry_bounds:
+        bounds_payload = geometry_bounds_payload(
+            bounds=geometry_bounds,
+            contract_fingerprint_sha256=frozen_contract["contract_fingerprint_sha256"],
+        )
+        bounds_payload["preparation_status"] = status
+    else:
+        bounds_payload = {
+            "schema": "rfic_transformer.broadband56_geometry_bounds.v1",
+            "campaign_id": CAMPAIGN_ID,
+            "contract_fingerprint_sha256": frozen_contract["contract_fingerprint_sha256"],
+            "preparation_status": "FAIL",
+            "field_bounds_um": {},
+            "contains_private_runtime_paths": False,
+        }
+    geometry_bounds_path.write_text(
+        json.dumps(bounds_payload, indent=2, ensure_ascii=False) + "\n",
+        encoding="utf-8",
+    )
     phase_path.write_text(
         json.dumps(
             {
@@ -162,6 +207,7 @@ def main(argv: list[str] | None = None) -> int:
             "frozen_contract": _file_evidence(frozen_path),
             "primary_bins": _file_evidence(bins_path),
             "secondary_coverage": _file_evidence(secondary_bins_path),
+            "geometry_bounds": _file_evidence(geometry_bounds_path),
             "phase_plan": _file_evidence(phase_path),
         },
     }

@@ -28,6 +28,8 @@ PRIMARY_BINS_PER_DIMENSION = 6
 PRIMARY_CELLS_PER_ANCHOR = PRIMARY_BINS_PER_DIMENSION**4
 PRIMARY_FREQUENCY_CONDITIONED_CELLS = len(ANCHOR_FREQUENCIES_GHZ) * PRIMARY_CELLS_PER_ANCHOR
 SECONDARY_BINS_PER_FEATURE = 6
+GEOMETRY_COVERAGE_BINS_PER_DIMENSION = 10
+GEOMETRY_BOUNDARY_FRACTION_PER_SIDE = 0.10
 
 SECONDARY_FEATURES = (
     "xp_ohm",
@@ -165,6 +167,32 @@ def canonical_geometry_sha256(
     return sha256_bytes(canonical_json_bytes(ordered))
 
 
+def canonical_geometry_bounds(adapter: Any) -> dict[str, tuple[float, float]]:
+    """Project the runtime search space onto the frozen independent 10-D basis."""
+
+    active = dict(zip(adapter.field_order(), adapter.search_space.to_scipy_bounds()))
+    required = set(GEOMETRY_FIELDS) - {"line_width_um"}
+    missing = required - set(active)
+    if missing:
+        raise ValueError(f"active search space lacks campaign geometry fields: {sorted(missing)}")
+    primary_width = active["primary_width_um"]
+    secondary_width = active["secondary_width_um"]
+    shared = (
+        max(float(primary_width[0]), float(secondary_width[0])),
+        min(float(primary_width[1]), float(secondary_width[1])),
+    )
+    if shared[1] <= shared[0]:
+        raise ValueError(f"primary/secondary line-width bounds do not overlap: {shared}")
+    return {
+        **{
+            name: tuple(map(float, active[name]))
+            for name in GEOMETRY_FIELDS
+            if name != "line_width_um"
+        },
+        "line_width_um": shared,
+    }
+
+
 def frequency_grid_hz() -> tuple[int, ...]:
     return FREQUENCY_GRID_HZ
 
@@ -216,6 +244,23 @@ def secondary_coverage_contract() -> dict[str, Any]:
         "campaign_phases": list(COVERAGE_PHASES),
         "counting_bases": ["record_weighted_coverage", "geometry_unique_anchor_coverage"],
         "bin_edges": {name: list(edges) for name, edges in secondary_bin_edges().items()},
+    }
+
+
+def geometry_coverage_contract() -> dict[str, Any]:
+    """Return the frozen normalized 10-D geometry-space audit definition."""
+
+    return {
+        "field_order": list(GEOMETRY_FIELDS),
+        "normalization": "exact affine normalization from frozen production bounds",
+        "bins_per_dimension": GEOMETRY_COVERAGE_BINS_PER_DIMENSION,
+        "pairwise_cell_shape": [
+            GEOMETRY_COVERAGE_BINS_PER_DIMENSION,
+            GEOMETRY_COVERAGE_BINS_PER_DIMENSION,
+        ],
+        "boundary_fraction_per_side": GEOMETRY_BOUNDARY_FRACTION_PER_SIDE,
+        "nearest_neighbor_metric": "euclidean_distance_in_normalized_10d_space",
+        "duplicate_identity": "canonical_ordered_10d_um_sha256_v2",
     }
 
 
@@ -322,6 +367,7 @@ def validate_contract(contract: Mapping[str, Any]) -> list[str]:
         )
 
     require(contract.get("secondary_coverage") == secondary_coverage_contract(), "secondary coverage contract mismatch")
+    require(contract.get("geometry_coverage") == geometry_coverage_contract(), "geometry coverage contract mismatch")
 
     phase_plan = contract.get("phase_plan") or {}
     require(phase_plan == build_phase_plan(), "phase plan or acquisition mixture mismatch")

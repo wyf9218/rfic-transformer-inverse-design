@@ -24,6 +24,7 @@ from rfic_transformer_inverse_design.campaigns.broadband56_balanced200k import (
     CAMPAIGN_ID,
     FREQUENCY_GRID_HZ,
     GEOMETRY_FIELDS,
+    canonical_geometry_bounds,
     canonical_geometry_sha256,
     contract_fingerprint,
     validate_contract,
@@ -57,7 +58,7 @@ def main(argv: list[str] | None = None) -> int:
     bounds: dict[str, tuple[float, float]] = {}
     if config is not None and int(args.count) > 0:
         adapter = TransformerOptimizationAdapter(config.bounds)
-        bounds = _campaign_bounds(adapter)
+        bounds = canonical_geometry_bounds(adapter)
         seen = set(excluded_hashes)
         for round_index in range(max(1, int(args.max_sampling_rounds))):
             remaining = int(args.count) - len(rows)
@@ -167,23 +168,6 @@ def _parse_args(argv: list[str] | None) -> argparse.Namespace:
     parser.add_argument("--max-sampling-rounds", type=int, default=20)
     parser.add_argument("--no-fail-exit", action="store_true")
     return parser.parse_args(argv)
-
-
-def _campaign_bounds(adapter: TransformerOptimizationAdapter) -> dict[str, tuple[float, float]]:
-    active = dict(zip(adapter.field_order(), adapter.search_space.to_scipy_bounds()))
-    required = set(GEOMETRY_FIELDS) - {"line_width_um"}
-    missing = required - set(active)
-    if missing:
-        raise ValueError(f"active search space lacks campaign geometry fields: {sorted(missing)}")
-    primary_width = active["primary_width_um"]
-    secondary_width = active["secondary_width_um"]
-    shared = (max(float(primary_width[0]), float(secondary_width[0])), min(float(primary_width[1]), float(secondary_width[1])))
-    if shared[1] <= shared[0]:
-        raise ValueError(f"primary/secondary line-width bounds do not overlap: {shared}")
-    return {
-        **{name: tuple(map(float, active[name])) for name in GEOMETRY_FIELDS if name != "line_width_um"},
-        "line_width_um": shared,
-    }
 
 
 def _sample_unit(count: int, dimensions: int, sampler: str, seed: int) -> np.ndarray:

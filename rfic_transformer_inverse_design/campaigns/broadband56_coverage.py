@@ -13,19 +13,23 @@ from typing import Any, Iterable, Mapping
 import numpy as np
 
 from .broadband56_balanced200k import (
+    ANCHOR_FREQUENCIES_GHZ,
     COVERAGE_PHASES,
     COVERAGE_POPULATIONS,
     FREQUENCY_GRID_HZ,
+    PRIMARY_CELLS_PER_ANCHOR,
     SECONDARY_BINS_PER_FEATURE,
     SECONDARY_FEATURES,
     SECONDARY_PAIRWISE_FEATURES,
     occupancy_metrics,
+    primary_cell_for_values,
     secondary_bin_edges,
 )
 
 
 BIN_CLASS_COUNT = SECONDARY_BINS_PER_FEATURE + 2
 _FREQUENCY_INDEX = {frequency_hz: index for index, frequency_hz in enumerate(FREQUENCY_GRID_HZ)}
+_ANCHOR_INDEX = {anchor: index for index, anchor in enumerate(ANCHOR_FREQUENCIES_GHZ)}
 _FEATURE_INDEX = {name: index for index, name in enumerate(SECONDARY_FEATURES)}
 _GROUP_KEYS = tuple((population, phase) for population in COVERAGE_POPULATIONS for phase in COVERAGE_PHASES)
 _GROUP_INDEX = {key: index for index, key in enumerate(_GROUP_KEYS)}
@@ -94,6 +98,9 @@ class StreamingPhysicalCoverage:
         self.pairwise_counts = np.zeros(
             (groups, frequencies, pairs, BIN_CLASS_COUNT, BIN_CLASS_COUNT), dtype=np.int64
         )
+        self.primary_counts = np.zeros(
+            (groups, len(ANCHOR_FREQUENCIES_GHZ), PRIMARY_CELLS_PER_ANCHOR), dtype=np.int64
+        )
         shape = (groups, frequencies, features)
         self.stat_count = np.zeros(shape, dtype=np.int64)
         self.stat_sum = np.zeros(shape, dtype=np.float64)
@@ -131,6 +138,16 @@ class StreamingPhysicalCoverage:
         unknown = set(memberships) - set(COVERAGE_POPULATIONS)
         if unknown:
             raise ValueError(f"unknown coverage population(s): {sorted(unknown)}")
+        anchor_ghz = frequency // 1_000_000_000
+        primary_cell = None
+        if anchor_ghz in _ANCHOR_INDEX:
+            primary_cell = primary_cell_for_values(
+                anchor_ghz=anchor_ghz,
+                xp_ohm=float(values["xp_ohm"]),
+                xs_ohm=float(values["xs_ohm"]),
+                qmin=float(values["qmin"]),
+                k_abs=float(values["k_abs"]),
+            )
 
         for population in memberships:
             for phase_scope in ("ALL", phase):
@@ -150,6 +167,12 @@ class StreamingPhysicalCoverage:
                     right_bin = int(bin_indices[_FEATURE_INDEX[right]])
                     self.pairwise_counts[
                         group_index, frequency_index, pair_index, left_bin, right_bin
+                    ] += 1
+                if primary_cell is not None:
+                    self.primary_counts[
+                        group_index,
+                        _ANCHOR_INDEX[anchor_ghz],
+                        primary_cell.local_index,
                     ] += 1
 
     def internal_errors(self) -> list[str]:
@@ -175,7 +198,61 @@ class StreamingPhysicalCoverage:
             )
             if not np.array_equal(overall, phases):
                 errors.append(f"phase marginals do not sum to ALL for {population}")
+            overall_primary = self.primary_counts[_GROUP_INDEX[(population, "ALL")]]
+            phase_primary = sum(
+                (self.primary_counts[_GROUP_INDEX[(population, phase)]] for phase in COVERAGE_PHASES[1:]),
+                np.zeros_like(overall_primary),
+            )
+            if not np.array_equal(overall_primary, phase_primary):
+                errors.append(f"phase primary counts do not sum to ALL for {population}")
         return errors
+
+    def primary_counts_for(self, population: str, phase: str = "ALL") -> dict[int, np.ndarray]:
+        group_index = _GROUP_INDEX[(str(population), str(phase))]
+        return {
+            anchor: self.primary_counts[group_index, anchor_index].copy()
+            for anchor_index, anchor in enumerate(ANCHOR_FREQUENCIES_GHZ)
+        }
+
+    def primary_summary(self) -> dict[str, Any]:
+        groups: list[dict[str, Any]] = []
+        for group_index, (population, phase) in enumerate(_GROUP_KEYS):
+            anchor_metrics: dict[str, Any] = {}
+            flattened_counts = self.primary_counts[group_index].reshape(-1)
+            total_anchor_records = 0
+            for anchor_index, anchor in enumerate(ANCHOR_FREQUENCIES_GHZ):
+                frequency_index = _FREQUENCY_INDEX[anchor * 1_000_000_000]
+                anchor_records = int(self.stat_count[group_index, frequency_index, 0])
+                total_anchor_records += anchor_records
+                counts = self.primary_counts[group_index, anchor_index]
+                anchor_metrics[str(anchor)] = {
+                    "anchor_record_count": anchor_records,
+                    "in_primary_cells": int(counts.sum()),
+                    "outside_primary_cells": anchor_records - int(counts.sum()),
+                    **occupancy_metrics(counts, accepted_count=anchor_records),
+                }
+            groups.append(
+                {
+                    "population": population,
+                    "campaign_phase": phase,
+                    "anchor_record_count": total_anchor_records,
+                    "in_primary_cells": int(flattened_counts.sum()),
+                    "outside_primary_cells": total_anchor_records - int(flattened_counts.sum()),
+                    "combined_anchor_metrics": occupancy_metrics(
+                        flattened_counts, accepted_count=total_anchor_records
+                    ),
+                    "by_anchor_ghz": anchor_metrics,
+                }
+            )
+        return {
+            "counting_basis": "geometry_unique_anchor_coverage",
+            "maximum_contributions_per_geometry": len(ANCHOR_FREQUENCIES_GHZ),
+            "groups": groups,
+            "scientific_boundary": (
+                "Each geometry contributes at most one actual real-EMX response cell per anchor. "
+                "Records outside the frozen primary edges remain visible as outside_primary_cells."
+            ),
+        }
 
     def frequency_summary_rows(self) -> list[dict[str, Any]]:
         rows: list[dict[str, Any]] = []

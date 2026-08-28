@@ -35,6 +35,10 @@ from rfic_transformer_inverse_design.campaigns.broadband56_coverage import (
     extended_bin_index,
     population_memberships,
 )
+from rfic_transformer_inverse_design.campaigns.broadband56_geometry_coverage import (
+    GeometryCoverageAudit,
+    geometry_bounds_payload,
+)
 from rfic_transformer_inverse_design.sim.base import SParameterResult
 
 
@@ -83,6 +87,21 @@ def _write_csv(path: Path, rows: list[dict[str, object]], fieldnames: list[str] 
         writer = csv.DictWriter(handle, fieldnames=names)
         writer.writeheader()
         writer.writerows(rows)
+
+
+def _test_geometry_bounds() -> dict[str, tuple[float, float]]:
+    return {
+        "primary_outer_width_um": (0.0, 600.0),
+        "primary_outer_height_um": (0.0, 600.0),
+        "secondary_outer_width_um": (0.0, 600.0),
+        "secondary_outer_height_um": (0.0, 600.0),
+        "line_width_um": (0.0, 20.0),
+        "primary_terminal_y_span_um": (0.0, 120.0),
+        "secondary_terminal_y_span_um": (0.0, 120.0),
+        "offset_um": (-100.0, 100.0),
+        "primary_feed_extension_um": (0.0, 400.0),
+        "secondary_feed_extension_um": (0.0, 400.0),
+    }
 
 
 def test_frozen_contract_has_exact_counts_grid_bins_and_phase_mixtures() -> None:
@@ -151,7 +170,7 @@ def test_secondary_coverage_retains_underflow_overflow_and_separates_phases() ->
     values = {name: 1.0 for name in SECONDARY_FEATURES}
     values.update({"xp_ohm": 20.0, "xs_ohm": 25.0, "qp": 10.0, "qs": 11.0, "qmin": 10.0, "k_abs": 0.4})
     coverage.add_record(
-        frequency_hz=FREQUENCY_GRID_HZ[0],
+        frequency_hz=8_000_000_000,
         values=values,
         populations=population_memberships(
             broadband_descriptor_valid=True,
@@ -179,6 +198,34 @@ def test_secondary_coverage_retains_underflow_overflow_and_separates_phases() ->
     assert all_parseable["geometry_frequency_records"] == 1
     assert phase_a["geometry_frequency_records"] == 1
     assert strict["geometry_frequency_records"] == 0
+    primary = coverage.primary_summary()
+    primary_all = next(
+        row for row in primary["groups"]
+        if row["population"] == "all_parseable_emx_records" and row["campaign_phase"] == "ALL"
+    )
+    assert primary_all["anchor_record_count"] == 1
+    assert primary_all["in_primary_cells"] == 1
+
+
+def test_geometry_coverage_uses_frozen_bounds_and_geometry_unique_counts() -> None:
+    unit = np.linspace(0.05, 0.95, 20, dtype=float).reshape(2, 10)
+    bounds = _test_geometry_bounds()
+    lower = np.asarray([bounds[name][0] for name in GEOMETRY_FIELDS], dtype=float)
+    upper = np.asarray([bounds[name][1] for name in GEOMETRY_FIELDS], dtype=float)
+    matrix = lower + unit * (upper - lower)
+    audit = GeometryCoverageAudit(
+        matrix_um=matrix,
+        bounds=bounds,
+        geometry_hashes=("a" * 64, "b" * 64),
+    )
+
+    assert audit.internal_errors() == []
+    summary = audit.summary()
+    assert summary["geometry_count"] == 2
+    assert summary["canonical_hash_unique_count"] == 2
+    assert summary["nearest_neighbor_distance"]["status"] == "PASS"
+    assert len(audit.marginal_rows()) == 10
+    assert len(audit.pairwise_rows()) == 45
 
 
 def test_phase_a_queue_is_exact_10d_unique_and_label_free(tmp_path: Path) -> None:
@@ -232,7 +279,13 @@ def test_checkpoint_acceptance_rejects_wrong_sequence_phase_and_source(tmp_path:
     _write_csv(path, rows)
     checks: list[dict[str, object]] = []
 
-    module._audit_accepted_geometries(path, fingerprint, 2, checks)
+    module._audit_accepted_geometries(
+        path,
+        fingerprint,
+        2,
+        checks,
+        geometry_bounds=_test_geometry_bounds(),
+    )
 
     by_name = {str(item["name"]): item for item in checks}
     assert not by_name["accepted_sequence_exact_contiguous_order"]["pass"]
@@ -293,6 +346,9 @@ def test_preparation_requires_hash_bound_previous_contract_and_identical_private
     assert receipt["overall_status"] == "PASS"
     assert frozen["preparation_status"] == "PASS"
     assert frozen["inherited_contract_evidence"]["previous_contract_sha256"] == _sha256(previous_contract)
+    frozen_bounds = json.loads((out_dir / "GEOMETRY_BOUNDS_FROZEN.json").read_text(encoding="utf-8"))
+    assert frozen_bounds["preparation_status"] == "PASS"
+    assert tuple(frozen_bounds["field_bounds_um"]) == GEOMETRY_FIELDS
 
 
 def test_checkpoint_audit_accepts_exact_100_geometry_real_emx_shaped_fixture(tmp_path: Path) -> None:
@@ -301,6 +357,16 @@ def test_checkpoint_audit_accepts_exact_100_geometry_real_emx_shaped_fixture(tmp
     fingerprint = module.contract_fingerprint(contract)
     contract_path = tmp_path / "contract.json"
     contract_path.write_text(json.dumps(contract), encoding="utf-8")
+    geometry_bounds_path = tmp_path / "geometry_bounds.json"
+    geometry_bounds_path.write_text(
+        json.dumps(
+            geometry_bounds_payload(
+                bounds=_test_geometry_bounds(),
+                contract_fingerprint_sha256=fingerprint,
+            )
+        ),
+        encoding="utf-8",
+    )
 
     accepted_rows: list[dict[str, object]] = []
     artifact_rows: list[dict[str, object]] = []
@@ -412,6 +478,7 @@ def test_checkpoint_audit_accepts_exact_100_geometry_real_emx_shaped_fixture(tmp
     status = module.main(
         [
             "--contract", str(contract_path),
+            "--geometry-bounds", str(geometry_bounds_path),
             "--accepted-geometries", str(accepted_path),
             "--long-features", str(features_path),
             "--artifact-index", str(artifacts_path),
@@ -432,9 +499,19 @@ def test_checkpoint_audit_accepts_exact_100_geometry_real_emx_shaped_fixture(tmp
     assert (out_dir / "physical_coverage_by_frequency.csv").stat().st_size > 0
     assert (out_dir / "physical_coverage_marginals.csv").stat().st_size > 0
     assert (out_dir / "physical_coverage_pairwise.csv").stat().st_size > 0
+    assert (out_dir / "GEOMETRY_COVERAGE_SUMMARY.json").stat().st_size > 0
+    assert sum(1 for _ in (out_dir / "geometry_coverage_marginals.csv").open(encoding="utf-8")) == 11
+    assert sum(1 for _ in (out_dir / "geometry_coverage_pairwise.csv").open(encoding="utf-8")) == 46
     secondary = coverage["record_weighted_secondary_coverage"]
     all_records = next(
         row for row in secondary["groups"]
         if row["population"] == "all_parseable_emx_records" and row["campaign_phase"] == "ALL"
     )
     assert all_records["geometry_frequency_records"] == 5_600
+    primary_groups = coverage["geometry_unique_anchor_coverage_by_population_phase"]["groups"]
+    primary_broadband = next(
+        row for row in primary_groups
+        if row["population"] == "broadband_descriptor_valid" and row["campaign_phase"] == "ALL"
+    )
+    assert primary_broadband["anchor_record_count"] == 800
+    assert primary_broadband["in_primary_cells"] == 800

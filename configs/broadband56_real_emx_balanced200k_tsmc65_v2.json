@@ -130,6 +130,26 @@
       "ls_over_lp": [0.25, 0.39685026299204984, 0.6299605249474366, 1.0, 1.5874010519681994, 2.5198420997897464, 4.0]
     }
   },
+  "geometry_coverage": {
+    "field_order": [
+      "primary_outer_width_um",
+      "primary_outer_height_um",
+      "secondary_outer_width_um",
+      "secondary_outer_height_um",
+      "line_width_um",
+      "primary_terminal_y_span_um",
+      "secondary_terminal_y_span_um",
+      "offset_um",
+      "primary_feed_extension_um",
+      "secondary_feed_extension_um"
+    ],
+    "normalization": "exact affine normalization from frozen production bounds",
+    "bins_per_dimension": 10,
+    "pairwise_cell_shape": [10, 10],
+    "boundary_fraction_per_side": 0.1,
+    "nearest_neighbor_metric": "euclidean_distance_in_normalized_10d_space",
+    "duplicate_identity": "canonical_ordered_10d_um_sha256_v2"
+  },
   "phase_plan": {
     "seed": 20260828,
     "checkpoints": [100, 1000, 5000, 20000, 50000, 75000, 100000, 125000, 150000, 175000, 200000],

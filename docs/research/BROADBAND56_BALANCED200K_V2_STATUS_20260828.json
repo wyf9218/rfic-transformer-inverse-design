@@ -17,7 +17,7 @@
   "verified_local_results": [
     {
       "scope": "focused contract, queue, preparation, and synthetic checkpoint tests",
-      "result": "8 passed"
+      "result": "9 passed"
     },
     {
       "scope": "candidate queue and parallel runner regression tests after identity/fail-on-error hardening",
@@ -34,6 +34,14 @@
     {
       "scope": "streaming accumulator microbenchmark",
       "result": "10000 records in 0.593723 s (16842.87 records/s), internal_errors=0; performance evidence only"
+    },
+    {
+      "scope": "frozen-bounds geometry coverage audit",
+      "result": "PASS; 10 marginals, 45 pairwise occupancies, boundary occupancy, duplicate identity, and normalized nearest-neighbor distance"
+    },
+    {
+      "scope": "geometry coverage microbenchmark",
+      "result": "50000 synthetic geometries in 0.823573 s (60711.08 geometries/s), internal_errors=0; performance evidence only"
     }
   ],
   "preserved_negative_result": {
@@ -49,7 +57,7 @@
     "failure": "one unrelated test hard-coded the repository directory name and failed only in a differently named worktree",
     "fix": "resolve the script from the current repository root",
     "focused_retest": "1 passed",
-    "full_retest": "1423 passed, 54 skipped, 1 deselected, 1 warning in 97.68s",
+    "full_retest": "1424 passed, 54 skipped, 1 deselected, 1 warning in 99.73s",
     "full_retest_status": "PASS",
     "compileall": "PASS"
   },

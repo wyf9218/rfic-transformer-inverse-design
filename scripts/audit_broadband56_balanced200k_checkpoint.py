@@ -45,6 +45,10 @@ from rfic_transformer_inverse_design.campaigns.broadband56_coverage import (  # 
     StreamingPhysicalCoverage,
     population_memberships,
 )
+from rfic_transformer_inverse_design.campaigns.broadband56_geometry_coverage import (  # noqa: E402
+    GeometryCoverageAudit,
+    validate_geometry_bounds_payload,
+)
 from rfic_transformer_inverse_design.sim.touchstone import load_touchstone  # noqa: E402
 
 
@@ -87,6 +91,7 @@ def main(argv: list[str] | None = None) -> int:
     args = _parse_args(argv)
     contract_path = Path(args.contract).expanduser().resolve()
     accepted_path = Path(args.accepted_geometries).expanduser().resolve()
+    geometry_bounds_path = Path(args.geometry_bounds).expanduser().resolve()
     features_path = Path(args.long_features).expanduser().resolve()
     artifact_path = Path(args.artifact_index).expanduser().resolve()
     funnel_path = Path(args.failure_funnel).expanduser().resolve()
@@ -100,8 +105,20 @@ def main(argv: list[str] | None = None) -> int:
         checks.append(_check(f"contract::{error}", False, error))
     fingerprint = str(contract.get("contract_fingerprint_sha256") or contract_fingerprint(contract))
     checks.append(_check("expected_checkpoint_is_frozen", int(args.expected_accepted) in CHECKPOINTS, args.expected_accepted))
+    geometry_bounds_payload = _read_json(geometry_bounds_path, checks, "geometry_bounds")
+    for error in validate_geometry_bounds_payload(
+        geometry_bounds_payload,
+        contract_fingerprint_sha256=fingerprint,
+    ):
+        checks.append(_check(f"geometry_bounds::{error}", False, error))
 
-    accepted = _audit_accepted_geometries(accepted_path, fingerprint, int(args.expected_accepted), checks)
+    accepted = _audit_accepted_geometries(
+        accepted_path,
+        fingerprint,
+        int(args.expected_accepted),
+        checks,
+        geometry_bounds=geometry_bounds_payload.get("field_bounds_um") or {},
+    )
     artifacts = _audit_artifact_index(
         artifact_path,
         accepted["geometry_ids"],
@@ -151,6 +168,25 @@ def main(argv: list[str] | None = None) -> int:
     _write_csv_rows(by_frequency_path, coverage["secondary_coverage"].frequency_summary_rows())
     _write_csv_rows(marginals_path, coverage["secondary_coverage"].marginal_rows())
     _write_csv_rows(pairwise_path, coverage["secondary_coverage"].pairwise_rows())
+    geometry_summary_path = out_dir / "GEOMETRY_COVERAGE_SUMMARY.json"
+    geometry_marginals_path = out_dir / "geometry_coverage_marginals.csv"
+    geometry_pairwise_path = out_dir / "geometry_coverage_pairwise.csv"
+    geometry_coverage = accepted["geometry_coverage"]
+    if geometry_coverage is None:
+        geometry_summary = {
+            "status": "FAIL",
+            "reason": "geometry coverage could not be computed from frozen bounds",
+        }
+        _write_csv_rows(geometry_marginals_path, [])
+        _write_csv_rows(geometry_pairwise_path, [])
+    else:
+        geometry_summary = {"status": "PASS", **geometry_coverage.summary()}
+        _write_csv_rows(geometry_marginals_path, geometry_coverage.marginal_rows())
+        _write_csv_rows(geometry_pairwise_path, geometry_coverage.pairwise_rows())
+    geometry_summary_path.write_text(
+        json.dumps(geometry_summary, indent=2, ensure_ascii=False) + "\n",
+        encoding="utf-8",
+    )
     coverage_summary_path = out_dir / "COVERAGE_SUMMARY.json"
     coverage_summary = {
         "campaign_id": CAMPAIGN_ID,
@@ -158,9 +194,13 @@ def main(argv: list[str] | None = None) -> int:
         "expected_accepted_geometries": int(args.expected_accepted),
         "geometry_unique_anchor_coverage": coverage["overall_metrics"],
         "by_anchor_ghz": coverage["anchor_metrics"],
+        "geometry_unique_anchor_coverage_by_population_phase": coverage[
+            "secondary_coverage"
+        ].primary_summary(),
         "feature_row_count": coverage["feature_row_count"],
         "validity_counts": coverage["validity_counts"],
         "record_weighted_secondary_coverage": coverage["secondary_coverage"].summary(),
+        "geometry_space_coverage": geometry_summary,
         "coverage_status": coverage_status,
         "coverage_gate": gate_evidence,
         "scientific_boundary": "Each geometry contributes at most one cell per anchor; no surrogate prediction is counted.",
@@ -197,6 +237,7 @@ def main(argv: list[str] | None = None) -> int:
         "checks": checks,
         "inputs": {
             "contract": _file_evidence(contract_path),
+            "geometry_bounds": _file_evidence(geometry_bounds_path),
             "accepted_geometries": _file_evidence(accepted_path),
             "long_features": _file_evidence(features_path),
             "artifact_index": _file_evidence(artifact_path),
@@ -207,6 +248,9 @@ def main(argv: list[str] | None = None) -> int:
             "coverage_by_frequency": _file_evidence(by_frequency_path),
             "coverage_marginals": _file_evidence(marginals_path),
             "coverage_pairwise": _file_evidence(pairwise_path),
+            "geometry_coverage_summary": _file_evidence(geometry_summary_path),
+            "geometry_coverage_marginals": _file_evidence(geometry_marginals_path),
+            "geometry_coverage_pairwise": _file_evidence(geometry_pairwise_path),
             "coverage_summary": _file_evidence(coverage_summary_path),
             "checkpoint_status": _file_evidence(status_path),
             "failure_funnel": _file_evidence(funnel_copy),
@@ -228,6 +272,7 @@ def _parse_args(argv: list[str] | None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--contract", required=True)
     parser.add_argument("--accepted-geometries", required=True)
+    parser.add_argument("--geometry-bounds", required=True)
     parser.add_argument("--long-features", required=True)
     parser.add_argument("--artifact-index", required=True)
     parser.add_argument("--failure-funnel", required=True)
@@ -241,7 +286,12 @@ def _parse_args(argv: list[str] | None) -> argparse.Namespace:
 
 
 def _audit_accepted_geometries(
-    path: Path, fingerprint: str, expected_count: int, checks: list[dict[str, Any]]
+    path: Path,
+    fingerprint: str,
+    expected_count: int,
+    checks: list[dict[str, Any]],
+    *,
+    geometry_bounds: dict[str, Any],
 ) -> dict[str, Any]:
     rows, fieldnames = _read_csv(path, checks, "accepted_geometries")
     required = {
@@ -261,6 +311,8 @@ def _audit_accepted_geometries(
     phases: dict[str, str] = {}
     acquisition_sources: dict[str, str] = {}
     sequences: list[int] = []
+    geometry_vectors: list[list[float]] = []
+    ordered_hashes: list[str] = []
     row_errors: list[str] = []
     for index, row in enumerate(rows, start=2):
         geometry_id = str(row.get("geometry_id") or "").strip()
@@ -302,11 +354,28 @@ def _audit_accepted_geometries(
         if supplied_hash != actual_hash:
             row_errors.append(f"line {index}: geometry hash mismatch")
         hashes[geometry_id] = actual_hash
+        try:
+            geometry_vectors.append([float(values[name]) for name in GEOMETRY_FIELDS])
+        except (TypeError, ValueError) as exc:
+            row_errors.append(f"line {index}: non-numeric geometry vector: {exc}")
+        else:
+            ordered_hashes.append(actual_hash)
         for field in ACCEPTANCE_STATUS_FIELDS:
             if str(row.get(field) or "").upper() != "PASS":
                 row_errors.append(f"line {index}: {field} is not PASS")
         if _as_int(row.get("calibre_blocking_violations")) != 0:
             row_errors.append(f"line {index}: Calibre blocking violations are not zero")
+    geometry_coverage: GeometryCoverageAudit | None = None
+    try:
+        geometry_coverage = GeometryCoverageAudit(
+            matrix_um=np.asarray(geometry_vectors, dtype=float),
+            bounds=geometry_bounds,
+            geometry_hashes=ordered_hashes,
+        )
+    except (KeyError, TypeError, ValueError) as exc:
+        row_errors.append(f"geometry coverage initialization failed: {type(exc).__name__}: {exc}")
+    else:
+        row_errors.extend(geometry_coverage.internal_errors())
     checks.extend(
         [
             _check("accepted_geometry_count_exact", len(rows) == expected_count, f"actual={len(rows)}, expected={expected_count}"),
@@ -316,6 +385,11 @@ def _audit_accepted_geometries(
                 sequences == list(range(1, expected_count + 1)),
                 f"sequence_count={len(sequences)}, expected={expected_count}",
             ),
+            _check(
+                "accepted_geometry_coverage_accounting",
+                geometry_coverage is not None and not geometry_coverage.internal_errors(),
+                "frozen-bounds marginals, pairwise cells, boundary and nearest-neighbor evidence",
+            ),
             _check("accepted_geometry_contract_and_gates", not row_errors, row_errors[:20]),
         ]
     )
@@ -324,6 +398,7 @@ def _audit_accepted_geometries(
         "geometry_hashes": hashes,
         "geometry_phases": phases,
         "acquisition_sources": acquisition_sources,
+        "geometry_coverage": geometry_coverage,
         "row_count": len(rows),
     }
 
@@ -520,6 +595,10 @@ def _audit_long_features(
 
     expected_rows = expected_accepted * len(FREQUENCY_GRID_HZ)
     errors.extend(secondary_coverage.internal_errors())
+    principal_primary = secondary_coverage.primary_counts_for("broadband_descriptor_valid")
+    for anchor in ANCHOR_FREQUENCIES_GHZ:
+        if not np.array_equal(anchor_counts[anchor], principal_primary[anchor]):
+            errors.append(f"primary coverage accumulator mismatch at {anchor} GHz")
     checks.extend(
         [
             _check("long_feature_row_count_exact", feature_rows == expected_rows, f"actual={feature_rows}, expected={expected_rows}"),
