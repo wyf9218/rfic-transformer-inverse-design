@@ -22,6 +22,7 @@ from rfic_transformer_inverse_design.campaigns.broadband56_balanced200k import (
     TARGET_ACCEPTED_GEOMETRIES,
     build_phase_plan,
     canonical_geometry_sha256,
+    contract_fingerprint,
     matrix_columns,
     occupancy_metrics,
     primary_bin_edges,
@@ -75,6 +76,113 @@ def _load_prepare_module():
     sys.modules[spec.name] = module
     spec.loader.exec_module(module)
     return module
+
+
+def _load_resource_estimator_module():
+    path = ROOT / "scripts" / "estimate_broadband56_balanced200k_resources.py"
+    spec = importlib.util.spec_from_file_location("estimate_broadband56_balanced200k_resources", path)
+    assert spec is not None and spec.loader is not None
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = module
+    spec.loader.exec_module(module)
+    return module
+
+
+def _write_resource_pilot_fixture(
+    root: Path,
+    *,
+    count: int,
+    fingerprint: str,
+    elapsed_seconds: float,
+    active_worker_seconds: float,
+    reused_shards: int = 0,
+) -> tuple[Path, Path]:
+    run_summary_path = root / f"pilot_{count}_parallel_summary.json"
+    shard_count = 4 if count == 32 else 48
+    run_summary_path.write_text(
+        json.dumps(
+            {
+                "overall_status": "PASS",
+                "decision": "PARALLEL_CANDIDATE_QUEUE_DATASET_READY",
+                "input_row_count": count,
+                "merged_row_count": count,
+                "fail_shard_count": 0,
+                "shard_count": shard_count,
+                "pending_shard_count": shard_count - reused_shards,
+                "reused_shard_count": reused_shards,
+                "elapsed_seconds": elapsed_seconds,
+                "active_worker_elapsed_seconds_sum": active_worker_seconds,
+                "rows_per_second_effective": count / elapsed_seconds,
+                "parallel_efficiency": active_worker_seconds / elapsed_seconds / shard_count,
+                "jobs_requested": shard_count,
+                "run_emx": True,
+                "create_only": False,
+                "campaign_identity": {
+                    "input_campaign_contract_fingerprints": [fingerprint],
+                    "merged_campaign_contract_fingerprints": [fingerprint],
+                    "input_geometry_sha256_present_count": count,
+                    "input_geometry_sha256_unique_count": count,
+                    "merged_geometry_sha256_present_count": count,
+                    "merged_geometry_sha256_unique_count": count,
+                    "geometry_sha256_sets_match": True,
+                },
+                "touchstone_output_contract": {
+                    "checked": True,
+                    "expected_extension": ".s4p",
+                    "expected_ports": 4,
+                    "parse_error_count": 0,
+                    "port_error_count": 0,
+                    "frequency_error_count": 0,
+                    "expected_frequency": {
+                        "start_ghz": 5.0,
+                        "stop_ghz": 60.0,
+                        "step_ghz": 1.0,
+                        "points": 56,
+                    },
+                },
+                "checks": [{"name": "fixture", "pass": True, "detail": "synthetic software test only"}],
+            }
+        ),
+        encoding="utf-8",
+    )
+    audit_dir = root / f"pilot_{count}_audit"
+    audit_dir.mkdir()
+    status_path = audit_dir / "CHECKPOINT_STATUS.json"
+    status_path.write_text(
+        json.dumps(
+            {
+                "campaign_id": "broadband56_real_emx_balanced200k_tsmc65_v2",
+                "contract_fingerprint_sha256": fingerprint,
+                "checkpoint_status": f"PILOT_{count}_COMPLETE",
+                "audit_mode": "pilot",
+                "accepted_geometries": count,
+                "s4p_artifacts": count,
+                "geometry_frequency_rows": count * 56,
+            }
+        ),
+        encoding="utf-8",
+    )
+    (audit_dir / "CHECKPOINT_RECEIPT.json").write_text(
+        json.dumps(
+            {
+                "overall_status": "PASS",
+                "decision": "USE_CHECKPOINT",
+                "campaign_id": "broadband56_real_emx_balanced200k_tsmc65_v2",
+                "contract_fingerprint_sha256": fingerprint,
+                "expected_accepted": count,
+                "audit_mode": "pilot",
+                "checks": [{"name": "fixture", "pass": True, "detail": "synthetic software test only"}],
+                "outputs": {
+                    "checkpoint_status": {
+                        "path": str(status_path.resolve()),
+                        "sha256": _sha256(status_path),
+                    }
+                },
+            }
+        ),
+        encoding="utf-8",
+    )
+    return run_summary_path, audit_dir
 
 
 def _sha256(path: Path) -> str:
@@ -505,6 +613,86 @@ def test_preparation_requires_hash_bound_previous_contract_and_identical_private
     frozen_bounds = json.loads((out_dir / "GEOMETRY_BOUNDS_FROZEN.json").read_text(encoding="utf-8"))
     assert frozen_bounds["preparation_status"] == "PASS"
     assert tuple(frozen_bounds["field_bounds_um"]) == GEOMETRY_FIELDS
+
+
+def test_resource_estimator_requires_contract_bound_fresh_real_emx_pilots(tmp_path: Path) -> None:
+    module = _load_resource_estimator_module()
+    contract = json.loads(CONTRACT.read_text(encoding="utf-8"))
+    fingerprint = contract_fingerprint(contract)
+    pilot_32_summary, pilot_32_audit = _write_resource_pilot_fixture(
+        tmp_path,
+        count=32,
+        fingerprint=fingerprint,
+        elapsed_seconds=64.0,
+        active_worker_seconds=200.0,
+    )
+    pilot_1000_summary, pilot_1000_audit = _write_resource_pilot_fixture(
+        tmp_path,
+        count=1_000,
+        fingerprint=fingerprint,
+        elapsed_seconds=1_000.0,
+        active_worker_seconds=40_000.0,
+    )
+    out_dir = tmp_path / "resource_estimate"
+
+    status = module.main(
+        [
+            "--contract", str(CONTRACT),
+            "--pilot-32-run-summary", str(pilot_32_summary),
+            "--pilot-32-audit-dir", str(pilot_32_audit),
+            "--pilot-1000-run-summary", str(pilot_1000_summary),
+            "--pilot-1000-audit-dir", str(pilot_1000_audit),
+            "--out-dir", str(out_dir),
+        ]
+    )
+
+    estimate = json.loads((out_dir / "RESOURCE_ESTIMATE.json").read_text(encoding="utf-8"))
+    assert status == 0
+    assert estimate["overall_status"] == "PASS"
+    assert estimate["decision"] == "RESOURCE_ESTIMATE_READY"
+    assert estimate["estimate"]["current_audited_accepted_geometries"] == 1_000
+    assert estimate["estimate"]["remaining_accepted_geometries"] == 199_000
+    assert estimate["estimate"]["nominal_remaining_wall_hours"] == 199_000 / 3_600.0
+
+
+def test_resource_estimator_rejects_resumed_pilot_timing(tmp_path: Path) -> None:
+    module = _load_resource_estimator_module()
+    contract = json.loads(CONTRACT.read_text(encoding="utf-8"))
+    fingerprint = contract_fingerprint(contract)
+    pilot_32_summary, pilot_32_audit = _write_resource_pilot_fixture(
+        tmp_path,
+        count=32,
+        fingerprint=fingerprint,
+        elapsed_seconds=64.0,
+        active_worker_seconds=200.0,
+    )
+    pilot_1000_summary, pilot_1000_audit = _write_resource_pilot_fixture(
+        tmp_path,
+        count=1_000,
+        fingerprint=fingerprint,
+        elapsed_seconds=1_000.0,
+        active_worker_seconds=40_000.0,
+        reused_shards=1,
+    )
+    out_dir = tmp_path / "resource_estimate_fail"
+
+    status = module.main(
+        [
+            "--contract", str(CONTRACT),
+            "--pilot-32-run-summary", str(pilot_32_summary),
+            "--pilot-32-audit-dir", str(pilot_32_audit),
+            "--pilot-1000-run-summary", str(pilot_1000_summary),
+            "--pilot-1000-audit-dir", str(pilot_1000_audit),
+            "--out-dir", str(out_dir),
+        ]
+    )
+
+    estimate = json.loads((out_dir / "RESOURCE_ESTIMATE.json").read_text(encoding="utf-8"))
+    assert status == 2
+    assert estimate["overall_status"] == "FAIL"
+    assert estimate["estimate"] is None
+    failed = {item["name"] for item in estimate["checks"] if not item["pass"]}
+    assert "pilot_1000_run_is_fresh_real_emx" in failed
 
 
 def test_checkpoint_audit_accepts_exact_100_geometry_real_emx_shaped_fixture(tmp_path: Path) -> None:

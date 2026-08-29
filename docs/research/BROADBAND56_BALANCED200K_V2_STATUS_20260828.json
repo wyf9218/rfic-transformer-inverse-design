@@ -17,11 +17,11 @@
   "verified_local_results": [
     {
       "scope": "focused contract, queue, preparation, and synthetic checkpoint tests",
-      "result": "11 passed"
+      "result": "13 passed"
     },
     {
-      "scope": "candidate queue and parallel runner regression tests after identity/fail-on-error hardening",
-      "result": "18 passed"
+      "scope": "resource estimator plus candidate queue and parallel runner focused regression tests",
+      "result": "22 passed"
     },
     {
       "scope": "32-row exact 10-D Sobol geometry-only queue",
@@ -46,6 +46,10 @@
     {
       "scope": "golden, pilot, and checkpoint audit-mode separation",
       "result": "PASS; golden=1, pilot=32/1000, checkpoint=frozen cumulative targets; only 200000 checkpoint can be COMPLETE_200K"
+    },
+    {
+      "scope": "fail-closed measured resource estimator",
+      "result": "PASS in synthetic software tests; binds fresh non-resumed 32/1000 runner summaries to matching pilot receipts, campaign fingerprint, geometry hashes, 4-port .s4p, and exact 5-60 GHz/1 GHz/56-point evidence; real ETA remains REVERIFY"
     }
   ],
   "preserved_development_test_failure": {
@@ -54,6 +58,26 @@
     "resolution": "moved the assertion to the correct test; no production code, data, or remote state was changed",
     "terminal_retest": "11 passed"
   },
+  "preserved_resource_estimator_development_failures": [
+    {
+      "result": "1 failed, 12 passed",
+      "cause": "valid numeric zero fields such as fail_shard_count=0 were initially parsed with an or -1 fallback",
+      "resolution": "replaced truthiness parsing with explicit integer conversion; no remote or physical evidence was involved",
+      "terminal_retest": "13 passed"
+    },
+    {
+      "result": "1 failed, 7 passed",
+      "cause": "new optional campaign-identity arguments were initially required by a legacy direct unit-test call",
+      "resolution": "restored backward-compatible defaults while keeping production fingerprint enforcement opt-in and auditable",
+      "terminal_retest": "22 passed across the two focused files"
+    },
+    {
+      "result": "156 collection errors under system Python 3.9",
+      "cause": "the repository requires Python >=3.10; Python 3.9 evaluates unsupported PEP 604 built-in generic union annotations during collection",
+      "resolution": "created a disposable Python 3.12 environment outside the repository and reran the full public suite",
+      "terminal_retest": "1429 passed, 54 skipped, 1 deselected, 1 warning"
+    }
+  ],
   "preserved_negative_result": {
     "scope": "local 32-row create-only attempt using sanitized placeholder config",
     "classification": "EXPECTED_FAIL_DO_NOT_USE_AS_GOLDEN",
@@ -67,7 +91,7 @@
     "failure": "one unrelated test hard-coded the repository directory name and failed only in a differently named worktree",
     "fix": "resolve the script from the current repository root",
     "focused_retest": "1 passed",
-    "full_retest": "1426 passed, 54 skipped, 1 deselected, 1 warning in 98.72s",
+    "full_retest": "1429 passed, 54 skipped, 1 deselected, 1 warning in 98.67s",
     "full_retest_status": "PASS",
     "compileall": "PASS"
   },

@@ -96,6 +96,7 @@ def main(argv: list[str] | None = None) -> int:
         frequency_tolerance_hz=args.frequency_tolerance_hz,
         max_touchstone_checks=args.max_touchstone_checks,
     )
+    campaign_identity = _campaign_identity_summary(rows, merged_rows)
     checks = _parallel_checks(
         candidate_csv=candidate_csv,
         rows=rows,
@@ -105,6 +106,8 @@ def main(argv: list[str] | None = None) -> int:
         expected_shards=len(shard_specs),
         expected_count=args.expected_count,
         expected_jobs=args.expected_jobs,
+        expected_campaign_contract_fingerprint=args.expected_campaign_contract_fingerprint,
+        campaign_identity=campaign_identity,
         fail_on_error=bool(args.fail_on_error),
     ) + touchstone_contract["checks"]
     status = "PASS" if all(item["pass"] for item in checks) else "FAIL"
@@ -144,6 +147,7 @@ def main(argv: list[str] | None = None) -> int:
         "rows_per_second_effective": rows_per_second_effective,
         "run_emx": not bool(args.create_only),
         "create_only": bool(args.create_only),
+        "campaign_identity": campaign_identity,
         "touchstone_output_contract": touchstone_contract["summary"],
         "shards": [_shard_summary(run) for run in runs],
         "checks": checks,
@@ -184,6 +188,13 @@ def _parse_args(argv: list[str] | None) -> argparse.Namespace:
     )
     parser.add_argument("--expected-count", type=int, help="Fail unless the merged dataset has this many rows")
     parser.add_argument("--expected-jobs", type=int, help="Fail unless this worker count is requested")
+    parser.add_argument(
+        "--expected-campaign-contract-fingerprint",
+        help=(
+            "Fail unless both the queue and merged rows contain exactly this SHA-256 "
+            "campaign contract fingerprint and geometry hashes remain unique"
+        ),
+    )
     parser.add_argument("--batch-size", type=int, default=10)
     parser.add_argument("--z-load-ohm", type=float, default=50.0)
     parser.add_argument("--uniformity-bins", type=int, default=10)
@@ -446,12 +457,15 @@ def _parallel_checks(
     expected_count: int | None,
     expected_jobs: int | None,
     fail_on_error: bool,
+    expected_campaign_contract_fingerprint: str | None = None,
+    campaign_identity: dict[str, Any] | None = None,
 ) -> list[dict[str, Any]]:
     input_count = len(rows)
     merged_count = len(merged_rows)
     expected_shards = int(expected_shards)
+    campaign_identity = campaign_identity or _campaign_identity_summary(rows, merged_rows)
     pass_shards = [run for run in runs if run.returncode == 0 and (run.summary or {}).get("overall_status") == "PASS"]
-    return [
+    checks = [
         _check("candidate_csv_exists", candidate_csv.is_file(), str(candidate_csv)),
         _check("input_rows_present", input_count > 0, f"input_rows={input_count}"),
         _check(
@@ -500,6 +514,72 @@ def _parallel_checks(
             f"fail_on_error={fail_on_error}, ok_rows={sum(_truthy(row.get('ok')) for row in merged_rows)}, merged_rows={merged_count}",
         ),
     ]
+    if expected_campaign_contract_fingerprint is not None:
+        expected = str(expected_campaign_contract_fingerprint).strip().lower()
+        checks.extend(
+            [
+                _check(
+                    "expected_campaign_contract_fingerprint_is_sha256",
+                    _is_sha256(expected),
+                    expected,
+                ),
+                _check(
+                    "input_campaign_contract_fingerprint_matches_expected",
+                    campaign_identity["input_campaign_contract_fingerprints"] == [expected],
+                    campaign_identity["input_campaign_contract_fingerprints"],
+                ),
+                _check(
+                    "merged_campaign_contract_fingerprint_matches_expected",
+                    campaign_identity["merged_campaign_contract_fingerprints"] == [expected],
+                    campaign_identity["merged_campaign_contract_fingerprints"],
+                ),
+                _check(
+                    "input_geometry_hashes_are_complete_and_unique",
+                    campaign_identity["input_geometry_sha256_present_count"] == input_count
+                    and campaign_identity["input_geometry_sha256_unique_count"] == input_count,
+                    campaign_identity,
+                ),
+                _check(
+                    "merged_geometry_hashes_match_input",
+                    campaign_identity["merged_geometry_sha256_present_count"] == merged_count
+                    and campaign_identity["merged_geometry_sha256_unique_count"] == merged_count
+                    and campaign_identity["geometry_sha256_sets_match"],
+                    campaign_identity,
+                ),
+            ]
+        )
+    return checks
+
+
+def _campaign_identity_summary(
+    input_rows: list[dict[str, str]],
+    merged_rows: list[dict[str, Any]],
+) -> dict[str, Any]:
+    input_fingerprints = _unique_nonempty(input_rows, "campaign_contract_fingerprint")
+    merged_fingerprints = _unique_nonempty(merged_rows, "queue__campaign_contract_fingerprint")
+    input_hashes = _nonempty_values(input_rows, "geometry_sha256")
+    merged_hashes = _nonempty_values(merged_rows, "queue__geometry_sha256")
+    return {
+        "input_campaign_contract_fingerprints": input_fingerprints,
+        "merged_campaign_contract_fingerprints": merged_fingerprints,
+        "input_geometry_sha256_present_count": len(input_hashes),
+        "input_geometry_sha256_unique_count": len(set(input_hashes)),
+        "merged_geometry_sha256_present_count": len(merged_hashes),
+        "merged_geometry_sha256_unique_count": len(set(merged_hashes)),
+        "geometry_sha256_sets_match": set(input_hashes) == set(merged_hashes),
+    }
+
+
+def _nonempty_values(rows: list[dict[str, Any]], key: str) -> list[str]:
+    return [str(row.get(key) or "").strip().lower() for row in rows if str(row.get(key) or "").strip()]
+
+
+def _unique_nonempty(rows: list[dict[str, Any]], key: str) -> list[str]:
+    return sorted(set(_nonempty_values(rows, key)))
+
+
+def _is_sha256(value: str) -> bool:
+    return len(value) == 64 and all(character in "0123456789abcdef" for character in value)
 
 
 def _touchstone_output_contract(

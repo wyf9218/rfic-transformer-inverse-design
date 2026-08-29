@@ -129,3 +129,21 @@ python scripts/build_broadband56_phase_a_queue.py \
 The private runner invocation remains `REVERIFY`; no public command may be
 described as a successful Calibre/EMX production path until a fresh terminal
 receipt is available.
+
+After both fresh pilot audits pass, the measured resource estimate is produced
+with:
+
+```bash
+python scripts/estimate_broadband56_balanced200k_resources.py \
+  --contract /private/no-clobber/campaign_contract_frozen.json \
+  --pilot-32-run-summary /private/no-clobber/pilot_32/parallel_candidate_queue_dataset_summary.json \
+  --pilot-32-audit-dir /private/no-clobber/pilot_32/audit \
+  --pilot-1000-run-summary /private/no-clobber/pilot_1000/parallel_candidate_queue_dataset_summary.json \
+  --pilot-1000-audit-dir /private/no-clobber/pilot_1000/audit \
+  --out-dir /private/no-clobber/resource_estimate
+```
+
+The estimator rejects create-only, proxy-only, resumed-shard, incomplete,
+wrong-grid, wrong-port, fingerprint-mismatched, or failed checkpoint evidence.
+Its CLI and fail-closed behavior are covered by synthetic software tests; a
+real ETA remains `REVERIFY` until the contract-bound 32 and 1,000 pilots exist.

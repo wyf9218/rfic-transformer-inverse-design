@@ -86,6 +86,82 @@ def test_fail_on_error_rejects_merged_rows_with_failed_layout_or_emx(tmp_path: P
     assert not by_name["all_merged_rows_ok_when_fail_on_error"]["pass"]
 
 
+def test_campaign_identity_gate_binds_fingerprint_and_unique_geometry_hashes(tmp_path: Path) -> None:
+    mod = _load_parallel_module()
+    candidate_csv = tmp_path / "queue.csv"
+    _write_candidate_csv(candidate_csv, 2)
+    fingerprint = "a" * 64
+    input_rows = [
+        {
+            "candidate_id": f"c{index}",
+            "campaign_contract_fingerprint": fingerprint,
+            "geometry_sha256": f"{index + 1:064x}",
+        }
+        for index in range(2)
+    ]
+    merged_rows = [
+        {
+            "queue__candidate_id": row["candidate_id"],
+            "queue__campaign_contract_fingerprint": row["campaign_contract_fingerprint"],
+            "queue__geometry_sha256": row["geometry_sha256"],
+            "ok": "true",
+        }
+        for row in input_rows
+    ]
+    run = mod.ShardRun(
+        index=0,
+        row_count=2,
+        csv_path=candidate_csv,
+        out_dir=tmp_path / "shard",
+        command=["fake"],
+        returncode=0,
+        stdout="",
+        stderr="",
+        summary_path=tmp_path / "summary.json",
+        summary={"overall_status": "PASS"},
+    )
+
+    checks = mod._parallel_checks(
+        candidate_csv=candidate_csv,
+        rows=input_rows,
+        runs=[run],
+        merged_rows=merged_rows,
+        jobs=1,
+        expected_shards=1,
+        expected_count=2,
+        expected_jobs=1,
+        expected_campaign_contract_fingerprint=fingerprint,
+        campaign_identity=mod._campaign_identity_summary(input_rows, merged_rows),
+        fail_on_error=True,
+    )
+
+    by_name = {item["name"]: item for item in checks}
+    assert by_name["input_campaign_contract_fingerprint_matches_expected"]["pass"]
+    assert by_name["merged_campaign_contract_fingerprint_matches_expected"]["pass"]
+    assert by_name["input_geometry_hashes_are_complete_and_unique"]["pass"]
+    assert by_name["merged_geometry_hashes_match_input"]["pass"]
+
+    tampered = [dict(row) for row in merged_rows]
+    tampered[0]["queue__campaign_contract_fingerprint"] = "b" * 64
+    identity = mod._campaign_identity_summary(input_rows, tampered)
+    assert identity["merged_campaign_contract_fingerprints"] == ["a" * 64, "b" * 64]
+    tampered_checks = mod._parallel_checks(
+        candidate_csv=candidate_csv,
+        rows=input_rows,
+        runs=[run],
+        merged_rows=tampered,
+        jobs=1,
+        expected_shards=1,
+        expected_count=2,
+        expected_jobs=1,
+        expected_campaign_contract_fingerprint=fingerprint,
+        campaign_identity=identity,
+        fail_on_error=True,
+    )
+    tampered_by_name = {item["name"]: item for item in tampered_checks}
+    assert not tampered_by_name["merged_campaign_contract_fingerprint_matches_expected"]["pass"]
+
+
 def test_parallel_runner_splits_shards_and_merges_dataset_rows() -> None:
     mod = _load_parallel_module()
 
