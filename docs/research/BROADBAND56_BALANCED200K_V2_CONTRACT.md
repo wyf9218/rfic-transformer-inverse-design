@@ -167,8 +167,8 @@ Full public regression suite (verified on 2026-08-28):
 python tools/run_public_tests.py
 ```
 
-Latest verified result after terminal training-readiness integration:
-`1456 passed, 54 skipped, 1 deselected, 1 warning`.  This is a software
+Latest verified result after checkpoint-figure integration:
+`1460 passed, 54 skipped, 1 deselected, 1 warning`.  This is a software
 regression result only; it is not Calibre, EMX, or physical campaign evidence.
 
 Queue construction after a frozen private preparation receipt exists:
@@ -338,3 +338,29 @@ invocation must enumerate every exact audit directory. The script discovers
 counts from SHA-bound status files, rejects duplicates and omissions, and
 creates no history output until all 35 inputs pass. It performs no MARS,
 Cadence, Calibre, EMX, proxy inference, or model-training work.
+
+After the PASS history finalizer and the exact 50k/100k/150k/200k formal
+checkpoint audits exist, render the frozen 14-figure set at each checkpoint:
+
+```bash
+python scripts/render_broadband56_checkpoint_figures.py \
+  --contract /private/no-clobber/campaign_contract_frozen.json \
+  --history-dir /private/no-clobber/campaign_histories_200000 \
+  --audit-dir /private/no-clobber/audit_050000 \
+  --audit-dir /private/no-clobber/audit_100000 \
+  --audit-dir /private/no-clobber/audit_150000 \
+  --audit-dir /private/no-clobber/audit_200000 \
+  --out-dir /private/no-clobber/checkpoint_figures_200000
+```
+
+The renderer validates every source receipt and SHA index before creating its
+staging directory. It emits PNG and SVG copies plus one manifest per
+checkpoint and a top-level receipt/index. Every logical figure binds its
+source CSV SHA-256, denominator, exact frequency or anchor scope, validity
+definition, campaign phase, production-config SHA-256, and campaign-contract
+fingerprint. Record-weighted frequency plots remain explicitly correlated
+within geometry; geometry-unique anchor occupancy remains the primary metric.
+The renderer performs no remote action, simulation, proxy inference, or model
+training. The implementation is locally software-tested with synthetic,
+hash-closed evidence; real campaign figures remain `PLANNED` until all four
+required formal checkpoint audits exist.
