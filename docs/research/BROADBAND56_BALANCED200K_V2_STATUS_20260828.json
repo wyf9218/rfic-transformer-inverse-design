@@ -3,7 +3,7 @@
   "campaign_id": "broadband56_real_emx_balanced200k_tsmc65_v2",
   "branch": "codex/broadband56-balanced200k-v2",
   "base_commit": "85a0b96be7d2227a44d00d046f972f2a9bfbeaa0",
-  "overall_status": "LOCAL_CONTRACT_AUDIT_ADAPTIVE_TERMINAL_READINESS_AND_FIGURE_CONTROL_PLANE_READY_REMOTE_GATES_PENDING",
+  "overall_status": "LOCAL_CONTRACT_AUDIT_ADAPTIVE_TERMINAL_DELIVERY_AND_FIGURE_CONTROL_PLANE_READY_REMOTE_GATES_PENDING",
   "current_accepted": 0,
   "current_feature_rows": 0,
   "current_phase": "PREPARATION",
@@ -82,6 +82,10 @@
     {
       "scope": "50k/100k/150k/200k frozen 14-figure checkpoint renderer",
       "result": "PASS in synthetic hash-closed local software tests; emits PNG+SVG for all 14 required figures per checkpoint, validates checkpoint/history receipts and SHA indexes before no-clobber staging, and binds every figure to source CSV SHA, denominator, frequency/anchor, validity, phase, production-config SHA, and campaign-contract fingerprint; real figures remain PLANNED because accepted=0"
+    },
+    {
+      "scope": "COMPLETE_200K terminal delivery auditor",
+      "result": "PASS in five synthetic hash-closed local tests; jointly verifies the exact terminal checkpoint, five frozen raw-product names and counts, accepted/artifact/provenance identity sets, production-config/candidate/GDS/Calibre/EMX-log/S4P path-plus-SHA chain, 35-audit histories, training-readiness outputs, and four checkpoints times 14 PNG/SVG figures before atomically emitting a final receipt; provenance-row tampering, physical GDS-byte tampering, figure tampering, and existing output directories fail closed; real execution remains PLANNED because accepted=0"
     }
   ],
   "preserved_campaign_history_development_failure": {
@@ -176,6 +180,9 @@
     "latest_checkpoint_figure_combined_retest": "44 passed in 6.00s",
     "latest_checkpoint_figure_public_retest": "1460 passed, 54 skipped, 1 deselected, 1 warning in 101.35s",
     "latest_checkpoint_figure_visual_qa": "PASS; representative geometry, physical-marginal, joint-anchor, primary-cell, acquisition, funnel, and baseline-comparison PNGs inspected after fixed GridSpec colorbar layout; no overlap or clipping",
+    "latest_final_delivery_auditor_focused_retest": "5 passed in 0.56s",
+    "latest_final_delivery_auditor_combined_retest": "49 passed in 6.24s",
+    "latest_final_delivery_auditor_public_retest": "1465 passed, 54 skipped, 1 deselected, 1 warning in 100.78s",
     "full_retest_status": "PASS",
     "compileall": "PASS"
   },

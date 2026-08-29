@@ -116,6 +116,18 @@ only the four frequency-grid fields.
   endpoint, the exact 31-round accepted-sequence partition, and either the
   complete active mixture or the complete maximin fallback for each adaptive
   round. A mixed or approximate per-round source count is rejected.
+- `scripts/render_broadband56_checkpoint_figures.py`:
+  downstream-only renderer for all 14 required PNG and SVG figures at the
+  exact 50k/100k/150k/200k checkpoints. Every manifest row binds the source
+  CSV hash, denominator, frequency/anchor scope, validity definition, phase,
+  production-config hash, contract fingerprint, and checkpoint receipt.
+- `scripts/audit_broadband56_balanced200k_final_delivery.py`:
+  final fail-closed completion auditor. It is the only public control-plane
+  command that may emit a `COMPLETE_200K` delivery receipt. It requires the
+  exact terminal checkpoint, all five named raw products, the 35-audit
+  histories, training-readiness products, and four-by-fourteen PNG/SVG figure
+  set to remain hash closed. It separately preserves the frozen coverage
+  status and never turns proxy predictions into labels.
 
 The secondary tables are explicitly record-weighted. They retain all exact
 frequency rows but never replace the primary geometry-unique anchor metric.
@@ -167,8 +179,8 @@ Full public regression suite (verified on 2026-08-28):
 python tools/run_public_tests.py
 ```
 
-Latest verified result after checkpoint-figure integration:
-`1460 passed, 54 skipped, 1 deselected, 1 warning`.  This is a software
+Latest verified result after terminal-delivery-auditor integration:
+`1465 passed, 54 skipped, 1 deselected, 1 warning`.  This is a software
 regression result only; it is not Calibre, EMX, or physical campaign evidence.
 
 Queue construction after a frozen private preparation receipt exists:
@@ -364,3 +376,32 @@ The renderer performs no remote action, simulation, proxy inference, or model
 training. The implementation is locally software-tested with synthetic,
 hash-closed evidence; real campaign figures remain `PLANNED` until all four
 required formal checkpoint audits exist.
+
+After the terminal checkpoint, history, training-readiness, and figure
+finalizers all pass, bind the complete private delivery without copying its
+large artifacts:
+
+```bash
+python scripts/audit_broadband56_balanced200k_final_delivery.py \
+  --contract /private/no-clobber/campaign_contract_frozen.json \
+  --raw-dir /private/no-clobber/final_products \
+  --checkpoint-dir /private/no-clobber/audit_200000 \
+  --history-dir /private/no-clobber/campaign_histories_200000 \
+  --training-readiness-dir /private/no-clobber/training_readiness_200000 \
+  --figure-dir /private/no-clobber/checkpoint_figures_200000 \
+  --out-dir /private/no-clobber/final_delivery_audit_200000
+```
+
+The raw directory names are frozen as `accepted_geometry_200k.csv`,
+`broadband_features_11p2m_long.csv`,
+`sparameter_artifact_index_200k.csv`, `geometry_provenance_200k.csv`, and
+`failure_funnel.csv`. The provenance table must bind each accepted geometry to
+the exact production config, candidate source, GDS, Calibre report, EMX log,
+and S4P by existing path and SHA-256; the S4P path/hash must also agree with the
+terminal artifact index. Shared files are hash-cached during validation, while
+per-geometry artifacts remain individually checked. `COMPLETE_200K` proves
+execution accounting only; `COVERAGE_PASS`, `COVERAGE_PARTIAL`,
+`COVERAGE_PHYSICALLY_LIMITED`, or `COVERAGE_AUDIT_FAIL` remains a separate
+field. Running this command performs no remote action, simulation, inference,
+or model training. Real execution remains `PLANNED` until all source evidence
+exists.
