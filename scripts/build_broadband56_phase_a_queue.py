@@ -103,6 +103,8 @@ def main(argv: list[str] | None = None) -> int:
                         fingerprint,
                         str(args.phase),
                         str(args.acquisition_source),
+                        str(args.sampler),
+                        int(args.seed) + round_index,
                         drc,
                     )
                 )
@@ -112,6 +114,13 @@ def main(argv: list[str] | None = None) -> int:
     checks.extend(
         [
             _check("requested_count_positive", int(args.count) > 0, args.count),
+            _check("requested_count_within_phase_a", int(args.count) <= 50_000, args.count),
+            _check("phase_is_frozen_phase_a", str(args.phase) == "PHASE_A", args.phase),
+            _check(
+                "acquisition_source_is_base_space_filling",
+                str(args.acquisition_source) == "base_space_filling",
+                args.acquisition_source,
+            ),
             _check("queue_count_exact", len(rows) == int(args.count), f"actual={len(rows)}, expected={args.count}"),
             _check("canonical_geometry_unique", len({row["geometry_sha256"] for row in rows}) == len(rows), len(rows)),
             _check("queue_contains_no_response_labels", all(not _looks_like_label(key) for row in rows for key in row), "geometry and provenance only"),
@@ -196,6 +205,8 @@ def _candidate_row(
     fingerprint: str,
     phase: str,
     acquisition_source: str,
+    sampler: str,
+    sampling_seed: int,
     drc: dict[str, Any],
 ) -> dict[str, Any]:
     row: dict[str, Any] = {
@@ -213,8 +224,13 @@ def _candidate_row(
         "geometry_fingerprint_quantization_um": "1e-9",
         "inside_target_bin": "true",
         "selection_score": "",
+        "analytical_status": "PASS",
+        "topology_status": "PASS",
+        "top_metal_drc_status": "PASS",
         "drc_status": str(drc.get("status") or "PASS"),
         "drc_rule_source": str(drc.get("rule_source") or ""),
+        "candidate_generation_mode": f"{sampler}_normalized_10d",
+        "candidate_generation_seed": int(sampling_seed),
     }
     for name, unit_value in zip(GEOMETRY_FIELDS, unit_vector):
         row[f"geom__{name}"] = float(flat[name])

@@ -54,7 +54,11 @@ only the four frequency-grid fields.
   no-clobber V1-hash/config preflight and V2 contract freeze. It runs no solver.
 - `scripts/build_broadband56_phase_a_queue.py`:
   exact 10-D label-free Phase-A queue generation with shared line width and
-  canonical duplicate rejection.
+  canonical duplicate rejection. The builder is fail-closed to `PHASE_A`,
+  `base_space_filling`, and at most 50,000 requested rows. Each candidate
+  records its sampler/seed and the PASS results of the local bounds, topology,
+  and public top-metal analytical audits; those fields are queue provenance,
+  not Cadence, Calibre, GDS, or EMX evidence.
 - `scripts/audit_broadband56_balanced200k_checkpoint.py`:
   streaming accepted/S4P/56-point/S-Z/feature/fingerprint audit plus required
   checkpoint receipt, coverage table, failure funnel, and SHA-256 index. It
@@ -112,7 +116,8 @@ Full public regression suite (verified on 2026-08-28):
 python tools/run_public_tests.py
 ```
 
-Verified result: `1426 passed, 54 skipped, 1 deselected`.  This is a software
+Latest verified result after Phase-A provenance hardening:
+`1432 passed, 54 skipped, 1 deselected`.  This is a software
 regression result only; it is not Calibre, EMX, or physical campaign evidence.
 
 Queue construction after a frozen private preparation receipt exists:

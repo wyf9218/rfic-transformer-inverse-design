@@ -20,6 +20,10 @@
       "result": "15 passed"
     },
     {
+      "scope": "Phase-A queue provenance and queue-runner regressions",
+      "result": "29 passed; queue builder is limited to PHASE_A/base_space_filling/count<=50000 and records sampler, seed, and local analytical/topology/top-metal audit status without claiming Cadence, Calibre, or EMX evidence"
+    },
+    {
       "scope": "resource estimator plus candidate queue and parallel runner focused regression tests",
       "result": "22 passed"
     },
@@ -90,12 +94,30 @@
     "remediation": "parallel runner now preserves queue identity and rejects failed merged rows when --fail-on-error is active",
     "physical_evidence": false
   },
+  "preserved_current_test_harness_failures": [
+    {
+      "command": "python -m pytest -q",
+      "result": "164 failed, 1564 passed, 55 skipped",
+      "cause": "non-authoritative raw pytest collection included research_snapshot tests whose frozen private support files are intentionally absent from the Git worktree, then exposed mutable workspace-report compatibility failures",
+      "classification": "HARNESS_AND_EXTERNAL_EVIDENCE_DRIFT_NOT_CURRENT_PATCH_REGRESSION"
+    },
+    {
+      "command": "python -m pytest -q tests in direct workspace-level detached worktrees",
+      "patched_result": "57 failed, 1605 passed, 55 skipped",
+      "baseline_result": "57 failed, 1604 passed, 55 skipped",
+      "exact_failed_node_set_comparison": "PASS; patched_only=[]; baseline_only=[]",
+      "cause": "57 legacy integration tests consume mutable workspace-level reports and fail identically at unmodified commit 321f1da7dc096d31533d6ac22609db93453ef762",
+      "classification": "BASELINE_EQUIVALENT_EXTERNAL_EVIDENCE_DRIFT"
+    }
+  ],
   "public_suite": {
     "first_run": "1420 passed, 54 skipped, 1 failed",
     "failure": "one unrelated test hard-coded the repository directory name and failed only in a differently named worktree",
     "fix": "resolve the script from the current repository root",
     "focused_retest": "1 passed",
     "full_retest": "1431 passed, 54 skipped, 1 deselected, 1 warning in 98.98s",
+    "latest_phase_a_hardening_command": "python tools/run_public_tests.py",
+    "latest_phase_a_hardening_retest": "1432 passed, 54 skipped, 1 deselected, 1 warning in 99.85s",
     "full_retest_status": "PASS",
     "compileall": "PASS"
   },

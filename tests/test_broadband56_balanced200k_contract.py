@@ -688,6 +688,34 @@ def test_phase_a_queue_is_exact_10d_unique_and_label_free(tmp_path: Path) -> Non
     for row in rows:
         geometry = {name: row[f"geom__{name}"] for name in GEOMETRY_FIELDS}
         assert row["geometry_sha256"] == canonical_geometry_sha256(geometry)
+        assert row["analytical_status"] == "PASS"
+        assert row["topology_status"] == "PASS"
+        assert row["top_metal_drc_status"] == "PASS"
+        assert row["candidate_generation_mode"] == "sobol_normalized_10d"
+
+
+def test_phase_a_queue_rejects_non_phase_a_source_contract(tmp_path: Path) -> None:
+    module = _load_queue_module()
+    out_dir = tmp_path / "wrong_phase_queue"
+
+    status = module.main(
+        [
+            "--contract", str(CONTRACT),
+            "--config", str(TEMPLATE),
+            "--out-dir", str(out_dir),
+            "--count", "1",
+            "--sampler", "sobol",
+            "--seed", "20260828",
+            "--phase", "PHASE_B",
+            "--acquisition-source", "maximin_geometry_exploration",
+        ]
+    )
+
+    summary = json.loads((out_dir / "broadband56_candidate_queue_summary.json").read_text(encoding="utf-8"))
+    assert status == 2
+    assert summary["overall_status"] == "FAIL"
+    failed = {item["name"] for item in summary["checks"] if not item["pass"]}
+    assert failed == {"phase_is_frozen_phase_a", "acquisition_source_is_base_space_filling"}
 
 
 def test_checkpoint_acceptance_rejects_wrong_sequence_phase_and_source(tmp_path: Path) -> None:
