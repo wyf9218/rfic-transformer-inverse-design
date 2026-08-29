@@ -4,7 +4,7 @@
   "campaign_id": "broadband56_real_emx_balanced200k_tsmc65_v2",
   "branch": "codex/broadband56-balanced200k-v2",
   "base_commit": "85a0b96be7d2227a44d00d046f972f2a9bfbeaa0",
-  "overall_status": "LOCAL_CONTROL_PLANE_READY_RECONSTRUCTED_V1_CANDIDATE_PENDING_EXPLICIT_SHA256_APPROVAL",
+  "overall_status": "PREPARATION_BLOCKED_APPROVED_BASELINE_CONFIG_IDENTITY_MISMATCH",
   "current_accepted": 0,
   "current_feature_rows": 0,
   "current_phase": "PREPARATION",
@@ -254,7 +254,9 @@
     "path": "docs/research/BROADBAND56_RECONSTRUCTED_BASELINE_V1_CANDIDATE_20260829.json",
     "sha256": "1abb85dd7e6aad709eb404dbcc174a8a66e325baf76f26c0eeb64a6498ea7a12",
     "classification": "NEW_RECONSTRUCTION_NOT_HISTORICAL_V1",
-    "approval_status": "PENDING_EXPLICIT_SHA256_APPROVAL",
+    "approval_status": "APPROVED_FOR_V2_PREPARATION_PREFLIGHT_ONLY",
+    "approval_receipt_path": "reports/broadband56_reconstructed_baseline_approval_20260829T165534Z/RECONSTRUCTED_BASELINE_APPROVAL_RECEIPT.json",
+    "approval_receipt_sha256": "234fa3296ef5b62e854c113e907d6305009d08fe0f3c368ae231f66d3615621c",
     "automatic_command_authorized": false,
     "production_use_authorized": false,
     "approval_request_path": "docs/research/BROADBAND56_V1_BASELINE_APPROVAL_REQUEST_20260829.md",
@@ -267,16 +269,17 @@
     "approval_recorder_sha256": "9061ebff3f8d780367d8eb427ba8958e5a1fdb4dd520a9506f6d14b69f1a58a3",
     "approval_recorder_test_sha256": "439b5020cbb9f2e511986f17ece3dc5011c98457099df5c881c64b8dc0670a3c",
     "git_and_local_search_result": "NOT_FOUND; no approved historical non-V2 broadband56 V1 contract exists in the current worktree, any Git ref or object history, or the bounded local attachment search",
-    "execution_effect": "NONE; no MARS write, private configuration creation, preparation, Cadence, Calibre, EMX, queue, runner, controller, or supervisor launch is authorized by this candidate"
+    "execution_effect": "Approval receipt recorded and V2 preparation preflight attempted only; golden, Cadence, Calibre, EMX, queue, runner, controller, and supervisor remain forbidden and were not launched"
   },
   "remote_state": {
     "mars_host": "PRIVATE_NOT_RECORDED",
     "web_session": "STABLE_READ_ONLY_UNLOCK_CONFIRMED_2026-08-29; EXISTING_TAB_REUSED_WITHOUT_RELOAD_OR_RECONNECT",
-    "user_instruction": "READ_ONLY_REVERIFY_AUTHORIZED; NO_SIMULATOR_LAUNCH_OR_REMOTE_WRITE",
+    "user_instruction": "APPROVE_V2_PREPARATION_PREFLIGHT_ONLY; NO_GOLDEN_CADENCE_CALIBRE_EMX_QUEUE_SUPERVISOR_OR_CAMPAIGN",
     "previous_v1_contract_hash": "NOT_FOUND_IN_BOUNDED_REMOTE_SEARCH_2026-08-29",
-    "private_production_config": "V2_NOT_FOUND; HISTORICAL_111_POINT_CONFIG_SHA256_RECORDED_ONLY",
-    "private_calibre_emx_backend": "PASS_HISTORICAL_RUNTIME_BYTES_MATCH; NOT_YET_BOUND_TO_A_V1_OR_V2_56_POINT_PREPARATION_RECEIPT",
+    "private_production_config": "NOT_CREATED; approved candidate records c4ffcca8... but historical receipt and current private bytes are c4ffcc8a...; exact approval cannot be silently amended",
+    "preparation_preflight": "FAIL; 39 checks PASS and production_frequency_grid_exact_56 FAIL because no identity-authorized 56-point private config was created; public-safe status SHA is indexed under reports/broadband56_v2_preparation_preflight_20260829T170900Z",
+    "private_calibre_emx_backend": "PASS_HISTORICAL_RUNTIME_BYTES_MATCH; PREPARATION BLOCKED BEFORE ANY SIMULATOR ACTION",
     "resource_and_license_gate": "REVERIFY; AGGREGATE_RESOURCE_SNAPSHOT_ONLY; LICENSE_GATE_NOT_RUN"
   },
-  "next_legal_action": "Either provide the original approved non-V2 5-60 GHz/1 GHz/56-point V1 contract and exact SHA-256, or explicitly approve candidate SHA-256 1abb85dd7e6aad709eb404dbcc174a8a66e325baf76f26c0eeb64a6498ea7a12 as a new reconstructed non-historical baseline. Only after one of those approvals may a no-clobber private V2 production config be created and preparation preflight run; golden still requires preparation plus resource/license PASS."
+  "next_legal_action": "Create a corrected reconstructed-baseline candidate that records historical/current config SHA c4ffcc8a424770e4b3c0c64d16c575271d29867d2b47dc3a29b7f642d2fd3655, obtain a new explicit approval for that corrected candidate exact SHA, then rerun preparation in a new no-clobber directory. Golden remains unauthorized."
 }

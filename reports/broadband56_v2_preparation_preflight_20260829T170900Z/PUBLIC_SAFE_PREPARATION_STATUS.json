@@ -1,0 +1,72 @@
+{
+  "schema": "rfic_transformer.broadband56_v2_public_preparation_status.v1",
+  "generated_utc": "2026-08-29T17:10:50Z",
+  "campaign_id": "broadband56_real_emx_balanced200k_tsmc65_v2",
+  "overall_status": "PREPARATION_BLOCKED",
+  "decision": "DO_NOT_START_GOLDEN_CADENCE_CALIBRE_EMX_QUEUE_OR_CAMPAIGN",
+  "approved_scope": "APPROVE_V2_PREPARATION_PREFLIGHT_ONLY",
+  "approved_candidate": {
+    "path": "docs/research/BROADBAND56_RECONSTRUCTED_BASELINE_V1_CANDIDATE_20260829.json",
+    "size_bytes": 4550,
+    "sha256": "1abb85dd7e6aad709eb404dbcc174a8a66e325baf76f26c0eeb64a6498ea7a12"
+  },
+  "approval_receipt": {
+    "path": "reports/broadband56_reconstructed_baseline_approval_20260829T165534Z/RECONSTRUCTED_BASELINE_APPROVAL_RECEIPT.json",
+    "size_bytes": 4485,
+    "sha256": "234fa3296ef5b62e854c113e907d6305009d08fe0f3c368ae231f66d3615621c",
+    "overall_status": "PASS",
+    "approved_by": "Yufeng Wang, project owner and project leader",
+    "approved_utc": "2026-08-29T16:55:34Z",
+    "approval_reference": "current Codex-thread explicit approval of reconstructed baseline SHA-256 1abb85dd7e6aad709eb404dbcc174a8a66e325baf76f26c0eeb64a6498ea7a12",
+    "automatic_command_authorized": false,
+    "golden_authorized": false,
+    "simulator_authorized": false
+  },
+  "frequency_grid": {
+    "approved": "5_to_60_GHz_inclusive_step_1_GHz",
+    "approved_points": 56,
+    "preflight_production_config_points": 111,
+    "preflight_production_config_step_ghz": 0.5
+  },
+  "identity_evidence": {
+    "historical_receipt_config_sha256": "c4ffcc8a424770e4b3c0c64d16c575271d29867d2b47dc3a29b7f642d2fd3655",
+    "current_private_config_sha256": "c4ffcc8a424770e4b3c0c64d16c575271d29867d2b47dc3a29b7f642d2fd3655",
+    "approved_candidate_sanitized_historical_config_sha256": "c4ffcca8424770e4b3c0c64d16c575271d29867d2b47dc3a29b7f642d2fd3655",
+    "historical_receipt_matches_current_private_config": true,
+    "approved_candidate_matches_current_private_config": false,
+    "mismatch": "hexadecimal characters at zero-based positions 6 and 7 are transposed: current/receipt=8a, approved candidate=a8"
+  },
+  "preparation_receipt": {
+    "private_path_not_published": true,
+    "size_bytes": 11202,
+    "sha256": "a82e2c340c84f3a705434bb5311102fb887f0c7c04eadc6b3ccd771e2b5ce2a0",
+    "overall_status": "FAIL",
+    "pass_checks": 39,
+    "fail_checks": 1,
+    "failed_check": "production_frequency_grid_exact_56",
+    "non_frequency_configuration_identical": true,
+    "approval_identity_checks": "PASS",
+    "private_runtime_path_checks": "PASS",
+    "emx_wrapper_executable_check": "PASS",
+    "canonical_geometry_bounds_check": "PASS",
+    "port_and_pin_contract_checks": "PASS"
+  },
+  "safety_checks": {
+    "new_private_config_created": false,
+    "existing_duplicate_v2_campaign_directory_found_before_preflight": false,
+    "relevant_processes_before_preflight": 0,
+    "relevant_processes_after_preflight": 0,
+    "simulator_action_taken": false,
+    "queue_or_supervisor_action_taken": false,
+    "historical_blocked_evidence_overwritten": false
+  },
+  "unchanged_contract_check": "FAIL",
+  "blocker": "The approved candidate records historical config SHA c4ffcca8... while both the historical receipt and current private bytes are c4ffcc8a...; exact approval cannot be silently amended, so no 56-point private config was created.",
+  "required_next_action": "Create a corrected reconstructed-baseline candidate that records the exact c4ffcc8a... source identity, obtain a new explicit exact-SHA approval, then rerun preparation in a new no-clobber directory.",
+  "public_repository_boundary": {
+    "private_runtime_paths_included": false,
+    "pdk_or_proc_bytes_included": false,
+    "gds_or_s4p_included": false,
+    "credentials_or_hostnames_included": false
+  }
+}
