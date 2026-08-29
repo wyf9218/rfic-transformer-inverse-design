@@ -71,6 +71,21 @@ only the four frequency-grid fields.
   canonical uniqueness against all accepted geometries, and internally
   consistent coverage-cell evidence. Missing or inconsistent evidence emits a
   FAIL receipt and no runnable candidate queue.
+- `rfic_transformer_inverse_design/campaigns/broadband56_acquisition_ensemble.py`:
+  deterministic geometry-identity splitting plus a minimum-five-member,
+  independently seeded random-feature ridge forward ensemble. It predicts the
+  seven frozen acquisition fields at all eight anchors, calibrates disagreement
+  only on the calibration split, and evaluates once on a sealed validation
+  split. Saved NPZ members contain no final labels.
+- `scripts/train_broadband56_acquisition_ensemble.py`:
+  no-clobber trainer that accepts only a hash-bound PASS checkpoint/round,
+  exact accepted geometry ledger, frozen bounds, and fresh-real-EMX feature
+  table. A failed validation receipt authorizes maximin fallback only.
+- `scripts/predict_broadband56_acquisition_candidates.py`:
+  verifies the staged round, exact ensemble receipt, member NPZ metadata,
+  accepted-ledger disjointness, and candidate analytical/topology gates before
+  writing 112 traceable prediction/uncertainty columns. The rows remain
+  unevaluated candidate-priority metadata.
 - `scripts/audit_broadband56_balanced200k_checkpoint.py`:
   streaming accepted/S4P/56-point/S-Z/feature/fingerprint audit plus required
   checkpoint receipt, coverage table, failure funnel, and SHA-256 index. It
@@ -128,8 +143,8 @@ Full public regression suite (verified on 2026-08-28):
 python tools/run_public_tests.py
 ```
 
-Latest verified result after Phase-A provenance hardening:
-`1432 passed, 54 skipped, 1 deselected`.  This is a software
+Latest verified result after acquisition-ensemble integration:
+`1444 passed, 54 skipped, 1 deselected`.  This is a software
 regression result only; it is not Calibre, EMX, or physical campaign evidence.
 
 Queue construction after a frozen private preparation receipt exists:
@@ -167,7 +182,21 @@ Its CLI and fail-closed behavior are covered by synthetic software tests; a
 real ETA remains `REVERIFY` until the contract-bound 32 and 1,000 pilots exist.
 
 After Phase A reaches an audited 50,000 and after every subsequent 5k batch,
-stage the next adaptive round without launching a solver:
+fit a checkpoint-bound candidate-priority ensemble without launching a solver:
+
+```bash
+python scripts/train_broadband56_acquisition_ensemble.py \
+  --contract /private/no-clobber/campaign_contract_frozen.json \
+  --checkpoint-audit-dir /private/no-clobber/latest_real_emx_audit \
+  --out-dir /private/no-clobber/acquisition_ensemble
+```
+
+Only completed fresh-real-EMX rows may enter this command. The receipt binds
+the exact accepted ledger, long feature table, bounds, split identities,
+member seeds, model SHA-256 values, uncertainty calibration, and sealed
+validation result. A PASS is candidate-ranking authorization only.
+
+Then stage the next adaptive round without launching a solver:
 
 ```bash
 python scripts/stage_broadband56_adaptive_round.py \
@@ -185,14 +214,32 @@ quotas. A missing or invalid ensemble is recorded and activates the frozen
 5,000-sample maximin fallback instead. Neither mode creates labels or accepted
 samples; those remain dependent on fresh Cadence, Calibre, and EMX evidence.
 
-After a staged round and a contract-matching unevaluated candidate pool exist,
-select the exact unlabeled 5,000-candidate queue without launching a solver:
+After an ensemble-authorized staged round and a contract-matching unevaluated
+candidate pool exist, attach calibrated candidate-priority predictions:
+
+```bash
+python scripts/predict_broadband56_acquisition_candidates.py \
+  --contract /private/no-clobber/campaign_contract_frozen.json \
+  --round-dir /private/no-clobber/next_adaptive_round \
+  --ensemble-receipt /private/no-clobber/acquisition_ensemble/ENSEMBLE_RECEIPT.json \
+  --candidate-csv /private/no-clobber/unevaluated_candidate_pool.csv \
+  --out-dir /private/no-clobber/candidate_predictions
+```
+
+The predictor rejects a model whose internal seed, training count, hidden
+width, or ridge metadata differs from the receipt. It does not create EMX
+labels or realized coverage. In maximin-fallback mode this prediction step is
+not used.
+
+Finally, select the exact unlabeled 5,000-candidate queue without launching a
+solver. In ensemble mode, `--candidate-csv` is the predictor output; in
+fallback mode it is the contract-matching geometry-only pool:
 
 ```bash
 python scripts/select_broadband56_adaptive_candidates.py \
   --contract /private/no-clobber/campaign_contract_frozen.json \
   --round-dir /private/no-clobber/next_adaptive_round \
-  --candidate-csv /private/no-clobber/unevaluated_candidate_pool.csv \
+  --candidate-csv /private/no-clobber/candidate_pool_for_selection.csv \
   --out-dir /private/no-clobber/selected_candidate_queue
 ```
 

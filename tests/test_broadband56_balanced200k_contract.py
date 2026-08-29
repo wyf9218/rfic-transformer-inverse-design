@@ -120,6 +120,8 @@ def _write_adaptive_audit_fixture(root: Path, *, accepted_count: int, fingerprin
         ),
         encoding="utf-8",
     )
+    features_path = audit_dir / "broadband_features_long.csv"
+    features_path.write_text("geometry_id,frequency_hz\nfixture,8000000000\n", encoding="utf-8")
     cells_path = audit_dir / "physical_coverage_cells_by_anchor.csv"
     with cells_path.open("w", newline="", encoding="utf-8") as handle:
         fields = [
@@ -181,6 +183,7 @@ def _write_adaptive_audit_fixture(root: Path, *, accepted_count: int, fingerprin
                 "inputs": {
                     "accepted_geometries": {"path": str(accepted_path.resolve()), "sha256": _sha256(accepted_path)},
                     "geometry_bounds": {"path": str(bounds_path.resolve()), "sha256": _sha256(bounds_path)},
+                    "long_features": {"path": str(features_path.resolve()), "sha256": _sha256(features_path)},
                 },
                 "outputs": {
                     "checkpoint_status": {"path": str(status_path.resolve()), "sha256": _sha256(status_path)},
@@ -194,7 +197,14 @@ def _write_adaptive_audit_fixture(root: Path, *, accepted_count: int, fingerprin
     return audit_dir
 
 
-def _write_ensemble_fixture(root: Path, *, fingerprint: str, duplicate_seed: bool = False) -> Path:
+def _write_ensemble_fixture(
+    root: Path,
+    *,
+    fingerprint: str,
+    audit_dir: Path,
+    accepted_count: int,
+    duplicate_seed: bool = False,
+) -> Path:
     training = root / "ensemble_training_rows.csv"
     training.write_text("geometry_id\ng0\n", encoding="utf-8")
     members = []
@@ -206,8 +216,13 @@ def _write_ensemble_fixture(root: Path, *, fingerprint: str, duplicate_seed: boo
                 "seed": 100 if duplicate_seed else 100 + index,
                 "model_sha256": _sha256(model),
                 "model_file": {"path": str(model.resolve()), "sha256": _sha256(model)},
+                "training_geometry_count": int(accepted_count * 0.8),
             }
         )
+    accepted_path = audit_dir / "accepted_geometries.csv"
+    features_path = audit_dir / "broadband_features_long.csv"
+    bounds_path = audit_dir / "GEOMETRY_BOUNDS_FROZEN.json"
+    checkpoint_receipt_path = audit_dir / "CHECKPOINT_RECEIPT.json"
     receipt = root / ("ensemble_duplicate_seed.json" if duplicate_seed else "ensemble_pass.json")
     receipt.write_text(
         json.dumps(
@@ -219,6 +234,8 @@ def _write_ensemble_fixture(root: Path, *, fingerprint: str, duplicate_seed: boo
                 "training_label_source": "FRESH_REAL_EMX_ONLY",
                 "split_unit": "canonical_geometry_sha256",
                 "validation_sealed": True,
+                "validation_used_for_training": False,
+                "validation_used_for_uncertainty_calibration": False,
                 "validation_status": "PASS",
                 "uncertainty_calibration_status": "PASS",
                 "candidate_priority_only": True,
@@ -235,8 +252,46 @@ def _write_ensemble_fixture(root: Path, *, fingerprint: str, duplicate_seed: boo
                 ],
                 "member_count": 5,
                 "members": members,
-                "training_geometry_count": 45_000,
-                "validation_geometry_count": 5_000,
+                "source_accepted_count": accepted_count,
+                "training_geometry_count": int(accepted_count * 0.8),
+                "calibration_geometry_count": int(accepted_count * 0.1),
+                "validation_geometry_count": accepted_count - int(accepted_count * 0.8) - int(accepted_count * 0.1),
+                "split_identity_sha256": {
+                    "train": "a" * 64,
+                    "calibration": "b" * 64,
+                    "validation": "c" * 64,
+                },
+                "source_checkpoint_receipt": {
+                    "path": str(checkpoint_receipt_path.resolve()),
+                    "sha256": _sha256(checkpoint_receipt_path),
+                },
+                "source_accepted_geometries": {
+                    "path": str(accepted_path.resolve()),
+                    "sha256": _sha256(accepted_path),
+                },
+                "source_long_features": {
+                    "path": str(features_path.resolve()),
+                    "sha256": _sha256(features_path),
+                },
+                "source_geometry_bounds": {
+                    "path": str(bounds_path.resolve()),
+                    "sha256": _sha256(bounds_path),
+                },
+                "uncertainty_calibration": {
+                    "feature_scales": {
+                        "xp_ohm": 1.0,
+                        "xs_ohm": 1.0,
+                        "qp": 1.0,
+                        "qs": 1.0,
+                        "qmin": 1.0,
+                        "k_abs": 1.0,
+                        "feature_validity_probability": 1.0,
+                    }
+                },
+                "validation": {
+                    "overall_status": "PASS",
+                    "gates": {"fixture_gate": True},
+                },
                 "training_table": {"path": str(training.resolve()), "sha256": _sha256(training)},
             }
         ),
@@ -949,7 +1004,12 @@ def test_adaptive_round_stager_enforces_ensemble_gate_and_phase_b_mixture(tmp_pa
     contract = json.loads(CONTRACT.read_text(encoding="utf-8"))
     fingerprint = contract_fingerprint(contract)
     audit_dir = _write_adaptive_audit_fixture(tmp_path, accepted_count=50_000, fingerprint=fingerprint)
-    ensemble = _write_ensemble_fixture(tmp_path, fingerprint=fingerprint)
+    ensemble = _write_ensemble_fixture(
+        tmp_path,
+        fingerprint=fingerprint,
+        audit_dir=audit_dir,
+        accepted_count=50_000,
+    )
     out_dir = tmp_path / "adaptive_ensemble"
 
     status = module.main(
@@ -973,7 +1033,13 @@ def test_adaptive_round_stager_enforces_ensemble_gate_and_phase_b_mixture(tmp_pa
     assert staged["ensemble_gate"]["status"] == "PASS"
     assert staged["candidate_selection_policy"] == selection_policy_contract()
 
-    invalid_ensemble = _write_ensemble_fixture(tmp_path, fingerprint=fingerprint, duplicate_seed=True)
+    invalid_ensemble = _write_ensemble_fixture(
+        tmp_path,
+        fingerprint=fingerprint,
+        audit_dir=audit_dir,
+        accepted_count=50_000,
+        duplicate_seed=True,
+    )
     invalid_out = tmp_path / "adaptive_invalid_ensemble"
     invalid_status = module.main(
         [

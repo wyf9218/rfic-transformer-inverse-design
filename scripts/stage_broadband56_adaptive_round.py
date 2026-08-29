@@ -85,7 +85,12 @@ def main(argv: list[str] | None = None) -> int:
         checks.append(_check("accepted_count_is_adaptive_round_boundary", False, str(exc)))
 
     ensemble_path = Path(args.ensemble_receipt).expanduser().resolve() if args.ensemble_receipt else None
-    ensemble = _validate_ensemble_receipt(ensemble_path, fingerprint, accepted_start)
+    ensemble = _validate_ensemble_receipt(
+        ensemble_path,
+        fingerprint,
+        accepted_start,
+        preceding_audit=audit,
+    )
     base_pass = bool(checks) and all(item["pass"] for item in checks) and round_spec is not None
     use_ensemble = base_pass and ensemble["status"] == "PASS"
     acquisition_mode = "ENSEMBLE_ACQUISITION" if use_ensemble else "FALLBACK_MAXIMIN"
@@ -222,15 +227,18 @@ def _validate_preceding_audit(
     coverage_evidence = outputs.get("coverage_summary") if isinstance(outputs.get("coverage_summary"), dict) else {}
     accepted_evidence = inputs.get("accepted_geometries") if isinstance(inputs.get("accepted_geometries"), dict) else {}
     bounds_evidence = inputs.get("geometry_bounds") if isinstance(inputs.get("geometry_bounds"), dict) else {}
+    features_evidence = inputs.get("long_features") if isinstance(inputs.get("long_features"), dict) else {}
     checks.append(_evidence_check("preceding_status_hash_bound", status_path, status_evidence))
     cells_path = Path(str(cells_evidence.get("path") or "")).expanduser().resolve()
     coverage_path = Path(str(coverage_evidence.get("path") or "")).expanduser().resolve()
     accepted_path = Path(str(accepted_evidence.get("path") or "")).expanduser().resolve()
     bounds_path = Path(str(bounds_evidence.get("path") or "")).expanduser().resolve()
+    features_path = Path(str(features_evidence.get("path") or "")).expanduser().resolve()
     checks.append(_evidence_check("preceding_coverage_cells_hash_bound", cells_path, cells_evidence))
     checks.append(_evidence_check("preceding_coverage_summary_hash_bound", coverage_path, coverage_evidence))
     checks.append(_evidence_check("preceding_accepted_geometries_hash_bound", accepted_path, accepted_evidence))
     checks.append(_evidence_check("preceding_geometry_bounds_hash_bound", bounds_path, bounds_evidence))
+    checks.append(_evidence_check("preceding_long_features_hash_bound", features_path, features_evidence))
     cell_summary = _validate_coverage_cells(cells_path, accepted)
     checks.extend(cell_summary.pop("checks"))
     return {
@@ -246,6 +254,10 @@ def _validate_preceding_audit(
         "accepted_geometries_sha256": accepted_evidence.get("sha256"),
         "geometry_bounds_path": str(bounds_path),
         "geometry_bounds_sha256": bounds_evidence.get("sha256"),
+        "long_features_path": str(features_path),
+        "long_features_sha256": features_evidence.get("sha256"),
+        "checkpoint_receipt_path": str(receipt_path),
+        "checkpoint_receipt_sha256": _sha256(receipt_path) if receipt_path.is_file() else None,
         "cell_summary": cell_summary,
     }
 
@@ -310,7 +322,13 @@ def _validate_coverage_cells(path: Path, accepted_count: int) -> dict[str, Any]:
     return {"checks": checks, "row_count": len(rows), "anchor_in_envelope_counts": anchor_totals}
 
 
-def _validate_ensemble_receipt(path: Path | None, fingerprint: str, accepted_count: int) -> dict[str, Any]:
+def _validate_ensemble_receipt(
+    path: Path | None,
+    fingerprint: str,
+    accepted_count: int,
+    *,
+    preceding_audit: dict[str, Any],
+) -> dict[str, Any]:
     if path is None:
         return {
             "status": "NOT_PROVIDED",
@@ -357,6 +375,11 @@ def _validate_ensemble_receipt(path: Path | None, fingerprint: str, accepted_cou
     require(payload.get("training_label_source") == "FRESH_REAL_EMX_ONLY", "training labels are not fresh real EMX")
     require(payload.get("split_unit") == "canonical_geometry_sha256", "ensemble split unit is not geometry identity")
     require(payload.get("validation_sealed") is True, "ensemble validation set is not sealed")
+    require(payload.get("validation_used_for_training") is False, "sealed validation was used for training")
+    require(
+        payload.get("validation_used_for_uncertainty_calibration") is False,
+        "sealed validation was used for uncertainty calibration",
+    )
     require(payload.get("validation_status") == "PASS", "ensemble validation status is not PASS")
     require(payload.get("uncertainty_calibration_status") == "PASS", "ensemble uncertainty is not calibrated")
     require(payload.get("candidate_priority_only") is True, "ensemble is not restricted to candidate priority")
@@ -370,7 +393,60 @@ def _validate_ensemble_receipt(path: Path | None, fingerprint: str, accepted_cou
         "ensemble model hashes are missing, invalid, or duplicated",
     )
     require(0 < _integer(payload.get("training_geometry_count")) <= accepted_count, "training geometry count is invalid")
+    require(_integer(payload.get("calibration_geometry_count")) > 0, "calibration geometry count is invalid")
     require(_integer(payload.get("validation_geometry_count")) > 0, "validation geometry count is invalid")
+    require(
+        _integer(payload.get("source_accepted_count")) == accepted_count,
+        "ensemble source accepted count does not match the preceding audit",
+    )
+    require(
+        _integer(payload.get("training_geometry_count"))
+        + _integer(payload.get("calibration_geometry_count"))
+        + _integer(payload.get("validation_geometry_count"))
+        == accepted_count,
+        "ensemble split counts do not close to the preceding accepted count",
+    )
+    split_identity = payload.get("split_identity_sha256") if isinstance(payload.get("split_identity_sha256"), dict) else {}
+    require(
+        tuple(split_identity) == ("train", "calibration", "validation")
+        and len(set(split_identity.values())) == 3
+        and all(_is_sha256(str(value)) for value in split_identity.values()),
+        "ensemble split identity hashes are missing, invalid, or duplicated",
+    )
+    validation = payload.get("validation") if isinstance(payload.get("validation"), dict) else {}
+    validation_gates = validation.get("gates") if isinstance(validation.get("gates"), dict) else {}
+    require(
+        validation.get("overall_status") == "PASS"
+        and bool(validation_gates)
+        and all(value is True for value in validation_gates.values()),
+        "ensemble sealed-validation gates are incomplete or failed",
+    )
+    calibration = payload.get("uncertainty_calibration") if isinstance(payload.get("uncertainty_calibration"), dict) else {}
+    calibration_scales = calibration.get("feature_scales") if isinstance(calibration.get("feature_scales"), dict) else {}
+    require(
+        tuple(calibration_scales) == ENSEMBLE_FEATURES
+        and all(
+            (number := _finite(calibration_scales.get(feature))) is not None and number >= 1.0
+            for feature in ENSEMBLE_FEATURES
+        ),
+        "ensemble uncertainty calibration scales are missing or invalid",
+    )
+    source_bindings = (
+        ("source_checkpoint_receipt", "checkpoint_receipt_path", "checkpoint_receipt_sha256"),
+        ("source_accepted_geometries", "accepted_geometries_path", "accepted_geometries_sha256"),
+        ("source_long_features", "long_features_path", "long_features_sha256"),
+        ("source_geometry_bounds", "geometry_bounds_path", "geometry_bounds_sha256"),
+    )
+    for payload_key, path_key, sha_key in source_bindings:
+        evidence = payload.get(payload_key) if isinstance(payload.get(payload_key), dict) else {}
+        expected_path = Path(str(preceding_audit.get(path_key) or "")).expanduser().resolve()
+        require(
+            str(evidence.get("path") or "") == str(expected_path)
+            and str(evidence.get("sha256") or "").lower()
+            == str(preceding_audit.get(sha_key) or "").lower()
+            and _evidence_matches(expected_path, evidence),
+            f"ensemble {payload_key} does not bind to the preceding audit",
+        )
     training = payload.get("training_table") if isinstance(payload.get("training_table"), dict) else {}
     training_path = Path(str(training.get("path") or "")).expanduser().resolve()
     require(_evidence_matches(training_path, training), "training table file/hash evidence mismatch")
@@ -380,6 +456,11 @@ def _validate_ensemble_receipt(path: Path | None, fingerprint: str, accepted_cou
         require(_evidence_matches(model_path, evidence), f"member {index} model file/hash evidence mismatch")
         if isinstance(member, dict):
             require(str(member.get("model_sha256") or "").lower() == evidence.get("sha256"), f"member {index} model SHA mismatch")
+            require(
+                _integer(member.get("training_geometry_count"))
+                == _integer(payload.get("training_geometry_count")),
+                f"member {index} training geometry count mismatch",
+            )
     return {
         "status": "PASS" if not errors else "FAIL",
         "decision": "USE_ENSEMBLE" if not errors else "FALLBACK_MAXIMIN",
