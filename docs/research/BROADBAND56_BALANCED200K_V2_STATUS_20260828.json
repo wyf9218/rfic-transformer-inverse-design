@@ -1,9 +1,10 @@
 {
   "generated_date": "2026-08-28",
+  "last_updated_date": "2026-08-29",
   "campaign_id": "broadband56_real_emx_balanced200k_tsmc65_v2",
   "branch": "codex/broadband56-balanced200k-v2",
   "base_commit": "85a0b96be7d2227a44d00d046f972f2a9bfbeaa0",
-  "overall_status": "LOCAL_CONTRACT_AUDIT_ADAPTIVE_TERMINAL_DELIVERY_FIGURE_AND_SUPERVISOR_STATE_CONTROL_PLANE_READY_REMOTE_GATES_PENDING",
+  "overall_status": "LOCAL_CONTRACT_AUDIT_ADAPTIVE_RAW_PRODUCTS_TERMINAL_DELIVERY_FIGURE_AND_SUPERVISOR_STATE_CONTROL_PLANE_READY_REMOTE_GATES_PENDING",
   "current_accepted": 0,
   "current_feature_rows": 0,
   "current_phase": "PREPARATION",
@@ -90,8 +91,18 @@
     {
       "scope": "authoritative-supervisor state evaluator",
       "result": "PASS in nine synthetic local tests and 58-test combined V2 regression; derives only receipt-backed PREPARED_WAITING_FOR_RESOURCE, READY, ACTIVE, RESUME, or COMPLETE states; enforces ordered golden/32/1000 gates, measured resource estimate, exact frozen audit prefix, nonempty PASS checks, strict finite numeric evidence, one no-clobber run root, local-host PID evidence, and no-clobber snapshots; non-prefix audits, duplicate supervisors, and cross-host unverifiable ownership fail closed; this is not a private runner and real execution remains PLANNED because accepted=0"
+    },
+    {
+      "scope": "fresh-real-EMX raw-product finalizer",
+      "result": "PASS in 13 synthetic four-port Touchstone tests and 71-test combined V2 regression; consumes a terminal attempt ledger, enforces exact status chains and stable canonical identity, verifies frozen production-config and candidate/GDS/Calibre/EMX-log/S4P hashes, reparses every accepted exact-grid S4P, and numerically rebinds all full S/Z matrices plus Lp/Ls/Qp/Qs/Qmin/M/signed-K/abs-K/ratio/reactance rows before no-clobber output; tampered values or physical files, nonterminal validity audits, proxy labeling, config drift, duplicate accepted geometry, and partial evidence fail closed; this does not run the private backend and physical counts remain zero"
     }
   ],
+  "preserved_raw_product_finalizer_development_failure": {
+    "result": "1 failed, 68 passed",
+    "cause": "after accepted-S4P parsing was deliberately deferred to the one-pass feature-binding stage, the negative test still expected the earlier fresh_real_emx error wording even though production correctly rejected the proxy-marked row",
+    "resolution": "updated only the test regex to match the current explicit rejection message; no gate, physical equation, data, or remote state changed",
+    "terminal_retest": "71 passed in 7.21s; public suite 1487 passed, 54 skipped, 1 deselected, 1 warning in 114.33s"
+  },
   "preserved_campaign_history_development_failure": {
     "result": "1 failed, 2 passed",
     "cause": "two correct negative facts in the new receipt were represented as false-valued checks and were therefore rejected by the all-checks-must-be-true gate",
@@ -190,6 +201,9 @@
     "latest_supervisor_state_focused_retest": "9 passed in 0.59s",
     "latest_supervisor_state_combined_retest": "58 passed in 6.88s",
     "latest_supervisor_state_public_retest": "1474 passed, 54 skipped, 1 deselected, 1 warning in 106.90s",
+    "latest_raw_product_finalizer_focused_retest": "13 passed in 1.91s",
+    "latest_raw_product_finalizer_combined_retest": "71 passed in 7.21s",
+    "latest_raw_product_finalizer_public_retest": "1487 passed, 54 skipped, 1 deselected, 1 warning in 114.33s",
     "full_retest_status": "PASS",
     "compileall": "PASS"
   },

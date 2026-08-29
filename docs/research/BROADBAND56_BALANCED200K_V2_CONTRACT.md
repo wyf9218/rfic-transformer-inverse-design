@@ -92,6 +92,17 @@ only the four frequency-grid fields.
   accepted-ledger disjointness, and candidate analytical/topology gates before
   writing 112 traceable prediction/uncertainty columns. The rows remain
   unevaluated candidate-priority metadata.
+- `scripts/finalize_broadband56_balanced200k_raw_products.py`:
+  no-clobber boundary between the private production runner and the five
+  authoritative raw products. It requires one terminal-stage row per attempt,
+  stable canonical geometry identities, a frozen production-config hash,
+  conditional candidate/GDS/Calibre/EMX/S4P path-plus-SHA evidence, exact gate
+  sequencing, and fresh-real-EMX marking. For every accepted geometry it parses
+  the exact four-port 56-point S4P and numerically rebinds every full S matrix,
+  full Z matrix, and derived L/Q/M/K/reactance value in the 56-row feature block
+  before atomically writing the five required CSVs and a SHA-closed receipt.
+  Proxy values, mixed fingerprints, altered evidence, duplicate accepted
+  geometry, and partial feature blocks leave no official output directory.
 - `scripts/audit_broadband56_balanced200k_checkpoint.py`:
   streaming accepted/S4P/56-point/S-Z/feature/fingerprint audit plus required
   checkpoint receipt, coverage table, failure funnel, and SHA-256 index. It
@@ -188,9 +199,19 @@ Full public regression suite (verified on 2026-08-28):
 python tools/run_public_tests.py
 ```
 
-Latest verified result after authoritative-supervisor-state integration:
-`1474 passed, 54 skipped, 1 deselected, 1 warning`.  This is a software
+Latest verified result after raw-product-finalizer integration:
+`1487 passed, 54 skipped, 1 deselected, 1 warning`.  This is a software
 regression result only; it is not Calibre, EMX, or physical campaign evidence.
+
+Focused raw-product finalizer tests:
+
+```bash
+python -m pytest tests/test_finalize_broadband56_balanced200k_raw_products.py -q
+```
+
+Latest focused result: `13 passed`. The fixtures are synthetic four-port
+Touchstone files; this proves the fail-closed software behavior, not MARS,
+Calibre, or EMX availability.
 
 Derive one safe next-action snapshot after private evidence has been located:
 
@@ -230,6 +251,28 @@ python scripts/build_broadband56_phase_a_queue.py \
 The private runner invocation remains `REVERIFY`; no public command may be
 described as a successful Calibre/EMX production path until a fresh terminal
 receipt is available.
+
+After the private runner has produced a terminal attempt ledger and an ordered
+56-row feature block for every accepted geometry, materialize one no-clobber
+raw-product snapshot with:
+
+```bash
+python scripts/finalize_broadband56_balanced200k_raw_products.py \
+  --contract /private/no-clobber/preparation/campaign_contract_frozen.json \
+  --production-config /private/approved/broadband56_v2.yaml \
+  --attempt-ledger /private/no-clobber/execution/attempt_ledger.csv \
+  --long-features /private/no-clobber/execution/long_features_from_fresh_emx.csv \
+  --expected-accepted 1000 \
+  --out-dir /private/no-clobber/raw_products_001000
+```
+
+The attempt ledger must use one of the explicit terminal stages
+`ANALYTICAL_FAILURE`, `TOPOLOGY_FAILURE`, `CADENCE_FAILURE`,
+`CALIBRE_FAILURE`, `EMX_FAILURE`, `INCOMPLETE_FREQUENCY_FAILURE`,
+`S4P_PARSING_FAILURE`, `FEATURE_EXTRACTION_FAILURE`, or `ACCEPTED`, with the
+corresponding PASS/FAIL/NOT_RUN status chain. Retries remain separate attempts;
+only one canonical geometry can become accepted. The finalizer does not invoke
+any simulator and does not substitute for the subsequent checkpoint audit.
 
 After both fresh pilot audits pass, the measured resource estimate is produced
 with:
