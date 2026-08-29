@@ -51,3 +51,19 @@ An unambiguous approval response is:
 
 Supplying the original V1 contract file and its approved SHA-256 remains the
 preferred alternative and supersedes this reconstruction path before use.
+
+After, and only after, the explicit approval above is received, record it into
+a new no-clobber directory with:
+
+```bash
+python scripts/record_broadband56_reconstructed_baseline_approval.py \
+  --candidate-contract docs/research/BROADBAND56_RECONSTRUCTED_BASELINE_V1_CANDIDATE_20260829.json \
+  --candidate-sha256 1abb85dd7e6aad709eb404dbcc174a8a66e325baf76f26c0eeb64a6498ea7a12 \
+  --approved-by '<explicit approver identity>' \
+  --approved-utc '<timezone-aware approval timestamp>' \
+  --approval-reference '<reference to the explicit approval instruction>' \
+  --out-dir '<new no-clobber approval receipt directory>'
+```
+
+The recorder has no production or remote execution path. A PASS output still
+authorizes only the subsequent preparation preflight.

@@ -58,6 +58,13 @@ simulator work must remain forbidden.
   no-clobber V1-hash/config preflight and V2 contract freeze. A reconstructed
   baseline additionally requires a matching explicit user-or-leader approval
   receipt via `--previous-contract-approval-receipt`. It runs no solver.
+- `scripts/record_broadband56_reconstructed_baseline_approval.py`:
+  no-clobber audit recorder for an approval that has already been explicitly
+  given by the user or project leader. It verifies the exact candidate bytes,
+  56-point grid, human identity, timezone-aware approval time, and instruction
+  reference before writing a preparation-only receipt plus SHA index. A failed
+  check writes a FAIL receipt. It cannot originate approval or run preparation,
+  MARS, Cadence, Calibre, EMX, a queue, or a supervisor.
 - `scripts/build_broadband56_phase_a_queue.py`:
   exact 10-D label-free Phase-A queue generation with shared line width and
   canonical duplicate rejection. The builder is fail-closed to `PHASE_A`,
@@ -177,7 +184,8 @@ before a golden geometry is launched.
 
 1. Verify the previous broadband56 contract and production-config SHA-256. A
    reconstructed replacement must also have an independently SHA-bound,
-   preparation-only approval receipt.
+   preparation-only approval receipt recorded only after the explicit human
+   approval exists.
 2. Run the preparation preflight into a new no-clobber directory.
 3. Run the focused and public test suites.
 4. Run one exact-contract golden geometry through private Cadence, Calibre, and EMX.
@@ -201,14 +209,20 @@ Focused contract tests:
 python -m pytest tests/test_broadband56_balanced200k_contract.py -q
 ```
 
+Focused reconstructed-approval recorder tests:
+
+```bash
+python -m pytest tests/test_record_broadband56_reconstructed_baseline_approval.py -q
+```
+
 Full public regression suite (verified on 2026-08-29):
 
 ```bash
 python tools/run_public_tests.py
 ```
 
-Latest verified result after reconstructed-baseline approval-gate integration:
-`1488 passed, 54 skipped, 1 deselected, 1 warning`.  This is a software
+Latest verified result after reconstructed-baseline approval-recorder integration:
+`1491 passed, 54 skipped, 1 deselected, 1 warning`.  This is a software
 regression result only; it is not Calibre, EMX, or physical campaign evidence.
 
 Focused raw-product finalizer tests:

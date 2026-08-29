@@ -17,6 +17,10 @@
   },
   "verified_local_results": [
     {
+      "scope": "no-clobber reconstructed-baseline approval recorder",
+      "result": "PASS in local software tests; records only a pre-existing explicit approval, verifies exact candidate bytes/grid plus non-placeholder identity/time/reference, writes PASS or FAIL receipt and SHA index, cross-validates PASS output against the preparation gate, rejects wrong SHA and duplicate output, and has no preparation or remote execution path"
+    },
+    {
       "scope": "reconstructed non-historical V1 approval hard gate",
       "result": "PASS in local software tests; a reconstructed baseline now requires a separate exact-SHA approval receipt with explicit user-or-leader source/reference, non-placeholder identity, timezone-aware timestamp, matching campaign and contract SHA, preparation-only authorization, and explicit automatic/golden/simulator prohibitions; missing or mismatched receipts fail closed and run no simulator"
     },
@@ -240,6 +244,9 @@
     "latest_reconstructed_baseline_approval_focused_retest": "17 passed in 4.22s",
     "latest_reconstructed_baseline_approval_combined_retest": "72 passed in 6.33s",
     "latest_reconstructed_baseline_approval_public_retest": "1488 passed, 54 skipped, 1 deselected, 1 warning in 100.34s",
+    "latest_reconstructed_baseline_approval_recorder_focused_retest": "3 passed in 1.88s",
+    "latest_reconstructed_baseline_approval_recorder_combined_retest": "75 passed in 6.49s",
+    "latest_reconstructed_baseline_approval_recorder_public_retest": "1491 passed, 54 skipped, 1 deselected, 1 warning in 99.96s",
     "full_retest_status": "PASS",
     "compileall": "PASS"
   },
@@ -256,6 +263,9 @@
     "fail_closed_receipt_template_sha256": "9ba6909801bb64742330d6e7acc93ba3e8d17f947176eff5906ed14b323d8d24",
     "preparation_gate_implementation_sha256": "ca1bce96896d464279abb76d6385289f3270ddd4ada8746d4946de6de226fc6e",
     "preparation_gate_test_sha256": "75a23d9bac8a5cda01fd65471c7d272eeb1c26d301289c659623d0f07d15cea9",
+    "approval_recorder_path": "scripts/record_broadband56_reconstructed_baseline_approval.py",
+    "approval_recorder_sha256": "9061ebff3f8d780367d8eb427ba8958e5a1fdb4dd520a9506f6d14b69f1a58a3",
+    "approval_recorder_test_sha256": "439b5020cbb9f2e511986f17ece3dc5011c98457099df5c881c64b8dc0670a3c",
     "git_and_local_search_result": "NOT_FOUND; no approved historical non-V2 broadband56 V1 contract exists in the current worktree, any Git ref or object history, or the bounded local attachment search",
     "execution_effect": "NONE; no MARS write, private configuration creation, preparation, Cadence, Calibre, EMX, queue, runner, controller, or supervisor launch is authorized by this candidate"
   },
