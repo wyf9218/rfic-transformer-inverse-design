@@ -12,6 +12,9 @@ from pathlib import Path
 import numpy as np
 
 from rfic_transformer_inverse_design.campaigns.broadband56_balanced200k import (
+    ADAPTIVE_INTERMEDIATE_AUDIT_COUNTS,
+    ADAPTIVE_ROUND_END_COUNTS,
+    ADAPTIVE_ROUND_START_COUNTS,
     ANCHOR_FREQUENCIES_GHZ,
     EXPECTED_FEATURE_ROWS,
     FREQUENCY_GRID_HZ,
@@ -20,6 +23,7 @@ from rfic_transformer_inverse_design.campaigns.broadband56_balanced200k import (
     PRIMARY_FREQUENCY_CONDITIONED_CELLS,
     SECONDARY_FEATURES,
     TARGET_ACCEPTED_GEOMETRIES,
+    adaptive_round_spec,
     build_phase_plan,
     canonical_geometry_sha256,
     contract_fingerprint,
@@ -86,6 +90,140 @@ def _load_resource_estimator_module():
     sys.modules[spec.name] = module
     spec.loader.exec_module(module)
     return module
+
+
+def _load_adaptive_round_module():
+    path = ROOT / "scripts" / "stage_broadband56_adaptive_round.py"
+    spec = importlib.util.spec_from_file_location("stage_broadband56_adaptive_round", path)
+    assert spec is not None and spec.loader is not None
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = module
+    spec.loader.exec_module(module)
+    return module
+
+
+def _write_adaptive_audit_fixture(root: Path, *, accepted_count: int, fingerprint: str) -> Path:
+    audit_dir = root / f"audit_{accepted_count}"
+    audit_dir.mkdir()
+    cells_path = audit_dir / "physical_coverage_cells_by_anchor.csv"
+    with cells_path.open("w", newline="", encoding="utf-8") as handle:
+        fields = [
+            "anchor_ghz",
+            "local_cell_index",
+            "conditioned_cell_index",
+            "actual_count",
+            "target_count",
+            "deficit",
+            "cell_status",
+        ]
+        writer = csv.DictWriter(handle, fieldnames=fields)
+        writer.writeheader()
+        target = accepted_count / 1_296.0
+        for anchor_index, anchor in enumerate(ANCHOR_FREQUENCIES_GHZ):
+            for local in range(1_296):
+                writer.writerow(
+                    {
+                        "anchor_ghz": anchor,
+                        "local_cell_index": local,
+                        "conditioned_cell_index": anchor_index * 1_296 + local,
+                        "actual_count": 0,
+                        "target_count": target,
+                        "deficit": target,
+                        "cell_status": "unobserved_under_current_geometry_contract",
+                    }
+                )
+    coverage_path = audit_dir / "COVERAGE_SUMMARY.json"
+    coverage_path.write_text(json.dumps({"coverage_status": "COVERAGE_PARTIAL"}), encoding="utf-8")
+    mode = "checkpoint" if accepted_count in (50_000, 75_000, 100_000, 125_000, 150_000, 175_000) else "round"
+    state = "CHECKPOINT_COMPLETE" if mode == "checkpoint" else f"ROUND_{accepted_count}_COMPLETE"
+    status_path = audit_dir / "CHECKPOINT_STATUS.json"
+    status_path.write_text(
+        json.dumps(
+            {
+                "campaign_id": "broadband56_real_emx_balanced200k_tsmc65_v2",
+                "contract_fingerprint_sha256": fingerprint,
+                "checkpoint_status": state,
+                "audit_mode": mode,
+                "coverage_status": "COVERAGE_PARTIAL",
+                "accepted_geometries": accepted_count,
+                "s4p_artifacts": accepted_count,
+                "geometry_frequency_rows": accepted_count * 56,
+            }
+        ),
+        encoding="utf-8",
+    )
+    receipt_path = audit_dir / "CHECKPOINT_RECEIPT.json"
+    receipt_path.write_text(
+        json.dumps(
+            {
+                "overall_status": "PASS",
+                "decision": "USE_CHECKPOINT",
+                "campaign_id": "broadband56_real_emx_balanced200k_tsmc65_v2",
+                "contract_fingerprint_sha256": fingerprint,
+                "expected_accepted": accepted_count,
+                "audit_mode": mode,
+                "checks": [{"name": "fixture", "pass": True}],
+                "outputs": {
+                    "checkpoint_status": {"path": str(status_path.resolve()), "sha256": _sha256(status_path)},
+                    "coverage_cells": {"path": str(cells_path.resolve()), "sha256": _sha256(cells_path)},
+                    "coverage_summary": {"path": str(coverage_path.resolve()), "sha256": _sha256(coverage_path)},
+                },
+            }
+        ),
+        encoding="utf-8",
+    )
+    return audit_dir
+
+
+def _write_ensemble_fixture(root: Path, *, fingerprint: str, duplicate_seed: bool = False) -> Path:
+    training = root / "ensemble_training_rows.csv"
+    training.write_text("geometry_id\ng0\n", encoding="utf-8")
+    members = []
+    for index in range(5):
+        model = root / f"ensemble_member_{index}.bin"
+        model.write_bytes(f"member-{index}".encode("ascii"))
+        members.append(
+            {
+                "seed": 100 if duplicate_seed else 100 + index,
+                "model_sha256": _sha256(model),
+                "model_file": {"path": str(model.resolve()), "sha256": _sha256(model)},
+            }
+        )
+    receipt = root / ("ensemble_duplicate_seed.json" if duplicate_seed else "ensemble_pass.json")
+    receipt.write_text(
+        json.dumps(
+            {
+                "schema": "broadband56_acquisition_ensemble_receipt_v1",
+                "overall_status": "PASS",
+                "campaign_id": "broadband56_real_emx_balanced200k_tsmc65_v2",
+                "campaign_contract_fingerprint": fingerprint,
+                "training_label_source": "FRESH_REAL_EMX_ONLY",
+                "split_unit": "canonical_geometry_sha256",
+                "validation_sealed": True,
+                "validation_status": "PASS",
+                "uncertainty_calibration_status": "PASS",
+                "candidate_priority_only": True,
+                "predictions_are_final_labels": False,
+                "anchor_frequencies_ghz": list(ANCHOR_FREQUENCIES_GHZ),
+                "predicted_features": [
+                    "xp_ohm",
+                    "xs_ohm",
+                    "qp",
+                    "qs",
+                    "qmin",
+                    "k_abs",
+                    "feature_validity_probability",
+                ],
+                "member_count": 5,
+                "members": members,
+                "training_geometry_count": 45_000,
+                "validation_geometry_count": 5_000,
+                "training_table": {"path": str(training.resolve()), "sha256": _sha256(training)},
+            }
+        ),
+        encoding="utf-8",
+    )
+    return receipt
 
 
 def _write_resource_pilot_fixture(
@@ -240,6 +378,32 @@ def test_frozen_contract_has_exact_counts_grid_bins_and_phase_mixtures() -> None
     assert plan["phase_c"]["round_count"] == 10
     assert plan["phase_c"]["mixture_fractions"]["maximin_geometry_exploration"] == 0.15
 
+    assert len(ADAPTIVE_ROUND_START_COUNTS) == 30
+    assert ADAPTIVE_ROUND_START_COUNTS[0] == 50_000
+    assert ADAPTIVE_ROUND_START_COUNTS[-1] == 195_000
+    assert ADAPTIVE_ROUND_END_COUNTS[-1] == 200_000
+    assert not set(ADAPTIVE_INTERMEDIATE_AUDIT_COUNTS).intersection(plan["checkpoints"])
+
+    first_b = adaptive_round_spec(50_000)
+    assert first_b.phase == "PHASE_B"
+    assert first_b.phase_round_index == 1
+    assert first_b.accepted_target == 55_000
+    assert dict(first_b.source_quotas) == {
+        "underfilled_response_repair": 3_000,
+        "ensemble_uncertainty": 1_000,
+        "maximin_geometry_exploration": 1_000,
+    }
+    last_c = adaptive_round_spec(195_000)
+    assert last_c.phase == "PHASE_C"
+    assert last_c.phase_round_index == 10
+    assert last_c.accepted_target == 200_000
+    assert dict(last_c.source_quotas) == {
+        "rare_or_underfilled_response_repair": 3_250,
+        "ensemble_uncertainty": 1_000,
+        "maximin_geometry_exploration": 750,
+    }
+    assert dict(last_c.fallback_source_quotas) == {"maximin_geometry_exploration": 5_000}
+
 
 def test_geometry_identity_is_ordered_quantized_and_primary_bins_include_upper_edges() -> None:
     geometry = {name: float(index + 1) for index, name in enumerate(GEOMETRY_FIELDS)}
@@ -336,7 +500,7 @@ def test_geometry_coverage_uses_frozen_bounds_and_geometry_unique_counts() -> No
     assert len(audit.pairwise_rows()) == 45
 
 
-def test_golden_pilot_and_checkpoint_targets_are_disjoint_and_frozen() -> None:
+def test_golden_pilot_round_and_checkpoint_targets_are_disjoint_and_frozen() -> None:
     module = _load_audit_module()
 
     assert module._audit_target_allowed("golden", 1)[0]
@@ -344,10 +508,15 @@ def test_golden_pilot_and_checkpoint_targets_are_disjoint_and_frozen() -> None:
     assert module._audit_target_allowed("pilot", 32)[0]
     assert module._audit_target_allowed("pilot", 1_000)[0]
     assert not module._audit_target_allowed("pilot", 100)[0]
+    assert module._audit_target_allowed("round", 55_000)[0]
+    assert module._audit_target_allowed("round", 195_000)[0]
+    assert not module._audit_target_allowed("round", 50_000)[0]
+    assert not module._audit_target_allowed("round", 75_000)[0]
     assert module._audit_target_allowed("checkpoint", 100)[0]
     assert module._audit_target_allowed("checkpoint", 200_000)[0]
     assert module._successful_audit_state("golden", 1, False) == "GOLDEN_COMPLETE"
     assert module._successful_audit_state("pilot", 32, False) == "PILOT_32_COMPLETE"
+    assert module._successful_audit_state("round", 55_000, False) == "ROUND_55000_COMPLETE"
     assert module._successful_audit_state("checkpoint", 200_000, True) == "COMPLETE_200K"
 
 
@@ -693,6 +862,77 @@ def test_resource_estimator_rejects_resumed_pilot_timing(tmp_path: Path) -> None
     assert estimate["estimate"] is None
     failed = {item["name"] for item in estimate["checks"] if not item["pass"]}
     assert "pilot_1000_run_is_fresh_real_emx" in failed
+
+
+def test_adaptive_round_stager_uses_maximin_fallback_without_ensemble(tmp_path: Path) -> None:
+    module = _load_adaptive_round_module()
+    contract = json.loads(CONTRACT.read_text(encoding="utf-8"))
+    fingerprint = contract_fingerprint(contract)
+    audit_dir = _write_adaptive_audit_fixture(tmp_path, accepted_count=50_000, fingerprint=fingerprint)
+    out_dir = tmp_path / "adaptive_fallback"
+
+    status = module.main(
+        [
+            "--contract", str(CONTRACT),
+            "--audit-dir", str(audit_dir),
+            "--out-dir", str(out_dir),
+        ]
+    )
+
+    staged = json.loads((out_dir / "ADAPTIVE_ROUND_CONTRACT.json").read_text(encoding="utf-8"))
+    assert status == 0
+    assert staged["overall_status"] == "PASS"
+    assert staged["decision"] == "USE_MAXIMIN_FALLBACK_FOR_ROUND"
+    assert staged["acquisition_mode"] == "FALLBACK_MAXIMIN"
+    assert staged["round"]["accepted_start"] == 50_000
+    assert staged["round"]["accepted_target"] == 55_000
+    assert staged["active_source_quotas"] == {"maximin_geometry_exploration": 5_000}
+    assert staged["ensemble_gate"]["status"] == "NOT_PROVIDED"
+
+
+def test_adaptive_round_stager_enforces_ensemble_gate_and_phase_b_mixture(tmp_path: Path) -> None:
+    module = _load_adaptive_round_module()
+    contract = json.loads(CONTRACT.read_text(encoding="utf-8"))
+    fingerprint = contract_fingerprint(contract)
+    audit_dir = _write_adaptive_audit_fixture(tmp_path, accepted_count=50_000, fingerprint=fingerprint)
+    ensemble = _write_ensemble_fixture(tmp_path, fingerprint=fingerprint)
+    out_dir = tmp_path / "adaptive_ensemble"
+
+    status = module.main(
+        [
+            "--contract", str(CONTRACT),
+            "--audit-dir", str(audit_dir),
+            "--ensemble-receipt", str(ensemble),
+            "--out-dir", str(out_dir),
+        ]
+    )
+
+    staged = json.loads((out_dir / "ADAPTIVE_ROUND_CONTRACT.json").read_text(encoding="utf-8"))
+    assert status == 0
+    assert staged["decision"] == "USE_ENSEMBLE_ACQUISITION_FOR_ROUND"
+    assert staged["acquisition_mode"] == "ENSEMBLE_ACQUISITION"
+    assert staged["active_source_quotas"] == {
+        "underfilled_response_repair": 3_000,
+        "ensemble_uncertainty": 1_000,
+        "maximin_geometry_exploration": 1_000,
+    }
+    assert staged["ensemble_gate"]["status"] == "PASS"
+
+    invalid_ensemble = _write_ensemble_fixture(tmp_path, fingerprint=fingerprint, duplicate_seed=True)
+    invalid_out = tmp_path / "adaptive_invalid_ensemble"
+    invalid_status = module.main(
+        [
+            "--contract", str(CONTRACT),
+            "--audit-dir", str(audit_dir),
+            "--ensemble-receipt", str(invalid_ensemble),
+            "--out-dir", str(invalid_out),
+        ]
+    )
+    invalid = json.loads((invalid_out / "ADAPTIVE_ROUND_CONTRACT.json").read_text(encoding="utf-8"))
+    assert invalid_status == 0
+    assert invalid["decision"] == "USE_MAXIMIN_FALLBACK_FOR_ROUND"
+    assert invalid["ensemble_gate"]["status"] == "FAIL"
+    assert "ensemble seeds are missing or duplicated" in invalid["ensemble_gate"]["errors"]
 
 
 def test_checkpoint_audit_accepts_exact_100_geometry_real_emx_shaped_fixture(tmp_path: Path) -> None:

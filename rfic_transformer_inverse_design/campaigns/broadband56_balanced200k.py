@@ -30,6 +30,25 @@ PRIMARY_FREQUENCY_CONDITIONED_CELLS = len(ANCHOR_FREQUENCIES_GHZ) * PRIMARY_CELL
 SECONDARY_BINS_PER_FEATURE = 6
 GEOMETRY_COVERAGE_BINS_PER_DIMENSION = 10
 GEOMETRY_BOUNDARY_FRACTION_PER_SIDE = 0.10
+REQUIRED_CHECKPOINT_COUNTS = (
+    100,
+    1_000,
+    5_000,
+    20_000,
+    50_000,
+    75_000,
+    100_000,
+    125_000,
+    150_000,
+    175_000,
+    200_000,
+)
+ADAPTIVE_BATCH_SIZE = 5_000
+ADAPTIVE_ROUND_START_COUNTS = tuple(range(50_000, 200_000, ADAPTIVE_BATCH_SIZE))
+ADAPTIVE_ROUND_END_COUNTS = tuple(value + ADAPTIVE_BATCH_SIZE for value in ADAPTIVE_ROUND_START_COUNTS)
+ADAPTIVE_INTERMEDIATE_AUDIT_COUNTS = tuple(
+    value for value in ADAPTIVE_ROUND_END_COUNTS if value not in REQUIRED_CHECKPOINT_COUNTS
+)
 
 SECONDARY_FEATURES = (
     "xp_ohm",
@@ -116,6 +135,37 @@ class PrimaryCell:
             * PRIMARY_BINS_PER_DIMENSION
             + self.k_abs_bin
         )
+
+
+@dataclass(frozen=True)
+class AdaptiveRoundSpec:
+    """Frozen accepted-count and acquisition-quota contract for one round."""
+
+    phase: str
+    phase_round_index: int
+    global_round_index: int
+    accepted_start: int
+    accepted_target: int
+    batch_size: int
+    source_quotas: tuple[tuple[str, int], ...]
+    fallback_source_quotas: tuple[tuple[str, int], ...]
+
+    @property
+    def round_id(self) -> str:
+        return f"{self.phase.lower()}_round_{self.phase_round_index:02d}_{self.accepted_start:06d}_{self.accepted_target:06d}"
+
+    def as_dict(self) -> dict[str, Any]:
+        return {
+            "round_id": self.round_id,
+            "phase": self.phase,
+            "phase_round_index": self.phase_round_index,
+            "global_round_index": self.global_round_index,
+            "accepted_start": self.accepted_start,
+            "accepted_target": self.accepted_target,
+            "batch_size": self.batch_size,
+            "source_quotas": dict(self.source_quotas),
+            "fallback_source_quotas": dict(self.fallback_source_quotas),
+        }
 
     @property
     def conditioned_index(self) -> int:
@@ -290,12 +340,51 @@ def phase_for_accepted_sequence(accepted_sequence: int) -> str:
     return "PHASE_C"
 
 
+def adaptive_round_spec(accepted_start: int) -> AdaptiveRoundSpec:
+    """Return the exact Phase-B/C 5k round beginning at ``accepted_start``."""
+
+    start = int(accepted_start)
+    if start not in ADAPTIVE_ROUND_START_COUNTS:
+        raise ValueError(
+            "adaptive rounds must start at a frozen 5k boundary in [50000,195000]; "
+            f"got {start}"
+        )
+    if start < 150_000:
+        phase = "PHASE_B"
+        phase_round_index = (start - 50_000) // ADAPTIVE_BATCH_SIZE + 1
+        quotas = (
+            ("underfilled_response_repair", 3_000),
+            ("ensemble_uncertainty", 1_000),
+            ("maximin_geometry_exploration", 1_000),
+        )
+    else:
+        phase = "PHASE_C"
+        phase_round_index = (start - 150_000) // ADAPTIVE_BATCH_SIZE + 1
+        quotas = (
+            ("rare_or_underfilled_response_repair", 3_250),
+            ("ensemble_uncertainty", 1_000),
+            ("maximin_geometry_exploration", 750),
+        )
+    if sum(value for _, value in quotas) != ADAPTIVE_BATCH_SIZE:
+        raise AssertionError(f"adaptive acquisition quotas do not sum to {ADAPTIVE_BATCH_SIZE}: {quotas}")
+    return AdaptiveRoundSpec(
+        phase=phase,
+        phase_round_index=phase_round_index,
+        global_round_index=(start - 50_000) // ADAPTIVE_BATCH_SIZE + 1,
+        accepted_start=start,
+        accepted_target=start + ADAPTIVE_BATCH_SIZE,
+        batch_size=ADAPTIVE_BATCH_SIZE,
+        source_quotas=quotas,
+        fallback_source_quotas=(("maximin_geometry_exploration", ADAPTIVE_BATCH_SIZE),),
+    )
+
+
 def build_phase_plan() -> dict[str, Any]:
     """Return the deterministic accepted-count and acquisition-mixture plan."""
 
     return {
         "seed": 20260828,
-        "checkpoints": [100, 1_000, 5_000, 20_000, 50_000, 75_000, 100_000, 125_000, 150_000, 175_000, 200_000],
+        "checkpoints": list(REQUIRED_CHECKPOINT_COUNTS),
         "phase_a": {
             "accepted_start": 0,
             "accepted_target": 50_000,

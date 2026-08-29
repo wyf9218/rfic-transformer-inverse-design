@@ -93,9 +93,10 @@ before a golden geometry is launched.
 Do not launch a 50k batch merely because the public contract tests pass.
 
 The same fail-closed audit script has disjoint modes: `golden` accepts only
-one geometry, `pilot` accepts only 32 or 1,000, and `checkpoint` accepts only
+one geometry, `pilot` accepts only 32 or 1,000, `round` accepts only adaptive
+5k endpoints that are not formal checkpoints, and `checkpoint` accepts only
 the eleven frozen cumulative checkpoint counts. Only the 200,000 checkpoint
-may emit `COMPLETE_200K`; golden and pilot receipts cannot do so.
+may emit `COMPLETE_200K`; golden, pilot, and round receipts cannot do so.
 
 ## Verified Commands
 
@@ -147,3 +148,21 @@ The estimator rejects create-only, proxy-only, resumed-shard, incomplete,
 wrong-grid, wrong-port, fingerprint-mismatched, or failed checkpoint evidence.
 Its CLI and fail-closed behavior are covered by synthetic software tests; a
 real ETA remains `REVERIFY` until the contract-bound 32 and 1,000 pilots exist.
+
+After Phase A reaches an audited 50,000 and after every subsequent 5k batch,
+stage the next adaptive round without launching a solver:
+
+```bash
+python scripts/stage_broadband56_adaptive_round.py \
+  --contract /private/no-clobber/campaign_contract_frozen.json \
+  --audit-dir /private/no-clobber/latest_real_emx_audit \
+  --ensemble-receipt /private/no-clobber/acquisition_ensemble/ENSEMBLE_RECEIPT.json \
+  --out-dir /private/no-clobber/next_adaptive_round
+```
+
+The stager verifies the preceding real-EMX receipt and all 10,368 fixed cell
+rows. A valid five-or-more-member, geometry-split, sealed-validation,
+uncertainty-calibrated ensemble activates the exact Phase-B or Phase-C source
+quotas. A missing or invalid ensemble is recorded and activates the frozen
+5,000-sample maximin fallback instead. Neither mode creates labels or accepted
+samples; those remain dependent on fresh Cadence, Calibre, and EMX evidence.

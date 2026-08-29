@@ -25,12 +25,14 @@ if __package__ in {None, ""}:
 
 from rfic_transformer_inverse_design.campaigns.broadband56_balanced200k import (  # noqa: E402
     ACQUISITION_SOURCES_BY_PHASE,
+    ADAPTIVE_INTERMEDIATE_AUDIT_COUNTS,
     ANCHOR_FREQUENCIES_GHZ,
     CAMPAIGN_ID,
     FREQUENCY_GRID_HZ,
     GEOMETRY_FIELDS,
     PRIMARY_CELLS_PER_ANCHOR,
     PRIMARY_FREQUENCY_CONDITIONED_CELLS,
+    REQUIRED_CHECKPOINT_COUNTS,
     TARGET_ACCEPTED_GEOMETRIES,
     canonical_geometry_sha256,
     contract_fingerprint,
@@ -52,9 +54,10 @@ from rfic_transformer_inverse_design.campaigns.broadband56_geometry_coverage imp
 from rfic_transformer_inverse_design.sim.touchstone import load_touchstone  # noqa: E402
 
 
-CHECKPOINTS = (100, 1_000, 5_000, 20_000, 50_000, 75_000, 100_000, 125_000, 150_000, 175_000, 200_000)
+CHECKPOINTS = REQUIRED_CHECKPOINT_COUNTS
 PILOT_TARGETS = (32, 1_000)
-AUDIT_MODES = ("golden", "pilot", "checkpoint")
+ROUND_TARGETS = ADAPTIVE_INTERMEDIATE_AUDIT_COUNTS
+AUDIT_MODES = ("golden", "pilot", "round", "checkpoint")
 ACCEPTANCE_STATUS_FIELDS = (
     "analytical_status",
     "topology_status",
@@ -302,6 +305,7 @@ def _audit_target_allowed(mode: str, expected_accepted: int) -> tuple[bool, str]
     allowed_by_mode = {
         "golden": (1,),
         "pilot": PILOT_TARGETS,
+        "round": ROUND_TARGETS,
         "checkpoint": CHECKPOINTS,
     }
     allowed = allowed_by_mode.get(normalized, ())
@@ -316,6 +320,8 @@ def _successful_audit_state(mode: str, expected_accepted: int, execution_complet
         return "GOLDEN_COMPLETE"
     if normalized == "pilot":
         return f"PILOT_{int(expected_accepted)}_COMPLETE"
+    if normalized == "round":
+        return f"ROUND_{int(expected_accepted)}_COMPLETE"
     return "CHECKPOINT_COMPLETE"
 
 
