@@ -228,6 +228,162 @@ def test_geometry_coverage_uses_frozen_bounds_and_geometry_unique_counts() -> No
     assert len(audit.pairwise_rows()) == 45
 
 
+def test_golden_pilot_and_checkpoint_targets_are_disjoint_and_frozen() -> None:
+    module = _load_audit_module()
+
+    assert module._audit_target_allowed("golden", 1)[0]
+    assert not module._audit_target_allowed("golden", 32)[0]
+    assert module._audit_target_allowed("pilot", 32)[0]
+    assert module._audit_target_allowed("pilot", 1_000)[0]
+    assert not module._audit_target_allowed("pilot", 100)[0]
+    assert module._audit_target_allowed("checkpoint", 100)[0]
+    assert module._audit_target_allowed("checkpoint", 200_000)[0]
+    assert module._successful_audit_state("golden", 1, False) == "GOLDEN_COMPLETE"
+    assert module._successful_audit_state("pilot", 32, False) == "PILOT_32_COMPLETE"
+    assert module._successful_audit_state("checkpoint", 200_000, True) == "COMPLETE_200K"
+
+
+def test_synthetic_golden_audit_writes_golden_complete_without_claiming_physical_files(
+    tmp_path: Path,
+) -> None:
+    module = _load_audit_module()
+    contract = json.loads(CONTRACT.read_text(encoding="utf-8"))
+    fingerprint = module.contract_fingerprint(contract)
+    contract_path = tmp_path / "contract.json"
+    contract_path.write_text(json.dumps(contract), encoding="utf-8")
+    bounds_path = tmp_path / "bounds.json"
+    bounds_path.write_text(
+        json.dumps(
+            geometry_bounds_payload(
+                bounds=_test_geometry_bounds(),
+                contract_fingerprint_sha256=fingerprint,
+            )
+        ),
+        encoding="utf-8",
+    )
+    geometry = {
+        "primary_outer_width_um": 220.0,
+        "primary_outer_height_um": 221.0,
+        "secondary_outer_width_um": 210.0,
+        "secondary_outer_height_um": 211.0,
+        "line_width_um": 8.0,
+        "primary_terminal_y_span_um": 50.0,
+        "secondary_terminal_y_span_um": 51.0,
+        "offset_um": 0.0,
+        "primary_feed_extension_um": 150.0,
+        "secondary_feed_extension_um": 151.0,
+    }
+    geometry_hash = canonical_geometry_sha256(geometry)
+    accepted: dict[str, object] = {
+        "geometry_id": "golden_000001",
+        "geometry_sha256": geometry_hash,
+        "campaign_contract_fingerprint": fingerprint,
+        "accepted_sequence": 1,
+        "campaign_phase": "PHASE_A",
+        "acquisition_source": "base_space_filling",
+        "calibre_blocking_violations": 0,
+    }
+    accepted.update({field: "PASS" for field in module.ACCEPTANCE_STATUS_FIELDS})
+    accepted.update({f"geom__{name}": value for name, value in geometry.items()})
+    accepted_path = tmp_path / "accepted.csv"
+    _write_csv(accepted_path, [accepted])
+    artifact_path = tmp_path / "artifacts.csv"
+    _write_csv(
+        artifact_path,
+        [
+            {
+                "geometry_id": "golden_000001",
+                "geometry_sha256": geometry_hash,
+                "campaign_contract_fingerprint": fingerprint,
+                "s4p_path": str(tmp_path / "synthetic_not_created.s4p"),
+                "s4p_sha256": "0" * 64,
+                "frequency_points": 56,
+                "emx_status": "PASS",
+                "calibre_status": "PASS",
+                "calibre_blocking_violations": 0,
+            }
+        ],
+    )
+    features = []
+    for frequency_hz in FREQUENCY_GRID_HZ:
+        lp_nh = 0.5
+        ls_nh = 0.5
+        features.append(
+            {
+                "geometry_id": "golden_000001",
+                "geometry_sha256": geometry_hash,
+                "campaign_contract_fingerprint": fingerprint,
+                "frequency_hz": frequency_hz,
+                "lp_nh": lp_nh,
+                "ls_nh": ls_nh,
+                "qp": 12.0,
+                "qs": 13.0,
+                "qmin": 12.0,
+                "mutual_inductance_h": 0.1e-9,
+                "signed_k": 0.2,
+                "k_abs": 0.2,
+                "ls_over_lp": 1.0,
+                "xp_ohm": 2.0 * math.pi * frequency_hz * lp_nh * 1.0e-9,
+                "xs_ohm": 2.0 * math.pi * frequency_hz * ls_nh * 1.0e-9,
+                "broadband_descriptor_valid": "true",
+                "strict_lumped_valid": "true",
+                "srf_status": "CENSORED_ABOVE_60_GHZ",
+                "passivity_status": "PASS",
+                "reciprocity_status": "PASS",
+                "inside_broad_response_envelope": "true",
+                "inside_literature_practical_panel": "true",
+                "outside_envelope_reason": "",
+            }
+        )
+    features_path = tmp_path / "features.csv"
+    _write_csv(features_path, features)
+    funnel_path = tmp_path / "funnel.csv"
+    _write_csv(
+        funnel_path,
+        [
+            {"stage": stage, "count": 1 if stage in {"raw_geometry_candidates", "accepted_geometries"} else 0}
+            for stage in (
+                "raw_geometry_candidates",
+                "analytical_failures",
+                "topology_failures",
+                "cadence_failures",
+                "calibre_failures",
+                "emx_failures",
+                "incomplete_frequency_failures",
+                "s4p_parsing_failures",
+                "feature_extraction_failures",
+                "accepted_geometries",
+            )
+        ],
+    )
+    out_dir = tmp_path / "golden_audit"
+
+    status = module.main(
+        [
+            "--contract", str(contract_path),
+            "--geometry-bounds", str(bounds_path),
+            "--accepted-geometries", str(accepted_path),
+            "--long-features", str(features_path),
+            "--artifact-index", str(artifact_path),
+            "--failure-funnel", str(funnel_path),
+            "--audit-mode", "golden",
+            "--expected-accepted", "1",
+            "--allow-missing-matrix-columns",
+            "--skip-s4p-file-hash-check",
+            "--out-dir", str(out_dir),
+        ]
+    )
+
+    receipt = json.loads((out_dir / "CHECKPOINT_RECEIPT.json").read_text(encoding="utf-8"))
+    checkpoint_status = json.loads((out_dir / "CHECKPOINT_STATUS.json").read_text(encoding="utf-8"))
+    assert status == 0
+    assert receipt["overall_status"] == "PASS"
+    assert receipt["audit_mode"] == "golden"
+    assert checkpoint_status["checkpoint_status"] == "GOLDEN_COMPLETE"
+    assert checkpoint_status["accepted_geometries"] == 1
+    assert checkpoint_status["geometry_frequency_rows"] == 56
+
+
 def test_phase_a_queue_is_exact_10d_unique_and_label_free(tmp_path: Path) -> None:
     module = _load_queue_module()
     out_dir = tmp_path / "queue"
@@ -492,6 +648,7 @@ def test_checkpoint_audit_accepts_exact_100_geometry_real_emx_shaped_fixture(tmp
     coverage = json.loads((out_dir / "COVERAGE_SUMMARY.json").read_text(encoding="utf-8"))
     assert status == 0
     assert receipt["overall_status"] == "PASS"
+    assert receipt["audit_mode"] == "checkpoint"
     assert coverage["feature_row_count"] == 5_600
     assert coverage["coverage_status"] == "COVERAGE_PARTIAL"
     assert coverage["geometry_unique_anchor_coverage"]["observed_cells"] == 8

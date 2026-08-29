@@ -53,6 +53,8 @@ from rfic_transformer_inverse_design.sim.touchstone import load_touchstone  # no
 
 
 CHECKPOINTS = (100, 1_000, 5_000, 20_000, 50_000, 75_000, 100_000, 125_000, 150_000, 175_000, 200_000)
+PILOT_TARGETS = (32, 1_000)
+AUDIT_MODES = ("golden", "pilot", "checkpoint")
 ACCEPTANCE_STATUS_FIELDS = (
     "analytical_status",
     "topology_status",
@@ -104,7 +106,10 @@ def main(argv: list[str] | None = None) -> int:
     for error in validate_contract(contract):
         checks.append(_check(f"contract::{error}", False, error))
     fingerprint = str(contract.get("contract_fingerprint_sha256") or contract_fingerprint(contract))
-    checks.append(_check("expected_checkpoint_is_frozen", int(args.expected_accepted) in CHECKPOINTS, args.expected_accepted))
+    target_allowed, target_detail = _audit_target_allowed(
+        str(args.audit_mode), int(args.expected_accepted)
+    )
+    checks.append(_check("audit_mode_and_target_are_frozen", target_allowed, target_detail))
     geometry_bounds_payload = _read_json(geometry_bounds_path, checks, "geometry_bounds")
     for error in validate_geometry_bounds_payload(
         geometry_bounds_payload,
@@ -142,6 +147,7 @@ def main(argv: list[str] | None = None) -> int:
     audit_pass = bool(checks) and all(item["pass"] for item in checks)
     execution_complete = bool(
         audit_pass
+        and str(args.audit_mode) == "checkpoint"
         and int(args.expected_accepted) == TARGET_ACCEPTED_GEOMETRIES
         and coverage["feature_row_count"] == TARGET_ACCEPTED_GEOMETRIES * len(FREQUENCY_GRID_HZ)
         and artifacts["artifact_count"] == TARGET_ACCEPTED_GEOMETRIES
@@ -156,7 +162,9 @@ def main(argv: list[str] | None = None) -> int:
         if not audit_pass:
             coverage_status = "COVERAGE_AUDIT_FAIL"
 
-    checkpoint_state = "COMPLETE_200K" if execution_complete else "CHECKPOINT_COMPLETE"
+    checkpoint_state = _successful_audit_state(
+        str(args.audit_mode), int(args.expected_accepted), execution_complete
+    )
     if not audit_pass:
         checkpoint_state = "CHECKPOINT_AUDIT_FAIL"
 
@@ -219,6 +227,7 @@ def main(argv: list[str] | None = None) -> int:
         "campaign_id": CAMPAIGN_ID,
         "contract_fingerprint_sha256": fingerprint,
         "checkpoint_status": checkpoint_state,
+        "audit_mode": str(args.audit_mode),
         "coverage_status": coverage_status,
         "accepted_geometries": len(accepted["geometry_ids"]),
         "s4p_artifacts": artifacts["artifact_count"],
@@ -234,6 +243,7 @@ def main(argv: list[str] | None = None) -> int:
         "campaign_id": CAMPAIGN_ID,
         "contract_fingerprint_sha256": fingerprint,
         "expected_accepted": int(args.expected_accepted),
+        "audit_mode": str(args.audit_mode),
         "checks": checks,
         "inputs": {
             "contract": _file_evidence(contract_path),
@@ -276,6 +286,7 @@ def _parse_args(argv: list[str] | None) -> argparse.Namespace:
     parser.add_argument("--long-features", required=True)
     parser.add_argument("--artifact-index", required=True)
     parser.add_argument("--failure-funnel", required=True)
+    parser.add_argument("--audit-mode", choices=AUDIT_MODES, default="checkpoint")
     parser.add_argument("--expected-accepted", required=True, type=int)
     parser.add_argument("--out-dir", required=True)
     parser.add_argument("--coverage-gate", help="Optional frozen numeric coverage-gate JSON")
@@ -283,6 +294,29 @@ def _parse_args(argv: list[str] | None) -> argparse.Namespace:
     parser.add_argument("--skip-s4p-file-hash-check", action="store_true")
     parser.add_argument("--no-fail-exit", action="store_true")
     return parser.parse_args(argv)
+
+
+def _audit_target_allowed(mode: str, expected_accepted: int) -> tuple[bool, str]:
+    normalized = str(mode)
+    target = int(expected_accepted)
+    allowed_by_mode = {
+        "golden": (1,),
+        "pilot": PILOT_TARGETS,
+        "checkpoint": CHECKPOINTS,
+    }
+    allowed = allowed_by_mode.get(normalized, ())
+    return target in allowed, f"mode={normalized}, target={target}, allowed={list(allowed)}"
+
+
+def _successful_audit_state(mode: str, expected_accepted: int, execution_complete: bool) -> str:
+    if execution_complete:
+        return "COMPLETE_200K"
+    normalized = str(mode)
+    if normalized == "golden":
+        return "GOLDEN_COMPLETE"
+    if normalized == "pilot":
+        return f"PILOT_{int(expected_accepted)}_COMPLETE"
+    return "CHECKPOINT_COMPLETE"
 
 
 def _audit_accepted_geometries(

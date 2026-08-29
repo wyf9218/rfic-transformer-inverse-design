@@ -92,6 +92,11 @@ before a golden geometry is launched.
 
 Do not launch a 50k batch merely because the public contract tests pass.
 
+The same fail-closed audit script has disjoint modes: `golden` accepts only
+one geometry, `pilot` accepts only 32 or 1,000, and `checkpoint` accepts only
+the eleven frozen cumulative checkpoint counts. Only the 200,000 checkpoint
+may emit `COMPLETE_200K`; golden and pilot receipts cannot do so.
+
 ## Verified Commands
 
 Focused contract tests:
@@ -106,7 +111,7 @@ Full public regression suite (verified on 2026-08-28):
 python tools/run_public_tests.py
 ```
 
-Verified result: `1424 passed, 54 skipped, 1 deselected`.  This is a software
+Verified result: `1426 passed, 54 skipped, 1 deselected`.  This is a software
 regression result only; it is not Calibre, EMX, or physical campaign evidence.
 
 Queue construction after a frozen private preparation receipt exists:

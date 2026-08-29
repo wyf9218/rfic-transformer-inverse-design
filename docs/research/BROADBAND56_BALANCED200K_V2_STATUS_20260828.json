@@ -17,7 +17,7 @@
   "verified_local_results": [
     {
       "scope": "focused contract, queue, preparation, and synthetic checkpoint tests",
-      "result": "9 passed"
+      "result": "11 passed"
     },
     {
       "scope": "candidate queue and parallel runner regression tests after identity/fail-on-error hardening",
@@ -42,8 +42,18 @@
     {
       "scope": "geometry coverage microbenchmark",
       "result": "50000 synthetic geometries in 0.823573 s (60711.08 geometries/s), internal_errors=0; performance evidence only"
+    },
+    {
+      "scope": "golden, pilot, and checkpoint audit-mode separation",
+      "result": "PASS; golden=1, pilot=32/1000, checkpoint=frozen cumulative targets; only 200000 checkpoint can be COMPLETE_200K"
     }
   ],
+  "preserved_development_test_failure": {
+    "result": "1 failed, 9 passed",
+    "cause": "an audit_mode assertion was inserted into the preparation-receipt test instead of the checkpoint-receipt test",
+    "resolution": "moved the assertion to the correct test; no production code, data, or remote state was changed",
+    "terminal_retest": "11 passed"
+  },
   "preserved_negative_result": {
     "scope": "local 32-row create-only attempt using sanitized placeholder config",
     "classification": "EXPECTED_FAIL_DO_NOT_USE_AS_GOLDEN",
@@ -57,7 +67,7 @@
     "failure": "one unrelated test hard-coded the repository directory name and failed only in a differently named worktree",
     "fix": "resolve the script from the current repository root",
     "focused_retest": "1 passed",
-    "full_retest": "1424 passed, 54 skipped, 1 deselected, 1 warning in 99.73s",
+    "full_retest": "1426 passed, 54 skipped, 1 deselected, 1 warning in 98.72s",
     "full_retest_status": "PASS",
     "compileall": "PASS"
   },
