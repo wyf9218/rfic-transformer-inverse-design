@@ -44,6 +44,9 @@ from rfic_transformer_inverse_design.campaigns.broadband56_geometry_coverage imp
     GeometryCoverageAudit,
     geometry_bounds_payload,
 )
+from rfic_transformer_inverse_design.campaigns.broadband56_adaptive_selection import (
+    selection_policy_contract,
+)
 from rfic_transformer_inverse_design.sim.base import SParameterResult
 
 
@@ -105,6 +108,18 @@ def _load_adaptive_round_module():
 def _write_adaptive_audit_fixture(root: Path, *, accepted_count: int, fingerprint: str) -> Path:
     audit_dir = root / f"audit_{accepted_count}"
     audit_dir.mkdir()
+    accepted_path = audit_dir / "accepted_geometries.csv"
+    accepted_path.write_text("geometry_id,fixture_count\nfixture,%d\n" % accepted_count, encoding="utf-8")
+    bounds_path = audit_dir / "GEOMETRY_BOUNDS_FROZEN.json"
+    bounds_path.write_text(
+        json.dumps(
+            geometry_bounds_payload(
+                bounds=_test_geometry_bounds(),
+                contract_fingerprint_sha256=fingerprint,
+            )
+        ),
+        encoding="utf-8",
+    )
     cells_path = audit_dir / "physical_coverage_cells_by_anchor.csv"
     with cells_path.open("w", newline="", encoding="utf-8") as handle:
         fields = [
@@ -163,6 +178,10 @@ def _write_adaptive_audit_fixture(root: Path, *, accepted_count: int, fingerprin
                 "expected_accepted": accepted_count,
                 "audit_mode": mode,
                 "checks": [{"name": "fixture", "pass": True}],
+                "inputs": {
+                    "accepted_geometries": {"path": str(accepted_path.resolve()), "sha256": _sha256(accepted_path)},
+                    "geometry_bounds": {"path": str(bounds_path.resolve()), "sha256": _sha256(bounds_path)},
+                },
                 "outputs": {
                     "checkpoint_status": {"path": str(status_path.resolve()), "sha256": _sha256(status_path)},
                     "coverage_cells": {"path": str(cells_path.resolve()), "sha256": _sha256(cells_path)},
@@ -916,6 +935,13 @@ def test_adaptive_round_stager_uses_maximin_fallback_without_ensemble(tmp_path: 
     assert staged["round"]["accepted_target"] == 55_000
     assert staged["active_source_quotas"] == {"maximin_geometry_exploration": 5_000}
     assert staged["ensemble_gate"]["status"] == "NOT_PROVIDED"
+    assert staged["candidate_selection_policy"] == selection_policy_contract()
+    assert staged["preceding_real_emx_audit"]["accepted_geometries_sha256"] == _sha256(
+        audit_dir / "accepted_geometries.csv"
+    )
+    assert staged["preceding_real_emx_audit"]["geometry_bounds_sha256"] == _sha256(
+        audit_dir / "GEOMETRY_BOUNDS_FROZEN.json"
+    )
 
 
 def test_adaptive_round_stager_enforces_ensemble_gate_and_phase_b_mixture(tmp_path: Path) -> None:
@@ -945,6 +971,7 @@ def test_adaptive_round_stager_enforces_ensemble_gate_and_phase_b_mixture(tmp_pa
         "maximin_geometry_exploration": 1_000,
     }
     assert staged["ensemble_gate"]["status"] == "PASS"
+    assert staged["candidate_selection_policy"] == selection_policy_contract()
 
     invalid_ensemble = _write_ensemble_fixture(tmp_path, fingerprint=fingerprint, duplicate_seed=True)
     invalid_out = tmp_path / "adaptive_invalid_ensemble"

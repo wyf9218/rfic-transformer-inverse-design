@@ -59,6 +59,18 @@ only the four frequency-grid fields.
   records its sampler/seed and the PASS results of the local bounds, topology,
   and public top-metal analytical audits; those fields are queue provenance,
   not Cadence, Calibre, GDS, or EMX evidence.
+- `rfic_transformer_inverse_design/campaigns/broadband56_adaptive_selection.py`:
+  exact Phase-B/C candidate-priority policy. It combines real-EMX fixed-cell
+  deficit, ensemble uncertainty, normalized 10-D geometry novelty, frozen
+  boundary coverage, and predicted feature validity, then applies
+  deterministic block-greedy batch diversity. Predictions remain ranking
+  metadata and never become labels.
+- `scripts/select_broadband56_adaptive_candidates.py`:
+  no-clobber, hash-bound selector for one exact 5,000-candidate adaptive
+  queue. It requires a candidate pool of at least 20,000, exact source quotas,
+  canonical uniqueness against all accepted geometries, and internally
+  consistent coverage-cell evidence. Missing or inconsistent evidence emits a
+  FAIL receipt and no runnable candidate queue.
 - `scripts/audit_broadband56_balanced200k_checkpoint.py`:
   streaming accepted/S4P/56-point/S-Z/feature/fingerprint audit plus required
   checkpoint receipt, coverage table, failure funnel, and SHA-256 index. It
@@ -166,8 +178,24 @@ python scripts/stage_broadband56_adaptive_round.py \
 ```
 
 The stager verifies the preceding real-EMX receipt and all 10,368 fixed cell
-rows. A valid five-or-more-member, geometry-split, sealed-validation,
+rows, and hash-binds the accepted-geometry ledger plus frozen geometry bounds.
+A valid five-or-more-member, geometry-split, sealed-validation,
 uncertainty-calibrated ensemble activates the exact Phase-B or Phase-C source
 quotas. A missing or invalid ensemble is recorded and activates the frozen
 5,000-sample maximin fallback instead. Neither mode creates labels or accepted
 samples; those remain dependent on fresh Cadence, Calibre, and EMX evidence.
+
+After a staged round and a contract-matching unevaluated candidate pool exist,
+select the exact unlabeled 5,000-candidate queue without launching a solver:
+
+```bash
+python scripts/select_broadband56_adaptive_candidates.py \
+  --contract /private/no-clobber/campaign_contract_frozen.json \
+  --round-dir /private/no-clobber/next_adaptive_round \
+  --candidate-csv /private/no-clobber/unevaluated_candidate_pool.csv \
+  --out-dir /private/no-clobber/selected_candidate_queue
+```
+
+The command is locally software-tested only. Private MARS candidate generation
+and Cadence/Calibre/EMX execution remain `REVERIFY` and must not be inferred
+from a PASS selection receipt.

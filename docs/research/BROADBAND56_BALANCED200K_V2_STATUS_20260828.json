@@ -3,7 +3,7 @@
   "campaign_id": "broadband56_real_emx_balanced200k_tsmc65_v2",
   "branch": "codex/broadband56-balanced200k-v2",
   "base_commit": "85a0b96be7d2227a44d00d046f972f2a9bfbeaa0",
-  "overall_status": "LOCAL_CONTRACT_AND_AUDIT_CODE_READY_REMOTE_GATES_PENDING",
+  "overall_status": "LOCAL_CONTRACT_AUDIT_AND_ADAPTIVE_SELECTOR_READY_REMOTE_GATES_PENDING",
   "current_accepted": 0,
   "current_feature_rows": 0,
   "current_phase": "PREPARATION",
@@ -58,6 +58,10 @@
     {
       "scope": "Phase-B/C intermediate-round audit and adaptive-round staging",
       "result": "PASS in synthetic software tests; round audits cover only non-checkpoint 5k endpoints, active quotas are exact 3000/1000/1000 or 3250/1000/750, and absent/invalid acquisition ensembles fall back to 5000 maximin candidates without creating labels"
+    },
+    {
+      "scope": "contract-bound Phase-B/C adaptive candidate selection",
+      "result": "PASS in local software tests; exact 5k disjoint quotas, minimum 4x candidate pool, 112 traceable eight-anchor prediction/uncertainty columns, accepted-ledger and frozen-bounds hash binding, coverage-cell arithmetic validation, deterministic diversity, proxy-is-not-label metadata, and fail-closed no-queue behavior"
     }
   ],
   "preserved_development_test_failure": {
@@ -118,17 +122,19 @@
     "full_retest": "1431 passed, 54 skipped, 1 deselected, 1 warning in 98.98s",
     "latest_phase_a_hardening_command": "python tools/run_public_tests.py",
     "latest_phase_a_hardening_retest": "1432 passed, 54 skipped, 1 deselected, 1 warning in 99.85s",
+    "latest_adaptive_selector_focused_retest": "22 passed in 3.13s",
+    "latest_adaptive_selector_public_retest": "1438 passed, 54 skipped, 1 deselected, 1 warning in 100.19s",
     "full_retest_status": "PASS",
     "compileall": "PASS"
   },
   "remote_state": {
     "mars_host": "PRIVATE_NOT_RECORDED",
-    "web_session": "USER_AUTHENTICATED_THEN_REMOTE_DESKTOP_RETURNED_TO_LOCK_SCREEN",
-    "user_instruction": "DO_NOT_TRIGGER_REPEATED_RECONNECTIONS",
+    "web_session": "USER_HAS_GUACAMOLE_TAB_OPEN; NOT_TOUCHED_BY_THIS_LOCAL_IMPLEMENTATION",
+    "user_instruction": "DO_NOT_REFRESH_RECONNECT_OR_USE_MARS_UNTIL_EXPLICIT_STABLE_UNLOCK",
     "previous_v1_contract_hash": "UNKNOWN",
     "private_production_config": "REVERIFY",
     "private_calibre_emx_backend": "REVERIFY",
     "resource_and_license_gate": "REVERIFY"
   },
-  "next_legal_action": "After one user unlock, read-only locate and hash the previous V1 contract/config/backend receipts; do not launch EMX until preparation, golden, and resource gates pass."
+  "next_legal_action": "Continue local verification only. Wait for explicit user stable-unlock authorization before any browser, SSH, or MARS action; then read-only locate and hash the previous V1 contract/config/backend receipts. Do not launch EMX until preparation, golden, and resource gates pass."
 }

@@ -34,6 +34,11 @@ from rfic_transformer_inverse_design.campaigns.broadband56_balanced200k import (
     contract_fingerprint,
     validate_contract,
 )
+from rfic_transformer_inverse_design.campaigns.broadband56_adaptive_selection import (
+    MINIMUM_CANDIDATE_POOL_FACTOR,
+    required_prediction_columns,
+    selection_policy_contract,
+)
 
 ENSEMBLE_SCHEMA = "broadband56_acquisition_ensemble_receipt_v1"
 ENSEMBLE_FEATURES = (
@@ -107,14 +112,17 @@ def main(argv: list[str] | None = None) -> int:
         "round": round_spec.as_dict() if round_spec is not None else None,
         "acquisition_mode": acquisition_mode if status == "PASS" else "NOT_AUTHORIZED",
         "active_source_quotas": active_quotas,
+        "candidate_selection_policy": selection_policy_contract(),
         "candidate_pool_requirement": {
             "same_frozen_geometry_bounds": True,
             "canonical_geometry_unique_against_all_accepted": True,
             "analytical_gate": "PASS_REQUIRED_BEFORE_RANKING",
             "topology_gate": "PASS_REQUIRED_BEFORE_RANKING",
+            "minimum_pool_factor": MINIMUM_CANDIDATE_POOL_FACTOR,
             "minimum_ensemble_members": 5,
             "anchor_frequencies_ghz": list(ANCHOR_FREQUENCIES_GHZ),
             "predicted_features": list(ENSEMBLE_FEATURES),
+            "required_prediction_columns": list(required_prediction_columns()) if use_ensemble else [],
             "predictions_are_labels": False,
         },
         "preceding_real_emx_audit": audit,
@@ -208,14 +216,21 @@ def _validate_preceding_audit(
         ]
     )
     outputs = receipt.get("outputs") if isinstance(receipt.get("outputs"), dict) else {}
+    inputs = receipt.get("inputs") if isinstance(receipt.get("inputs"), dict) else {}
     status_evidence = outputs.get("checkpoint_status") if isinstance(outputs.get("checkpoint_status"), dict) else {}
     cells_evidence = outputs.get("coverage_cells") if isinstance(outputs.get("coverage_cells"), dict) else {}
     coverage_evidence = outputs.get("coverage_summary") if isinstance(outputs.get("coverage_summary"), dict) else {}
+    accepted_evidence = inputs.get("accepted_geometries") if isinstance(inputs.get("accepted_geometries"), dict) else {}
+    bounds_evidence = inputs.get("geometry_bounds") if isinstance(inputs.get("geometry_bounds"), dict) else {}
     checks.append(_evidence_check("preceding_status_hash_bound", status_path, status_evidence))
     cells_path = Path(str(cells_evidence.get("path") or "")).expanduser().resolve()
     coverage_path = Path(str(coverage_evidence.get("path") or "")).expanduser().resolve()
+    accepted_path = Path(str(accepted_evidence.get("path") or "")).expanduser().resolve()
+    bounds_path = Path(str(bounds_evidence.get("path") or "")).expanduser().resolve()
     checks.append(_evidence_check("preceding_coverage_cells_hash_bound", cells_path, cells_evidence))
     checks.append(_evidence_check("preceding_coverage_summary_hash_bound", coverage_path, coverage_evidence))
+    checks.append(_evidence_check("preceding_accepted_geometries_hash_bound", accepted_path, accepted_evidence))
+    checks.append(_evidence_check("preceding_geometry_bounds_hash_bound", bounds_path, bounds_evidence))
     cell_summary = _validate_coverage_cells(cells_path, accepted)
     checks.extend(cell_summary.pop("checks"))
     return {
@@ -227,6 +242,10 @@ def _validate_preceding_audit(
         "coverage_cells_sha256": cells_evidence.get("sha256"),
         "coverage_summary_path": str(coverage_path),
         "coverage_summary_sha256": coverage_evidence.get("sha256"),
+        "accepted_geometries_path": str(accepted_path),
+        "accepted_geometries_sha256": accepted_evidence.get("sha256"),
+        "geometry_bounds_path": str(bounds_path),
+        "geometry_bounds_sha256": bounds_evidence.get("sha256"),
         "cell_summary": cell_summary,
     }
 
