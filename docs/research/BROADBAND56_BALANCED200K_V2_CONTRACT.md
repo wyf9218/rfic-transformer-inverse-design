@@ -98,6 +98,15 @@ only the four frequency-grid fields.
   also writes `physical_coverage_by_frequency.csv`,
   `physical_coverage_marginals.csv`, and `physical_coverage_pairwise.csv` for
   all five frozen validity/panel populations and `ALL`/Phase A/B/C scopes.
+- `scripts/finalize_broadband56_training_readiness.py`:
+  terminal-only finalizer for `full_200k_training_weights.csv`,
+  `maximal_balanced_subset.csv`, and `future_split_manifest.json` plus its
+  geometry-level assignment table. It requires a SHA-bound `COMPLETE_200K`
+  receipt with exactly 200,000 accepted geometries, 200,000 S4P artifacts,
+  and 11,200,000 correlated rows. It recomputes actual eight-anchor cell
+  memberships and checks them against the audited 10,368-cell table before
+  creating any output. A failed identity, count, receipt, or hash check leaves
+  no output directory.
 
 The secondary tables are explicitly record-weighted. They retain all exact
 frequency rows but never replace the primary geometry-unique anchor metric.
@@ -149,8 +158,8 @@ Full public regression suite (verified on 2026-08-28):
 python tools/run_public_tests.py
 ```
 
-Latest verified result after adaptive candidate-pool integration:
-`1446 passed, 54 skipped, 1 deselected`.  This is a software
+Latest verified result after terminal training-readiness integration:
+`1451 passed, 54 skipped, 1 deselected, 1 warning`.  This is a software
 regression result only; it is not Calibre, EMX, or physical campaign evidence.
 
 Queue construction after a frozen private preparation receipt exists:
@@ -271,3 +280,29 @@ python scripts/select_broadband56_adaptive_candidates.py \
 The command is locally software-tested only. Private MARS candidate generation
 and Cadence/Calibre/EMX execution remain `REVERIFY` and must not be inferred
 from a PASS selection receipt.
+
+Only after the exact terminal checkpoint exists, create the frozen
+training-readiness products without training a model:
+
+```bash
+python scripts/finalize_broadband56_training_readiness.py \
+  --contract /private/no-clobber/campaign_contract_frozen.json \
+  --checkpoint-dir /private/no-clobber/checkpoint_200000 \
+  --accepted-geometries /private/no-clobber/accepted_geometry_200k.csv \
+  --long-features /private/no-clobber/broadband_features_11p2m_long.csv \
+  --out-dir /private/no-clobber/training_readiness_200000
+```
+
+The full-dataset weight is the mean inverse occupancy of each geometry's
+actual broadband-valid anchor cells, globally normalized to mean one and
+clipped to `[0.25, 4.0]`; a geometry outside every primary cell receives a
+neutral pre-normalization weight rather than fabricated coverage evidence.
+Samples are never duplicated. The balanced-subset algorithm first assigns
+each geometry to its least-populated actual conditioned cell, then performs
+strict equal-quota capacity-aware water filling over those deterministic
+owner strata. Its maximality claim is limited to that frozen partition and is
+not a claimed global optimum over the multi-anchor hypergraph. The future
+80/10/10 split uses salted canonical-geometry SHA-256 ordering with exact
+largest-remainder counts, so all 56 rows from one geometry remain together.
+This command is locally verified with synthetic terminal evidence; running it
+on real 200k evidence remains `PLANNED` until `COMPLETE_200K` exists.
