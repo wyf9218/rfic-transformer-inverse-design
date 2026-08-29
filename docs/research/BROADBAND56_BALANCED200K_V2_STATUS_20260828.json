@@ -4,7 +4,7 @@
   "campaign_id": "broadband56_real_emx_balanced200k_tsmc65_v2",
   "branch": "codex/broadband56-balanced200k-v2",
   "base_commit": "85a0b96be7d2227a44d00d046f972f2a9bfbeaa0",
-  "overall_status": "PREPARATION_BLOCKED_APPROVED_BASELINE_CONFIG_IDENTITY_MISMATCH",
+  "overall_status": "PREPARATION_BLOCKED_CORRECTED_R2_CANDIDATE_PENDING_EXPLICIT_SHA256_APPROVAL",
   "current_accepted": 0,
   "current_feature_rows": 0,
   "current_phase": "PREPARATION",
@@ -271,6 +271,22 @@
     "git_and_local_search_result": "NOT_FOUND; no approved historical non-V2 broadband56 V1 contract exists in the current worktree, any Git ref or object history, or the bounded local attachment search",
     "execution_effect": "Approval receipt recorded and V2 preparation preflight attempted only; golden, Cadence, Calibre, EMX, queue, runner, controller, and supervisor remain forbidden and were not launched"
   },
+  "v1_reconstruction_candidate_r2": {
+    "path": "docs/research/BROADBAND56_RECONSTRUCTED_BASELINE_V1_CANDIDATE_R2_20260829.json",
+    "sha256": "037889d41f41bbedbcd38188c44a5c8c1ccffa62943c334a72f0980f38bf864f",
+    "size_bytes": 5540,
+    "classification": "NEW_RECONSTRUCTION_NOT_HISTORICAL_V1_CORRECTED_R2",
+    "approval_status": "PENDING_EXPLICIT_SHA256_APPROVAL",
+    "automatic_command_authorized": false,
+    "production_use_authorized": false,
+    "superseded_candidate_sha256": "1abb85dd7e6aad709eb404dbcc174a8a66e325baf76f26c0eeb64a6498ea7a12",
+    "corrected_historical_config_sha256": "c4ffcc8a424770e4b3c0c64d16c575271d29867d2b47dc3a29b7f642d2fd3655",
+    "physical_contract_and_frequency_grid_comparison": "PASS; unchanged physical-contract list and exact 5-60 GHz inclusive, 1 GHz, 56-point vector are identical to the superseded candidate",
+    "old_approval_transfer_check": "PASS_FAIL_CLOSED; old receipt is rejected by both campaign-id and contract-SHA checks",
+    "approval_request_path": "docs/research/BROADBAND56_RECONSTRUCTED_BASELINE_V1_R2_APPROVAL_REQUEST_20260829.md",
+    "approval_request_sha256": "60fc0d484aac83314f5c6747913dfdaecbbdc1552b0cb698405e8ecd8590e790",
+    "execution_effect": "NONE; R2 creation and validation are local public control-plane work only"
+  },
   "remote_state": {
     "mars_host": "PRIVATE_NOT_RECORDED",
     "web_session": "STABLE_READ_ONLY_UNLOCK_CONFIRMED_2026-08-29; EXISTING_TAB_REUSED_WITHOUT_RELOAD_OR_RECONNECT",
@@ -281,5 +297,5 @@
     "private_calibre_emx_backend": "PASS_HISTORICAL_RUNTIME_BYTES_MATCH; PREPARATION BLOCKED BEFORE ANY SIMULATOR ACTION",
     "resource_and_license_gate": "REVERIFY; AGGREGATE_RESOURCE_SNAPSHOT_ONLY; LICENSE_GATE_NOT_RUN"
   },
-  "next_legal_action": "Create a corrected reconstructed-baseline candidate that records historical/current config SHA c4ffcc8a424770e4b3c0c64d16c575271d29867d2b47dc3a29b7f642d2fd3655, obtain a new explicit approval for that corrected candidate exact SHA, then rerun preparation in a new no-clobber directory. Golden remains unauthorized."
+  "next_legal_action": "Obtain explicit project-owner approval of corrected R2 candidate SHA 037889d41f41bbedbcd38188c44a5c8c1ccffa62943c334a72f0980f38bf864f for APPROVE_V2_PREPARATION_PREFLIGHT_ONLY. Only then may a new no-clobber approval receipt be recorded and preparation rerun; golden remains unauthorized."
 }
