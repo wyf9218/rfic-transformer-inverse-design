@@ -74,8 +74,18 @@
     {
       "scope": "COMPLETE_200K-only training-readiness finalizer",
       "result": "PASS in synthetic local software tests; requires exact SHA-bound terminal checkpoint evidence before writing, recomputes all actual fresh-real-EMX anchor memberships against the audited 10368-cell table, emits one clipped mean-one coverage weight per geometry without duplication, creates a geometry-unique equal-quota capacity-aware subset with a narrow documented maximality scope, and freezes an exact geometry-identity 80/10/10 future split without training a model"
+    },
+    {
+      "scope": "35-audit campaign coverage and acquisition history finalizer",
+      "result": "PASS in synthetic local software tests; requires all 5 Phase-A checkpoints plus every Phase-B/C 5k endpoint, validates exact 10368-cell identities and deficit arithmetic, exact 31-round accepted-sequence partition, active-or-fallback source quotas without mixing, terminal accepted-ledger SHA binding, and emits the four required history/summary products without simulator, proxy inference, or model training"
     }
   ],
+  "preserved_campaign_history_development_failure": {
+    "result": "1 failed, 2 passed",
+    "cause": "two correct negative facts in the new receipt were represented as false-valued checks and were therefore rejected by the all-checks-must-be-true gate",
+    "resolution": "renamed them to positive invariants proxy_predictions_excluded_from_labels and simulator_and_model_training_not_run; no data, quota, physical, or remote contract was changed",
+    "terminal_retest": "5 passed in 0.88s"
+  },
   "preserved_adaptive_candidate_pool_development_failure": {
     "result": "1 failed, 1 passed",
     "cause": "the first bounds comparison incorrectly required the runtime config mapping to use the same insertion order as the already order-normalized frozen bounds payload even though all ten field names and numeric bounds were identical",
@@ -155,6 +165,9 @@
     "latest_training_readiness_focused_retest": "5 passed in 0.46s",
     "latest_training_readiness_combined_retest": "35 passed, 21 pre-existing acquisition-ensemble runtime warnings in 4.35s",
     "latest_training_readiness_public_retest": "1451 passed, 54 skipped, 1 deselected, 1 warning in 99.03s",
+    "latest_campaign_history_focused_retest": "5 passed in 0.88s",
+    "latest_campaign_history_combined_retest": "40 passed in 3.70s",
+    "latest_campaign_history_public_retest": "1456 passed, 54 skipped, 1 deselected, 1 warning in 98.79s",
     "full_retest_status": "PASS",
     "compileall": "PASS"
   },

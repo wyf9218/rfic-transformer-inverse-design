@@ -107,6 +107,15 @@ only the four frequency-grid fields.
   memberships and checks them against the audited 10,368-cell table before
   creating any output. A failed identity, count, receipt, or hash check leaves
   no output directory.
+- `scripts/finalize_broadband56_campaign_histories.py`:
+  terminal history finalizer for `coverage_deficit_history.csv`,
+  `acquisition_round_history.csv`, `acquisition_source_by_geometry.csv`, and
+  the byte-exact `coverage_summary_200k.json` copy. It requires all 35 frozen
+  audit endpoints: 100/1k/5k/20k/50k plus every Phase-B/C 5k endpoint through
+  200k. It validates all 10,368 cell identities and deficit equations per
+  endpoint, the exact 31-round accepted-sequence partition, and either the
+  complete active mixture or the complete maximin fallback for each adaptive
+  round. A mixed or approximate per-round source count is rejected.
 
 The secondary tables are explicitly record-weighted. They retain all exact
 frequency rows but never replace the primary geometry-unique anchor metric.
@@ -159,7 +168,7 @@ python tools/run_public_tests.py
 ```
 
 Latest verified result after terminal training-readiness integration:
-`1451 passed, 54 skipped, 1 deselected, 1 warning`.  This is a software
+`1456 passed, 54 skipped, 1 deselected, 1 warning`.  This is a software
 regression result only; it is not Calibre, EMX, or physical campaign evidence.
 
 Queue construction after a frozen private preparation receipt exists:
@@ -306,3 +315,26 @@ not a claimed global optimum over the multi-anchor hypergraph. The future
 largest-remainder counts, so all 56 rows from one geometry remain together.
 This command is locally verified with synthetic terminal evidence; running it
 on real 200k evidence remains `PLANNED` until `COMPLETE_200K` exists.
+
+After all Phase-A checkpoints and every adaptive 5k endpoint have terminal
+PASS receipts, finalize the required campaign histories. Repeat `--audit-dir`
+exactly once for each of the 35 frozen accepted-count audits:
+
+```bash
+python scripts/finalize_broadband56_campaign_histories.py \
+  --contract /private/no-clobber/campaign_contract_frozen.json \
+  --accepted-geometries /private/no-clobber/accepted_geometry_200k.csv \
+  --audit-dir /private/no-clobber/audit_000100 \
+  --audit-dir /private/no-clobber/audit_001000 \
+  --audit-dir /private/no-clobber/audit_005000 \
+  --audit-dir /private/no-clobber/audit_020000 \
+  --audit-dir /private/no-clobber/audit_050000 \
+  --audit-dir /private/no-clobber/every_remaining_5k_endpoint_through_200000 \
+  --out-dir /private/no-clobber/campaign_histories_200000
+```
+
+The abbreviated path in this documentation is not a shell wildcard: the real
+invocation must enumerate every exact audit directory. The script discovers
+counts from SHA-bound status files, rejects duplicates and omissions, and
+creates no history output until all 35 inputs pass. It performs no MARS,
+Cadence, Calibre, EMX, proxy inference, or model-training work.
