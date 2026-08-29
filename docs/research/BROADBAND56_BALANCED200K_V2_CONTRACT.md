@@ -59,6 +59,12 @@ only the four frequency-grid fields.
   records its sampler/seed and the PASS results of the local bounds, topology,
   and public top-metal analytical audits; those fields are queue provenance,
   not Cadence, Calibre, GDS, or EMX evidence.
+- `scripts/build_broadband56_adaptive_candidate_pool.py`:
+  no-clobber Phase-B/C geometry-only pool builder. It requires an exact staged
+  5k round, hash-bound accepted ledger and frozen bounds, matching production
+  config bounds, exact 56-point/4-port settings, at least 4x batch-size rows,
+  canonical uniqueness, and disjointness from every accepted geometry. Prior
+  attempted or reserved identities may be supplied as additional exclusions.
 - `rfic_transformer_inverse_design/campaigns/broadband56_adaptive_selection.py`:
   exact Phase-B/C candidate-priority policy. It combines real-EMX fixed-cell
   deficit, ensemble uncertainty, normalized 10-D geometry novelty, frozen
@@ -143,8 +149,8 @@ Full public regression suite (verified on 2026-08-28):
 python tools/run_public_tests.py
 ```
 
-Latest verified result after acquisition-ensemble integration:
-`1444 passed, 54 skipped, 1 deselected`.  This is a software
+Latest verified result after adaptive candidate-pool integration:
+`1446 passed, 54 skipped, 1 deselected`.  This is a software
 regression result only; it is not Calibre, EMX, or physical campaign evidence.
 
 Queue construction after a frozen private preparation receipt exists:
@@ -214,15 +220,34 @@ quotas. A missing or invalid ensemble is recorded and activates the frozen
 5,000-sample maximin fallback instead. Neither mode creates labels or accepted
 samples; those remain dependent on fresh Cadence, Calibre, and EMX evidence.
 
-After an ensemble-authorized staged round and a contract-matching unevaluated
-candidate pool exist, attach calibrated candidate-priority predictions:
+After staging, construct a large geometry-only pool from the same frozen
+bounds. The command performs no Cadence, Calibre, GDS, or EMX work:
+
+```bash
+python scripts/build_broadband56_adaptive_candidate_pool.py \
+  --contract /private/no-clobber/campaign_contract_frozen.json \
+  --config /private/approved/broadband56_v2.yaml \
+  --round-dir /private/no-clobber/next_adaptive_round \
+  --out-dir /private/no-clobber/unevaluated_candidate_pool \
+  --count 20000 \
+  --sampler sobol \
+  --seed 20310828
+```
+
+The example seed is the Phase-A base seed plus the 50,000 accepted round start;
+each later round must use and record its own deterministic seed. A pool must
+contain at least 20,000 rows for the frozen 5,000-candidate selection batch.
+Its local analytical/top-metal PASS fields are queue provenance only.
+
+For an ensemble-authorized round, attach calibrated candidate-priority
+predictions:
 
 ```bash
 python scripts/predict_broadband56_acquisition_candidates.py \
   --contract /private/no-clobber/campaign_contract_frozen.json \
   --round-dir /private/no-clobber/next_adaptive_round \
   --ensemble-receipt /private/no-clobber/acquisition_ensemble/ENSEMBLE_RECEIPT.json \
-  --candidate-csv /private/no-clobber/unevaluated_candidate_pool.csv \
+  --candidate-csv /private/no-clobber/unevaluated_candidate_pool/broadband56_adaptive_candidate_pool.csv \
   --out-dir /private/no-clobber/candidate_predictions
 ```
 

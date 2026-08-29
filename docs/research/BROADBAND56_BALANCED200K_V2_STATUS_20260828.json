@@ -3,7 +3,7 @@
   "campaign_id": "broadband56_real_emx_balanced200k_tsmc65_v2",
   "branch": "codex/broadband56-balanced200k-v2",
   "base_commit": "85a0b96be7d2227a44d00d046f972f2a9bfbeaa0",
-  "overall_status": "LOCAL_CONTRACT_AUDIT_ADAPTIVE_ENSEMBLE_AND_SELECTOR_READY_REMOTE_GATES_PENDING",
+  "overall_status": "LOCAL_CONTRACT_AUDIT_AND_ADAPTIVE_CONTROL_PLANE_READY_REMOTE_GATES_PENDING",
   "current_accepted": 0,
   "current_feature_rows": 0,
   "current_phase": "PREPARATION",
@@ -66,8 +66,18 @@
     {
       "scope": "checkpoint-bound Phase-B/C temporary acquisition ensemble and candidate prediction",
       "result": "PASS in local software tests; five independently seeded forward members, deterministic geometry-identity 80/10/10 train/calibration/sealed-validation split, fresh-real-EMX source bindings, calibrated disagreement, seven features at eight anchors, internal NPZ-to-receipt metadata binding, 112 candidate-priority columns, and no prediction output on identity mismatch"
+    },
+    {
+      "scope": "contract-bound Phase-B/C geometry-only candidate-pool generation",
+      "result": "PASS in local software tests; exact staged-round hash binding, production-config/frozen-bounds numeric equality, exact 56-point and 4-port config gates, minimum 4x batch pool, canonical uniqueness, accepted-ledger disjointness, optional prior-identity exclusion, and no proxy or EMX label columns"
     }
   ],
+  "preserved_adaptive_candidate_pool_development_failure": {
+    "result": "1 failed, 1 passed",
+    "cause": "the first bounds comparison incorrectly required the runtime config mapping to use the same insertion order as the already order-normalized frozen bounds payload even though all ten field names and numeric bounds were identical",
+    "resolution": "compare the exact ten-field set and each lower/upper value with 1e-12 absolute tolerance; no physical evidence or remote state was involved",
+    "terminal_retest": "2 passed; combined focused retest 30 passed in 4.43s"
+  },
   "preserved_acquisition_ensemble_development_failure": {
     "result": "2 failed, 26 passed",
     "cause": "the new synthetic long-feature fixture used xp/xs column names instead of the frozen xp_ohm/xs_ohm schema, so the trainer stopped before splitting or fitting any member",
@@ -136,6 +146,8 @@
     "latest_adaptive_selector_public_retest": "1438 passed, 54 skipped, 1 deselected, 1 warning in 100.19s",
     "latest_acquisition_ensemble_focused_retest": "28 passed in 3.19s",
     "latest_acquisition_ensemble_public_retest": "1444 passed, 54 skipped, 1 deselected, 1 warning in 98.94s",
+    "latest_adaptive_candidate_pool_focused_retest": "30 passed in 4.43s",
+    "latest_adaptive_candidate_pool_public_retest": "1446 passed, 54 skipped, 1 deselected, 1 warning in 98.81s",
     "full_retest_status": "PASS",
     "compileall": "PASS"
   },
