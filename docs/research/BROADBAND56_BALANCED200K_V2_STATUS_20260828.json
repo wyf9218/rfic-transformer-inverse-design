@@ -3,7 +3,7 @@
   "campaign_id": "broadband56_real_emx_balanced200k_tsmc65_v2",
   "branch": "codex/broadband56-balanced200k-v2",
   "base_commit": "85a0b96be7d2227a44d00d046f972f2a9bfbeaa0",
-  "overall_status": "LOCAL_CONTRACT_AUDIT_ADAPTIVE_TERMINAL_DELIVERY_AND_FIGURE_CONTROL_PLANE_READY_REMOTE_GATES_PENDING",
+  "overall_status": "LOCAL_CONTRACT_AUDIT_ADAPTIVE_TERMINAL_DELIVERY_FIGURE_AND_SUPERVISOR_STATE_CONTROL_PLANE_READY_REMOTE_GATES_PENDING",
   "current_accepted": 0,
   "current_feature_rows": 0,
   "current_phase": "PREPARATION",
@@ -86,6 +86,10 @@
     {
       "scope": "COMPLETE_200K terminal delivery auditor",
       "result": "PASS in five synthetic hash-closed local tests; jointly verifies the exact terminal checkpoint, five frozen raw-product names and counts, accepted/artifact/provenance identity sets, production-config/candidate/GDS/Calibre/EMX-log/S4P path-plus-SHA chain, 35-audit histories, training-readiness outputs, and four checkpoints times 14 PNG/SVG figures before atomically emitting a final receipt; provenance-row tampering, physical GDS-byte tampering, figure tampering, and existing output directories fail closed; real execution remains PLANNED because accepted=0"
+    },
+    {
+      "scope": "authoritative-supervisor state evaluator",
+      "result": "PASS in nine synthetic local tests and 58-test combined V2 regression; derives only receipt-backed PREPARED_WAITING_FOR_RESOURCE, READY, ACTIVE, RESUME, or COMPLETE states; enforces ordered golden/32/1000 gates, measured resource estimate, exact frozen audit prefix, nonempty PASS checks, strict finite numeric evidence, one no-clobber run root, local-host PID evidence, and no-clobber snapshots; non-prefix audits, duplicate supervisors, and cross-host unverifiable ownership fail closed; this is not a private runner and real execution remains PLANNED because accepted=0"
     }
   ],
   "preserved_campaign_history_development_failure": {
@@ -183,6 +187,9 @@
     "latest_final_delivery_auditor_focused_retest": "5 passed in 0.56s",
     "latest_final_delivery_auditor_combined_retest": "49 passed in 6.24s",
     "latest_final_delivery_auditor_public_retest": "1465 passed, 54 skipped, 1 deselected, 1 warning in 100.78s",
+    "latest_supervisor_state_focused_retest": "9 passed in 0.59s",
+    "latest_supervisor_state_combined_retest": "58 passed in 6.88s",
+    "latest_supervisor_state_public_retest": "1474 passed, 54 skipped, 1 deselected, 1 warning in 106.90s",
     "full_retest_status": "PASS",
     "compileall": "PASS"
   },

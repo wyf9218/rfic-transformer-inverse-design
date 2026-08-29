@@ -128,6 +128,15 @@ only the four frequency-grid fields.
   histories, training-readiness products, and four-by-fourteen PNG/SVG figure
   set to remain hash closed. It separately preserves the frozen coverage
   status and never turns proxy predictions into labels.
+- `scripts/audit_broadband56_balanced200k_supervisor_state.py`:
+  read-only authoritative-supervisor state evaluator. It validates the frozen
+  preparation receipt, resource/license gate, ordered golden/32/1,000 pilot
+  chain, measured resource estimate, exact prefix of all 35 campaign audits,
+  and at most one fingerprint-bound no-clobber run root. It emits only a
+  no-clobber `SUPERVISOR_STATE.json` snapshot and SHA index; it cannot create a
+  run root, submit work, start or signal a process, or invoke Cadence, Calibre,
+  or EMX. Cross-host supervisor ownership is rejected because remote liveness
+  cannot be proven by a local PID check.
 
 The secondary tables are explicitly record-weighted. They retain all exact
 frequency rows but never replace the primary geometry-unique anchor metric.
@@ -179,9 +188,32 @@ Full public regression suite (verified on 2026-08-28):
 python tools/run_public_tests.py
 ```
 
-Latest verified result after terminal-delivery-auditor integration:
-`1465 passed, 54 skipped, 1 deselected, 1 warning`.  This is a software
+Latest verified result after authoritative-supervisor-state integration:
+`1474 passed, 54 skipped, 1 deselected, 1 warning`.  This is a software
 regression result only; it is not Calibre, EMX, or physical campaign evidence.
+
+Derive one safe next-action snapshot after private evidence has been located:
+
+```bash
+python scripts/audit_broadband56_balanced200k_supervisor_state.py \
+  --contract /private/no-clobber/preparation/campaign_contract_frozen.json \
+  --preparation-dir /private/no-clobber/preparation \
+  --resource-gate /private/no-clobber/resource_gate.json \
+  --golden-audit-dir /private/no-clobber/golden/audit \
+  --pilot-32-audit-dir /private/no-clobber/pilot_32/audit \
+  --pilot-1000-audit-dir /private/no-clobber/pilot_1000/audit \
+  --resource-estimate-dir /private/no-clobber/resource_estimate \
+  --audit-dir /private/no-clobber/audit_000100 \
+  --out-dir /private/no-clobber/supervisor_state_snapshot
+```
+
+Every existing campaign audit must be enumerated once in ascending frozen
+order. Omit absent optional evidence instead of inventing it. With no current
+PASS resource gate, the only legal snapshot is
+`PREPARED_WAITING_FOR_RESOURCE`. A non-prefix audit chain, duplicate
+supervisor, different-host registry, hash mismatch, or overwritten output path
+fails closed. This command is locally verified with synthetic evidence only;
+it is not the private production supervisor or runner.
 
 Queue construction after a frozen private preparation receipt exists:
 
