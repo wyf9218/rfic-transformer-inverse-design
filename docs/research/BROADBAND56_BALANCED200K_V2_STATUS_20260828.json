@@ -17,6 +17,10 @@
   },
   "verified_local_results": [
     {
+      "scope": "reconstructed non-historical V1 approval hard gate",
+      "result": "PASS in local software tests; a reconstructed baseline now requires a separate exact-SHA approval receipt with explicit user-or-leader source/reference, non-placeholder identity, timezone-aware timestamp, matching campaign and contract SHA, preparation-only authorization, and explicit automatic/golden/simulator prohibitions; missing or mismatched receipts fail closed and run no simulator"
+    },
+    {
       "scope": "focused contract, queue, preparation, and synthetic checkpoint tests",
       "result": "15 passed"
     },
@@ -233,6 +237,9 @@
     "latest_raw_product_finalizer_focused_retest": "13 passed in 1.91s",
     "latest_raw_product_finalizer_combined_retest": "71 passed in 7.21s",
     "latest_raw_product_finalizer_public_retest": "1487 passed, 54 skipped, 1 deselected, 1 warning in 114.33s",
+    "latest_reconstructed_baseline_approval_focused_retest": "17 passed in 4.22s",
+    "latest_reconstructed_baseline_approval_combined_retest": "72 passed in 6.33s",
+    "latest_reconstructed_baseline_approval_public_retest": "1488 passed, 54 skipped, 1 deselected, 1 warning in 100.34s",
     "full_retest_status": "PASS",
     "compileall": "PASS"
   },
@@ -244,6 +251,11 @@
     "automatic_command_authorized": false,
     "production_use_authorized": false,
     "approval_request_path": "docs/research/BROADBAND56_V1_BASELINE_APPROVAL_REQUEST_20260829.md",
+    "approval_request_sha256": "ac5c1c968b815a6c532afb5ac2bbdfa614927abc5eb2d23e94f4a60026349e3f",
+    "fail_closed_receipt_template_path": "docs/research/BROADBAND56_RECONSTRUCTED_BASELINE_APPROVAL_RECEIPT_TEMPLATE_20260829.json",
+    "fail_closed_receipt_template_sha256": "9ba6909801bb64742330d6e7acc93ba3e8d17f947176eff5906ed14b323d8d24",
+    "preparation_gate_implementation_sha256": "ca1bce96896d464279abb76d6385289f3270ddd4ada8746d4946de6de226fc6e",
+    "preparation_gate_test_sha256": "75a23d9bac8a5cda01fd65471c7d272eeb1c26d301289c659623d0f07d15cea9",
     "git_and_local_search_result": "NOT_FOUND; no approved historical non-V2 broadband56 V1 contract exists in the current worktree, any Git ref or object history, or the bounded local attachment search",
     "execution_effect": "NONE; no MARS write, private configuration creation, preparation, Cadence, Calibre, EMX, queue, runner, controller, or supervisor launch is authorized by this candidate"
   },

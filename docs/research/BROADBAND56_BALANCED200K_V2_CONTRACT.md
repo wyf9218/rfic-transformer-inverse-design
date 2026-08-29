@@ -32,7 +32,11 @@ All process, layout, GDS, DRC, port, grounding, EMX, S/Z conversion, feature,
 and provenance items are inherited from the approved broadband56 V1 contract.
 Preparation fails unless the prior contract hash is supplied and the private
 V1 and V2 production configurations are structurally identical after removing
-only the four frequency-grid fields.
+only the four frequency-grid fields. If the original V1 artifact is unavailable
+and a newly reconstructed non-historical baseline is proposed, preparation
+also requires an independent exact-SHA approval receipt. That receipt may
+authorize preparation preflight only; automatic execution, golden, and all
+simulator work must remain forbidden.
 
 ## Evidence Boundary
 
@@ -51,7 +55,9 @@ only the four frequency-grid fields.
   immutable constants, canonical 10-D identity, bin assignment, phase plan,
   and uniformity metrics.
 - `scripts/prepare_broadband56_balanced200k_campaign.py`:
-  no-clobber V1-hash/config preflight and V2 contract freeze. It runs no solver.
+  no-clobber V1-hash/config preflight and V2 contract freeze. A reconstructed
+  baseline additionally requires a matching explicit user-or-leader approval
+  receipt via `--previous-contract-approval-receipt`. It runs no solver.
 - `scripts/build_broadband56_phase_a_queue.py`:
   exact 10-D label-free Phase-A queue generation with shared line width and
   canonical duplicate rejection. The builder is fail-closed to `PHASE_A`,
@@ -169,7 +175,9 @@ before a golden geometry is launched.
 
 ## Required Order
 
-1. Verify the previous broadband56 contract and production-config SHA-256.
+1. Verify the previous broadband56 contract and production-config SHA-256. A
+   reconstructed replacement must also have an independently SHA-bound,
+   preparation-only approval receipt.
 2. Run the preparation preflight into a new no-clobber directory.
 3. Run the focused and public test suites.
 4. Run one exact-contract golden geometry through private Cadence, Calibre, and EMX.
@@ -193,14 +201,14 @@ Focused contract tests:
 python -m pytest tests/test_broadband56_balanced200k_contract.py -q
 ```
 
-Full public regression suite (verified on 2026-08-28):
+Full public regression suite (verified on 2026-08-29):
 
 ```bash
 python tools/run_public_tests.py
 ```
 
-Latest verified result after raw-product-finalizer integration:
-`1487 passed, 54 skipped, 1 deselected, 1 warning`.  This is a software
+Latest verified result after reconstructed-baseline approval-gate integration:
+`1488 passed, 54 skipped, 1 deselected, 1 warning`.  This is a software
 regression result only; it is not Calibre, EMX, or physical campaign evidence.
 
 Focused raw-product finalizer tests:

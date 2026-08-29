@@ -53,6 +53,9 @@ from rfic_transformer_inverse_design.sim.base import SParameterResult
 ROOT = Path(__file__).resolve().parents[1]
 CONTRACT = ROOT / "configs" / "broadband56_real_emx_balanced200k_tsmc65_v2.json"
 TEMPLATE = ROOT / "configs" / "mars_s4p_grounded_powerline_broadband56_balanced200k_v2_template.yaml"
+RECONSTRUCTED_CANDIDATE = (
+    ROOT / "docs" / "research" / "BROADBAND56_RECONSTRUCTED_BASELINE_V1_CANDIDATE_20260829.json"
+)
 
 
 def _load_audit_module():
@@ -827,8 +830,7 @@ def test_checkpoint_acceptance_rejects_wrong_sequence_phase_and_source(tmp_path:
     assert not by_name["accepted_geometry_contract_and_gates"]["pass"]
 
 
-def test_preparation_requires_hash_bound_previous_contract_and_identical_private_config(tmp_path: Path) -> None:
-    module = _load_prepare_module()
+def _write_preparation_config_fixture(tmp_path: Path) -> tuple[Path, Path]:
     emx = tmp_path / "emx"
     proc = tmp_path / "process.proc"
     cadence = tmp_path / "cadence"
@@ -852,6 +854,12 @@ def test_preparation_requires_hash_bound_previous_contract_and_identical_private
     production_config = tmp_path / "production.yaml"
     previous_config.write_text(config_text, encoding="utf-8")
     production_config.write_text(config_text, encoding="utf-8")
+    return previous_config, production_config
+
+
+def test_preparation_requires_hash_bound_previous_contract_and_identical_private_config(tmp_path: Path) -> None:
+    module = _load_prepare_module()
+    previous_config, production_config = _write_preparation_config_fixture(tmp_path)
 
     previous_contract = tmp_path / "previous_contract.json"
     previous_contract.write_text(
@@ -884,6 +892,109 @@ def test_preparation_requires_hash_bound_previous_contract_and_identical_private
     frozen_bounds = json.loads((out_dir / "GEOMETRY_BOUNDS_FROZEN.json").read_text(encoding="utf-8"))
     assert frozen_bounds["preparation_status"] == "PASS"
     assert tuple(frozen_bounds["field_bounds_um"]) == GEOMETRY_FIELDS
+
+
+def test_reconstructed_baseline_requires_explicit_matching_approval_receipt(tmp_path: Path) -> None:
+    module = _load_prepare_module()
+    previous_config, production_config = _write_preparation_config_fixture(tmp_path)
+    candidate_sha = _sha256(RECONSTRUCTED_CANDIDATE)
+
+    missing_out = tmp_path / "missing_approval"
+    missing_status = module.main(
+        [
+            "--override-contract", str(CONTRACT),
+            "--previous-contract", str(RECONSTRUCTED_CANDIDATE),
+            "--previous-contract-sha256", candidate_sha,
+            "--previous-config", str(previous_config),
+            "--production-config", str(production_config),
+            "--out-dir", str(missing_out),
+        ]
+    )
+    missing_receipt = json.loads((missing_out / "PREPARATION_RECEIPT.json").read_text(encoding="utf-8"))
+    missing_failed = {item["name"] for item in missing_receipt["checks"] if not item["pass"]}
+    assert missing_status == 2
+    assert missing_receipt["overall_status"] == "FAIL"
+    assert "reconstructed_baseline_approval_receipt_provided" in missing_failed
+
+    candidate = json.loads(RECONSTRUCTED_CANDIDATE.read_text(encoding="utf-8"))
+    approval = {
+        "schema": "rfic_transformer.broadband56_reconstructed_baseline_approval.v1",
+        "overall_status": "PASS",
+        "decision": "APPROVE_V2_PREPARATION_PREFLIGHT_ONLY",
+        "approved_by": "unit-test-project-owner",
+        "approved_utc": "2026-08-29T12:00:00Z",
+        "approval_source": "EXPLICIT_USER_OR_PROJECT_LEADER_INSTRUCTION",
+        "approval_reference": "unit-test explicit approval fixture",
+        "approved_contract": {
+            "campaign_id": candidate["campaign_id"],
+            "sha256": candidate_sha,
+        },
+        "preparation_preflight_authorized": True,
+        "automatic_command_authorized": False,
+        "golden_authorized": False,
+        "simulator_authorized": False,
+    }
+    approval_path = tmp_path / "approval.json"
+    approval_path.write_text(json.dumps(approval), encoding="utf-8")
+    approved_out = tmp_path / "approved"
+    approved_status = module.main(
+        [
+            "--override-contract", str(CONTRACT),
+            "--previous-contract", str(RECONSTRUCTED_CANDIDATE),
+            "--previous-contract-sha256", candidate_sha,
+            "--previous-contract-approval-receipt", str(approval_path),
+            "--previous-config", str(previous_config),
+            "--production-config", str(production_config),
+            "--out-dir", str(approved_out),
+        ]
+    )
+    approved_receipt = json.loads((approved_out / "PREPARATION_RECEIPT.json").read_text(encoding="utf-8"))
+    approved_contract = json.loads((approved_out / "campaign_contract_frozen.json").read_text(encoding="utf-8"))
+    assert approved_status == 0
+    assert approved_receipt["overall_status"] == "PASS"
+    assert approved_contract["inherited_contract_evidence"]["previous_contract_approval_receipt_sha256"] == _sha256(approval_path)
+
+    approval["approved_contract"]["sha256"] = "0" * 64
+    mismatch_path = tmp_path / "mismatch_approval.json"
+    mismatch_path.write_text(json.dumps(approval), encoding="utf-8")
+    mismatch_out = tmp_path / "mismatch"
+    mismatch_status = module.main(
+        [
+            "--override-contract", str(CONTRACT),
+            "--previous-contract", str(RECONSTRUCTED_CANDIDATE),
+            "--previous-contract-sha256", candidate_sha,
+            "--previous-contract-approval-receipt", str(mismatch_path),
+            "--previous-config", str(previous_config),
+            "--production-config", str(production_config),
+            "--out-dir", str(mismatch_out),
+        ]
+    )
+    mismatch_receipt = json.loads((mismatch_out / "PREPARATION_RECEIPT.json").read_text(encoding="utf-8"))
+    mismatch_failed = {item["name"] for item in mismatch_receipt["checks"] if not item["pass"]}
+    assert mismatch_status == 2
+    assert mismatch_receipt["overall_status"] == "FAIL"
+    assert "reconstructed_baseline_approval_contract_sha256" in mismatch_failed
+
+    approval["approved_contract"] = []
+    malformed_path = tmp_path / "malformed_approval.json"
+    malformed_path.write_text(json.dumps(approval), encoding="utf-8")
+    malformed_out = tmp_path / "malformed"
+    malformed_status = module.main(
+        [
+            "--override-contract", str(CONTRACT),
+            "--previous-contract", str(RECONSTRUCTED_CANDIDATE),
+            "--previous-contract-sha256", candidate_sha,
+            "--previous-contract-approval-receipt", str(malformed_path),
+            "--previous-config", str(previous_config),
+            "--production-config", str(production_config),
+            "--out-dir", str(malformed_out),
+        ]
+    )
+    malformed_receipt = json.loads((malformed_out / "PREPARATION_RECEIPT.json").read_text(encoding="utf-8"))
+    malformed_failed = {item["name"] for item in malformed_receipt["checks"] if not item["pass"]}
+    assert malformed_status == 2
+    assert malformed_receipt["overall_status"] == "FAIL"
+    assert "reconstructed_baseline_approved_contract_is_object" in malformed_failed
 
 
 def test_resource_estimator_requires_contract_bound_fresh_real_emx_pilots(tmp_path: Path) -> None:

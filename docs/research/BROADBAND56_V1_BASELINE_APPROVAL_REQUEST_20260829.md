@@ -32,6 +32,15 @@ after the user or project leader approves its **exact SHA-256**. Approval of a
 different SHA does not transfer. Until then, preparation, golden, 32, 1,000,
 and Phase A/B/C remain forbidden.
 
+The preparation command also enforces an independent approval receipt through
+`--previous-contract-approval-receipt`. For a reconstructed baseline it
+requires the exact schema, PASS decision, non-placeholder approver and
+timezone-aware approval time, explicit instruction reference, matching
+campaign ID and candidate SHA, and preparation-only scope. Both automatic
+execution and golden/simulator authorization must remain false. The adjacent
+receipt template intentionally has `overall_status=FAIL`; it cannot authorize
+preparation and must never be edited in place.
+
 An unambiguous approval response is:
 
 > I approve the exact SHA-256 of

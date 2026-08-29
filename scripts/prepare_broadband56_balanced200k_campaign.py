@@ -4,7 +4,9 @@
 The script performs no Cadence, Calibre, or EMX work.  It refuses to prepare a
 campaign unless the supplied production configuration is identical to the
 approved previous broadband56 configuration except for the already-approved
-frequency-grid fields, and that grid is exactly 5-60 GHz in 1-GHz steps.
+frequency-grid fields, and that grid is exactly 5-60 GHz in 1-GHz steps.  A
+newly reconstructed non-historical baseline additionally requires a separate,
+exactly SHA-bound approval receipt limited to preparation preflight.
 """
 
 from __future__ import annotations
@@ -44,6 +46,9 @@ FREQUENCY_FIELDS = {
     "frequency_step_hz",
     "band_points",
 }
+RECONSTRUCTED_BASELINE_ORIGIN = "NEW_RECONSTRUCTION_NOT_HISTORICAL_V1"
+RECONSTRUCTED_APPROVAL_SCHEMA = "rfic_transformer.broadband56_reconstructed_baseline_approval.v1"
+RECONSTRUCTED_APPROVAL_DECISION = "APPROVE_V2_PREPARATION_PREFLIGHT_ONLY"
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -65,6 +70,32 @@ def main(argv: list[str] | None = None) -> int:
         previous_contract_path,
         str(args.previous_contract_sha256),
     )
+    approval_receipt_path: Path | None = None
+    approval_receipt_sha256: str | None = None
+    if str(previous_contract.get("contract_origin") or "") == RECONSTRUCTED_BASELINE_ORIGIN:
+        if args.previous_contract_approval_receipt:
+            approval_receipt_path = Path(args.previous_contract_approval_receipt).expanduser().resolve()
+            approval_receipt = _read_json(
+                approval_receipt_path,
+                checks,
+                "previous_contract_approval_receipt",
+            )
+            _validate_reconstructed_baseline_approval(
+                checks,
+                approval_receipt,
+                previous_contract,
+                previous_contract_path,
+            )
+            if approval_receipt_path.is_file():
+                approval_receipt_sha256 = _sha256(approval_receipt_path)
+        else:
+            checks.append(
+                _check(
+                    "reconstructed_baseline_approval_receipt_provided",
+                    False,
+                    "a reconstructed non-historical baseline requires an independently SHA-bound approval receipt",
+                )
+            )
 
     for error in validate_contract(override):
         checks.append(_check(f"override_contract::{error}", False, error))
@@ -120,6 +151,8 @@ def main(argv: list[str] | None = None) -> int:
     inherited_evidence = {
         "previous_campaign_id": previous_campaign_id or None,
         "previous_contract_sha256": _sha256(previous_contract_path) if previous_contract_path.is_file() else None,
+        "previous_contract_origin": str(previous_contract.get("contract_origin") or "HISTORICAL_OR_UNSPECIFIED"),
+        "previous_contract_approval_receipt_sha256": approval_receipt_sha256,
         "previous_config_sha256": _sha256(previous_config_path) if previous_config_path.is_file() else None,
         "production_config_sha256": _sha256(production_config_path) if production_config_path.is_file() else None,
         "private_runtime_paths_not_for_publication": True,
@@ -230,6 +263,10 @@ def _parse_args(argv: list[str] | None) -> argparse.Namespace:
     )
     parser.add_argument("--previous-contract", required=True)
     parser.add_argument("--previous-contract-sha256", required=True)
+    parser.add_argument(
+        "--previous-contract-approval-receipt",
+        help="Required only for a NEW_RECONSTRUCTION_NOT_HISTORICAL_V1 baseline; must authorize preparation preflight only.",
+    )
     parser.add_argument("--previous-config", required=True)
     parser.add_argument("--production-config", required=True)
     parser.add_argument("--out-dir", required=True)
@@ -319,6 +356,115 @@ def _validate_private_runtime_paths(checks: list[dict[str, Any]], config: Any) -
             str(paths["emx_binary"]),
         )
     )
+
+
+def _validate_reconstructed_baseline_approval(
+    checks: list[dict[str, Any]],
+    approval: dict[str, Any],
+    previous_contract: dict[str, Any],
+    previous_contract_path: Path,
+) -> None:
+    approved_contract_value = approval.get("approved_contract")
+    approved_contract = approved_contract_value if isinstance(approved_contract_value, dict) else {}
+    approved_by = str(approval.get("approved_by") or "").strip()
+    approved_utc = str(approval.get("approved_utc") or "").strip()
+    approval_reference = str(approval.get("approval_reference") or "").strip()
+    checks.extend(
+        [
+            _check(
+                "reconstructed_baseline_approved_contract_is_object",
+                isinstance(approved_contract_value, dict),
+                type(approved_contract_value).__name__,
+            ),
+            _check(
+                "reconstructed_baseline_approval_schema",
+                approval.get("schema") == RECONSTRUCTED_APPROVAL_SCHEMA,
+                approval.get("schema"),
+            ),
+            _check(
+                "reconstructed_baseline_approval_status",
+                approval.get("overall_status") == "PASS",
+                approval.get("overall_status"),
+            ),
+            _check(
+                "reconstructed_baseline_approval_decision",
+                approval.get("decision") == RECONSTRUCTED_APPROVAL_DECISION,
+                approval.get("decision"),
+            ),
+            _check(
+                "reconstructed_baseline_approval_identity",
+                bool(approved_by) and approved_by.upper() not in {"TBD", "UNKNOWN", "PLACEHOLDER"},
+                approved_by or "missing",
+            ),
+            _check(
+                "reconstructed_baseline_approval_utc",
+                _is_timezone_aware_iso8601(approved_utc),
+                approved_utc or "missing",
+            ),
+            _check(
+                "reconstructed_baseline_approval_source",
+                approval.get("approval_source") == "EXPLICIT_USER_OR_PROJECT_LEADER_INSTRUCTION",
+                approval.get("approval_source"),
+            ),
+            _check(
+                "reconstructed_baseline_approval_reference",
+                bool(approval_reference)
+                and approval_reference.upper() not in {"TBD", "UNKNOWN", "PLACEHOLDER"},
+                approval_reference or "missing",
+            ),
+            _check(
+                "reconstructed_baseline_approval_campaign_id",
+                approved_contract.get("campaign_id") == previous_contract.get("campaign_id"),
+                approved_contract.get("campaign_id"),
+            ),
+            _check(
+                "reconstructed_baseline_approval_contract_sha256",
+                str(approved_contract.get("sha256") or "").strip().lower()
+                == _sha256(previous_contract_path),
+                approved_contract.get("sha256"),
+            ),
+            _check(
+                "reconstructed_baseline_preparation_only_authorized",
+                approval.get("preparation_preflight_authorized") is True,
+                approval.get("preparation_preflight_authorized"),
+            ),
+            _check(
+                "reconstructed_baseline_automatic_execution_forbidden",
+                approval.get("automatic_command_authorized") is False,
+                approval.get("automatic_command_authorized"),
+            ),
+            _check(
+                "reconstructed_baseline_golden_forbidden",
+                approval.get("golden_authorized") is False,
+                approval.get("golden_authorized"),
+            ),
+            _check(
+                "reconstructed_baseline_simulator_forbidden",
+                approval.get("simulator_authorized") is False,
+                approval.get("simulator_authorized"),
+            ),
+            _check(
+                "reconstructed_baseline_contract_automatic_execution_forbidden",
+                previous_contract.get("automatic_command_authorized") is False,
+                previous_contract.get("automatic_command_authorized"),
+            ),
+            _check(
+                "reconstructed_baseline_contract_production_use_forbidden",
+                previous_contract.get("production_use_authorized") is False,
+                previous_contract.get("production_use_authorized"),
+            ),
+        ]
+    )
+
+
+def _is_timezone_aware_iso8601(value: str) -> bool:
+    if not value:
+        return False
+    try:
+        parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
+    except ValueError:
+        return False
+    return parsed.tzinfo is not None and parsed.utcoffset() is not None
 
 
 def _check_file_sha(checks: list[dict[str, Any]], name: str, path: Path, expected: str) -> None:

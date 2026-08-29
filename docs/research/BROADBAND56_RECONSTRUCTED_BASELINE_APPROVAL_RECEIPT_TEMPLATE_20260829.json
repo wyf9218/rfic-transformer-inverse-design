@@ -1,0 +1,19 @@
+{
+  "schema": "rfic_transformer.broadband56_reconstructed_baseline_approval.v1",
+  "overall_status": "FAIL",
+  "decision": "DO_NOT_AUTHORIZE_UNTIL_EXPLICIT_APPROVAL",
+  "approved_by": "",
+  "approved_utc": "",
+  "approval_source": "",
+  "approval_reference": "",
+  "approved_contract": {
+    "campaign_id": "broadband56_real_emx_tsmc65_reconstructed_baseline_v1_20260829",
+    "sha256": "1abb85dd7e6aad709eb404dbcc174a8a66e325baf76f26c0eeb64a6498ea7a12"
+  },
+  "preparation_preflight_authorized": false,
+  "automatic_command_authorized": false,
+  "golden_authorized": false,
+  "simulator_authorized": false,
+  "template_only": true,
+  "instructions": "Do not edit this template in place. After explicit approval of the exact candidate SHA-256, create a new no-clobber receipt, bind the approval reference, and keep golden and simulator authorization false."
+}
