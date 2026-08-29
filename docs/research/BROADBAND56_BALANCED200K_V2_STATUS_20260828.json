@@ -4,7 +4,7 @@
   "campaign_id": "broadband56_real_emx_balanced200k_tsmc65_v2",
   "branch": "codex/broadband56-balanced200k-v2",
   "base_commit": "85a0b96be7d2227a44d00d046f972f2a9bfbeaa0",
-  "overall_status": "LOCAL_CONTRACT_AUDIT_ADAPTIVE_RAW_PRODUCTS_TERMINAL_DELIVERY_FIGURE_AND_SUPERVISOR_STATE_CONTROL_PLANE_READY_REMOTE_GATES_PENDING",
+  "overall_status": "LOCAL_CONTROL_PLANE_READY_REMOTE_BACKEND_REVERIFIED_V1_56_POINT_CONTRACT_NOT_FOUND",
   "current_accepted": 0,
   "current_feature_rows": 0,
   "current_phase": "PREPARATION",
@@ -13,7 +13,7 @@
   "frozen_public_contract": {
     "path": "configs/broadband56_real_emx_balanced200k_tsmc65_v2.json",
     "validation": "PASS",
-    "private_inherited_evidence": "REVERIFY"
+    "private_inherited_evidence": "PARTIAL_READ_ONLY_REVERIFY; historical backend matches, approved V1 56-point contract not found"
   },
   "verified_local_results": [
     {
@@ -95,6 +95,35 @@
     {
       "scope": "fresh-real-EMX raw-product finalizer",
       "result": "PASS in 13 synthetic four-port Touchstone tests and 71-test combined V2 regression; consumes a terminal attempt ledger, enforces exact status chains and stable canonical identity, verifies frozen production-config and candidate/GDS/Calibre/EMX-log/S4P hashes, reparses every accepted exact-grid S4P, and numerically rebinds all full S/Z matrices plus Lp/Ls/Qp/Qs/Qmin/M/signed-K/abs-K/ratio/reactance rows before no-clobber output; tampered values or physical files, nonterminal validity audits, proxy labeling, config drift, duplicate accepted geometry, and partial evidence fail closed; this does not run the private backend and physical counts remain zero"
+    }
+  ],
+  "verified_remote_read_only_results": [
+    {
+      "scope": "existing stable MARS session",
+      "result": "PASS; user explicitly unlocked read-only verification on 2026-08-29; the existing Guacamole tab was reused without reload, reconnect, SSH, file writes, or simulator launch"
+    },
+    {
+      "scope": "historical production-controller evidence",
+      "result": "PASS for historical evidence only; general, authorized, and production-launch preflights were present and SHA-bound, with PASS checks for TSMC65, 48 jobs, 5-60 GHz/0.5 GHz/111 points, single-ended shield-grounded mode, P001-P004 signal ports, Cadence PinPurpose 51, and 4-port Touchstone output",
+      "source_sha256": {
+        "general_preflight": "19ecbe32452a1f70016e57ebbee699009c7c8f12b4edc98a670611d22922630a4",
+        "authorized_preflight": "52b928a81d70e7c4d7430fd5a25bb4f3606cd951bcda4a3acbf106277af93af0",
+        "production_launch_preflight": "713440c844d7782105e4e8304d077ef39a9a46c634fc8c0e255fc243eed2afe3",
+        "authorized_acquisition_contract": "c290427d22570d8f8946112c76af921739a9321e504c3d69d40d53068a6f80a3",
+        "historical_production_config": "c4ffcca8424770e4b3c0c64d16c575271d29867d2b47dc3a29b7f642d2fd3655"
+      }
+    },
+    {
+      "scope": "historical private runtime-byte drift check",
+      "result": "PASS; current EMX wrapper, EMX process file, Cadence cds.lib, and Cadence layer-map SHA-256 values each matched their historical authorized-preflight evidence, and the EMX wrapper remained executable; private paths and bytes are intentionally omitted"
+    },
+    {
+      "scope": "approved V1 56-point contract and V2 private config discovery",
+      "result": "NOT_FOUND; bounded read-only searches of the user research root and home found neither an approved non-V2 5-60 GHz/1 GHz/56-point broadband56 contract nor the V2 private production config; the historical 111-point contract cannot substitute for either artifact"
+    },
+    {
+      "scope": "resource snapshot and process isolation",
+      "result": "PARTIAL; 192 logical CPUs, load average 51.04/77.45/144.43, 417 GiB available memory, 31 GiB swap used, and 2.4 TiB research storage free were observed; exact campaign/EMX/Calibre/controller process count for the current account was zero; no license gate was queried or approved"
     }
   ],
   "preserved_raw_product_finalizer_development_failure": {
@@ -209,12 +238,12 @@
   },
   "remote_state": {
     "mars_host": "PRIVATE_NOT_RECORDED",
-    "web_session": "USER_HAS_GUACAMOLE_TAB_OPEN; NOT_TOUCHED_BY_THIS_LOCAL_IMPLEMENTATION",
-    "user_instruction": "DO_NOT_REFRESH_RECONNECT_OR_USE_MARS_UNTIL_EXPLICIT_STABLE_UNLOCK",
-    "previous_v1_contract_hash": "UNKNOWN",
-    "private_production_config": "REVERIFY",
-    "private_calibre_emx_backend": "REVERIFY",
-    "resource_and_license_gate": "REVERIFY"
+    "web_session": "STABLE_READ_ONLY_UNLOCK_CONFIRMED_2026-08-29; EXISTING_TAB_REUSED_WITHOUT_RELOAD_OR_RECONNECT",
+    "user_instruction": "READ_ONLY_REVERIFY_AUTHORIZED; NO_SIMULATOR_LAUNCH_OR_REMOTE_WRITE",
+    "previous_v1_contract_hash": "NOT_FOUND_IN_BOUNDED_REMOTE_SEARCH_2026-08-29",
+    "private_production_config": "V2_NOT_FOUND; HISTORICAL_111_POINT_CONFIG_SHA256_RECORDED_ONLY",
+    "private_calibre_emx_backend": "PASS_HISTORICAL_RUNTIME_BYTES_MATCH; NOT_YET_BOUND_TO_A_V1_OR_V2_56_POINT_PREPARATION_RECEIPT",
+    "resource_and_license_gate": "REVERIFY; AGGREGATE_RESOURCE_SNAPSHOT_ONLY; LICENSE_GATE_NOT_RUN"
   },
-  "next_legal_action": "Continue local verification only. Wait for explicit user stable-unlock authorization before any browser, SSH, or MARS action; then read-only locate and hash the previous V1 contract/config/backend receipts. Do not launch EMX until preparation, golden, and resource gates pass."
+  "next_legal_action": "Obtain or leader-approve the missing non-V2 5-60 GHz/1 GHz/56-point V1 contract and its exact SHA-256. Only then create a no-clobber private V2 production config whose only inherited-config changes are the four approved frequency fields, run preparation preflight, and proceed to golden only if the preparation and resource/license gates pass."
 }
