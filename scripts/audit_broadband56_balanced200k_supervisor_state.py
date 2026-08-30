@@ -36,6 +36,12 @@ from rfic_transformer_inverse_design.campaigns.broadband56_balanced200k import (
     phase_for_accepted_count,
     validate_contract,
 )
+from rfic_transformer_inverse_design.campaigns.broadband56_capacity_policy import (  # noqa: E402
+    GATE_SCHEMA as CAPACITY_RESOURCE_GATE_SCHEMA,
+    POLICY_APPROVAL_SCHEMA,
+    POLICY_APPROVAL_SCOPE,
+    RESOURCE_POLICY,
+)
 
 
 EXPECTED_FEATURE_ROWS = TARGET_ACCEPTED_GEOMETRIES * len(FREQUENCY_GRID_HZ)
@@ -556,8 +562,13 @@ def _load_resource_gate(path: Path | None, *, fingerprint: str) -> dict[str, Any
     ) == fingerprint
     if not identity_ok:
         raise SupervisorStateError("resource gate campaign identity mismatch")
-    if payload.get("schema") != RESOURCE_GATE_SCHEMA:
+    gate_schema = payload.get("schema")
+    if gate_schema not in {RESOURCE_GATE_SCHEMA, CAPACITY_RESOURCE_GATE_SCHEMA}:
         raise SupervisorStateError("resource gate schema mismatch")
+    if gate_schema == CAPACITY_RESOURCE_GATE_SCHEMA and payload.get(
+        "resource_policy"
+    ) != RESOURCE_POLICY:
+        raise SupervisorStateError("capacity resource-policy identity mismatch")
     status = payload.get("overall_status")
     if status not in {"PASS", "WAIT"}:
         raise SupervisorStateError("resource gate is neither PASS nor WAIT")
@@ -581,16 +592,19 @@ def _load_resource_gate(path: Path | None, *, fingerprint: str) -> dict[str, Any
     elif any(gate_permissions.values()):
         raise SupervisorStateError("WAIT resource gate must authorize no launch action")
 
+    required_resource_fields = [
+        "resources_available",
+        "load_gate_pass",
+        "memory_gate_pass",
+        "storage_gate_pass",
+        "license_gate_pass",
+        "isolation_gate_pass",
+    ]
+    if gate_schema == CAPACITY_RESOURCE_GATE_SCHEMA:
+        required_resource_fields.extend(("iowait_gate_pass", "swap_gate_pass"))
     resource_checks_pass = all(
         payload.get(key) is True
-        for key in (
-            "resources_available",
-            "load_gate_pass",
-            "memory_gate_pass",
-            "storage_gate_pass",
-            "license_gate_pass",
-            "isolation_gate_pass",
-        )
+        for key in required_resource_fields
     )
     checks_pass = _checks_are_exact_pass(payload)
     valid_until = _parse_aware_datetime(payload.get("valid_until_utc"))
@@ -616,8 +630,10 @@ def _load_gate_authorization(
     evidence = gate.get("evidence")
     if not isinstance(evidence, Mapping):
         raise SupervisorStateError("resource gate lacks authorization evidence")
-    item = evidence.get("golden_authorization_receipt") or evidence.get(
-        "stage_authorization_receipt"
+    item = (
+        evidence.get("operational_policy_approval_receipt")
+        or evidence.get("golden_authorization_receipt")
+        or evidence.get("stage_authorization_receipt")
     )
     if not isinstance(item, Mapping):
         raise SupervisorStateError("resource gate lacks authorization-receipt evidence")
@@ -667,6 +683,15 @@ def _load_gate_authorization(
             or not _is_sha256(str(approved.get("sha256") or ""))
         ):
             raise SupervisorStateError("one-golden authorization identity mismatch")
+    elif authorization.get("schema") == POLICY_APPROVAL_SCHEMA:
+        if (
+            authorization.get("decision") != POLICY_APPROVAL_SCOPE
+            or authorization.get("authorization_scope") != "FULL_CAMPAIGN"
+            or authorization.get("resource_policy") != RESOURCE_POLICY
+            or authorization.get("approval_source")
+            != "EXPLICIT_PROJECT_OWNER_INSTRUCTION"
+        ):
+            raise SupervisorStateError("operational-policy authorization identity mismatch")
     elif (
         authorization.get("schema") != STAGE_AUTHORIZATION_SCHEMA
         or authorization.get("decision") != STAGE_AUTHORIZATION_DECISION

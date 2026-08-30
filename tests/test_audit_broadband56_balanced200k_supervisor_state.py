@@ -204,6 +204,77 @@ def _write_resource_gate(
     return path
 
 
+def _write_capacity_resource_gate(tmp_path: Path, fingerprint: str) -> Path:
+    authorization = tmp_path / "capacity_policy_authorization.json"
+    _write_json(
+        authorization,
+        {
+            "schema": "rfic_transformer.broadband56_v2_operational_policy_amendment_approval.v1",
+            "overall_status": "PASS",
+            "decision": "APPROVE_CAPACITY_NORMALIZED_STAGED_EXECUTION",
+            "authorization_scope": "FULL_CAMPAIGN",
+            "campaign_id": CAMPAIGN_ID,
+            "contract_fingerprint_sha256": fingerprint,
+            "resource_policy": "CAPACITY_NORMALIZED_HIGH_LOAD_V1",
+            "approved_by": "unit-test-project-owner",
+            "approved_utc": "2026-08-30T18:00:00Z",
+            "approval_source": "EXPLICIT_PROJECT_OWNER_INSTRUCTION",
+            "approval_reference": "explicit unit-test capacity-policy approval",
+            "approved_candidate": {
+                "campaign_id": CAMPAIGN_ID,
+                "contract_fingerprint_sha256": fingerprint,
+                "sha256": "d" * 64,
+            },
+            "one_golden_authorized": True,
+            "pilot_32_authorized": True,
+            "pilot_1000_authorized": True,
+            "queue_authorized": True,
+            "supervisor_authorized": True,
+            "phase_a_authorized": True,
+            "phase_b_authorized": True,
+            "phase_c_authorized": True,
+            "campaign_200k_authorized": True,
+            "checks": [{"name": "fixture", "pass": True}],
+            "execution_effect": "NONE_RECORD_ONLY",
+        },
+    )
+    path = tmp_path / "capacity_resource_gate.json"
+    _write_json(
+        path,
+        {
+            "schema": "rfic_transformer.broadband56_v2_capacity_resource_gate.v1",
+            "campaign_id": CAMPAIGN_ID,
+            "contract_fingerprint_sha256": fingerprint,
+            "resource_policy": "CAPACITY_NORMALIZED_HIGH_LOAD_V1",
+            "overall_status": "PASS",
+            "authorization_scope": "FULL_CAMPAIGN",
+            "resources_available": True,
+            "load_gate_pass": True,
+            "memory_gate_pass": True,
+            "iowait_gate_pass": True,
+            "swap_gate_pass": True,
+            "storage_gate_pass": True,
+            "license_gate_pass": True,
+            "isolation_gate_pass": True,
+            "valid_until_utc": "2099-01-01T00:00:00Z",
+            "checks": [{"name": "fixture", "pass": True}],
+            "evidence": {
+                "operational_policy_approval_receipt": _evidence(authorization)
+            },
+            "golden_launch_authorized": True,
+            "pilot_32_launch_authorized": True,
+            "pilot_1000_launch_authorized": True,
+            "queue_launch_authorized": True,
+            "supervisor_launch_authorized": True,
+            "phase_a_launch_authorized": True,
+            "phase_b_launch_authorized": True,
+            "phase_c_launch_authorized": True,
+            "campaign_launch_authorized": True,
+        },
+    )
+    return path
+
+
 def _write_audit(
     tmp_path: Path,
     *,
@@ -418,6 +489,25 @@ def test_pass_resource_gate_advances_only_to_golden(tmp_path: Path) -> None:
     assert snapshot["next_action"] == "RUN_ONE_EXACT_CONTRACT_GOLDEN_GEOMETRY"
     assert snapshot["stage_authorizations"]["golden"] is True
     assert snapshot["stage_authorizations"]["pilot_32"] is False
+
+
+def test_capacity_policy_gate_supports_full_ordered_stage_authorization(
+    tmp_path: Path,
+) -> None:
+    module = _load_module()
+    contract_path, preparation, fingerprint = _prepared_fixture(tmp_path)
+    resource_gate = _write_capacity_resource_gate(tmp_path, fingerprint)
+
+    snapshot = _audit(
+        module,
+        contract_path=contract_path,
+        preparation=preparation,
+        resource_gate=resource_gate,
+        out_dir=tmp_path / "state_capacity_golden",
+    )
+
+    assert snapshot["lifecycle_state"] == "READY_FOR_GOLDEN"
+    assert all(snapshot["stage_authorizations"].values())
 
 
 def test_one_golden_scope_stops_after_golden_receipt(tmp_path: Path) -> None:
