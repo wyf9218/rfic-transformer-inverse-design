@@ -4,7 +4,7 @@
   "campaign_id": "broadband56_real_emx_balanced200k_tsmc65_v2",
   "branch": "codex/broadband56-balanced200k-v2",
   "base_commit": "85a0b96be7d2227a44d00d046f972f2a9bfbeaa0",
-  "overall_status": "PREPARATION_PASS_R2_APPROVED_GOLDEN_NOT_AUTHORIZED",
+  "overall_status": "PREPARATION_PASS_GOLDEN_AUTHORIZATION_PENDING_EXPLICIT_SHA256_APPROVAL",
   "current_accepted": 0,
   "current_feature_rows": 0,
   "current_phase": "PREPARATION",
@@ -16,6 +16,13 @@
     "private_inherited_evidence": "PARTIAL_READ_ONLY_REVERIFY; historical backend matches, approved V1 56-point contract not found"
   },
   "verified_local_results": [
+    {
+      "scope": "exact-SHA one-golden authorization candidate and record-only recorder",
+      "result": "PASS in local software tests; the request binds campaign fingerprint f86a00efbf7756b7421b863bbb16c340db6b423640f63a3257d46c1af49eb55e, the exact R2/preparation/config evidence, fresh resource/load/license gates, a one-geometry simulator limit, and mandatory stop after the golden receipt; wrong SHA, scope expansion, preparation-evidence drift, invalid human metadata, and duplicate output fail closed; no resource, license, remote, Cadence, Calibre, EMX, queue, runner, or supervisor action is available from the recorder",
+      "candidate_sha256": "655a490c027a5aa96412ac982891123e17250412d90819f52d5cb8e17a082965",
+      "recorder_sha256": "39359617ffa368e953653b941603077571f019d135c35ef0d7cb9681f8f9897e",
+      "test_sha256": "26e45e3193aa7bbdf2461b8e6d3c6f43ca450af07d098eb1a029f294ac489e0a"
+    },
     {
       "scope": "no-clobber reconstructed-baseline approval recorder",
       "result": "PASS in local software tests; records only a pre-existing explicit approval, verifies exact candidate bytes/grid plus non-placeholder identity/time/reference, writes PASS or FAIL receipt and SHA index, cross-validates PASS output against the preparation gate, rejects wrong SHA and duplicate output, and has no preparation or remote execution path"
@@ -271,6 +278,8 @@
     "latest_reconstructed_baseline_approval_recorder_public_retest": "1491 passed, 54 skipped, 1 deselected, 1 warning in 99.96s",
     "latest_r2_approval_and_preparation_focused_retest": "20 passed in 3.20s under disposable Python 3.12 environment",
     "latest_r2_preparation_public_retest": "1491 passed, 54 skipped, 1 deselected, 1 warning in 114.59s under disposable Python 3.12 environment",
+    "latest_one_golden_authorization_focused_retest": "25 passed in 3.09s under disposable Python 3.12 environment",
+    "latest_one_golden_authorization_public_retest": "1496 passed, 54 skipped, 1 deselected, 1 warning in 95.92s under disposable Python 3.12 environment",
     "full_retest_status": "PASS",
     "compileall": "PASS"
   },
@@ -318,6 +327,22 @@
     "public_preparation_status_sha256": "3273e498946e7170cc528ddc8027f408c943f52f0d1f07c264d5d15dd02529d9",
     "execution_effect": "Approval recorded and preparation preflight completed only; no golden, Cadence, Calibre, EMX, queue, supervisor, phase, or campaign action was launched"
   },
+  "golden_authorization_candidate": {
+    "path": "docs/research/BROADBAND56_V2_GOLDEN_AUTHORIZATION_CANDIDATE_20260830.json",
+    "sha256": "655a490c027a5aa96412ac982891123e17250412d90819f52d5cb8e17a082965",
+    "approval_status": "PENDING_EXPLICIT_PROJECT_OWNER_SHA256_APPROVAL",
+    "authorization_scope": "APPROVE_RESOURCE_LICENSE_GATE_AND_ONE_GOLDEN_ONLY",
+    "request_path": "docs/research/BROADBAND56_V2_GOLDEN_AUTHORIZATION_REQUEST_20260830.md",
+    "request_sha256": "4af00a5e27741c03a3bac7c2ab19b24f6bc882a3849283b9dd14301fd2801a87",
+    "recorder_path": "scripts/record_broadband56_v2_golden_authorization.py",
+    "recorder_sha256": "39359617ffa368e953653b941603077571f019d135c35ef0d7cb9681f8f9897e",
+    "recorder_test_path": "tests/test_record_broadband56_v2_golden_authorization.py",
+    "recorder_test_sha256": "26e45e3193aa7bbdf2461b8e6d3c6f43ca450af07d098eb1a029f294ac489e0a",
+    "contract_fingerprint_sha256": "f86a00efbf7756b7421b863bbb16c340db6b423640f63a3257d46c1af49eb55e",
+    "execution_effect": "NONE_REQUEST_ONLY",
+    "golden_authorized": false,
+    "pilot_or_campaign_authorized": false
+  },
   "remote_state": {
     "mars_host": "PRIVATE_NOT_RECORDED",
     "web_session": "STABLE_EXISTING_TAB_REUSED_WITHOUT_RELOAD_OR_RECONNECT; PREPARATION_ONLY_WRITES_COMPLETED_2026-08-30",
@@ -328,5 +353,5 @@
     "private_calibre_emx_backend": "PASS_HISTORICAL_RUNTIME_BYTES_MATCH; PREPARATION COMPLETE WITHOUT ANY SIMULATOR ACTION",
     "resource_and_license_gate": "REVERIFY; AGGREGATE_RESOURCE_SNAPSHOT_ONLY; LICENSE_GATE_NOT_RUN"
   },
-  "next_legal_action": "STOP. The current approval boundary is exhausted. Golden remains unauthorized; before any later golden action, obtain separate explicit authorization and pass fresh resource and license gates. Cadence, Calibre, EMX, queue, supervisor, Phase A/B/C, and the 200k campaign remain forbidden."
+  "next_legal_action": "Obtain explicit project-owner approval of docs/research/BROADBAND56_V2_GOLDEN_AUTHORIZATION_CANDIDATE_20260830.json at exact SHA-256 655a490c027a5aa96412ac982891123e17250412d90819f52d5cb8e17a082965. Until then, stop. Even after approval, fresh resource/load/license gates must PASS before exactly one golden; 32/1000 pilots, queues, supervisors, Phase A/B/C, and the 200k campaign remain forbidden."
 }

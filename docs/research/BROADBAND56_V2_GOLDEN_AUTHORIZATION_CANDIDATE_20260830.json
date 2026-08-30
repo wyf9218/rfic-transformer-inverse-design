@@ -1,0 +1,93 @@
+{
+  "schema": "rfic_transformer.broadband56_v2_golden_authorization_candidate.v1",
+  "generated_utc": "2026-08-30T15:15:04Z",
+  "campaign_id": "broadband56_real_emx_balanced200k_tsmc65_v2",
+  "contract_fingerprint_sha256": "f86a00efbf7756b7421b863bbb16c340db6b423640f63a3257d46c1af49eb55e",
+  "approval_status": "PENDING_EXPLICIT_PROJECT_OWNER_SHA256_APPROVAL",
+  "authorization_scope": "APPROVE_RESOURCE_LICENSE_GATE_AND_ONE_GOLDEN_ONLY",
+  "automatic_campaign_execution_authorized": false,
+  "pilot_execution_authorized": false,
+  "phase_execution_authorized": false,
+  "preparation_evidence": {
+    "r2_candidate_path": "docs/research/BROADBAND56_RECONSTRUCTED_BASELINE_V1_CANDIDATE_R2_20260829.json",
+    "r2_candidate_sha256": "037889d41f41bbedbcd38188c44a5c8c1ccffa62943c334a72f0980f38bf864f",
+    "r2_approval_receipt_path": "reports/broadband56_reconstructed_baseline_r2_approval_20260830T143319Z/RECONSTRUCTED_BASELINE_APPROVAL_RECEIPT.json",
+    "r2_approval_receipt_sha256": "c58c8a29e66855a44e923026666955b655f10c7355b53f815018be352483dbc8",
+    "public_preparation_status_path": "reports/broadband56_v2_preparation_preflight_r2_20260830T145300Z/PUBLIC_SAFE_PREPARATION_STATUS.json",
+    "public_preparation_status_sha256": "3273e498946e7170cc528ddc8027f408c943f52f0d1f07c264d5d15dd02529d9",
+    "private_preparation_receipt_sha256": "1cbc646d0223a4f5655552eeb0339becf3d0cc5ac7a86a2bc72b19b0ea7b8ca6",
+    "private_preparation_receipt_size_bytes": 10439,
+    "private_configuration_sha256": "d83114199dfe82e1f1d1fc90db8e021bad9b2d98118d1bba0011b5a9f8e24327",
+    "historical_configuration_sha256": "c4ffcc8a424770e4b3c0c64d16c575271d29867d2b47dc3a29b7f642d2fd3655",
+    "preparation_status": "PASS",
+    "preparation_checks_passed": 40,
+    "preparation_checks_failed": 0
+  },
+  "frozen_frequency_contract": {
+    "start_ghz": 5,
+    "stop_ghz": 60,
+    "step_ghz": 1,
+    "points": 56,
+    "ports": 4,
+    "touchstone_extension": ".s4p"
+  },
+  "permitted_only_after_exact_sha256_approval": {
+    "read_only_resource_and_load_gate": true,
+    "read_only_license_availability_gate": true,
+    "create_one_no_clobber_golden_run_root": true,
+    "prepare_exactly_one_deterministic_golden_geometry_from_frozen_bounds": true,
+    "run_analytical_and_topology_gates_for_that_geometry": true,
+    "run_cadence_for_that_geometry": true,
+    "run_calibre_drc_for_that_geometry": true,
+    "run_emx_for_that_geometry": true,
+    "parse_and_audit_one_exact_56_point_four_port_s4p": true,
+    "write_one_no_clobber_golden_audit_and_receipt": true
+  },
+  "mandatory_preconditions": [
+    "The exact approved candidate SHA-256 and campaign fingerprint must match the frozen preparation artifacts.",
+    "The current private configuration SHA-256 must remain d83114199dfe82e1f1d1fc90db8e021bad9b2d98118d1bba0011b5a9f8e24327.",
+    "The historical runtime identities must still match authorized-preflight SHA-256 52b928a81d70e7c4d7430fd5a25bb4f3606cd951bcda4a3acbf106277af93af0.",
+    "The load, resource, and license gates must each be fresh and PASS before any Cadence, Calibre, or EMX action.",
+    "No duplicate authoritative supervisor, queue, runner, or exact output root may exist.",
+    "The golden geometry must be canonical, unique, inside the exact frozen ten-dimensional bounds, deterministic, and recorded before simulator execution.",
+    "Every output must use a new no-clobber path and retain path, size, SHA-256, and stage provenance."
+  ],
+  "golden_acceptance_contract": {
+    "expected_unique_geometries": 1,
+    "analytical_geometry_pass_required": true,
+    "topology_pass_required": true,
+    "cadence_gds_required": true,
+    "zero_blocking_calibre_violations_required": true,
+    "fresh_real_emx_required": true,
+    "parseable_four_port_touchstone_required": true,
+    "exact_frequency_vector_required": true,
+    "complete_s_and_z_matrices_required": true,
+    "finite_feature_rows_required": true,
+    "candidate_gds_calibre_emx_s4p_hash_chain_required": true,
+    "audit_mode": "golden",
+    "terminal_state": "GOLDEN_COMPLETE"
+  },
+  "fail_closed_conditions": [
+    "Any candidate, approval, preparation, configuration, contract-fingerprint, runtime, process, port, grounding, DRC, layout, or frequency identity mismatch.",
+    "Any non-PASS load, resource, or license gate.",
+    "Any pre-existing output path, duplicate process, or unverifiable ownership.",
+    "Any analytical, topology, Cadence, Calibre, EMX, S4P, feature, or provenance failure.",
+    "Any attempt to execute more than one geometry or continue after the golden receipt."
+  ],
+  "explicitly_forbidden": [
+    "32-geometry pilot",
+    "1000-geometry pilot",
+    "resource-based campaign launch",
+    "candidate queue launch",
+    "authoritative supervisor launch",
+    "Phase A",
+    "Phase B",
+    "Phase C",
+    "200000-geometry campaign",
+    "reuse of historical 0.5-GHz labels",
+    "proxy predictions as labels",
+    "publication of private paths, PDK or proc bytes, license details, GDS, S4P, credentials, or hostnames"
+  ],
+  "stop_condition": "STOP_AFTER_ONE_GOLDEN_RECEIPT_REGARDLESS_OF_PASS_OR_FAIL",
+  "execution_effect_of_this_candidate_file": "NONE_REQUEST_ONLY"
+}

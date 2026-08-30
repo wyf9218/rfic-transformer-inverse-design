@@ -65,6 +65,16 @@ simulator work must remain forbidden.
   reference before writing a preparation-only receipt plus SHA index. A failed
   check writes a FAIL receipt. It cannot originate approval or run preparation,
   MARS, Cadence, Calibre, EMX, a queue, or a supervisor.
+- `scripts/record_broadband56_v2_golden_authorization.py`:
+  no-clobber record-only gate for a separately supplied project-owner approval
+  of the exact one-golden authorization candidate SHA. It recomputes the
+  candidate bytes, verifies the campaign fingerprint, frozen 56-point/4-port
+  contract, one-geometry stop condition, exact permitted-action set, locally
+  available R2/preparation evidence hashes, and timezone-aware human approval
+  metadata. PASS can authorize fresh resource/load/license gates and at most
+  one exact-contract golden geometry; both pilots, queues, supervisors, all
+  phases, and the 200K campaign remain false. The recorder itself has no
+  resource, license, remote, GDS, Cadence, Calibre, or EMX execution path.
 - `scripts/build_broadband56_phase_a_queue.py`:
   exact 10-D label-free Phase-A queue generation with shared line width and
   canonical duplicate rejection. The builder is fail-closed to `PHASE_A`,
@@ -224,6 +234,18 @@ python tools/run_public_tests.py
 Latest verified result after reconstructed-baseline approval-recorder integration:
 `1491 passed, 54 skipped, 1 deselected, 1 warning`.  This is a software
 regression result only; it is not Calibre, EMX, or physical campaign evidence.
+
+Focused one-golden authorization-recorder tests:
+
+```bash
+python -m pytest tests/test_record_broadband56_v2_golden_authorization.py -q
+```
+
+Latest focused result: `5 passed`; combined R2/preparation/authorization gate
+result: `25 passed`; latest public regression: `1496 passed, 54 skipped,
+1 deselected, 1 warning`. These are control-plane software results only. The
+golden candidate remains pending explicit exact-SHA approval, and no Cadence,
+Calibre, EMX, pilot, queue, supervisor, or campaign action is implied.
 
 Focused raw-product finalizer tests:
 
