@@ -1,0 +1,99 @@
+{
+  "schema": "rfic_transformer.broadband56_v2_public_safe_capacity_wait_status.v1",
+  "generated_utc": "2026-08-30T18:34:09Z",
+  "overall_status": "WAITING_FOR_CAPACITY",
+  "decision": "NO_SIMULATOR_ACTION_RESOURCE_GATE_WAIT",
+  "branch": "codex/broadband56-balanced200k-v2",
+  "campaign_id": "broadband56_real_emx_balanced200k_tsmc65_v2",
+  "contract_fingerprint_sha256": "f86a00efbf7756b7421b863bbb16c340db6b423640f63a3257d46c1af49eb55e",
+  "resource_policy": "CAPACITY_NORMALIZED_HIGH_LOAD_V1",
+  "operational_policy_sha256": "aca4883a08abca1d8309b6e1af4f6fd4916c03e7240056a434413a7b50d63a8d",
+  "operational_policy_approval": {
+    "overall_status": "PASS",
+    "private_receipt_path_published": false,
+    "private_receipt_sha256": "a28fa3182bc5f5a39f64ac8f35b586273936eb541e638bb3bcc9cdc88b2c6742",
+    "checks_passed": 25,
+    "checks_failed": 0
+  },
+  "fresh_capacity_gate": {
+    "overall_status": "WAIT",
+    "decision": "WAITING_FOR_CAPACITY",
+    "private_snapshot_path_published": false,
+    "private_receipt_path_published": false,
+    "private_snapshot_sha256": "9581e4f4b26b164a030a0b54deeded30ac1844cf5c26dd45848433c301a66a47",
+    "private_receipt_sha256": "34d5e391eec36efb88fcd760888a393e7b05c3237d3ca477c112bae2ceb00879",
+    "checks_failed": 3,
+    "failed_checks": [
+      "normalized_load1_gate",
+      "normalized_load5_gate",
+      "swap_thrash_gate"
+    ]
+  },
+  "fresh_resource_observations": {
+    "raw_load1": 225.638671875,
+    "logical_cpu_count": 192,
+    "normalized_load1": 1.175201416015625,
+    "normalized_load5": 1.1560211181640625,
+    "available_memory_fraction": 0.43718430626208665,
+    "iowait_percent": 0.0012162522576682534,
+    "swap_in_pages_delta": 71,
+    "swap_out_pages_delta": 0,
+    "active_swap_thrashing": true,
+    "license_gate": "PASS_READ_ONLY_NO_CHECKOUT",
+    "active_simulator_jobs": 0,
+    "max_allowed_concurrency": 0
+  },
+  "capacity_supervisor": {
+    "state": "RUNNING_WAIT_ONLY",
+    "poll_interval_seconds": 300,
+    "private_process_identity_published": false,
+    "private_state_path_published": false,
+    "private_state_sha256_at_initial_check": "5fb40ea5a28623f860db147680cc74f4dd65e3c52b642e42e68937032395645",
+    "simulator_launch_capability": false
+  },
+  "latest_supervisor_observation": {
+    "read_utc": "2026-08-30T18:30:46Z",
+    "check_index": 2,
+    "overall_status": "WAITING_FOR_CAPACITY",
+    "resource_gate": "WAIT",
+    "raw_load1": 227.59619140625,
+    "normalized_load1": 1.1853968302408855,
+    "normalized_load5": 1.1709696451822917,
+    "iowait_percent": 0.0003474831362090459,
+    "license_gate": "PASS_READ_ONLY_NO_CHECKOUT",
+    "active_simulator_jobs": 0,
+    "max_allowed_concurrency": 0,
+    "failed_checks": [
+      "normalized_load1_gate",
+      "normalized_load5_gate",
+      "swap_thrash_gate"
+    ],
+    "private_state_sha256": "829aef8a981493e93da7670ceaf657d3831b8ba5b9259316f94318344a1f6d5a"
+  },
+  "project_account_process_attribution": {
+    "read_utc": "2026-08-30T18:33:00Z",
+    "aggregate_cpu_percent_excluding_sampling_process": 2.0,
+    "emx_process_count": 0,
+    "calibre_process_count": 0,
+    "virtuoso_process_count": 0,
+    "project_heavy_compute_process_detected": false,
+    "system_high_load_attributed_to_other_accounts": true,
+    "project_process_terminated": false
+  },
+  "campaign_progress": {
+    "current_stage": "GOLDEN",
+    "accepted_unique_geometries": 0,
+    "emx_success": 0,
+    "golden_receipt": null
+  },
+  "mandatory_stop_compliance": {
+    "cadence_started": false,
+    "calibre_started": false,
+    "emx_started": false,
+    "queue_started": false,
+    "campaign_started": false,
+    "simulator_action_taken": false
+  },
+  "private_paths_pdk_proc_gds_s4p_license_counts_or_hostnames_published": false,
+  "blocker": "Normalized one-minute and five-minute load exceed the approved capacity thresholds, and active swap thrashing was measured."
+}
