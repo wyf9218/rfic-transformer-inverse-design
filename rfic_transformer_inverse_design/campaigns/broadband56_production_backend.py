@@ -296,7 +296,11 @@ def validate_backend_identity_manifest(
     )
 
     _validate_stage_commands(errors, manifest.get("stage_commands"), scripts=scripts)
-    _validate_historical_receipts(errors, manifest)
+    _validate_historical_receipts(
+        errors,
+        manifest,
+        verify_files=verify_files,
+    )
     return errors
 
 
@@ -655,37 +659,96 @@ def _validate_artifact_root(
             errors.append(f"artifacts.{role}.path escapes the stage artifact root")
 
 
-def _validate_historical_receipts(errors: list[str], manifest: Mapping[str, Any]) -> None:
+def _validate_historical_receipts(
+    errors: list[str],
+    manifest: Mapping[str, Any],
+    *,
+    verify_files: bool,
+) -> None:
     receipts = manifest.get("historical_backend_pass_receipts")
     if not isinstance(receipts, list) or len(receipts) < 2:
         errors.append("historical_backend_pass_receipts must contain at least two records")
     else:
+        receipt_paths: list[str] = []
+        receipt_hashes: list[str] = []
         for index, record in enumerate(receipts):
             if not isinstance(record, Mapping):
                 errors.append(f"historical backend receipt {index} is not an object")
                 continue
-            if record.get("overall_status") != "PASS":
-                errors.append(f"historical backend receipt {index} is not PASS")
-            if not _is_sha256(record.get("sha256")):
-                errors.append(f"historical backend receipt {index} lacks SHA-256")
-            if (
-                not isinstance(record.get("size_bytes"), int)
-                or record.get("size_bytes", 0) <= 0
-            ):
-                errors.append(f"historical backend receipt {index} has invalid size")
+            label = f"historical_backend_pass_receipts.{index}"
+            _validate_pass_receipt_identity_record(
+                errors,
+                record,
+                label=label,
+                verify_file=verify_files,
+            )
+            path_text = record.get("path")
+            digest = record.get("sha256")
+            if isinstance(path_text, str):
+                receipt_paths.append(path_text)
+            if isinstance(digest, str):
+                receipt_hashes.append(digest)
+        if len(receipt_paths) == len(receipts) and len(set(receipt_paths)) != len(
+            receipt_paths
+        ):
+            errors.append("historical backend receipt paths must be distinct")
+        if len(receipt_hashes) == len(receipts) and len(set(receipt_hashes)) != len(
+            receipt_hashes
+        ):
+            errors.append("historical backend receipt bytes must be distinct")
     gds = manifest.get("historical_gds_identity_pass_receipt")
     if not isinstance(gds, Mapping):
         errors.append("historical_gds_identity_pass_receipt must be an object")
     else:
-        if gds.get("overall_status") != "PASS":
-            errors.append("historical_gds_identity_pass_receipt is not PASS")
-        if not _is_sha256(gds.get("sha256")):
-            errors.append("historical_gds_identity_pass_receipt lacks SHA-256")
-        if (
-            not isinstance(gds.get("size_bytes"), int)
-            or gds.get("size_bytes", 0) <= 0
-        ):
-            errors.append("historical_gds_identity_pass_receipt has invalid size")
+        _validate_pass_receipt_identity_record(
+            errors,
+            gds,
+            label="historical_gds_identity_pass_receipt",
+            verify_file=verify_files,
+        )
+
+
+def _validate_pass_receipt_identity_record(
+    errors: list[str],
+    record: Mapping[str, Any],
+    *,
+    label: str,
+    verify_file: bool,
+) -> None:
+    path_text = record.get("path")
+    digest = record.get("sha256")
+    size = record.get("size_bytes")
+    if record.get("overall_status") != "PASS":
+        errors.append(f"{label}.overall_status is not PASS")
+    if (
+        not isinstance(path_text, str)
+        or not path_text
+        or not Path(path_text).is_absolute()
+    ):
+        errors.append(f"{label}.path must be absolute")
+        return
+    if not _is_sha256(digest):
+        errors.append(f"{label}.sha256 is not SHA-256")
+    if not isinstance(size, int) or isinstance(size, bool) or size <= 0:
+        errors.append(f"{label}.size_bytes is invalid")
+    if not verify_file:
+        return
+    path = Path(path_text).expanduser().resolve()
+    if not path.is_file():
+        errors.append(f"{label}.path is missing")
+        return
+    if path.stat().st_size != size:
+        errors.append(f"{label}.size_bytes mismatches file")
+    if _is_sha256(digest) and _sha256(path) != digest:
+        errors.append(f"{label}.sha256 mismatches file")
+        return
+    try:
+        value = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeDecodeError, json.JSONDecodeError):
+        errors.append(f"{label}.file is not valid UTF-8 JSON")
+        return
+    if not isinstance(value, Mapping) or value.get("overall_status") != "PASS":
+        errors.append(f"{label}.file is not top-level PASS")
 
 
 def _validate_failure_accounting(

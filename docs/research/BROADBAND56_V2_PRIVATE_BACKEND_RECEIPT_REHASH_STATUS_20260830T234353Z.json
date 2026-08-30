@@ -1,0 +1,89 @@
+{
+  "schema": "rfic_transformer.broadband56_v2_private_backend_receipt_rehash_status.v1",
+  "generated_utc": "2026-08-30T23:43:53Z",
+  "overall_status": "PASS",
+  "decision": "HISTORICAL_PASS_RECEIPTS_NOW_INDEPENDENTLY_REHASHED_AND_REPARSED",
+  "campaign_id": "broadband56_real_emx_balanced200k_tsmc65_v2",
+  "scientific_contract_fingerprint_sha256": "f86a00efbf7756b7421b863bbb16c340db6b423640f63a3257d46c1af49eb55e",
+  "branch": "codex/broadband56-balanced200k-v2",
+  "scope": "PUBLIC_SAFE_IDENTITY_VALIDATION_ONLY",
+  "artifacts": {
+    "private_backend_validator": {
+      "path": "rfic_transformer_inverse_design/campaigns/broadband56_production_backend.py",
+      "sha256": "51c87601fe1d93b1e171eee9a5791112ee8078c0df7b82e8e00f00b012b75291"
+    },
+    "private_backend_manifest_builder": {
+      "path": "scripts/build_broadband56_v2_private_backend_identity.py",
+      "sha256": "043a30732ceb06e9e00a20fef8115f9a3e177d0afd1609f337a7e32a42e5321e"
+    },
+    "validator_tests": {
+      "path": "tests/test_broadband56_production_backend.py",
+      "sha256": "966d814682e6d4ead2f37c90f01b55012ee271e4f5c6ba94aae1777509acfd4d"
+    },
+    "builder_tests": {
+      "path": "tests/test_build_broadband56_v2_private_backend_identity.py",
+      "sha256": "bda77d555ab83565b0a73c698c21e5866512b654fe206ec114f1b89336646756"
+    },
+    "authorization_tests": {
+      "path": "tests/test_record_broadband56_v2_full_campaign_authorization.py",
+      "sha256": "7b5e059e306e01516c3399b5bbf72a03b6cfb6ba8aefa6a8960fb10a28181257"
+    },
+    "stage_launcher_tests": {
+      "path": "tests/test_run_broadband56_v2_stage_launcher.py",
+      "sha256": "318b112b05a07a7ffd3ba4ae65426d1706a335a7938208d401d67b70154ff2d4"
+    }
+  },
+  "completed_checks": {
+    "historical_backend_receipt_absolute_paths_required": true,
+    "historical_backend_receipt_size_and_sha_recomputed": true,
+    "historical_backend_receipt_json_reparsed": true,
+    "historical_backend_receipt_top_level_pass_reverified": true,
+    "historical_backend_receipt_paths_distinct": true,
+    "historical_backend_receipt_bytes_distinct": true,
+    "historical_gds_receipt_absolute_path_required": true,
+    "historical_gds_receipt_size_and_sha_recomputed": true,
+    "historical_gds_receipt_json_reparsed": true,
+    "historical_gds_receipt_top_level_pass_reverified": true,
+    "receipt_tamper_fails_closed": true,
+    "declared_pass_with_fail_file_fails_closed": true,
+    "simulator_action_taken": false
+  },
+  "test_evidence": {
+    "focused_backend_authorization_launcher_tests": {
+      "status": "PASS",
+      "passed": 36,
+      "failed": 0
+    },
+    "all_broadband56_tests": {
+      "status": "PASS",
+      "passed": 178,
+      "failed": 0
+    }
+  },
+  "mars_read_only_evidence": {
+    "remote_repository_head_before_update": "3d7906bc27c30e8b558ed55d030a5702388ddace",
+    "remote_repository_update_performed": false,
+    "base_public_head_before_receipt_hardening": "854b56ecb40046eea3a1bbd3c3d6b5ef25ab27e3",
+    "private_preparation_receipt_present": true,
+    "private_configuration_present": true,
+    "remote_private_backend_manifest_builder_present": false,
+    "remote_private_backend_verifier_present": false,
+    "remote_exact_gds_emx_runner_present": false,
+    "remote_exact56_s4p_qa_builder_present": false,
+    "private_backend_manifest_created": false,
+    "private_backend_verification_receipt_created": false
+  },
+  "runtime_boundary": {
+    "owner_stop_status_path": "docs/research/BROADBAND56_V2_OWNER_STOP_STATUS_20260830T195649Z.json",
+    "owner_stop_status_sha256": "b0d97d1266a138c3726e6e923b901f4cffc3ff126d3a453e6e80bd9c09e38431",
+    "owner_stop_reversed": false,
+    "mars_write_action_taken": false,
+    "queue_or_supervisor_launched": false,
+    "cadence_action_taken": false,
+    "calibre_action_taken": false,
+    "emx_action_taken": false,
+    "simulator_action_taken": false,
+    "private_paths_published": false
+  },
+  "next_legal_action": "After explicit owner-stop reversal, update the private MARS repository to the current public commit without launching simulators, identify and hash every private backend role and real historical PASS receipt, build and independently verify one no-clobber private manifest, then create the sole FULL_CAMPAIGN candidate only if every identity passes."
+}

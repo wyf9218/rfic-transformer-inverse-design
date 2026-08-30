@@ -138,10 +138,39 @@ def _valid_fixture(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> dict[str,
         role: str(record["sha256"])
         for role, record in script_identities.items()
     }
-    pass_receipts = [
-        {"overall_status": "PASS", "sha256": "6" * 64, "size_bytes": 2589},
-        {"overall_status": "PASS", "sha256": "7" * 64, "size_bytes": 3272},
+    pass_receipt_records = [
+        {
+            **_identity_record(
+                private_root / "history" / "backend_one.json",
+                json.dumps({"overall_status": "PASS", "receipt_id": "one"})
+                + "\n",
+            ),
+            "overall_status": "PASS",
+        },
+        {
+            **_identity_record(
+                private_root / "history" / "backend_two.json",
+                json.dumps({"overall_status": "PASS", "receipt_id": "two"})
+                + "\n",
+            ),
+            "overall_status": "PASS",
+        },
     ]
+    pass_receipts = [
+        {
+            "overall_status": record["overall_status"],
+            "sha256": record["sha256"],
+            "size_bytes": record["size_bytes"],
+        }
+        for record in pass_receipt_records
+    ]
+    gds_receipt_record = {
+        **_identity_record(
+            private_root / "history" / "gds.json",
+            json.dumps({"overall_status": "PASS", "receipt_id": "gds"}) + "\n",
+        ),
+        "overall_status": "PASS",
+    }
     backend_manifest = _write(
         private_root / "BACKEND_IDENTITY.json",
         {
@@ -187,12 +216,8 @@ def _valid_fixture(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> dict[str,
                 }
                 for stage in STAGES
             },
-            "historical_gds_identity_pass_receipt": {
-                "overall_status": "PASS",
-                "sha256": "5" * 64,
-                "size_bytes": 975,
-            },
-            "historical_backend_pass_receipts": pass_receipts,
+            "historical_gds_identity_pass_receipt": gds_receipt_record,
+            "historical_backend_pass_receipts": pass_receipt_records,
         },
     )
     backend_verification = _write(
@@ -306,7 +331,9 @@ def _valid_fixture(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> dict[str,
             ],
             "stage07_08_resume_guard_sha256": script_hashes["stage07_08_resume_guard"],
             "raw_products_finalizer_sha256": script_hashes["raw_products_finalizer"],
-            "historical_gds_identity_pass_receipt_sha256": "5" * 64,
+            "historical_gds_identity_pass_receipt_sha256": gds_receipt_record[
+                "sha256"
+            ],
             "historical_backend_pass_receipts": pass_receipts,
             "cadence_identity_reverified": True,
             "calibre_zero_blocking_gate_required": True,

@@ -261,6 +261,27 @@ receipt = {
             for item in (flag, placeholder)
         ],
     ]
+    historical_one = _write(
+        tmp_path / "history" / "backend_one.json",
+        {"overall_status": "PASS", "receipt_id": "one"},
+    )
+    historical_two = _write(
+        tmp_path / "history" / "backend_two.json",
+        {"overall_status": "PASS", "receipt_id": "two"},
+    )
+    historical_gds = _write(
+        tmp_path / "history" / "gds.json",
+        {"overall_status": "PASS", "receipt_id": "gds"},
+    )
+
+    def pass_record(path: Path) -> dict[str, object]:
+        return {
+            "path": str(path.resolve()),
+            "sha256": _sha(path),
+            "size_bytes": path.stat().st_size,
+            "overall_status": "PASS",
+        }
+
     backend = {
         "schema": BACKEND_MANIFEST_SCHEMA,
         "campaign_id": CAMPAIGN_ID,
@@ -297,14 +318,10 @@ receipt = {
             }
             for stage in STAGES
         },
-        "historical_gds_identity_pass_receipt": {
-            "overall_status": "PASS",
-            "sha256": "5" * 64,
-            "size_bytes": 975,
-        },
+        "historical_gds_identity_pass_receipt": pass_record(historical_gds),
         "historical_backend_pass_receipts": [
-            {"overall_status": "PASS", "sha256": "6" * 64, "size_bytes": 2589},
-            {"overall_status": "PASS", "sha256": "7" * 64, "size_bytes": 3272},
+            pass_record(historical_one),
+            pass_record(historical_two),
         ],
     }
     backend_path = _write(tmp_path / "backend.json", backend)

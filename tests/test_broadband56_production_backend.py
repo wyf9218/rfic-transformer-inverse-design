@@ -74,6 +74,18 @@ def _backend_manifest(tmp_path: Path) -> tuple[dict, Path]:
     runtimes = {role: _identity(files[role]) for role in REQUIRED_RUNTIME_ROLES}
     scripts["production_stage_backend"]["executable"] = True
     runtimes["emx_wrapper"]["executable"] = True
+    historical_one = _write(
+        tmp_path / "history" / "backend_one.json",
+        {"overall_status": "PASS", "receipt_id": "one"},
+    )
+    historical_two = _write(
+        tmp_path / "history" / "backend_two.json",
+        {"overall_status": "PASS", "receipt_id": "two"},
+    )
+    historical_gds = _write(
+        tmp_path / "history" / "gds.json",
+        {"overall_status": "PASS", "receipt_id": "gds"},
+    )
     backend_path = str(files["production_stage_backend"].resolve())
     argv = [
         backend_path,
@@ -120,13 +132,12 @@ def _backend_manifest(tmp_path: Path) -> tuple[dict, Path]:
             for stage in STAGES
         },
         "historical_backend_pass_receipts": [
-            {"overall_status": "PASS", "sha256": "5" * 64, "size_bytes": 100},
-            {"overall_status": "PASS", "sha256": "6" * 64, "size_bytes": 200},
+            {**_identity(historical_one), "overall_status": "PASS"},
+            {**_identity(historical_two), "overall_status": "PASS"},
         ],
         "historical_gds_identity_pass_receipt": {
+            **_identity(historical_gds),
             "overall_status": "PASS",
-            "sha256": "7" * 64,
-            "size_bytes": 300,
         },
     }
     path = _write(tmp_path / "backend_manifest.json", manifest)
@@ -250,6 +261,51 @@ def test_backend_manifest_rejects_non_executable_emx_wrapper(tmp_path: Path) -> 
     errors = validate_backend_identity_manifest(manifest, verify_files=True)
 
     assert "runtime_identities.emx_wrapper.path is not executable" in errors
+
+
+def test_backend_manifest_rejects_historical_receipt_file_tamper(
+    tmp_path: Path,
+) -> None:
+    manifest, _ = _backend_manifest(tmp_path)
+    path = Path(manifest["historical_backend_pass_receipts"][0]["path"])
+    path.write_text("tampered\n", encoding="utf-8")
+
+    errors = validate_backend_identity_manifest(manifest, verify_files=True)
+
+    assert any(
+        "historical_backend_pass_receipts.0.sha256 mismatches file" in error
+        for error in errors
+    )
+
+
+def test_backend_manifest_reparses_historical_receipt_pass_status(
+    tmp_path: Path,
+) -> None:
+    manifest, _ = _backend_manifest(tmp_path)
+    record = manifest["historical_gds_identity_pass_receipt"]
+    path = Path(record["path"])
+    _write(path, {"overall_status": "FAIL", "receipt_id": "gds"})
+    record.update(_identity(path))
+
+    errors = validate_backend_identity_manifest(manifest, verify_files=True)
+
+    assert (
+        "historical_gds_identity_pass_receipt.file is not top-level PASS" in errors
+    )
+
+
+def test_backend_manifest_rejects_duplicate_historical_receipt_identity(
+    tmp_path: Path,
+) -> None:
+    manifest, _ = _backend_manifest(tmp_path)
+    manifest["historical_backend_pass_receipts"][1] = dict(
+        manifest["historical_backend_pass_receipts"][0]
+    )
+
+    errors = validate_backend_identity_manifest(manifest, verify_files=False)
+
+    assert "historical backend receipt paths must be distinct" in errors
+    assert "historical backend receipt bytes must be distinct" in errors
 
 
 def test_exact_stage_receipt_passes(tmp_path: Path) -> None:
