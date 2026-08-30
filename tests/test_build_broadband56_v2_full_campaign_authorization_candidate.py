@@ -50,6 +50,8 @@ def _args(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> list[str]:
         "production-stage-backend",
         "calibre-runner",
         "calibre-zero-safe-freezer",
+        "exact-audited-gds-emx-runner",
+        "exact-audited-gds-emx-module",
         "full-band-s4p-qa-builder",
         "stage07-08-resume-guard",
         "raw-products-finalizer",

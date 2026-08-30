@@ -45,8 +45,10 @@ simulator work must remain forbidden.
 - A temporary acquisition ensemble may rank unevaluated geometries but cannot
   write final labels.
 - An accepted row requires analytical, topology, Cadence/GDS, zero-blocking
-  Calibre, fresh EMX, parseable exact-grid S4P, finite S/Z, feature extraction,
-  provenance, and fingerprint PASS evidence.
+  Calibre, exact byte identity between the Calibre-audited GDS and the EMX
+  input GDS, fresh EMX, parseable exact-grid S4P, finite S/Z, feature
+  extraction, provenance, and fingerprint PASS evidence. Cadence or GDS
+  regeneration after the zero-blocking Calibre gate is forbidden.
 - A PNG or approximate polygon is never a GDS artifact.
 
 ## Current Public Components
@@ -126,6 +128,15 @@ simulator work must remain forbidden.
   before atomically writing the five required CSVs and a SHA-closed receipt.
   Proxy values, mixed fingerprints, altered evidence, duplicate accepted
   geometry, and partial feature blocks leave no official output directory.
+- `scripts/run_broadband56_exact_audited_gds_emx.py` and
+  `rfic_transformer_inverse_design/campaigns/broadband56_exact_gds_emx.py`:
+  hash-bound, no-clobber bridge from one exact zero-blocking Calibre GDS to
+  fresh real EMX. The runner requires an exact FULL_CAMPAIGN PASS receipt,
+  exact candidate/geometry/config/manifest/GDS/Calibre bindings, the frozen
+  four-port order, and the exact 56-point grid. It rehashes every immutable
+  source immediately before and after EMX, verifies the EMX command names the
+  one audited GDS, rejects any output GDS/Cadence/Calibre tree, and writes a
+  per-candidate receipt. Its tests mock EMX and do not execute a simulator.
 - `scripts/audit_broadband56_balanced200k_checkpoint.py`:
   streaming accepted/S4P/56-point/S-Z/feature/fingerprint audit plus required
   checkpoint receipt, coverage table, failure funnel, and SHA-256 index. It

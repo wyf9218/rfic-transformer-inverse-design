@@ -93,6 +93,8 @@ def _parse_args(argv: list[str] | None) -> argparse.Namespace:
     parser.add_argument("--production-stage-backend-sha256", required=True)
     parser.add_argument("--calibre-runner-sha256", required=True)
     parser.add_argument("--calibre-zero-safe-freezer-sha256", required=True)
+    parser.add_argument("--exact-audited-gds-emx-runner-sha256", required=True)
+    parser.add_argument("--exact-audited-gds-emx-module-sha256", required=True)
     parser.add_argument("--full-band-s4p-qa-builder-sha256", required=True)
     parser.add_argument("--stage07-08-resume-guard-sha256", required=True)
     parser.add_argument("--raw-products-finalizer-sha256", required=True)
@@ -161,6 +163,9 @@ def build_candidate(args: argparse.Namespace, *, out_dir: Path) -> dict[str, str
             "cadence_required": True,
             "zero_blocking_calibre_required": True,
             "geometry_to_s4p_hash_chain_required": True,
+            "calibre_audited_gds_must_equal_emx_input_bytes": True,
+            "cadence_or_gds_regeneration_after_calibre_forbidden": True,
+            "exact_audited_gds_emx_receipt_required": True,
         },
         "private_preparation_evidence": {
             "preparation_receipt_sha256": args.preparation_receipt_sha256,
@@ -195,6 +200,12 @@ def build_candidate(args: argparse.Namespace, *, out_dir: Path) -> dict[str, str
             "operational_policy_approval_scope": POLICY_APPROVAL_SCOPE,
             "calibre_runner_sha256": args.calibre_runner_sha256,
             "calibre_zero_safe_freezer_sha256": args.calibre_zero_safe_freezer_sha256,
+            "exact_audited_gds_emx_runner_sha256": (
+                args.exact_audited_gds_emx_runner_sha256
+            ),
+            "exact_audited_gds_emx_module_sha256": (
+                args.exact_audited_gds_emx_module_sha256
+            ),
             "full_band_s4p_qa_builder_sha256": args.full_band_s4p_qa_builder_sha256,
             "stage07_08_resume_guard_sha256": args.stage07_08_resume_guard_sha256,
             "raw_products_finalizer_sha256": args.raw_products_finalizer_sha256,

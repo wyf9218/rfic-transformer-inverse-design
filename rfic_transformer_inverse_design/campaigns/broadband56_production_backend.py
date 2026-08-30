@@ -78,6 +78,7 @@ PRODUCTION_CHAIN = (
     "cadence_gds_generation",
     "gds_identity_audit",
     "calibre_zero_blocking_drc",
+    "calibre_to_emx_exact_gds_identity_binding",
     "fresh_real_emx",
     "exact_four_port_s4p_qa",
     "s_to_z_conversion",
@@ -92,6 +93,8 @@ REQUIRED_SCRIPT_ROLES = (
     "production_stage_backend",
     "calibre_runner",
     "calibre_zero_safe_freezer",
+    "exact_audited_gds_emx_runner",
+    "exact_audited_gds_emx_module",
     "full_band_s4p_qa_builder",
     "stage07_08_resume_guard",
     "raw_products_finalizer",
@@ -122,6 +125,9 @@ LABEL_CONTRACT = {
     "cadence_required": True,
     "zero_blocking_calibre_required": True,
     "geometry_to_s4p_hash_chain_required": True,
+    "calibre_audited_gds_must_equal_emx_input_bytes": True,
+    "cadence_or_gds_regeneration_after_calibre_forbidden": True,
+    "exact_audited_gds_emx_receipt_required": True,
 }
 
 STAGE_GATE_FIELDS = (
@@ -130,6 +136,7 @@ STAGE_GATE_FIELDS = (
     "cadence_gds_gate_complete",
     "gds_identity_gate_complete",
     "calibre_zero_blocking_gate_complete",
+    "calibre_to_emx_exact_gds_identity_gate_complete",
     "fresh_real_emx_gate_complete",
     "exact_four_port_s4p_gate_complete",
     "s_to_z_gate_complete",
@@ -145,6 +152,7 @@ STAGE_ARTIFACT_FIELDS = (
     "s4p_artifact_index",
     "broadband_features_manifest",
     "failure_funnel",
+    "exact_gds_emx_receipt_index",
     "raw_products_receipt",
     "checkpoint_receipt",
     "checkpoint_sha256s",
