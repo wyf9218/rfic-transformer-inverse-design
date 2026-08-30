@@ -1,0 +1,101 @@
+{
+  "schema": "rfic_transformer.broadband56_v2_public_safe_preparation_status.v1",
+  "generated_utc": "2026-08-30T15:00:37Z",
+  "overall_status": "PREPARATION_PASS",
+  "decision": "PREPARED_FOR_GOLDEN_GATE_BUT_GOLDEN_NOT_AUTHORIZED",
+  "branch": "codex/broadband56-balanced200k-v2",
+  "candidate": {
+    "path": "docs/research/BROADBAND56_RECONSTRUCTED_BASELINE_V1_CANDIDATE_R2_20260829.json",
+    "classification": "NEW_RECONSTRUCTION_NOT_HISTORICAL_V1_CORRECTED_R2",
+    "size_bytes": 5540,
+    "sha256": "037889d41f41bbedbcd38188c44a5c8c1ccffa62943c334a72f0980f38bf864f",
+    "supersedes_sha256": "1abb85dd7e6aad709eb404dbcc174a8a66e325baf76f26c0eeb64a6498ea7a12"
+  },
+  "approval": {
+    "overall_status": "PASS",
+    "decision": "APPROVE_V2_PREPARATION_PREFLIGHT_ONLY",
+    "approved_by": "Yufeng Wang, project owner and project leader",
+    "approved_utc": "2026-08-30T14:33:19Z",
+    "approval_reference": "Current Codex-thread explicit approval of corrected R2 baseline SHA-256 037889d41f41bbedbcd38188c44a5c8c1ccffa62943c334a72f0980f38bf864f",
+    "local_receipt_path": "reports/broadband56_reconstructed_baseline_r2_approval_20260830T143319Z/RECONSTRUCTED_BASELINE_APPROVAL_RECEIPT.json",
+    "local_receipt_sha256": "c58c8a29e66855a44e923026666955b655f10c7355b53f815018be352483dbc8",
+    "remote_receipt_sha256": "68e832043e7b4299b48e286c2811a8f7a843e54cf89282b209ea25a8ac7c3390",
+    "candidate_path_bytes_size_sha256_identity_binding": "PASS",
+    "approval_identity_timestamp_reference_binding": "PASS",
+    "preparation_preflight_authorized": true,
+    "automatic_command_authorized": false,
+    "golden_authorized": false,
+    "simulator_authorized": false
+  },
+  "frequency_grid": {
+    "start_ghz": 5,
+    "stop_ghz": 60,
+    "step_ghz": 1,
+    "points": 56,
+    "inclusive": true,
+    "verification": "PASS"
+  },
+  "historical_config_identity": {
+    "expected_sha256": "c4ffcc8a424770e4b3c0c64d16c575271d29867d2b47dc3a29b7f642d2fd3655",
+    "actual_sha256": "c4ffcc8a424770e4b3c0c64d16c575271d29867d2b47dc3a29b7f642d2fd3655",
+    "verification": "PASS"
+  },
+  "private_configuration": {
+    "path_published": false,
+    "sha256": "d83114199dfe82e1f1d1fc90db8e021bad9b2d98118d1bba0011b5a9f8e24327",
+    "created_no_clobber": true,
+    "frequency_fields_changed_only": true,
+    "all_non_frequency_fields_identical_to_historical_config": "PASS"
+  },
+  "preparation_preflight": {
+    "private_receipt_path_published": false,
+    "private_receipt_sha256": "1cbc646d0223a4f5655552eeb0339becf3d0cc5ac7a86a2bc72b19b0ea7b8ca6",
+    "private_receipt_size_bytes": 10439,
+    "overall_status": "PASS",
+    "decision": "PREPARED_FOR_GOLDEN_GATE",
+    "check_count": 40,
+    "pass_count": 40,
+    "fail_count": 0,
+    "candidate_and_approval_identity_check": "PASS",
+    "frequency_grid_check": "PASS",
+    "canonical_geometry_order_and_bounds_check": "PASS",
+    "port_mode_and_grounding_check": "PASS",
+    "pin_purpose_51_check": "PASS",
+    "private_runtime_path_existence_check": "PASS",
+    "emx_wrapper_executable_check": "PASS",
+    "unchanged_physical_contract_check": "PASS"
+  },
+  "runtime_identity_reverification": {
+    "historical_authorized_preflight_sha256": "52b928a81d70e7c4d7430fd5a25bb4f3606cd951bcda4a3acbf106277af93af0",
+    "cadence_layer_map_sha_and_size": "PASS",
+    "cadence_cds_lib_sha_and_size": "PASS",
+    "emx_wrapper_sha_size_and_executable": "PASS",
+    "emx_process_file_sha_and_size": "PASS",
+    "private_paths_and_bytes_published": false
+  },
+  "layout_and_drc_contract": {
+    "verification": "PASS",
+    "evidence": "The R2 candidate preserves the frozen layout/DRC contract list, and the preparation receipt proves every non-frequency production-config field is byte-value identical after structured parsing."
+  },
+  "isolation_checks": {
+    "duplicate_broadband56_queue_or_supervisor": "NONE_FOUND",
+    "historical_campaign_output_path_collision": "NONE_FOUND",
+    "simulator_or_campaign_launched_by_this_action": false
+  },
+  "preserved_prior_evidence": {
+    "superseded_candidate_approval_receipt": "PRESERVED_UNCHANGED",
+    "prior_preparation_failure_receipt": "PRESERVED_UNCHANGED"
+  },
+  "authorization_boundary": {
+    "golden": "NOT_AUTHORIZED",
+    "cadence": "NOT_AUTHORIZED",
+    "calibre": "NOT_AUTHORIZED",
+    "emx": "NOT_AUTHORIZED",
+    "queue_generation_or_execution": "NOT_AUTHORIZED",
+    "supervisor": "NOT_AUTHORIZED",
+    "phase_a_b_c": "NOT_AUTHORIZED",
+    "campaign_200k": "NOT_AUTHORIZED"
+  },
+  "simulator_action_taken": false,
+  "blocker": null
+}

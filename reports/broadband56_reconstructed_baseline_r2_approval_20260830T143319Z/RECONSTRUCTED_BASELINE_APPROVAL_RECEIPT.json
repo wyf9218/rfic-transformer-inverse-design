@@ -1,0 +1,97 @@
+{
+  "schema": "rfic_transformer.broadband56_reconstructed_baseline_approval.v1",
+  "generated_utc": "2026-08-30T14:33:46+00:00",
+  "overall_status": "PASS",
+  "decision": "APPROVE_V2_PREPARATION_PREFLIGHT_ONLY",
+  "approved_by": "Yufeng Wang, project owner and project leader",
+  "approved_utc": "2026-08-30T14:33:19Z",
+  "approval_source": "EXPLICIT_USER_OR_PROJECT_LEADER_INSTRUCTION",
+  "approval_reference": "Current Codex-thread explicit approval of corrected R2 baseline SHA-256 037889d41f41bbedbcd38188c44a5c8c1ccffa62943c334a72f0980f38bf864f",
+  "approved_contract": {
+    "campaign_id": "broadband56_real_emx_tsmc65_reconstructed_baseline_v1_r2_20260829",
+    "sha256": "037889d41f41bbedbcd38188c44a5c8c1ccffa62943c334a72f0980f38bf864f"
+  },
+  "candidate_source": {
+    "path": "/Users/wyf/Documents/模拟变压器AI反向建模/github_worktrees/broadband56-balanced200k-v2/docs/research/BROADBAND56_RECONSTRUCTED_BASELINE_V1_CANDIDATE_R2_20260829.json",
+    "size_bytes": 5540,
+    "sha256": "037889d41f41bbedbcd38188c44a5c8c1ccffa62943c334a72f0980f38bf864f"
+  },
+  "preparation_preflight_authorized": true,
+  "automatic_command_authorized": false,
+  "golden_authorized": false,
+  "simulator_authorized": false,
+  "checks": [
+    {
+      "name": "candidate_contract_exists",
+      "pass": true,
+      "detail": "/Users/wyf/Documents/模拟变压器AI反向建模/github_worktrees/broadband56-balanced200k-v2/docs/research/BROADBAND56_RECONSTRUCTED_BASELINE_V1_CANDIDATE_R2_20260829.json"
+    },
+    {
+      "name": "candidate_contract_parses",
+      "pass": true,
+      "detail": "dict"
+    },
+    {
+      "name": "candidate_sha256_argument_is_valid",
+      "pass": true,
+      "detail": "037889d41f41bbedbcd38188c44a5c8c1ccffa62943c334a72f0980f38bf864f"
+    },
+    {
+      "name": "candidate_sha256_matches_exact_bytes",
+      "pass": true,
+      "detail": "expected=037889d41f41bbedbcd38188c44a5c8c1ccffa62943c334a72f0980f38bf864f, actual=037889d41f41bbedbcd38188c44a5c8c1ccffa62943c334a72f0980f38bf864f"
+    },
+    {
+      "name": "candidate_schema",
+      "pass": true,
+      "detail": "rfic_transformer.broadband56_reconstructed_baseline_contract.v1"
+    },
+    {
+      "name": "candidate_origin",
+      "pass": true,
+      "detail": "NEW_RECONSTRUCTION_NOT_HISTORICAL_V1"
+    },
+    {
+      "name": "candidate_campaign_id_is_non_v2",
+      "pass": true,
+      "detail": "broadband56_real_emx_tsmc65_reconstructed_baseline_v1_r2_20260829"
+    },
+    {
+      "name": "candidate_pending_explicit_approval",
+      "pass": true,
+      "detail": "PENDING_EXPLICIT_SHA256_APPROVAL"
+    },
+    {
+      "name": "candidate_automatic_execution_forbidden",
+      "pass": true,
+      "detail": "False"
+    },
+    {
+      "name": "candidate_production_use_forbidden",
+      "pass": true,
+      "detail": "False"
+    },
+    {
+      "name": "candidate_frequency_grid_exact_56",
+      "pass": true,
+      "detail": "{\"exact_hz\": [5000000000, 6000000000, 7000000000, 8000000000, 9000000000, 10000000000, 11000000000, 12000000000, 13000000000, 14000000000, 15000000000, 16000000000, 17000000000, 18000000000, 19000000000, 20000000000, 21000000000, 22000000000, 23000000000, 24000000000, 25000000000, 26000000000, 27000000000, 28000000000, 29000000000, 30000000000, 31000000000, 32000000000, 33000000000, 34000000000, 35000000000, 36000000000, 37000000000, 38000000000, 39000000000, 40000000000, 41000000000, 42000000000, 43000000000, 44000000000, 45000000000, 46000000000, 47000000000, 48000000000, 49000000000, 50000000000, 51000000000, 52000000000, 53000000000, 54000000000, 55000000000, 56000000000, 57000000000, 58000000000, 59000000000, 60000000000], \"points\": 56, \"start_ghz\": 5.0, \"step_ghz\": 1.0, \"stop_ghz\": 60.0}"
+    },
+    {
+      "name": "approved_by_is_explicit",
+      "pass": true,
+      "detail": "Yufeng Wang, project owner and project leader"
+    },
+    {
+      "name": "approved_utc_is_timezone_aware",
+      "pass": true,
+      "detail": "2026-08-30T14:33:19Z"
+    },
+    {
+      "name": "approval_reference_is_explicit",
+      "pass": true,
+      "detail": "Current Codex-thread explicit approval of corrected R2 baseline SHA-256 037889d41f41bbedbcd38188c44a5c8c1ccffa62943c334a72f0980f38bf864f"
+    }
+  ],
+  "execution_effect": "NONE_RECORD_ONLY",
+  "authorization_boundary": "A PASS receipt authorizes only the V2 preparation preflight with this exact candidate SHA. It does not authorize golden, Cadence, Calibre, EMX, queue execution, or automatic commands."
+}
