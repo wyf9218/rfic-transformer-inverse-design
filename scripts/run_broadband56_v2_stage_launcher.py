@@ -39,20 +39,16 @@ from rfic_transformer_inverse_design.campaigns.broadband56_full_campaign_authori
     FULL_CAMPAIGN_PASS_DECISION,
     PRODUCTION_BACKEND_ID,
 )
+from rfic_transformer_inverse_design.campaigns.broadband56_production_backend import (  # noqa: E402
+    ALLOWED_STAGE_PLACEHOLDERS,
+    validate_backend_identity_manifest,
+    validate_stage_receipt,
+    validate_stage_receipt_chain,
+)
 
 
-BACKEND_MANIFEST_SCHEMA = "rfic_transformer.broadband56_v2_private_backend_identity.v1"
 LAUNCH_AUDIT_SCHEMA = "rfic_transformer.broadband56_v2_stage_launch_audit.v1"
-ALLOWED_PLACEHOLDERS = {
-    "{stage}",
-    "{cumulative_target}",
-    "{campaign_root}",
-    "{backend_out_dir}",
-    "{full_campaign_receipt}",
-    "{backend_identity_manifest}",
-    "{resource_snapshot}",
-    "{max_concurrency}",
-}
+ALLOWED_PLACEHOLDERS = set(ALLOWED_STAGE_PLACEHOLDERS)
 
 
 class StageLauncherError(RuntimeError):
@@ -108,7 +104,19 @@ def launch_stage(args: argparse.Namespace, *, out_dir: Path) -> dict[str, Any]:
     _validate_receipt(receipt, backend_sha256=_sha256(backend_path))
     _validate_backend(backend, launcher_path=Path(__file__).resolve())
 
-    stage_receipts = _ordered_stage_receipts(campaign_root)
+    stage_receipt_records = _ordered_stage_receipt_records(campaign_root)
+    chain_errors = validate_stage_receipt_chain(
+        stage_receipt_records,
+        backend_manifest_sha256=_sha256(backend_path),
+        authorization_receipt_sha256=_sha256(receipt_path),
+        verify_artifacts=True,
+    )
+    if chain_errors:
+        raise StageLauncherError(
+            "prior stage receipt chain failed validation: "
+            + "; ".join(chain_errors[:8])
+        )
+    stage_receipts = [value for _, value in stage_receipt_records]
     current_accepted = (
         int(stage_receipts[-1]["accepted_unique_geometries"])
         if stage_receipts
@@ -203,16 +211,23 @@ def launch_stage(args: argparse.Namespace, *, out_dir: Path) -> dict[str, Any]:
         )
     backend_receipt_path = backend_out_dir / "STAGE_RECEIPT.json"
     backend_receipt = _read_json(backend_receipt_path, "backend stage receipt")
-    if not (
-        backend_receipt.get("overall_status") == "PASS"
-        and backend_receipt.get("stage") == stage
-        and backend_receipt.get("terminal_state") == spec.receipt_status
-        and backend_receipt.get("accepted_unique_geometries") == spec.cumulative_target
-        and backend_receipt.get("campaign_id") == CAMPAIGN_ID
-        and backend_receipt.get("contract_fingerprint_sha256")
-        == SCIENTIFIC_CONTRACT_FINGERPRINT
-    ):
-        raise StageLauncherError("backend stage receipt is not the exact stage PASS contract")
+    receipt_errors = validate_stage_receipt(
+        backend_receipt,
+        stage=stage,
+        cumulative_target=spec.cumulative_target,
+        backend_manifest_sha256=_sha256(backend_path),
+        authorization_receipt_sha256=_sha256(receipt_path),
+        prior_stage_receipt_sha256=(
+            _sha256(stage_receipt_records[-1][0]) if stage_receipt_records else None
+        ),
+        verify_artifacts=True,
+        artifact_root=backend_out_dir,
+    )
+    if receipt_errors:
+        raise StageLauncherError(
+            "backend stage receipt failed the exact stage contract: "
+            + "; ".join(receipt_errors[:8])
+        )
     shutil.copyfile(backend_receipt_path, out_dir / "STAGE_RECEIPT.json")
     (out_dir / "SHA256SUMS.txt").write_text(
         "\n".join(
@@ -248,10 +263,14 @@ def _validate_receipt(receipt: Mapping[str, Any], *, backend_sha256: str) -> Non
 
 
 def _validate_backend(backend: Mapping[str, Any], *, launcher_path: Path) -> None:
+    errors = validate_backend_identity_manifest(backend, verify_files=True)
+    if errors:
+        raise StageLauncherError(
+            "backend identity manifest failed validation: " + "; ".join(errors[:8])
+        )
     launcher_record = backend.get("script_identities", {}).get("stage_launcher", {})
     if not (
-        backend.get("schema") == BACKEND_MANIFEST_SCHEMA
-        and backend.get("campaign_id") == CAMPAIGN_ID
+        backend.get("campaign_id") == CAMPAIGN_ID
         and backend.get("contract_fingerprint_sha256") == SCIENTIFIC_CONTRACT_FINGERPRINT
         and backend.get("backend_id") == PRODUCTION_BACKEND_ID
         and launcher_record.get("sha256") == _sha256(launcher_path)
@@ -304,12 +323,14 @@ def re_placeholder_tokens(value: str) -> list[str]:
     return re.findall(r"\{[A-Za-z0-9_]+\}", value)
 
 
-def _ordered_stage_receipts(campaign_root: Path) -> list[dict[str, Any]]:
-    receipts = []
+def _ordered_stage_receipt_records(
+    campaign_root: Path,
+) -> list[tuple[Path, dict[str, Any]]]:
+    receipts: list[tuple[Path, dict[str, Any]]] = []
     for path in sorted((campaign_root / "stages").glob("*/STAGE_RECEIPT.json")):
         value = _read_json(path, "prior stage receipt")
         if value.get("overall_status") == "PASS":
-            receipts.append(value)
+            receipts.append((path, value))
     return receipts
 
 

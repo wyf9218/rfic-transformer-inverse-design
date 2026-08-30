@@ -52,13 +52,16 @@ from rfic_transformer_inverse_design.campaigns.broadband56_full_campaign_authori
     PRODUCTION_BACKEND_ID,
     validate_full_campaign_candidate,
 )
+from rfic_transformer_inverse_design.campaigns.broadband56_production_backend import (  # noqa: E402
+    validate_backend_identity_manifest,
+    validate_stage_receipt,
+)
 
 
 QUEUE_SCHEMA = "rfic_transformer.broadband56_v2_mars_queue_entry.v1"
 QUEUE_RECEIPT_SCHEMA = "rfic_transformer.broadband56_v2_mars_queue_receipt.v1"
 SUPERVISOR_SCHEMA = "rfic_transformer.broadband56_v2_authoritative_supervisor.v1"
 STATUS_SCHEMA = "rfic_transformer.broadband56_v2_campaign_status.v1"
-BACKEND_MANIFEST_SCHEMA = "rfic_transformer.broadband56_v2_private_backend_identity.v1"
 STATE_NAME = "CAMPAIGN_STATUS.json"
 LOCK_NAME = ".broadband56_v2_authoritative_controller.lock"
 SNAPSHOT_LINE = re.compile(r"^SNAPSHOT=(.+)$", re.MULTILINE)
@@ -368,9 +371,14 @@ def _validate_control_evidence(
 
     backend = _read_json(inputs["backend_identity_manifest"], "backend identity manifest")
     runtime = candidate.get("runtime_and_backend_identity") or {}
+    backend_errors = validate_backend_identity_manifest(backend, verify_files=True)
+    if backend_errors:
+        raise ControllerError(
+            "backend identity manifest failed validation: "
+            + "; ".join(backend_errors[:8])
+        )
     if not (
-        backend.get("schema") == BACKEND_MANIFEST_SCHEMA
-        and backend.get("campaign_id") == CAMPAIGN_ID
+        backend.get("campaign_id") == CAMPAIGN_ID
         and backend.get("contract_fingerprint_sha256") == fingerprint
         and backend.get("backend_id") == PRODUCTION_BACKEND_ID
         and _sha256(inputs["backend_identity_manifest"])
@@ -656,6 +664,7 @@ def _run_stage_launcher(
     check_index: int,
 ) -> None:
     stage_spec = STAGE_BY_NAME[stage]
+    prior_records = _ordered_stage_receipt_records(campaign_root)
     out_dir = campaign_root / "stages" / f"{check_index:06d}_{stage.lower()}_{_stamp()}"
     command = [
         str(inputs["python_bin"]),
@@ -691,25 +700,38 @@ def _run_stage_launcher(
         raise ControllerError(f"{stage} launcher exited with return code {result.returncode}")
     receipt_path = out_dir / "STAGE_RECEIPT.json"
     receipt = _read_json(receipt_path, f"{stage} stage receipt")
-    if not (
-        receipt.get("overall_status") == "PASS"
-        and receipt.get("stage") == stage
-        and receipt.get("terminal_state") == stage_spec.receipt_status
-        and receipt.get("accepted_unique_geometries") == stage_spec.cumulative_target
-        and receipt.get("campaign_id") == CAMPAIGN_ID
-        and receipt.get("contract_fingerprint_sha256") == SCIENTIFIC_CONTRACT_FINGERPRINT
-    ):
-        raise ControllerError(f"{stage} launcher did not produce the exact PASS stage receipt")
+    receipt_errors = validate_stage_receipt(
+        receipt,
+        stage=stage,
+        cumulative_target=stage_spec.cumulative_target,
+        backend_manifest_sha256=_sha256(inputs["backend_identity_manifest"]),
+        authorization_receipt_sha256=_sha256(inputs["full_campaign_receipt"]),
+        prior_stage_receipt_sha256=(
+            _sha256(prior_records[-1][0]) if prior_records else None
+        ),
+        verify_artifacts=True,
+        artifact_root=receipt_path.parent / "backend",
+    )
+    if receipt_errors:
+        raise ControllerError(
+            f"{stage} launcher did not produce the exact PASS stage receipt: "
+            + "; ".join(receipt_errors[:8])
+        )
 
 
 def _ordered_stage_receipts(campaign_root: Path) -> list[dict[str, Any]]:
-    paths = sorted((campaign_root / "stages").glob("*/STAGE_RECEIPT.json"))
-    pass_receipts = []
-    for path in paths:
+    return [value for _, value in _ordered_stage_receipt_records(campaign_root)]
+
+
+def _ordered_stage_receipt_records(
+    campaign_root: Path,
+) -> list[tuple[Path, dict[str, Any]]]:
+    records: list[tuple[Path, dict[str, Any]]] = []
+    for path in sorted((campaign_root / "stages").glob("*/STAGE_RECEIPT.json")):
         value = _read_json(path, "stage receipt")
         if value.get("overall_status") == "PASS":
-            pass_receipts.append(value)
-    return pass_receipts
+            records.append((path, value))
+    return records
 
 
 def _materialize_authorization_receipt(*, source: Path, campaign_root: Path) -> None:

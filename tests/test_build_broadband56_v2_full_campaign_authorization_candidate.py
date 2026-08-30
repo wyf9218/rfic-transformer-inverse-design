@@ -44,12 +44,15 @@ def _args(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> list[str]:
         "phase-plan-frozen",
         "operational-policy-approval-receipt",
         "backend-identity-manifest",
+        "backend-identity-verification-receipt",
         "queue-controller",
         "stage-launcher",
+        "production-stage-backend",
         "calibre-runner",
         "calibre-zero-safe-freezer",
         "full-band-s4p-qa-builder",
         "stage07-08-resume-guard",
+        "raw-products-finalizer",
         "historical-gds-identity-pass-receipt",
     ]
     argv = [

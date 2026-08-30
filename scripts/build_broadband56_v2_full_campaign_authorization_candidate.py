@@ -87,12 +87,15 @@ def _parse_args(argv: list[str] | None) -> argparse.Namespace:
     parser.add_argument("--phase-plan-frozen-sha256", required=True)
     parser.add_argument("--operational-policy-approval-receipt-sha256", required=True)
     parser.add_argument("--backend-identity-manifest-sha256", required=True)
+    parser.add_argument("--backend-identity-verification-receipt-sha256", required=True)
     parser.add_argument("--queue-controller-sha256", required=True)
     parser.add_argument("--stage-launcher-sha256", required=True)
+    parser.add_argument("--production-stage-backend-sha256", required=True)
     parser.add_argument("--calibre-runner-sha256", required=True)
     parser.add_argument("--calibre-zero-safe-freezer-sha256", required=True)
     parser.add_argument("--full-band-s4p-qa-builder-sha256", required=True)
     parser.add_argument("--stage07-08-resume-guard-sha256", required=True)
+    parser.add_argument("--raw-products-finalizer-sha256", required=True)
     parser.add_argument("--historical-gds-identity-pass-receipt-sha256", required=True)
     parser.add_argument(
         "--historical-backend-pass-receipt",
@@ -182,14 +185,19 @@ def build_candidate(args: argparse.Namespace, *, out_dir: Path) -> dict[str, str
         "runtime_and_backend_identity": {
             "backend_id": PRODUCTION_BACKEND_ID,
             "backend_identity_manifest_sha256": args.backend_identity_manifest_sha256,
+            "backend_identity_verification_receipt_sha256": (
+                args.backend_identity_verification_receipt_sha256
+            ),
             "queue_controller_sha256": args.queue_controller_sha256,
             "stage_launcher_sha256": args.stage_launcher_sha256,
+            "production_stage_backend_sha256": args.production_stage_backend_sha256,
             "resource_policy": RESOURCE_POLICY,
             "operational_policy_approval_scope": POLICY_APPROVAL_SCOPE,
             "calibre_runner_sha256": args.calibre_runner_sha256,
             "calibre_zero_safe_freezer_sha256": args.calibre_zero_safe_freezer_sha256,
             "full_band_s4p_qa_builder_sha256": args.full_band_s4p_qa_builder_sha256,
             "stage07_08_resume_guard_sha256": args.stage07_08_resume_guard_sha256,
+            "raw_products_finalizer_sha256": args.raw_products_finalizer_sha256,
             "historical_gds_identity_pass_receipt_sha256": (
                 args.historical_gds_identity_pass_receipt_sha256
             ),

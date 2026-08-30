@@ -12,6 +12,7 @@ from rfic_transformer_inverse_design.campaigns.broadband56_capacity_policy impor
     POLICY_APPROVAL_SCOPE,
     RESOURCE_POLICY,
     SCIENTIFIC_CONTRACT_FINGERPRINT,
+    STAGES,
 )
 from rfic_transformer_inverse_design.campaigns.broadband56_full_campaign_authorization import (
     FULL_CAMPAIGN_CANDIDATE_EFFECT,
@@ -27,6 +28,18 @@ from rfic_transformer_inverse_design.campaigns.broadband56_full_campaign_authori
     expected_stage_contract,
     expected_terminal_contract,
     validate_full_campaign_candidate,
+)
+from rfic_transformer_inverse_design.campaigns.broadband56_production_backend import (
+    BACKEND_MANIFEST_EFFECT,
+    BACKEND_MANIFEST_SCHEMA,
+    BACKEND_VERIFICATION_PASS_DECISION,
+    BACKEND_VERIFICATION_PASS_CHECKS,
+    BACKEND_VERIFICATION_SCHEMA,
+    LABEL_CONTRACT,
+    PRODUCTION_CHAIN,
+    REQUIRED_RUNTIME_ROLES,
+    REQUIRED_SCRIPT_ROLES,
+    STAGE_COMMAND_ARGUMENTS,
 )
 
 
@@ -49,6 +62,15 @@ def _write(path: Path, value: dict | str) -> Path:
     else:
         path.write_text(value, encoding="utf-8")
     return path
+
+
+def _identity_record(path: Path, value: str) -> dict[str, object]:
+    written = _write(path, value)
+    return {
+        "path": str(written.resolve()),
+        "sha256": _sha(written),
+        "size_bytes": written.stat().st_size,
+    }
 
 
 def _padded_preparation_receipt(path: Path) -> Path:
@@ -90,13 +112,31 @@ def _valid_fixture(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> dict[str,
     phase_plan = _write(private_root / "PHASE_PLAN_FROZEN.json", {"stages": expected_stage_contract()})
     policy_receipt = _write(private_root / "OPERATIONAL_POLICY_APPROVAL_RECEIPT.json", {"overall_status": "PASS"})
 
+    script_identities = {
+        role: _identity_record(
+            private_root / "scripts" / f"{role}.py",
+            f"#!/usr/bin/env python3\n# test identity: {role}\n",
+        )
+        for role in REQUIRED_SCRIPT_ROLES
+    }
+    runtime_identities = {
+        role: _identity_record(
+            private_root / "runtime" / f"{role}.dat",
+            f"test runtime identity: {role}\n",
+        )
+        for role in REQUIRED_RUNTIME_ROLES
+    }
+    production_backend = Path(
+        str(script_identities["production_stage_backend"]["path"])
+    )
+    emx_wrapper = Path(str(runtime_identities["emx_wrapper"]["path"]))
+    production_backend.chmod(0o755)
+    emx_wrapper.chmod(0o755)
+    script_identities["production_stage_backend"]["executable"] = True
+    runtime_identities["emx_wrapper"]["executable"] = True
     script_hashes = {
-        "queue_controller": "8" * 64,
-        "stage_launcher": "9" * 64,
-        "calibre_runner": "1" * 64,
-        "calibre_zero_safe_freezer": "2" * 64,
-        "full_band_s4p_qa_builder": "3" * 64,
-        "stage07_08_resume_guard": "4" * 64,
+        role: str(record["sha256"])
+        for role, record in script_identities.items()
     }
     pass_receipts = [
         {"overall_status": "PASS", "sha256": "6" * 64, "size_bytes": 2589},
@@ -105,12 +145,47 @@ def _valid_fixture(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> dict[str,
     backend_manifest = _write(
         private_root / "BACKEND_IDENTITY.json",
         {
-            "schema": "rfic_transformer.broadband56_v2_private_backend_identity.v1",
+            "schema": BACKEND_MANIFEST_SCHEMA,
             "campaign_id": CAMPAIGN_ID,
             "contract_fingerprint_sha256": SCIENTIFIC_CONTRACT_FINGERPRINT,
             "backend_id": PRODUCTION_BACKEND_ID,
-            "script_identities": {
-                key: {"sha256": value} for key, value in script_hashes.items()
+            "manifest_effect": BACKEND_MANIFEST_EFFECT,
+            "simulator_action_taken": False,
+            "private_paths_published": False,
+            "no_clobber_required": True,
+            "execution_chain": list(PRODUCTION_CHAIN),
+            "scientific_contract": {
+                "frequency_contract": expected_frequency_contract(),
+                "geometry_contract": expected_geometry_contract(),
+                "port_and_grounding_contract": PORT_AND_GROUNDING_CONTRACT,
+                "label_contract": LABEL_CONTRACT,
+                "terminal_contract": expected_terminal_contract(),
+                "ordered_stages": expected_stage_contract(),
+            },
+            "preparation_bindings": {
+                "preparation_receipt_sha256": _sha(preparation),
+                "private_configuration_sha256": _sha(private_config),
+                "historical_configuration_sha256": _sha(historical_config),
+                "operational_policy_approval_receipt_sha256": _sha(policy_receipt),
+            },
+            "script_identities": script_identities,
+            "runtime_identities": runtime_identities,
+            "stage_commands": {
+                stage.name: {
+                    "argv": [
+                        str(script_identities["production_stage_backend"]["path"]),
+                        *[
+                            item
+                            for flag, placeholder in STAGE_COMMAND_ARGUMENTS
+                            for item in (flag, placeholder)
+                        ],
+                    ],
+                    "shell_used": False,
+                    "identity_role": "production_stage_backend",
+                    "identity_argv_index": 0,
+                    "identity_sha256": script_hashes["production_stage_backend"],
+                }
+                for stage in STAGES
             },
             "historical_gds_identity_pass_receipt": {
                 "overall_status": "PASS",
@@ -118,6 +193,24 @@ def _valid_fixture(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> dict[str,
                 "size_bytes": 975,
             },
             "historical_backend_pass_receipts": pass_receipts,
+        },
+    )
+    backend_verification = _write(
+        private_root / "PRIVATE_BACKEND_IDENTITY_VERIFICATION_RECEIPT.json",
+        {
+            "schema": BACKEND_VERIFICATION_SCHEMA,
+            "overall_status": "PASS",
+            "decision": BACKEND_VERIFICATION_PASS_DECISION,
+            "campaign_id": CAMPAIGN_ID,
+            "contract_fingerprint_sha256": SCIENTIFIC_CONTRACT_FINGERPRINT,
+            "backend_identity_manifest": {
+                "path": str(backend_manifest.resolve()),
+                "size_bytes": backend_manifest.stat().st_size,
+                "sha256": _sha(backend_manifest),
+            },
+            "checks": BACKEND_VERIFICATION_PASS_CHECKS,
+            "errors": [],
+            "simulator_action_taken": False,
         },
     )
 
@@ -186,14 +279,21 @@ def _valid_fixture(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> dict[str,
         "runtime_and_backend_identity": {
             "backend_id": PRODUCTION_BACKEND_ID,
             "backend_identity_manifest_sha256": _sha(backend_manifest),
+            "backend_identity_verification_receipt_sha256": _sha(
+                backend_verification
+            ),
             "queue_controller_sha256": script_hashes["queue_controller"],
             "stage_launcher_sha256": script_hashes["stage_launcher"],
+            "production_stage_backend_sha256": script_hashes[
+                "production_stage_backend"
+            ],
             "resource_policy": RESOURCE_POLICY,
             "operational_policy_approval_scope": POLICY_APPROVAL_SCOPE,
             "calibre_runner_sha256": script_hashes["calibre_runner"],
             "calibre_zero_safe_freezer_sha256": script_hashes["calibre_zero_safe_freezer"],
             "full_band_s4p_qa_builder_sha256": script_hashes["full_band_s4p_qa_builder"],
             "stage07_08_resume_guard_sha256": script_hashes["stage07_08_resume_guard"],
+            "raw_products_finalizer_sha256": script_hashes["raw_products_finalizer"],
             "historical_gds_identity_pass_receipt_sha256": "5" * 64,
             "historical_backend_pass_receipts": pass_receipts,
             "cadence_identity_reverified": True,
@@ -220,6 +320,7 @@ def _valid_fixture(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> dict[str,
         "phase_plan": phase_plan,
         "policy_receipt": policy_receipt,
         "backend_manifest": backend_manifest,
+        "backend_verification": backend_verification,
     }
 
 
@@ -257,6 +358,8 @@ def _argv(fixture: dict[str, object], out_dir: Path) -> list[str]:
         str(fixture["policy_receipt"]),
         "--backend-identity-manifest",
         str(fixture["backend_manifest"]),
+        "--backend-identity-verification-receipt",
+        str(fixture["backend_verification"]),
         "--out-dir",
         str(out_dir),
     ]
@@ -302,6 +405,28 @@ def test_rejects_private_preparation_hash_drift(
     private_config = fixture["private_config"]
     assert isinstance(private_config, Path)
     private_config.write_text("frequency: drifted\n", encoding="utf-8")
+
+    assert MODULE.main(_argv(fixture, tmp_path / "receipt")) == 2
+
+
+def test_rejects_false_check_in_hash_bound_backend_verification(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    fixture = _valid_fixture(tmp_path, monkeypatch)
+    verification_path = fixture["backend_verification"]
+    candidate = fixture["candidate"]
+    candidate_path = fixture["candidate_path"]
+    assert isinstance(verification_path, Path)
+    assert isinstance(candidate, dict)
+    assert isinstance(candidate_path, Path)
+
+    verification = json.loads(verification_path.read_text(encoding="utf-8"))
+    verification["checks"]["all_named_file_sha256_values_match"] = False
+    _write(verification_path, verification)
+    candidate["runtime_and_backend_identity"][
+        "backend_identity_verification_receipt_sha256"
+    ] = _sha(verification_path)
+    _write(candidate_path, candidate)
 
     assert MODULE.main(_argv(fixture, tmp_path / "receipt")) == 2
 

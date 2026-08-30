@@ -4,20 +4,37 @@ import argparse
 import hashlib
 import importlib.util
 import json
-import sys
 from pathlib import Path
 
 import pytest
 
+from rfic_transformer_inverse_design.campaigns.broadband56_balanced200k import (
+    CAMPAIGN_ID,
+)
 from rfic_transformer_inverse_design.campaigns.broadband56_capacity_policy import (
     RESOURCE_POLICY,
     SCIENTIFIC_CONTRACT_FINGERPRINT,
     SNAPSHOT_SCHEMA,
+    STAGES,
 )
 from rfic_transformer_inverse_design.campaigns.broadband56_full_campaign_authorization import (
     FULL_CAMPAIGN_APPROVAL_SCHEMA,
     FULL_CAMPAIGN_PASS_DECISION,
+    PORT_AND_GROUNDING_CONTRACT,
     PRODUCTION_BACKEND_ID,
+    expected_frequency_contract,
+    expected_geometry_contract,
+    expected_stage_contract,
+    expected_terminal_contract,
+)
+from rfic_transformer_inverse_design.campaigns.broadband56_production_backend import (
+    BACKEND_MANIFEST_EFFECT,
+    BACKEND_MANIFEST_SCHEMA,
+    LABEL_CONTRACT,
+    PRODUCTION_CHAIN,
+    REQUIRED_RUNTIME_ROLES,
+    REQUIRED_SCRIPT_ROLES,
+    STAGE_COMMAND_ARGUMENTS,
 )
 
 
@@ -95,30 +112,200 @@ def _fixture(tmp_path: Path) -> argparse.Namespace:
     (campaign_root / "stages").mkdir(parents=True)
     backend_script = _write(
         tmp_path / "backend.py",
-        """import argparse,json\nfrom pathlib import Path\np=argparse.ArgumentParser();p.add_argument('--stage');p.add_argument('--target',type=int);p.add_argument('--out-dir');ns=p.parse_args()\nout=Path(ns.out_dir);out.mkdir(parents=True)\nterm={'GOLDEN':'GOLDEN_COMPLETE'}[ns.stage]\nd={'overall_status':'PASS','stage':ns.stage,'terminal_state':term,'accepted_unique_geometries':ns.target,'campaign_id':'broadband56_real_emx_balanced200k_tsmc65_v2','contract_fingerprint_sha256':'f86a00efbf7756b7421b863bbb16c340db6b423640f63a3257d46c1af49eb55e'}\n(out/'STAGE_RECEIPT.json').write_text(json.dumps(d))\n""",
+        """#!/usr/bin/env python3
+import argparse
+import hashlib
+import json
+import sys
+from pathlib import Path
+
+sys.path.insert(0, "__REPOSITORY_ROOT__")
+
+from rfic_transformer_inverse_design.campaigns.broadband56_balanced200k import CAMPAIGN_ID
+from rfic_transformer_inverse_design.campaigns.broadband56_capacity_policy import SCIENTIFIC_CONTRACT_FINGERPRINT, STAGE_BY_NAME
+from rfic_transformer_inverse_design.campaigns.broadband56_full_campaign_authorization import PORT_AND_GROUNDING_CONTRACT, PRODUCTION_BACKEND_ID, expected_frequency_contract
+from rfic_transformer_inverse_design.campaigns.broadband56_production_backend import FAILURE_ACCOUNTING_FIELDS, STAGE_ARTIFACT_FIELDS, STAGE_GATE_FIELDS, STAGE_RECEIPT_SCHEMA
+
+def sha(path):
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+parser = argparse.ArgumentParser()
+parser.add_argument('--stage')
+parser.add_argument('--cumulative-target', type=int)
+parser.add_argument('--campaign-root')
+parser.add_argument('--backend-out-dir')
+parser.add_argument('--full-campaign-receipt')
+parser.add_argument('--backend-identity-manifest')
+parser.add_argument('--resource-snapshot')
+parser.add_argument('--max-concurrency', type=int)
+args = parser.parse_args()
+out = Path(args.backend_out_dir)
+out.mkdir(parents=True)
+rows = args.cumulative_target * 56
+
+raw_receipt = {
+    'schema': 'broadband56_raw_products_receipt_v1',
+    'overall_status': 'PASS',
+    'decision': 'USE_AS_FRESH_REAL_EMX_RAW_PRODUCTS',
+    'campaign_id': CAMPAIGN_ID,
+    'contract_fingerprint_sha256': SCIENTIFIC_CONTRACT_FINGERPRINT,
+    'counts': {
+        'accepted_geometries': args.cumulative_target,
+        's4p_artifacts': args.cumulative_target,
+        'geometry_frequency_rows': rows,
+    },
+    'checks': {
+        'all_accepted_s4p_are_fresh_exact_56_point_four_port': True,
+        'long_features_bound_to_exact_s4p_s_and_z': True,
+        'long_physical_features_recomputed_from_exact_s4p': True,
+        'proxy_values_excluded_from_labels': True,
+    },
+}
+
+artifacts = {}
+for role in STAGE_ARTIFACT_FIELDS:
+    suffix = '.json' if role == 'raw_products_receipt' else '.txt'
+    path = out / (role + suffix)
+    if role == 'raw_products_receipt':
+        path.write_text(json.dumps(raw_receipt) + '\\n', encoding='utf-8')
+    else:
+        path.write_text('test artifact: ' + role + '\\n', encoding='utf-8')
+    artifacts[role] = {
+        'path': str(path.resolve()),
+        'sha256': sha(path),
+        'size_bytes': path.stat().st_size,
+    }
+
+failure_accounting = {field: 0 for field in FAILURE_ACCOUNTING_FIELDS}
+failure_accounting['raw_geometry_candidates'] = args.cumulative_target
+failure_accounting['accepted_geometries'] = args.cumulative_target
+receipt = {
+    'schema': STAGE_RECEIPT_SCHEMA,
+    'overall_status': 'PASS',
+    'decision': 'ACCEPT_STAGE',
+    'campaign_id': CAMPAIGN_ID,
+    'contract_fingerprint_sha256': SCIENTIFIC_CONTRACT_FINGERPRINT,
+    'backend_id': PRODUCTION_BACKEND_ID,
+    'stage': args.stage,
+    'terminal_state': STAGE_BY_NAME[args.stage].receipt_status,
+    'cumulative_target': args.cumulative_target,
+    'accepted_unique_geometries': args.cumulative_target,
+    'backend_identity_manifest_sha256': sha(Path(args.backend_identity_manifest)),
+    'full_campaign_authorization_receipt_sha256': sha(Path(args.full_campaign_receipt)),
+    'prior_stage_receipt_sha256': None,
+    'frequency_contract': expected_frequency_contract(),
+    'port_and_grounding_contract': PORT_AND_GROUNDING_CONTRACT,
+    'label_source': 'FRESH_REAL_EMX_ONLY',
+    'counts': {
+        'accepted_unique_geometries': args.cumulative_target,
+        'valid_s4p_geometries': args.cumulative_target,
+        'feature_complete_geometries': args.cumulative_target,
+        's4p_artifacts': args.cumulative_target,
+        'independent_designs': args.cumulative_target,
+        'geometry_frequency_rows': rows,
+        'broadband_descriptor_valid_rows': rows,
+        'strict_lumped_valid_rows': rows,
+    },
+    'safeguards': {
+        'proxy_label_count': 0,
+        'historical_label_count': 0,
+        'interpolated_frequency_record_count': 0,
+        'accepted_duplicate_geometry_count': 0,
+        'accepted_blocking_calibre_count': 0,
+        'manual_gds_modification_count': 0,
+        'mixed_contract_fingerprint_count': 0,
+    },
+    'gates': {field: True for field in STAGE_GATE_FIELDS},
+    'failure_accounting': failure_accounting,
+    'artifacts': artifacts,
+}
+(out / 'STAGE_RECEIPT.json').write_text(
+    json.dumps(receipt) + '\\n', encoding='utf-8'
+)
+""".replace("__REPOSITORY_ROOT__", str(ROOT)),
     )
+    backend_script.chmod(0o755)
+    script_identities = {}
+    for role in REQUIRED_SCRIPT_ROLES:
+        path = (
+            SCRIPT
+            if role == "stage_launcher"
+            else backend_script
+            if role == "production_stage_backend"
+            else _write(tmp_path / "scripts" / f"{role}.py", f"# {role}\n")
+        )
+        script_identities[role] = {
+            "path": str(path.resolve()),
+            "sha256": _sha(path),
+            "size_bytes": path.stat().st_size,
+        }
+        if role == "production_stage_backend":
+            script_identities[role]["executable"] = True
+    runtime_identities = {}
+    for role in REQUIRED_RUNTIME_ROLES:
+        path = _write(tmp_path / "runtime" / f"{role}.dat", f"{role}\n")
+        if role == "emx_wrapper":
+            path.chmod(0o755)
+        runtime_identities[role] = {
+            "path": str(path.resolve()),
+            "sha256": _sha(path),
+            "size_bytes": path.stat().st_size,
+        }
+        if role == "emx_wrapper":
+            runtime_identities[role]["executable"] = True
+    command = [
+        str(backend_script.resolve()),
+        *[
+            item
+            for flag, placeholder in STAGE_COMMAND_ARGUMENTS
+            for item in (flag, placeholder)
+        ],
+    ]
     backend = {
-        "schema": "rfic_transformer.broadband56_v2_private_backend_identity.v1",
-        "campaign_id": "broadband56_real_emx_balanced200k_tsmc65_v2",
+        "schema": BACKEND_MANIFEST_SCHEMA,
+        "campaign_id": CAMPAIGN_ID,
         "contract_fingerprint_sha256": SCIENTIFIC_CONTRACT_FINGERPRINT,
         "backend_id": PRODUCTION_BACKEND_ID,
-        "script_identities": {"stage_launcher": {"sha256": _sha(SCRIPT)}},
+        "manifest_effect": BACKEND_MANIFEST_EFFECT,
+        "simulator_action_taken": False,
+        "private_paths_published": False,
+        "no_clobber_required": True,
+        "execution_chain": list(PRODUCTION_CHAIN),
+        "scientific_contract": {
+            "frequency_contract": expected_frequency_contract(),
+            "geometry_contract": expected_geometry_contract(),
+            "port_and_grounding_contract": PORT_AND_GROUNDING_CONTRACT,
+            "label_contract": LABEL_CONTRACT,
+            "terminal_contract": expected_terminal_contract(),
+            "ordered_stages": expected_stage_contract(),
+        },
+        "preparation_bindings": {
+            "preparation_receipt_sha256": "1" * 64,
+            "private_configuration_sha256": "2" * 64,
+            "historical_configuration_sha256": "3" * 64,
+            "operational_policy_approval_receipt_sha256": "4" * 64,
+        },
+        "script_identities": script_identities,
+        "runtime_identities": runtime_identities,
         "stage_commands": {
-            "GOLDEN": {
-                "argv": [
-                    sys.executable,
-                    str(backend_script),
-                    "--stage",
-                    "{stage}",
-                    "--target",
-                    "{cumulative_target}",
-                    "--out-dir",
-                    "{backend_out_dir}",
-                ],
-                "identity_argv_index": 1,
+            stage.name: {
+                "argv": command,
+                "shell_used": False,
+                "identity_role": "production_stage_backend",
+                "identity_argv_index": 0,
                 "identity_sha256": _sha(backend_script),
             }
+            for stage in STAGES
         },
+        "historical_gds_identity_pass_receipt": {
+            "overall_status": "PASS",
+            "sha256": "5" * 64,
+            "size_bytes": 975,
+        },
+        "historical_backend_pass_receipts": [
+            {"overall_status": "PASS", "sha256": "6" * 64, "size_bytes": 2589},
+            {"overall_status": "PASS", "sha256": "7" * 64, "size_bytes": 3272},
+        ],
     }
     backend_path = _write(tmp_path / "backend.json", backend)
     receipt = {
@@ -126,7 +313,7 @@ def _fixture(tmp_path: Path) -> argparse.Namespace:
         "overall_status": "PASS",
         "decision": FULL_CAMPAIGN_PASS_DECISION,
         "authorization_scope": "FULL_CAMPAIGN",
-        "campaign_id": "broadband56_real_emx_balanced200k_tsmc65_v2",
+        "campaign_id": CAMPAIGN_ID,
         "contract_fingerprint_sha256": SCIENTIFIC_CONTRACT_FINGERPRINT,
         "backend_identity_manifest": {"sha256": _sha(backend_path)},
         "simulator_geometry_limit": 200_000,
@@ -171,7 +358,7 @@ def test_rejects_backend_executable_hash_drift(tmp_path: Path) -> None:
     receipt["backend_identity_manifest"]["sha256"] = _sha(Path(args.backend_identity_manifest))
     Path(args.full_campaign_receipt).write_text(json.dumps(receipt))
 
-    with pytest.raises(MODULE.StageLauncherError, match="executable identity"):
+    with pytest.raises(MODULE.StageLauncherError, match="identity"):
         MODULE.launch_stage(args, out_dir=Path(args.out_dir))
 
 

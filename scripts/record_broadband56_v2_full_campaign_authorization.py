@@ -39,6 +39,12 @@ from rfic_transformer_inverse_design.campaigns.broadband56_full_campaign_authori
     PRODUCTION_BACKEND_ID,
     validate_full_campaign_candidate,
 )
+from rfic_transformer_inverse_design.campaigns.broadband56_production_backend import (  # noqa: E402
+    BACKEND_VERIFICATION_PASS_DECISION,
+    BACKEND_VERIFICATION_PASS_CHECKS,
+    BACKEND_VERIFICATION_SCHEMA,
+    validate_backend_identity_manifest,
+)
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -193,6 +199,21 @@ def main(argv: list[str] | None = None) -> int:
     if not isinstance(runtime, Mapping):
         runtime = {}
     backend_sha = _sha256(backend_manifest_path) if backend_manifest_path.is_file() else None
+    backend_errors = validate_backend_identity_manifest(
+        backend_manifest,
+        verify_files=True,
+    )
+    backend_verification_path = (
+        Path(args.backend_identity_verification_receipt).expanduser().resolve()
+    )
+    backend_verification = _read_json(
+        backend_verification_path,
+        checks,
+        "backend_identity_verification_receipt",
+    )
+    backend_verification_sha = (
+        _sha256(backend_verification_path) if backend_verification_path.is_file() else None
+    )
     checks.extend(
         [
             _check(
@@ -200,7 +221,11 @@ def main(argv: list[str] | None = None) -> int:
                 backend_sha == runtime.get("backend_identity_manifest_sha256"),
                 backend_sha,
             ),
-            _check("backend_manifest_schema", backend_manifest.get("schema") == "rfic_transformer.broadband56_v2_private_backend_identity.v1", backend_manifest.get("schema")),
+            _check(
+                "backend_manifest_complete",
+                not backend_errors,
+                "PASS" if not backend_errors else "; ".join(backend_errors[:8]),
+            ),
             _check("backend_manifest_campaign", backend_manifest.get("campaign_id") == CAMPAIGN_ID, backend_manifest.get("campaign_id")),
             _check(
                 "backend_manifest_fingerprint",
@@ -210,8 +235,33 @@ def main(argv: list[str] | None = None) -> int:
             _check("backend_manifest_id", backend_manifest.get("backend_id") == PRODUCTION_BACKEND_ID, backend_manifest.get("backend_id")),
             _check(
                 "backend_manifest_candidate_identity",
-                _backend_manifest_matches_candidate(backend_manifest, runtime),
+                _backend_manifest_matches_candidate(backend_manifest, candidate),
                 "backend script and PASS-receipt identities",
+            ),
+            _check(
+                "backend_identity_verification_receipt_sha256",
+                backend_verification_sha
+                == runtime.get("backend_identity_verification_receipt_sha256"),
+                backend_verification_sha,
+            ),
+            _check(
+                "backend_identity_verification_receipt_pass",
+                backend_verification.get("schema") == BACKEND_VERIFICATION_SCHEMA
+                and backend_verification.get("overall_status") == "PASS"
+                and backend_verification.get("decision")
+                == BACKEND_VERIFICATION_PASS_DECISION
+                and backend_verification.get("campaign_id") == CAMPAIGN_ID
+                and backend_verification.get("contract_fingerprint_sha256")
+                == SCIENTIFIC_CONTRACT_FINGERPRINT
+                and backend_verification.get("backend_identity_manifest", {}).get(
+                    "sha256"
+                )
+                == backend_sha
+                and backend_verification.get("checks")
+                == BACKEND_VERIFICATION_PASS_CHECKS
+                and backend_verification.get("errors") == []
+                and backend_verification.get("simulator_action_taken") is False,
+                backend_verification.get("overall_status"),
             ),
         ]
     )
@@ -251,6 +301,15 @@ def main(argv: list[str] | None = None) -> int:
             "size_bytes": backend_manifest_path.stat().st_size if backend_manifest_path.is_file() else None,
             "sha256": backend_sha,
             "backend_id": backend_manifest.get("backend_id"),
+        },
+        "backend_identity_verification_receipt": {
+            "path": str(backend_verification_path),
+            "size_bytes": (
+                backend_verification_path.stat().st_size
+                if backend_verification_path.is_file()
+                else None
+            ),
+            "sha256": backend_verification_sha,
         },
         "queue_authorized": passed,
         "supervisor_authorized": passed,
@@ -308,14 +367,19 @@ def _parse_args(argv: list[str] | None) -> argparse.Namespace:
     parser.add_argument("--phase-plan-frozen", required=True)
     parser.add_argument("--operational-policy-approval-receipt", required=True)
     parser.add_argument("--backend-identity-manifest", required=True)
+    parser.add_argument("--backend-identity-verification-receipt", required=True)
     parser.add_argument("--out-dir", required=True)
     parser.add_argument("--no-fail-exit", action="store_true")
     return parser.parse_args(argv)
 
 
 def _backend_manifest_matches_candidate(
-    manifest: Mapping[str, Any], candidate_runtime: Mapping[str, Any]
+    manifest: Mapping[str, Any], candidate: Mapping[str, Any]
 ) -> bool:
+    candidate_runtime = candidate.get("runtime_and_backend_identity")
+    candidate_private = candidate.get("private_preparation_evidence")
+    if not isinstance(candidate_runtime, Mapping) or not isinstance(candidate_private, Mapping):
+        return False
     script_identities = manifest.get("script_identities")
     receipts = manifest.get("historical_backend_pass_receipts")
     if not isinstance(script_identities, Mapping) or not isinstance(receipts, list):
@@ -323,10 +387,12 @@ def _backend_manifest_matches_candidate(
     expected_scripts = {
         "queue_controller": "queue_controller_sha256",
         "stage_launcher": "stage_launcher_sha256",
+        "production_stage_backend": "production_stage_backend_sha256",
         "calibre_runner": "calibre_runner_sha256",
         "calibre_zero_safe_freezer": "calibre_zero_safe_freezer_sha256",
         "full_band_s4p_qa_builder": "full_band_s4p_qa_builder_sha256",
         "stage07_08_resume_guard": "stage07_08_resume_guard_sha256",
+        "raw_products_finalizer": "raw_products_finalizer_sha256",
     }
     for manifest_key, candidate_key in expected_scripts.items():
         record = script_identities.get(manifest_key)
@@ -349,6 +415,17 @@ def _backend_manifest_matches_candidate(
         for item in receipts
         if isinstance(item, Mapping)
     ]
+    preparation_bindings = manifest.get("preparation_bindings")
+    if not isinstance(preparation_bindings, Mapping):
+        return False
+    for field in (
+        "preparation_receipt_sha256",
+        "private_configuration_sha256",
+        "historical_configuration_sha256",
+        "operational_policy_approval_receipt_sha256",
+    ):
+        if preparation_bindings.get(field) != candidate_private.get(field):
+            return False
     return compact == expected_receipts
 
 

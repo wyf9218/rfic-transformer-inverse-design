@@ -131,12 +131,15 @@ PRIVATE_PREPARATION_SHA_FIELDS = (
 
 BACKEND_SHA_FIELDS = (
     "backend_identity_manifest_sha256",
+    "backend_identity_verification_receipt_sha256",
     "queue_controller_sha256",
     "stage_launcher_sha256",
+    "production_stage_backend_sha256",
     "calibre_runner_sha256",
     "calibre_zero_safe_freezer_sha256",
     "full_band_s4p_qa_builder_sha256",
     "stage07_08_resume_guard_sha256",
+    "raw_products_finalizer_sha256",
     "historical_gds_identity_pass_receipt_sha256",
 )
 

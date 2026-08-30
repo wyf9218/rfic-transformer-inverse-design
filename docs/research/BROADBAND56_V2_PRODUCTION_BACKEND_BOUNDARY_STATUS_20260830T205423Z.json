@@ -1,0 +1,63 @@
+{
+  "schema": "rfic_transformer.broadband56_v2_production_backend_boundary_status.v1",
+  "generated_utc": "2026-08-30T20:54:23Z",
+  "overall_status": "PASS",
+  "decision": "PUBLIC_CONTROL_PLANE_HARDENED_PRIVATE_BACKEND_IDENTITY_REQUIRED",
+  "campaign_id": "broadband56_real_emx_balanced200k_tsmc65_v2",
+  "scientific_contract_fingerprint_sha256": "f86a00efbf7756b7421b863bbb16c340db6b423640f63a3257d46c1af49eb55e",
+  "branch": "codex/broadband56-balanced200k-v2",
+  "scope": "PUBLIC_SAFE_STATIC_CONTROL_PLANE_ONLY",
+  "completed_checks": {
+    "private_backend_manifest_v2_contract_implemented": true,
+    "all_named_script_and_runtime_files_require_path_size_sha256": true,
+    "production_stage_backend_and_emx_wrapper_require_executable_identity": true,
+    "all_ordered_stage_commands_require_hash_bound_shell_free_argv": true,
+    "stage_command_flag_and_placeholder_order_is_frozen": true,
+    "exact_56_point_four_port_fresh_emx_stage_contract_implemented": true,
+    "failure_funnel_and_zero_proxy_label_safeguards_implemented": true,
+    "stage_artifacts_require_exact_roles_path_size_sha256": true,
+    "stage_artifacts_must_remain_under_no_clobber_stage_backend_root": true,
+    "prior_stage_receipts_are_revalidated_in_exact_sha_order": true,
+    "backend_verification_receipt_requires_exact_pass_checks_and_empty_errors": true,
+    "candidate_binds_backend_verification_stage_backend_and_raw_finalizer_sha256": true
+  },
+  "test_evidence": {
+    "focused_backend_authorization_tests": {
+      "status": "PASS",
+      "passed": 29,
+      "failed": 0
+    },
+    "all_broadband56_test_files": {
+      "status": "PASS",
+      "passed": 143,
+      "failed": 0,
+      "warnings": 35,
+      "warning_scope": "PRE_EXISTING_NUMERICAL_AND_MATPLOTLIB_WARNINGS"
+    },
+    "python_compile": "PASS",
+    "full_repository_collection": {
+      "status": "NOT_RUN_IN_SUPPORTED_TEST_ENVIRONMENT",
+      "reason": "System pytest uses Python 3.9 while pyproject.toml requires Python >=3.10; the available bundled Python 3.12 runtime does not include pytest."
+    }
+  },
+  "pending_private_evidence": {
+    "private_backend_identity_manifest_v2": "REVERIFY_ON_MARS",
+    "private_backend_identity_verification_receipt": "NOT_CREATED",
+    "production_stage_backend_file_identity": "REVERIFY_ON_MARS",
+    "raw_products_finalizer_file_identity": "REVERIFY_ON_MARS",
+    "full_band_s4p_qa_builder_identity_conflict": "UNRESOLVED",
+    "final_full_campaign_candidate": "NOT_CREATED",
+    "full_campaign_authorization_receipt": "NOT_PRESENT"
+  },
+  "runtime_boundary": {
+    "owner_stop_status_path": "docs/research/BROADBAND56_V2_OWNER_STOP_STATUS_20260830T195649Z.json",
+    "owner_stop_status_sha256": "b0d97d1266a138c3726e6e923b901f4cffc3ff126d3a453e6e80bd9c09e38431",
+    "queue_or_supervisor_launched": false,
+    "cadence_action_taken": false,
+    "calibre_action_taken": false,
+    "emx_action_taken": false,
+    "simulator_action_taken": false,
+    "private_paths_published": false
+  },
+  "next_legal_action": "Reverify the exact private production backend files and disputed full-band S4P QA builder identity on MARS, then write one no-clobber private backend verification receipt before building the single final FULL_CAMPAIGN authorization candidate."
+}
