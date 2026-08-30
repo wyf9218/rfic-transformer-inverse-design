@@ -393,6 +393,7 @@ def _backend_manifest_matches_candidate(
         "exact_audited_gds_emx_runner": "exact_audited_gds_emx_runner_sha256",
         "exact_audited_gds_emx_module": "exact_audited_gds_emx_module_sha256",
         "full_band_s4p_qa_builder": "full_band_s4p_qa_builder_sha256",
+        "full_band_s4p_qa_module": "full_band_s4p_qa_module_sha256",
         "stage07_08_resume_guard": "stage07_08_resume_guard_sha256",
         "raw_products_finalizer": "raw_products_finalizer_sha256",
     }

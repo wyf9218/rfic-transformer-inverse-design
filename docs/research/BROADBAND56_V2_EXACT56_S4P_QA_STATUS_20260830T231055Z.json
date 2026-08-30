@@ -1,0 +1,74 @@
+{
+  "schema": "rfic_transformer.broadband56_v2_public_safe_exact56_s4p_qa_status.v1",
+  "generated_utc": "2026-08-30T23:10:55Z",
+  "overall_status": "PASS",
+  "decision": "PUBLIC_EXACT56_QA_IMPLEMENTED_PRIVATE_BACKEND_IDENTITY_REVERIFY_REQUIRED",
+  "campaign_id": "broadband56_real_emx_balanced200k_tsmc65_v2",
+  "contract_fingerprint_sha256": "f86a00efbf7756b7421b863bbb16c340db6b423640f63a3257d46c1af49eb55e",
+  "branch": "codex/broadband56-balanced200k-v2",
+  "implementation_identities": {
+    "full_band_s4p_qa_builder": {
+      "path": "scripts/build_broadband56_exact56_s4p_qa.py",
+      "sha256": "6e8cf6051fe4ce87c3f3f98c6324f47aac60764c50d9cc28d85543b956e946ee"
+    },
+    "full_band_s4p_qa_module": {
+      "path": "rfic_transformer_inverse_design/campaigns/broadband56_s4p_qa.py",
+      "sha256": "7c51b2592364b4ea28632269c0cc1c6398bb60b43eccac83f15ebb8c3a666f83"
+    }
+  },
+  "implemented_contract": {
+    "fresh_exact_gds_emx_receipt_required": true,
+    "ports": 4,
+    "frequency_start_hz": 5000000000,
+    "frequency_stop_hz": 60000000000,
+    "frequency_step_hz": 1000000000,
+    "frequency_points": 56,
+    "interpolation_allowed": false,
+    "resampling_used": false,
+    "complete_complex_s_matrix_retained": true,
+    "complete_complex_z_matrix_retained": true,
+    "s_to_z_roundtrip_audited": true,
+    "broadband_feature_and_validity_rows_written": true,
+    "near_resonance_invalid_lumped_row_rejects_valid_s4p_geometry": false,
+    "proxy_or_historical_labels_allowed": false,
+    "builder_and_imported_module_both_sha_bound": true
+  },
+  "test_evidence": {
+    "exact56_s4p_qa_tests": {
+      "status": "PASS",
+      "passed": 11,
+      "failed": 0
+    },
+    "focused_qa_authorization_finalizer_tests": {
+      "status": "PASS",
+      "passed": 57,
+      "failed": 0
+    },
+    "all_broadband56_tests": {
+      "status": "PASS",
+      "passed": 167,
+      "failed": 0,
+      "warnings": 35,
+      "warning_scope": "PRE_EXISTING_NUMERICAL_AND_MATPLOTLIB_WARNINGS"
+    },
+    "python_compile": "PASS",
+    "ruff": "UNAVAILABLE_NO_MODULE_INSTALLED",
+    "black": "UNAVAILABLE_NO_MODULE_INSTALLED"
+  },
+  "runtime_boundary": {
+    "owner_stop_status_path": "docs/research/BROADBAND56_V2_OWNER_STOP_STATUS_20260830T195649Z.json",
+    "owner_stop_status_sha256": "b0d97d1266a138c3726e6e923b901f4cffc3ff126d3a453e6e80bd9c09e38431",
+    "queue_or_supervisor_launched": false,
+    "cadence_action_taken": false,
+    "calibre_action_taken": false,
+    "emx_action_taken": false,
+    "simulator_action_taken": false
+  },
+  "pending_private_evidence": {
+    "private_backend_identity_manifest_v2": "REVERIFY_ON_MARS_WITH_NEW_QA_IDENTITIES",
+    "private_backend_identity_verification_receipt": "NOT_CREATED",
+    "final_full_campaign_candidate": "NOT_CREATED",
+    "full_campaign_authorization_receipt": "NOT_PRESENT"
+  },
+  "next_legal_action": "After the owner stop is explicitly reversed, update the stale private MARS repository without launching simulators, bind the exact builder/module bytes in a new no-clobber private backend manifest, and run identity-only verification before creating the one final FULL_CAMPAIGN candidate."
+}

@@ -53,6 +53,7 @@ def _args(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> list[str]:
         "exact-audited-gds-emx-runner",
         "exact-audited-gds-emx-module",
         "full-band-s4p-qa-builder",
+        "full-band-s4p-qa-module",
         "stage07-08-resume-guard",
         "raw-products-finalizer",
         "historical-gds-identity-pass-receipt",

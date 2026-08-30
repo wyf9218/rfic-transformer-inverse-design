@@ -137,6 +137,19 @@ simulator work must remain forbidden.
   source immediately before and after EMX, verifies the EMX command names the
   one audited GDS, rejects any output GDS/Cadence/Calibre tree, and writes a
   per-candidate receipt. Its tests mock EMX and do not execute a simulator.
+- `scripts/build_broadband56_exact56_s4p_qa.py` and
+  `rfic_transformer_inverse_design/campaigns/broadband56_s4p_qa.py`:
+  post-simulation, no-clobber QA boundary for the exact-GDS fresh-EMX
+  receipts. It independently rehashes each receipt and S4P, requires the
+  exact native `5, 6, ..., 60 GHz` vector and a finite `(56, 4, 4)` S matrix,
+  prohibits interpolation/resampling, audits the S-to-Z-to-S round trip, and
+  writes complete S/Z matrices, Lp/Ls/Qp/Qs/Qmin/M/signed-K/absolute-K,
+  reactance, SRF, passivity, reciprocity, validity, and envelope fields for
+  all 56 rows. Passivity and reciprocity remain explicit diagnostics rather
+  than hidden acceptance filters; an otherwise valid S4P remains accepted
+  when a near-resonance row is unsuitable for lumped interpretation. Both
+  the CLI and imported calculation module require separate SHA-256 bindings
+  in the private backend manifest and final authorization candidate.
 - `scripts/audit_broadband56_balanced200k_checkpoint.py`:
   streaming accepted/S4P/56-point/S-Z/feature/fingerprint audit plus required
   checkpoint receipt, coverage table, failure funnel, and SHA-256 index. It
@@ -312,11 +325,26 @@ After the private runner has produced a terminal attempt ledger and an ordered
 raw-product snapshot with:
 
 ```bash
+python scripts/build_broadband56_exact56_s4p_qa.py \
+  --input-index /private/no-clobber/execution/exact_gds_fresh_emx_receipt_index.csv \
+  --expected-geometry-count 1000 \
+  --out-dir /private/no-clobber/execution/exact56_s4p_qa_001000
+```
+
+The input index contains only identity fields and exact-GDS fresh-EMX receipt
+paths/SHA-256 values. The QA builder does not run a simulator and does not
+accept a raw S4P path without its upstream exact-GDS fresh-EMX receipt. Its
+`broadband_features_long.csv` is then passed unchanged to the raw-products
+finalizer, which independently recomputes and rebinds every S/Z/feature value.
+
+Materialize the five authoritative raw products with:
+
+```bash
 python scripts/finalize_broadband56_balanced200k_raw_products.py \
   --contract /private/no-clobber/preparation/campaign_contract_frozen.json \
   --production-config /private/approved/broadband56_v2.yaml \
   --attempt-ledger /private/no-clobber/execution/attempt_ledger.csv \
-  --long-features /private/no-clobber/execution/long_features_from_fresh_emx.csv \
+  --long-features /private/no-clobber/execution/exact56_s4p_qa_001000/broadband_features_long.csv \
   --expected-accepted 1000 \
   --out-dir /private/no-clobber/raw_products_001000
 ```

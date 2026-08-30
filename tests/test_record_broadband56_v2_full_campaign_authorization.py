@@ -301,6 +301,9 @@ def _valid_fixture(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> dict[str,
                 "exact_audited_gds_emx_module"
             ],
             "full_band_s4p_qa_builder_sha256": script_hashes["full_band_s4p_qa_builder"],
+            "full_band_s4p_qa_module_sha256": script_hashes[
+                "full_band_s4p_qa_module"
+            ],
             "stage07_08_resume_guard_sha256": script_hashes["stage07_08_resume_guard"],
             "raw_products_finalizer_sha256": script_hashes["raw_products_finalizer"],
             "historical_gds_identity_pass_receipt_sha256": "5" * 64,

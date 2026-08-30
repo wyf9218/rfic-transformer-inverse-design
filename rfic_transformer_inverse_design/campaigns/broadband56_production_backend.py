@@ -96,6 +96,7 @@ REQUIRED_SCRIPT_ROLES = (
     "exact_audited_gds_emx_runner",
     "exact_audited_gds_emx_module",
     "full_band_s4p_qa_builder",
+    "full_band_s4p_qa_module",
     "stage07_08_resume_guard",
     "raw_products_finalizer",
 )

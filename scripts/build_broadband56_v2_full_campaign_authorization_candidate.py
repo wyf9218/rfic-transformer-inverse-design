@@ -96,6 +96,7 @@ def _parse_args(argv: list[str] | None) -> argparse.Namespace:
     parser.add_argument("--exact-audited-gds-emx-runner-sha256", required=True)
     parser.add_argument("--exact-audited-gds-emx-module-sha256", required=True)
     parser.add_argument("--full-band-s4p-qa-builder-sha256", required=True)
+    parser.add_argument("--full-band-s4p-qa-module-sha256", required=True)
     parser.add_argument("--stage07-08-resume-guard-sha256", required=True)
     parser.add_argument("--raw-products-finalizer-sha256", required=True)
     parser.add_argument("--historical-gds-identity-pass-receipt-sha256", required=True)
@@ -207,6 +208,7 @@ def build_candidate(args: argparse.Namespace, *, out_dir: Path) -> dict[str, str
                 args.exact_audited_gds_emx_module_sha256
             ),
             "full_band_s4p_qa_builder_sha256": args.full_band_s4p_qa_builder_sha256,
+            "full_band_s4p_qa_module_sha256": args.full_band_s4p_qa_module_sha256,
             "stage07_08_resume_guard_sha256": args.stage07_08_resume_guard_sha256,
             "raw_products_finalizer_sha256": args.raw_products_finalizer_sha256,
             "historical_gds_identity_pass_receipt_sha256": (

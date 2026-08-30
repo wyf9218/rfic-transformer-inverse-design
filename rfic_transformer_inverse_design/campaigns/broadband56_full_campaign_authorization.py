@@ -140,6 +140,7 @@ BACKEND_SHA_FIELDS = (
     "exact_audited_gds_emx_runner_sha256",
     "exact_audited_gds_emx_module_sha256",
     "full_band_s4p_qa_builder_sha256",
+    "full_band_s4p_qa_module_sha256",
     "stage07_08_resume_guard_sha256",
     "raw_products_finalizer_sha256",
     "historical_gds_identity_pass_receipt_sha256",
