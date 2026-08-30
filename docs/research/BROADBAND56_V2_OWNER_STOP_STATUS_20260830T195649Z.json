@@ -1,0 +1,38 @@
+{
+  "schema": "rfic_transformer.broadband56_v2_public_safe_owner_stop_status.v1",
+  "generated_utc": "2026-08-30T19:56:49Z",
+  "campaign_id": "broadband56_real_emx_balanced200k_tsmc65_v2",
+  "contract_fingerprint_sha256": "f86a00efbf7756b7421b863bbb16c340db6b423640f63a3257d46c1af49eb55e",
+  "overall_status": "WAIT",
+  "decision": "DO_NOT_LAUNCH_PROJECT_SIMULATORS_UNDER_CURRENT_RESOURCE_LOAD",
+  "project_owner_latest_runtime_instruction": "STOP_PROJECT_OWNED_MARS_TASKS",
+  "live_observation": {
+    "logical_cpu_count": 192,
+    "load_average_1m": 222.81,
+    "load_average_5m": 224.05,
+    "load_average_15m": 214.92,
+    "other_account_active_emx_count": 4,
+    "project_account_active_emx_count": 0,
+    "project_account_active_calibre_count": 0,
+    "project_account_active_virtuoso_count": 0,
+    "project_account_authoritative_supervisor_count": 0
+  },
+  "action": {
+    "stopped_process_role": "capacity_only_wait_supervisor",
+    "graceful_term_attempted": true,
+    "forced_stop_required": true,
+    "post_stop_verification": "PASS",
+    "cadence_action_taken": false,
+    "calibre_action_taken": false,
+    "emx_action_taken": false,
+    "other_account_process_action_taken": false
+  },
+  "queue_state": "QUEUE_REGISTRATION_STOPPED_BY_PROJECT_OWNER_REQUEST",
+  "resource_shortage_is_scientific_blocker": false,
+  "restart_authorized": false,
+  "limitations": [
+    "This is a public-safe live process observation, not a simulator or scientific-result receipt.",
+    "Other-account process names, paths, and private runtime details are intentionally omitted.",
+    "A fresh resource and authorization audit is required before any future MARS launch."
+  ]
+}
