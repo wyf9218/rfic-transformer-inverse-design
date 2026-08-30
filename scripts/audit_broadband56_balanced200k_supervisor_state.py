@@ -66,6 +66,67 @@ COVERAGE_STATUSES = {
     "COVERAGE_PHYSICALLY_LIMITED",
     "COVERAGE_AUDIT_FAIL",
 }
+RESOURCE_GATE_SCHEMA = "rfic_transformer.broadband56_v2_resource_license_gate.v1"
+GOLDEN_AUTHORIZATION_SCHEMA = "rfic_transformer.broadband56_v2_golden_authorization.v1"
+STAGE_AUTHORIZATION_SCHEMA = "rfic_transformer.broadband56_v2_stage_authorization.v1"
+GOLDEN_AUTHORIZATION_DECISION = "APPROVE_RESOURCE_LICENSE_GATE_AND_ONE_GOLDEN_ONLY"
+STAGE_AUTHORIZATION_DECISION = "APPROVE_EXPLICIT_BROADBAND56_V2_STAGES"
+ONE_GOLDEN_SCOPE = "ONE_GOLDEN_ONLY"
+GATE_PERMISSION_FIELDS = {
+    "golden": "golden_launch_authorized",
+    "pilot_32": "pilot_32_launch_authorized",
+    "pilot_1000": "pilot_1000_launch_authorized",
+    "queue": "queue_launch_authorized",
+    "supervisor": "supervisor_launch_authorized",
+    "phase_a": "phase_a_launch_authorized",
+    "phase_b": "phase_b_launch_authorized",
+    "phase_c": "phase_c_launch_authorized",
+    "campaign_200k": "campaign_launch_authorized",
+}
+AUTHORIZATION_PERMISSION_FIELDS = {
+    "golden": "one_golden_authorized",
+    "pilot_32": "pilot_32_authorized",
+    "pilot_1000": "pilot_1000_authorized",
+    "queue": "queue_authorized",
+    "supervisor": "supervisor_authorized",
+    "phase_a": "phase_a_authorized",
+    "phase_b": "phase_b_authorized",
+    "phase_c": "phase_c_authorized",
+    "campaign_200k": "campaign_200k_authorized",
+}
+AUTHORIZATION_SCOPE_STAGES = {
+    ONE_GOLDEN_SCOPE: ("golden",),
+    "PILOT_32_ONLY": ("golden", "pilot_32"),
+    "PILOT_1000_ONLY": ("golden", "pilot_32", "pilot_1000"),
+    "PHASE_A_ONLY": (
+        "golden",
+        "pilot_32",
+        "pilot_1000",
+        "queue",
+        "supervisor",
+        "phase_a",
+    ),
+    "PHASE_B_ONLY": (
+        "golden",
+        "pilot_32",
+        "pilot_1000",
+        "queue",
+        "supervisor",
+        "phase_a",
+        "phase_b",
+    ),
+    "PHASE_C_ONLY": (
+        "golden",
+        "pilot_32",
+        "pilot_1000",
+        "queue",
+        "supervisor",
+        "phase_a",
+        "phase_b",
+        "phase_c",
+    ),
+    "FULL_CAMPAIGN": tuple(GATE_PERMISSION_FIELDS),
+}
 
 
 class SupervisorStateError(RuntimeError):
@@ -238,6 +299,7 @@ def audit_supervisor_state(
     latest = audits[-1] if audits else None
     state = _classify_state(
         resources_available=resource_gate["available"],
+        stage_authorizations=resource_gate["permissions"],
         golden=golden,
         pilot_32=pilot_32,
         pilot_1000=pilot_1000,
@@ -271,6 +333,7 @@ def audit_supervisor_state(
         "supervisor_hostname": supervisor.hostname,
         "supervisor_owner_pid": supervisor.owner_pid,
         "latest_checkpoint": str(latest.path) if latest else None,
+        "stage_authorizations": resource_gate["permissions"],
         "evidence": {
             "contract": _file_evidence(contract_path),
             "preparation_receipt": preparation,
@@ -287,6 +350,7 @@ def audit_supervisor_state(
         "checks": {
             "preparation_pass_and_hash_closed": True,
             "resource_and_license_gate_not_bypassed": True,
+            "stage_authorization_not_bypassed": True,
             "golden_and_pilot_order_not_bypassed": True,
             "campaign_audits_form_exact_prefix": True,
             "at_most_one_authoritative_supervisor": True,
@@ -316,6 +380,7 @@ def audit_supervisor_state(
 def _classify_state(
     *,
     resources_available: bool,
+    stage_authorizations: Mapping[str, bool],
     golden: AuditEvidence | None,
     pilot_32: AuditEvidence | None,
     pilot_1000: AuditEvidence | None,
@@ -338,6 +403,13 @@ def _classify_state(
             "blocker": "resource or license gate is not currently PASS",
         }
     if golden is None:
+        if not stage_authorizations.get("golden", False):
+            return {
+                "campaign_status": "PREPARED",
+                "lifecycle_state": "PREPARED_WAITING_FOR_GOLDEN_AUTHORIZATION",
+                "next_action": "REQUEST_EXPLICIT_ONE_GOLDEN_AUTHORIZATION",
+                "blocker": "one-golden execution is not explicitly authorized",
+            }
         return {
             "campaign_status": "PREPARED",
             "lifecycle_state": "READY_FOR_GOLDEN",
@@ -345,6 +417,13 @@ def _classify_state(
             "blocker": None,
         }
     if pilot_32 is None:
+        if not stage_authorizations.get("pilot_32", False):
+            return {
+                "campaign_status": "PREPARED",
+                "lifecycle_state": "GOLDEN_COMPLETE_WAITING_FOR_PILOT_32_AUTHORIZATION",
+                "next_action": "STOP_AND_REQUEST_EXPLICIT_PILOT_32_AUTHORIZATION",
+                "blocker": "32-geometry pilot execution is not explicitly authorized",
+            }
         return {
             "campaign_status": "PREPARED",
             "lifecycle_state": "READY_FOR_PILOT_32",
@@ -352,6 +431,13 @@ def _classify_state(
             "blocker": None,
         }
     if pilot_1000 is None:
+        if not stage_authorizations.get("pilot_1000", False):
+            return {
+                "campaign_status": "PREPARED",
+                "lifecycle_state": "PILOT_32_COMPLETE_WAITING_FOR_PILOT_1000_AUTHORIZATION",
+                "next_action": "STOP_AND_REQUEST_EXPLICIT_PILOT_1000_AUTHORIZATION",
+                "blocker": "1,000-geometry pilot execution is not explicitly authorized",
+            }
         return {
             "campaign_status": "PREPARED",
             "lifecycle_state": "READY_FOR_PILOT_1000",
@@ -366,6 +452,24 @@ def _classify_state(
             "blocker": None,
         }
     phase = phase_for_accepted_count(current_accepted)
+    required_permissions = ("queue", "supervisor", phase.lower())
+    missing_permissions = [
+        name for name in required_permissions if not stage_authorizations.get(name, False)
+    ]
+    if missing_permissions:
+        if supervisor.live:
+            return {
+                "campaign_status": "BLOCKED",
+                "lifecycle_state": "UNAUTHORIZED_SUPERVISOR_ACTIVE",
+                "next_action": "STOP_UNAUTHORIZED_SUPERVISOR_AND_PRESERVE_EVIDENCE",
+                "blocker": "live supervisor lacks explicit stage authorization",
+            }
+        return {
+            "campaign_status": "PREPARED",
+            "lifecycle_state": f"{phase}_WAITING_FOR_AUTHORIZATION",
+            "next_action": f"REQUEST_EXPLICIT_{phase}_QUEUE_AND_SUPERVISOR_AUTHORIZATION",
+            "blocker": "missing explicit launch permissions: " + ", ".join(missing_permissions),
+        }
     running_status = {
         "PHASE_A": "PHASE_A_RUNNING",
         "PHASE_B": "PHASE_B_RUNNING",
@@ -441,22 +545,211 @@ def _load_preparation(
 
 def _load_resource_gate(path: Path | None, *, fingerprint: str) -> dict[str, Any]:
     if path is None:
-        return {"available": False, "evidence": None}
+        return {
+            "available": False,
+            "permissions": _empty_stage_permissions(),
+            "evidence": None,
+        }
     payload = _read_json(path)
     identity_ok = payload.get("campaign_id") == CAMPAIGN_ID and payload.get(
         "contract_fingerprint_sha256"
     ) == fingerprint
-    available = bool(
-        identity_ok
-        and payload.get("overall_status") == "PASS"
-        and payload.get("resources_available") is True
-        and payload.get("load_gate_pass") is True
-        and payload.get("license_gate_pass") is True
-        and payload.get("campaign_launch_authorized") is True
-    )
     if not identity_ok:
         raise SupervisorStateError("resource gate campaign identity mismatch")
-    return {"available": available, "evidence": _file_evidence(path)}
+    if payload.get("schema") != RESOURCE_GATE_SCHEMA:
+        raise SupervisorStateError("resource gate schema mismatch")
+    status = payload.get("overall_status")
+    if status not in {"PASS", "WAIT"}:
+        raise SupervisorStateError("resource gate is neither PASS nor WAIT")
+
+    authorization_path, authorization = _load_gate_authorization(
+        payload,
+        fingerprint=fingerprint,
+    )
+    authorized_permissions = _authorization_permissions(authorization)
+    expected_permissions = _permissions_for_scope(payload.get("authorization_scope"))
+    if authorized_permissions != expected_permissions:
+        raise SupervisorStateError(
+            "authorization receipt permissions do not match its exact scope"
+        )
+    gate_permissions = _gate_permissions(payload)
+    if status == "PASS":
+        if gate_permissions != authorized_permissions:
+            raise SupervisorStateError(
+                "resource gate launch permissions exceed or differ from authorization receipt"
+            )
+    elif any(gate_permissions.values()):
+        raise SupervisorStateError("WAIT resource gate must authorize no launch action")
+
+    resource_checks_pass = all(
+        payload.get(key) is True
+        for key in (
+            "resources_available",
+            "load_gate_pass",
+            "memory_gate_pass",
+            "storage_gate_pass",
+            "license_gate_pass",
+            "isolation_gate_pass",
+        )
+    )
+    checks_pass = _checks_are_exact_pass(payload)
+    valid_until = _parse_aware_datetime(payload.get("valid_until_utc"))
+    gate_is_fresh = valid_until is not None and datetime.now(timezone.utc) <= valid_until
+    available = bool(
+        status == "PASS" and resource_checks_pass and checks_pass and gate_is_fresh
+    )
+    effective_permissions = gate_permissions if available else _empty_stage_permissions()
+    return {
+        "available": available,
+        "permissions": effective_permissions,
+        "evidence": {
+            "gate": _file_evidence(path),
+            "authorization_receipt": _file_evidence(authorization_path),
+            "gate_is_fresh": gate_is_fresh,
+        },
+    }
+
+
+def _load_gate_authorization(
+    gate: Mapping[str, Any], *, fingerprint: str
+) -> tuple[Path, dict[str, Any]]:
+    evidence = gate.get("evidence")
+    if not isinstance(evidence, Mapping):
+        raise SupervisorStateError("resource gate lacks authorization evidence")
+    item = evidence.get("golden_authorization_receipt") or evidence.get(
+        "stage_authorization_receipt"
+    )
+    if not isinstance(item, Mapping):
+        raise SupervisorStateError("resource gate lacks authorization-receipt evidence")
+    path_text = str(item.get("path") or "")
+    path = Path(path_text).expanduser().resolve()
+    if (
+        not path_text
+        or not path.is_file()
+        or item.get("size_bytes") != path.stat().st_size
+        or str(item.get("sha256") or "").lower() != _sha256(path)
+    ):
+        raise SupervisorStateError("resource gate authorization-receipt evidence mismatch")
+    authorization = _read_json(path)
+    approved = authorization.get("approved_candidate")
+    approved_campaign = (
+        approved.get("campaign_id") if isinstance(approved, Mapping) else None
+    ) or authorization.get("campaign_id")
+    approved_fingerprint = (
+        approved.get("contract_fingerprint_sha256")
+        if isinstance(approved, Mapping)
+        else None
+    ) or authorization.get("contract_fingerprint_sha256")
+    if (
+        authorization.get("overall_status") != "PASS"
+        or approved_campaign != CAMPAIGN_ID
+        or approved_fingerprint != fingerprint
+        or not _checks_are_exact_pass(authorization)
+        or authorization.get("execution_effect") != "NONE_RECORD_ONLY"
+        or not str(authorization.get("approved_by") or "").strip()
+        or _parse_aware_datetime(authorization.get("approved_utc")) is None
+        or not str(authorization.get("approval_reference") or "").strip()
+    ):
+        raise SupervisorStateError("authorization receipt is not exact hash-closed PASS")
+    scope = gate.get("authorization_scope")
+    if scope == ONE_GOLDEN_SCOPE:
+        if (
+            authorization.get("schema") != GOLDEN_AUTHORIZATION_SCHEMA
+            or authorization.get("decision") != GOLDEN_AUTHORIZATION_DECISION
+            or authorization.get("approval_source")
+            != "EXPLICIT_USER_OR_PROJECT_LEADER_INSTRUCTION"
+            or authorization.get("resource_and_license_gate_authorized") is not True
+            or authorization.get("cadence_authorized_for_one_golden") is not True
+            or authorization.get("calibre_authorized_for_one_golden") is not True
+            or authorization.get("emx_authorized_for_one_golden") is not True
+            or authorization.get("simulator_geometry_limit") != 1
+            or not isinstance(approved, Mapping)
+            or not _is_sha256(str(approved.get("sha256") or ""))
+        ):
+            raise SupervisorStateError("one-golden authorization identity mismatch")
+    elif (
+        authorization.get("schema") != STAGE_AUTHORIZATION_SCHEMA
+        or authorization.get("decision") != STAGE_AUTHORIZATION_DECISION
+        or authorization.get("authorization_scope") != scope
+        or authorization.get("approval_source")
+        != "EXPLICIT_USER_OR_PROJECT_LEADER_INSTRUCTION"
+    ):
+        raise SupervisorStateError("stage authorization identity mismatch")
+    return path, authorization
+
+
+def _authorization_permissions(authorization: Mapping[str, Any]) -> dict[str, bool]:
+    permissions = _read_permission_fields(
+        authorization,
+        AUTHORIZATION_PERMISSION_FIELDS,
+        "authorization receipt",
+    )
+    _require_monotonic_permissions(permissions)
+    return permissions
+
+
+def _gate_permissions(gate: Mapping[str, Any]) -> dict[str, bool]:
+    permissions = _read_permission_fields(gate, GATE_PERMISSION_FIELDS, "resource gate")
+    _require_monotonic_permissions(permissions)
+    return permissions
+
+
+def _read_permission_fields(
+    payload: Mapping[str, Any], fields: Mapping[str, str], label: str
+) -> dict[str, bool]:
+    permissions: dict[str, bool] = {}
+    for name, field in fields.items():
+        value = payload.get(field)
+        if not isinstance(value, bool):
+            raise SupervisorStateError(f"{label} permission is not boolean: {field}")
+        permissions[name] = value
+    return permissions
+
+
+def _require_monotonic_permissions(permissions: Mapping[str, bool]) -> None:
+    implications = (
+        ("pilot_32", "golden"),
+        ("pilot_1000", "pilot_32"),
+        ("phase_b", "phase_a"),
+        ("phase_c", "phase_b"),
+    )
+    for later, earlier in implications:
+        if permissions[later] and not permissions[earlier]:
+            raise SupervisorStateError(
+                f"stage authorization is non-monotonic: {later} requires {earlier}"
+            )
+    if permissions["campaign_200k"] and not all(
+        permissions[name]
+        for name in ("queue", "supervisor", "phase_a", "phase_b", "phase_c")
+    ):
+        raise SupervisorStateError(
+            "200K campaign authorization requires queue, supervisor, and all phase permissions"
+        )
+
+
+def _empty_stage_permissions() -> dict[str, bool]:
+    return {name: False for name in GATE_PERMISSION_FIELDS}
+
+
+def _permissions_for_scope(scope: Any) -> dict[str, bool]:
+    if not isinstance(scope, str) or scope not in AUTHORIZATION_SCOPE_STAGES:
+        raise SupervisorStateError(f"unsupported stage authorization scope: {scope!r}")
+    permissions = _empty_stage_permissions()
+    for name in AUTHORIZATION_SCOPE_STAGES[scope]:
+        permissions[name] = True
+    return permissions
+
+
+def _parse_aware_datetime(value: Any) -> datetime | None:
+    if not isinstance(value, str) or not value:
+        return None
+    try:
+        parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
+    except ValueError:
+        return None
+    if parsed.tzinfo is None or parsed.utcoffset() is None:
+        return None
+    return parsed.astimezone(timezone.utc)
 
 
 def _load_optional_gate_audit(

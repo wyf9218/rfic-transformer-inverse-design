@@ -100,18 +100,105 @@ def _prepared_fixture(tmp_path: Path) -> tuple[Path, Path, str]:
     return contract_path, preparation, fingerprint
 
 
-def _write_resource_gate(tmp_path: Path, fingerprint: str, *, available: bool = True) -> Path:
-    path = tmp_path / ("resource_gate_pass.json" if available else "resource_gate_wait.json")
+def _write_resource_gate(
+    tmp_path: Path,
+    fingerprint: str,
+    *,
+    available: bool = True,
+    permission_level: str = "golden",
+) -> Path:
+    if permission_level not in {"golden", "full"}:
+        raise ValueError(f"unsupported permission level: {permission_level}")
+    full = permission_level == "full"
+    scope = "FULL_CAMPAIGN" if full else "ONE_GOLDEN_ONLY"
+    authorization = tmp_path / f"authorization_{permission_level}.json"
+    auth_permissions = {
+        "one_golden_authorized": True,
+        "pilot_32_authorized": full,
+        "pilot_1000_authorized": full,
+        "queue_authorized": full,
+        "supervisor_authorized": full,
+        "phase_a_authorized": full,
+        "phase_b_authorized": full,
+        "phase_c_authorized": full,
+        "campaign_200k_authorized": full,
+    }
+    _write_json(
+        authorization,
+        {
+            "schema": (
+                "rfic_transformer.broadband56_v2_stage_authorization.v1"
+                if full
+                else "rfic_transformer.broadband56_v2_golden_authorization.v1"
+            ),
+            "overall_status": "PASS",
+            "decision": (
+                "APPROVE_EXPLICIT_BROADBAND56_V2_STAGES"
+                if full
+                else "APPROVE_RESOURCE_LICENSE_GATE_AND_ONE_GOLDEN_ONLY"
+            ),
+            "authorization_scope": scope,
+            "campaign_id": CAMPAIGN_ID,
+            "contract_fingerprint_sha256": fingerprint,
+            "approved_by": "unit-test-project-owner",
+            "approved_utc": "2026-08-30T18:00:00Z",
+            "approval_source": "EXPLICIT_USER_OR_PROJECT_LEADER_INSTRUCTION",
+            "approval_reference": "explicit unit-test stage approval",
+            "approved_candidate": {
+                "campaign_id": CAMPAIGN_ID,
+                "contract_fingerprint_sha256": fingerprint,
+                "sha256": "d" * 64,
+            },
+            "resource_and_license_gate_authorized": True,
+            "cadence_authorized_for_one_golden": True,
+            "calibre_authorized_for_one_golden": True,
+            "emx_authorized_for_one_golden": True,
+            "simulator_geometry_limit": 200_000 if full else 1,
+            "checks": [{"name": "fixture", "pass": True}],
+            "execution_effect": "NONE_RECORD_ONLY",
+            **auth_permissions,
+        },
+    )
+    path = tmp_path / (
+        f"resource_gate_{permission_level}_pass.json"
+        if available
+        else f"resource_gate_{permission_level}_wait.json"
+    )
+    launch_permissions = {
+        "golden_launch_authorized": available,
+        "pilot_32_launch_authorized": available and full,
+        "pilot_1000_launch_authorized": available and full,
+        "queue_launch_authorized": available and full,
+        "supervisor_launch_authorized": available and full,
+        "phase_a_launch_authorized": available and full,
+        "phase_b_launch_authorized": available and full,
+        "phase_c_launch_authorized": available and full,
+        "campaign_launch_authorized": available and full,
+    }
     _write_json(
         path,
         {
+            "schema": "rfic_transformer.broadband56_v2_resource_license_gate.v1",
             "campaign_id": CAMPAIGN_ID,
             "contract_fingerprint_sha256": fingerprint,
             "overall_status": "PASS" if available else "WAIT",
+            "authorization_scope": scope,
             "resources_available": available,
             "load_gate_pass": available,
+            "memory_gate_pass": available,
+            "storage_gate_pass": available,
             "license_gate_pass": available,
-            "campaign_launch_authorized": available,
+            "isolation_gate_pass": available,
+            "valid_until_utc": "2099-01-01T00:00:00Z",
+            "checks": [{"name": "fixture", "pass": available}],
+            "evidence": {
+                (
+                    "stage_authorization_receipt"
+                    if full
+                    else "golden_authorization_receipt"
+                ): _evidence(authorization)
+            },
+            **launch_permissions,
         },
     )
     return path
@@ -329,6 +416,90 @@ def test_pass_resource_gate_advances_only_to_golden(tmp_path: Path) -> None:
 
     assert snapshot["lifecycle_state"] == "READY_FOR_GOLDEN"
     assert snapshot["next_action"] == "RUN_ONE_EXACT_CONTRACT_GOLDEN_GEOMETRY"
+    assert snapshot["stage_authorizations"]["golden"] is True
+    assert snapshot["stage_authorizations"]["pilot_32"] is False
+
+
+def test_one_golden_scope_stops_after_golden_receipt(tmp_path: Path) -> None:
+    module = _load_module()
+    contract_path, preparation, fingerprint = _prepared_fixture(tmp_path)
+    resource_gate = _write_resource_gate(tmp_path, fingerprint)
+    golden = _write_audit(
+        tmp_path,
+        name="golden",
+        count=1,
+        mode="golden",
+        state="GOLDEN_COMPLETE",
+        fingerprint=fingerprint,
+    )
+
+    snapshot = _audit(
+        module,
+        contract_path=contract_path,
+        preparation=preparation,
+        resource_gate=resource_gate,
+        golden=golden,
+        out_dir=tmp_path / "state_after_golden",
+    )
+
+    assert snapshot["campaign_status"] == "PREPARED"
+    assert (
+        snapshot["lifecycle_state"]
+        == "GOLDEN_COMPLETE_WAITING_FOR_PILOT_32_AUTHORIZATION"
+    )
+    assert snapshot["next_action"] == "STOP_AND_REQUEST_EXPLICIT_PILOT_32_AUTHORIZATION"
+    assert snapshot["blocker"] == "32-geometry pilot execution is not explicitly authorized"
+
+
+def test_legacy_campaign_boolean_cannot_bypass_staged_authorization(
+    tmp_path: Path,
+) -> None:
+    module = _load_module()
+    contract_path, preparation, fingerprint = _prepared_fixture(tmp_path)
+    gate = tmp_path / "legacy_resource_gate.json"
+    _write_json(
+        gate,
+        {
+            "campaign_id": CAMPAIGN_ID,
+            "contract_fingerprint_sha256": fingerprint,
+            "overall_status": "PASS",
+            "resources_available": True,
+            "load_gate_pass": True,
+            "license_gate_pass": True,
+            "campaign_launch_authorized": True,
+        },
+    )
+
+    with pytest.raises(module.SupervisorStateError, match="schema mismatch"):
+        _audit(
+            module,
+            contract_path=contract_path,
+            preparation=preparation,
+            resource_gate=gate,
+            out_dir=tmp_path / "state_legacy_gate",
+        )
+
+
+def test_tampered_authorization_receipt_fails_closed(tmp_path: Path) -> None:
+    module = _load_module()
+    contract_path, preparation, fingerprint = _prepared_fixture(tmp_path)
+    gate = _write_resource_gate(tmp_path, fingerprint)
+    authorization = tmp_path / "authorization_golden.json"
+    payload = json.loads(authorization.read_text(encoding="utf-8"))
+    payload["pilot_32_authorized"] = True
+    _write_json(authorization, payload)
+
+    with pytest.raises(
+        module.SupervisorStateError,
+        match="authorization-receipt evidence mismatch",
+    ):
+        _audit(
+            module,
+            contract_path=contract_path,
+            preparation=preparation,
+            resource_gate=gate,
+            out_dir=tmp_path / "state_tampered_authorization",
+        )
 
 
 def test_empty_preparation_checks_fail_without_output(tmp_path: Path) -> None:
@@ -375,7 +546,9 @@ def test_exact_audit_prefix_supports_resume_and_one_live_supervisor(
         lambda count: "PHASE_B" if count >= 50_000 else "PHASE_A",
     )
     contract_path, preparation, fingerprint = _prepared_fixture(tmp_path)
-    resource_gate = _write_resource_gate(tmp_path, fingerprint)
+    resource_gate = _write_resource_gate(
+        tmp_path, fingerprint, permission_level="full"
+    )
     golden, pilot_32, pilot_1000 = _write_gate_sequence(tmp_path, fingerprint)
     estimate = _write_resource_estimate(tmp_path, fingerprint)
     audits = tuple(
@@ -434,7 +607,9 @@ def test_non_prefix_campaign_audit_fails_without_output(
     monkeypatch.setattr(module, "ALL_AUDIT_COUNTS", (100, 1_000))
     monkeypatch.setattr(module, "REQUIRED_CHECKPOINT_COUNTS", (100, 1_000))
     contract_path, preparation, fingerprint = _prepared_fixture(tmp_path)
-    resource_gate = _write_resource_gate(tmp_path, fingerprint)
+    resource_gate = _write_resource_gate(
+        tmp_path, fingerprint, permission_level="full"
+    )
     golden, pilot_32, pilot_1000 = _write_gate_sequence(tmp_path, fingerprint)
     estimate = _write_resource_estimate(tmp_path, fingerprint)
     skipped = _write_audit(
@@ -509,7 +684,9 @@ def test_terminal_exact_prefix_is_complete_200k(
     monkeypatch.setattr(module, "ALL_AUDIT_COUNTS", (100, 200, 300))
     monkeypatch.setattr(module, "REQUIRED_CHECKPOINT_COUNTS", (100, 200, 300))
     contract_path, preparation, fingerprint = _prepared_fixture(tmp_path)
-    resource_gate = _write_resource_gate(tmp_path, fingerprint)
+    resource_gate = _write_resource_gate(
+        tmp_path, fingerprint, permission_level="full"
+    )
     golden, pilot_32, pilot_1000 = _write_gate_sequence(tmp_path, fingerprint)
     estimate = _write_resource_estimate(tmp_path, fingerprint, target=300)
     audits = tuple(

@@ -17,6 +17,14 @@
   },
   "verified_local_results": [
     {
+      "scope": "one-golden resource/license gate and staged supervisor authorization",
+      "result": "PASS in 18 focused test cases and the full public suite; the audit-only gate consumes a fresh private snapshot and exact hash-bound one-golden authorization, distinguishes unavailable resources (WAIT) from inconsistent evidence (FAIL), grants at most one golden, expires from the snapshot-capture time, and always denies pilots, queues, supervisors, phases, and the 200k campaign; the supervisor now checks each exact stage scope separately, stops after a one-golden receipt, rejects the legacy campaign-only boolean, and fails closed on authorization-receipt tampering; no remote query, resource write, license action, simulator, queue, runner, or supervisor was executed",
+      "resource_gate_auditor_sha256": "8a794613dd1dcda140c83c7eea1767630f0cf2fcf22fc0ce3b069519cbae0cb6",
+      "staged_supervisor_auditor_sha256": "528f3fc81107a4973f77d1ccbcc33b8c12ae20da6b4a9a3ff3d272158369c6a7",
+      "resource_gate_test_sha256": "810b1c367fa32eb2c9b99bedf27b8d4644e3ae953b143406eed08b5feedcd567",
+      "staged_supervisor_test_sha256": "7cdfe22a78748b3b665478bd8039f13c4899e899ce7815b00283f99b97a167d2"
+    },
+    {
       "scope": "exact-SHA one-golden authorization candidate and record-only recorder",
       "result": "PASS in local software tests; the request binds campaign fingerprint f86a00efbf7756b7421b863bbb16c340db6b423640f63a3257d46c1af49eb55e, the exact R2/preparation/config evidence, fresh resource/load/license gates, a one-geometry simulator limit, and mandatory stop after the golden receipt; wrong SHA, scope expansion, preparation-evidence drift, invalid human metadata, and duplicate output fail closed; no resource, license, remote, Cadence, Calibre, EMX, queue, runner, or supervisor action is available from the recorder",
       "candidate_sha256": "655a490c027a5aa96412ac982891123e17250412d90819f52d5cb8e17a082965",
@@ -280,6 +288,8 @@
     "latest_r2_preparation_public_retest": "1491 passed, 54 skipped, 1 deselected, 1 warning in 114.59s under disposable Python 3.12 environment",
     "latest_one_golden_authorization_focused_retest": "25 passed in 3.09s under disposable Python 3.12 environment",
     "latest_one_golden_authorization_public_retest": "1496 passed, 54 skipped, 1 deselected, 1 warning in 95.92s under disposable Python 3.12 environment",
+    "latest_resource_gate_and_staged_supervisor_focused_retest": "18 passed in 0.49s under disposable Python 3.12 environment",
+    "latest_resource_gate_and_staged_supervisor_public_retest": "1505 passed, 54 skipped, 1 deselected, 1 warning in 101.47s under disposable Python 3.12 environment",
     "full_retest_status": "PASS",
     "compileall": "PASS"
   },
@@ -338,6 +348,10 @@
     "recorder_sha256": "39359617ffa368e953653b941603077571f019d135c35ef0d7cb9681f8f9897e",
     "recorder_test_path": "tests/test_record_broadband56_v2_golden_authorization.py",
     "recorder_test_sha256": "26e45e3193aa7bbdf2461b8e6d3c6f43ca450af07d098eb1a029f294ac489e0a",
+    "resource_gate_auditor_path": "scripts/audit_broadband56_v2_resource_license_gate.py",
+    "resource_gate_auditor_sha256": "8a794613dd1dcda140c83c7eea1767630f0cf2fcf22fc0ce3b069519cbae0cb6",
+    "staged_supervisor_auditor_path": "scripts/audit_broadband56_balanced200k_supervisor_state.py",
+    "staged_supervisor_auditor_sha256": "528f3fc81107a4973f77d1ccbcc33b8c12ae20da6b4a9a3ff3d272158369c6a7",
     "contract_fingerprint_sha256": "f86a00efbf7756b7421b863bbb16c340db6b423640f63a3257d46c1af49eb55e",
     "execution_effect": "NONE_REQUEST_ONLY",
     "golden_authorized": false,
