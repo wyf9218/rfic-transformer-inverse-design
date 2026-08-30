@@ -38,6 +38,10 @@ from rfic_transformer_inverse_design.dataset import (
     write_ground_clearance_audit,
 )
 from rfic_transformer_inverse_design.execution.serialization import _json_default
+from rfic_transformer_inverse_design.execution.zeus_cadence import (
+    collect_cadence_pin_labels,
+    load_emx_layout_manifest,
+)
 from rfic_transformer_inverse_design.layout.drc_rules import audit_tsmc65_top_metal_geometry
 from rfic_transformer_inverse_design.sim.touchstone import load_touchstone
 
@@ -107,6 +111,8 @@ QUEUE_METADATA_COLUMNS = (
 
 def main(argv: list[str] | None = None) -> int:
     args = _parse_args(argv)
+    cadence_streamout_only = bool(args.cadence_streamout_only)
+    run_emx = not bool(args.create_only or cadence_streamout_only)
     candidate_csv = Path(args.candidate_csv).expanduser().resolve()
     out_dir = Path(args.out_dir).expanduser().resolve()
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -136,7 +142,13 @@ def main(argv: list[str] | None = None) -> int:
         batch_size = max(1, int(args.batch_size))
         for start in range(0, len(geometries), batch_size):
             batch = geometries[start : start + batch_size]
-            results.extend(evaluator.evaluate_geometry_batch(batch, run_emx=not bool(args.create_only)))
+            results.extend(
+                evaluator.evaluate_geometry_batch(
+                    batch,
+                    run_emx=run_emx,
+                    cadence_streamout_only=cadence_streamout_only,
+                )
+            )
         rows = [
             _merge_queue_metadata(result_to_dataset_row(result, z_load_ohm=float(args.z_load_ohm)), queue_metadata[idx])
             for idx, result in enumerate(results)
@@ -162,6 +174,7 @@ def main(argv: list[str] | None = None) -> int:
             out_dir=out_dir,
             rows=rows,
             create_only=bool(args.create_only),
+            cadence_streamout_only=cadence_streamout_only,
             expected_extension=str(args.expected_touchstone_extension),
             expected_ports=int(args.expected_ports),
             expected_frequency_start_ghz=args.expected_frequency_start_ghz,
@@ -172,6 +185,12 @@ def main(argv: list[str] | None = None) -> int:
             max_touchstone_checks=int(args.max_touchstone_checks),
         )
         checks.extend(touchstone_contract["checks"])
+        cadence_streamout_contract = _cadence_streamout_output_contract(
+            results=results,
+            enabled=cadence_streamout_only,
+            expected_ports=int(args.expected_ports),
+        )
+        checks.extend(cadence_streamout_contract["checks"])
     else:
         touchstone_contract = {
             "summary": {
@@ -180,6 +199,15 @@ def main(argv: list[str] | None = None) -> int:
                 "expected_extension": _normalise_suffix(str(args.expected_touchstone_extension)),
                 "expected_ports": int(args.expected_ports),
                 "sampled_count": 0,
+            },
+            "checks": [],
+        }
+        cadence_streamout_contract = {
+            "summary": {
+                "checked": False,
+                "reason": "input_or_geometry_checks_failed_before_evaluation",
+                "expected_ports": int(args.expected_ports),
+                "result_count": 0,
             },
             "checks": [],
         }
@@ -204,8 +232,9 @@ def main(argv: list[str] | None = None) -> int:
         "result_count": len(results),
         "ok_count": int(sum(1 for result in results if result.ok())),
         "fail_count": int(fail_count),
-        "run_emx": not bool(args.create_only),
+        "run_emx": run_emx,
         "create_only": bool(args.create_only),
+        "cadence_streamout_only": cadence_streamout_only,
         "port_mode": run_config.emx.port_mode,
         "cadence_pin_purpose": run_config.emx.cadence_pin_purpose,
         "target_frequency": target_frequency_report(run_config),
@@ -221,12 +250,14 @@ def main(argv: list[str] | None = None) -> int:
         if manifest
         else {},
         "touchstone_output_contract": touchstone_contract["summary"],
+        "cadence_streamout_output_contract": cadence_streamout_contract["summary"],
         "checks": checks,
         "arguments": vars(args),
         "limitations": [
             "Predicted response columns from the candidate queue are provenance only and are not simulator labels.",
             "Raw/calibrated physical-feature predictions are retained only so post-EMX bin-hit calibration can be audited on the same geometry.",
             "When --create-only is used, output is geometry/export evidence only; no EMX S4P or Zin label acceptance is implied.",
+            "When --cadence-streamout-only is used, each result is a candidate-bound Cadence-pin GDS; no EMX Touchstone or physical label acceptance is implied.",
             "A final training chunk still needs downstream dataset quality gates, Zin uniformity audit, and random-sample EMX/HFSS validation.",
         ],
     }
@@ -252,7 +283,16 @@ def _parse_args(argv: list[str] | None) -> argparse.Namespace:
     parser.add_argument("--batch-size", type=int, default=10)
     parser.add_argument("--z-load-ohm", type=float, default=50.0)
     parser.add_argument("--uniformity-bins", type=int, default=10)
-    parser.add_argument("--create-only", action="store_true")
+    execution_mode = parser.add_mutually_exclusive_group()
+    execution_mode.add_argument("--create-only", action="store_true")
+    execution_mode.add_argument(
+        "--cadence-streamout-only",
+        action="store_true",
+        help=(
+            "Run export, Cadence strmin, dbCreatePin, and strmout for each "
+            "candidate, then stop before EMX."
+        ),
+    )
     parser.add_argument("--fail-on-error", action="store_true")
     parser.add_argument("--allow-outside-target-bin", action="store_true")
     parser.add_argument("--force-port-mode")
@@ -548,11 +588,159 @@ def _as_float(value: Any) -> float | None:
     return out if math.isfinite(out) else None
 
 
+def _cadence_streamout_output_contract(
+    *,
+    results: list[Any],
+    enabled: bool,
+    expected_ports: int,
+) -> dict[str, Any]:
+    if not enabled:
+        return {
+            "summary": {
+                "checked": False,
+                "reason": "cadence_streamout_only_not_requested",
+                "expected_ports": int(expected_ports),
+                "result_count": len(results),
+            },
+            "checks": [],
+        }
+
+    records: list[dict[str, Any]] = []
+    for result in results:
+        work_dir = Path(result.work_dir).resolve()
+        expected_gds = (work_dir / "streamout" / "transformer_layout_cadpins.gds").resolve()
+        roundtrip_summary = work_dir / "summary_cadence_roundtrip.json"
+        payload: dict[str, Any] = {}
+        payload_error: str | None = None
+        try:
+            payload = json.loads(roundtrip_summary.read_text(encoding="utf-8"))
+        except Exception as exc:  # noqa: BLE001 - retain the exact evidence failure.
+            payload_error = str(exc)
+
+        layout = result.layout
+        layout_gds = None if layout is None else Path(layout.gds_path).resolve()
+        manifest_path = None if layout is None else Path(layout.manifest_path).resolve()
+        artifact_gds_raw = (payload.get("artifacts") or {}).get("cadence_gds")
+        artifact_gds = Path(str(artifact_gds_raw)).resolve() if artifact_gds_raw else None
+        recorded_labels = tuple(
+            str(value) for value in ((payload.get("cadence") or {}).get("pin_labels") or ())
+        )
+        manifest_error: str | None = None
+        expected_labels: tuple[str, ...] = ()
+        manifest_ports = 0
+        try:
+            if manifest_path is None:
+                raise ValueError("result layout manifest path is missing")
+            manifest = load_emx_layout_manifest(manifest_path)
+            expected_labels = collect_cadence_pin_labels(manifest)
+            manifest_ports = len(manifest.ports)
+        except Exception as exc:  # noqa: BLE001 - retain the exact evidence failure.
+            manifest_error = str(exc)
+        touchstones = sorted(work_dir.rglob("*.s?p"))
+        records.append(
+            {
+                "cache_key": str(result.cache_key),
+                "result_ok": result.error is None,
+                "roundtrip_summary": str(roundtrip_summary),
+                "roundtrip_summary_ok": payload_error is None,
+                "roundtrip_payload_ok": payload.get("ok") is True,
+                "roundtrip_stop_after": payload.get("stop_after"),
+                "expected_gds": str(expected_gds),
+                "layout_gds": None if layout_gds is None else str(layout_gds),
+                "artifact_gds": None if artifact_gds is None else str(artifact_gds),
+                "gds_exists_nonzero": expected_gds.is_file()
+                and expected_gds.stat().st_size > 0,
+                "candidate_bound_gds": layout_gds == expected_gds
+                and artifact_gds == expected_gds,
+                "manifest_path": None if manifest_path is None else str(manifest_path),
+                "manifest_ok": manifest_error is None,
+                "manifest_port_count": manifest_ports,
+                "pin_labels_match_manifest": bool(expected_labels)
+                and recorded_labels == expected_labels,
+                "touchstone_path_is_none": result.touchstone_path is None,
+                "touchstone_file_count": len(touchstones),
+                "error": result.error or payload_error or manifest_error,
+            }
+        )
+
+    checks = [
+        _check(
+            "cadence_streamout_results_present",
+            bool(records),
+            f"result_count={len(records)}",
+        ),
+        _check(
+            "cadence_streamout_results_have_no_errors",
+            bool(records) and all(record["result_ok"] for record in records),
+            f"error_count={sum(not record['result_ok'] for record in records)}",
+        ),
+        _check(
+            "cadence_streamout_roundtrip_summaries_pass",
+            bool(records)
+            and all(
+                record["roundtrip_summary_ok"]
+                and record["roundtrip_payload_ok"]
+                and record["roundtrip_stop_after"] == "strmout"
+                for record in records
+            ),
+            f"invalid_count={sum(not (record['roundtrip_summary_ok'] and record['roundtrip_payload_ok'] and record['roundtrip_stop_after'] == 'strmout') for record in records)}",
+        ),
+        _check(
+            "cadence_streamout_gds_files_are_candidate_bound_and_nonzero",
+            bool(records)
+            and all(
+                record["gds_exists_nonzero"] and record["candidate_bound_gds"]
+                for record in records
+            ),
+            f"invalid_count={sum(not (record['gds_exists_nonzero'] and record['candidate_bound_gds']) for record in records)}",
+        ),
+        _check(
+            "cadence_streamout_manifest_ports_and_pin_labels_match",
+            bool(records)
+            and all(
+                record["manifest_ok"]
+                and record["manifest_port_count"] == int(expected_ports)
+                and record["pin_labels_match_manifest"]
+                for record in records
+            ),
+            f"expected_ports={expected_ports}, invalid_count={sum(not (record['manifest_ok'] and record['manifest_port_count'] == int(expected_ports) and record['pin_labels_match_manifest']) for record in records)}",
+        ),
+        _check(
+            "cadence_streamout_stopped_before_emx",
+            bool(records)
+            and all(
+                record["touchstone_path_is_none"]
+                and record["touchstone_file_count"] == 0
+                for record in records
+            ),
+            f"touchstone_file_count={sum(int(record['touchstone_file_count']) for record in records)}",
+        ),
+    ]
+    return {
+        "summary": {
+            "checked": True,
+            "reason": "candidate_bound_cadence_pin_gds_required_before_foundry_drc",
+            "expected_ports": int(expected_ports),
+            "result_count": len(records),
+            "valid_candidate_bound_gds_count": sum(
+                bool(record["gds_exists_nonzero"] and record["candidate_bound_gds"])
+                for record in records
+            ),
+            "touchstone_file_count": sum(
+                int(record["touchstone_file_count"]) for record in records
+            ),
+            "records": records,
+        },
+        "checks": checks,
+    }
+
+
 def _touchstone_output_contract(
     *,
     out_dir: Path,
     rows: list[dict[str, Any]],
     create_only: bool,
+    cadence_streamout_only: bool = False,
     expected_extension: str,
     expected_ports: int,
     expected_frequency_start_ghz: float | None,
@@ -563,10 +751,20 @@ def _touchstone_output_contract(
     max_touchstone_checks: int,
 ) -> dict[str, Any]:
     expected_extension = _normalise_suffix(expected_extension)
-    if create_only:
+    if create_only or cadence_streamout_only:
+        reason = (
+            "cadence_streamout_only_has_no_emx_touchstone_output"
+            if cadence_streamout_only
+            else "create_only_run_has_no_emx_touchstone_output"
+        )
+        check_name = (
+            "touchstone_output_contract_skipped_for_cadence_streamout_only"
+            if cadence_streamout_only
+            else "touchstone_output_contract_skipped_for_create_only"
+        )
         summary = {
             "checked": False,
-            "reason": "create_only_run_has_no_emx_touchstone_output",
+            "reason": reason,
             "expected_extension": expected_extension,
             "expected_ports": int(expected_ports),
             "sampled_count": 0,
@@ -575,9 +773,9 @@ def _touchstone_output_contract(
             "summary": summary,
             "checks": [
                 _check(
-                    "touchstone_output_contract_skipped_for_create_only",
+                    check_name,
                     True,
-                    "create-only layout smoke runs intentionally do not require .s8p output",
+                    "layout-only modes intentionally do not require Touchstone output",
                 )
             ],
         }

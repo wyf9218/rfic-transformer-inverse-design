@@ -3,6 +3,7 @@ from tests.rfic_transformer_inverse_design.shared import *
 import csv
 import importlib.util
 import sys
+from types import SimpleNamespace
 
 from rfic_transformer_inverse_design.dataset import GROUND_CLEARANCE_AUDIT_FILENAME
 
@@ -54,6 +55,113 @@ def _write_candidate_csv(path: Path, cfg, *, inside: bool = True, rows: int = 2)
 
 
 class RunCandidateQueueDatasetScriptTest(TransformerToolboxTestBase):
+    def test_execution_modes_are_mutually_exclusive(self) -> None:
+        mod = _load_script_module()
+        with self.assertRaises(SystemExit):
+            mod._parse_args(
+                [
+                    "--candidate-csv",
+                    "queue.csv",
+                    "--out-dir",
+                    "out",
+                    "--create-only",
+                    "--cadence-streamout-only",
+                ]
+            )
+
+    def test_cadence_streamout_contract_binds_gds_and_manifest_ports(self) -> None:
+        mod = _load_script_module()
+        with tempfile.TemporaryDirectory() as tmpdir:
+            work_dir = Path(tmpdir) / "evaluations" / "abc"
+            streamout_dir = work_dir / "streamout"
+            streamout_dir.mkdir(parents=True)
+            gds = streamout_dir / "transformer_layout_cadpins.gds"
+            gds.write_bytes(b"gds")
+            manifest_path = work_dir / "transformer_layout.layout.json"
+            ports = [
+                {
+                    "name": f"port_{index}",
+                    "signal_labels": [f"P{index:03d}"],
+                    "ground_labels": [f"P{index:03d}_G"],
+                    "internal_size_um": [1.0, 1.0],
+                }
+                for index in range(1, 5)
+            ]
+            manifest_path.write_text(
+                json.dumps(
+                    {
+                        "layout_path": str(gds),
+                        "top_cell": "TRANSFORMER",
+                        "ports": ports,
+                        "metal_layer": 39,
+                        "metal_datatype": 60,
+                        "ground_layer": 35,
+                        "ground_datatype": 0,
+                        "label_layer": 39,
+                        "label_datatype": 51,
+                        "cadence_pin_purpose": 51,
+                    }
+                ),
+                encoding="utf-8",
+            )
+            labels = [
+                label
+                for index in range(1, 5)
+                for label in (f"P{index:03d}", f"P{index:03d}_G")
+            ]
+            (work_dir / "summary_cadence_roundtrip.json").write_text(
+                json.dumps(
+                    {
+                        "ok": True,
+                        "stop_after": "strmout",
+                        "artifacts": {"cadence_gds": str(gds)},
+                        "cadence": {"pin_labels": labels},
+                    }
+                ),
+                encoding="utf-8",
+            )
+            result = SimpleNamespace(
+                work_dir=work_dir,
+                cache_key="abc",
+                error=None,
+                layout=SimpleNamespace(gds_path=gds, manifest_path=manifest_path),
+                touchstone_path=None,
+            )
+
+            contract = mod._cadence_streamout_output_contract(
+                results=[result],
+                enabled=True,
+                expected_ports=4,
+            )
+
+        self.assertTrue(contract["summary"]["checked"])
+        self.assertEqual(contract["summary"]["valid_candidate_bound_gds_count"], 1)
+        self.assertEqual(contract["summary"]["touchstone_file_count"], 0)
+        self.assertTrue(all(check["pass"] for check in contract["checks"]))
+
+    def test_cadence_streamout_touchstone_contract_is_explicitly_skipped(self) -> None:
+        mod = _load_script_module()
+        contract = mod._touchstone_output_contract(
+            out_dir=Path("out"),
+            rows=[],
+            create_only=False,
+            cadence_streamout_only=True,
+            expected_extension=".s4p",
+            expected_ports=4,
+            expected_frequency_start_ghz=5.0,
+            expected_frequency_stop_ghz=60.0,
+            expected_frequency_step_ghz=1.0,
+            expected_frequency_points=56,
+            frequency_tolerance_hz=1.0,
+            max_touchstone_checks=1,
+        )
+
+        self.assertFalse(contract["summary"]["checked"])
+        self.assertEqual(
+            contract["summary"]["reason"],
+            "cadence_streamout_only_has_no_emx_touchstone_output",
+        )
+
     def test_create_only_runs_fixed_candidate_queue_and_preserves_metadata(self) -> None:
         mod = _load_script_module()
         cfg = default_run_config("1t1t")

@@ -48,6 +48,8 @@ class ShardRun:
 def main(argv: list[str] | None = None) -> int:
     started_at = time.perf_counter()
     args = _parse_args(argv)
+    cadence_streamout_only = bool(args.cadence_streamout_only)
+    run_emx = not bool(args.create_only or cadence_streamout_only)
     candidate_csv = Path(args.candidate_csv).expanduser().resolve()
     if args.config is not None:
         args.config = str(Path(args.config).expanduser().resolve())
@@ -68,7 +70,11 @@ def main(argv: list[str] | None = None) -> int:
     runs: list[ShardRun] = []
     pending_specs = list(shard_specs)
     if args.resume_completed:
-        runs, pending_specs = _reuse_completed_shards(shard_specs)
+        runs, pending_specs = _reuse_completed_shards(
+            shard_specs,
+            create_only=bool(args.create_only),
+            cadence_streamout_only=cadence_streamout_only,
+        )
     if pending_specs:
         with ThreadPoolExecutor(max_workers=min(jobs, len(pending_specs))) as pool:
             futures = [
@@ -87,6 +93,7 @@ def main(argv: list[str] | None = None) -> int:
         out_dir=out_dir,
         merged_rows=merged_rows,
         create_only=bool(args.create_only),
+        cadence_streamout_only=cadence_streamout_only,
         expected_extension=args.expected_touchstone_extension,
         expected_ports=args.expected_ports,
         expected_frequency_start_ghz=args.expected_frequency_start_ghz,
@@ -95,6 +102,11 @@ def main(argv: list[str] | None = None) -> int:
         expected_frequency_points=args.expected_frequency_points,
         frequency_tolerance_hz=args.frequency_tolerance_hz,
         max_touchstone_checks=args.max_touchstone_checks,
+    )
+    cadence_streamout_contract = _parallel_cadence_streamout_contract(
+        runs=runs,
+        enabled=cadence_streamout_only,
+        expected_count=len(rows),
     )
     campaign_identity = _campaign_identity_summary(rows, merged_rows)
     checks = _parallel_checks(
@@ -109,7 +121,7 @@ def main(argv: list[str] | None = None) -> int:
         expected_campaign_contract_fingerprint=args.expected_campaign_contract_fingerprint,
         campaign_identity=campaign_identity,
         fail_on_error=bool(args.fail_on_error),
-    ) + touchstone_contract["checks"]
+    ) + touchstone_contract["checks"] + cadence_streamout_contract["checks"]
     status = "PASS" if all(item["pass"] for item in checks) else "FAIL"
     elapsed_seconds = max(0.0, time.perf_counter() - started_at)
     active_elapsed_seconds = sum(float(run.elapsed_seconds) for run in runs if not run.reused_existing)
@@ -145,10 +157,12 @@ def main(argv: list[str] | None = None) -> int:
         "parallel_efficiency": parallel_efficiency,
         "seconds_per_row_effective": seconds_per_row_effective,
         "rows_per_second_effective": rows_per_second_effective,
-        "run_emx": not bool(args.create_only),
+        "run_emx": run_emx,
         "create_only": bool(args.create_only),
+        "cadence_streamout_only": cadence_streamout_only,
         "campaign_identity": campaign_identity,
         "touchstone_output_contract": touchstone_contract["summary"],
+        "cadence_streamout_output_contract": cadence_streamout_contract["summary"],
         "shards": [_shard_summary(run) for run in runs],
         "checks": checks,
         "limitations": [
@@ -198,7 +212,16 @@ def _parse_args(argv: list[str] | None) -> argparse.Namespace:
     parser.add_argument("--batch-size", type=int, default=10)
     parser.add_argument("--z-load-ohm", type=float, default=50.0)
     parser.add_argument("--uniformity-bins", type=int, default=10)
-    parser.add_argument("--create-only", action="store_true")
+    execution_mode = parser.add_mutually_exclusive_group()
+    execution_mode.add_argument("--create-only", action="store_true")
+    execution_mode.add_argument(
+        "--cadence-streamout-only",
+        action="store_true",
+        help=(
+            "Run candidate-bound Cadence streamout in each shard and stop "
+            "before EMX."
+        ),
+    )
     parser.add_argument("--fail-on-error", action="store_true")
     parser.add_argument("--allow-outside-target-bin", action="store_true")
     parser.add_argument("--force-port-mode")
@@ -295,11 +318,21 @@ def _write_shard_inputs(
 
 def _reuse_completed_shards(
     shard_specs: list[tuple[int, int, Path, Path]],
+    *,
+    create_only: bool,
+    cadence_streamout_only: bool,
 ) -> tuple[list[ShardRun], list[tuple[int, int, Path, Path]]]:
     reused: list[ShardRun] = []
     pending: list[tuple[int, int, Path, Path]] = []
     for index, row_count, csv_path, shard_out in shard_specs:
-        existing = _existing_shard_run(index, row_count, csv_path, shard_out)
+        existing = _existing_shard_run(
+            index,
+            row_count,
+            csv_path,
+            shard_out,
+            create_only=create_only,
+            cadence_streamout_only=cadence_streamout_only,
+        )
         if existing is None:
             pending.append((index, row_count, csv_path, shard_out))
         else:
@@ -307,7 +340,15 @@ def _reuse_completed_shards(
     return reused, pending
 
 
-def _existing_shard_run(index: int, row_count: int, csv_path: Path, out_dir: Path) -> ShardRun | None:
+def _existing_shard_run(
+    index: int,
+    row_count: int,
+    csv_path: Path,
+    out_dir: Path,
+    *,
+    create_only: bool,
+    cadence_streamout_only: bool,
+) -> ShardRun | None:
     summary_path = out_dir / "candidate_queue_dataset_summary.json"
     dataset_csv = out_dir / "dataset_rows.csv"
     if not summary_path.is_file() or not dataset_csv.is_file():
@@ -317,6 +358,13 @@ def _existing_shard_run(index: int, row_count: int, csv_path: Path, out_dir: Pat
     except Exception:
         return None
     if summary.get("overall_status") != "PASS":
+        return None
+    expected_run_emx = not bool(create_only or cadence_streamout_only)
+    if (
+        summary.get("create_only") is not bool(create_only)
+        or summary.get("cadence_streamout_only") is not bool(cadence_streamout_only)
+        or summary.get("run_emx") is not expected_run_emx
+    ):
         return None
     input_rows = _read_csv(csv_path)
     dataset_rows = _read_csv(dataset_csv)
@@ -368,6 +416,7 @@ def _run_shard(index: int, row_count: int, csv_path: Path, out_dir: Path, args: 
     ]
     _append_optional_arg(command, "--config", args.config)
     _append_flag(command, "--create-only", args.create_only)
+    _append_flag(command, "--cadence-streamout-only", args.cadence_streamout_only)
     _append_flag(command, "--fail-on-error", args.fail_on_error)
     _append_flag(command, "--allow-outside-target-bin", args.allow_outside_target_bin)
     _append_flag(command, "--force-wideband-5-50-0p1", args.force_wideband_5_50_0p1)
@@ -582,11 +631,92 @@ def _is_sha256(value: str) -> bool:
     return len(value) == 64 and all(character in "0123456789abcdef" for character in value)
 
 
+def _parallel_cadence_streamout_contract(
+    *,
+    runs: list[ShardRun],
+    enabled: bool,
+    expected_count: int,
+) -> dict[str, Any]:
+    if not enabled:
+        return {
+            "summary": {
+                "checked": False,
+                "reason": "cadence_streamout_only_not_requested",
+                "expected_count": int(expected_count),
+                "shard_count": len(runs),
+            },
+            "checks": [],
+        }
+
+    shard_records: list[dict[str, Any]] = []
+    for run in runs:
+        summary = run.summary or {}
+        contract = summary.get("cadence_streamout_output_contract") or {}
+        shard_records.append(
+            {
+                "index": run.index,
+                "run_emx": summary.get("run_emx"),
+                "create_only": summary.get("create_only"),
+                "cadence_streamout_only": summary.get("cadence_streamout_only"),
+                "contract_checked": contract.get("checked") is True,
+                "valid_candidate_bound_gds_count": int(
+                    contract.get("valid_candidate_bound_gds_count") or 0
+                ),
+                "touchstone_file_count": int(contract.get("touchstone_file_count") or 0),
+            }
+        )
+    valid_count = sum(
+        record["valid_candidate_bound_gds_count"] for record in shard_records
+    )
+    touchstone_count = sum(record["touchstone_file_count"] for record in shard_records)
+    checks = [
+        _check(
+            "all_shards_used_cadence_streamout_only_mode",
+            bool(shard_records)
+            and all(
+                record["run_emx"] is False
+                and record["create_only"] is False
+                and record["cadence_streamout_only"] is True
+                for record in shard_records
+            ),
+            f"shards={len(shard_records)}",
+        ),
+        _check(
+            "all_shard_cadence_streamout_contracts_checked",
+            bool(shard_records)
+            and all(record["contract_checked"] for record in shard_records),
+            f"unchecked={sum(not record['contract_checked'] for record in shard_records)}",
+        ),
+        _check(
+            "candidate_bound_cadence_gds_count_matches_input",
+            valid_count == int(expected_count) and int(expected_count) > 0,
+            f"valid_gds={valid_count}, expected={expected_count}",
+        ),
+        _check(
+            "cadence_streamout_shards_produced_no_touchstone",
+            touchstone_count == 0,
+            f"touchstone_files={touchstone_count}",
+        ),
+    ]
+    return {
+        "summary": {
+            "checked": True,
+            "expected_count": int(expected_count),
+            "shard_count": len(shard_records),
+            "valid_candidate_bound_gds_count": valid_count,
+            "touchstone_file_count": touchstone_count,
+            "shards": shard_records,
+        },
+        "checks": checks,
+    }
+
+
 def _touchstone_output_contract(
     *,
     out_dir: Path,
     merged_rows: list[dict[str, Any]],
     create_only: bool,
+    cadence_streamout_only: bool = False,
     expected_extension: str,
     expected_ports: int,
     expected_frequency_start_ghz: float | None,
@@ -597,10 +727,20 @@ def _touchstone_output_contract(
     max_touchstone_checks: int,
 ) -> dict[str, Any]:
     expected_extension = _normalise_suffix(expected_extension)
-    if create_only:
+    if create_only or cadence_streamout_only:
+        reason = (
+            "cadence_streamout_only_has_no_emx_touchstone_output"
+            if cadence_streamout_only
+            else "create_only_run_has_no_emx_touchstone_output"
+        )
+        check_name = (
+            "touchstone_output_contract_skipped_for_cadence_streamout_only"
+            if cadence_streamout_only
+            else "touchstone_output_contract_skipped_for_create_only"
+        )
         summary = {
             "checked": False,
-            "reason": "create_only_run_has_no_emx_touchstone_output",
+            "reason": reason,
             "expected_extension": expected_extension,
             "expected_ports": int(expected_ports),
             "sampled_count": 0,
@@ -609,9 +749,9 @@ def _touchstone_output_contract(
             "summary": summary,
             "checks": [
                 _check(
-                    "touchstone_output_contract_skipped_for_create_only",
+                    check_name,
                     True,
-                    f"create-only layout smoke runs intentionally do not require {expected_extension} output",
+                    f"layout-only modes intentionally do not require {expected_extension} output",
                 )
             ],
         }

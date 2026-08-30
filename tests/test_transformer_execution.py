@@ -245,6 +245,146 @@ class TransformerExecutionTest(TransformerToolboxTestBase):
             self.assertTrue((result.work_dir / "differential_analysis.npz").exists())
             self.assertTrue((result.work_dir / "lumped_compare.png").exists())
 
+    def test_evaluator_cadence_streamout_only_stops_before_emx(self) -> None:
+        cfg = default_run_config("1t1t")
+        geometry = cfg.bounds.midpoint()
+        calls: list[tuple[str, Path]] = []
+
+        def _fake_roundtrip(
+            *,
+            run_config,
+            geometry,
+            root_dir,
+            stop_after,
+            cadence_install_root,
+            pdk_cds_lib,
+            tech_lib_name,
+            layer_map_path,
+        ):
+            self.assertEqual(stop_after, "strmout")
+            evaluator = TransformerEmxEvaluator(run_config=run_config, root_dir=Path(root_dir))
+            cache_key = evaluator.cache_key(geometry)
+            work_dir = Path(root_dir) / "evaluations" / cache_key
+            streamout_dir = work_dir / "streamout"
+            layout_dir = work_dir / "layout"
+            streamout_dir.mkdir(parents=True, exist_ok=True)
+            layout_dir.mkdir(parents=True, exist_ok=True)
+            cadence_gds = streamout_dir / "transformer_layout_cadpins.gds"
+            manifest_path = layout_dir / "transformer_layout.layout.json"
+            cadence_gds.write_bytes(b"candidate-bound cadence gds")
+            manifest_path.write_text(
+                json.dumps({"top_cell": run_config.emx.top_cell_prefix, "ports": []}),
+                encoding="utf-8",
+            )
+            calls.append((cache_key, cadence_gds))
+            return {
+                "ok": True,
+                "artifacts": {
+                    "cadence_gds": str(cadence_gds),
+                    "export_manifest": str(manifest_path),
+                    "top_cell": run_config.emx.top_cell_prefix,
+                },
+            }
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            evaluator = TransformerEmxEvaluator(run_config=cfg, root_dir=Path(tmpdir))
+            with mock.patch(
+                "rfic_transformer_inverse_design.execution.evaluator.run_transformer_zeus_cadence_roundtrip",
+                _fake_roundtrip,
+            ):
+                result = evaluator.evaluate_geometry(
+                    geometry,
+                    run_emx=False,
+                    cadence_streamout_only=True,
+                )
+
+            self.assertTrue(result.ok())
+            self.assertEqual(len(calls), 1)
+            self.assertEqual(result.layout.gds_path, calls[0][1])
+            self.assertTrue(result.layout.gds_path.is_file())
+            self.assertIsNone(result.touchstone_path)
+            self.assertIsNone(result.command)
+
+    def test_evaluator_cadence_streamout_only_batch_owns_one_gds_per_candidate(self) -> None:
+        cfg = default_run_config("1t1t")
+        geometry_a = cfg.bounds.midpoint()
+        geometry_b = replace(geometry_a, offset_um=geometry_a.offset_um + 0.5)
+        calls: list[tuple[str, Path]] = []
+
+        def _fake_roundtrip(
+            *,
+            run_config,
+            geometry,
+            root_dir,
+            stop_after,
+            cadence_install_root,
+            pdk_cds_lib,
+            tech_lib_name,
+            layer_map_path,
+        ):
+            self.assertEqual(stop_after, "strmout")
+            evaluator = TransformerEmxEvaluator(run_config=run_config, root_dir=Path(root_dir))
+            cache_key = evaluator.cache_key(geometry)
+            work_dir = Path(root_dir) / "evaluations" / cache_key
+            streamout_dir = work_dir / "streamout"
+            layout_dir = work_dir / "layout"
+            streamout_dir.mkdir(parents=True, exist_ok=True)
+            layout_dir.mkdir(parents=True, exist_ok=True)
+            cadence_gds = streamout_dir / "transformer_layout_cadpins.gds"
+            manifest_path = layout_dir / "transformer_layout.layout.json"
+            cadence_gds.write_bytes(cache_key.encode("ascii"))
+            manifest_path.write_text(
+                json.dumps({"top_cell": run_config.emx.top_cell_prefix, "ports": []}),
+                encoding="utf-8",
+            )
+            calls.append((cache_key, cadence_gds))
+            return {
+                "ok": True,
+                "artifacts": {
+                    "cadence_gds": str(cadence_gds),
+                    "export_manifest": str(manifest_path),
+                    "top_cell": run_config.emx.top_cell_prefix,
+                },
+            }
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            evaluator = TransformerEmxEvaluator(run_config=cfg, root_dir=Path(tmpdir))
+            with mock.patch(
+                "rfic_transformer_inverse_design.execution.evaluator.run_transformer_zeus_cadence_roundtrip",
+                _fake_roundtrip,
+            ):
+                results = evaluator.evaluate_geometry_batch(
+                    [geometry_a, geometry_b],
+                    run_emx=False,
+                    cadence_streamout_only=True,
+                )
+
+            self.assertEqual(len(results), 2)
+            self.assertEqual(len(calls), 2)
+            self.assertEqual(len({cache_key for cache_key, _ in calls}), 2)
+            self.assertEqual(len({path for _, path in calls}), 2)
+            self.assertTrue(all(result.ok() for result in results))
+            self.assertTrue(all(result.touchstone_path is None for result in results))
+
+    def test_evaluator_rejects_combined_emx_and_cadence_streamout_only_modes(self) -> None:
+        cfg = default_run_config("1t1t")
+        geometry = cfg.bounds.midpoint()
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            evaluator = TransformerEmxEvaluator(run_config=cfg, root_dir=Path(tmpdir))
+            with self.assertRaisesRegex(ValueError, "mutually exclusive"):
+                evaluator.evaluate_geometry(
+                    geometry,
+                    run_emx=True,
+                    cadence_streamout_only=True,
+                )
+            with self.assertRaisesRegex(ValueError, "mutually exclusive"):
+                evaluator.evaluate_geometry_batch(
+                    [geometry],
+                    run_emx=True,
+                    cadence_streamout_only=True,
+                )
+
     def test_evaluator_can_route_through_remote_ssh_roundtrip(self) -> None:
         cfg = default_run_config("1t1t")
         cfg = replace(

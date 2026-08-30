@@ -4,6 +4,7 @@ import json
 import sys
 import tempfile
 from pathlib import Path
+from subprocess import CompletedProcess
 from unittest import mock
 
 
@@ -50,6 +51,69 @@ def test_split_rows_uses_requested_worker_count_when_rows_exceed_jobs() -> None:
     assert len(shards) == 8
     assert [len(shard) for shard in shards] == [3, 3, 3, 3, 2, 2, 2, 2]
     assert [row["candidate_id"] for shard in shards for row in shard] == [f"c{index}" for index in range(20)]
+
+
+def test_parallel_runner_forwards_cadence_streamout_only_to_single_runner() -> None:
+    mod = _load_parallel_module()
+    args = mod._parse_args(
+        [
+            "--candidate-csv",
+            "queue.csv",
+            "--out-dir",
+            "out",
+            "--cadence-streamout-only",
+        ]
+    )
+    with tempfile.TemporaryDirectory() as tmpdir:
+        root = Path(tmpdir)
+        queue = root / "queue.csv"
+        _write_candidate_csv(queue, 1)
+        out_dir = root / "out"
+        out_dir.mkdir(parents=True)
+        with mock.patch.object(
+            mod.subprocess,
+            "run",
+            return_value=CompletedProcess(args=[], returncode=0, stdout="", stderr=""),
+        ):
+            result = mod._run_shard(0, 1, queue, out_dir, args)
+
+    assert "--cadence-streamout-only" in result.command
+    assert "--create-only" not in result.command
+
+
+def test_parallel_cadence_streamout_contract_counts_candidate_bound_gds() -> None:
+    mod = _load_parallel_module()
+    run = mod.ShardRun(
+        index=0,
+        row_count=2,
+        csv_path=Path("queue.csv"),
+        out_dir=Path("out"),
+        command=["fake"],
+        returncode=0,
+        stdout="",
+        stderr="",
+        summary_path=Path("summary.json"),
+        summary={
+            "overall_status": "PASS",
+            "run_emx": False,
+            "create_only": False,
+            "cadence_streamout_only": True,
+            "cadence_streamout_output_contract": {
+                "checked": True,
+                "valid_candidate_bound_gds_count": 2,
+                "touchstone_file_count": 0,
+            },
+        },
+    )
+
+    contract = mod._parallel_cadence_streamout_contract(
+        runs=[run],
+        enabled=True,
+        expected_count=2,
+    )
+
+    assert contract["summary"]["valid_candidate_bound_gds_count"] == 2
+    assert all(check["pass"] for check in contract["checks"])
 
 
 def test_fail_on_error_rejects_merged_rows_with_failed_layout_or_emx(tmp_path: Path) -> None:
@@ -363,10 +427,17 @@ def test_parallel_runner_resume_completed_reuses_only_complete_matching_shards()
             writer.writeheader()
             writer.writerow({"candidate_id": "c0", "ok": "true"})
             writer.writerow({"candidate_id": "c1", "ok": "true"})
-        (completed / "candidate_queue_dataset_summary.json").write_text(
-            json.dumps({"overall_status": "PASS"}),
-            encoding="utf-8",
-        )
+            (completed / "candidate_queue_dataset_summary.json").write_text(
+                json.dumps(
+                    {
+                        "overall_status": "PASS",
+                        "run_emx": False,
+                        "create_only": True,
+                        "cadence_streamout_only": False,
+                    }
+                ),
+                encoding="utf-8",
+            )
 
         with mock.patch.object(mod, "_run_shard", side_effect=fake_run_shard) as patched:
             status = mod.main(

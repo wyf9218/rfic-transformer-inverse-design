@@ -288,7 +288,14 @@ class TransformerEmxEvaluator:
             encoding="utf-8",
         )
 
-    def evaluate_geometry(self, geometry: TransformerSpec, run_emx: bool = True) -> TransformerEvalResult:
+    def evaluate_geometry(
+        self,
+        geometry: TransformerSpec,
+        run_emx: bool = True,
+        cadence_streamout_only: bool = False,
+    ) -> TransformerEvalResult:
+        if run_emx and cadence_streamout_only:
+            raise ValueError("run_emx and cadence_streamout_only are mutually exclusive")
         key = self.cache_key(geometry)
         work_dir = self.eval_dir / key
 
@@ -302,9 +309,14 @@ class TransformerEmxEvaluator:
 
         layout, error, geometry_check = self._evaluate_export(geometry, work_dir=work_dir)
 
-        if run_emx and layout is not None and error is None:
+        if (run_emx or cadence_streamout_only) and layout is not None and error is None:
             try:
                 if self.run_config.emx.uses_remote_ssh():
+                    if cadence_streamout_only:
+                        raise RuntimeError(
+                            "cadence_streamout_only requires local Cadence execution; "
+                            "remote SSH mode is not supported"
+                        )
                     roundtrip_payload = run_transformer_remote_ssh_roundtrip(
                         run_config=self.run_config,
                         geometry=geometry,
@@ -316,7 +328,7 @@ class TransformerEmxEvaluator:
                         run_config=self.run_config,
                         geometry=geometry,
                         root_dir=self.root_dir,
-                        stop_after="emx",
+                        stop_after="strmout" if cadence_streamout_only else "emx",
                         cadence_install_root=self.run_config.emx.cadence_install_root,
                         pdk_cds_lib=self.run_config.emx.cadence_pdk_cds_lib,
                         tech_lib_name=self.run_config.emx.cadence_tech_lib,
@@ -376,10 +388,24 @@ class TransformerEmxEvaluator:
         self,
         geometries: list[TransformerSpec] | tuple[TransformerSpec, ...],
         run_emx: bool = True,
+        cadence_streamout_only: bool = False,
     ) -> list[TransformerEvalResult]:
+        if run_emx and cadence_streamout_only:
+            raise ValueError("run_emx and cadence_streamout_only are mutually exclusive")
         geometry_list = list(geometries)
         if not geometry_list:
             return []
+        if cadence_streamout_only:
+            # A batched Cadence round-trip shares one GDS. Foundry DRC evidence
+            # must instead bind one distinct Cadence-pin GDS to each candidate.
+            return [
+                self.evaluate_geometry(
+                    geometry,
+                    run_emx=False,
+                    cadence_streamout_only=True,
+                )
+                for geometry in geometry_list
+            ]
         if not run_emx or len(geometry_list) == 1:
             return [self.evaluate_geometry(geometry, run_emx=run_emx) for geometry in geometry_list]
         if self.run_config.emx.uses_remote_ssh():
