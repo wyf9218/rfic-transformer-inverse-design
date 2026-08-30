@@ -127,12 +127,13 @@ def _base_attempt(
     )
     row: dict[str, object] = {
         "attempt_id": f"attempt_{index:04d}",
+        "retry_of_attempt_id": "",
         "geometry_id": f"geometry_{index:04d}",
         "geometry_sha256": canonical_geometry_sha256(geometry),
         "campaign_contract_fingerprint": fingerprint,
         "accepted_sequence": "",
-        "campaign_phase": "",
-        "acquisition_source": "",
+        "campaign_phase": "PHASE_A",
+        "acquisition_source": "base_space_filling",
         "terminal_stage": terminal,
         "calibre_blocking_violations": 0,
         "frequency_points": "",
@@ -151,12 +152,15 @@ def _base_attempt(
     }
     for name, status in zip(
         (
+            "duplicate_status",
+            "geometry_bounds_status",
             "analytical_status",
             "topology_status",
             "cadence_gds_status",
             "calibre_status",
             "emx_status",
             "s4p_status",
+            "s_to_z_status",
             "feature_extraction_status",
         ),
         statuses,
@@ -177,7 +181,7 @@ def _accepted_attempt(
         fingerprint=fingerprint,
         index=index,
         terminal="ACCEPTED",
-        statuses=("PASS",) * 7,
+        statuses=("PASS",) * 10,
     )
     gds_path = tmp_path / f"design_{index}.gds"
     gds_path.write_bytes(f"gds-{index}".encode())
@@ -234,8 +238,13 @@ def _feature_rows(attempts: list[dict[str, object]]) -> list[dict[str, object]]:
                 "accepted_sequence": attempt["accepted_sequence"],
                 "geometry_id": attempt["geometry_id"],
                 "geometry_sha256": attempt["geometry_sha256"],
+                "campaign_phase": attempt["campaign_phase"],
+                "acquisition_source": attempt["acquisition_source"],
                 "campaign_contract_fingerprint": attempt["campaign_contract_fingerprint"],
+                "s4p_sha256": attempt["s4p_sha256"],
                 "frequency_hz": frequency_hz,
+                "lp_h": lp_h,
+                "ls_h": ls_h,
                 "lp_nh": lp_h * 1.0e9,
                 "ls_nh": ls_h * 1.0e9,
                 "qp": qp,
@@ -247,6 +256,13 @@ def _feature_rows(attempts: list[dict[str, object]]) -> list[dict[str, object]]:
                 "ls_over_lp": ls_h / lp_h,
                 "xp_ohm": omega * lp_h,
                 "xs_ohm": omega * ls_h,
+                "finite_values": "true",
+                "positive_primary_resistance": "true",
+                "positive_secondary_resistance": "true",
+                "positive_primary_inductive_reactance": "true",
+                "positive_secondary_inductive_reactance": "true",
+                "extraction_continuity_status": "PASS",
+                "below_half_srf": "true",
                 "broadband_descriptor_valid": "true",
                 "strict_lumped_valid": "true",
                 "srf_status": "CENSORED_ABOVE_60_GHZ",
@@ -280,7 +296,7 @@ def _fixture(tmp_path: Path) -> dict[str, object]:
             fingerprint=fingerprint,
             index=2,
             terminal="ANALYTICAL_FAILURE",
-            statuses=("FAIL", "NOT_RUN", "NOT_RUN", "NOT_RUN", "NOT_RUN", "NOT_RUN", "NOT_RUN"),
+            statuses=("PASS", "PASS", "FAIL", "NOT_RUN", "NOT_RUN", "NOT_RUN", "NOT_RUN", "NOT_RUN", "NOT_RUN", "NOT_RUN"),
         ),
     ]
     ledger = tmp_path / "attempt_ledger.csv"
@@ -308,7 +324,7 @@ def _run(module, fixture: dict[str, object], out_dir: Path) -> dict[str, int]:
     )
 
 
-def test_materializes_five_fresh_emx_products_and_receipt(tmp_path: Path) -> None:
+def test_materializes_complete_fresh_emx_products_and_receipt(tmp_path: Path) -> None:
     module = _load_module()
     fixture = _fixture(tmp_path)
     out_dir = tmp_path / "raw_products"
@@ -318,7 +334,9 @@ def test_materializes_five_fresh_emx_products_and_receipt(tmp_path: Path) -> Non
     assert result == {"accepted_geometries": 2, "geometry_frequency_rows": 112}
     assert {path.name for path in out_dir.iterdir()} == {
         "accepted_geometry_200k.csv",
+        "rejected_geometry_index.csv",
         "broadband_features_11p2m_long.csv",
+        "broadband_features_manifest.json",
         "sparameter_artifact_index_200k.csv",
         "geometry_provenance_200k.csv",
         "failure_funnel.csv",
@@ -328,6 +346,8 @@ def test_materializes_five_fresh_emx_products_and_receipt(tmp_path: Path) -> Non
     receipt = json.loads((out_dir / "RAW_PRODUCTS_RECEIPT.json").read_text(encoding="utf-8"))
     assert receipt["overall_status"] == "PASS"
     assert receipt["counts"]["accepted_geometries"] == 2
+    assert receipt["counts"]["accepted_s4p_geometries"] == 2
+    assert receipt["counts"]["accepted_feature_complete_geometries"] == 2
     assert receipt["counts"]["geometry_frequency_rows"] == 112
     assert receipt["checks"]["proxy_values_excluded_from_labels"] is True
     with (out_dir / "failure_funnel.csv").open(newline="", encoding="utf-8") as handle:
@@ -335,6 +355,26 @@ def test_materializes_five_fresh_emx_products_and_receipt(tmp_path: Path) -> Non
     assert funnel["raw_geometry_candidates"] == 3
     assert funnel["analytical_failures"] == 1
     assert funnel["accepted_geometries"] == 2
+    assert set(funnel) == set(module.FAILURE_FUNNEL_ORDER)
+    manifest = json.loads(
+        (out_dir / "broadband_features_manifest.json").read_text(encoding="utf-8")
+    )
+    assert manifest["total_row_count"] == 112
+    assert manifest["geometry_count"] == 2
+    assert manifest["partitions"][0]["sha256"] == _sha256(
+        out_dir / "broadband_features_11p2m_long.csv"
+    )
+    column_types = {row["name"]: row["logical_type"] for row in manifest["columns"]}
+    assert column_types["lp_h"] == "float64"
+    assert column_types["below_half_srf"] == "boolean"
+    with (out_dir / "sparameter_artifact_index_200k.csv").open(
+        newline="", encoding="utf-8"
+    ) as handle:
+        artifact = next(csv.DictReader(handle))
+    assert int(artifact["s4p_size_bytes"]) > 0
+    assert int(artifact["port_count"]) == 4
+    assert int(artifact["first_frequency_hz"]) == FREQUENCY_GRID_HZ[0]
+    assert int(artifact["last_frequency_hz"]) == FREQUENCY_GRID_HZ[-1]
 
 
 @pytest.mark.parametrize("column", ["s11_re", "z43_im", "lp_nh", "signed_k", "qmin"])
@@ -382,10 +422,117 @@ def test_duplicate_accepted_geometry_is_rejected(tmp_path: Path) -> None:
     attempts = list(fixture["attempts"])
     for field in ("geometry_id", "geometry_sha256", *(f"geom__{name}" for name in GEOMETRY_FIELDS)):
         attempts[1][field] = attempts[0][field]
+    attempts[1]["retry_of_attempt_id"] = attempts[0]["attempt_id"]
     _write_csv(Path(fixture["ledger"]), attempts)
 
     with pytest.raises(module.RawProductFinalizationError, match="duplicate accepted canonical geometry"):
         _run(module, fixture, tmp_path / "raw_products")
+
+
+def test_duplicate_candidate_is_accounted_separately_from_retry(tmp_path: Path) -> None:
+    module = _load_module()
+    fixture = _fixture(tmp_path)
+    attempts = list(fixture["attempts"])
+    duplicate = _base_attempt(
+        tmp_path,
+        fingerprint=str(fixture["fingerprint"]),
+        index=3,
+        terminal="DUPLICATE_CANDIDATE",
+        statuses=("FAIL",) + ("NOT_RUN",) * 9,
+    )
+    for field in (
+        "geometry_id",
+        "geometry_sha256",
+        *(f"geom__{name}" for name in GEOMETRY_FIELDS),
+    ):
+        duplicate[field] = attempts[0][field]
+    attempts.append(duplicate)
+    _write_csv(Path(fixture["ledger"]), attempts)
+
+    out_dir = tmp_path / "raw_products"
+    _run(module, fixture, out_dir)
+
+    receipt = json.loads((out_dir / "RAW_PRODUCTS_RECEIPT.json").read_text(encoding="utf-8"))
+    assert receipt["failure_funnel"]["duplicate_candidates"] == 1
+    assert receipt["counts"]["retry_attempts"] == 0
+    with (out_dir / "rejected_geometry_index.csv").open(
+        newline="", encoding="utf-8"
+    ) as handle:
+        rejected = list(csv.DictReader(handle))
+    assert {row["terminal_stage"] for row in rejected} == {
+        "ANALYTICAL_FAILURE",
+        "DUPLICATE_CANDIDATE",
+    }
+
+
+def test_invalid_lumped_descriptor_retains_finite_s_and_z_row() -> None:
+    module = _load_module()
+    frequency_hz = FREQUENCY_GRID_HZ[0]
+    omega = 2.0 * math.pi * frequency_hz
+    s_matrix = np.zeros((4, 4), dtype=np.complex128)
+    z_matrix = np.eye(4, dtype=np.complex128)
+    z_diff = np.asarray(
+        [[1.0j, 0.2j], [0.2j, 1.0 + 2.0j]], dtype=np.complex128
+    )
+    lp_h = 1.0 / omega
+    ls_h = 2.0 / omega
+    signed_k = 0.2 / math.sqrt(2.0)
+    row: dict[str, object] = {
+        "lp_h": lp_h,
+        "ls_h": ls_h,
+        "lp_nh": lp_h * 1.0e9,
+        "ls_nh": ls_h * 1.0e9,
+        "qp": "nan",
+        "qs": 2.0,
+        "qmin": "nan",
+        "mutual_inductance_h": 0.2 / omega,
+        "signed_k": signed_k,
+        "k_abs": abs(signed_k),
+        "ls_over_lp": 2.0,
+        "xp_ohm": 1.0,
+        "xs_ohm": 2.0,
+        "finite_values": "false",
+        "positive_primary_resistance": "false",
+        "positive_secondary_resistance": "true",
+        "positive_primary_inductive_reactance": "true",
+        "positive_secondary_inductive_reactance": "true",
+        "extraction_continuity_status": "PASS",
+        "below_half_srf": "true",
+        "broadband_descriptor_valid": "false",
+        "strict_lumped_valid": "false",
+        "srf_status": "CENSORED_ABOVE_60_GHZ",
+        "passivity_status": "PASS",
+        "reciprocity_status": "PASS",
+        "inside_broad_response_envelope": "false",
+        "inside_literature_practical_panel": "true",
+        "outside_envelope_reason": "invalid_qp_and_reactance_below_envelope",
+    }
+    for matrix_name, matrix in (("s", s_matrix), ("z", z_matrix)):
+        for matrix_row in range(4):
+            for matrix_col in range(4):
+                value = complex(matrix[matrix_row, matrix_col])
+                row[f"{matrix_name}{matrix_row + 1}{matrix_col + 1}_re"] = value.real
+                row[f"{matrix_name}{matrix_row + 1}{matrix_col + 1}_im"] = value.imag
+
+    module._audit_bound_feature_row(
+        row,
+        s_matrix=s_matrix,
+        z_matrix=z_matrix,
+        z_diff=z_diff,
+        frequency_hz=frequency_hz,
+        line=2,
+    )
+
+    row["finite_values"] = "true"
+    with pytest.raises(module.RawProductFinalizationError, match="finite_values contradicts"):
+        module._audit_bound_feature_row(
+            row,
+            s_matrix=s_matrix,
+            z_matrix=z_matrix,
+            z_diff=z_diff,
+            frequency_hz=frequency_hz,
+            line=2,
+        )
 
 
 def test_invalid_status_chain_is_rejected(tmp_path: Path) -> None:

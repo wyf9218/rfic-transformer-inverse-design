@@ -51,15 +51,20 @@ from rfic_transformer_inverse_design.sim.touchstone import load_touchstone  # no
 
 
 ACCEPTANCE_STATUS_FIELDS = (
+    "duplicate_status",
+    "geometry_bounds_status",
     "analytical_status",
     "topology_status",
     "cadence_gds_status",
     "calibre_status",
     "emx_status",
     "s4p_status",
+    "s_to_z_status",
     "feature_extraction_status",
 )
 FEATURE_COLUMNS = (
+    "lp_h",
+    "ls_h",
     "lp_nh",
     "ls_nh",
     "qp",
@@ -73,6 +78,13 @@ FEATURE_COLUMNS = (
     "xs_ohm",
 )
 VALIDITY_COLUMNS = (
+    "finite_values",
+    "positive_primary_resistance",
+    "positive_secondary_resistance",
+    "positive_primary_inductive_reactance",
+    "positive_secondary_inductive_reactance",
+    "extraction_continuity_status",
+    "below_half_srf",
     "broadband_descriptor_valid",
     "strict_lumped_valid",
     "srf_status",
@@ -90,6 +102,8 @@ PATH_HASH_FIELDS = (
     ("s4p_path", "s4p_sha256"),
 )
 TERMINAL_STAGES = (
+    "DUPLICATE_CANDIDATE",
+    "GEOMETRY_BOUND_FAILURE",
     "ANALYTICAL_FAILURE",
     "TOPOLOGY_FAILURE",
     "CADENCE_FAILURE",
@@ -97,42 +111,52 @@ TERMINAL_STAGES = (
     "EMX_FAILURE",
     "INCOMPLETE_FREQUENCY_FAILURE",
     "S4P_PARSING_FAILURE",
+    "S_TO_Z_FAILURE",
     "FEATURE_EXTRACTION_FAILURE",
     "ACCEPTED",
 )
 FUNNEL_STAGE_BY_TERMINAL = {
+    "DUPLICATE_CANDIDATE": "duplicate_candidates",
+    "GEOMETRY_BOUND_FAILURE": "geometry_bound_failures",
     "ANALYTICAL_FAILURE": "analytical_failures",
     "TOPOLOGY_FAILURE": "topology_failures",
     "CADENCE_FAILURE": "cadence_failures",
-    "CALIBRE_FAILURE": "calibre_failures",
+    "CALIBRE_FAILURE": "calibre_blocking_failures",
     "EMX_FAILURE": "emx_failures",
     "INCOMPLETE_FREQUENCY_FAILURE": "incomplete_frequency_failures",
     "S4P_PARSING_FAILURE": "s4p_parsing_failures",
+    "S_TO_Z_FAILURE": "s_to_z_failures",
     "FEATURE_EXTRACTION_FAILURE": "feature_extraction_failures",
     "ACCEPTED": "accepted_geometries",
 }
 FAILURE_FUNNEL_ORDER = (
     "raw_geometry_candidates",
+    "duplicate_candidates",
+    "geometry_bound_failures",
     "analytical_failures",
     "topology_failures",
     "cadence_failures",
-    "calibre_failures",
+    "calibre_blocking_failures",
     "emx_failures",
     "incomplete_frequency_failures",
     "s4p_parsing_failures",
+    "s_to_z_failures",
     "feature_extraction_failures",
     "accepted_geometries",
 )
 STATUS_PATTERN_BY_TERMINAL = {
-    "ANALYTICAL_FAILURE": ("FAIL", "NOT_RUN", "NOT_RUN", "NOT_RUN", "NOT_RUN", "NOT_RUN", "NOT_RUN"),
-    "TOPOLOGY_FAILURE": ("PASS", "FAIL", "NOT_RUN", "NOT_RUN", "NOT_RUN", "NOT_RUN", "NOT_RUN"),
-    "CADENCE_FAILURE": ("PASS", "PASS", "FAIL", "NOT_RUN", "NOT_RUN", "NOT_RUN", "NOT_RUN"),
-    "CALIBRE_FAILURE": ("PASS", "PASS", "PASS", "FAIL", "NOT_RUN", "NOT_RUN", "NOT_RUN"),
-    "EMX_FAILURE": ("PASS", "PASS", "PASS", "PASS", "FAIL", "NOT_RUN", "NOT_RUN"),
-    "INCOMPLETE_FREQUENCY_FAILURE": ("PASS", "PASS", "PASS", "PASS", "PASS", "FAIL", "NOT_RUN"),
-    "S4P_PARSING_FAILURE": ("PASS", "PASS", "PASS", "PASS", "PASS", "FAIL", "NOT_RUN"),
-    "FEATURE_EXTRACTION_FAILURE": ("PASS", "PASS", "PASS", "PASS", "PASS", "PASS", "FAIL"),
-    "ACCEPTED": ("PASS", "PASS", "PASS", "PASS", "PASS", "PASS", "PASS"),
+    "DUPLICATE_CANDIDATE": ("FAIL", "NOT_RUN", "NOT_RUN", "NOT_RUN", "NOT_RUN", "NOT_RUN", "NOT_RUN", "NOT_RUN", "NOT_RUN", "NOT_RUN"),
+    "GEOMETRY_BOUND_FAILURE": ("PASS", "FAIL", "NOT_RUN", "NOT_RUN", "NOT_RUN", "NOT_RUN", "NOT_RUN", "NOT_RUN", "NOT_RUN", "NOT_RUN"),
+    "ANALYTICAL_FAILURE": ("PASS", "PASS", "FAIL", "NOT_RUN", "NOT_RUN", "NOT_RUN", "NOT_RUN", "NOT_RUN", "NOT_RUN", "NOT_RUN"),
+    "TOPOLOGY_FAILURE": ("PASS", "PASS", "PASS", "FAIL", "NOT_RUN", "NOT_RUN", "NOT_RUN", "NOT_RUN", "NOT_RUN", "NOT_RUN"),
+    "CADENCE_FAILURE": ("PASS", "PASS", "PASS", "PASS", "FAIL", "NOT_RUN", "NOT_RUN", "NOT_RUN", "NOT_RUN", "NOT_RUN"),
+    "CALIBRE_FAILURE": ("PASS", "PASS", "PASS", "PASS", "PASS", "FAIL", "NOT_RUN", "NOT_RUN", "NOT_RUN", "NOT_RUN"),
+    "EMX_FAILURE": ("PASS", "PASS", "PASS", "PASS", "PASS", "PASS", "FAIL", "NOT_RUN", "NOT_RUN", "NOT_RUN"),
+    "INCOMPLETE_FREQUENCY_FAILURE": ("PASS", "PASS", "PASS", "PASS", "PASS", "PASS", "PASS", "FAIL", "NOT_RUN", "NOT_RUN"),
+    "S4P_PARSING_FAILURE": ("PASS", "PASS", "PASS", "PASS", "PASS", "PASS", "PASS", "FAIL", "NOT_RUN", "NOT_RUN"),
+    "S_TO_Z_FAILURE": ("PASS", "PASS", "PASS", "PASS", "PASS", "PASS", "PASS", "PASS", "FAIL", "NOT_RUN"),
+    "FEATURE_EXTRACTION_FAILURE": ("PASS", "PASS", "PASS", "PASS", "PASS", "PASS", "PASS", "PASS", "PASS", "FAIL"),
+    "ACCEPTED": ("PASS", "PASS", "PASS", "PASS", "PASS", "PASS", "PASS", "PASS", "PASS", "PASS"),
 }
 
 
@@ -153,9 +177,11 @@ class AcceptedAttempt:
 @dataclass(frozen=True)
 class AttemptLedgerAudit:
     accepted: tuple[AcceptedAttempt, ...]
+    rejected: tuple[Mapping[str, str], ...]
     funnel_counts: Mapping[str, int]
     attempt_count: int
     unique_geometry_count: int
+    retry_count: int
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -225,12 +251,15 @@ def finalize_raw_products(
     staging.mkdir(parents=True)
     try:
         accepted_path = staging / "accepted_geometry_200k.csv"
+        rejected_path = staging / "rejected_geometry_index.csv"
         artifact_path = staging / "sparameter_artifact_index_200k.csv"
         provenance_path = staging / "geometry_provenance_200k.csv"
         feature_path = staging / "broadband_features_11p2m_long.csv"
+        feature_manifest_path = staging / "broadband_features_manifest.json"
         funnel_path = staging / "failure_funnel.csv"
 
         _write_accepted_ledger(accepted_path, accepted)
+        _write_rejected_ledger(rejected_path, attempt_audit.rejected)
         _write_artifact_index(artifact_path, accepted)
         _write_geometry_provenance(
             provenance_path,
@@ -238,10 +267,19 @@ def finalize_raw_products(
             production_config_path=production_config_path,
             production_config_sha256=production_config_sha256,
         )
-        feature_count = _validate_and_write_long_features(
+        feature_count, feature_fields = _validate_and_write_long_features(
             source_path=long_features_path,
             destination_path=feature_path,
             accepted=accepted,
+            fingerprint=fingerprint,
+        )
+        _write_feature_manifest(
+            feature_manifest_path,
+            feature_path=feature_path,
+            recorded_feature_path=out_dir / feature_path.name,
+            fieldnames=feature_fields,
+            row_count=feature_count,
+            accepted_count=len(accepted),
             fingerprint=fingerprint,
         )
         _write_failure_funnel(funnel_path, funnel_counts)
@@ -266,6 +304,10 @@ def finalize_raw_products(
             "all_accepted_s4p_are_fresh_exact_56_point_four_port": True,
             "long_features_bound_to_exact_s4p_s_and_z": True,
             "long_physical_features_recomputed_from_exact_s4p": True,
+            "long_feature_schema_complete": True,
+            "long_validity_flags_recomputed_or_fail_closed": True,
+            "failure_accounting_matches_frozen_funnel": set(funnel_counts)
+            == set(FAILURE_FUNNEL_ORDER) - {"raw_geometry_candidates"},
             "proxy_values_excluded_from_labels": True,
             "simulators_not_run_by_finalizer": True,
             "output_is_no_clobber": True,
@@ -282,9 +324,10 @@ def finalize_raw_products(
             "counts": {
                 "raw_attempts": attempt_audit.attempt_count,
                 "unique_geometry_candidates": attempt_audit.unique_geometry_count,
-                "retry_attempts": attempt_audit.attempt_count
-                - attempt_audit.unique_geometry_count,
+                "retry_attempts": attempt_audit.retry_count,
                 "accepted_geometries": len(accepted),
+                "accepted_s4p_geometries": len(accepted),
+                "accepted_feature_complete_geometries": len(accepted),
                 "s4p_artifacts": len(accepted),
                 "geometry_frequency_rows": feature_count,
                 "independent_designs": len(accepted),
@@ -308,8 +351,15 @@ def finalize_raw_products(
                 "accepted_geometries": _file_evidence(
                     accepted_path, recorded_path=out_dir / accepted_path.name
                 ),
+                "rejected_geometries": _file_evidence(
+                    rejected_path, recorded_path=out_dir / rejected_path.name
+                ),
                 "long_features": _file_evidence(
                     feature_path, recorded_path=out_dir / feature_path.name
+                ),
+                "long_features_manifest": _file_evidence(
+                    feature_manifest_path,
+                    recorded_path=out_dir / feature_manifest_path.name,
                 ),
                 "artifact_index": _file_evidence(
                     artifact_path, recorded_path=out_dir / artifact_path.name
@@ -381,6 +431,7 @@ def _audit_attempt_ledger(
         raise RawProductFinalizationError(f"attempt ledger is missing or empty: {path}")
     required = {
         "attempt_id",
+        "retry_of_attempt_id",
         "geometry_id",
         "geometry_sha256",
         "campaign_contract_fingerprint",
@@ -396,8 +447,11 @@ def _audit_attempt_ledger(
         *(name for pair in PATH_HASH_FIELDS for name in pair),
     }
     accepted: list[AcceptedAttempt] = []
+    rejected: list[Mapping[str, str]] = []
     attempt_count = 0
+    retry_count = 0
     attempt_ids: set[str] = set()
+    attempt_id_to_geometry_sha: dict[str, str] = {}
     accepted_geometry_ids: set[str] = set()
     accepted_geometry_hashes: set[str] = set()
     geometry_id_to_sha: dict[str, str] = {}
@@ -421,7 +475,6 @@ def _audit_attempt_ledger(
                 )
             if not geometry_id:
                 raise RawProductFinalizationError(f"attempt ledger has empty geometry_id at line {line}")
-            attempt_ids.add(attempt_id)
             if row["campaign_contract_fingerprint"] != fingerprint:
                 raise RawProductFinalizationError(f"contract fingerprint mismatch at line {line}")
             geometry_values = {name: row[f"geom__{name}"] for name in GEOMETRY_FIELDS}
@@ -433,6 +486,18 @@ def _audit_attempt_ledger(
                 ) from exc
             if row["geometry_sha256"].lower() != geometry_sha:
                 raise RawProductFinalizationError(f"geometry SHA-256 mismatch at line {line}")
+            retry_of = row["retry_of_attempt_id"]
+            if retry_of:
+                if retry_of not in attempt_id_to_geometry_sha:
+                    raise RawProductFinalizationError(
+                        f"retry_of_attempt_id does not reference an earlier attempt at line {line}"
+                    )
+                if attempt_id_to_geometry_sha[retry_of] != geometry_sha:
+                    raise RawProductFinalizationError(
+                        f"retry_of_attempt_id references a different geometry at line {line}"
+                    )
+                retry_count += 1
+            seen_geometry = geometry_sha in geometry_sha_to_id
             prior_sha = geometry_id_to_sha.setdefault(geometry_id, geometry_sha)
             prior_id = geometry_sha_to_id.setdefault(geometry_sha, geometry_id)
             if prior_sha != geometry_sha or prior_id != geometry_id:
@@ -444,6 +509,21 @@ def _audit_attempt_ledger(
                 raise RawProductFinalizationError(
                     f"unsupported terminal_stage={terminal!r} at line {line}"
                 )
+            if terminal == "DUPLICATE_CANDIDATE":
+                if retry_of or not seen_geometry:
+                    raise RawProductFinalizationError(
+                        f"duplicate-candidate terminal identity is inconsistent at line {line}"
+                    )
+            elif seen_geometry and not retry_of:
+                raise RawProductFinalizationError(
+                    f"repeated canonical geometry lacks retry_of_attempt_id at line {line}"
+                )
+            phase = row["campaign_phase"]
+            source = row["acquisition_source"]
+            if phase not in ACQUISITION_SOURCES_BY_PHASE:
+                raise RawProductFinalizationError(f"campaign phase is invalid at line {line}")
+            if source not in ACQUISITION_SOURCES_BY_PHASE[phase]:
+                raise RawProductFinalizationError(f"acquisition source is invalid at line {line}")
             statuses = tuple(row[field].upper() for field in ACCEPTANCE_STATUS_FIELDS)
             if statuses != STATUS_PATTERN_BY_TERMINAL[terminal]:
                 raise RawProductFinalizationError(
@@ -452,6 +532,10 @@ def _audit_attempt_ledger(
             blocking = _as_int(row["calibre_blocking_violations"], f"line {line} blocking")
             if blocking < 0:
                 raise RawProductFinalizationError(f"negative Calibre blocking count at line {line}")
+            if terminal == "CALIBRE_FAILURE" and blocking == 0:
+                raise RawProductFinalizationError(
+                    f"CALIBRE_FAILURE has zero blocking violations at line {line}"
+                )
             if terminal not in {
                 "CALIBRE_FAILURE",
                 "ANALYTICAL_FAILURE",
@@ -466,6 +550,7 @@ def _audit_attempt_ledger(
             if terminal not in {
                 "INCOMPLETE_FREQUENCY_FAILURE",
                 "S4P_PARSING_FAILURE",
+                "S_TO_Z_FAILURE",
                 "FEATURE_EXTRACTION_FAILURE",
                 "ACCEPTED",
             } and _truthy(row["fresh_real_emx"]):
@@ -473,6 +558,8 @@ def _audit_attempt_ledger(
                     f"pre-S4P terminal stage is incorrectly marked fresh_real_emx at line {line}"
                 )
             attempt_count += 1
+            attempt_ids.add(attempt_id)
+            attempt_id_to_geometry_sha[attempt_id] = geometry_sha
             funnel[FUNNEL_STAGE_BY_TERMINAL[terminal]] += 1
 
             if terminal != "ACCEPTED":
@@ -480,6 +567,7 @@ def _audit_attempt_ledger(
                     raise RawProductFinalizationError(
                         f"failed attempt has accepted_sequence at line {line}"
                     )
+                rejected.append(row)
                 continue
             if not _truthy(row["fresh_real_emx"]):
                 raise RawProductFinalizationError(f"accepted attempt is not fresh real EMX at line {line}")
@@ -490,10 +578,8 @@ def _audit_attempt_ledger(
                 expected_phase = phase_for_accepted_sequence(sequence)
             except ValueError as exc:
                 raise RawProductFinalizationError(f"invalid accepted sequence at line {line}: {exc}") from exc
-            if row["campaign_phase"] != expected_phase:
+            if phase != expected_phase:
                 raise RawProductFinalizationError(f"campaign phase mismatch at line {line}")
-            if row["acquisition_source"] not in ACQUISITION_SOURCES_BY_PHASE[expected_phase]:
-                raise RawProductFinalizationError(f"acquisition source mismatch at line {line}")
             if geometry_id in accepted_geometry_ids or geometry_sha in accepted_geometry_hashes:
                 raise RawProductFinalizationError(f"duplicate accepted canonical geometry at line {line}")
             accepted_geometry_ids.add(geometry_id)
@@ -519,9 +605,11 @@ def _audit_attempt_ledger(
         raise RawProductFinalizationError("attempt ledger terminal partition does not close")
     return AttemptLedgerAudit(
         accepted=tuple(accepted),
+        rejected=tuple(rejected),
         funnel_counts=dict(funnel),
         attempt_count=attempt_count,
         unique_geometry_count=len(geometry_sha_to_id),
+        retry_count=retry_count,
     )
 
 
@@ -543,6 +631,7 @@ def _audit_conditional_evidence(
     if terminal in {
         "INCOMPLETE_FREQUENCY_FAILURE",
         "S4P_PARSING_FAILURE",
+        "S_TO_Z_FAILURE",
         "FEATURE_EXTRACTION_FAILURE",
         "ACCEPTED",
     }:
@@ -574,6 +663,7 @@ def _audit_conditional_evidence(
         "EMX_FAILURE",
         "INCOMPLETE_FREQUENCY_FAILURE",
         "S4P_PARSING_FAILURE",
+        "S_TO_Z_FAILURE",
         "FEATURE_EXTRACTION_FAILURE",
         "ACCEPTED",
     }:
@@ -588,6 +678,7 @@ def _audit_terminal_s4p(row: Mapping[str, str], *, terminal: str, line: int) -> 
     if terminal not in {
         "INCOMPLETE_FREQUENCY_FAILURE",
         "S4P_PARSING_FAILURE",
+        "S_TO_Z_FAILURE",
         "FEATURE_EXTRACTION_FAILURE",
         "ACCEPTED",
     }:
@@ -640,6 +731,27 @@ def _audit_terminal_s4p(row: Mapping[str, str], *, terminal: str, line: int) -> 
         raise RawProductFinalizationError(
             f"post-EMX S4P terminal stage is not marked fresh_real_emx at line {line}"
         )
+    try:
+        z_matrix = touchstone.to_z_parameters()
+    except Exception as exc:  # noqa: BLE001
+        if terminal == "S_TO_Z_FAILURE":
+            return
+        raise RawProductFinalizationError(
+            f"terminal stage {terminal} contradicts S-to-Z failure at line {line}: {exc}"
+        ) from exc
+    z_finite = bool(
+        np.isfinite(z_matrix.real).all() and np.isfinite(z_matrix.imag).all()
+    )
+    if terminal == "S_TO_Z_FAILURE":
+        if z_finite:
+            raise RawProductFinalizationError(
+                f"S_TO_Z_FAILURE artifact yields finite Z parameters at line {line}"
+            )
+        return
+    if not z_finite:
+        raise RawProductFinalizationError(
+            f"terminal stage {terminal} has non-finite Z parameters at line {line}"
+        )
 
 
 def _write_accepted_ledger(path: Path, accepted: Sequence[AcceptedAttempt]) -> None:
@@ -661,6 +773,32 @@ def _write_accepted_ledger(path: Path, accepted: Sequence[AcceptedAttempt]) -> N
     )
 
 
+def _write_rejected_ledger(
+    path: Path, rejected: Sequence[Mapping[str, str]]
+) -> None:
+    fields = [
+        "attempt_id",
+        "retry_of_attempt_id",
+        "geometry_id",
+        "geometry_sha256",
+        "campaign_contract_fingerprint",
+        "campaign_phase",
+        "acquisition_source",
+        "terminal_stage",
+        "calibre_blocking_violations",
+        "frequency_points",
+        "fresh_real_emx",
+        *(f"geom__{name}" for name in GEOMETRY_FIELDS),
+        *ACCEPTANCE_STATUS_FIELDS,
+        *(name for pair in PATH_HASH_FIELDS for name in pair),
+    ]
+    _write_csv(
+        path,
+        fields,
+        ({field: row.get(field, "") for field in fields} for row in rejected),
+    )
+
+
 def _write_artifact_index(path: Path, accepted: Sequence[AcceptedAttempt]) -> None:
     fields = [
         "geometry_id",
@@ -668,16 +806,26 @@ def _write_artifact_index(path: Path, accepted: Sequence[AcceptedAttempt]) -> No
         "campaign_contract_fingerprint",
         "s4p_path",
         "s4p_sha256",
+        "s4p_size_bytes",
+        "port_count",
         "frequency_points",
+        "first_frequency_hz",
+        "last_frequency_hz",
+        "frequency_step_hz",
         "emx_status",
         "calibre_status",
         "calibre_blocking_violations",
     ]
     def rows():
         for item in accepted:
-            row = {field: item.row[field] for field in fields}
+            row = {field: item.row.get(field, "") for field in fields}
             row["s4p_path"] = str(item.s4p_path)
             row["s4p_sha256"] = item.s4p_sha256
+            row["s4p_size_bytes"] = item.s4p_path.stat().st_size
+            row["port_count"] = 4
+            row["first_frequency_hz"] = FREQUENCY_GRID_HZ[0]
+            row["last_frequency_hz"] = FREQUENCY_GRID_HZ[-1]
+            row["frequency_step_hz"] = FREQUENCY_GRID_HZ[1] - FREQUENCY_GRID_HZ[0]
             yield row
 
     _write_csv(path, fields, rows())
@@ -722,14 +870,17 @@ def _validate_and_write_long_features(
     destination_path: Path,
     accepted: Sequence[AcceptedAttempt],
     fingerprint: str,
-) -> int:
+) -> tuple[int, tuple[str, ...]]:
     if not source_path.is_file() or source_path.stat().st_size <= 0:
         raise RawProductFinalizationError(f"long feature source is missing or empty: {source_path}")
     required = {
         "accepted_sequence",
         "geometry_id",
         "geometry_sha256",
+        "campaign_phase",
+        "acquisition_source",
         "campaign_contract_fingerprint",
+        "s4p_sha256",
         "frequency_hz",
         *FEATURE_COLUMNS,
         *VALIDITY_COLUMNS,
@@ -763,7 +914,10 @@ def _validate_and_write_long_features(
             if (
                 row["geometry_id"] != item.geometry_id
                 or row["geometry_sha256"].lower() != item.geometry_sha256
+                or row["campaign_phase"] != item.row["campaign_phase"]
+                or row["acquisition_source"] != item.row["acquisition_source"]
                 or row["campaign_contract_fingerprint"] != fingerprint
+                or row["s4p_sha256"].lower() != item.s4p_sha256
             ):
                 raise RawProductFinalizationError(f"feature identity/fingerprint mismatch at line {line}")
             expected_frequency = FREQUENCY_GRID_HZ[frequency_index]
@@ -780,7 +934,12 @@ def _validate_and_write_long_features(
                     raise RawProductFinalizationError(
                         f"accepted S4P hash changed during feature binding: {item.geometry_id}"
                     )
-                z_single = touchstone.to_z_parameters()
+                try:
+                    z_single = touchstone.to_z_parameters()
+                except Exception as exc:  # noqa: BLE001
+                    raise RawProductFinalizationError(
+                        f"accepted S4P fails S-to-Z conversion: {item.geometry_id}: {exc}"
+                    ) from exc
                 z_diff = single_ended_to_differential_z(z_single)
                 if not (
                     np.isfinite(z_single.real).all()
@@ -815,7 +974,69 @@ def _validate_and_write_long_features(
         raise RawProductFinalizationError(
             f"long feature geometry count mismatch: actual={expected_geometry_index}, expected={len(accepted)}"
         )
-    return feature_count
+    return feature_count, tuple(fieldnames)
+
+
+def _write_feature_manifest(
+    path: Path,
+    *,
+    feature_path: Path,
+    recorded_feature_path: Path,
+    fieldnames: Sequence[str],
+    row_count: int,
+    accepted_count: int,
+    fingerprint: str,
+) -> None:
+    integer_columns = {"accepted_sequence", "frequency_hz"}
+    floating_columns = set(FEATURE_COLUMNS) | set(matrix_columns())
+    boolean_columns = {
+        "finite_values",
+        "positive_primary_resistance",
+        "positive_secondary_resistance",
+        "positive_primary_inductive_reactance",
+        "positive_secondary_inductive_reactance",
+        "below_half_srf",
+        "broadband_descriptor_valid",
+        "strict_lumped_valid",
+        "inside_broad_response_envelope",
+        "inside_literature_practical_panel",
+    }
+
+    def logical_type(name: str) -> str:
+        if name in integer_columns:
+            return "integer"
+        if name in floating_columns:
+            return "float64"
+        if name in boolean_columns:
+            return "boolean"
+        return "string"
+
+    _write_json(
+        path,
+        {
+            "schema": "broadband56_long_feature_manifest_v1",
+            "generated_utc": _utc_now(),
+            "campaign_id": CAMPAIGN_ID,
+            "contract_fingerprint_sha256": fingerprint,
+            "format": "csv",
+            "partition_count": 1,
+            "geometry_count": accepted_count,
+            "frequency_points_per_geometry": len(FREQUENCY_GRID_HZ),
+            "total_row_count": row_count,
+            "columns": [
+                {"name": name, "logical_type": logical_type(name)} for name in fieldnames
+            ],
+            "partitions": [
+                {
+                    **_file_evidence(
+                        feature_path,
+                        recorded_path=recorded_feature_path,
+                    ),
+                    "row_count": row_count,
+                }
+            ],
+        },
+    )
 
 
 def _audit_bound_feature_row(
@@ -845,62 +1066,95 @@ def _audit_bound_feature_row(
     lp_h = float(z11.imag / omega)
     ls_h = float(z22.imag / omega)
     mutual_h = float(z21.imag / omega)
-    denom = math.sqrt(max(abs(lp_h * ls_h), 1.0e-30))
-    signed_k = mutual_h / denom
-    qp = _safe_ratio(z11.imag, z11.real, line=line, name="qp")
-    qs = _safe_ratio(z22.imag, z22.real, line=line, name="qs")
-    if abs(lp_h) <= 1.0e-30:
-        raise RawProductFinalizationError(f"cannot derive Ls/Lp at line {line}")
+    inductance_product = abs(lp_h * ls_h)
+    signed_k = (
+        mutual_h / math.sqrt(inductance_product)
+        if inductance_product > 1.0e-30
+        else math.nan
+    )
+    qp = _derived_ratio(z11.imag, z11.real)
+    qs = _derived_ratio(z22.imag, z22.real)
+    qmin = min(qp, qs) if math.isfinite(qp) and math.isfinite(qs) else math.nan
+    ls_over_lp = _derived_ratio(ls_h, lp_h)
     expected_features = {
+        "lp_h": lp_h,
+        "ls_h": ls_h,
         "lp_nh": lp_h * 1.0e9,
         "ls_nh": ls_h * 1.0e9,
         "qp": qp,
         "qs": qs,
-        "qmin": min(qp, qs),
+        "qmin": qmin,
         "mutual_inductance_h": mutual_h,
         "signed_k": signed_k,
         "k_abs": abs(signed_k),
-        "ls_over_lp": ls_h / lp_h,
+        "ls_over_lp": ls_over_lp,
         "xp_ohm": omega * lp_h,
         "xs_ohm": omega * ls_h,
     }
     actual_features = {
-        name: _as_float(row.get(name), f"line {line} {name}") for name in FEATURE_COLUMNS
+        name: _as_float_allow_nonfinite(row.get(name), f"line {line} {name}")
+        for name in FEATURE_COLUMNS
     }
     for name, expected in expected_features.items():
         _require_close(actual_features[name], expected, line=line, name=name)
 
-    broadband = _as_bool(row.get("broadband_descriptor_valid"), f"line {line} broadband validity")
+    finite_expected = bool(
+        np.isfinite(s_matrix.real).all()
+        and np.isfinite(s_matrix.imag).all()
+        and np.isfinite(z_matrix.real).all()
+        and np.isfinite(z_matrix.imag).all()
+        and all(math.isfinite(value) for value in expected_features.values())
+    )
+    expected_flags = {
+        "finite_values": finite_expected,
+        "positive_primary_resistance": z11.real > 0.0,
+        "positive_secondary_resistance": z22.real > 0.0,
+        "positive_primary_inductive_reactance": z11.imag > 0.0,
+        "positive_secondary_inductive_reactance": z22.imag > 0.0,
+    }
+    for name, expected in expected_flags.items():
+        actual = _as_bool(row.get(name), f"line {line} {name}")
+        if actual is not expected:
+            raise RawProductFinalizationError(
+                f"{name} contradicts S/Z values at line {line}"
+            )
+
+    broadband = _as_bool(
+        row.get("broadband_descriptor_valid"), f"line {line} broadband validity"
+    )
     strict = _as_bool(row.get("strict_lumped_valid"), f"line {line} strict validity")
+    below_half_srf = _as_bool(row.get("below_half_srf"), f"line {line} below-half-SRF")
     broad_inside = _as_bool(
         row.get("inside_broad_response_envelope"), f"line {line} broad envelope"
     )
     practical_inside = _as_bool(
         row.get("inside_literature_practical_panel"), f"line {line} practical panel"
     )
-    if strict and not broadband:
-        raise RawProductFinalizationError(
-            f"strict_lumped_valid is true while broadband_descriptor_valid is false at line {line}"
-        )
+    terminal_statuses: dict[str, str] = {}
     for label, value in (
         ("SRF", row.get("srf_status")),
         ("passivity", row.get("passivity_status")),
         ("reciprocity", row.get("reciprocity_status")),
+        ("extraction continuity", row.get("extraction_continuity_status")),
     ):
         normalized = str(value or "").strip().upper()
         if normalized in {"", "NOT_RUN", "UNKNOWN", "PENDING"}:
             raise RawProductFinalizationError(
                 f"{label} audit status is not terminal at line {line}"
             )
-    descriptor_numeric_conditions = (
-        z11.real > 0.0
-        and z22.real > 0.0
-        and z11.imag > 0.0
-        and z22.imag > 0.0
+        terminal_statuses[label] = normalized
+    broadband_expected = bool(
+        all(expected_flags.values())
+        and terminal_statuses["extraction continuity"] == "PASS"
     )
-    if broadband and not descriptor_numeric_conditions:
+    if broadband is not broadband_expected:
         raise RawProductFinalizationError(
-            f"broadband_descriptor_valid contradicts winding R/X signs at line {line}"
+            f"broadband_descriptor_valid contradicts audited validity flags at line {line}"
+        )
+    strict_expected = broadband_expected and below_half_srf
+    if strict is not strict_expected:
+        raise RawProductFinalizationError(
+            f"strict_lumped_valid contradicts broadband/below-half-SRF status at line {line}"
         )
 
     broad_expected = (
@@ -1021,6 +1275,13 @@ def _as_float(value: Any, label: str) -> float:
     return number
 
 
+def _as_float_allow_nonfinite(value: Any, label: str) -> float:
+    try:
+        return float(value)
+    except (TypeError, ValueError) as exc:
+        raise RawProductFinalizationError(f"{label} is not numeric: {value!r}") from exc
+
+
 def _as_bool(value: Any, label: str) -> bool:
     normalized = str(value).strip().lower()
     if normalized in {"true", "1", "yes"}:
@@ -1034,20 +1295,25 @@ def _truthy(value: Any) -> bool:
     return str(value).strip().lower() in {"true", "1", "yes"}
 
 
-def _safe_ratio(numerator: float, denominator: float, *, line: int, name: str) -> float:
+def _derived_ratio(numerator: float, denominator: float) -> float:
     if abs(float(denominator)) <= 1.0e-18:
-        raise RawProductFinalizationError(f"cannot derive finite {name} at line {line}")
+        return math.nan
     value = float(numerator) / float(denominator)
-    if not math.isfinite(value):
-        raise RawProductFinalizationError(f"derived {name} is NaN/Inf at line {line}")
-    return value
+    return value if math.isfinite(value) else math.nan
 
 
 def _require_close(actual: float, expected: float, *, line: int, name: str) -> None:
-    if not math.isclose(actual, expected, rel_tol=1.0e-8, abs_tol=1.0e-10):
-        raise RawProductFinalizationError(
-            f"S4P-bound value mismatch at line {line}: {name}, actual={actual:.17g}, expected={expected:.17g}"
-        )
+    if math.isnan(expected):
+        if math.isnan(actual):
+            return
+    elif math.isinf(expected):
+        if actual == expected:
+            return
+    elif math.isclose(actual, expected, rel_tol=1.0e-8, abs_tol=1.0e-10):
+        return
+    raise RawProductFinalizationError(
+        f"S4P-bound value mismatch at line {line}: {name}, actual={actual:.17g}, expected={expected:.17g}"
+    )
 
 
 def _utc_now() -> str:
