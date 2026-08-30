@@ -1,0 +1,42 @@
+{
+  "schema": "rfic_transformer.broadband56_v2_public_safe_golden_authorization_status.v1",
+  "generated_utc": "2026-08-30T16:34:34Z",
+  "overall_status": "PASS",
+  "decision": "APPROVE_RESOURCE_LICENSE_GATE_AND_ONE_GOLDEN_ONLY",
+  "branch": "codex/broadband56-balanced200k-v2",
+  "campaign_id": "broadband56_real_emx_balanced200k_tsmc65_v2",
+  "contract_fingerprint_sha256": "f86a00efbf7756b7421b863bbb16c340db6b423640f63a3257d46c1af49eb55e",
+  "approved_candidate": {
+    "path": "docs/research/BROADBAND56_V2_GOLDEN_AUTHORIZATION_CANDIDATE_20260830.json",
+    "sha256": "655a490c027a5aa96412ac982891123e17250412d90819f52d5cb8e17a082965",
+    "exact_sha256_reverification": "PASS"
+  },
+  "approval": {
+    "approved_by": "Yufeng Wang, project owner and project leader",
+    "approved_utc": "2026-08-30T16:09:24Z",
+    "approval_source": "CURRENT_CODEX_THREAD_EXPLICIT_PROJECT_OWNER_INSTRUCTION",
+    "private_receipt_path_published": false,
+    "private_receipt_sha256": "ff0fe7cece01c0c130a46b82d7014c7e212b307015a163f61c78dc458f37059a",
+    "private_receipt_size_bytes": 7325,
+    "private_receipt_generated_utc": "2026-08-30T16:11:28+00:00",
+    "receipt_checks_passed": 22,
+    "receipt_checks_failed": 0
+  },
+  "authorization_boundary": {
+    "fresh_read_only_resource_and_license_gate": true,
+    "one_golden_geometry_only_if_every_gate_passes": true,
+    "simulator_geometry_limit": 1,
+    "stop_after_one_golden_receipt_regardless_of_result": true,
+    "pilot_32": false,
+    "pilot_1000": false,
+    "queue": false,
+    "supervisor": false,
+    "phase_a": false,
+    "phase_b": false,
+    "phase_c": false,
+    "campaign_200k": false
+  },
+  "execution_effect": "AUTHORIZATION_RECORDED_ONLY",
+  "simulator_action_taken": false,
+  "private_paths_or_license_details_published": false
+}

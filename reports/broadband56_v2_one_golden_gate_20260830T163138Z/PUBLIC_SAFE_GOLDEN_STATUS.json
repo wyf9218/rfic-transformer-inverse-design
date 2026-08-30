@@ -1,0 +1,73 @@
+{
+  "schema": "rfic_transformer.broadband56_v2_public_safe_golden_status.v1",
+  "generated_utc": "2026-08-30T16:34:34Z",
+  "overall_status": "WAITING_FOR_RESOURCE",
+  "decision": "NO_SIMULATOR_ACTION_LOAD_GATE_WAIT",
+  "branch": "codex/broadband56-balanced200k-v2",
+  "campaign_id": "broadband56_real_emx_balanced200k_tsmc65_v2",
+  "contract_fingerprint_sha256": "f86a00efbf7756b7421b863bbb16c340db6b423640f63a3257d46c1af49eb55e",
+  "candidate_sha256": "655a490c027a5aa96412ac982891123e17250412d90819f52d5cb8e17a082965",
+  "authorization": {
+    "overall_status": "PASS",
+    "decision": "APPROVE_RESOURCE_LICENSE_GATE_AND_ONE_GOLDEN_ONLY",
+    "private_receipt_path_published": false,
+    "private_receipt_sha256": "ff0fe7cece01c0c130a46b82d7014c7e212b307015a163f61c78dc458f37059a",
+    "receipt_checks_passed": 22,
+    "receipt_checks_failed": 0
+  },
+  "resource_gate": {
+    "overall_status": "WAIT",
+    "decision": "PREPARED_WAITING_FOR_RESOURCE",
+    "private_snapshot_path_published": false,
+    "private_receipt_path_published": false,
+    "private_receipt_sha256": "0ca53bde8ba8200a4217f3ae000acdefebd66fd5fe112751fef8b205ee21f5d9",
+    "private_receipt_size_bytes": 7288,
+    "snapshot_captured_utc": "2026-08-30T16:31:40+00:00",
+    "snapshot_valid_until_utc": "2026-08-30T16:46:40+00:00",
+    "checks_passed": 39,
+    "checks_failed": 1,
+    "failed_checks": [
+      "load_gate"
+    ]
+  },
+  "fresh_gate_results": {
+    "candidate_contract_preparation_and_authorization_identity": "PASS",
+    "runtime_and_private_configuration_identity": "PASS_FROM_PREPARATION_AND_FRESH_HASH_RECHECK",
+    "load_gate": "WAIT",
+    "observed_load_1m": 225.8837890625,
+    "conservative_load_limit": 40.0,
+    "memory_gate": "PASS",
+    "storage_gate": "PASS",
+    "cadence_license_availability": "PASS_READ_ONLY_NO_CHECKOUT",
+    "calibre_license_availability": "PASS_READ_ONLY_NO_CHECKOUT",
+    "emx_license_availability": "PASS_READ_ONLY_NO_CHECKOUT",
+    "process_isolation": "PASS",
+    "output_path_noncollision": "PASS",
+    "duplicate_supervisor_count": 0,
+    "duplicate_queue_count": 0,
+    "conflicting_solver_process_count": 0
+  },
+  "golden_execution": {
+    "golden_geometries": 0,
+    "golden_run_root_created": false,
+    "analytical_gate": "NOT_RUN",
+    "topology_gate": "NOT_RUN",
+    "cadence": "NOT_RUN",
+    "calibre": "NOT_RUN",
+    "emx": "NOT_RUN",
+    "touchstone_ports": null,
+    "frequency_points": null,
+    "first_frequency_ghz": null,
+    "last_frequency_ghz": null,
+    "feature_rows": null,
+    "golden_receipt": null
+  },
+  "mandatory_stop_compliance": {
+    "continued_to_second_golden": false,
+    "continued_to_pilot": false,
+    "continued_to_queue_or_campaign": false,
+    "simulator_action_taken": false
+  },
+  "private_paths_pdk_proc_gds_s4p_license_details_or_hostnames_published": false,
+  "blocker": "The fresh MARS one-minute load exceeded the conservative launch limit, so the authorized golden sample was not started."
+}
