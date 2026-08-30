@@ -1,6 +1,6 @@
 {
   "schema": "rfic_transformer.broadband56_v2_public_safe_capacity_wait_status.v1",
-  "generated_utc": "2026-08-30T18:34:09Z",
+  "generated_utc": "2026-08-30T18:39:09Z",
   "overall_status": "WAITING_FOR_CAPACITY",
   "decision": "NO_SIMULATOR_ACTION_RESOURCE_GATE_WAIT",
   "branch": "codex/broadband56-balanced200k-v2",
@@ -53,12 +53,15 @@
   },
   "latest_supervisor_observation": {
     "read_utc": "2026-08-30T18:30:46Z",
+    "snapshot_captured_utc": "2026-08-30T18:30:31+00:00",
+    "private_snapshot_sha256": "2909d1d88b2ab9308948e923157c4bfaea5c83f1bed9bbc1db1bd2f83df6c1ed",
     "check_index": 2,
     "overall_status": "WAITING_FOR_CAPACITY",
     "resource_gate": "WAIT",
     "raw_load1": 227.59619140625,
     "normalized_load1": 1.1853968302408855,
     "normalized_load5": 1.1709696451822917,
+    "available_memory_fraction": 0.4351155610379567,
     "iowait_percent": 0.0003474831362090459,
     "license_gate": "PASS_READ_ONLY_NO_CHECKOUT",
     "active_simulator_jobs": 0,
@@ -71,7 +74,7 @@
     "private_state_sha256": "829aef8a981493e93da7670ceaf657d3831b8ba5b9259316f94318344a1f6d5a"
   },
   "project_account_process_attribution": {
-    "read_utc": "2026-08-30T18:33:00Z",
+    "read_utc_minute": "2026-08-30T18:33Z",
     "aggregate_cpu_percent_excluding_sampling_process": 2.0,
     "emx_process_count": 0,
     "calibre_process_count": 0,
