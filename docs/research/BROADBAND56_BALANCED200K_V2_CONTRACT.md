@@ -128,6 +128,15 @@ simulator work must remain forbidden.
   before atomically writing the five required CSVs and a SHA-closed receipt.
   Proxy values, mixed fingerprints, altered evidence, duplicate accepted
   geometry, and partial feature blocks leave no official output directory.
+- `scripts/build_broadband56_v2_private_backend_identity.py` and
+  `scripts/verify_broadband56_v2_private_backend_identity.py`:
+  execution-free, no-clobber identity boundary for the private production
+  backend. The builder hashes every required public script and private runtime,
+  requires distinct historical PASS receipts, binds the preparation evidence,
+  and emits shell-free stage argv whose first token is the exact executable
+  production backend. The verifier independently rehashes every named file.
+  Both the exact56 QA CLI and its imported calculation module are separate
+  required roles. Neither command launches a simulator, queue, or supervisor.
 - `scripts/run_broadband56_exact_audited_gds_emx.py` and
   `rfic_transformer_inverse_design/campaigns/broadband56_exact_gds_emx.py`:
   hash-bound, no-clobber bridge from one exact zero-blocking Calibre GDS to

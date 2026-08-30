@@ -1,0 +1,79 @@
+{
+  "schema": "rfic_transformer.broadband56_v2_private_backend_manifest_builder_status.v1",
+  "generated_utc": "2026-08-30T23:29:21Z",
+  "overall_status": "PASS",
+  "decision": "PUBLIC_IDENTITY_BUILDER_READY_PRIVATE_MARS_BUILD_NOT_AUTHORIZED",
+  "campaign_id": "broadband56_real_emx_balanced200k_tsmc65_v2",
+  "scientific_contract_fingerprint_sha256": "f86a00efbf7756b7421b863bbb16c340db6b423640f63a3257d46c1af49eb55e",
+  "branch": "codex/broadband56-balanced200k-v2",
+  "scope": "PUBLIC_SAFE_IDENTITY_ONLY_CONTROL_PLANE",
+  "artifacts": {
+    "private_backend_identity_builder": {
+      "path": "scripts/build_broadband56_v2_private_backend_identity.py",
+      "sha256": "043a30732ceb06e9e00a20fef8115f9a3e177d0afd1609f337a7e32a42e5321e"
+    },
+    "adversarial_tests": {
+      "path": "tests/test_build_broadband56_v2_private_backend_identity.py",
+      "sha256": "bda77d555ab83565b0a73c698c21e5866512b654fe206ec114f1b89336646756"
+    },
+    "campaign_contract": {
+      "path": "docs/research/BROADBAND56_BALANCED200K_V2_CONTRACT.md",
+      "sha256": "38f43ff2447abe6740e9874570cb72fd929a55aa11e8a2c9c65eeac4d96ea826"
+    }
+  },
+  "completed_checks": {
+    "all_required_script_roles_path_size_sha_bound": true,
+    "all_required_runtime_roles_path_size_sha_bound": true,
+    "production_stage_backend_executable_required": true,
+    "emx_wrapper_executable_required": true,
+    "exact56_qa_cli_and_module_bound_as_distinct_roles": true,
+    "preparation_receipt_and_configuration_sha_bindings_required": true,
+    "at_least_two_distinct_historical_backend_pass_receipts_required": true,
+    "historical_gds_identity_pass_receipt_required": true,
+    "all_stage_argv_shell_free_and_exact_backend_first": true,
+    "manifest_self_validated_before_use": true,
+    "output_no_clobber": true,
+    "simulator_action_taken": false
+  },
+  "test_evidence": {
+    "builder_adversarial_tests": {
+      "status": "PASS",
+      "passed": 8,
+      "failed": 0
+    },
+    "backend_authorization_exact_gds_s4p_focused_tests": {
+      "status": "PASS",
+      "passed": 46,
+      "failed": 0
+    },
+    "all_broadband56_tests": {
+      "status": "PASS",
+      "passed": 175,
+      "failed": 0
+    }
+  },
+  "runtime_boundary": {
+    "owner_stop_status_path": "docs/research/BROADBAND56_V2_OWNER_STOP_STATUS_20260830T195649Z.json",
+    "owner_stop_status_sha256": "b0d97d1266a138c3726e6e923b901f4cffc3ff126d3a453e6e80bd9c09e38431",
+    "owner_stop_reversed": false,
+    "latest_mars_check": "READ_ONLY_HIGH_LOAD_CURRENT_ACCOUNT_HAS_ZERO_CAMPAIGN_OR_EDA_PROCESSES",
+    "private_backend_manifest_created_on_mars": false,
+    "private_backend_verification_receipt_created": false,
+    "queue_or_supervisor_launched": false,
+    "cadence_action_taken": false,
+    "calibre_action_taken": false,
+    "emx_action_taken": false,
+    "simulator_action_taken": false,
+    "private_paths_published": false
+  },
+  "pending_private_evidence": {
+    "mars_repository_update_to_current_public_commit": "WAITING_FOR_EXPLICIT_OWNER_STOP_REVERSAL",
+    "private_backend_identity_manifest_v2": "NOT_CREATED",
+    "private_backend_identity_verification_receipt": "NOT_CREATED",
+    "production_stage_backend_identity": "REVERIFY_ON_MARS",
+    "private_runtime_identities": "REVERIFY_ON_MARS",
+    "final_full_campaign_candidate": "NOT_CREATED",
+    "full_campaign_authorization_receipt": "NOT_PRESENT"
+  },
+  "next_legal_action": "After the project owner explicitly reverses the owner-stop, update the stale private MARS repository without launching simulators, run this builder in a new no-clobber private directory, run the independent identity verifier, and create the sole FULL_CAMPAIGN candidate only if every exact identity passes."
+}
