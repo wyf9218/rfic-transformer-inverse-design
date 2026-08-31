@@ -1,0 +1,40 @@
+{
+  "schema": "rfic_transformer.broadband56_v2_public_safe_owner_restart_status.v1",
+  "generated_utc": "2026-08-31T03:51:28Z",
+  "campaign_id": "broadband56_real_emx_balanced200k_tsmc65_v2",
+  "contract_fingerprint_sha256": "f86a00efbf7756b7421b863bbb16c340db6b423640f63a3257d46c1af49eb55e",
+  "overall_status": "PASS",
+  "decision": "REVOKE_AUGUST_30_OWNER_STOP_FOR_THIS_REAL_EMX_DATA_CAMPAIGN_ONLY",
+  "authorization_scope": "REAL_EMX_DATA_GENERATION_CAMPAIGN_ONLY",
+  "owner_stop": {
+    "restart_authorized": true,
+    "unrelated_jobs_remain_stopped": true,
+    "superseded_status_path": "docs/research/BROADBAND56_V2_OWNER_STOP_STATUS_20260830T195649Z.json",
+    "superseded_status_sha256": "b0d97d1266a138c3726e6e923b901f4cffc3ff126d3a453e6e80bd9c09e38431"
+  },
+  "owner_instruction": {
+    "reference": "Current Codex-thread authoritative GOAL MODE instruction explicitly revoking the August 30 owner-stop for this real-EMX data-generation campaign only.",
+    "instruction_sha256": "ab245cc63bada2d869a28278487ccbd1018322080082e79db9fb7a88ccf07b1d"
+  },
+  "neural_network_training": {
+    "final_forward_training_authorized": false,
+    "inverse_training_authorized": false,
+    "tandem_mlp_training_authorized": false,
+    "model_comparison_training_authorized": false,
+    "temporary_acquisition_surrogate_condition": "ONLY_AFTER_PILOT_1000_PASS_FOR_CANDIDATE_RANKING_NEVER_LABELS"
+  },
+  "runtime_action": {
+    "mars_live_state": "REVERIFY_AFTER_REMOTE_DESKTOP_UNLOCK",
+    "queue_registration_action_taken": false,
+    "cadence_action_taken": false,
+    "calibre_action_taken": false,
+    "emx_action_taken": false,
+    "simulator_action_taken": false
+  },
+  "next_legal_action": "Unlock the existing MARS desktop session, perform fresh read-only process, lock, queue, resource, license, storage, and private-runtime identity checks, then register one zero-simulator durable queue and create the single exact-SHA FULL_CAMPAIGN candidate.",
+  "limitations": [
+    "This receipt revokes the prior owner-stop only; it is not a FULL_CAMPAIGN authorization receipt.",
+    "No simulator, queue, supervisor, or training action is authorized merely by this public-safe status.",
+    "The live MARS process and resource state must be reverified before queue registration or launch."
+  ]
+}
