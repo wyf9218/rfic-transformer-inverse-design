@@ -31,6 +31,7 @@ from .broadband56_balanced200k import (
 )
 from .broadband56_capacity_policy import SCIENTIFIC_CONTRACT_FINGERPRINT
 from .broadband56_full_campaign_authorization import (
+    ATTEMPT_REPLENISHMENT_CONTRACT,
     FULL_CAMPAIGN_APPROVAL_SCHEMA,
     FULL_CAMPAIGN_APPROVAL_SCOPE,
     FULL_CAMPAIGN_PASS_DECISION,
@@ -306,8 +307,18 @@ def _validate_full_campaign_receipt(receipt: Mapping[str, Any]) -> None:
         "approved_by": bool(str(receipt.get("approved_by") or "").strip()),
         "emx_authorized": receipt.get("emx_authorized_within_current_stage") is True,
         "campaign_200k_authorized": receipt.get("campaign_200k_authorized") is True,
-        "simulator_geometry_limit": receipt.get("simulator_geometry_limit")
+        "accepted_geometry_target": receipt.get("accepted_geometry_target")
         == TARGET_ACCEPTED_GEOMETRIES,
+        "replenished_attempt_rounds_authorized": receipt.get(
+            "replenished_attempt_rounds_authorized"
+        )
+        is True,
+        "attempt_replenishment_contract": receipt.get(
+            "attempt_replenishment_contract"
+        )
+        == ATTEMPT_REPLENISHMENT_CONTRACT,
+        "legacy_simulator_geometry_limit_absent": "simulator_geometry_limit"
+        not in receipt,
     }
     _require_checks(checks, "FULL_CAMPAIGN authorization")
 

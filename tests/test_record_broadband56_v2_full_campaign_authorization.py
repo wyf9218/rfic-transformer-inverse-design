@@ -15,6 +15,7 @@ from rfic_transformer_inverse_design.campaigns.broadband56_capacity_policy impor
     STAGES,
 )
 from rfic_transformer_inverse_design.campaigns.broadband56_full_campaign_authorization import (
+    ATTEMPT_REPLENISHMENT_CONTRACT,
     FULL_CAMPAIGN_CANDIDATE_EFFECT,
     FULL_CAMPAIGN_CANDIDATE_SCHEMA,
     FULL_CAMPAIGN_PENDING_STATUS,
@@ -250,6 +251,7 @@ def _valid_fixture(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> dict[str,
                 "geometry_contract": expected_geometry_contract(),
                 "port_and_grounding_contract": PORT_AND_GROUNDING_CONTRACT,
                 "label_contract": LABEL_CONTRACT,
+                "attempt_replenishment_contract": ATTEMPT_REPLENISHMENT_CONTRACT,
                 "terminal_contract": expected_terminal_contract(),
                 "ordered_stages": expected_stage_contract(),
             },
@@ -313,6 +315,7 @@ def _valid_fixture(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> dict[str,
         "terminal_contract": expected_terminal_contract(),
         "geometry_contract": expected_geometry_contract(),
         "port_and_grounding_contract": PORT_AND_GROUNDING_CONTRACT,
+        "attempt_replenishment_contract": ATTEMPT_REPLENISHMENT_CONTRACT,
         "unchanged_physical_contract_items": list(UNCHANGED_PHYSICAL_CONTRACT_ITEMS),
         "ordered_stages": expected_stage_contract(),
         "stage_transition_contract": {
@@ -522,7 +525,10 @@ def test_records_exact_full_campaign_approval(
     assert receipt["decision"] == "APPROVE_FULL_CAMPAIGN"
     assert receipt["authorization_scope"] == "FULL_CAMPAIGN"
     assert receipt["campaign_200k_authorized"] is True
-    assert receipt["simulator_geometry_limit"] == 200_000
+    assert receipt["accepted_geometry_target"] == 200_000
+    assert receipt["replenished_attempt_rounds_authorized"] is True
+    assert receipt["attempt_replenishment_contract"] == ATTEMPT_REPLENISHMENT_CONTRACT
+    assert "simulator_geometry_limit" not in receipt
     assert receipt["expected_feature_rows"] == 11_200_000
     assert receipt["execution_effect"] == "NONE_RECORD_ONLY"
     assert all(item["pass"] for item in receipt["checks"])

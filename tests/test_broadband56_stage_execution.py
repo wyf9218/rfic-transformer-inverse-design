@@ -80,6 +80,18 @@ def test_exact_execution_profile_passes() -> None:
     assert validate_execution_profile(profile, backend_manifest=manifest) == []
 
 
+def test_adaptive_role_order_matches_contract_runbook() -> None:
+    roles = expected_stage_role_order("PHASE_B")
+
+    assert roles[:5] == (
+        "acquisition_ensemble_trainer",
+        "adaptive_round_stager",
+        "adaptive_candidate_pool_builder",
+        "acquisition_predictor",
+        "adaptive_candidate_selector",
+    )
+
+
 def test_rejects_reordered_role_chain() -> None:
     profile, manifest = _profile()
     commands = profile["stages"]["GOLDEN"]["commands"]

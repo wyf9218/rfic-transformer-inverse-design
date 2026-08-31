@@ -34,6 +34,7 @@ from rfic_transformer_inverse_design.campaigns.broadband56_capacity_policy impor
     stage_for_progress,
 )
 from rfic_transformer_inverse_design.campaigns.broadband56_full_campaign_authorization import (  # noqa: E402
+    ATTEMPT_REPLENISHMENT_CONTRACT,
     FULL_CAMPAIGN_APPROVAL_SCHEMA,
     FULL_CAMPAIGN_APPROVAL_SCOPE,
     FULL_CAMPAIGN_PASS_DECISION,
@@ -247,6 +248,7 @@ def _validate_receipt(receipt: Mapping[str, Any], *, backend_sha256: str) -> Non
         "calibre_authorized_within_current_stage",
         "emx_authorized_within_current_stage",
         "campaign_200k_authorized",
+        "replenished_attempt_rounds_authorized",
     )
     if not (
         receipt.get("schema") == FULL_CAMPAIGN_APPROVAL_SCHEMA
@@ -256,7 +258,10 @@ def _validate_receipt(receipt: Mapping[str, Any], *, backend_sha256: str) -> Non
         and receipt.get("campaign_id") == CAMPAIGN_ID
         and receipt.get("contract_fingerprint_sha256") == SCIENTIFIC_CONTRACT_FINGERPRINT
         and receipt.get("backend_identity_manifest", {}).get("sha256") == backend_sha256
-        and receipt.get("simulator_geometry_limit") == TARGET_ACCEPTED_GEOMETRIES
+        and receipt.get("accepted_geometry_target") == TARGET_ACCEPTED_GEOMETRIES
+        and receipt.get("attempt_replenishment_contract")
+        == ATTEMPT_REPLENISHMENT_CONTRACT
+        and "simulator_geometry_limit" not in receipt
         and all(receipt.get(field) is True for field in required_true)
     ):
         raise StageLauncherError("FULL_CAMPAIGN receipt identity or permission mismatch")

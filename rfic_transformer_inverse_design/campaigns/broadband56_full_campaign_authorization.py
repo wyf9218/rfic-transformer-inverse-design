@@ -31,10 +31,10 @@ from .broadband56_capacity_policy import (
 
 
 FULL_CAMPAIGN_CANDIDATE_SCHEMA = (
-    "rfic_transformer.broadband56_v2_full_campaign_authorization_candidate.v5"
+    "rfic_transformer.broadband56_v2_full_campaign_authorization_candidate.v6"
 )
 FULL_CAMPAIGN_APPROVAL_SCHEMA = (
-    "rfic_transformer.broadband56_v2_full_campaign_authorization_approval.v5"
+    "rfic_transformer.broadband56_v2_full_campaign_authorization_approval.v6"
 )
 FULL_CAMPAIGN_APPROVAL_SCOPE = "FULL_CAMPAIGN"
 FULL_CAMPAIGN_PENDING_STATUS = "PENDING_EXPLICIT_PROJECT_OWNER_SHA256_APPROVAL"
@@ -42,7 +42,7 @@ FULL_CAMPAIGN_PASS_DECISION = "APPROVE_FULL_CAMPAIGN"
 FULL_CAMPAIGN_FAIL_DECISION = "DO_NOT_AUTHORIZE_FULL_CAMPAIGN"
 FULL_CAMPAIGN_CANDIDATE_EFFECT = "NONE_REQUEST_ONLY"
 FULL_CAMPAIGN_RECEIPT_EFFECT = "NONE_RECORD_ONLY"
-PRODUCTION_BACKEND_ID = "MARS_CADENCE_GDS_IDENTITY_CALIBRE_EMX_S4P_QA_V5"
+PRODUCTION_BACKEND_ID = "MARS_CADENCE_GDS_IDENTITY_CALIBRE_EMX_S4P_QA_V6"
 SHA256_PATTERN = re.compile(r"[0-9a-f]{64}")
 
 UNCHANGED_PHYSICAL_CONTRACT_ITEMS = (
@@ -90,6 +90,18 @@ PORT_AND_GROUNDING_CONTRACT = {
     "port_order": ["P001", "P002", "P003", "P004"],
     "port_ground_reference": "shield",
     "ground_unused_s8p_ports": False,
+}
+
+ATTEMPT_REPLENISHMENT_CONTRACT = {
+    "submitted_count_is_not_accepted_count": True,
+    "failed_or_duplicate_attempts_do_not_consume_accepted_target": True,
+    "continue_sampling_until_exact_accepted_target": True,
+    "bounded_replenished_shards_required": True,
+    "bounded_pending_work_window_required": True,
+    "resource_gate_before_every_attempt_shard": True,
+    "no_clobber_attempt_paths_required": True,
+    "retry_failed_shards_only": True,
+    "accepted_count_overshoot_forbidden": True,
 }
 
 STAGE_ORDER = tuple(stage.name for stage in STAGES)
@@ -276,6 +288,12 @@ def validate_full_campaign_candidate(
         "port_and_grounding_contract",
         candidate.get("port_and_grounding_contract"),
         PORT_AND_GROUNDING_CONTRACT,
+    )
+    _require_equal(
+        errors,
+        "attempt_replenishment_contract",
+        candidate.get("attempt_replenishment_contract"),
+        ATTEMPT_REPLENISHMENT_CONTRACT,
     )
     _require_equal(
         errors,

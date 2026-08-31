@@ -18,6 +18,7 @@ from rfic_transformer_inverse_design.campaigns.broadband56_capacity_policy impor
     STAGES,
 )
 from rfic_transformer_inverse_design.campaigns.broadband56_full_campaign_authorization import (
+    ATTEMPT_REPLENISHMENT_CONTRACT,
     FULL_CAMPAIGN_APPROVAL_SCHEMA,
     FULL_CAMPAIGN_PASS_DECISION,
     PORT_AND_GROUNDING_CONTRACT,
@@ -346,6 +347,7 @@ receipt = {
             "geometry_contract": expected_geometry_contract(),
             "port_and_grounding_contract": PORT_AND_GROUNDING_CONTRACT,
             "label_contract": LABEL_CONTRACT,
+            "attempt_replenishment_contract": ATTEMPT_REPLENISHMENT_CONTRACT,
             "terminal_contract": expected_terminal_contract(),
             "ordered_stages": expected_stage_contract(),
         },
@@ -384,7 +386,9 @@ receipt = {
         "campaign_id": CAMPAIGN_ID,
         "contract_fingerprint_sha256": SCIENTIFIC_CONTRACT_FINGERPRINT,
         "backend_identity_manifest": {"sha256": _sha(backend_path)},
-        "simulator_geometry_limit": 200_000,
+        "accepted_geometry_target": 200_000,
+        "replenished_attempt_rounds_authorized": True,
+        "attempt_replenishment_contract": ATTEMPT_REPLENISHMENT_CONTRACT,
         "automatic_ordered_stage_execution_authorized": True,
         "cadence_authorized_within_current_stage": True,
         "calibre_authorized_within_current_stage": True,

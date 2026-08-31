@@ -348,6 +348,9 @@ def _load_candidates(
     rows, fields = _read_csv(path)
     required = {
         "candidate_id",
+        "candidate_id_sha256",
+        "candidate_geometry_identity_sha256",
+        "candidate_identity_schema",
         "campaign_id",
         "campaign_contract_fingerprint",
         "geometry_sha256",
@@ -384,6 +387,20 @@ def _load_candidates(
         candidate_id = str(row.get("candidate_id") or "").strip()
         if not candidate_id:
             errors.append(f"line {row_index}: candidate_id is missing")
+        if str(row.get("candidate_id_sha256") or "").lower() != digest:
+            errors.append(f"line {row_index}: candidate_id_sha256 mismatch")
+        if (
+            str(row.get("candidate_geometry_identity_sha256") or "").lower()
+            != digest
+        ):
+            errors.append(
+                f"line {row_index}: candidate_geometry_identity_sha256 mismatch"
+            )
+        if (
+            str(row.get("candidate_identity_schema") or "")
+            != "canonical_10d_geometry_sha256_alias_v1"
+        ):
+            errors.append(f"line {row_index}: candidate identity schema mismatch")
         if require_predictions and str(row.get("ensemble_receipt_sha256") or "").lower() != ensemble_sha:
             errors.append(f"line {row_index}: ensemble receipt SHA mismatch")
         matrix.append(values)

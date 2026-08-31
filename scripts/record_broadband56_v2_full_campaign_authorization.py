@@ -31,6 +31,7 @@ from rfic_transformer_inverse_design.campaigns.broadband56_capacity_policy impor
     STAGES,
 )
 from rfic_transformer_inverse_design.campaigns.broadband56_full_campaign_authorization import (  # noqa: E402
+    ATTEMPT_REPLENISHMENT_CONTRACT,
     FULL_CAMPAIGN_APPROVAL_SCHEMA,
     FULL_CAMPAIGN_APPROVAL_SCOPE,
     FULL_CAMPAIGN_FAIL_DECISION,
@@ -325,7 +326,9 @@ def main(argv: list[str] | None = None) -> int:
         "phase_b_authorized": passed,
         "phase_c_authorized": passed,
         "campaign_200k_authorized": passed,
-        "simulator_geometry_limit": TARGET_ACCEPTED_GEOMETRIES if passed else 0,
+        "accepted_geometry_target": TARGET_ACCEPTED_GEOMETRIES if passed else 0,
+        "replenished_attempt_rounds_authorized": passed,
+        "attempt_replenishment_contract": ATTEMPT_REPLENISHMENT_CONTRACT,
         "expected_feature_rows": EXPECTED_FEATURE_ROWS if passed else 0,
         "ordered_stages": [stage.name for stage in STAGES],
         "checks": checks,

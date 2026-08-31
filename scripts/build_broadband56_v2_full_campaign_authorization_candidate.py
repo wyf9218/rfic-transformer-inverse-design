@@ -30,6 +30,7 @@ from rfic_transformer_inverse_design.campaigns.broadband56_capacity_policy impor
     SCIENTIFIC_CONTRACT_FINGERPRINT,
 )
 from rfic_transformer_inverse_design.campaigns.broadband56_full_campaign_authorization import (  # noqa: E402
+    ATTEMPT_REPLENISHMENT_CONTRACT,
     FULL_CAMPAIGN_APPROVAL_SCOPE,
     FULL_CAMPAIGN_CANDIDATE_EFFECT,
     FULL_CAMPAIGN_CANDIDATE_SCHEMA,
@@ -161,6 +162,7 @@ def build_candidate(args: argparse.Namespace, *, out_dir: Path) -> dict[str, str
         "terminal_contract": expected_terminal_contract(),
         "geometry_contract": expected_geometry_contract(),
         "port_and_grounding_contract": PORT_AND_GROUNDING_CONTRACT,
+        "attempt_replenishment_contract": ATTEMPT_REPLENISHMENT_CONTRACT,
         "unchanged_physical_contract_items": list(UNCHANGED_PHYSICAL_CONTRACT_ITEMS),
         "ordered_stages": expected_stage_contract(),
         "stage_transition_contract": {

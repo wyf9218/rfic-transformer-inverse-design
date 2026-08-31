@@ -61,11 +61,11 @@ TERMINAL_RESULT_PATH_FIELDS = (
 
 SPACE_FILLING_ACQUISITION_ROLES = ("phase_a_queue_builder",)
 ADAPTIVE_ACQUISITION_ROLES = (
-    "adaptive_candidate_pool_builder",
     "acquisition_ensemble_trainer",
+    "adaptive_round_stager",
+    "adaptive_candidate_pool_builder",
     "acquisition_predictor",
     "adaptive_candidate_selector",
-    "adaptive_round_stager",
 )
 PHYSICAL_PIPELINE_ROLES = (
     "cadence_streamout_runner",

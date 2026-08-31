@@ -25,6 +25,7 @@ from rfic_transformer_inverse_design.campaigns.broadband56_exact_gds_emx import 
     run_exact_audited_gds_fresh_emx,
 )
 from rfic_transformer_inverse_design.campaigns.broadband56_full_campaign_authorization import (
+    ATTEMPT_REPLENISHMENT_CONTRACT,
     FULL_CAMPAIGN_APPROVAL_SCHEMA,
     FULL_CAMPAIGN_APPROVAL_SCOPE,
     FULL_CAMPAIGN_PASS_DECISION,
@@ -327,7 +328,9 @@ def _build_fixture(root: Path) -> dict[str, object]:
                 "approved_by": "Test project owner",
                 "emx_authorized_within_current_stage": True,
                 "campaign_200k_authorized": True,
-                "simulator_geometry_limit": TARGET_ACCEPTED_GEOMETRIES,
+                "accepted_geometry_target": TARGET_ACCEPTED_GEOMETRIES,
+                "replenished_attempt_rounds_authorized": True,
+                "attempt_replenishment_contract": ATTEMPT_REPLENISHMENT_CONTRACT,
             },
             indent=2,
         ),

@@ -38,6 +38,7 @@ from rfic_transformer_inverse_design.campaigns.broadband56_capacity_policy impor
     stage_for_progress,
 )
 from rfic_transformer_inverse_design.campaigns.broadband56_full_campaign_authorization import (  # noqa: E402
+    ATTEMPT_REPLENISHMENT_CONTRACT,
     FULL_CAMPAIGN_APPROVAL_SCHEMA,
     FULL_CAMPAIGN_APPROVAL_SCOPE,
     FULL_CAMPAIGN_PASS_DECISION,
@@ -276,8 +277,12 @@ def run_stage_backend(
     stage_profile = profile["stages"][stage]
     commands = stage_profile["commands"]
     expected_roles = expected_stage_role_order(stage)
+    if len(commands) != len(expected_roles):
+        raise ProductionStageBackendError(
+            "stage command count differs from the exact role order"
+        )
     for index, (role, command_profile) in enumerate(
-        zip(expected_roles, commands, strict=True),
+        zip(expected_roles, commands),
         start=1,
     ):
         role_out_dir = out_dir / "roles" / f"{index:02d}_{role}"
@@ -661,6 +666,7 @@ def _validate_authorization(receipt: Mapping[str, Any], *, backend_sha256: str) 
         "calibre_authorized_within_current_stage",
         "emx_authorized_within_current_stage",
         "campaign_200k_authorized",
+        "replenished_attempt_rounds_authorized",
     )
     if not (
         receipt.get("schema") == FULL_CAMPAIGN_APPROVAL_SCHEMA
@@ -672,7 +678,10 @@ def _validate_authorization(receipt: Mapping[str, Any], *, backend_sha256: str) 
         == SCIENTIFIC_CONTRACT_FINGERPRINT
         and receipt.get("backend_identity_manifest", {}).get("sha256")
         == backend_sha256
-        and receipt.get("simulator_geometry_limit") == TARGET_ACCEPTED_GEOMETRIES
+        and receipt.get("accepted_geometry_target") == TARGET_ACCEPTED_GEOMETRIES
+        and receipt.get("attempt_replenishment_contract")
+        == ATTEMPT_REPLENISHMENT_CONTRACT
+        and "simulator_geometry_limit" not in receipt
         and all(receipt.get(field) is True for field in required_true)
     ):
         raise ProductionStageBackendError(

@@ -765,6 +765,9 @@ def test_phase_a_queue_is_exact_10d_unique_and_label_free(tmp_path: Path) -> Non
     for row in rows:
         geometry = {name: row[f"geom__{name}"] for name in GEOMETRY_FIELDS}
         assert row["geometry_sha256"] == canonical_geometry_sha256(geometry)
+        assert row["candidate_id_sha256"] == row["geometry_sha256"]
+        assert row["candidate_geometry_identity_sha256"] == row["geometry_sha256"]
+        assert row["candidate_identity_schema"] == "canonical_10d_geometry_sha256_alias_v1"
         assert row["analytical_status"] == "PASS"
         assert row["topology_status"] == "PASS"
         assert row["top_metal_drc_status"] == "PASS"

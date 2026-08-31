@@ -18,6 +18,7 @@ from typing import Any
 from .broadband56_balanced200k import CAMPAIGN_ID
 from .broadband56_capacity_policy import SCIENTIFIC_CONTRACT_FINGERPRINT, STAGES
 from .broadband56_full_campaign_authorization import (
+    ATTEMPT_REPLENISHMENT_CONTRACT,
     PORT_AND_GROUNDING_CONTRACT,
     PRODUCTION_BACKEND_ID,
     expected_frequency_contract,
@@ -32,7 +33,7 @@ from .broadband56_stage_execution import (
 )
 
 
-BACKEND_MANIFEST_SCHEMA = "rfic_transformer.broadband56_v2_private_backend_identity.v7"
+BACKEND_MANIFEST_SCHEMA = "rfic_transformer.broadband56_v2_private_backend_identity.v8"
 BACKEND_VERIFICATION_SCHEMA = (
     "rfic_transformer.broadband56_v2_private_backend_identity_verification.v3"
 )
@@ -291,6 +292,12 @@ def validate_backend_identity_manifest(
             "scientific_contract.label_contract",
             scientific.get("label_contract"),
             LABEL_CONTRACT,
+        )
+        _require_equal(
+            errors,
+            "scientific_contract.attempt_replenishment_contract",
+            scientific.get("attempt_replenishment_contract"),
+            ATTEMPT_REPLENISHMENT_CONTRACT,
         )
         _require_equal(
             errors,

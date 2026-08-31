@@ -34,6 +34,7 @@ from rfic_transformer_inverse_design.campaigns.broadband56_capacity_policy impor
     POLICY_APPROVAL_SCOPE,
     RESOURCE_POLICY,
     SCIENTIFIC_CONTRACT_FINGERPRINT,
+    STAGE_BY_NAME,
     adaptive_concurrency,
     evaluate_capacity_snapshot,
 )
@@ -191,6 +192,8 @@ def audit_capacity_resource_gate(
         gate_field: bool(status == "PASS" and approval.get(approval_field) is True)
         for gate_field, approval_field in PERMISSION_FIELDS.items()
     }
+    stage_target = STAGE_BY_NAME[str(stage).upper()].cumulative_target
+    stage_remaining_accepted = stage_target - int(current_accepted)
     resource_checks = [
         _check(name, passed, metrics if name.startswith("normalized") else passed)
         for name, passed in decision["checks"].items()
@@ -230,7 +233,10 @@ def audit_capacity_resource_gate(
         "concurrency_action": concurrency["action"],
         "concurrency_reasons": concurrency["reasons"],
         **permissions,
-        "simulator_geometry_limit": TARGET_ACCEPTED_GEOMETRIES if status == "PASS" else 0,
+        "accepted_geometry_target": TARGET_ACCEPTED_GEOMETRIES,
+        "stage_remaining_accepted": stage_remaining_accepted,
+        "max_new_candidate_attempts": stage_remaining_accepted if status == "PASS" else 0,
+        "submitted_count_is_not_accepted_count": True,
         "snapshot_age_seconds": age_seconds,
         "snapshot_captured_utc": captured.isoformat(timespec="seconds") if captured else None,
         "max_snapshot_age_seconds": max_age_seconds,

@@ -209,10 +209,14 @@ def _candidate_row(
     sampling_seed: int,
     drc: dict[str, Any],
 ) -> dict[str, Any]:
+    candidate_id = f"b56v2_{geometry_hash[:16]}"
     row: dict[str, Any] = {
         "selection_rank": index + 1,
         "candidate_index": index,
-        "candidate_id": f"b56v2_{geometry_hash[:16]}",
+        "candidate_id": candidate_id,
+        "candidate_id_sha256": geometry_hash,
+        "candidate_geometry_identity_sha256": geometry_hash,
+        "candidate_identity_schema": "canonical_10d_geometry_sha256_alias_v1",
         "campaign_id": CAMPAIGN_ID,
         "campaign_contract_fingerprint": fingerprint,
         "campaign_phase": phase,

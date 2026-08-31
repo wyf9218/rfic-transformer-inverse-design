@@ -12,6 +12,7 @@ from rfic_transformer_inverse_design.campaigns.broadband56_capacity_policy impor
     STAGES,
 )
 from rfic_transformer_inverse_design.campaigns.broadband56_full_campaign_authorization import (
+    ATTEMPT_REPLENISHMENT_CONTRACT,
     PORT_AND_GROUNDING_CONTRACT,
     PRODUCTION_BACKEND_ID,
     expected_frequency_contract,
@@ -154,6 +155,7 @@ def _backend_manifest(tmp_path: Path) -> tuple[dict, Path]:
             "geometry_contract": expected_geometry_contract(),
             "port_and_grounding_contract": PORT_AND_GROUNDING_CONTRACT,
             "label_contract": LABEL_CONTRACT,
+            "attempt_replenishment_contract": ATTEMPT_REPLENISHMENT_CONTRACT,
             "terminal_contract": expected_terminal_contract(),
             "ordered_stages": expected_stage_contract(),
         },
