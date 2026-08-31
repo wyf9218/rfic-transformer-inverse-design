@@ -60,6 +60,12 @@ from rfic_transformer_inverse_design.campaigns.broadband56_production_backend im
     validate_backend_identity_manifest,
     validate_stage_receipt,
 )
+from rfic_transformer_inverse_design.campaigns.broadband56_stage_progress import (  # noqa: E402
+    STAGE_PROGRESS_DECISION,
+    accepted_after_progress,
+    validate_stage_progress_chain,
+    validate_stage_progress_receipt,
+)
 
 
 QUEUE_SCHEMA = "rfic_transformer.broadband56_v2_mars_queue_entry.v1"
@@ -182,13 +188,13 @@ def run_controller(args: argparse.Namespace, *, campaign_root: Path) -> dict[str
             )
             snapshot = _read_json(snapshot_path, "capacity snapshot")
             stage_receipts = _ordered_stage_receipts(campaign_root)
-            current_accepted = (
+            base_accepted = (
                 int(stage_receipts[-1]["accepted_unique_geometries"])
                 if stage_receipts
                 else 0
             )
             stage = stage_for_progress(
-                current_accepted=current_accepted,
+                current_accepted=base_accepted,
                 stage_receipts=stage_receipts,
             )
             active_jobs = _active_simulator_jobs(snapshot)
@@ -197,6 +203,24 @@ def run_controller(args: argparse.Namespace, *, campaign_root: Path) -> dict[str
                 candidate_sha256=evidence["candidate"]["sha256"],
                 backend_manifest_sha256=evidence["backend_identity_manifest"]["sha256"],
             )
+            progress_paths = list(
+                (campaign_root / "stages").glob("*/STAGE_PROGRESS_RECEIPT.json")
+            )
+            if receipt is None and progress_paths:
+                raise ControllerError(
+                    "stage progress exists without an exact FULL_CAMPAIGN receipt"
+                )
+            current_accepted = base_accepted
+            if receipt is not None and stage != "COMPLETE":
+                current_accepted = _current_accepted_with_progress(
+                    campaign_root=campaign_root,
+                    stage=stage,
+                    base_accepted=base_accepted,
+                    backend_manifest_sha256=evidence["backend_identity_manifest"]["sha256"],
+                    authorization_receipt_sha256=_sha256(
+                        inputs["full_campaign_receipt"]
+                    ),
+                )
 
             resource_gate = "NOT_RUN"
             failed_checks: list[str] = []
@@ -267,7 +291,7 @@ def run_controller(args: argparse.Namespace, *, campaign_root: Path) -> dict[str
                         source=inputs["full_campaign_receipt"],
                         campaign_root=campaign_root,
                     )
-                    _run_stage_launcher(
+                    launch_result = _run_stage_launcher(
                         inputs=inputs,
                         campaign_root=campaign_root,
                         stage=stage,
@@ -276,6 +300,18 @@ def run_controller(args: argparse.Namespace, *, campaign_root: Path) -> dict[str
                         check_index=check_index,
                     )
                     launch_taken = True
+                    if launch_result.get("decision") == STAGE_PROGRESS_DECISION:
+                        current_accepted = int(launch_result["accepted_after"])
+                        lifecycle = "QUEUED_WAITING_FOR_CAPACITY"
+                    else:
+                        current_accepted = int(
+                            launch_result["accepted_unique_geometries"]
+                        )
+                        if current_accepted == TARGET_ACCEPTED_GEOMETRIES:
+                            lifecycle = "COMPLETE_200K"
+                            stage = "COMPLETE"
+                        else:
+                            lifecycle = "QUEUED_WAITING_FOR_CAPACITY"
 
             latest = _state_payload(
                 lifecycle=lifecycle,
@@ -816,9 +852,25 @@ def _run_stage_launcher(
     concurrency: int,
     snapshot_path: Path,
     check_index: int,
-) -> None:
+) -> dict[str, Any]:
     stage_spec = STAGE_BY_NAME[stage]
     prior_records = _ordered_stage_receipt_records(campaign_root)
+    base_accepted = (
+        int(prior_records[-1][1]["accepted_unique_geometries"])
+        if prior_records
+        else 0
+    )
+    prior_progress_records = _ordered_stage_progress_receipt_records(
+        campaign_root,
+        stage=stage,
+    )
+    current_accepted = _current_accepted_with_progress(
+        campaign_root=campaign_root,
+        stage=stage,
+        base_accepted=base_accepted,
+        backend_manifest_sha256=_sha256(inputs["backend_identity_manifest"]),
+        authorization_receipt_sha256=_sha256(inputs["full_campaign_receipt"]),
+    )
     out_dir = campaign_root / "stages" / f"{check_index:06d}_{stage.lower()}_{_stamp()}"
     command = [
         str(inputs["python_bin"]),
@@ -853,6 +905,35 @@ def _run_stage_launcher(
     if result.returncode != 0:
         raise ControllerError(f"{stage} launcher exited with return code {result.returncode}")
     receipt_path = out_dir / "STAGE_RECEIPT.json"
+    progress_path = out_dir / "STAGE_PROGRESS_RECEIPT.json"
+    if receipt_path.is_file() == progress_path.is_file():
+        raise ControllerError(
+            f"{stage} launcher must produce exactly one stage or progress receipt"
+        )
+    if progress_path.is_file():
+        progress = _read_json(progress_path, f"{stage} stage progress receipt")
+        progress_errors = validate_stage_progress_receipt(
+            progress,
+            stage=stage,
+            attempt_index=len(prior_progress_records) + 1,
+            accepted_before=current_accepted,
+            prior_progress_receipt_sha256=(
+                _sha256(prior_progress_records[-1][0])
+                if prior_progress_records
+                else None
+            ),
+            backend_manifest_sha256=_sha256(inputs["backend_identity_manifest"]),
+            authorization_receipt_sha256=_sha256(inputs["full_campaign_receipt"]),
+            verify_artifacts=True,
+            artifact_root=progress_path.parent,
+        )
+        if progress_errors:
+            raise ControllerError(
+                f"{stage} launcher did not produce exact progress evidence: "
+                + "; ".join(progress_errors[:8])
+            )
+        return progress
+
     receipt = _read_json(receipt_path, f"{stage} stage receipt")
     receipt_errors = validate_stage_receipt(
         receipt,
@@ -871,6 +952,7 @@ def _run_stage_launcher(
             f"{stage} launcher did not produce the exact PASS stage receipt: "
             + "; ".join(receipt_errors[:8])
         )
+    return receipt
 
 
 def _ordered_stage_receipts(campaign_root: Path) -> list[dict[str, Any]]:
@@ -886,6 +968,48 @@ def _ordered_stage_receipt_records(
         if value.get("overall_status") == "PASS":
             records.append((path, value))
     return records
+
+
+def _ordered_stage_progress_receipt_records(
+    campaign_root: Path,
+    *,
+    stage: str,
+) -> list[tuple[Path, dict[str, Any]]]:
+    records: list[tuple[Path, dict[str, Any]]] = []
+    for path in sorted(
+        (campaign_root / "stages").glob("*/STAGE_PROGRESS_RECEIPT.json")
+    ):
+        value = _read_json(path, "stage progress receipt")
+        if str(value.get("stage") or "").upper() == str(stage).upper():
+            records.append((path, value))
+    return records
+
+
+def _current_accepted_with_progress(
+    *,
+    campaign_root: Path,
+    stage: str,
+    base_accepted: int,
+    backend_manifest_sha256: str,
+    authorization_receipt_sha256: str,
+) -> int:
+    records = _ordered_stage_progress_receipt_records(
+        campaign_root,
+        stage=stage,
+    )
+    errors = validate_stage_progress_chain(
+        records,
+        stage=stage,
+        base_accepted=base_accepted,
+        backend_manifest_sha256=backend_manifest_sha256,
+        authorization_receipt_sha256=authorization_receipt_sha256,
+        verify_artifacts=True,
+    )
+    if errors:
+        raise ControllerError(
+            "stage progress chain failed validation: " + "; ".join(errors[:10])
+        )
+    return accepted_after_progress(records, base_accepted=base_accepted)
 
 
 def _materialize_authorization_receipt(*, source: Path, campaign_root: Path) -> None:

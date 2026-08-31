@@ -323,12 +323,50 @@ def test_exact_authorization_and_safe_capacity_invoke_one_stage(
     monkeypatch.setattr(MODULE, "_write_resource_gate", lambda **_kwargs: gate)
     monkeypatch.setattr(MODULE, "_materialize_authorization_receipt", lambda **_kwargs: None)
     launches = []
-    monkeypatch.setattr(MODULE, "_run_stage_launcher", lambda **kwargs: launches.append(kwargs["stage"]))
+    monkeypatch.setattr(
+        MODULE,
+        "_run_stage_launcher",
+        lambda **kwargs: (
+            launches.append(kwargs["stage"])
+            or {"decision": "ACCEPT_STAGE", "accepted_unique_geometries": 1}
+        ),
+    )
 
     state = MODULE.run_controller(args, campaign_root=campaign_root)
 
     assert launches == ["GOLDEN"]
-    assert state["overall_status"] == "GOLDEN_RUNNING"
+    assert state["overall_status"] == "QUEUED_WAITING_FOR_CAPACITY"
+    assert state["current_accepted"] == 1
+
+
+def test_nonterminal_attempt_returns_to_capacity_queue_without_stage_pass(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    args, campaign_root = _install_common(
+        tmp_path, monkeypatch, wait=False, authorized=True
+    )
+    gate = _write(tmp_path / "gate.json", {"overall_status": "PASS"})
+    monkeypatch.setattr(MODULE, "_write_resource_gate", lambda **_kwargs: gate)
+    monkeypatch.setattr(
+        MODULE,
+        "_materialize_authorization_receipt",
+        lambda **_kwargs: None,
+    )
+    monkeypatch.setattr(
+        MODULE,
+        "_run_stage_launcher",
+        lambda **_kwargs: {
+            "decision": "CONTINUE_SAMPLING",
+            "accepted_after": 0,
+        },
+    )
+
+    state = MODULE.run_controller(args, campaign_root=campaign_root)
+
+    assert state["overall_status"] == "QUEUED_WAITING_FOR_CAPACITY"
+    assert state["current_stage"] == "GOLDEN"
+    assert state["current_accepted"] == 0
+    assert state["simulator_action_taken_on_this_iteration"] is True
     assert state["simulator_action_taken_on_this_iteration"] is True
     assert state["current_concurrency"] == 1
 

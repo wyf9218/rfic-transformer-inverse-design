@@ -119,6 +119,7 @@ def _parse_args(argv: list[str] | None) -> argparse.Namespace:
     parser.add_argument("--exact-audited-gds-emx-module-sha256", required=True)
     parser.add_argument("--full-band-s4p-qa-builder-sha256", required=True)
     parser.add_argument("--full-band-s4p-qa-module-sha256", required=True)
+    parser.add_argument("--stage-attempt-finalizer-sha256", required=True)
     parser.add_argument("--raw-products-finalizer-sha256", required=True)
     parser.add_argument("--checkpoint-auditor-sha256", required=True)
     parser.add_argument("--campaign-histories-finalizer-sha256", required=True)
@@ -264,6 +265,7 @@ def build_candidate(args: argparse.Namespace, *, out_dir: Path) -> dict[str, str
             ),
             "full_band_s4p_qa_builder_sha256": args.full_band_s4p_qa_builder_sha256,
             "full_band_s4p_qa_module_sha256": args.full_band_s4p_qa_module_sha256,
+            "stage_attempt_finalizer_sha256": args.stage_attempt_finalizer_sha256,
             "raw_products_finalizer_sha256": args.raw_products_finalizer_sha256,
             "checkpoint_auditor_sha256": args.checkpoint_auditor_sha256,
             "campaign_histories_finalizer_sha256": (

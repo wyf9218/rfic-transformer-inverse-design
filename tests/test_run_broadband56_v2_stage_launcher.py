@@ -152,6 +152,7 @@ def _fixture(tmp_path: Path) -> argparse.Namespace:
 import argparse
 import hashlib
 import json
+import os
 import sys
 from pathlib import Path
 
@@ -178,6 +179,61 @@ args = parser.parse_args()
 out = Path(args.backend_out_dir)
 out.mkdir(parents=True)
 rows = args.cumulative_target * 56
+
+if os.environ.get('MOCK_LAUNCHER_PROGRESS') == '1':
+    artifacts = {}
+    for role in (
+        'attempt_ledger', 'accepted_geometry_increment',
+        'rejected_geometry_increment', 'exact_gds_emx_receipt_index',
+        's4p_artifact_index', 'long_features', 'failure_funnel',
+    ):
+        path = out / 'attempt_artifacts' / (role + '.csv')
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(role + '\\n', encoding='utf-8')
+        artifacts[role] = {
+            'path': str(path.resolve()), 'sha256': sha(path),
+            'size_bytes': path.stat().st_size,
+        }
+    failure = {field: 0 for field in FAILURE_ACCOUNTING_FIELDS}
+    failure['raw_geometry_candidates'] = 1
+    failure['analytical_failures'] = 1
+    progress = {
+        'schema': 'rfic_transformer.broadband56_v2_stage_progress_receipt.v1',
+        'overall_status': 'INCOMPLETE',
+        'decision': 'CONTINUE_SAMPLING',
+        'campaign_id': CAMPAIGN_ID,
+        'contract_fingerprint_sha256': SCIENTIFIC_CONTRACT_FINGERPRINT,
+        'backend_id': PRODUCTION_BACKEND_ID,
+        'stage': args.stage,
+        'attempt_index': 1,
+        'cumulative_target': args.cumulative_target,
+        'accepted_before': 0,
+        'accepted_this_attempt': 0,
+        'accepted_after': 0,
+        'remaining_after': args.cumulative_target,
+        'raw_candidates_this_attempt': 1,
+        'terminal_attempts_this_attempt': 1,
+        'prior_progress_receipt_sha256': None,
+        'backend_identity_manifest_sha256': sha(Path(args.backend_identity_manifest)),
+        'full_campaign_authorization_receipt_sha256': sha(Path(args.full_campaign_receipt)),
+        'safeguards': {
+            'proxy_label_count': 0, 'historical_label_count': 0,
+            'interpolated_frequency_record_count': 0,
+            'accepted_duplicate_geometry_count': 0,
+            'accepted_blocking_calibre_count': 0,
+            'manual_gds_modification_count': 0,
+            'mixed_contract_fingerprint_count': 0,
+        },
+        'failure_accounting': failure,
+        'artifacts': artifacts,
+        'simulator_action_taken': False,
+        'stage_pass_receipt_created': False,
+        'evidence_preserved': True,
+    }
+    (out / 'STAGE_PROGRESS_RECEIPT.json').write_text(
+        json.dumps(progress) + '\\n', encoding='utf-8'
+    )
+    raise SystemExit(0)
 
 raw_receipt = {
     'schema': 'broadband56_raw_products_receipt_v1',
@@ -419,6 +475,21 @@ def test_launches_hash_bound_backend_and_preserves_exact_receipt(tmp_path: Path)
     assert receipt["stage"] == "GOLDEN"
     assert (out_dir / "STAGE_LAUNCH_AUDIT.json").is_file()
     assert (out_dir / "STAGE_RECEIPT.json").is_file()
+
+
+def test_launcher_preserves_valid_nonterminal_progress(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    args = _fixture(tmp_path)
+    out_dir = Path(args.out_dir)
+    monkeypatch.setenv("MOCK_LAUNCHER_PROGRESS", "1")
+
+    progress = MODULE.launch_stage(args, out_dir=out_dir)
+
+    assert progress["decision"] == "CONTINUE_SAMPLING"
+    assert progress["accepted_after"] == 0
+    assert (out_dir / "STAGE_PROGRESS_RECEIPT.json").is_file()
+    assert not (out_dir / "STAGE_RECEIPT.json").exists()
 
 
 def test_rejects_backend_executable_hash_drift(tmp_path: Path) -> None:

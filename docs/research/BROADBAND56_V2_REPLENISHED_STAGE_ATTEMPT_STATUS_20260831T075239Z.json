@@ -1,0 +1,60 @@
+{
+  "schema": "rfic_transformer.broadband56_v2_public_safe_replenished_stage_attempt_status.v1",
+  "generated_utc": "2026-08-31T07:52:39Z",
+  "overall_status": "PASS",
+  "decision": "REPLENISHED_STAGE_ATTEMPT_CONTROL_CHAIN_VERIFIED",
+  "branch": "codex/broadband56-balanced200k-v2",
+  "base_commit": "5948ebe92397364b14e36a0540f9260a50e9515f",
+  "campaign_id": "broadband56_real_emx_balanced200k_tsmc65_v2",
+  "contract_fingerprint_sha256": "f86a00efbf7756b7421b863bbb16c340db6b423640f63a3257d46c1af49eb55e",
+  "scientific_contract_modified": false,
+  "implemented_controls": {
+    "bounded_attempt_terminal_partition": true,
+    "accepted_count_separate_from_submitted_count": true,
+    "sha_linked_nonterminal_progress_receipts": true,
+    "exact_stage_target_no_overshoot": true,
+    "failed_or_duplicate_attempts_do_not_count": true,
+    "progress_chain_verified_at_backend_launcher_and_controller": true,
+    "terminal_stage_receipt_withheld_until_exact_target": true,
+    "proxy_or_historical_labels_forbidden": true,
+    "simulator_invocation_by_attempt_finalizer": false
+  },
+  "identity_contract_updates": {
+    "stage_execution_profile_schema": "rfic_transformer.broadband56_v2_stage_execution_profile.v2",
+    "command_plan_schema": "rfic_transformer.broadband56_v2_stage_execution_command_plan.v2",
+    "backend_manifest_schema": "rfic_transformer.broadband56_private_backend_identity_manifest.v9",
+    "backend_verification_schema": "rfic_transformer.broadband56_private_backend_verification_receipt.v4",
+    "full_campaign_candidate_schema": "rfic_transformer.broadband56_v2_full_campaign_authorization_candidate.v7",
+    "full_campaign_approval_schema": "rfic_transformer.broadband56_v2_full_campaign_authorization.v7"
+  },
+  "implementation_sha256": {
+    "stage_progress_module": "a98ce5011c9d4d1eb746c15bc65c67a47c75efdd11a2b2cb5bdb7753d0d44ba5",
+    "stage_attempt_finalizer": "cd97736dc1468428817acd655229f05c5b265de90bb4a5d0abbca3381ab122a8",
+    "production_stage_backend": "a51a70a955614745db09e542002b5ddd99103a39f05987a7d5d03c2e9e2a55f8",
+    "stage_launcher": "1cbdc60cd43ed5ebf9555b9a95d2f99f1ef263016aa32f441f1d0d3e799f17de",
+    "authorized_queue_controller": "b3ae46672fa096419ba927cf5f38699833f05e670af26c0e444d0f799b3a75d0"
+  },
+  "verification": {
+    "broadband56_focused_tests": "300 passed, 35 warnings in 23.50s",
+    "stage_attempt_finalizer_tests": "4 passed",
+    "production_backend_tests": "7 passed",
+    "stage_launcher_tests": "4 passed",
+    "authorized_controller_tests": "8 passed",
+    "python_compile": "PASS",
+    "git_diff_check": "PASS"
+  },
+  "remote_campaign_state": {
+    "latest_trusted_capacity_decision": "WAITING_FOR_CAPACITY",
+    "active_simulator_jobs": 0,
+    "accepted_unique_geometries": 0,
+    "full_campaign_authorization_recorded": false,
+    "simulator_action_taken_by_this_change": false
+  },
+  "authorization_boundary": {
+    "capacity_pass_alone_authorizes_launch": false,
+    "exact_full_campaign_sha_approval_required": true,
+    "current_change_authorizes_simulation": false
+  },
+  "next_legal_action": "Bind the real private per-attempt Cadence, Calibre, exact-GDS EMX and exact56 role commands, independently verify the private backend identity, then generate one public-safe exact-SHA FULL_CAMPAIGN candidate while the zero-simulator supervisor continues five-minute capacity checks.",
+  "private_paths_pdk_proc_gds_s4p_license_details_hostnames_or_credentials_published": false
+}

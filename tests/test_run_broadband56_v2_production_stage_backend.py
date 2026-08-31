@@ -116,6 +116,87 @@ if os.environ.get("MOCK_FAIL_ROLE") == args.role:
 if args.role == "exact_audited_gds_emx_runner":
     write(results / "exact_gds_emx_receipt_index.json", {"overall_status": "PASS", "count": args.cumulative_target})
 
+if args.role == "stage_attempt_finalizer":
+    artifact_fields = (
+        "attempt_ledger", "accepted_geometry_increment",
+        "rejected_geometry_increment", "exact_gds_emx_receipt_index",
+        "s4p_artifact_index", "long_features", "failure_funnel",
+    )
+    base_by_stage = {
+        "GOLDEN": 0, "PILOT_32": 1, "PILOT_1000": 32,
+        "PHASE_A": 1000, "PHASE_B": 50000, "PHASE_C": 150000,
+    }
+    if os.environ.get("MOCK_STAGE_SHORTFALL") == "1":
+        context = json.loads(Path(os.environ["BROADBAND56_STAGE_CONTEXT"]).read_text())
+        artifacts = {
+            field: evidence(write(role_out / "attempt_artifacts" / f"{field}.csv", f"{field}\n"))
+            for field in artifact_fields
+        }
+        funnel = {field: 0 for field in FAILURE_FIELDS}
+        funnel["raw_geometry_candidates"] = 1
+        funnel["analytical_failures"] = 1
+        progress = {
+            "schema": "rfic_transformer.broadband56_v2_stage_progress_receipt.v1",
+            "overall_status": "INCOMPLETE",
+            "decision": "CONTINUE_SAMPLING",
+            "campaign_id": CAMPAIGN_ID,
+            "contract_fingerprint_sha256": FINGERPRINT,
+            "backend_id": "MARS_CADENCE_GDS_IDENTITY_CALIBRE_EMX_S4P_QA_V7",
+            "stage": args.stage,
+            "attempt_index": 1,
+            "cumulative_target": args.cumulative_target,
+            "accepted_before": base_by_stage[args.stage],
+            "accepted_this_attempt": 0,
+            "accepted_after": base_by_stage[args.stage],
+            "remaining_after": args.cumulative_target - base_by_stage[args.stage],
+            "raw_candidates_this_attempt": 1,
+            "terminal_attempts_this_attempt": 1,
+            "prior_progress_receipt_sha256": None,
+            "backend_identity_manifest_sha256": context["backend_identity_manifest"]["sha256"],
+            "full_campaign_authorization_receipt_sha256": context["full_campaign_authorization_receipt"]["sha256"],
+            "safeguards": {
+                "proxy_label_count": 0, "historical_label_count": 0,
+                "interpolated_frequency_record_count": 0,
+                "accepted_duplicate_geometry_count": 0,
+                "accepted_blocking_calibre_count": 0,
+                "manual_gds_modification_count": 0,
+                "mixed_contract_fingerprint_count": 0,
+            },
+            "failure_accounting": funnel,
+            "artifacts": artifacts,
+            "simulator_action_taken": False,
+            "stage_pass_receipt_created": False,
+            "evidence_preserved": True,
+        }
+        progress_path = write(role_out / "STAGE_PROGRESS_RECEIPT.json", progress)
+        role_receipt.update({
+            "schema": "rfic_transformer.broadband56_v2_stage_attempt_finalizer.v1",
+            "decision": "CONTINUE_SAMPLING",
+            "accepted_before": base_by_stage[args.stage],
+            "accepted_after": base_by_stage[args.stage],
+            "cumulative_target": args.cumulative_target,
+            "progress_receipt": evidence(progress_path),
+            "cumulative_stage_inputs": None,
+            "simulator_invoked_by_finalizer": False,
+        })
+    else:
+        cumulative = {
+            field: evidence(
+                write(role_out / "cumulative_stage_inputs" / f"{field}.csv", f"{field}\n")
+            )
+            for field in artifact_fields
+        }
+        role_receipt.update({
+            "schema": "rfic_transformer.broadband56_v2_stage_attempt_finalizer.v1",
+            "decision": "STAGE_TARGET_REACHED",
+            "accepted_before": base_by_stage[args.stage],
+            "accepted_after": args.cumulative_target,
+            "cumulative_target": args.cumulative_target,
+            "progress_receipt": None,
+            "cumulative_stage_inputs": cumulative,
+            "simulator_invoked_by_finalizer": False,
+        })
+
 if args.role == "raw_products_finalizer":
     attempt = write(results / "attempt_ledger.jsonl", "attempt\n")
     accepted = write(results / "accepted_geometries.jsonl", "accepted\n")
@@ -496,6 +577,25 @@ def test_checkpoint_count_mismatch_fails_after_mock_chain(
     out = Path(args.backend_out_dir)
     failure = json.loads((out / "BACKEND_FAILURE.json").read_text(encoding="utf-8"))
     assert "parseable row count mismatch" in failure["error"]
+
+
+def test_shortfall_stops_before_terminal_roles_and_preserves_progress(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    args = _fixture(tmp_path)
+    monkeypatch.setenv("MOCK_STAGE_SHORTFALL", "1")
+
+    assert MODULE.main(_argv(args)) == 0
+
+    out = Path(args.backend_out_dir)
+    progress = json.loads(
+        (out / "STAGE_PROGRESS_RECEIPT.json").read_text(encoding="utf-8")
+    )
+    assert progress["decision"] == "CONTINUE_SAMPLING"
+    assert progress["accepted_after"] == 0
+    assert not (out / "STAGE_RECEIPT.json").exists()
+    assert not list((out / "roles").glob("*raw_products_finalizer"))
+    assert not list((out / "roles").glob("*checkpoint_auditor"))
     assert not (out / "STAGE_RECEIPT.json").exists()
 
 

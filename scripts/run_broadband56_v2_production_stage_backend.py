@@ -14,6 +14,7 @@ import argparse
 import hashlib
 import json
 import os
+import shutil
 import subprocess
 import sys
 import time
@@ -64,6 +65,15 @@ from rfic_transformer_inverse_design.campaigns.broadband56_stage_execution impor
     resolve_under,
     validate_execution_profile,
 )
+from rfic_transformer_inverse_design.campaigns.broadband56_stage_progress import (  # noqa: E402
+    STAGE_ATTEMPT_FINALIZER_RECEIPT_SCHEMA,
+    STAGE_ATTEMPT_TARGET_REACHED_DECISION,
+    STAGE_PROGRESS_ARTIFACT_FIELDS,
+    STAGE_PROGRESS_DECISION,
+    accepted_after_progress,
+    validate_stage_progress_chain,
+    validate_stage_progress_receipt,
+)
 
 
 TRACE_SCHEMA = "rfic_transformer.broadband56_v2_stage_execution_trace.v1"
@@ -108,10 +118,16 @@ def main(argv: list[str] | None = None) -> int:
             )
         print(f"overall_status=FAIL\nerror={exc}", file=sys.stderr)
         return 2
-    print("overall_status=PASS")
-    print(f"stage={result['stage']}")
-    print(f"accepted_unique_geometries={result['accepted_unique_geometries']}")
-    print(f"receipt={out_dir / 'STAGE_RECEIPT.json'}")
+    if result.get("decision") == STAGE_PROGRESS_DECISION:
+        print("overall_status=INCOMPLETE")
+        print(f"stage={result['stage']}")
+        print(f"accepted_after={result['accepted_after']}")
+        print(f"receipt={out_dir / 'STAGE_PROGRESS_RECEIPT.json'}")
+    else:
+        print("overall_status=PASS")
+        print(f"stage={result['stage']}")
+        print(f"accepted_unique_geometries={result['accepted_unique_geometries']}")
+        print(f"receipt={out_dir / 'STAGE_RECEIPT.json'}")
     return 0
 
 
@@ -180,19 +196,40 @@ def run_stage_backend(
             + "; ".join(chain_errors[:10])
         )
     prior_receipts = [receipt for _, receipt in prior_records]
-    current_accepted = (
+    base_accepted = (
         int(prior_receipts[-1]["accepted_unique_geometries"])
         if prior_receipts
         else 0
     )
     next_stage = stage_for_progress(
-        current_accepted=current_accepted,
+        current_accepted=base_accepted,
         stage_receipts=prior_receipts,
     )
     if next_stage != stage:
         raise ProductionStageBackendError(
             f"requested stage {stage} is out of order; next legal stage is {next_stage}"
         )
+    progress_records = _ordered_stage_progress_receipt_records(
+        campaign_root,
+        stage=stage,
+    )
+    progress_errors = validate_stage_progress_chain(
+        progress_records,
+        stage=stage,
+        base_accepted=base_accepted,
+        backend_manifest_sha256=backend_sha256,
+        authorization_receipt_sha256=authorization_sha256,
+        verify_artifacts=True,
+    )
+    if progress_errors:
+        raise ProductionStageBackendError(
+            "prior stage progress chain failed validation: "
+            + "; ".join(progress_errors[:10])
+        )
+    current_accepted = accepted_after_progress(
+        progress_records,
+        base_accepted=base_accepted,
+    )
 
     capacity = evaluate_capacity_snapshot(
         snapshot,
@@ -281,6 +318,8 @@ def run_stage_backend(
         raise ProductionStageBackendError(
             "stage command count differs from the exact role order"
         )
+    progress_source_path: Path | None = None
+    progress_receipt: dict[str, Any] | None = None
     for index, (role, command_profile) in enumerate(
         zip(expected_roles, commands),
         start=1,
@@ -362,17 +401,39 @@ def run_stage_backend(
         role_record["simulator_action_taken"] = bool(
             role_receipt.get("simulator_action_taken", False)
         )
+        if role == "stage_attempt_finalizer":
+            decision, candidate_progress_path, candidate_progress = (
+                _validate_stage_attempt_finalizer_receipt(
+                    role_receipt,
+                    role_out_dir=role_out_dir,
+                    backend_out_dir=out_dir,
+                    stage=stage,
+                    current_accepted=current_accepted,
+                    cumulative_target=spec.cumulative_target,
+                    progress_records=progress_records,
+                    backend_manifest_sha256=backend_sha256,
+                    authorization_receipt_sha256=authorization_sha256,
+                )
+            )
+            if decision == STAGE_PROGRESS_DECISION:
+                progress_source_path = candidate_progress_path
+                progress_receipt = candidate_progress
+                break
 
     trace_path = out_dir / "STAGE_EXECUTION_TRACE.json"
     trace = {
         "schema": TRACE_SCHEMA,
         "generated_utc": _utc_now(),
-        "overall_status": "PASS",
+        "overall_status": "INCOMPLETE" if progress_receipt else "PASS",
+        "decision": (
+            STAGE_PROGRESS_DECISION if progress_receipt else "COMPLETE_STAGE_ROLE_CHAIN"
+        ),
         "campaign_id": CAMPAIGN_ID,
         "contract_fingerprint_sha256": SCIENTIFIC_CONTRACT_FINGERPRINT,
         "backend_id": PRODUCTION_BACKEND_ID,
         "stage": stage,
-        "role_order": list(expected_roles),
+        "role_order": [item["role"] for item in completed_roles],
+        "expected_terminal_role_order": list(expected_roles),
         "roles": completed_roles,
         "all_role_return_codes_zero": all(
             item["return_code"] == 0 for item in completed_roles
@@ -402,6 +463,30 @@ def run_stage_backend(
         ),
     }
     _write_json(resource_summary_path, resource_summary)
+
+    if progress_receipt is not None:
+        if progress_source_path is None:
+            raise ProductionStageBackendError("progress receipt path is missing")
+        progress_path = out_dir / "STAGE_PROGRESS_RECEIPT.json"
+        if progress_path.exists():
+            raise ProductionStageBackendError("backend progress receipt path already exists")
+        shutil.copyfile(progress_source_path, progress_path)
+        if _sha256(progress_path) != _sha256(progress_source_path):
+            raise ProductionStageBackendError("copied progress receipt identity drifted")
+        (out_dir / "SHA256SUMS.txt").write_text(
+            "\n".join(
+                f"{_sha256(path)}  {path.name}"
+                for path in (
+                    context_path,
+                    trace_path,
+                    resource_summary_path,
+                    progress_path,
+                )
+            )
+            + "\n",
+            encoding="utf-8",
+        )
+        return progress_receipt
 
     result_paths = {
         field: resolve_under(
@@ -453,6 +538,104 @@ def run_stage_backend(
         encoding="utf-8",
     )
     return receipt
+
+
+def _validate_stage_attempt_finalizer_receipt(
+    receipt: Mapping[str, Any],
+    *,
+    role_out_dir: Path,
+    backend_out_dir: Path,
+    stage: str,
+    current_accepted: int,
+    cumulative_target: int,
+    progress_records: list[tuple[Path, dict[str, Any]]],
+    backend_manifest_sha256: str,
+    authorization_receipt_sha256: str,
+) -> tuple[str, Path | None, dict[str, Any] | None]:
+    if receipt.get("schema") != STAGE_ATTEMPT_FINALIZER_RECEIPT_SCHEMA:
+        raise ProductionStageBackendError("stage-attempt finalizer schema mismatch")
+    if _nonnegative_int(
+        receipt.get("accepted_before"), "stage_attempt.accepted_before"
+    ) != current_accepted:
+        raise ProductionStageBackendError(
+            "stage-attempt finalizer accepted_before mismatch"
+        )
+    accepted_after = _nonnegative_int(
+        receipt.get("accepted_after"), "stage_attempt.accepted_after"
+    )
+    if _nonnegative_int(
+        receipt.get("cumulative_target"), "stage_attempt.cumulative_target"
+    ) != cumulative_target:
+        raise ProductionStageBackendError(
+            "stage-attempt finalizer cumulative target mismatch"
+        )
+    if receipt.get("simulator_invoked_by_finalizer") is not False:
+        raise ProductionStageBackendError(
+            "stage-attempt finalizer must not invoke a simulator"
+        )
+
+    decision = receipt.get("decision")
+    if decision == STAGE_PROGRESS_DECISION:
+        if accepted_after >= cumulative_target:
+            raise ProductionStageBackendError(
+                "nonterminal progress is not strictly below the stage target"
+            )
+        progress_path = _evidence_path(
+            receipt.get("progress_receipt"),
+            label="stage progress receipt",
+            artifact_root=backend_out_dir,
+        )
+        progress = _read_json(progress_path, "stage progress receipt")
+        errors = validate_stage_progress_receipt(
+            progress,
+            stage=stage,
+            attempt_index=len(progress_records) + 1,
+            accepted_before=current_accepted,
+            prior_progress_receipt_sha256=(
+                _sha256(progress_records[-1][0]) if progress_records else None
+            ),
+            backend_manifest_sha256=backend_manifest_sha256,
+            authorization_receipt_sha256=authorization_receipt_sha256,
+            verify_artifacts=True,
+            artifact_root=progress_path.parent,
+        )
+        if errors:
+            raise ProductionStageBackendError(
+                "stage progress receipt failed validation: "
+                + "; ".join(errors[:10])
+            )
+        if receipt.get("cumulative_stage_inputs") is not None:
+            raise ProductionStageBackendError(
+                "nonterminal attempt unexpectedly exposed cumulative inputs"
+            )
+        return STAGE_PROGRESS_DECISION, progress_path, progress
+
+    if decision != STAGE_ATTEMPT_TARGET_REACHED_DECISION:
+        raise ProductionStageBackendError(
+            "stage-attempt finalizer decision is not recognized"
+        )
+    if accepted_after != cumulative_target:
+        raise ProductionStageBackendError(
+            "terminal attempt does not close exactly to the stage target"
+        )
+    if receipt.get("progress_receipt") is not None:
+        raise ProductionStageBackendError(
+            "terminal attempt unexpectedly exposed a progress receipt"
+        )
+    cumulative = receipt.get("cumulative_stage_inputs")
+    if not isinstance(cumulative, Mapping) or set(cumulative) != set(
+        STAGE_PROGRESS_ARTIFACT_FIELDS
+    ):
+        raise ProductionStageBackendError(
+            "terminal attempt cumulative input fields mismatch"
+        )
+    for field in STAGE_PROGRESS_ARTIFACT_FIELDS:
+        _evidence_path(
+            cumulative.get(field),
+            label=f"cumulative stage input {field}",
+            artifact_root=role_out_dir,
+        )
+    return STAGE_ATTEMPT_TARGET_REACHED_DECISION, None, None
 
 
 def _build_stage_receipt(
@@ -760,6 +943,21 @@ def _ordered_stage_receipt_records(
     for path in sorted((campaign_root / "stages").glob("*/STAGE_RECEIPT.json")):
         receipt = _read_json(path, "prior stage receipt")
         if receipt.get("overall_status") == "PASS":
+            records.append((path, receipt))
+    return records
+
+
+def _ordered_stage_progress_receipt_records(
+    campaign_root: Path,
+    *,
+    stage: str,
+) -> list[tuple[Path, dict[str, Any]]]:
+    records: list[tuple[Path, dict[str, Any]]] = []
+    for path in sorted(
+        (campaign_root / "stages").glob("*/STAGE_PROGRESS_RECEIPT.json")
+    ):
+        receipt = _read_json(path, "prior stage progress receipt")
+        if str(receipt.get("stage") or "").upper() == stage:
             records.append((path, receipt))
     return records
 

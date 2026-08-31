@@ -25,8 +25,8 @@ from .broadband56_full_campaign_authorization import PRODUCTION_BACKEND_ID
 
 
 PROFILE_KEY = "broadband56_stage_execution_profile"
-PROFILE_SCHEMA = "rfic_transformer.broadband56_v2_stage_execution_profile.v1"
-COMMAND_PLAN_SCHEMA = "rfic_transformer.broadband56_v2_stage_execution_command_plan.v1"
+PROFILE_SCHEMA = "rfic_transformer.broadband56_v2_stage_execution_profile.v2"
+COMMAND_PLAN_SCHEMA = "rfic_transformer.broadband56_v2_stage_execution_command_plan.v2"
 PROFILE_EXECUTION_MODE = "HASH_BOUND_PYTHON_ROLE_COMMANDS"
 ROLE_RECEIPT_REQUIRED_STATUS = "PASS"
 
@@ -75,6 +75,7 @@ PHYSICAL_PIPELINE_ROLES = (
     "calibre_zero_blocking_receipt_builder",
     "exact_audited_gds_emx_runner",
     "full_band_s4p_qa_builder",
+    "stage_attempt_finalizer",
     "raw_products_finalizer",
     "checkpoint_auditor",
 )

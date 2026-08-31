@@ -423,6 +423,9 @@ def _valid_fixture(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> dict[str,
             "full_band_s4p_qa_module_sha256": script_hashes[
                 "full_band_s4p_qa_module"
             ],
+            "stage_attempt_finalizer_sha256": script_hashes[
+                "stage_attempt_finalizer"
+            ],
             "raw_products_finalizer_sha256": script_hashes["raw_products_finalizer"],
             "checkpoint_auditor_sha256": script_hashes["checkpoint_auditor"],
             "campaign_histories_finalizer_sha256": script_hashes[

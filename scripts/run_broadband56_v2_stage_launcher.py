@@ -46,6 +46,12 @@ from rfic_transformer_inverse_design.campaigns.broadband56_production_backend im
     validate_stage_receipt,
     validate_stage_receipt_chain,
 )
+from rfic_transformer_inverse_design.campaigns.broadband56_stage_progress import (  # noqa: E402
+    STAGE_PROGRESS_DECISION,
+    accepted_after_progress,
+    validate_stage_progress_chain,
+    validate_stage_progress_receipt,
+)
 
 
 LAUNCH_AUDIT_SCHEMA = "rfic_transformer.broadband56_v2_stage_launch_audit.v1"
@@ -67,9 +73,14 @@ def main(argv: list[str] | None = None) -> int:
     except StageLauncherError as exc:
         print(f"overall_status=FAIL\nerror={exc}", file=sys.stderr)
         return 2
-    print("overall_status=PASS")
-    print(f"stage={result['stage']}")
-    print(f"receipt={out_dir / 'STAGE_RECEIPT.json'}")
+    if result.get("decision") == STAGE_PROGRESS_DECISION:
+        print("overall_status=INCOMPLETE")
+        print(f"stage={result['stage']}")
+        print(f"receipt={out_dir / 'STAGE_PROGRESS_RECEIPT.json'}")
+    else:
+        print("overall_status=PASS")
+        print(f"stage={result['stage']}")
+        print(f"receipt={out_dir / 'STAGE_RECEIPT.json'}")
     return 0
 
 
@@ -118,17 +129,38 @@ def launch_stage(args: argparse.Namespace, *, out_dir: Path) -> dict[str, Any]:
             + "; ".join(chain_errors[:8])
         )
     stage_receipts = [value for _, value in stage_receipt_records]
-    current_accepted = (
+    base_accepted = (
         int(stage_receipts[-1]["accepted_unique_geometries"])
         if stage_receipts
         else 0
     )
     next_stage = stage_for_progress(
-        current_accepted=current_accepted,
+        current_accepted=base_accepted,
         stage_receipts=stage_receipts,
     )
     if next_stage != stage:
         raise StageLauncherError(f"requested stage {stage} is out of order; next legal stage is {next_stage}")
+    progress_records = _ordered_stage_progress_receipt_records(
+        campaign_root,
+        stage=stage,
+    )
+    progress_errors = validate_stage_progress_chain(
+        progress_records,
+        stage=stage,
+        base_accepted=base_accepted,
+        backend_manifest_sha256=_sha256(backend_path),
+        authorization_receipt_sha256=_sha256(receipt_path),
+        verify_artifacts=True,
+    )
+    if progress_errors:
+        raise StageLauncherError(
+            "prior stage progress chain failed validation: "
+            + "; ".join(progress_errors[:8])
+        )
+    current_accepted = accepted_after_progress(
+        progress_records,
+        base_accepted=base_accepted,
+    )
 
     policy = evaluate_capacity_snapshot(
         snapshot,
@@ -210,7 +242,53 @@ def launch_stage(args: argparse.Namespace, *, out_dir: Path) -> dict[str, Any]:
         raise StageLauncherError(
             f"hash-bound backend exited with return code {result.returncode}"
         )
-    backend_receipt_path = backend_out_dir / "STAGE_RECEIPT.json"
+    backend_stage_receipt_path = backend_out_dir / "STAGE_RECEIPT.json"
+    backend_progress_receipt_path = backend_out_dir / "STAGE_PROGRESS_RECEIPT.json"
+    if backend_stage_receipt_path.is_file() == backend_progress_receipt_path.is_file():
+        raise StageLauncherError(
+            "backend must produce exactly one terminal stage or nonterminal progress receipt"
+        )
+    if backend_progress_receipt_path.is_file():
+        backend_progress = _read_json(
+            backend_progress_receipt_path,
+            "backend stage progress receipt",
+        )
+        progress_errors = validate_stage_progress_receipt(
+            backend_progress,
+            stage=stage,
+            attempt_index=len(progress_records) + 1,
+            accepted_before=current_accepted,
+            prior_progress_receipt_sha256=(
+                _sha256(progress_records[-1][0]) if progress_records else None
+            ),
+            backend_manifest_sha256=_sha256(backend_path),
+            authorization_receipt_sha256=_sha256(receipt_path),
+            verify_artifacts=True,
+            artifact_root=backend_out_dir,
+        )
+        if progress_errors:
+            raise StageLauncherError(
+                "backend progress receipt failed the exact progress contract: "
+                + "; ".join(progress_errors[:8])
+            )
+        shutil.copyfile(
+            backend_progress_receipt_path,
+            out_dir / "STAGE_PROGRESS_RECEIPT.json",
+        )
+        (out_dir / "SHA256SUMS.txt").write_text(
+            "\n".join(
+                f"{_sha256(out_dir / name)}  {name}"
+                for name in (
+                    "STAGE_LAUNCH_AUDIT.json",
+                    "STAGE_PROGRESS_RECEIPT.json",
+                )
+            )
+            + "\n",
+            encoding="utf-8",
+        )
+        return backend_progress
+
+    backend_receipt_path = backend_stage_receipt_path
     backend_receipt = _read_json(backend_receipt_path, "backend stage receipt")
     receipt_errors = validate_stage_receipt(
         backend_receipt,
@@ -335,6 +413,21 @@ def _ordered_stage_receipt_records(
     for path in sorted((campaign_root / "stages").glob("*/STAGE_RECEIPT.json")):
         value = _read_json(path, "prior stage receipt")
         if value.get("overall_status") == "PASS":
+            receipts.append((path, value))
+    return receipts
+
+
+def _ordered_stage_progress_receipt_records(
+    campaign_root: Path,
+    *,
+    stage: str,
+) -> list[tuple[Path, dict[str, Any]]]:
+    receipts: list[tuple[Path, dict[str, Any]]] = []
+    for path in sorted(
+        (campaign_root / "stages").glob("*/STAGE_PROGRESS_RECEIPT.json")
+    ):
+        value = _read_json(path, "prior stage progress receipt")
+        if str(value.get("stage") or "").upper() == stage:
             receipts.append((path, value))
     return receipts
 

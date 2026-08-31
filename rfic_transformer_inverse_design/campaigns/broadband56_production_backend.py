@@ -33,9 +33,9 @@ from .broadband56_stage_execution import (
 )
 
 
-BACKEND_MANIFEST_SCHEMA = "rfic_transformer.broadband56_v2_private_backend_identity.v8"
+BACKEND_MANIFEST_SCHEMA = "rfic_transformer.broadband56_v2_private_backend_identity.v9"
 BACKEND_VERIFICATION_SCHEMA = (
-    "rfic_transformer.broadband56_v2_private_backend_identity_verification.v3"
+    "rfic_transformer.broadband56_v2_private_backend_identity_verification.v4"
 )
 BACKEND_VERIFICATION_PASS_DECISION = "USE_HASH_BOUND_PRODUCTION_BACKEND"
 BACKEND_MANIFEST_EFFECT = "IDENTITY_ONLY_NO_EXECUTION"
@@ -115,6 +115,7 @@ REQUIRED_SCRIPT_ROLES = (
     "exact_audited_gds_emx_module",
     "full_band_s4p_qa_builder",
     "full_band_s4p_qa_module",
+    "stage_attempt_finalizer",
     "raw_products_finalizer",
     "checkpoint_auditor",
     "campaign_histories_finalizer",
