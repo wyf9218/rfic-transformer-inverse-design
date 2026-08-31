@@ -44,6 +44,14 @@ from rfic_transformer_inverse_design.campaigns.broadband56_full_campaign_authori
     expected_terminal_contract,
     validate_full_campaign_candidate,
 )
+from rfic_transformer_inverse_design.campaigns.broadband56_production_backend import (  # noqa: E402
+    BACKEND_VERIFICATION_PASS_CHECKS,
+    BACKEND_VERIFICATION_PASS_DECISION,
+    BACKEND_VERIFICATION_SCHEMA,
+    REQUIRED_RUNTIME_ROLES,
+    REQUIRED_SCRIPT_ROLES,
+    validate_backend_identity_manifest,
+)
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -86,9 +94,12 @@ def _parse_args(argv: list[str] | None) -> argparse.Namespace:
     parser.add_argument("--geometry-bounds-frozen-sha256", required=True)
     parser.add_argument("--phase-plan-frozen-sha256", required=True)
     parser.add_argument("--operational-policy-approval-receipt-sha256", required=True)
+    parser.add_argument("--backend-identity-manifest", required=True)
     parser.add_argument("--backend-identity-manifest-sha256", required=True)
+    parser.add_argument("--backend-identity-verification-receipt", required=True)
     parser.add_argument("--backend-identity-verification-receipt-sha256", required=True)
     parser.add_argument("--queue-controller-sha256", required=True)
+    parser.add_argument("--resource-gate-auditor-sha256", required=True)
     parser.add_argument("--stage-launcher-sha256", required=True)
     parser.add_argument("--production-stage-backend-sha256", required=True)
     parser.add_argument("--phase-a-queue-builder-sha256", required=True)
@@ -113,6 +124,8 @@ def _parse_args(argv: list[str] | None) -> argparse.Namespace:
     parser.add_argument("--training-readiness-finalizer-sha256", required=True)
     parser.add_argument("--checkpoint-figure-renderer-sha256", required=True)
     parser.add_argument("--final-delivery-auditor-sha256", required=True)
+    parser.add_argument("--resource-probe-sha256", required=True)
+    parser.add_argument("--python-executable-sha256", required=True)
     parser.add_argument("--historical-gds-identity-pass-receipt-sha256", required=True)
     parser.add_argument(
         "--historical-backend-pass-receipt",
@@ -133,6 +146,7 @@ def build_candidate(args: argparse.Namespace, *, out_dir: Path) -> dict[str, str
     if not _aware_datetime(generated_utc):
         raise CandidateBuildError("--generated-utc must be timezone-aware")
     pass_receipts = _parse_historical_receipts(args.historical_backend_pass_receipt)
+    _validate_verified_backend_inputs(args, pass_receipts=pass_receipts)
     public_evidence = _public_evidence()
     candidate = {
         "schema": FULL_CAMPAIGN_CANDIDATE_SCHEMA,
@@ -209,6 +223,7 @@ def build_candidate(args: argparse.Namespace, *, out_dir: Path) -> dict[str, str
                 args.backend_identity_verification_receipt_sha256
             ),
             "queue_controller_sha256": args.queue_controller_sha256,
+            "resource_gate_auditor_sha256": args.resource_gate_auditor_sha256,
             "stage_launcher_sha256": args.stage_launcher_sha256,
             "production_stage_backend_sha256": args.production_stage_backend_sha256,
             "phase_a_queue_builder_sha256": args.phase_a_queue_builder_sha256,
@@ -259,6 +274,8 @@ def build_candidate(args: argparse.Namespace, *, out_dir: Path) -> dict[str, str
                 args.checkpoint_figure_renderer_sha256
             ),
             "final_delivery_auditor_sha256": args.final_delivery_auditor_sha256,
+            "resource_probe_sha256": args.resource_probe_sha256,
+            "python_executable_sha256": args.python_executable_sha256,
             "historical_gds_identity_pass_receipt_sha256": (
                 args.historical_gds_identity_pass_receipt_sha256
             ),
@@ -326,6 +343,195 @@ def _parse_historical_receipts(values: list[str]) -> list[dict[str, Any]]:
             raise CandidateBuildError("historical receipt identity is invalid")
         records.append({"overall_status": "PASS", "sha256": digest, "size_bytes": size})
     return records
+
+
+def _validate_verified_backend_inputs(
+    args: argparse.Namespace,
+    *,
+    pass_receipts: list[dict[str, Any]],
+) -> None:
+    manifest_path = Path(args.backend_identity_manifest).expanduser()
+    verification_path = Path(
+        args.backend_identity_verification_receipt
+    ).expanduser()
+    manifest, manifest_identity = _read_stable_json(
+        manifest_path,
+        label="backend identity manifest",
+    )
+    verification, verification_identity = _read_stable_json(
+        verification_path,
+        label="backend identity verification receipt",
+    )
+    manifest_errors = validate_backend_identity_manifest(
+        manifest,
+        verify_files=True,
+    )
+    if manifest_errors:
+        raise CandidateBuildError(
+            "backend identity manifest failed validation: "
+            + "; ".join(manifest_errors[:16])
+        )
+    if manifest_identity["sha256"] != args.backend_identity_manifest_sha256:
+        raise CandidateBuildError("backend identity manifest SHA-256 mismatch")
+    if (
+        verification_identity["sha256"]
+        != args.backend_identity_verification_receipt_sha256
+    ):
+        raise CandidateBuildError("backend verification receipt SHA-256 mismatch")
+    if not (
+        verification.get("schema") == BACKEND_VERIFICATION_SCHEMA
+        and verification.get("overall_status") == "PASS"
+        and verification.get("decision") == BACKEND_VERIFICATION_PASS_DECISION
+        and verification.get("campaign_id") == CAMPAIGN_ID
+        and verification.get("contract_fingerprint_sha256")
+        == SCIENTIFIC_CONTRACT_FINGERPRINT
+        and verification.get("checks") == BACKEND_VERIFICATION_PASS_CHECKS
+        and verification.get("errors") == []
+        and verification.get("simulator_action_taken") is False
+        and verification.get("authorization_effect")
+        == "NONE_IDENTITY_VERIFICATION_ONLY"
+    ):
+        raise CandidateBuildError("backend identity verification receipt is not exact PASS")
+    verified_manifest = verification.get("backend_identity_manifest")
+    if not isinstance(verified_manifest, Mapping) or verified_manifest != manifest_identity:
+        raise CandidateBuildError(
+            "backend verification receipt does not bind the exact manifest"
+        )
+
+    script_identities = manifest.get("script_identities")
+    runtime_identities = manifest.get("runtime_identities")
+    if not isinstance(script_identities, Mapping) or not isinstance(
+        runtime_identities, Mapping
+    ):
+        raise CandidateBuildError("backend manifest lacks exact identity maps")
+    for role in REQUIRED_SCRIPT_ROLES:
+        record = script_identities.get(role)
+        expected = getattr(args, f"{role}_sha256", None)
+        if not isinstance(record, Mapping) or record.get("sha256") != expected:
+            raise CandidateBuildError(
+                f"candidate {role} SHA-256 differs from the verified manifest"
+            )
+    runtime_candidate_fields = {
+        "resource_probe": "resource_probe_sha256",
+        "python_executable": "python_executable_sha256",
+    }
+    if not set(runtime_candidate_fields).issubset(REQUIRED_RUNTIME_ROLES):
+        raise CandidateBuildError("runtime candidate field map is inconsistent")
+    for role, field in runtime_candidate_fields.items():
+        record = runtime_identities.get(role)
+        if not isinstance(record, Mapping) or record.get("sha256") != getattr(
+            args, field
+        ):
+            raise CandidateBuildError(
+                f"candidate {role} SHA-256 differs from the verified manifest"
+            )
+
+    preparation = manifest.get("preparation_bindings")
+    if not isinstance(preparation, Mapping):
+        raise CandidateBuildError("backend manifest lacks preparation bindings")
+    preparation_fields = (
+        "preparation_receipt_sha256",
+        "private_configuration_sha256",
+        "historical_configuration_sha256",
+        "operational_policy_approval_receipt_sha256",
+    )
+    for field in preparation_fields:
+        if preparation.get(field) != getattr(args, field):
+            raise CandidateBuildError(
+                f"candidate {field} differs from the verified manifest"
+            )
+
+    manifest_receipts = manifest.get("historical_backend_pass_receipts")
+    if not isinstance(manifest_receipts, list):
+        raise CandidateBuildError("backend manifest lacks historical PASS receipts")
+    compact_receipts = [
+        {
+            "overall_status": item.get("overall_status"),
+            "sha256": item.get("sha256"),
+            "size_bytes": item.get("size_bytes"),
+        }
+        for item in manifest_receipts
+        if isinstance(item, Mapping)
+    ]
+    if compact_receipts != pass_receipts:
+        raise CandidateBuildError(
+            "candidate historical PASS receipts differ from the verified manifest"
+        )
+    gds_receipt = manifest.get("historical_gds_identity_pass_receipt")
+    if not isinstance(gds_receipt, Mapping) or gds_receipt.get("sha256") != (
+        args.historical_gds_identity_pass_receipt_sha256
+    ):
+        raise CandidateBuildError(
+            "candidate historical GDS receipt differs from the verified manifest"
+        )
+    _require_identity_unchanged(
+        manifest_identity,
+        label="backend identity manifest",
+    )
+    _require_identity_unchanged(
+        verification_identity,
+        label="backend identity verification receipt",
+    )
+
+
+def _read_stable_json(
+    path: Path,
+    *,
+    label: str,
+) -> tuple[dict[str, Any], dict[str, Any]]:
+    try:
+        if not path.is_file() or path.is_symlink() or path.stat().st_size <= 0:
+            raise CandidateBuildError(f"{label} is missing, empty, or a symlink")
+        resolved = path.resolve()
+        before = resolved.stat()
+        payload = resolved.read_bytes()
+        after = resolved.stat()
+    except OSError as exc:
+        raise CandidateBuildError(f"cannot read {label}") from exc
+    identity_before = (
+        before.st_dev,
+        before.st_ino,
+        before.st_size,
+        before.st_mtime_ns,
+        before.st_ctime_ns,
+    )
+    identity_after = (
+        after.st_dev,
+        after.st_ino,
+        after.st_size,
+        after.st_mtime_ns,
+        after.st_ctime_ns,
+    )
+    if identity_before != identity_after:
+        raise CandidateBuildError(f"{label} changed while reading")
+    try:
+        value = json.loads(payload.decode("utf-8"))
+    except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+        raise CandidateBuildError(f"{label} is not valid UTF-8 JSON") from exc
+    if not isinstance(value, dict):
+        raise CandidateBuildError(f"{label} is not a JSON object")
+    return value, {
+        "path": str(resolved),
+        "size_bytes": len(payload),
+        "sha256": hashlib.sha256(payload).hexdigest(),
+    }
+
+
+def _require_identity_unchanged(
+    identity: Mapping[str, Any],
+    *,
+    label: str,
+) -> None:
+    path = Path(str(identity.get("path", "")))
+    try:
+        if (
+            not path.is_file()
+            or path.stat().st_size != identity.get("size_bytes")
+            or _sha256(path) != identity.get("sha256")
+        ):
+            raise CandidateBuildError(f"{label} changed during candidate construction")
+    except OSError as exc:
+        raise CandidateBuildError(f"cannot recheck {label}") from exc
 
 
 def _is_sha256(value: Any) -> bool:

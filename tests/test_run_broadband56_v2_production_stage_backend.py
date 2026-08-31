@@ -349,10 +349,11 @@ def _fixture(tmp_path: Path) -> argparse.Namespace:
             if role == "stage_execution_profile"
             else _write(tmp_path / "runtime" / role, f"{role}\n")
         )
-        if role == "emx_wrapper":
+        if role in {"emx_wrapper", "python_executable"}:
             path.chmod(0o755)
         runtimes[role] = _identity(path)
     runtimes["emx_wrapper"]["executable"] = True
+    runtimes["python_executable"]["executable"] = True
 
     history_one = _write(tmp_path / "history" / "one.json", {"overall_status": "PASS", "id": 1})
     history_two = _write(tmp_path / "history" / "two.json", {"overall_status": "PASS", "id": 2})

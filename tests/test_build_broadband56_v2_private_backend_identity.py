@@ -90,6 +90,7 @@ def _build_args(tmp_path: Path) -> tuple[list[str], dict[str, Path], Path]:
     }
     files["production_stage_backend"].chmod(0o755)
     files["emx_wrapper"].chmod(0o755)
+    files["python_executable"].chmod(0o755)
     files["stage_execution_profile"] = _write(
         files["stage_execution_profile"],
         _execution_profile(),
@@ -113,7 +114,7 @@ def _build_args(tmp_path: Path) -> tuple[list[str], dict[str, Path], Path]:
         "--preparation-receipt-sha256",
         "1" * 64,
         "--private-configuration-sha256",
-        "2" * 64,
+        _sha(files["private_configuration"]),
         "--historical-configuration-sha256",
         "3" * 64,
         "--operational-policy-approval-receipt-sha256",

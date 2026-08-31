@@ -1,0 +1,133 @@
+{
+  "schema": "rfic_transformer.broadband56_v2_runtime_identity_chain_status.v1",
+  "generated_utc": "2026-08-31T03:24:49Z",
+  "overall_status": "PASS",
+  "decision": "USE_HARDENED_LOCAL_IDENTITY_CHAIN_DO_NOT_LAUNCH_UNTIL_OWNER_STOP_REVERSAL_AND_PRIVATE_REBIND",
+  "campaign_id": "broadband56_real_emx_balanced200k_tsmc65_v2",
+  "scientific_contract_fingerprint_sha256": "f86a00efbf7756b7421b863bbb16c340db6b423640f63a3257d46c1af49eb55e",
+  "branch": "codex/broadband56-balanced200k-v2",
+  "base_commit": "732102cd8237f1b6fb48189c403c1aa1bfc74dbc",
+  "supersedes_status": "docs/research/BROADBAND56_V2_STAGE_EXECUTION_PROFILE_BUILDER_STATUS_20260831T025036Z.json",
+  "current_role_model": {
+    "private_backend_manifest_schema": "rfic_transformer.broadband56_v2_private_backend_identity.v7",
+    "private_backend_verification_schema": "rfic_transformer.broadband56_v2_private_backend_identity_verification.v3",
+    "full_campaign_candidate_schema": "rfic_transformer.broadband56_v2_full_campaign_authorization_candidate.v5",
+    "full_campaign_approval_schema": "rfic_transformer.broadband56_v2_full_campaign_authorization_approval.v5",
+    "production_backend_id": "MARS_CADENCE_GDS_IDENTITY_CALIBRE_EMX_S4P_QA_V5",
+    "new_exact_script_identity": "resource_gate_auditor",
+    "new_exact_runtime_identities": [
+      "resource_probe",
+      "python_executable"
+    ],
+    "approved_production_configuration_bytes_modified": false,
+    "frequency_port_layout_and_label_contract_modified": false
+  },
+  "implementation": {
+    "production_contract_validator": {
+      "path": "rfic_transformer_inverse_design/campaigns/broadband56_production_backend.py",
+      "sha256": "5098565658c5cfe4ef66b100bca163f8367dc7cb228bed2b1cfe733c0517d7f1",
+      "private_configuration_runtime_sha_must_equal_preparation_binding": true
+    },
+    "full_campaign_contract": {
+      "path": "rfic_transformer_inverse_design/campaigns/broadband56_full_campaign_authorization.py",
+      "sha256": "78b644c5370d394d7fa1ab64769f2e2203a6873ffd708e4022d020820dcdd388"
+    },
+    "private_manifest_builder": {
+      "path": "scripts/build_broadband56_v2_private_backend_identity.py",
+      "sha256": "97db07eaa77c76e64f5d0f45598dae026cb4878d488d7f1b7d85bc669468a8dc"
+    },
+    "full_campaign_candidate_builder": {
+      "path": "scripts/build_broadband56_v2_full_campaign_authorization_candidate.py",
+      "sha256": "e6070e7cd86817a6b858c69644b705614fa45e87ce162080c95f85f9a901c9bb",
+      "verified_manifest_and_receipt_required": true,
+      "manual_sha_values_cross_checked_against_verified_evidence": true,
+      "private_paths_written_to_candidate": false
+    },
+    "full_campaign_approval_recorder": {
+      "path": "scripts/record_broadband56_v2_full_campaign_authorization.py",
+      "sha256": "d67328ca0684fd7ea7bbe7661ee956af54ebcaa967677ee3bee665ae90de97fc"
+    },
+    "authorized_queue_controller": {
+      "path": "scripts/run_broadband56_v2_authorized_queue_controller.py",
+      "sha256": "3143b880b0d4be08d8f431373ecc4978a7a1667938e434e0ed9341c356ad28ac",
+      "queue_controller_self_identity_rechecked": true,
+      "resource_gate_auditor_identity_rechecked": true,
+      "resource_probe_identity_rechecked": true,
+      "python_executable_identity_rechecked": true,
+      "stage_launcher_identity_rechecked": true,
+      "backend_verification_receipt_reparsed": true,
+      "preparation_policy_and_contract_sha_rechecked": true
+    }
+  },
+  "security_and_scientific_effect": {
+    "prevents_unapproved_resource_probe_substitution": true,
+    "prevents_unapproved_resource_gate_substitution": true,
+    "prevents_unapproved_python_runtime_substitution": true,
+    "prevents_candidate_role_sha_drift_from_verified_manifest": true,
+    "prevents_candidate_use_of_modified_backend_pass_receipt": true,
+    "prevents_runtime_private_configuration_drift_from_preparation": true,
+    "proxy_label_policy_changed": false,
+    "fresh_real_emx_only_label_policy_preserved": true,
+    "exact_56_point_four_port_s4p_contract_preserved": true,
+    "simulator_action_taken": false
+  },
+  "test_evidence": {
+    "initial_manifest_role_regression": {
+      "status": "EXPECTED_FAIL_THEN_REPAIRED",
+      "passed": 56,
+      "failed": 4,
+      "cause": "the manifest builder had not yet marked the newly required Python runtime identity executable"
+    },
+    "candidate_verified_evidence_integration": {
+      "status": "PASS",
+      "passed": 7,
+      "failed": 0
+    },
+    "queue_runtime_identity_tests": {
+      "status": "PASS",
+      "passed": 7,
+      "failed": 0
+    },
+    "focused_runtime_authorization_queue_backend_regression": {
+      "status": "PASS",
+      "passed": 68,
+      "failed": 0
+    },
+    "all_broadband56_tests": {
+      "status": "PASS",
+      "passed": 227,
+      "failed": 0
+    },
+    "python_compile": "PASS",
+    "full_repository_regression": "NOT_RERUN_BY_FOCUSED_CAMPAIGN_TEST_POLICY"
+  },
+  "runtime_authority": {
+    "owner_stop_still_authoritative": true,
+    "owner_stop_status": "docs/research/BROADBAND56_V2_OWNER_STOP_STATUS_20260830T195649Z.json",
+    "owner_stop_status_sha256": "b0d97d1266a138c3726e6e923b901f4cffc3ff126d3a453e6e80bd9c09e38431",
+    "restart_authorized": false,
+    "mars_write_action_taken": false,
+    "queue_registration_action_taken": false,
+    "cadence_action_taken": false,
+    "calibre_action_taken": false,
+    "emx_action_taken": false,
+    "supervisor_action_taken": false
+  },
+  "physical_counts": {
+    "accepted_geometries": 0,
+    "s4p_artifacts": 0,
+    "geometry_frequency_rows": 0
+  },
+  "remaining_runtime_requirements": {
+    "explicit_owner_stop_reversal": "REQUIRED",
+    "fresh_resource_license_isolation_storage_pass": "REQUIRED",
+    "private_stage_execution_command_plan": "NOT_CREATED_ON_MARS",
+    "private_stage_execution_profile": "NOT_CREATED_OR_HASH_BOUND_ON_MARS",
+    "private_backend_identity_manifest_v7": "NOT_CREATED",
+    "private_backend_identity_verification_receipt_v3": "NOT_CREATED",
+    "full_campaign_authorization_candidate_v5": "NOT_CREATED",
+    "exact_sha256_full_campaign_owner_approval_v5": "NOT_RECORDED",
+    "durable_authoritative_queue": "NOT_REGISTERED"
+  },
+  "next_legal_action": "After explicit owner-stop reversal, perform a fresh read-only resource and identity preflight, update the private repository to the exact public commit, build the private command plan and profile, build and verify the V7 backend manifest, and create the single V5 FULL_CAMPAIGN candidate for exact-SHA project-owner approval; no simulator launch is permitted before those gates pass."
+}

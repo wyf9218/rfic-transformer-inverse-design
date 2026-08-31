@@ -117,7 +117,7 @@ def build_manifest(args: argparse.Namespace) -> dict[str, Any]:
     runtimes = {
         role: _identity_record(
             Path(getattr(args, f"runtime_{role}")),
-            executable=role == "emx_wrapper",
+            executable=role in {"python_executable", "emx_wrapper"},
         )
         for role in REQUIRED_RUNTIME_ROLES
     }

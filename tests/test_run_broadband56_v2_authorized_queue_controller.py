@@ -92,6 +92,9 @@ def _evidence(tmp_path: Path) -> dict:
         "policy_approval_receipt": MODULE._file_record(policy),
         "candidate": MODULE._file_record(candidate),
         "backend_identity_manifest": MODULE._file_record(backend),
+        "backend_identity_verification_receipt": MODULE._file_record(
+            _write(tmp_path / "backend_verification.json", {"overall_status": "PASS"})
+        ),
         "stage_launcher": MODULE._file_record(launcher),
         "frequency_contract": {"points": 56},
         "port_and_grounding_contract": {"ports": 4},
@@ -108,6 +111,7 @@ def _args(tmp_path: Path, *, receipt_exists: bool = False) -> argparse.Namespace
         "policy_approval_receipt",
         "full_campaign_candidate",
         "backend_identity_manifest",
+        "backend_identity_verification_receipt",
         "stage_launcher",
         "probe_script",
         "resource_gate_auditor",
@@ -128,6 +132,122 @@ def _args(tmp_path: Path, *, receipt_exists: bool = False) -> argparse.Namespace
         max_age_seconds=300,
         resume=False,
     )
+
+
+def _valid_control_fixture(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> tuple[argparse.Namespace, dict[str, Path], dict]:
+    args = _args(tmp_path)
+    contract_path = _write(
+        Path(args.frozen_contract),
+        {
+            "campaign_id": MODULE.CAMPAIGN_ID,
+            "contract_fingerprint_sha256": SCIENTIFIC_CONTRACT_FINGERPRINT,
+        },
+    )
+    preparation_path = _write(
+        Path(args.preparation_receipt),
+        {
+            "overall_status": "PASS",
+            "decision": "PREPARED_FOR_GOLDEN_GATE",
+            "campaign_id": MODULE.CAMPAIGN_ID,
+            "contract_fingerprint_sha256": SCIENTIFIC_CONTRACT_FINGERPRINT,
+        },
+    )
+    policy_path = _write(
+        Path(args.policy_approval_receipt),
+        {
+            "schema": MODULE.POLICY_APPROVAL_SCHEMA,
+            "overall_status": "PASS",
+            "decision": MODULE.POLICY_APPROVAL_SCOPE,
+            "campaign_id": MODULE.CAMPAIGN_ID,
+            "contract_fingerprint_sha256": SCIENTIFIC_CONTRACT_FINGERPRINT,
+            "resource_policy": RESOURCE_POLICY,
+            "queue_authorized": True,
+            "supervisor_authorized": True,
+        },
+    )
+    gate_path = _write(Path(args.resource_gate_auditor), "# resource gate\n")
+    launcher_path = _write(Path(args.stage_launcher), "# stage launcher\n")
+    probe_path = _write(Path(args.probe_script), "# resource probe\n")
+    python_path = Path(args.python_bin).resolve()
+    manifest = {
+        "campaign_id": MODULE.CAMPAIGN_ID,
+        "contract_fingerprint_sha256": SCIENTIFIC_CONTRACT_FINGERPRINT,
+        "backend_id": MODULE.PRODUCTION_BACKEND_ID,
+        "script_identities": {
+            "queue_controller": MODULE._file_record(SCRIPT.resolve()),
+            "resource_gate_auditor": MODULE._file_record(gate_path.resolve()),
+            "stage_launcher": MODULE._file_record(launcher_path.resolve()),
+        },
+        "runtime_identities": {
+            "resource_probe": MODULE._file_record(probe_path.resolve()),
+            "python_executable": MODULE._file_record(python_path),
+        },
+    }
+    manifest_path = _write(Path(args.backend_identity_manifest), manifest)
+    manifest_record = MODULE._file_record(manifest_path.resolve())
+    verification = {
+        "schema": MODULE.BACKEND_VERIFICATION_SCHEMA,
+        "overall_status": "PASS",
+        "decision": MODULE.BACKEND_VERIFICATION_PASS_DECISION,
+        "campaign_id": MODULE.CAMPAIGN_ID,
+        "contract_fingerprint_sha256": SCIENTIFIC_CONTRACT_FINGERPRINT,
+        "backend_identity_manifest": manifest_record,
+        "checks": MODULE.BACKEND_VERIFICATION_PASS_CHECKS,
+        "errors": [],
+        "simulator_action_taken": False,
+        "authorization_effect": "NONE_IDENTITY_VERIFICATION_ONLY",
+    }
+    verification_path = _write(
+        Path(args.backend_identity_verification_receipt),
+        verification,
+    )
+    candidate = {
+        "frequency_contract": {"points": 56},
+        "port_and_grounding_contract": {"signal_port_count": 4},
+        "unchanged_physical_contract_items": ["calibre_drc"],
+        "private_preparation_evidence": {
+            "preparation_receipt_sha256": MODULE._sha256(preparation_path),
+            "campaign_contract_frozen_sha256": MODULE._sha256(contract_path),
+            "operational_policy_approval_receipt_sha256": MODULE._sha256(
+                policy_path
+            ),
+        },
+        "runtime_and_backend_identity": {
+            "backend_id": MODULE.PRODUCTION_BACKEND_ID,
+            "backend_identity_manifest_sha256": MODULE._sha256(manifest_path),
+            "backend_identity_verification_receipt_sha256": MODULE._sha256(
+                verification_path
+            ),
+            "queue_controller_sha256": MODULE._sha256(SCRIPT),
+            "resource_gate_auditor_sha256": MODULE._sha256(gate_path),
+            "stage_launcher_sha256": MODULE._sha256(launcher_path),
+            "resource_probe_sha256": MODULE._sha256(probe_path),
+            "python_executable_sha256": MODULE._sha256(python_path),
+        },
+    }
+    candidate_path = _write(Path(args.full_campaign_candidate), candidate)
+    args.full_campaign_candidate_sha256 = MODULE._sha256(candidate_path)
+    monkeypatch.setattr(MODULE, "validate_contract", lambda _value: [])
+    monkeypatch.setattr(
+        MODULE,
+        "contract_fingerprint",
+        lambda _value: SCIENTIFIC_CONTRACT_FINGERPRINT,
+    )
+    monkeypatch.setattr(
+        MODULE,
+        "validate_full_campaign_candidate",
+        lambda _value: [],
+    )
+    monkeypatch.setattr(
+        MODULE,
+        "validate_backend_identity_manifest",
+        lambda _value, verify_files: [],
+    )
+    inputs = MODULE._resolve_inputs(args)
+    return args, inputs, candidate
 
 
 def _install_common(
@@ -223,3 +343,50 @@ def test_no_clobber_existing_campaign_root(
 
     with pytest.raises(MODULE.ControllerError, match="no-clobber"):
         MODULE.run_controller(args, campaign_root=campaign_root)
+
+
+def test_control_evidence_binds_queue_gate_probe_and_python_identities(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    _args_value, inputs, _candidate = _valid_control_fixture(
+        tmp_path,
+        monkeypatch,
+    )
+
+    evidence = MODULE._validate_control_evidence(
+        inputs,
+        _args_value,
+    )
+
+    assert evidence["backend_identity_verification_receipt"]["sha256"]
+    assert evidence["stage_launcher"]["sha256"]
+
+
+def test_control_evidence_rejects_unapproved_resource_probe_path(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    args, _inputs, _candidate = _valid_control_fixture(tmp_path, monkeypatch)
+    args.probe_script = str(_write(tmp_path / "different_probe.sh", "# drift\n"))
+    inputs = MODULE._resolve_inputs(args)
+
+    with pytest.raises(MODULE.ControllerError, match="resource probe path"):
+        MODULE._validate_control_evidence(inputs, args)
+
+
+def test_control_evidence_rejects_nonexact_backend_verification_pass(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    args, _inputs, candidate = _valid_control_fixture(tmp_path, monkeypatch)
+    receipt_path = Path(args.backend_identity_verification_receipt)
+    receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
+    receipt["checks"]["all_stage_commands_shell_free"] = False
+    _write(receipt_path, receipt)
+    candidate["runtime_and_backend_identity"][
+        "backend_identity_verification_receipt_sha256"
+    ] = MODULE._sha256(receipt_path)
+    candidate_path = _write(Path(args.full_campaign_candidate), candidate)
+    args.full_campaign_candidate_sha256 = MODULE._sha256(candidate_path)
+    inputs = MODULE._resolve_inputs(args)
+
+    with pytest.raises(MODULE.ControllerError, match="not exact PASS"):
+        MODULE._validate_control_evidence(inputs, args)

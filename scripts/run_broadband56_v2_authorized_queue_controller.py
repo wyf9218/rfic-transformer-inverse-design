@@ -53,6 +53,9 @@ from rfic_transformer_inverse_design.campaigns.broadband56_full_campaign_authori
     validate_full_campaign_candidate,
 )
 from rfic_transformer_inverse_design.campaigns.broadband56_production_backend import (  # noqa: E402
+    BACKEND_VERIFICATION_PASS_CHECKS,
+    BACKEND_VERIFICATION_PASS_DECISION,
+    BACKEND_VERIFICATION_SCHEMA,
     validate_backend_identity_manifest,
     validate_stage_receipt,
 )
@@ -108,6 +111,7 @@ def _parse_args(argv: list[str] | None) -> argparse.Namespace:
     parser.add_argument("--full-campaign-candidate-sha256", required=True)
     parser.add_argument("--full-campaign-receipt", required=True)
     parser.add_argument("--backend-identity-manifest", required=True)
+    parser.add_argument("--backend-identity-verification-receipt", required=True)
     parser.add_argument("--stage-launcher", required=True)
     parser.add_argument("--probe-script", required=True)
     parser.add_argument("--resource-gate-auditor", required=True)
@@ -307,6 +311,7 @@ def _resolve_inputs(args: argparse.Namespace) -> dict[str, Path]:
         "full_campaign_candidate",
         "full_campaign_receipt",
         "backend_identity_manifest",
+        "backend_identity_verification_receipt",
         "stage_launcher",
         "probe_script",
         "resource_gate_auditor",
@@ -346,6 +351,12 @@ def _validate_control_evidence(
         raise ControllerError("full-campaign candidate invalid: " + "; ".join(candidate_errors[:5]))
     if actual_candidate_sha != str(args.full_campaign_candidate_sha256).lower():
         raise ControllerError("full-campaign candidate SHA-256 mismatch")
+    candidate_private = candidate.get("private_preparation_evidence")
+    candidate_runtime = candidate.get("runtime_and_backend_identity")
+    if not isinstance(candidate_private, Mapping) or not isinstance(
+        candidate_runtime, Mapping
+    ):
+        raise ControllerError("full-campaign candidate lacks private runtime bindings")
 
     preparation = _read_json(inputs["preparation_receipt"], "preparation receipt")
     if not (
@@ -355,6 +366,13 @@ def _validate_control_evidence(
         and preparation.get("contract_fingerprint_sha256") == fingerprint
     ):
         raise ControllerError("preparation receipt identity mismatch")
+    if (
+        _sha256(inputs["preparation_receipt"])
+        != candidate_private.get("preparation_receipt_sha256")
+        or _sha256(inputs["frozen_contract"])
+        != candidate_private.get("campaign_contract_frozen_sha256")
+    ):
+        raise ControllerError("candidate preparation or frozen-contract SHA-256 mismatch")
 
     policy = _read_json(inputs["policy_approval_receipt"], "policy approval receipt")
     if not (
@@ -368,6 +386,11 @@ def _validate_control_evidence(
         and policy.get("supervisor_authorized") is True
     ):
         raise ControllerError("operational policy approval identity mismatch")
+    if (
+        _sha256(inputs["policy_approval_receipt"])
+        != candidate_private.get("operational_policy_approval_receipt_sha256")
+    ):
+        raise ControllerError("candidate operational-policy SHA-256 mismatch")
 
     backend = _read_json(inputs["backend_identity_manifest"], "backend identity manifest")
     runtime = candidate.get("runtime_and_backend_identity") or {}
@@ -385,9 +408,50 @@ def _validate_control_evidence(
         == runtime.get("backend_identity_manifest_sha256")
     ):
         raise ControllerError("backend identity manifest mismatch")
-    launcher_record = backend.get("script_identities", {}).get("stage_launcher", {})
-    if _sha256(inputs["stage_launcher"]) != launcher_record.get("sha256"):
-        raise ControllerError("stage launcher SHA-256 mismatch")
+    verification = _read_json(
+        inputs["backend_identity_verification_receipt"],
+        "backend identity verification receipt",
+    )
+    _validate_backend_verification_receipt(
+        verification,
+        receipt_path=inputs["backend_identity_verification_receipt"],
+        manifest_path=inputs["backend_identity_manifest"],
+        candidate_runtime=candidate_runtime,
+    )
+    scripts = backend.get("script_identities")
+    runtimes = backend.get("runtime_identities")
+    if not isinstance(scripts, Mapping) or not isinstance(runtimes, Mapping):
+        raise ControllerError("backend manifest lacks identity maps")
+    _require_input_identity(
+        Path(__file__).resolve(),
+        scripts.get("queue_controller"),
+        candidate_runtime.get("queue_controller_sha256"),
+        label="queue controller",
+    )
+    _require_input_identity(
+        inputs["resource_gate_auditor"],
+        scripts.get("resource_gate_auditor"),
+        candidate_runtime.get("resource_gate_auditor_sha256"),
+        label="resource-gate auditor",
+    )
+    _require_input_identity(
+        inputs["stage_launcher"],
+        scripts.get("stage_launcher"),
+        candidate_runtime.get("stage_launcher_sha256"),
+        label="stage launcher",
+    )
+    _require_input_identity(
+        inputs["probe_script"],
+        runtimes.get("resource_probe"),
+        candidate_runtime.get("resource_probe_sha256"),
+        label="resource probe",
+    )
+    _require_input_identity(
+        inputs["python_bin"],
+        runtimes.get("python_executable"),
+        candidate_runtime.get("python_executable_sha256"),
+        label="Python executable",
+    )
 
     return {
         "contract": _file_record(inputs["frozen_contract"]),
@@ -395,12 +459,92 @@ def _validate_control_evidence(
         "policy_approval_receipt": _file_record(inputs["policy_approval_receipt"]),
         "candidate": _file_record(inputs["full_campaign_candidate"]),
         "backend_identity_manifest": _file_record(inputs["backend_identity_manifest"]),
+        "backend_identity_verification_receipt": _file_record(
+            inputs["backend_identity_verification_receipt"]
+        ),
         "stage_launcher": _file_record(inputs["stage_launcher"]),
         "frequency_contract": candidate["frequency_contract"],
         "port_and_grounding_contract": candidate["port_and_grounding_contract"],
         "unchanged_physical_contract_items": candidate["unchanged_physical_contract_items"],
         "backend_id": backend["backend_id"],
     }
+
+
+def _validate_backend_verification_receipt(
+    receipt: Mapping[str, Any],
+    *,
+    receipt_path: Path,
+    manifest_path: Path,
+    candidate_runtime: Mapping[str, Any],
+) -> None:
+    if not (
+        receipt.get("schema") == BACKEND_VERIFICATION_SCHEMA
+        and receipt.get("overall_status") == "PASS"
+        and receipt.get("decision") == BACKEND_VERIFICATION_PASS_DECISION
+        and receipt.get("campaign_id") == CAMPAIGN_ID
+        and receipt.get("contract_fingerprint_sha256")
+        == SCIENTIFIC_CONTRACT_FINGERPRINT
+        and receipt.get("checks") == BACKEND_VERIFICATION_PASS_CHECKS
+        and receipt.get("errors") == []
+        and receipt.get("simulator_action_taken") is False
+        and receipt.get("authorization_effect")
+        == "NONE_IDENTITY_VERIFICATION_ONLY"
+    ):
+        raise ControllerError("backend identity verification receipt is not exact PASS")
+    if (
+        _sha256(receipt_path)
+        != candidate_runtime.get("backend_identity_verification_receipt_sha256")
+    ):
+        raise ControllerError("backend verification receipt SHA-256 mismatch")
+    manifest_record = receipt.get("backend_identity_manifest")
+    if not isinstance(manifest_record, Mapping):
+        raise ControllerError("backend verification receipt lacks manifest identity")
+    _require_input_identity(
+        manifest_path,
+        manifest_record,
+        manifest_record.get("sha256"),
+        label="verified backend manifest",
+    )
+
+
+def _require_input_identity(
+    path: Path,
+    record: Any,
+    candidate_sha256: Any,
+    *,
+    label: str,
+) -> None:
+    if not isinstance(record, Mapping):
+        raise ControllerError(f"{label} lacks a manifest identity")
+    resolved = Path(path).expanduser().resolve()
+    if not resolved.is_file():
+        raise ControllerError(f"{label} is missing")
+    before = resolved.stat()
+    digest = _sha256(resolved)
+    after = resolved.stat()
+    before_identity = (
+        before.st_dev,
+        before.st_ino,
+        before.st_size,
+        before.st_mtime_ns,
+        before.st_ctime_ns,
+    )
+    after_identity = (
+        after.st_dev,
+        after.st_ino,
+        after.st_size,
+        after.st_mtime_ns,
+        after.st_ctime_ns,
+    )
+    if before_identity != after_identity:
+        raise ControllerError(f"{label} changed while hashing")
+    record_path = record.get("path")
+    if not isinstance(record_path, str) or Path(record_path).expanduser().resolve() != resolved:
+        raise ControllerError(f"{label} path differs from the approved manifest")
+    if record.get("size_bytes") != after.st_size or record.get("sha256") != digest:
+        raise ControllerError(f"{label} file identity differs from the approved manifest")
+    if candidate_sha256 != digest:
+        raise ControllerError(f"{label} SHA-256 differs from the approved candidate")
 
 
 def _register_queue(
@@ -462,6 +606,9 @@ def _register_queue(
         "backend_id": evidence["backend_id"],
         "candidate": evidence["candidate"],
         "backend_identity_manifest": evidence["backend_identity_manifest"],
+        "backend_identity_verification_receipt": evidence[
+            "backend_identity_verification_receipt"
+        ],
         "stage_launcher": evidence["stage_launcher"],
         "one_authoritative_supervisor": controller_id,
         "bounded_pending_work_window_required": True,
@@ -553,6 +700,8 @@ def _validate_resume_root(
         or entry.get("candidate", {}).get("sha256") != evidence["candidate"]["sha256"]
         or entry.get("backend_identity_manifest", {}).get("sha256")
         != evidence["backend_identity_manifest"]["sha256"]
+        or entry.get("backend_identity_verification_receipt", {}).get("sha256")
+        != evidence["backend_identity_verification_receipt"]["sha256"]
     ):
         raise ControllerError("resume queue identity mismatch")
     return str(entry["queue_id"]), str(supervisor["controller_id"])

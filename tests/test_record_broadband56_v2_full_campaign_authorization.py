@@ -156,8 +156,18 @@ def _valid_fixture(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> dict[str,
     }
     runtime_identities = {}
     for role in REQUIRED_RUNTIME_ROLES:
-        path = private_root / "runtime" / f"{role}.dat"
-        if role == "stage_execution_profile":
+        path = (
+            private_config
+            if role == "private_configuration"
+            else private_root / "runtime" / f"{role}.dat"
+        )
+        if role == "private_configuration":
+            runtime_identities[role] = {
+                "path": str(path.resolve()),
+                "sha256": _sha(path),
+                "size_bytes": path.stat().st_size,
+            }
+        elif role == "stage_execution_profile":
             written = _write(path, _execution_profile())
             runtime_identities[role] = {
                 "path": str(written.resolve()),
@@ -173,13 +183,22 @@ def _valid_fixture(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> dict[str,
         str(script_identities["production_stage_backend"]["path"])
     )
     emx_wrapper = Path(str(runtime_identities["emx_wrapper"]["path"]))
+    python_executable = Path(
+        str(runtime_identities["python_executable"]["path"])
+    )
     production_backend.chmod(0o755)
     emx_wrapper.chmod(0o755)
+    python_executable.chmod(0o755)
     script_identities["production_stage_backend"]["executable"] = True
     runtime_identities["emx_wrapper"]["executable"] = True
+    runtime_identities["python_executable"]["executable"] = True
     script_hashes = {
         role: str(record["sha256"])
         for role, record in script_identities.items()
+    }
+    runtime_hashes = {
+        role: str(record["sha256"])
+        for role, record in runtime_identities.items()
     }
     pass_receipt_records = [
         {
@@ -354,6 +373,9 @@ def _valid_fixture(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> dict[str,
                 backend_verification
             ),
             "queue_controller_sha256": script_hashes["queue_controller"],
+            "resource_gate_auditor_sha256": script_hashes[
+                "resource_gate_auditor"
+            ],
             "stage_launcher_sha256": script_hashes["stage_launcher"],
             "production_stage_backend_sha256": script_hashes[
                 "production_stage_backend"
@@ -412,6 +434,8 @@ def _valid_fixture(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> dict[str,
             "final_delivery_auditor_sha256": script_hashes[
                 "final_delivery_auditor"
             ],
+            "resource_probe_sha256": runtime_hashes["resource_probe"],
+            "python_executable_sha256": runtime_hashes["python_executable"],
             "historical_gds_identity_pass_receipt_sha256": gds_receipt_record[
                 "sha256"
             ],

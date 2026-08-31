@@ -386,6 +386,7 @@ def _backend_manifest_matches_candidate(
         return False
     expected_scripts = {
         "queue_controller": "queue_controller_sha256",
+        "resource_gate_auditor": "resource_gate_auditor_sha256",
         "stage_launcher": "stage_launcher_sha256",
         "production_stage_backend": "production_stage_backend_sha256",
         "phase_a_queue_builder": "phase_a_queue_builder_sha256",
@@ -418,6 +419,20 @@ def _backend_manifest_matches_candidate(
     for manifest_key, candidate_key in expected_scripts.items():
         record = script_identities.get(manifest_key)
         if not isinstance(record, Mapping) or record.get("sha256") != candidate_runtime.get(candidate_key):
+            return False
+    runtime_identities = manifest.get("runtime_identities")
+    if not isinstance(runtime_identities, Mapping):
+        return False
+    expected_runtimes = {
+        "resource_probe": "resource_probe_sha256",
+        "python_executable": "python_executable_sha256",
+    }
+    for manifest_key, candidate_key in expected_runtimes.items():
+        record = runtime_identities.get(manifest_key)
+        if (
+            not isinstance(record, Mapping)
+            or record.get("sha256") != candidate_runtime.get(candidate_key)
+        ):
             return False
     gds_receipt = manifest.get("historical_gds_identity_pass_receipt")
     if not isinstance(gds_receipt, Mapping) or gds_receipt.get("sha256") != candidate_runtime.get(

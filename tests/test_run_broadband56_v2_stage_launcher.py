@@ -293,14 +293,14 @@ receipt = {
             if role == "stage_execution_profile"
             else f"{role}\n",
         )
-        if role == "emx_wrapper":
+        if role in {"emx_wrapper", "python_executable"}:
             path.chmod(0o755)
         runtime_identities[role] = {
             "path": str(path.resolve()),
             "sha256": _sha(path),
             "size_bytes": path.stat().st_size,
         }
-        if role == "emx_wrapper":
+        if role in {"emx_wrapper", "python_executable"}:
             runtime_identities[role]["executable"] = True
     command = [
         str(backend_script.resolve()),
@@ -351,7 +351,9 @@ receipt = {
         },
         "preparation_bindings": {
             "preparation_receipt_sha256": "1" * 64,
-            "private_configuration_sha256": "2" * 64,
+            "private_configuration_sha256": runtime_identities[
+                "private_configuration"
+            ]["sha256"],
             "historical_configuration_sha256": "3" * 64,
             "operational_policy_approval_receipt_sha256": "4" * 64,
         },

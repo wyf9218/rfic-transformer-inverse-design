@@ -108,6 +108,7 @@ def _backend_manifest(tmp_path: Path) -> tuple[dict, Path]:
     }
     files["production_stage_backend"].chmod(0o755)
     files["emx_wrapper"].chmod(0o755)
+    files["python_executable"].chmod(0o755)
     files["stage_execution_profile"] = _write(
         files["stage_execution_profile"],
         _execution_profile(),
@@ -116,6 +117,7 @@ def _backend_manifest(tmp_path: Path) -> tuple[dict, Path]:
     runtimes = {role: _identity(files[role]) for role in REQUIRED_RUNTIME_ROLES}
     scripts["production_stage_backend"]["executable"] = True
     runtimes["emx_wrapper"]["executable"] = True
+    runtimes["python_executable"]["executable"] = True
     historical_one = _write(
         tmp_path / "history" / "backend_one.json",
         {"overall_status": "PASS", "receipt_id": "one"},
@@ -157,7 +159,7 @@ def _backend_manifest(tmp_path: Path) -> tuple[dict, Path]:
         },
         "preparation_bindings": {
             "preparation_receipt_sha256": "1" * 64,
-            "private_configuration_sha256": "2" * 64,
+            "private_configuration_sha256": _sha(files["private_configuration"]),
             "historical_configuration_sha256": "3" * 64,
             "operational_policy_approval_receipt_sha256": "4" * 64,
         },
@@ -377,6 +379,31 @@ def test_backend_manifest_rejects_non_executable_emx_wrapper(tmp_path: Path) -> 
     errors = validate_backend_identity_manifest(manifest, verify_files=True)
 
     assert "runtime_identities.emx_wrapper.path is not executable" in errors
+
+
+def test_backend_manifest_rejects_non_executable_python_runtime(
+    tmp_path: Path,
+) -> None:
+    manifest, _ = _backend_manifest(tmp_path)
+    python = Path(manifest["runtime_identities"]["python_executable"]["path"])
+    python.chmod(0o644)
+
+    errors = validate_backend_identity_manifest(manifest, verify_files=True)
+
+    assert "runtime_identities.python_executable.path is not executable" in errors
+
+
+def test_backend_manifest_rejects_private_configuration_binding_drift(
+    tmp_path: Path,
+) -> None:
+    manifest, _ = _backend_manifest(tmp_path)
+    manifest["preparation_bindings"]["private_configuration_sha256"] = "f" * 64
+
+    errors = validate_backend_identity_manifest(manifest, verify_files=True)
+
+    assert any(
+        "private_configuration.sha256 must match" in error for error in errors
+    )
 
 
 def test_backend_manifest_reparses_stage_profile_after_identity_match(

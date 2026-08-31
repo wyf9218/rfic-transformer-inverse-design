@@ -32,9 +32,9 @@ from .broadband56_stage_execution import (
 )
 
 
-BACKEND_MANIFEST_SCHEMA = "rfic_transformer.broadband56_v2_private_backend_identity.v6"
+BACKEND_MANIFEST_SCHEMA = "rfic_transformer.broadband56_v2_private_backend_identity.v7"
 BACKEND_VERIFICATION_SCHEMA = (
-    "rfic_transformer.broadband56_v2_private_backend_identity_verification.v2"
+    "rfic_transformer.broadband56_v2_private_backend_identity_verification.v3"
 )
 BACKEND_VERIFICATION_PASS_DECISION = "USE_HASH_BOUND_PRODUCTION_BACKEND"
 BACKEND_MANIFEST_EFFECT = "IDENTITY_ONLY_NO_EXECUTION"
@@ -95,6 +95,7 @@ PRODUCTION_CHAIN = (
 
 REQUIRED_SCRIPT_ROLES = (
     "queue_controller",
+    "resource_gate_auditor",
     "stage_launcher",
     "production_stage_backend",
     "phase_a_queue_builder",
@@ -124,6 +125,8 @@ REQUIRED_SCRIPT_ROLES = (
 REQUIRED_RUNTIME_ROLES = (
     "private_configuration",
     "stage_execution_profile",
+    "resource_probe",
+    "python_executable",
     "emx_wrapper",
     "emx_process_file",
     "cadence_layout_generator",
@@ -326,6 +329,17 @@ def validate_backend_identity_manifest(
         label="runtime_identities",
         verify_files=verify_files,
     )
+    if isinstance(preparation, Mapping) and isinstance(runtimes, Mapping):
+        private_configuration = runtimes.get("private_configuration")
+        if (
+            not isinstance(private_configuration, Mapping)
+            or private_configuration.get("sha256")
+            != preparation.get("private_configuration_sha256")
+        ):
+            errors.append(
+                "runtime_identities.private_configuration.sha256 must match "
+                "preparation_bindings.private_configuration_sha256"
+            )
     _validate_stage_execution_profile_identity(
         errors,
         manifest=manifest,
@@ -677,7 +691,10 @@ def _validate_identity_records(
             errors.append(f"{label}.{role}.size_bytes is invalid")
         must_be_executable = (
             label == "script_identities" and role == "production_stage_backend"
-        ) or (label == "runtime_identities" and role == "emx_wrapper")
+        ) or (
+            label == "runtime_identities"
+            and role in {"python_executable", "emx_wrapper"}
+        )
         if must_be_executable and record.get("executable") is not True:
             errors.append(f"{label}.{role}.executable must be true")
         if not verify_files:
