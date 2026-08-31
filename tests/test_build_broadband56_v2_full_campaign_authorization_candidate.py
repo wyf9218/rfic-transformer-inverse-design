@@ -55,6 +55,9 @@ def _args(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> list[str]:
         "adaptive-candidate-selector",
         "adaptive-round-stager",
         "cadence-streamout-runner",
+        "candidate-gds-index-builder",
+        "gds-physical-identity-auditor",
+        "gds-physical-identity-module",
         "calibre-runner",
         "calibre-zero-blocking-receipt-builder",
         "exact-audited-gds-emx-runner",
@@ -101,6 +104,10 @@ def test_builds_public_safe_exact_candidate(
     assert not validate_full_campaign_candidate(candidate, repository_root=MODULE.ROOT)
     assert candidate["execution_effect_of_candidate_file"] == "NONE_REQUEST_ONLY"
     assert candidate["automatic_campaign_execution_authorized"] is False
+    runtime = candidate["runtime_and_backend_identity"]
+    assert runtime["candidate_gds_index_builder_sha256"]
+    assert runtime["gds_physical_identity_auditor_sha256"]
+    assert runtime["gds_physical_identity_module_sha256"]
     serialized = json.dumps(candidate)
     assert "/volumes/" not in serialized
     assert _sha(paths[0]) in (out_dir / "SHA256SUMS.txt").read_text()

@@ -98,6 +98,9 @@ def _parse_args(argv: list[str] | None) -> argparse.Namespace:
     parser.add_argument("--adaptive-candidate-selector-sha256", required=True)
     parser.add_argument("--adaptive-round-stager-sha256", required=True)
     parser.add_argument("--cadence-streamout-runner-sha256", required=True)
+    parser.add_argument("--candidate-gds-index-builder-sha256", required=True)
+    parser.add_argument("--gds-physical-identity-auditor-sha256", required=True)
+    parser.add_argument("--gds-physical-identity-module-sha256", required=True)
     parser.add_argument("--calibre-runner-sha256", required=True)
     parser.add_argument("--calibre-zero-blocking-receipt-builder-sha256", required=True)
     parser.add_argument("--exact-audited-gds-emx-runner-sha256", required=True)
@@ -220,6 +223,15 @@ def build_candidate(args: argparse.Namespace, *, out_dir: Path) -> dict[str, str
             ),
             "adaptive_round_stager_sha256": args.adaptive_round_stager_sha256,
             "cadence_streamout_runner_sha256": args.cadence_streamout_runner_sha256,
+            "candidate_gds_index_builder_sha256": (
+                args.candidate_gds_index_builder_sha256
+            ),
+            "gds_physical_identity_auditor_sha256": (
+                args.gds_physical_identity_auditor_sha256
+            ),
+            "gds_physical_identity_module_sha256": (
+                args.gds_physical_identity_module_sha256
+            ),
             "resource_policy": RESOURCE_POLICY,
             "operational_policy_approval_scope": POLICY_APPROVAL_SCOPE,
             "calibre_runner_sha256": args.calibre_runner_sha256,

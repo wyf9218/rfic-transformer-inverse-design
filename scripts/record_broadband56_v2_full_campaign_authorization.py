@@ -395,6 +395,11 @@ def _backend_manifest_matches_candidate(
         "adaptive_candidate_selector": "adaptive_candidate_selector_sha256",
         "adaptive_round_stager": "adaptive_round_stager_sha256",
         "cadence_streamout_runner": "cadence_streamout_runner_sha256",
+        "candidate_gds_index_builder": "candidate_gds_index_builder_sha256",
+        "gds_physical_identity_auditor": (
+            "gds_physical_identity_auditor_sha256"
+        ),
+        "gds_physical_identity_module": "gds_physical_identity_module_sha256",
         "calibre_runner": "calibre_runner_sha256",
         "calibre_zero_blocking_receipt_builder": (
             "calibre_zero_blocking_receipt_builder_sha256"

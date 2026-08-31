@@ -27,7 +27,7 @@ from .broadband56_full_campaign_authorization import (
 )
 
 
-BACKEND_MANIFEST_SCHEMA = "rfic_transformer.broadband56_v2_private_backend_identity.v3"
+BACKEND_MANIFEST_SCHEMA = "rfic_transformer.broadband56_v2_private_backend_identity.v4"
 BACKEND_VERIFICATION_SCHEMA = (
     "rfic_transformer.broadband56_v2_private_backend_identity_verification.v1"
 )
@@ -98,6 +98,9 @@ REQUIRED_SCRIPT_ROLES = (
     "adaptive_candidate_selector",
     "adaptive_round_stager",
     "cadence_streamout_runner",
+    "candidate_gds_index_builder",
+    "gds_physical_identity_auditor",
+    "gds_physical_identity_module",
     "calibre_runner",
     "calibre_zero_blocking_receipt_builder",
     "exact_audited_gds_emx_runner",

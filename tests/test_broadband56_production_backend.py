@@ -5,6 +5,8 @@ import importlib.util
 import json
 from pathlib import Path
 
+import pytest
+
 from rfic_transformer_inverse_design.campaigns.broadband56_capacity_policy import (
     SCIENTIFIC_CONTRACT_FINGERPRINT,
     STAGES,
@@ -240,6 +242,25 @@ def test_backend_manifest_rejects_missing_stage(tmp_path: Path) -> None:
     errors = validate_backend_identity_manifest(manifest, verify_files=False)
 
     assert "stage_commands keys do not exactly match the ordered stages" in errors
+
+
+@pytest.mark.parametrize(
+    "role",
+    (
+        "candidate_gds_index_builder",
+        "gds_physical_identity_auditor",
+        "gds_physical_identity_module",
+    ),
+)
+def test_backend_manifest_requires_current_gds_identity_roles(
+    tmp_path: Path, role: str
+) -> None:
+    manifest, _ = _backend_manifest(tmp_path)
+    del manifest["script_identities"][role]
+
+    errors = validate_backend_identity_manifest(manifest, verify_files=False)
+
+    assert f"script_identities lacks roles: ['{role}']" in errors
 
 
 def test_backend_manifest_rejects_unbound_interpreter_prefix(tmp_path: Path) -> None:

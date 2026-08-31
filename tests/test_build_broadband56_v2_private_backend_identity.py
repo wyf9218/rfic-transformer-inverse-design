@@ -113,6 +113,15 @@ def test_builder_writes_complete_self_validating_manifest(tmp_path: Path) -> Non
     assert manifest["script_identities"]["full_band_s4p_qa_module"]["sha256"] == _sha(
         files["full_band_s4p_qa_module"]
     )
+    assert manifest["script_identities"]["candidate_gds_index_builder"]["sha256"] == _sha(
+        files["candidate_gds_index_builder"]
+    )
+    assert manifest["script_identities"]["gds_physical_identity_auditor"]["sha256"] == _sha(
+        files["gds_physical_identity_auditor"]
+    )
+    assert manifest["script_identities"]["gds_physical_identity_module"]["sha256"] == _sha(
+        files["gds_physical_identity_module"]
+    )
     assert set(manifest["stage_commands"]) == {stage.name for stage in STAGES}
     assert all(
         command["argv"][0]

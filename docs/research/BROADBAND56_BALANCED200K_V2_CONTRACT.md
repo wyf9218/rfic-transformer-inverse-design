@@ -137,11 +137,12 @@ simulator work must remain forbidden.
   production backend. The verifier independently rehashes every named file.
   Both the exact56 QA CLI and its imported calculation module are separate
   required roles. Neither command launches a simulator, queue, or supervisor.
-- The private backend manifest V3 binds the actual current campaign chain:
+- The private backend manifest V4 binds the actual current campaign chain:
   Phase-A queue construction; adaptive pool/training/prediction/selection/round
-  staging; candidate-bound Cadence streamout; Calibre execution; per-candidate
-  zero-blocking receipt construction; exact-GDS EMX; exact56 QA; raw-product,
-  checkpoint, history, training-readiness, and final-delivery finalization. The
+  staging; candidate-bound Cadence streamout; candidate-to-GDS index building;
+  GDS physical-identity auditing; Calibre execution; per-candidate zero-blocking
+  receipt construction; exact-GDS EMX; exact56 QA; raw-product, checkpoint,
+  history, training-readiness, and final-delivery finalization. The
   historical fixed10k Calibre pass-queue freezer and Stage07/08 statistics
   watcher are evidence for their original lane only and are explicitly not
   accepted as current broadband56 production roles.

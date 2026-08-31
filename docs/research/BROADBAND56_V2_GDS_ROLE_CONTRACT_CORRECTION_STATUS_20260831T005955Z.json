@@ -1,0 +1,94 @@
+{
+  "schema": "rfic_transformer.broadband56_v2_public_safe_gds_role_contract_correction_status.v1",
+  "generated_utc": "2026-08-31T01:43:54Z",
+  "overall_status": "PASS",
+  "decision": "REQUIRE_EXPLICIT_GDS_INDEX_AND_PHYSICAL_IDENTITY_ROLES_BEFORE_PRIVATE_AUTHORIZATION",
+  "campaign_id": "broadband56_real_emx_balanced200k_tsmc65_v2",
+  "contract_fingerprint_sha256": "f86a00efbf7756b7421b863bbb16c340db6b423640f63a3257d46c1af49eb55e",
+  "starting_commit_sha256": "59d56043a356f8678b981ef1dd6f8de9a7937a42",
+  "owner_stop_status": {
+    "path": "docs/research/BROADBAND56_V2_OWNER_STOP_STATUS_20260830T195649Z.json",
+    "sha256": "b0d97d1266a138c3726e6e923b901f4cffc3ff126d3a453e6e80bd9c09e38431",
+    "restart_authorized": false
+  },
+  "schema_corrections": {
+    "private_backend_manifest": "rfic_transformer.broadband56_v2_private_backend_identity.v4",
+    "full_campaign_candidate": "rfic_transformer.broadband56_v2_full_campaign_authorization_candidate.v3",
+    "full_campaign_approval": "rfic_transformer.broadband56_v2_full_campaign_authorization_approval.v3",
+    "production_backend_id": "MARS_CADENCE_GDS_IDENTITY_CALIBRE_EMX_S4P_QA_V3"
+  },
+  "new_required_script_roles": [
+    "candidate_gds_index_builder",
+    "gds_physical_identity_auditor",
+    "gds_physical_identity_module"
+  ],
+  "role_boundary": {
+    "cadence_streamout_runner": "creates the candidate-bound Cadence stream-out GDS",
+    "candidate_gds_index_builder": "binds each candidate and canonical geometry identity to one exact Cadence GDS and its geometry audit",
+    "gds_physical_identity_auditor": "proves the intended direct-layout and Cadence stream-out physical structures are identical before Calibre",
+    "gds_physical_identity_module": "contains the separately hash-bound structural comparison implementation imported by the auditor CLI",
+    "calibre_runner": "consumes only the audited GDS index",
+    "calibre_zero_blocking_receipt_builder": "binds zero-blocking Calibre evidence to the exact GDS consumed by fresh EMX"
+  },
+  "historical_evidence": {
+    "candidate_gds_index_builder_sha256": "8728cec2bfa926701e7b4ff6cc6081f360942ee3bd608315269010d9d45a792d",
+    "historical_fixed14_gds_physical_identity_auditor_sha256": "51e66f8bcecc374d8649b1a713a77ff2245da0fc85f22e92b5d1076dc09a0f09",
+    "historical_fixed14_auditor_is_current_production_role": false,
+    "reason": "The historical auditor freezes expected_count=14 and therefore cannot be bound as the general 200,000-geometry production auditor."
+  },
+  "production_general_implementation": {
+    "auditor_cli": {
+      "path": "scripts/audit_broadband56_gds_physical_identity.py",
+      "sha256": "1519c4277ba587dcd2916fef0f73e27c90e9ed0a78e173a4e500aa8a09476d4d"
+    },
+    "auditor_module": {
+      "path": "rfic_transformer_inverse_design/campaigns/broadband56_gds_identity.py",
+      "sha256": "d0e241b4bbc42e2fd7bd56515da2ae5e89a0ffbdf08107f1b6729e853a4e05fb"
+    },
+    "adversarial_tests": {
+      "path": "tests/test_broadband56_gds_identity.py",
+      "sha256": "3b0d16eabe1e9710da4582d9b8986b6eac84af6266a007b157f0814978f4ef6f"
+    },
+    "fixed_expected_count": false,
+    "requires_positive_runtime_expected_count": true,
+    "candidate_record_uses_full_sha256": true,
+    "direct_and_cadence_polygon_multisets_must_match": true,
+    "direct_and_cadence_base_label_sets_must_match": true,
+    "candidate_physical_hashes_must_be_unique": true,
+    "input_csvs_and_gds_are_rehashed_after_audit": true,
+    "simulator_capability": false
+  },
+  "tests": {
+    "auditor_command": "/tmp/codex_broadband56_py312_20260828_v2/bin/python -m pytest -q tests/test_broadband56_gds_identity.py",
+    "auditor_result": "8 passed in 0.92s",
+    "role_chain_command": "/tmp/codex_broadband56_py312_20260828_v2/bin/python -m pytest -q tests/test_broadband56_gds_identity.py tests/test_broadband56_production_backend.py tests/test_build_broadband56_v2_private_backend_identity.py tests/test_build_broadband56_v2_full_campaign_authorization_candidate.py tests/test_record_broadband56_v2_full_campaign_authorization.py tests/test_build_broadband56_calibre_zero_blocking_receipt.py",
+    "role_chain_result": "51 passed in 4.20s",
+    "initial_broadband56_suite_invocation": "NOT_RUN_ZSH_MULTILINE_ARGUMENT_WAS_NOT_SPLIT",
+    "broadband56_suite_command": "rg --files tests | rg '/test_.*broadband56.*\\.py$' | sort | xargs /tmp/codex_broadband56_py312_20260828_v2/bin/python -m pytest -q",
+    "broadband56_suite_result": "196 passed in 14.46s",
+    "broadband56_test_file_count": 27
+  },
+  "static_checks": {
+    "py_compile": "PASS",
+    "auditor_cli_help": "PASS",
+    "full_candidate_cli_help": "PASS",
+    "full_authorization_recorder_cli_help": "PASS",
+    "json_parse": "PASS",
+    "embedded_implementation_hashes": "PASS",
+    "git_diff_check": "PASS",
+    "initial_broad_scan": "EXPECTED_GUARD_LITERALS_ONLY",
+    "strict_private_identity_scan": "PASS"
+  },
+  "current_runtime_readiness": {
+    "private_manifest_created": false,
+    "full_campaign_candidate_created": false,
+    "production_general_gds_physical_identity_auditor_selected": true,
+    "next_required_work": "Implement and adversarially test the production stage backend that invokes the complete hash-bound chain."
+  },
+  "simulator_action_taken": false,
+  "mars_write_action_taken": false,
+  "queue_or_supervisor_action_taken": false,
+  "accepted_geometries": 0,
+  "s4p_artifacts": 0,
+  "feature_rows": 0
+}

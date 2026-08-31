@@ -330,6 +330,15 @@ def _valid_fixture(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> dict[str,
             "cadence_streamout_runner_sha256": script_hashes[
                 "cadence_streamout_runner"
             ],
+            "candidate_gds_index_builder_sha256": script_hashes[
+                "candidate_gds_index_builder"
+            ],
+            "gds_physical_identity_auditor_sha256": script_hashes[
+                "gds_physical_identity_auditor"
+            ],
+            "gds_physical_identity_module_sha256": script_hashes[
+                "gds_physical_identity_module"
+            ],
             "resource_policy": RESOURCE_POLICY,
             "operational_policy_approval_scope": POLICY_APPROVAL_SCOPE,
             "calibre_runner_sha256": script_hashes["calibre_runner"],
@@ -458,6 +467,22 @@ def test_rejects_changed_frequency_contract(
     candidate["frequency_contract"]["points"] = 55
     candidate_path = fixture["candidate_path"]
     assert isinstance(candidate_path, Path)
+    _write(candidate_path, candidate)
+
+    assert MODULE.main(_argv(fixture, tmp_path / "receipt")) == 2
+
+
+def test_rejects_gds_physical_identity_role_hash_drift(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    fixture = _valid_fixture(tmp_path, monkeypatch)
+    candidate = fixture["candidate"]
+    candidate_path = fixture["candidate_path"]
+    assert isinstance(candidate, dict)
+    assert isinstance(candidate_path, Path)
+    candidate["runtime_and_backend_identity"][
+        "gds_physical_identity_auditor_sha256"
+    ] = "f" * 64
     _write(candidate_path, candidate)
 
     assert MODULE.main(_argv(fixture, tmp_path / "receipt")) == 2
