@@ -1,0 +1,151 @@
+{
+  "schema": "rfic_transformer.broadband56_v2_production_stage_backend_status.v1",
+  "generated_utc": "2026-08-31T02:28:06Z",
+  "overall_status": "PASS",
+  "decision": "USE_LOCAL_IMPLEMENTATION_DO_NOT_LAUNCH_UNTIL_OWNER_STOP_REVERSAL_AND_PRIVATE_REBIND",
+  "campaign_id": "broadband56_real_emx_balanced200k_tsmc65_v2",
+  "scientific_contract_fingerprint_sha256": "f86a00efbf7756b7421b863bbb16c340db6b423640f63a3257d46c1af49eb55e",
+  "branch": "codex/broadband56-balanced200k-v2",
+  "base_commit": "c6b8fa2d4145d2104e87e5e9810d803f3ba7d108",
+  "supersedes_status": "docs/research/BROADBAND56_V2_CURRENT_ROLE_MODEL_STATUS_20260831T001827Z.json",
+  "current_role_model": {
+    "private_backend_manifest_schema": "rfic_transformer.broadband56_v2_private_backend_identity.v5",
+    "full_campaign_candidate_schema": "rfic_transformer.broadband56_v2_full_campaign_authorization_candidate.v4",
+    "full_campaign_approval_schema": "rfic_transformer.broadband56_v2_full_campaign_authorization_approval.v4",
+    "stage_receipt_schema": "rfic_transformer.broadband56_v2_stage_receipt.v2",
+    "production_backend_id": "MARS_CADENCE_GDS_IDENTITY_CALIBRE_EMX_S4P_QA_V4",
+    "execution_profile_schema": "rfic_transformer.broadband56_v2_stage_execution_profile.v1",
+    "execution_profile_is_separate_private_hash_bound_artifact": true,
+    "approved_production_configuration_bytes_modified": false
+  },
+  "implementation": {
+    "production_stage_backend": {
+      "path": "scripts/run_broadband56_v2_production_stage_backend.py",
+      "sha256": "e6f0aa94999e6595959bdffe934fadb38203ef9e94148cb0cd021972c3e93c41",
+      "executable": true,
+      "shell_used": false
+    },
+    "stage_execution_profile_validator": {
+      "path": "rfic_transformer_inverse_design/campaigns/broadband56_stage_execution.py",
+      "sha256": "ecf1daa788313526a9d958d74342c6e5c46fb85d381b7ecc706f18b50d8c175b"
+    },
+    "production_contract_validator": {
+      "path": "rfic_transformer_inverse_design/campaigns/broadband56_production_backend.py",
+      "sha256": "188d865998583d9a054fab1af08b330513166d6230c943cc4afaad8abb3f908b"
+    },
+    "full_campaign_authorization_contract": {
+      "path": "rfic_transformer_inverse_design/campaigns/broadband56_full_campaign_authorization.py",
+      "sha256": "64c645ade9b2fa5d37f1c6bd6d7d15b52ad9a7b6c83e95214f46f5129a085a9d"
+    }
+  },
+  "enforced_execution_contract": {
+    "ordered_stages": [
+      "GOLDEN",
+      "PILOT_32",
+      "PILOT_1000",
+      "PHASE_A",
+      "PHASE_B",
+      "PHASE_C"
+    ],
+    "stage_targets": [
+      1,
+      32,
+      1000,
+      50000,
+      150000,
+      200000
+    ],
+    "frequency_grid": "5_to_60_GHz_inclusive_step_1_GHz",
+    "frequency_points": 56,
+    "final_accepted_geometries": 200000,
+    "final_s4p_artifacts": 200000,
+    "final_geometry_frequency_rows": 11200000,
+    "fresh_real_emx_only_labels": true,
+    "proxy_may_rank_candidates_only": true,
+    "exact_role_order_required": true,
+    "role_script_sha256_rechecked_before_and_after_execution": true,
+    "all_role_receipts_must_be_pass": true,
+    "checkpoint_receipt_reparsed": true,
+    "phase_c_terminal_receipts_reparsed": true,
+    "failure_evidence_preserved_without_pass_stage_receipt": true,
+    "no_clobber_required": true
+  },
+  "test_evidence": {
+    "initial_focused_regression": {
+      "status": "EXPECTED_FAIL_THEN_REPAIRED",
+      "passed": 32,
+      "failed": 8,
+      "cause": "legacy test fixtures did not yet emit the new checkpoint and checkpoint-figure identities"
+    },
+    "focused_authorization_backend_launcher_regression": {
+      "status": "PASS",
+      "passed": 51,
+      "failed": 0
+    },
+    "new_profile_and_mock_backend_adversarial_tests": {
+      "status": "PASS",
+      "passed": 13,
+      "failed": 0,
+      "coverage": [
+        "exact role order",
+        "shell-free execution",
+        "unsafe path and placeholder rejection",
+        "failed role evidence preservation",
+        "checkpoint count mismatch rejection",
+        "role-script SHA-256 drift rejection",
+        "out-of-order stage rejection",
+        "profile validator has no process-execution capability",
+        "no-clobber behavior"
+      ]
+    },
+    "all_broadband56_tests": {
+      "status": "PASS",
+      "passed": 210,
+      "failed": 0
+    },
+    "production_receipt_profile_backend_tests": {
+      "status": "PASS",
+      "passed": 32,
+      "failed": 0,
+      "includes_phase_c_exact_terminal_count_gate": true
+    },
+    "python_compile": "PASS",
+    "full_repository_test_observation": {
+      "status": "KNOWN_BASELINE_ASSET_GAPS_OUTSIDE_BROADBAND56_SCOPE",
+      "passed": 1764,
+      "skipped": 55,
+      "failed": 164,
+      "broadband56_failures_in_pytest_lastfailed_index": 0,
+      "failure_examples": [
+        "missing historical research snapshot contract files",
+        "missing HFSS/S8P delivery fixtures",
+        "environment-specific archived workflow assets"
+      ]
+    }
+  },
+  "runtime_authority": {
+    "owner_stop_still_authoritative": true,
+    "owner_stop_status_sha256": "b0d97d1266a138c3726e6e923b901f4cffc3ff126d3a453e6e80bd9c09e38431",
+    "restart_authorized": false,
+    "mars_write_action_taken": false,
+    "cadence_action_taken": false,
+    "calibre_action_taken": false,
+    "emx_action_taken": false,
+    "queue_or_supervisor_action_taken": false
+  },
+  "physical_counts": {
+    "accepted_geometries": 0,
+    "s4p_artifacts": 0,
+    "geometry_frequency_rows": 0
+  },
+  "remaining_runtime_requirements": {
+    "explicit_owner_stop_reversal": "REQUIRED",
+    "fresh_resource_license_isolation_storage_pass": "REQUIRED",
+    "private_stage_execution_profile": "NOT_CREATED_OR_HASH_BOUND_ON_MARS",
+    "private_backend_identity_manifest_v5": "NOT_CREATED",
+    "private_backend_identity_verification_receipt": "NOT_CREATED",
+    "full_campaign_authorization_candidate_v4": "NOT_CREATED",
+    "exact_sha256_full_campaign_owner_approval": "NOT_RECORDED"
+  },
+  "next_legal_action": "After explicit owner-stop reversal, create the separate private stage-execution profile without changing the approved production configuration, rebuild and verify the v5 private backend manifest, run a fresh read-only resource preflight, then prepare the exact-SHA full-campaign authorization candidate; do not launch a simulator before all gates pass."
+}

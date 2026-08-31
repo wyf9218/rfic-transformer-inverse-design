@@ -68,6 +68,7 @@ def _args(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> list[str]:
         "checkpoint-auditor",
         "campaign-histories-finalizer",
         "training-readiness-finalizer",
+        "checkpoint-figure-renderer",
         "final-delivery-auditor",
         "historical-gds-identity-pass-receipt",
     ]

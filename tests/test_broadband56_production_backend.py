@@ -32,6 +32,7 @@ from rfic_transformer_inverse_design.campaigns.broadband56_production_backend im
     STAGE_COMMAND_ARGUMENTS,
     STAGE_GATE_FIELDS,
     STAGE_RECEIPT_SCHEMA,
+    stage_artifact_fields,
     validate_backend_identity_manifest,
     validate_stage_receipt,
     validate_stage_receipt_chain,
@@ -146,7 +147,12 @@ def _backend_manifest(tmp_path: Path) -> tuple[dict, Path]:
     return manifest, path
 
 
-def _stage_receipt(tmp_path: Path, *, target: int = 1) -> dict:
+def _stage_receipt(
+    tmp_path: Path,
+    *,
+    target: int = 1,
+    stage: str = "GOLDEN",
+) -> dict:
     raw_receipt = {
         "schema": "broadband56_raw_products_receipt_v1",
         "overall_status": "PASS",
@@ -166,14 +172,64 @@ def _stage_receipt(tmp_path: Path, *, target: int = 1) -> dict:
         },
     }
     raw_path = _write(tmp_path / "artifacts" / "raw_products.json", raw_receipt)
-    artifact_paths = {
-        role: (
-            raw_path
-            if role == "raw_products_receipt"
-            else _write(tmp_path / "artifacts" / role, f"{role}\n")
-        )
-        for role in STAGE_ARTIFACT_FIELDS
+    checkpoint_receipt = {
+        "overall_status": "PASS",
+        "decision": "USE_CHECKPOINT",
+        "campaign_id": "broadband56_real_emx_balanced200k_tsmc65_v2",
+        "contract_fingerprint_sha256": SCIENTIFIC_CONTRACT_FINGERPRINT,
+        "expected_accepted": target,
+        "checks": [{"name": "exact_count", "pass": True}],
     }
+    checkpoint_path = _write(
+        tmp_path / "artifacts" / "checkpoint_receipt.json",
+        checkpoint_receipt,
+    )
+    terminal_receipts = {
+        "campaign_history_receipt": {
+            "overall_status": "PASS",
+            "decision": "USE_AS_AUDITED_CAMPAIGN_HISTORY",
+            "campaign_id": "broadband56_real_emx_balanced200k_tsmc65_v2",
+            "contract_fingerprint_sha256": SCIENTIFIC_CONTRACT_FINGERPRINT,
+        },
+        "training_readiness_receipt": {
+            "overall_status": "PASS",
+            "decision": "USE_DERIVED_PRODUCTS_FOR_FUTURE_TRAINING_PREPARATION_ONLY",
+            "campaign_id": "broadband56_real_emx_balanced200k_tsmc65_v2",
+            "contract_fingerprint_sha256": SCIENTIFIC_CONTRACT_FINGERPRINT,
+        },
+        "checkpoint_figure_receipt": {
+            "overall_status": "PASS",
+            "decision": "USE_AS_AUDITED_STATIC_CHECKPOINT_FIGURES",
+            "campaign_id": "broadband56_real_emx_balanced200k_tsmc65_v2",
+            "contract_fingerprint_sha256": SCIENTIFIC_CONTRACT_FINGERPRINT,
+        },
+        "final_delivery_receipt": {
+            "overall_status": "PASS",
+            "decision": "REPORT_COMPLETE_200K_WITH_SEPARATE_COVERAGE_STATUS",
+            "campaign_id": "broadband56_real_emx_balanced200k_tsmc65_v2",
+            "contract_fingerprint_sha256": SCIENTIFIC_CONTRACT_FINGERPRINT,
+            "execution_completion": "COMPLETE_200K",
+            "terminal_counts": {
+                "accepted_geometries": 200_000,
+                "s4p_artifacts": 200_000,
+                "geometry_frequency_rows": 11_200_000,
+            },
+        },
+    }
+    artifact_paths = {}
+    for role in stage_artifact_fields(stage):
+        if role == "raw_products_receipt":
+            path = raw_path
+        elif role == "checkpoint_receipt":
+            path = checkpoint_path
+        elif role in terminal_receipts:
+            path = _write(
+                tmp_path / "artifacts" / f"{role}.json",
+                terminal_receipts[role],
+            )
+        else:
+            path = _write(tmp_path / "artifacts" / role, f"{role}\n")
+        artifact_paths[role] = path
     failure = {field: 0 for field in FAILURE_ACCOUNTING_FIELDS}
     failure["raw_geometry_candidates"] = target
     failure["accepted_geometries"] = target
@@ -184,8 +240,8 @@ def _stage_receipt(tmp_path: Path, *, target: int = 1) -> dict:
         "campaign_id": "broadband56_real_emx_balanced200k_tsmc65_v2",
         "contract_fingerprint_sha256": SCIENTIFIC_CONTRACT_FINGERPRINT,
         "backend_id": PRODUCTION_BACKEND_ID,
-        "stage": "GOLDEN",
-        "terminal_state": "GOLDEN_COMPLETE",
+        "stage": stage,
+        "terminal_state": {item.name: item.receipt_status for item in STAGES}[stage],
         "cumulative_target": target,
         "accepted_unique_geometries": target,
         "backend_identity_manifest_sha256": "8" * 64,
@@ -388,6 +444,38 @@ def test_stage_receipt_chain_revalidates_prior_stage_bytes(tmp_path: Path) -> No
         in error
         for error in errors
     )
+
+
+def test_phase_c_requires_exact_terminal_delivery_counts(tmp_path: Path) -> None:
+    receipt = _stage_receipt(tmp_path, target=200_000, stage="PHASE_C")
+    receipt["prior_stage_receipt_sha256"] = "7" * 64
+
+    assert validate_stage_receipt(
+        receipt,
+        stage="PHASE_C",
+        cumulative_target=200_000,
+        backend_manifest_sha256="8" * 64,
+        authorization_receipt_sha256="9" * 64,
+        prior_stage_receipt_sha256="7" * 64,
+        verify_artifacts=True,
+    ) == []
+
+    final_record = receipt["artifacts"]["final_delivery_receipt"]
+    final_path = Path(final_record["path"])
+    final = json.loads(final_path.read_text(encoding="utf-8"))
+    final["terminal_counts"]["geometry_frequency_rows"] = 11_199_999
+    _write(final_path, final)
+    final_record.update(_identity(final_path))
+    errors = validate_stage_receipt(
+        receipt,
+        stage="PHASE_C",
+        cumulative_target=200_000,
+        backend_manifest_sha256="8" * 64,
+        authorization_receipt_sha256="9" * 64,
+        prior_stage_receipt_sha256="7" * 64,
+        verify_artifacts=True,
+    )
+    assert "final_delivery_receipt.terminal_counts.geometry_frequency_rows mismatch" in errors
 
 
 def test_stage_receipt_rejects_artifact_path_outside_stage_root(

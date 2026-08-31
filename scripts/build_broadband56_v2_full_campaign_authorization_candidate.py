@@ -111,6 +111,7 @@ def _parse_args(argv: list[str] | None) -> argparse.Namespace:
     parser.add_argument("--checkpoint-auditor-sha256", required=True)
     parser.add_argument("--campaign-histories-finalizer-sha256", required=True)
     parser.add_argument("--training-readiness-finalizer-sha256", required=True)
+    parser.add_argument("--checkpoint-figure-renderer-sha256", required=True)
     parser.add_argument("--final-delivery-auditor-sha256", required=True)
     parser.add_argument("--historical-gds-identity-pass-receipt-sha256", required=True)
     parser.add_argument(
@@ -253,6 +254,9 @@ def build_candidate(args: argparse.Namespace, *, out_dir: Path) -> dict[str, str
             ),
             "training_readiness_finalizer_sha256": (
                 args.training_readiness_finalizer_sha256
+            ),
+            "checkpoint_figure_renderer_sha256": (
+                args.checkpoint_figure_renderer_sha256
             ),
             "final_delivery_auditor_sha256": args.final_delivery_auditor_sha256,
             "historical_gds_identity_pass_receipt_sha256": (

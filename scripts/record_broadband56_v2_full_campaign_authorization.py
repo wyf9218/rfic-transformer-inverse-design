@@ -412,6 +412,7 @@ def _backend_manifest_matches_candidate(
         "checkpoint_auditor": "checkpoint_auditor_sha256",
         "campaign_histories_finalizer": "campaign_histories_finalizer_sha256",
         "training_readiness_finalizer": "training_readiness_finalizer_sha256",
+        "checkpoint_figure_renderer": "checkpoint_figure_renderer_sha256",
         "final_delivery_auditor": "final_delivery_auditor_sha256",
     }
     for manifest_key, candidate_key in expected_scripts.items():

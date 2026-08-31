@@ -164,10 +164,19 @@ raw_receipt = {
 
 artifacts = {}
 for role in STAGE_ARTIFACT_FIELDS:
-    suffix = '.json' if role == 'raw_products_receipt' else '.txt'
+    suffix = '.json' if role in {'raw_products_receipt', 'checkpoint_receipt'} else '.txt'
     path = out / (role + suffix)
     if role == 'raw_products_receipt':
         path.write_text(json.dumps(raw_receipt) + '\\n', encoding='utf-8')
+    elif role == 'checkpoint_receipt':
+        path.write_text(json.dumps({
+            'overall_status': 'PASS',
+            'decision': 'USE_CHECKPOINT',
+            'campaign_id': CAMPAIGN_ID,
+            'contract_fingerprint_sha256': SCIENTIFIC_CONTRACT_FINGERPRINT,
+            'expected_accepted': args.cumulative_target,
+            'checks': [{'name': 'exact_count', 'pass': True}],
+        }) + '\\n', encoding='utf-8')
     else:
         path.write_text('test artifact: ' + role + '\\n', encoding='utf-8')
     artifacts[role] = {

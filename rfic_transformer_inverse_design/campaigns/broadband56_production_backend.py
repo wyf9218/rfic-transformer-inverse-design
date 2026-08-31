@@ -27,13 +27,13 @@ from .broadband56_full_campaign_authorization import (
 )
 
 
-BACKEND_MANIFEST_SCHEMA = "rfic_transformer.broadband56_v2_private_backend_identity.v4"
+BACKEND_MANIFEST_SCHEMA = "rfic_transformer.broadband56_v2_private_backend_identity.v5"
 BACKEND_VERIFICATION_SCHEMA = (
     "rfic_transformer.broadband56_v2_private_backend_identity_verification.v1"
 )
 BACKEND_VERIFICATION_PASS_DECISION = "USE_HASH_BOUND_PRODUCTION_BACKEND"
 BACKEND_MANIFEST_EFFECT = "IDENTITY_ONLY_NO_EXECUTION"
-STAGE_RECEIPT_SCHEMA = "rfic_transformer.broadband56_v2_stage_receipt.v1"
+STAGE_RECEIPT_SCHEMA = "rfic_transformer.broadband56_v2_stage_receipt.v2"
 SHA256_PATTERN = re.compile(r"[0-9a-f]{64}")
 
 BACKEND_VERIFICATION_PASS_CHECKS = {
@@ -111,11 +111,13 @@ REQUIRED_SCRIPT_ROLES = (
     "checkpoint_auditor",
     "campaign_histories_finalizer",
     "training_readiness_finalizer",
+    "checkpoint_figure_renderer",
     "final_delivery_auditor",
 )
 
 REQUIRED_RUNTIME_ROLES = (
     "private_configuration",
+    "stage_execution_profile",
     "emx_wrapper",
     "emx_process_file",
     "cadence_layout_generator",
@@ -160,6 +162,7 @@ STAGE_GATE_FIELDS = (
 )
 
 STAGE_ARTIFACT_FIELDS = (
+    "stage_execution_trace",
     "attempt_ledger",
     "accepted_geometry_index",
     "rejected_geometry_index",
@@ -170,6 +173,16 @@ STAGE_ARTIFACT_FIELDS = (
     "raw_products_receipt",
     "checkpoint_receipt",
     "checkpoint_sha256s",
+    "checkpoint_status",
+    "coverage_summary",
+    "resource_summary",
+)
+
+TERMINAL_STAGE_ARTIFACT_FIELDS = (
+    "campaign_history_receipt",
+    "training_readiness_receipt",
+    "checkpoint_figure_receipt",
+    "final_delivery_receipt",
 )
 
 FAILURE_ACCOUNTING_FIELDS = (
@@ -467,7 +480,7 @@ def validate_stage_receipt(
     _validate_identity_records(
         errors,
         artifacts,
-        required_roles=STAGE_ARTIFACT_FIELDS,
+        required_roles=stage_artifact_fields(stage_name),
         label="artifacts",
         verify_files=verify_artifacts,
     )
@@ -485,7 +498,32 @@ def validate_stage_receipt(
                 cumulative_target=cumulative_target,
                 verify_file=verify_artifacts,
             )
+        checkpoint_record = artifacts.get("checkpoint_receipt")
+        if isinstance(checkpoint_record, Mapping):
+            _validate_checkpoint_receipt(
+                errors,
+                checkpoint_record,
+                cumulative_target=cumulative_target,
+                verify_file=verify_artifacts,
+            )
+        if stage_name == "PHASE_C":
+            _validate_terminal_receipts(
+                errors,
+                artifacts,
+                verify_files=verify_artifacts,
+            )
     return errors
+
+
+def stage_artifact_fields(stage: str) -> tuple[str, ...]:
+    """Return the exact artifact-role set for one completed stage."""
+
+    stage_name = str(stage).upper()
+    if stage_name not in {item.name for item in STAGES}:
+        raise ValueError(f"unknown stage: {stage_name}")
+    if stage_name == "PHASE_C":
+        return (*STAGE_ARTIFACT_FIELDS, *TERMINAL_STAGE_ARTIFACT_FIELDS)
+    return STAGE_ARTIFACT_FIELDS
 
 
 def validate_stage_receipt_chain(
@@ -658,7 +696,8 @@ def _validate_artifact_root(
         return
     if not isinstance(artifacts, Mapping):
         return
-    for role in STAGE_ARTIFACT_FIELDS:
+    expected_roles = set(STAGE_ARTIFACT_FIELDS) | set(TERMINAL_STAGE_ARTIFACT_FIELDS)
+    for role in expected_roles:
         record = artifacts.get(role)
         if not isinstance(record, Mapping):
             continue
@@ -881,6 +920,169 @@ def _validate_raw_products_receipt(
                 errors.append(f"raw_products.checks.{field} must be true")
 
 
+def _validate_checkpoint_receipt(
+    errors: list[str],
+    record: Mapping[str, Any],
+    *,
+    cumulative_target: int,
+    verify_file: bool,
+) -> None:
+    receipt = _read_artifact_json(
+        errors,
+        record,
+        label="artifacts.checkpoint_receipt",
+        verify_file=verify_file,
+    )
+    if receipt is None:
+        return
+    _require_equal(
+        errors,
+        "checkpoint.overall_status",
+        receipt.get("overall_status"),
+        "PASS",
+    )
+    _require_equal(
+        errors,
+        "checkpoint.decision",
+        receipt.get("decision"),
+        "USE_CHECKPOINT",
+    )
+    _require_equal(
+        errors,
+        "checkpoint.campaign_id",
+        receipt.get("campaign_id"),
+        CAMPAIGN_ID,
+    )
+    _require_equal(
+        errors,
+        "checkpoint.contract_fingerprint_sha256",
+        receipt.get("contract_fingerprint_sha256"),
+        SCIENTIFIC_CONTRACT_FINGERPRINT,
+    )
+    _require_equal(
+        errors,
+        "checkpoint.expected_accepted",
+        receipt.get("expected_accepted"),
+        cumulative_target,
+    )
+    checks = receipt.get("checks")
+    if not isinstance(checks, list) or not checks:
+        errors.append("checkpoint.checks must be a nonempty list")
+    else:
+        for index, check in enumerate(checks):
+            if not isinstance(check, Mapping) or check.get("pass") is not True:
+                errors.append(f"checkpoint.checks.{index} is not PASS")
+
+
+def _validate_terminal_receipts(
+    errors: list[str],
+    artifacts: Mapping[str, Any],
+    *,
+    verify_files: bool,
+) -> None:
+    expectations = {
+        "campaign_history_receipt": "USE_AS_AUDITED_CAMPAIGN_HISTORY",
+        "training_readiness_receipt": (
+            "USE_DERIVED_PRODUCTS_FOR_FUTURE_TRAINING_PREPARATION_ONLY"
+        ),
+        "checkpoint_figure_receipt": "USE_AS_AUDITED_STATIC_CHECKPOINT_FIGURES",
+        "final_delivery_receipt": (
+            "REPORT_COMPLETE_200K_WITH_SEPARATE_COVERAGE_STATUS"
+        ),
+    }
+    for role, decision in expectations.items():
+        record = artifacts.get(role)
+        if not isinstance(record, Mapping):
+            continue
+        receipt = _read_artifact_json(
+            errors,
+            record,
+            label=f"artifacts.{role}",
+            verify_file=verify_files,
+        )
+        if receipt is None:
+            continue
+        _require_equal(
+            errors,
+            f"{role}.overall_status",
+            receipt.get("overall_status"),
+            "PASS",
+        )
+        _require_equal(
+            errors,
+            f"{role}.decision",
+            receipt.get("decision"),
+            decision,
+        )
+        _require_equal(
+            errors,
+            f"{role}.campaign_id",
+            receipt.get("campaign_id"),
+            CAMPAIGN_ID,
+        )
+        _require_equal(
+            errors,
+            f"{role}.contract_fingerprint_sha256",
+            receipt.get("contract_fingerprint_sha256"),
+            SCIENTIFIC_CONTRACT_FINGERPRINT,
+        )
+        if role == "final_delivery_receipt":
+            _require_equal(
+                errors,
+                "final_delivery_receipt.execution_completion",
+                receipt.get("execution_completion"),
+                "COMPLETE_200K",
+            )
+            counts = receipt.get("terminal_counts")
+            if not isinstance(counts, Mapping):
+                errors.append("final_delivery_receipt.terminal_counts must be an object")
+            else:
+                _require_equal(
+                    errors,
+                    "final_delivery_receipt.terminal_counts.accepted_geometries",
+                    counts.get("accepted_geometries"),
+                    200_000,
+                )
+                _require_equal(
+                    errors,
+                    "final_delivery_receipt.terminal_counts.s4p_artifacts",
+                    counts.get("s4p_artifacts"),
+                    200_000,
+                )
+                _require_equal(
+                    errors,
+                    "final_delivery_receipt.terminal_counts.geometry_frequency_rows",
+                    counts.get("geometry_frequency_rows"),
+                    11_200_000,
+                )
+
+
+def _read_artifact_json(
+    errors: list[str],
+    record: Mapping[str, Any],
+    *,
+    label: str,
+    verify_file: bool,
+) -> Mapping[str, Any] | None:
+    if not verify_file:
+        return None
+    path_text = record.get("path")
+    if not isinstance(path_text, str) or not path_text:
+        return None
+    path = Path(path_text).expanduser().resolve()
+    if not path.is_file():
+        return None
+    try:
+        value = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeDecodeError, json.JSONDecodeError):
+        errors.append(f"{label} is not valid UTF-8 JSON")
+        return None
+    if not isinstance(value, Mapping):
+        errors.append(f"{label} is not an object")
+        return None
+    return value
+
+
 def _placeholder_tokens(value: str) -> list[str]:
     return re.findall(r"\{[A-Za-z0-9_]+\}", value)
 
@@ -926,6 +1128,8 @@ __all__ = [
     "STAGE_COMMAND_ARGUMENTS",
     "STAGE_GATE_FIELDS",
     "STAGE_RECEIPT_SCHEMA",
+    "TERMINAL_STAGE_ARTIFACT_FIELDS",
+    "stage_artifact_fields",
     "validate_backend_identity_manifest",
     "validate_stage_receipt",
     "validate_stage_receipt_chain",

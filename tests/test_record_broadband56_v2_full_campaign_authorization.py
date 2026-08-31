@@ -363,6 +363,9 @@ def _valid_fixture(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> dict[str,
             "training_readiness_finalizer_sha256": script_hashes[
                 "training_readiness_finalizer"
             ],
+            "checkpoint_figure_renderer_sha256": script_hashes[
+                "checkpoint_figure_renderer"
+            ],
             "final_delivery_auditor_sha256": script_hashes[
                 "final_delivery_auditor"
             ],
