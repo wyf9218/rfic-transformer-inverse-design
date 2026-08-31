@@ -1,0 +1,101 @@
+{
+  "schema": "rfic_transformer.broadband56_v2_private_role_audit_status.v1",
+  "generated_utc": "2026-08-31T00:09:08Z",
+  "overall_status": "PASS",
+  "decision": "IDENTITY_EVIDENCE_CLASSIFIED_CURRENT_PRODUCTION_BACKEND_NOT_READY",
+  "campaign_id": "broadband56_real_emx_balanced200k_tsmc65_v2",
+  "scientific_contract_fingerprint_sha256": "f86a00efbf7756b7421b863bbb16c340db6b423640f63a3257d46c1af49eb55e",
+  "branch": "codex/broadband56-balanced200k-v2",
+  "commit_at_audit": "a976b7258302f173d1cce6287ed2bbcc86a1e9d0",
+  "scope": "READ_ONLY_PRIVATE_IDENTITY_CLASSIFICATION_AND_PUBLIC_SAFE_STATUS",
+  "reusable_private_identity_evidence": {
+    "cadence_layout_generator": {
+      "status": "PASS_IDENTITY_ONLY",
+      "size_bytes": 59333,
+      "sha256": "52f7cc90825d00c932fecc62b501bac5e60870e0af70b44217c9a88a84cd5556",
+      "evidence": "Historical candidate runner imports TransformerEmxEvaluator; the evaluator imports the Cadence round-trip implementation; that implementation builds the dbAccess/SKILL/strmout path used by the candidate-bound streamout receipt.",
+      "execution_authorized": false
+    },
+    "calibre_runner": {
+      "status": "PASS_IDENTITY_ONLY",
+      "size_bytes": 32706,
+      "sha256": "7f0c470646c75c5e0d76c6fdea9765433850d6e5569f9074f49238c568f45a37",
+      "evidence": "Historical Calibre attempt receipt binds the exact serial runner bytes and records its foundry-deck, GDS, version, and blocking-rule accounting checks.",
+      "execution_authorized": false
+    }
+  },
+  "reusable_historical_pass_receipts": {
+    "calibre_pass_freeze_terminal": {
+      "overall_status": "PASS",
+      "size_bytes": 4735,
+      "sha256": "dea44924af556e022720ae9e3d28b5576bb3352178359003fde746be5837787f"
+    },
+    "fresh_emx_terminal": {
+      "overall_status": "PASS",
+      "size_bytes": 1569,
+      "sha256": "befee07da91752961a4bc7ea65f21f068a40f9e564125a91535e5045fc53977f"
+    },
+    "stage05_stage06_gds_identity_terminal": {
+      "overall_status": "PASS",
+      "size_bytes": 975,
+      "sha256": "cee3e8a3fe78fe21b7e086b9ae9424692ddbb5b0b67af703b9aeca8faf744f56"
+    }
+  },
+  "historical_roles_rejected_for_current_execution": {
+    "historical_calibre_pass_queue_freezer": {
+      "status": "REJECT_CURRENT_ROLE",
+      "size_bytes": 35594,
+      "sha256": "676571897e1725a4491a1284f4ef3228aa5552e7415e00e56d3898c1191e4c80",
+      "reason": "The script is bound to the historical fixed-target pass-queue schema and is evidence of that completed lane, not a generic broadband56 production component."
+    },
+    "historical_stage07_08_statistics_watcher": {
+      "status": "REJECT_CURRENT_ROLE",
+      "size_bytes": 12015,
+      "sha256": "8220e0d1cf737f7f1ebc344845bac4e1da3d1a270309b1b49fe7d54329cf1151",
+      "reason": "The watcher hard-codes historical fixed10k/Stage06/Stage07/Stage08 statistics identities and 7298/10000 denominators; it is not a resume guard for the broadband56 staged campaign."
+    }
+  },
+  "current_public_control_plane_identities": {
+    "queue_controller_sha256": "d3278429c83407a8013cc0be70ef9f2de2346c1e52efc4b17c295b8486271fa5",
+    "stage_launcher_sha256": "519587325971244d75bea0133c3cd3db10e148fe5e83103fe6e77d6a459c29fc",
+    "raw_products_finalizer_sha256": "ced020f9b029d63f674333631c69bc26ba79b269766dd66003d9c86f7efce284",
+    "checkpoint_auditor_sha256": "4f246f46d92a83ce00a73115e7bc6f1f10e55705c95f5ab4014561871d2438ab",
+    "exact_audited_gds_emx_runner_sha256": "a4759bb00aa611b96352e5245d6137c8b7b83e69f54da7ef24516d18f8fd1ee8",
+    "exact_audited_gds_emx_module_sha256": "f30e7edca9f639cba9ae442f337e2511fdd8d357598c6a971afcb27adbbbe77d",
+    "exact56_s4p_qa_builder_sha256": "6e8cf6051fe4ce87c3f3f98c6324f47aac60764c50d9cc28d85543b956e946ee",
+    "exact56_s4p_qa_module_sha256": "7c51b2592364b4ea28632269c0cc1c6398bb60b43eccac83f15ebb8c3a666f83"
+  },
+  "unresolved_current_roles": {
+    "production_stage_backend": "MISSING",
+    "broadband56_calibre_pass_freezer": "MISSING",
+    "broadband56_checkpoint_resume_contract": "PRESENT_IN_QUEUE_CONTROLLER_BUT_NOT_CORRECTLY_MODELED_AS_A_MANIFEST_ROLE",
+    "private_backend_identity_manifest": "NOT_CREATED",
+    "private_backend_identity_verification_receipt": "NOT_CREATED",
+    "full_campaign_authorization_candidate": "NOT_CREATED"
+  },
+  "checks": {
+    "remote_files_rehashed_read_only": true,
+    "historical_pass_receipts_rehashed_and_parsed": true,
+    "cadence_call_chain_traced": true,
+    "legacy_statistics_watcher_not_misrepresented_as_current_resume_guard": true,
+    "legacy_fixed_target_freezer_not_misrepresented_as_current_backend": true,
+    "private_paths_published": false,
+    "mars_write_action_taken": false,
+    "queue_or_supervisor_action_taken": false,
+    "cadence_action_taken": false,
+    "calibre_action_taken": false,
+    "emx_action_taken": false,
+    "simulator_action_taken": false
+  },
+  "owner_stop": {
+    "still_authoritative": true,
+    "status_sha256": "b0d97d1266a138c3726e6e923b901f4cffc3ff126d3a453e6e80bd9c09e38431",
+    "restart_authorized": false
+  },
+  "physical_counts": {
+    "accepted_geometries": 0,
+    "s4p_artifacts": 0,
+    "feature_rows": 0
+  },
+  "next_legal_action": "Correct the manifest and authorization role model so it binds a current broadband56 production backend, current Calibre-pass boundary, and the existing campaign checkpoint/resume implementation instead of historical fixed-target watchers; then implement and test those missing current components locally before any private manifest or FULL_CAMPAIGN candidate is created."
+}

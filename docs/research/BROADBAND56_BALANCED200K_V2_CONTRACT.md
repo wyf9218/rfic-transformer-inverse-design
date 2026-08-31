@@ -137,6 +137,22 @@ simulator work must remain forbidden.
   production backend. The verifier independently rehashes every named file.
   Both the exact56 QA CLI and its imported calculation module are separate
   required roles. Neither command launches a simulator, queue, or supervisor.
+- The private backend manifest V3 binds the actual current campaign chain:
+  Phase-A queue construction; adaptive pool/training/prediction/selection/round
+  staging; candidate-bound Cadence streamout; Calibre execution; per-candidate
+  zero-blocking receipt construction; exact-GDS EMX; exact56 QA; raw-product,
+  checkpoint, history, training-readiness, and final-delivery finalization. The
+  historical fixed10k Calibre pass-queue freezer and Stage07/08 statistics
+  watcher are evidence for their original lane only and are explicitly not
+  accepted as current broadband56 production roles.
+- `scripts/build_broadband56_calibre_zero_blocking_receipt.py`:
+  execution-free, no-clobber boundary between the real production Calibre
+  runner and exact-GDS EMX. It rehashes the exact config, GDS, layout manifest,
+  per-candidate Calibre summary, Calibre report, and candidate-bound geometry
+  audit; requires the production summary schema, exact candidate/geometry/GDS/
+  top-cell identity, PASS status, and zero blocking violations; and emits the
+  exact receipt consumed by the no-regeneration EMX runner. It cannot invoke
+  Cadence, Calibre, EMX, a queue, or a supervisor.
 - `scripts/run_broadband56_exact_audited_gds_emx.py` and
   `rfic_transformer_inverse_design/campaigns/broadband56_exact_gds_emx.py`:
   hash-bound, no-clobber bridge from one exact zero-blocking Calibre GDS to

@@ -31,10 +31,10 @@ from .broadband56_capacity_policy import (
 
 
 FULL_CAMPAIGN_CANDIDATE_SCHEMA = (
-    "rfic_transformer.broadband56_v2_full_campaign_authorization_candidate.v1"
+    "rfic_transformer.broadband56_v2_full_campaign_authorization_candidate.v2"
 )
 FULL_CAMPAIGN_APPROVAL_SCHEMA = (
-    "rfic_transformer.broadband56_v2_full_campaign_authorization_approval.v1"
+    "rfic_transformer.broadband56_v2_full_campaign_authorization_approval.v2"
 )
 FULL_CAMPAIGN_APPROVAL_SCOPE = "FULL_CAMPAIGN"
 FULL_CAMPAIGN_PENDING_STATUS = "PENDING_EXPLICIT_PROJECT_OWNER_SHA256_APPROVAL"
@@ -42,7 +42,7 @@ FULL_CAMPAIGN_PASS_DECISION = "APPROVE_FULL_CAMPAIGN"
 FULL_CAMPAIGN_FAIL_DECISION = "DO_NOT_AUTHORIZE_FULL_CAMPAIGN"
 FULL_CAMPAIGN_CANDIDATE_EFFECT = "NONE_REQUEST_ONLY"
 FULL_CAMPAIGN_RECEIPT_EFFECT = "NONE_RECORD_ONLY"
-PRODUCTION_BACKEND_ID = "MARS_CADENCE_CALIBRE_ZERO_BLOCKING_EMX_S4P_QA_V1"
+PRODUCTION_BACKEND_ID = "MARS_CADENCE_CALIBRE_ZERO_BLOCKING_EMX_S4P_QA_V2"
 SHA256_PATTERN = re.compile(r"[0-9a-f]{64}")
 
 UNCHANGED_PHYSICAL_CONTRACT_ITEMS = (
@@ -135,14 +135,24 @@ BACKEND_SHA_FIELDS = (
     "queue_controller_sha256",
     "stage_launcher_sha256",
     "production_stage_backend_sha256",
+    "phase_a_queue_builder_sha256",
+    "adaptive_candidate_pool_builder_sha256",
+    "acquisition_ensemble_trainer_sha256",
+    "acquisition_predictor_sha256",
+    "adaptive_candidate_selector_sha256",
+    "adaptive_round_stager_sha256",
+    "cadence_streamout_runner_sha256",
     "calibre_runner_sha256",
-    "calibre_zero_safe_freezer_sha256",
+    "calibre_zero_blocking_receipt_builder_sha256",
     "exact_audited_gds_emx_runner_sha256",
     "exact_audited_gds_emx_module_sha256",
     "full_band_s4p_qa_builder_sha256",
     "full_band_s4p_qa_module_sha256",
-    "stage07_08_resume_guard_sha256",
     "raw_products_finalizer_sha256",
+    "checkpoint_auditor_sha256",
+    "campaign_histories_finalizer_sha256",
+    "training_readiness_finalizer_sha256",
+    "final_delivery_auditor_sha256",
     "historical_gds_identity_pass_receipt_sha256",
 )
 

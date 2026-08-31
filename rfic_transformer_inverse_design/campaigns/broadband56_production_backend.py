@@ -27,7 +27,7 @@ from .broadband56_full_campaign_authorization import (
 )
 
 
-BACKEND_MANIFEST_SCHEMA = "rfic_transformer.broadband56_v2_private_backend_identity.v2"
+BACKEND_MANIFEST_SCHEMA = "rfic_transformer.broadband56_v2_private_backend_identity.v3"
 BACKEND_VERIFICATION_SCHEMA = (
     "rfic_transformer.broadband56_v2_private_backend_identity_verification.v1"
 )
@@ -91,14 +91,24 @@ REQUIRED_SCRIPT_ROLES = (
     "queue_controller",
     "stage_launcher",
     "production_stage_backend",
+    "phase_a_queue_builder",
+    "adaptive_candidate_pool_builder",
+    "acquisition_ensemble_trainer",
+    "acquisition_predictor",
+    "adaptive_candidate_selector",
+    "adaptive_round_stager",
+    "cadence_streamout_runner",
     "calibre_runner",
-    "calibre_zero_safe_freezer",
+    "calibre_zero_blocking_receipt_builder",
     "exact_audited_gds_emx_runner",
     "exact_audited_gds_emx_module",
     "full_band_s4p_qa_builder",
     "full_band_s4p_qa_module",
-    "stage07_08_resume_guard",
     "raw_products_finalizer",
+    "checkpoint_auditor",
+    "campaign_histories_finalizer",
+    "training_readiness_finalizer",
+    "final_delivery_auditor",
 )
 
 REQUIRED_RUNTIME_ROLES = (

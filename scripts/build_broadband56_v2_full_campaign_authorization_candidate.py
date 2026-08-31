@@ -91,14 +91,24 @@ def _parse_args(argv: list[str] | None) -> argparse.Namespace:
     parser.add_argument("--queue-controller-sha256", required=True)
     parser.add_argument("--stage-launcher-sha256", required=True)
     parser.add_argument("--production-stage-backend-sha256", required=True)
+    parser.add_argument("--phase-a-queue-builder-sha256", required=True)
+    parser.add_argument("--adaptive-candidate-pool-builder-sha256", required=True)
+    parser.add_argument("--acquisition-ensemble-trainer-sha256", required=True)
+    parser.add_argument("--acquisition-predictor-sha256", required=True)
+    parser.add_argument("--adaptive-candidate-selector-sha256", required=True)
+    parser.add_argument("--adaptive-round-stager-sha256", required=True)
+    parser.add_argument("--cadence-streamout-runner-sha256", required=True)
     parser.add_argument("--calibre-runner-sha256", required=True)
-    parser.add_argument("--calibre-zero-safe-freezer-sha256", required=True)
+    parser.add_argument("--calibre-zero-blocking-receipt-builder-sha256", required=True)
     parser.add_argument("--exact-audited-gds-emx-runner-sha256", required=True)
     parser.add_argument("--exact-audited-gds-emx-module-sha256", required=True)
     parser.add_argument("--full-band-s4p-qa-builder-sha256", required=True)
     parser.add_argument("--full-band-s4p-qa-module-sha256", required=True)
-    parser.add_argument("--stage07-08-resume-guard-sha256", required=True)
     parser.add_argument("--raw-products-finalizer-sha256", required=True)
+    parser.add_argument("--checkpoint-auditor-sha256", required=True)
+    parser.add_argument("--campaign-histories-finalizer-sha256", required=True)
+    parser.add_argument("--training-readiness-finalizer-sha256", required=True)
+    parser.add_argument("--final-delivery-auditor-sha256", required=True)
     parser.add_argument("--historical-gds-identity-pass-receipt-sha256", required=True)
     parser.add_argument(
         "--historical-backend-pass-receipt",
@@ -197,10 +207,25 @@ def build_candidate(args: argparse.Namespace, *, out_dir: Path) -> dict[str, str
             "queue_controller_sha256": args.queue_controller_sha256,
             "stage_launcher_sha256": args.stage_launcher_sha256,
             "production_stage_backend_sha256": args.production_stage_backend_sha256,
+            "phase_a_queue_builder_sha256": args.phase_a_queue_builder_sha256,
+            "adaptive_candidate_pool_builder_sha256": (
+                args.adaptive_candidate_pool_builder_sha256
+            ),
+            "acquisition_ensemble_trainer_sha256": (
+                args.acquisition_ensemble_trainer_sha256
+            ),
+            "acquisition_predictor_sha256": args.acquisition_predictor_sha256,
+            "adaptive_candidate_selector_sha256": (
+                args.adaptive_candidate_selector_sha256
+            ),
+            "adaptive_round_stager_sha256": args.adaptive_round_stager_sha256,
+            "cadence_streamout_runner_sha256": args.cadence_streamout_runner_sha256,
             "resource_policy": RESOURCE_POLICY,
             "operational_policy_approval_scope": POLICY_APPROVAL_SCOPE,
             "calibre_runner_sha256": args.calibre_runner_sha256,
-            "calibre_zero_safe_freezer_sha256": args.calibre_zero_safe_freezer_sha256,
+            "calibre_zero_blocking_receipt_builder_sha256": (
+                args.calibre_zero_blocking_receipt_builder_sha256
+            ),
             "exact_audited_gds_emx_runner_sha256": (
                 args.exact_audited_gds_emx_runner_sha256
             ),
@@ -209,8 +234,15 @@ def build_candidate(args: argparse.Namespace, *, out_dir: Path) -> dict[str, str
             ),
             "full_band_s4p_qa_builder_sha256": args.full_band_s4p_qa_builder_sha256,
             "full_band_s4p_qa_module_sha256": args.full_band_s4p_qa_module_sha256,
-            "stage07_08_resume_guard_sha256": args.stage07_08_resume_guard_sha256,
             "raw_products_finalizer_sha256": args.raw_products_finalizer_sha256,
+            "checkpoint_auditor_sha256": args.checkpoint_auditor_sha256,
+            "campaign_histories_finalizer_sha256": (
+                args.campaign_histories_finalizer_sha256
+            ),
+            "training_readiness_finalizer_sha256": (
+                args.training_readiness_finalizer_sha256
+            ),
+            "final_delivery_auditor_sha256": args.final_delivery_auditor_sha256,
             "historical_gds_identity_pass_receipt_sha256": (
                 args.historical_gds_identity_pass_receipt_sha256
             ),

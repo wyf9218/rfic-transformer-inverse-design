@@ -315,10 +315,27 @@ def _valid_fixture(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> dict[str,
             "production_stage_backend_sha256": script_hashes[
                 "production_stage_backend"
             ],
+            "phase_a_queue_builder_sha256": script_hashes["phase_a_queue_builder"],
+            "adaptive_candidate_pool_builder_sha256": script_hashes[
+                "adaptive_candidate_pool_builder"
+            ],
+            "acquisition_ensemble_trainer_sha256": script_hashes[
+                "acquisition_ensemble_trainer"
+            ],
+            "acquisition_predictor_sha256": script_hashes["acquisition_predictor"],
+            "adaptive_candidate_selector_sha256": script_hashes[
+                "adaptive_candidate_selector"
+            ],
+            "adaptive_round_stager_sha256": script_hashes["adaptive_round_stager"],
+            "cadence_streamout_runner_sha256": script_hashes[
+                "cadence_streamout_runner"
+            ],
             "resource_policy": RESOURCE_POLICY,
             "operational_policy_approval_scope": POLICY_APPROVAL_SCOPE,
             "calibre_runner_sha256": script_hashes["calibre_runner"],
-            "calibre_zero_safe_freezer_sha256": script_hashes["calibre_zero_safe_freezer"],
+            "calibre_zero_blocking_receipt_builder_sha256": script_hashes[
+                "calibre_zero_blocking_receipt_builder"
+            ],
             "exact_audited_gds_emx_runner_sha256": script_hashes[
                 "exact_audited_gds_emx_runner"
             ],
@@ -329,8 +346,17 @@ def _valid_fixture(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> dict[str,
             "full_band_s4p_qa_module_sha256": script_hashes[
                 "full_band_s4p_qa_module"
             ],
-            "stage07_08_resume_guard_sha256": script_hashes["stage07_08_resume_guard"],
             "raw_products_finalizer_sha256": script_hashes["raw_products_finalizer"],
+            "checkpoint_auditor_sha256": script_hashes["checkpoint_auditor"],
+            "campaign_histories_finalizer_sha256": script_hashes[
+                "campaign_histories_finalizer"
+            ],
+            "training_readiness_finalizer_sha256": script_hashes[
+                "training_readiness_finalizer"
+            ],
+            "final_delivery_auditor_sha256": script_hashes[
+                "final_delivery_auditor"
+            ],
             "historical_gds_identity_pass_receipt_sha256": gds_receipt_record[
                 "sha256"
             ],

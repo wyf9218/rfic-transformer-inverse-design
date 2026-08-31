@@ -388,14 +388,26 @@ def _backend_manifest_matches_candidate(
         "queue_controller": "queue_controller_sha256",
         "stage_launcher": "stage_launcher_sha256",
         "production_stage_backend": "production_stage_backend_sha256",
+        "phase_a_queue_builder": "phase_a_queue_builder_sha256",
+        "adaptive_candidate_pool_builder": "adaptive_candidate_pool_builder_sha256",
+        "acquisition_ensemble_trainer": "acquisition_ensemble_trainer_sha256",
+        "acquisition_predictor": "acquisition_predictor_sha256",
+        "adaptive_candidate_selector": "adaptive_candidate_selector_sha256",
+        "adaptive_round_stager": "adaptive_round_stager_sha256",
+        "cadence_streamout_runner": "cadence_streamout_runner_sha256",
         "calibre_runner": "calibre_runner_sha256",
-        "calibre_zero_safe_freezer": "calibre_zero_safe_freezer_sha256",
+        "calibre_zero_blocking_receipt_builder": (
+            "calibre_zero_blocking_receipt_builder_sha256"
+        ),
         "exact_audited_gds_emx_runner": "exact_audited_gds_emx_runner_sha256",
         "exact_audited_gds_emx_module": "exact_audited_gds_emx_module_sha256",
         "full_band_s4p_qa_builder": "full_band_s4p_qa_builder_sha256",
         "full_band_s4p_qa_module": "full_band_s4p_qa_module_sha256",
-        "stage07_08_resume_guard": "stage07_08_resume_guard_sha256",
         "raw_products_finalizer": "raw_products_finalizer_sha256",
+        "checkpoint_auditor": "checkpoint_auditor_sha256",
+        "campaign_histories_finalizer": "campaign_histories_finalizer_sha256",
+        "training_readiness_finalizer": "training_readiness_finalizer_sha256",
+        "final_delivery_auditor": "final_delivery_auditor_sha256",
     }
     for manifest_key, candidate_key in expected_scripts.items():
         record = script_identities.get(manifest_key)

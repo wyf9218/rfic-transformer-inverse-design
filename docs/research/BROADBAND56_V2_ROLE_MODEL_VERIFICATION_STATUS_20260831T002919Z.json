@@ -1,0 +1,53 @@
+{
+  "schema": "rfic_transformer.broadband56_v2_role_model_verification_status.v1",
+  "generated_utc": "2026-08-31T00:29:19Z",
+  "overall_status": "PASS",
+  "decision": "CURRENT_ROLE_MODEL_AND_CALIBRE_RECEIPT_BOUNDARY_VERIFIED",
+  "campaign_id": "broadband56_real_emx_balanced200k_tsmc65_v2",
+  "scientific_contract_fingerprint_sha256": "f86a00efbf7756b7421b863bbb16c340db6b423640f63a3257d46c1af49eb55e",
+  "branch": "codex/broadband56-balanced200k-v2",
+  "base_commit": "a976b7258302f173d1cce6287ed2bbcc86a1e9d0",
+  "scope": "LOCAL_PUBLIC_CONTROL_PLANE_VERIFICATION_ONLY",
+  "verified_identities": {
+    "contract_document_sha256": "7c76e817f22c4b71dc31cf923b3a7d433a33b7ca9eded0433c0bd1259275e6ac",
+    "private_role_audit_status_sha256": "51dadf8e3c5700c13ff3791dee170cd7c3734f1923767d1ae260949add92ec23",
+    "current_role_model_status_sha256": "282a2f1bf363a9bf5733b4c6fbbf223d7e8184237c507d5210a35e9b4daad654",
+    "production_backend_contract_sha256": "e41257397d472c7ace5c090a0ca9f873088b62bca813f3d772a88072b82c655f",
+    "full_campaign_authorization_contract_sha256": "9ac891a68e5aabca54499dc8cc9862c98e6d0ca2a2a72a321b31d7bb7e469a6b",
+    "full_campaign_candidate_builder_sha256": "158bddb0272180259d17df71adb1625d48d3d1fbe38f3687a14ecff67326f403",
+    "full_campaign_authorization_recorder_sha256": "ba74dc8b82020ef4e360fa05ece005a1428cc48a26b48db6611bf9483915b154",
+    "calibre_zero_blocking_receipt_builder_sha256": "70f52d579c408e59bb10625652395f90d36dab84ff4d4a7526d852c33ef11567",
+    "calibre_zero_blocking_receipt_builder_tests_sha256": "c95c9b4a72a960a59e32263f832736377faf2b181d86df8c3fc366523043c53a"
+  },
+  "test_evidence": {
+    "python_version": "3.12.13",
+    "broadband56_test_files": 26,
+    "passed": 184,
+    "failed": 0,
+    "duration_seconds": 12.14,
+    "bundled_runtime_attempt": "NOT_RUN_PYTEST_UNAVAILABLE",
+    "authoritative_test_run": "PASS"
+  },
+  "checks": {
+    "status_json_parse": true,
+    "public_safe_sensitive_pattern_scan": true,
+    "legacy_fixed_target_roles_rejected_for_current_execution": true,
+    "current_calibre_zero_blocking_boundary_verified": true,
+    "full_campaign_candidate_or_approval_created": false,
+    "mars_write_action_taken": false,
+    "queue_or_supervisor_action_taken": false,
+    "simulator_action_taken": false
+  },
+  "owner_stop": {
+    "still_authoritative": true,
+    "status_sha256": "b0d97d1266a138c3726e6e923b901f4cffc3ff126d3a453e6e80bd9c09e38431",
+    "restart_authorized": false
+  },
+  "physical_counts": {
+    "accepted_geometries": 0,
+    "s4p_artifacts": 0,
+    "feature_rows": 0
+  },
+  "remaining_required_component": "CURRENT_BROADBAND56_PRODUCTION_STAGE_BACKEND",
+  "next_legal_action": "Implement the production stage backend locally with simulator-mocked adversarial tests; do not construct private identities, a FULL_CAMPAIGN candidate, a queue, or simulator work before explicit owner-stop reversal."
+}

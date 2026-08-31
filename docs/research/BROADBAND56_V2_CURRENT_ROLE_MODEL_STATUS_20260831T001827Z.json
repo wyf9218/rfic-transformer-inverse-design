@@ -1,0 +1,107 @@
+{
+  "schema": "rfic_transformer.broadband56_v2_current_role_model_status.v1",
+  "generated_utc": "2026-08-31T00:18:27Z",
+  "overall_status": "PASS",
+  "decision": "USE_CURRENT_CAMPAIGN_ROLE_MODEL_PRODUCTION_BACKEND_STILL_REQUIRED",
+  "campaign_id": "broadband56_real_emx_balanced200k_tsmc65_v2",
+  "scientific_contract_fingerprint_sha256": "f86a00efbf7756b7421b863bbb16c340db6b423640f63a3257d46c1af49eb55e",
+  "branch": "codex/broadband56-balanced200k-v2",
+  "base_commit": "a976b7258302f173d1cce6287ed2bbcc86a1e9d0",
+  "supersedes_role_model_only": {
+    "private_backend_manifest_schema": "rfic_transformer.broadband56_v2_private_backend_identity.v2",
+    "full_campaign_candidate_schema": "rfic_transformer.broadband56_v2_full_campaign_authorization_candidate.v1",
+    "full_campaign_approval_schema": "rfic_transformer.broadband56_v2_full_campaign_authorization_approval.v1",
+    "production_backend_id": "MARS_CADENCE_CALIBRE_ZERO_BLOCKING_EMX_S4P_QA_V1"
+  },
+  "current_role_model": {
+    "private_backend_manifest_schema": "rfic_transformer.broadband56_v2_private_backend_identity.v3",
+    "full_campaign_candidate_schema": "rfic_transformer.broadband56_v2_full_campaign_authorization_candidate.v2",
+    "full_campaign_approval_schema": "rfic_transformer.broadband56_v2_full_campaign_authorization_approval.v2",
+    "production_backend_id": "MARS_CADENCE_CALIBRE_ZERO_BLOCKING_EMX_S4P_QA_V2",
+    "required_script_roles": [
+      "queue_controller",
+      "stage_launcher",
+      "production_stage_backend",
+      "phase_a_queue_builder",
+      "adaptive_candidate_pool_builder",
+      "acquisition_ensemble_trainer",
+      "acquisition_predictor",
+      "adaptive_candidate_selector",
+      "adaptive_round_stager",
+      "cadence_streamout_runner",
+      "calibre_runner",
+      "calibre_zero_blocking_receipt_builder",
+      "exact_audited_gds_emx_runner",
+      "exact_audited_gds_emx_module",
+      "full_band_s4p_qa_builder",
+      "full_band_s4p_qa_module",
+      "raw_products_finalizer",
+      "checkpoint_auditor",
+      "campaign_histories_finalizer",
+      "training_readiness_finalizer",
+      "final_delivery_auditor"
+    ]
+  },
+  "calibre_zero_blocking_receipt_builder": {
+    "path": "scripts/build_broadband56_calibre_zero_blocking_receipt.py",
+    "size_bytes": 15520,
+    "sha256": "70f52d579c408e59bb10625652395f90d36dab84ff4d4a7526d852c33ef11567",
+    "simulator_capability": false,
+    "input_evidence": [
+      "exact private configuration",
+      "exact candidate GDS",
+      "exact layout manifest",
+      "real per-candidate production Calibre summary",
+      "real Calibre report",
+      "candidate-bound geometry audit"
+    ],
+    "pass_condition": "summary PASS and blocking_drc_violation_count equals zero with all path/size/SHA/candidate/geometry/top-cell bindings exact"
+  },
+  "removed_legacy_execution_roles": {
+    "calibre_zero_safe_freezer": "Historical fixed-target queue freezer retained only as evidence.",
+    "stage07_08_resume_guard": "Historical fixed10k statistics watcher retained only as evidence; current resume behavior is part of the hash-bound queue controller and checkpoint chain."
+  },
+  "checks": {
+    "legacy_roles_absent_from_current_manifest_schema": true,
+    "phase_a_and_adaptive_acquisition_scripts_sha_bound": true,
+    "cadence_streamout_runner_sha_bound": true,
+    "real_calibre_runner_sha_bound": true,
+    "calibre_receipt_builder_sha_bound": true,
+    "exact_gds_emx_and_exact56_qa_sha_bound": true,
+    "checkpoint_and_final_delivery_tools_sha_bound": true,
+    "full_campaign_candidate_or_approval_created": false,
+    "mars_write_action_taken": false,
+    "simulator_action_taken": false
+  },
+  "test_evidence": {
+    "calibre_receipt_builder_adversarial_tests": {
+      "status": "PASS",
+      "passed": 6,
+      "failed": 0
+    },
+    "focused_backend_manifest_candidate_authorization_launcher_tests": {
+      "status": "PASS",
+      "passed": 42,
+      "failed": 0
+    },
+    "python_compile": "PASS",
+    "git_diff_check": "PASS"
+  },
+  "owner_stop": {
+    "still_authoritative": true,
+    "status_sha256": "b0d97d1266a138c3726e6e923b901f4cffc3ff126d3a453e6e80bd9c09e38431",
+    "restart_authorized": false
+  },
+  "physical_counts": {
+    "accepted_geometries": 0,
+    "s4p_artifacts": 0,
+    "feature_rows": 0
+  },
+  "remaining_blockers": {
+    "production_stage_backend": "MISSING",
+    "private_backend_identity_manifest": "NOT_CREATED",
+    "private_backend_identity_verification_receipt": "NOT_CREATED",
+    "full_campaign_authorization_candidate": "NOT_CREATED"
+  },
+  "next_legal_action": "Implement the current campaign production stage backend against this V3 role model, prove its exact stage receipts and failure accounting with simulator-mocked tests, and only then reverify private identities after explicit owner-stop reversal."
+}
