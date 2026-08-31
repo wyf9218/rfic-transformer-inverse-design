@@ -33,9 +33,9 @@ from .broadband56_stage_execution import (
 )
 
 
-BACKEND_MANIFEST_SCHEMA = "rfic_transformer.broadband56_v2_private_backend_identity.v9"
+BACKEND_MANIFEST_SCHEMA = "rfic_transformer.broadband56_v2_private_backend_identity.v11"
 BACKEND_VERIFICATION_SCHEMA = (
-    "rfic_transformer.broadband56_v2_private_backend_identity_verification.v4"
+    "rfic_transformer.broadband56_v2_private_backend_identity_verification.v6"
 )
 BACKEND_VERIFICATION_PASS_DECISION = "USE_HASH_BOUND_PRODUCTION_BACKEND"
 BACKEND_MANIFEST_EFFECT = "IDENTITY_ONLY_NO_EXECUTION"
@@ -106,15 +106,21 @@ REQUIRED_SCRIPT_ROLES = (
     "adaptive_candidate_selector",
     "adaptive_round_stager",
     "cadence_streamout_runner",
+    "cadence_streamout_delegate",
     "candidate_gds_index_builder",
     "gds_physical_identity_auditor",
+    "gds_physical_identity_delegate",
     "gds_physical_identity_module",
     "calibre_runner",
+    "calibre_batch_delegate",
     "calibre_zero_blocking_receipt_builder",
+    "calibre_zero_blocking_single_receipt_builder",
     "exact_audited_gds_emx_runner",
+    "exact_audited_gds_emx_single_runner",
     "exact_audited_gds_emx_module",
     "full_band_s4p_qa_builder",
     "full_band_s4p_qa_module",
+    "stage_attempt_product_builder",
     "stage_attempt_finalizer",
     "raw_products_finalizer",
     "checkpoint_auditor",
@@ -132,7 +138,9 @@ REQUIRED_RUNTIME_ROLES = (
     "emx_wrapper",
     "emx_process_file",
     "cadence_layout_generator",
+    "calibre_foundry_archive",
     "calibre_rule_deck",
+    "calibre_user_guide",
 )
 
 PREPARATION_BINDING_FIELDS = (

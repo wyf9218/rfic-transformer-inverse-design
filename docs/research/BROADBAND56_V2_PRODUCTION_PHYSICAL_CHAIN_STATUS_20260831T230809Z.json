@@ -1,0 +1,54 @@
+{
+  "schema": "rfic_transformer.broadband56_v2_production_physical_chain_status.v1",
+  "generated_utc": "2026-08-31T23:08:09Z",
+  "overall_status": "PASS_PHYSICAL_CHAIN_SOFTWARE_ONLY",
+  "campaign_id": "broadband56_real_emx_balanced200k_tsmc65_v2",
+  "contract_fingerprint_sha256": "f86a00efbf7756b7421b863bbb16c340db6b423640f63a3257d46c1af49eb55e",
+  "branch": "codex/broadband56-balanced200k-v2",
+  "base_commit": "d114879910f047d401ee299024b9ccbd867b8fa8",
+  "completed_software_work": [
+    "Hash-bound Cadence batch wrapper with per-candidate terminal partitioning",
+    "Candidate-to-exact-Cadence-GDS identity index with canonical ten-dimensional geometry binding",
+    "GDS physical-identity audit batch wrapper",
+    "Calibre batch and zero-blocking receipt batch wrappers",
+    "Exact audited-GDS-to-fresh-EMX batch wrapper",
+    "Exact four-port 56-point S4P QA batch wrapper",
+    "Stage-attempt product builder and terminal failure accounting",
+    "Empty-partition propagation without launching downstream simulators",
+    "Cumulative stage finalization now includes the preceding stage's authoritative raw products",
+    "Phase-A and pilot replenishment queues now exclude every prior accepted and rejected campaign geometry"
+  ],
+  "test_evidence": {
+    "all_broadband56_tests": {
+      "status": "PASS",
+      "passed": 270,
+      "failed": 0,
+      "warnings": 35,
+      "command": "TESTS=$(rg --files tests | rg '/test_.*broadband56.*\\.py$' | sort); python3 -m pytest -q $=TESTS"
+    },
+    "python_compile": "PASS",
+    "git_diff_check": "PASS"
+  },
+  "runtime_state": {
+    "simulator_action_taken": false,
+    "cadence_action_taken": false,
+    "calibre_action_taken": false,
+    "emx_action_taken": false,
+    "new_geometry_generated": 0,
+    "last_remote_accepted_count": 0,
+    "last_remote_state": "WAITING_FOR_CAPACITY",
+    "last_remote_state_requires_fresh_reverification": true
+  },
+  "remaining_fail_closed_work": [
+    "Close PHASE_B and PHASE_C adaptive 5,000-accepted round replenishment and intermediate-checkpoint continuation",
+    "Build and verify one exact private MARS stage command plan and backend identity manifest from a committed revision",
+    "Create one exact FULL_CAMPAIGN authorization candidate and obtain exact-SHA project-owner approval",
+    "Recheck current capacity, license, process isolation and output-path gates before any simulator launch"
+  ],
+  "authorization_state": {
+    "full_campaign_authorization_candidate": "NOT_CREATED",
+    "full_campaign_authorization_receipt": "NOT_PRESENT",
+    "simulator_launch_authorized": false
+  },
+  "scientific_boundary": "This status proves software behavior only. It is not Cadence, Calibre, EMX, S4P, physical-feature, accepted-geometry or campaign-completion evidence."
+}

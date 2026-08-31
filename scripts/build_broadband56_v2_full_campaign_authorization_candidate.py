@@ -110,15 +110,23 @@ def _parse_args(argv: list[str] | None) -> argparse.Namespace:
     parser.add_argument("--adaptive-candidate-selector-sha256", required=True)
     parser.add_argument("--adaptive-round-stager-sha256", required=True)
     parser.add_argument("--cadence-streamout-runner-sha256", required=True)
+    parser.add_argument("--cadence-streamout-delegate-sha256", required=True)
     parser.add_argument("--candidate-gds-index-builder-sha256", required=True)
     parser.add_argument("--gds-physical-identity-auditor-sha256", required=True)
+    parser.add_argument("--gds-physical-identity-delegate-sha256", required=True)
     parser.add_argument("--gds-physical-identity-module-sha256", required=True)
     parser.add_argument("--calibre-runner-sha256", required=True)
+    parser.add_argument("--calibre-batch-delegate-sha256", required=True)
     parser.add_argument("--calibre-zero-blocking-receipt-builder-sha256", required=True)
+    parser.add_argument(
+        "--calibre-zero-blocking-single-receipt-builder-sha256", required=True
+    )
     parser.add_argument("--exact-audited-gds-emx-runner-sha256", required=True)
+    parser.add_argument("--exact-audited-gds-emx-single-runner-sha256", required=True)
     parser.add_argument("--exact-audited-gds-emx-module-sha256", required=True)
     parser.add_argument("--full-band-s4p-qa-builder-sha256", required=True)
     parser.add_argument("--full-band-s4p-qa-module-sha256", required=True)
+    parser.add_argument("--stage-attempt-product-builder-sha256", required=True)
     parser.add_argument("--stage-attempt-finalizer-sha256", required=True)
     parser.add_argument("--raw-products-finalizer-sha256", required=True)
     parser.add_argument("--checkpoint-auditor-sha256", required=True)
@@ -242,11 +250,17 @@ def build_candidate(args: argparse.Namespace, *, out_dir: Path) -> dict[str, str
             ),
             "adaptive_round_stager_sha256": args.adaptive_round_stager_sha256,
             "cadence_streamout_runner_sha256": args.cadence_streamout_runner_sha256,
+            "cadence_streamout_delegate_sha256": (
+                args.cadence_streamout_delegate_sha256
+            ),
             "candidate_gds_index_builder_sha256": (
                 args.candidate_gds_index_builder_sha256
             ),
             "gds_physical_identity_auditor_sha256": (
                 args.gds_physical_identity_auditor_sha256
+            ),
+            "gds_physical_identity_delegate_sha256": (
+                args.gds_physical_identity_delegate_sha256
             ),
             "gds_physical_identity_module_sha256": (
                 args.gds_physical_identity_module_sha256
@@ -254,17 +268,27 @@ def build_candidate(args: argparse.Namespace, *, out_dir: Path) -> dict[str, str
             "resource_policy": RESOURCE_POLICY,
             "operational_policy_approval_scope": POLICY_APPROVAL_SCOPE,
             "calibre_runner_sha256": args.calibre_runner_sha256,
+            "calibre_batch_delegate_sha256": args.calibre_batch_delegate_sha256,
             "calibre_zero_blocking_receipt_builder_sha256": (
                 args.calibre_zero_blocking_receipt_builder_sha256
             ),
+            "calibre_zero_blocking_single_receipt_builder_sha256": (
+                args.calibre_zero_blocking_single_receipt_builder_sha256
+            ),
             "exact_audited_gds_emx_runner_sha256": (
                 args.exact_audited_gds_emx_runner_sha256
+            ),
+            "exact_audited_gds_emx_single_runner_sha256": (
+                args.exact_audited_gds_emx_single_runner_sha256
             ),
             "exact_audited_gds_emx_module_sha256": (
                 args.exact_audited_gds_emx_module_sha256
             ),
             "full_band_s4p_qa_builder_sha256": args.full_band_s4p_qa_builder_sha256,
             "full_band_s4p_qa_module_sha256": args.full_band_s4p_qa_module_sha256,
+            "stage_attempt_product_builder_sha256": (
+                args.stage_attempt_product_builder_sha256
+            ),
             "stage_attempt_finalizer_sha256": args.stage_attempt_finalizer_sha256,
             "raw_products_finalizer_sha256": args.raw_products_finalizer_sha256,
             "checkpoint_auditor_sha256": args.checkpoint_auditor_sha256,

@@ -36,6 +36,9 @@ from rfic_transformer_inverse_design.campaigns.broadband56_capacity_policy impor
 from rfic_transformer_inverse_design.campaigns.broadband56_full_campaign_authorization import (  # noqa: E402
     PRODUCTION_BACKEND_ID,
 )
+from rfic_transformer_inverse_design.campaigns.broadband56_production_backend import (  # noqa: E402
+    validate_stage_receipt_chain,
+)
 from rfic_transformer_inverse_design.campaigns.broadband56_stage_progress import (  # noqa: E402
     ATTEMPT_FAILURE_ACCOUNTING_FIELDS,
     STAGE_PROGRESS_ARTIFACT_FIELDS,
@@ -56,6 +59,14 @@ PROGRESS_RECEIPT_NAME = "STAGE_PROGRESS_RECEIPT.json"
 ATTEMPT_ARTIFACT_DIR_NAME = "attempt_artifacts"
 CUMULATIVE_DIR_NAME = "cumulative_stage_inputs"
 CSV_ARTIFACT_FIELDS = STAGE_PROGRESS_ARTIFACT_FIELDS[:-1]
+PRIOR_STAGE_ARTIFACT_FIELDS = {
+    "attempt_ledger": "attempt_ledger",
+    "accepted_geometry_increment": "accepted_geometry_index",
+    "rejected_geometry_increment": "rejected_geometry_index",
+    "exact_gds_emx_receipt_index": "exact_gds_emx_receipt_index",
+    "s4p_artifact_index": "s4p_artifact_index",
+    "failure_funnel": "failure_funnel",
+}
 MINIMUM_COLUMNS = {
     "attempt_ledger": {"attempt_id", "geometry_sha256", "terminal_stage"},
     "accepted_geometry_increment": {"geometry_sha256"},
@@ -122,6 +133,12 @@ def finalize_stage_attempt(
     )
     backend_sha256 = _sha256(backend_path)
     authorization_sha256 = _sha256(authorization_path)
+    prior_stage_artifacts = _prior_stage_cumulative_artifacts(
+        campaign_root,
+        stage=stage,
+        backend_sha256=backend_sha256,
+        authorization_sha256=authorization_sha256,
+    )
     artifacts = {
         field: _required_file(Path(getattr(args, field)), field)
         for field in STAGE_PROGRESS_ARTIFACT_FIELDS
@@ -212,6 +229,7 @@ def finalize_stage_attempt(
             cumulative_outputs = _write_cumulative_inputs(
                 staging / CUMULATIVE_DIR_NAME,
                 published_out_dir=out_dir / CUMULATIVE_DIR_NAME,
+                prior_stage_artifacts=prior_stage_artifacts,
                 prior_records=prior_records,
                 current_artifacts=staged_artifacts,
             )
@@ -306,12 +324,17 @@ def _write_cumulative_inputs(
     out_dir: Path,
     *,
     published_out_dir: Path,
+    prior_stage_artifacts: Mapping[str, Path],
     prior_records: Sequence[tuple[Path, Mapping[str, Any]]],
     current_artifacts: Mapping[str, Path],
 ) -> dict[str, dict[str, Any]]:
     out_dir.mkdir()
     sources: dict[str, list[Path]] = {field: [] for field in CSV_ARTIFACT_FIELDS}
     funnels: list[Path] = []
+    if prior_stage_artifacts:
+        for field in CSV_ARTIFACT_FIELDS:
+            sources[field].append(prior_stage_artifacts[field])
+        funnels.append(prior_stage_artifacts["failure_funnel"])
     for _, receipt in prior_records:
         records = receipt.get("artifacts")
         if not isinstance(records, Mapping):
@@ -345,6 +368,84 @@ def _write_cumulative_inputs(
         published_out_dir / funnel_path.name,
     )
     return outputs
+
+
+def _prior_stage_cumulative_artifacts(
+    campaign_root: Path,
+    *,
+    stage: str,
+    backend_sha256: str,
+    authorization_sha256: str,
+) -> dict[str, Path]:
+    """Resolve the immediately preceding stage's cumulative raw products."""
+
+    stage_names = [item.name for item in STAGES]
+    stage_index = stage_names.index(stage)
+    records: list[tuple[Path, dict[str, Any]]] = []
+    for path in sorted((campaign_root / "stages").glob("*/STAGE_RECEIPT.json")):
+        receipt = _read_json(path, "prior stage receipt")
+        if receipt.get("overall_status") == "PASS":
+            records.append((path.resolve(), receipt))
+    errors = validate_stage_receipt_chain(
+        records,
+        backend_manifest_sha256=backend_sha256,
+        authorization_receipt_sha256=authorization_sha256,
+        verify_artifacts=True,
+    )
+    if errors:
+        raise StageAttemptFinalizationError(
+            "prior stage receipt chain failed validation: " + "; ".join(errors[:10])
+        )
+    if len(records) != stage_index:
+        raise StageAttemptFinalizationError(
+            f"prior stage receipt count mismatch for {stage}: "
+            f"actual={len(records)}, expected={stage_index}"
+        )
+    if stage_index == 0:
+        return {}
+
+    _, prior_receipt = records[-1]
+    expected_prior = STAGES[stage_index - 1]
+    if (
+        prior_receipt.get("stage") != expected_prior.name
+        or prior_receipt.get("accepted_unique_geometries")
+        != expected_prior.cumulative_target
+    ):
+        raise StageAttemptFinalizationError("immediately preceding stage identity mismatch")
+    evidence = prior_receipt.get("artifacts")
+    if not isinstance(evidence, Mapping):
+        raise StageAttemptFinalizationError("prior stage receipt lacks artifacts")
+
+    resolved = {
+        field: _verified_evidence_path(evidence.get(source), f"prior stage {field}")
+        for field, source in PRIOR_STAGE_ARTIFACT_FIELDS.items()
+    }
+    raw_receipt_path = _verified_evidence_path(
+        evidence.get("raw_products_receipt"),
+        "prior stage raw-products receipt",
+    )
+    raw_receipt = _read_json(raw_receipt_path, "prior stage raw-products receipt")
+    raw_outputs = raw_receipt.get("outputs")
+    if not isinstance(raw_outputs, Mapping):
+        raise StageAttemptFinalizationError(
+            "prior stage raw-products receipt lacks outputs"
+        )
+    resolved["long_features"] = _verified_evidence_path(
+        raw_outputs.get("long_features"),
+        "prior stage long features",
+    )
+    return resolved
+
+
+def _verified_evidence_path(value: Any, label: str) -> Path:
+    if not isinstance(value, Mapping):
+        raise StageAttemptFinalizationError(f"{label} evidence is not an object")
+    path = _required_file(Path(str(value.get("path") or "")), label)
+    if value.get("size_bytes") != path.stat().st_size:
+        raise StageAttemptFinalizationError(f"{label} size evidence mismatch")
+    if value.get("sha256") != _sha256(path):
+        raise StageAttemptFinalizationError(f"{label} SHA-256 evidence mismatch")
+    return path
 
 
 def _stage_attempt_artifacts(

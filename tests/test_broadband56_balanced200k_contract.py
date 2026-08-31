@@ -798,6 +798,80 @@ def test_phase_a_queue_rejects_non_phase_a_source_contract(tmp_path: Path) -> No
     assert failed == {"phase_is_frozen_phase_a", "acquisition_source_is_base_space_filling"}
 
 
+def test_phase_a_production_queue_excludes_prior_campaign_geometry(tmp_path: Path) -> None:
+    module = _load_queue_module()
+    seed_out = tmp_path / "seed_queue"
+    assert module.main(
+        [
+            "--contract", str(CONTRACT),
+            "--config", str(TEMPLATE),
+            "--out-dir", str(seed_out),
+            "--count", "1",
+            "--sampler", "sobol",
+            "--seed", "20260828",
+        ]
+    ) == 0
+    with (seed_out / "broadband56_candidate_queue.csv").open(
+        newline="", encoding="utf-8"
+    ) as handle:
+        prior_geometry = next(csv.DictReader(handle))["geometry_sha256"]
+
+    campaign_root = tmp_path / "campaign"
+    stage_dir = campaign_root / "stages" / "000001_golden" / "backend" / "raw"
+    stage_dir.mkdir(parents=True)
+    accepted_path = stage_dir / "accepted.csv"
+    rejected_path = stage_dir / "rejected.csv"
+    _write_csv(accepted_path, [{"geometry_sha256": prior_geometry}])
+    _write_csv(rejected_path, [], fieldnames=["geometry_sha256"])
+    receipt = {
+        "overall_status": "PASS",
+        "artifacts": {
+            "accepted_geometry_index": {
+                "path": str(accepted_path.resolve()),
+                "size_bytes": accepted_path.stat().st_size,
+                "sha256": _sha256(accepted_path),
+            },
+            "rejected_geometry_index": {
+                "path": str(rejected_path.resolve()),
+                "size_bytes": rejected_path.stat().st_size,
+                "sha256": _sha256(rejected_path),
+            },
+        },
+    }
+    receipt_path = campaign_root / "stages" / "000001_golden" / "STAGE_RECEIPT.json"
+    receipt_path.write_text(json.dumps(receipt) + "\n", encoding="utf-8")
+
+    out_dir = tmp_path / "pilot_queue"
+    status = module.main(
+        [
+            "--contract", str(CONTRACT),
+            "--config", str(TEMPLATE),
+            "--out-dir", str(out_dir),
+            "--count", "31",
+            "--sampler", "sobol",
+            "--seed", "20260828",
+            "--campaign-root", str(campaign_root),
+            "--stage", "PILOT_32",
+            "--current-accepted", "1",
+        ]
+    )
+
+    with (out_dir / "broadband56_candidate_queue.csv").open(
+        newline="", encoding="utf-8"
+    ) as handle:
+        rows = list(csv.DictReader(handle))
+    summary = json.loads(
+        (out_dir / "broadband56_candidate_queue_summary.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    assert status == 0
+    assert summary["overall_status"] == "PASS"
+    assert summary["excluded_prior_geometry_count"] == 1
+    assert len(rows) == 31
+    assert prior_geometry not in {row["geometry_sha256"] for row in rows}
+
+
 def test_checkpoint_acceptance_rejects_wrong_sequence_phase_and_source(tmp_path: Path) -> None:
     module = _load_audit_module()
     fingerprint = "f" * 64

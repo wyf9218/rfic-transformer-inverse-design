@@ -141,7 +141,7 @@ if args.role == "stage_attempt_finalizer":
             "decision": "CONTINUE_SAMPLING",
             "campaign_id": CAMPAIGN_ID,
             "contract_fingerprint_sha256": FINGERPRINT,
-            "backend_id": "MARS_CADENCE_GDS_IDENTITY_CALIBRE_EMX_S4P_QA_V7",
+            "backend_id": "MARS_CADENCE_GDS_IDENTITY_CALIBRE_EMX_S4P_QA_V9",
             "stage": args.stage,
             "attempt_index": 1,
             "cumulative_target": args.cumulative_target,

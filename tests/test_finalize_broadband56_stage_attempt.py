@@ -34,9 +34,88 @@ def _write_csv(path: Path, fields: list[str], rows: list[dict[str, object]]) -> 
     return path
 
 
+def _evidence(path: Path) -> dict[str, object]:
+    return {
+        "path": str(path.resolve()),
+        "size_bytes": path.stat().st_size,
+        "sha256": _sha(path),
+    }
+
+
+def _write_prior_golden(campaign_root: Path, tmp_path: Path) -> None:
+    prior = tmp_path / "prior_golden"
+    geometry = "f" * 64
+    attempt = _write_csv(
+        prior / "attempt.csv",
+        ["attempt_id", "geometry_sha256", "terminal_stage"],
+        [{"attempt_id": "golden", "geometry_sha256": geometry, "terminal_stage": "ACCEPTED"}],
+    )
+    accepted = _write_csv(
+        prior / "accepted.csv", ["geometry_sha256"], [{"geometry_sha256": geometry}]
+    )
+    rejected = _write_csv(prior / "rejected.csv", ["geometry_sha256"], [])
+    exact = _write_csv(
+        prior / "exact.csv",
+        ["candidate_id_sha256", "geometry_sha256"],
+        [{"candidate_id_sha256": geometry, "geometry_sha256": geometry}],
+    )
+    s4p = _write_csv(
+        prior / "s4p.csv", ["geometry_sha256"], [{"geometry_sha256": geometry}]
+    )
+    features = _write_csv(
+        prior / "features.csv",
+        ["geometry_sha256", "frequency_hz"],
+        [
+            {
+                "geometry_sha256": geometry,
+                "frequency_hz": str(5_000_000_000 + point * 1_000_000_000),
+            }
+            for point in range(56)
+        ],
+    )
+    funnel = _write_csv(
+        prior / "funnel.csv",
+        ["stage", "count"],
+        [
+            {
+                "stage": field,
+                "count": 1 if field in {"raw_geometry_candidates", "accepted_geometries"} else 0,
+            }
+            for field in ATTEMPT_FAILURE_ACCOUNTING_FIELDS
+        ],
+    )
+    raw_receipt = prior / "RAW_PRODUCTS_RECEIPT.json"
+    raw_receipt.write_text(
+        json.dumps({"overall_status": "PASS", "outputs": {"long_features": _evidence(features)}})
+        + "\n",
+        encoding="utf-8",
+    )
+    stage_dir = campaign_root / "stages" / "000001_golden"
+    stage_dir.mkdir(parents=True)
+    stage_receipt = {
+        "overall_status": "PASS",
+        "stage": "GOLDEN",
+        "accepted_unique_geometries": 1,
+        "artifacts": {
+            "attempt_ledger": _evidence(attempt),
+            "accepted_geometry_index": _evidence(accepted),
+            "rejected_geometry_index": _evidence(rejected),
+            "exact_gds_emx_receipt_index": _evidence(exact),
+            "s4p_artifact_index": _evidence(s4p),
+            "failure_funnel": _evidence(funnel),
+            "raw_products_receipt": _evidence(raw_receipt),
+        },
+    }
+    (stage_dir / "STAGE_RECEIPT.json").write_text(
+        json.dumps(stage_receipt) + "\n", encoding="utf-8"
+    )
+
+
 def _args(tmp_path: Path, *, accepted: int, raw: int, stage: str = "PILOT_32") -> argparse.Namespace:
     campaign_root = tmp_path / "campaign"
     (campaign_root / "stages").mkdir(parents=True)
+    if stage == "PILOT_32":
+        _write_prior_golden(campaign_root, tmp_path)
     backend = tmp_path / "backend.json"
     backend.write_text("{}\n", encoding="utf-8")
     authorization = tmp_path / "authorization.json"
@@ -108,7 +187,8 @@ def _args(tmp_path: Path, *, accepted: int, raw: int, stage: str = "PILOT_32") -
     )
 
 
-def test_shortfall_writes_valid_nonterminal_progress_receipt(tmp_path: Path) -> None:
+def test_shortfall_writes_valid_nonterminal_progress_receipt(tmp_path: Path, monkeypatch) -> None:
+    monkeypatch.setattr(MODULE, "validate_stage_receipt_chain", lambda *args, **kwargs: [])
     args = _args(tmp_path, accepted=20, raw=24)
     out_dir = Path(args.out_dir)
 
@@ -134,7 +214,8 @@ def test_shortfall_writes_valid_nonterminal_progress_receipt(tmp_path: Path) -> 
     assert result["cumulative_stage_inputs"] is None
 
 
-def test_exact_target_writes_cumulative_inputs_without_progress(tmp_path: Path) -> None:
+def test_exact_target_writes_cumulative_inputs_without_progress(tmp_path: Path, monkeypatch) -> None:
+    monkeypatch.setattr(MODULE, "validate_stage_receipt_chain", lambda *args, **kwargs: [])
     args = _args(tmp_path, accepted=31, raw=31)
     out_dir = Path(args.out_dir)
 
@@ -148,9 +229,18 @@ def test_exact_target_writes_cumulative_inputs_without_progress(tmp_path: Path) 
     for record in cumulative.values():
         assert Path(record["path"]).is_file()
         assert _sha(Path(record["path"])) == record["sha256"]
+    accepted_rows = list(
+        csv.DictReader(Path(cumulative["accepted_geometry_increment"]["path"]).open(newline="", encoding="utf-8"))
+    )
+    feature_rows = list(
+        csv.DictReader(Path(cumulative["long_features"]["path"]).open(newline="", encoding="utf-8"))
+    )
+    assert len(accepted_rows) == 32
+    assert len(feature_rows) == 32 * 56
 
 
-def test_overshoot_fails_closed(tmp_path: Path) -> None:
+def test_overshoot_fails_closed(tmp_path: Path, monkeypatch) -> None:
+    monkeypatch.setattr(MODULE, "validate_stage_receipt_chain", lambda *args, **kwargs: [])
     args = _args(tmp_path, accepted=32, raw=32)
 
     try:
@@ -161,7 +251,8 @@ def test_overshoot_fails_closed(tmp_path: Path) -> None:
         raise AssertionError("overshoot must fail")
 
 
-def test_feature_grain_mismatch_fails_before_output(tmp_path: Path) -> None:
+def test_feature_grain_mismatch_fails_before_output(tmp_path: Path, monkeypatch) -> None:
+    monkeypatch.setattr(MODULE, "validate_stage_receipt_chain", lambda *args, **kwargs: [])
     args = _args(tmp_path, accepted=2, raw=2)
     features = Path(args.long_features)
     rows = list(csv.DictReader(features.open(newline="", encoding="utf-8")))

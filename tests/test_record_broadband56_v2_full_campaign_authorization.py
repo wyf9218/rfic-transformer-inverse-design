@@ -398,11 +398,17 @@ def _valid_fixture(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> dict[str,
             "cadence_streamout_runner_sha256": script_hashes[
                 "cadence_streamout_runner"
             ],
+            "cadence_streamout_delegate_sha256": script_hashes[
+                "cadence_streamout_delegate"
+            ],
             "candidate_gds_index_builder_sha256": script_hashes[
                 "candidate_gds_index_builder"
             ],
             "gds_physical_identity_auditor_sha256": script_hashes[
                 "gds_physical_identity_auditor"
+            ],
+            "gds_physical_identity_delegate_sha256": script_hashes[
+                "gds_physical_identity_delegate"
             ],
             "gds_physical_identity_module_sha256": script_hashes[
                 "gds_physical_identity_module"
@@ -410,11 +416,20 @@ def _valid_fixture(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> dict[str,
             "resource_policy": RESOURCE_POLICY,
             "operational_policy_approval_scope": POLICY_APPROVAL_SCOPE,
             "calibre_runner_sha256": script_hashes["calibre_runner"],
+            "calibre_batch_delegate_sha256": script_hashes[
+                "calibre_batch_delegate"
+            ],
             "calibre_zero_blocking_receipt_builder_sha256": script_hashes[
                 "calibre_zero_blocking_receipt_builder"
             ],
+            "calibre_zero_blocking_single_receipt_builder_sha256": script_hashes[
+                "calibre_zero_blocking_single_receipt_builder"
+            ],
             "exact_audited_gds_emx_runner_sha256": script_hashes[
                 "exact_audited_gds_emx_runner"
+            ],
+            "exact_audited_gds_emx_single_runner_sha256": script_hashes[
+                "exact_audited_gds_emx_single_runner"
             ],
             "exact_audited_gds_emx_module_sha256": script_hashes[
                 "exact_audited_gds_emx_module"
@@ -422,6 +437,9 @@ def _valid_fixture(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> dict[str,
             "full_band_s4p_qa_builder_sha256": script_hashes["full_band_s4p_qa_builder"],
             "full_band_s4p_qa_module_sha256": script_hashes[
                 "full_band_s4p_qa_module"
+            ],
+            "stage_attempt_product_builder_sha256": script_hashes[
+                "stage_attempt_product_builder"
             ],
             "stage_attempt_finalizer_sha256": script_hashes[
                 "stage_attempt_finalizer"

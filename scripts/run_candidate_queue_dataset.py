@@ -57,6 +57,8 @@ QUEUE_METADATA_COLUMNS = (
     "selection_rank",
     "candidate_index",
     "candidate_id",
+    "candidate_id_sha256",
+    "candidate_geometry_identity_sha256",
     "target_rank",
     "target_real_bin",
     "target_imag_bin",
