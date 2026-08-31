@@ -1,0 +1,96 @@
+{
+  "schema": "rfic_transformer.broadband56_v2_public_safe_capacity_supervisor_restart_status.v1",
+  "generated_utc": "2026-08-31T05:45:08Z",
+  "overall_status": "PASS",
+  "decision": "ZERO_SIMULATOR_CAPACITY_SUPERVISOR_RUNNING_WAITING_FOR_CAPACITY",
+  "branch": "codex/broadband56-balanced200k-v2",
+  "head_commit": "967061b4597ef590efddf1d7f86d1707bec23210",
+  "campaign_id": "broadband56_real_emx_balanced200k_tsmc65_v2",
+  "contract_fingerprint_sha256": "f86a00efbf7756b7421b863bbb16c340db6b423640f63a3257d46c1af49eb55e",
+  "resource_policy": "CAPACITY_NORMALIZED_HIGH_LOAD_V1",
+  "scientific_contract_modified": false,
+  "owner_restart_evidence": {
+    "path": "docs/research/BROADBAND56_V2_OWNER_RESTART_STATUS_20260831T035128Z.json",
+    "sha256": "6a14e0462f2285e23a7d1c117f1064085575352f8d50402d55a4f4e9f146ca0f",
+    "restart_authorized": true
+  },
+  "repository_sync": {
+    "branch": "codex/broadband56-balanced200k-v2",
+    "head_commit": "967061b4597ef590efddf1d7f86d1707bec23210",
+    "working_tree_clean": true
+  },
+  "fresh_capacity_observation": {
+    "snapshot_stamp_utc": "2026-08-31T05:31:31Z",
+    "raw_load1": 209.777832,
+    "logical_cpu_count": 192,
+    "normalized_load1": 1.092593,
+    "raw_load5": 213.784668,
+    "normalized_load5": 1.113462,
+    "available_memory_fraction": 0.553144,
+    "iowait_percent": 0.006949,
+    "swap_in_pages_delta": 14,
+    "swap_out_pages_delta": 0,
+    "active_swap_thrashing": true,
+    "license_gate": "PASS_READ_ONLY_NO_CHECKOUT",
+    "duplicate_supervisor_count_before_restart": 0,
+    "duplicate_runner_count": 0,
+    "unexpected_project_child_count": 0,
+    "output_path_collision": false
+  },
+  "capacity_gate": {
+    "overall_status": "WAIT",
+    "decision": "WAITING_FOR_CAPACITY",
+    "failed_checks": [
+      "normalized_load1_gate",
+      "normalized_load5_gate",
+      "swap_thrash_gate"
+    ],
+    "max_allowed_concurrency": 0
+  },
+  "capacity_supervisor": {
+    "state": "RUNNING_WAIT_ONLY",
+    "poll_interval_seconds": 300,
+    "simulator_launch_capability": false,
+    "active_simulator_jobs": 0,
+    "private_process_identity_published": false,
+    "private_state_path_published": false
+  },
+  "evidence_sha256": {
+    "private_capacity_snapshot": "d6b3d23bd5a3c07677adcba81f2110cd747aaf82a96039556c44d913fbf30986",
+    "private_capacity_gate_receipt": "5c74a9cb77e9cdc0ec54f395e8541120479b44d0eaf84d24c7661e0dc614d0a7",
+    "private_supervisor_initial_state": "48b22ca8b0f3ec3982c0cdff07ee46833d195aa929190c05504f79a732075e9d"
+  },
+  "runtime_resolution": {
+    "system_python_attempt": "EXPECTED_FAIL_CLOSED_MISSING_NUMPY_NO_RECEIPT_CREATED",
+    "verified_project_runtime_numpy_version": "2.5.0",
+    "verified_project_runtime_path_published": false,
+    "simulator_action_taken_during_resolution": false
+  },
+  "thread_monitor": {
+    "automation_id": "mars-broadband56",
+    "status": "ACTIVE",
+    "poll_interval_minutes": 5
+  },
+  "mandatory_stop_compliance": {
+    "cadence_started": false,
+    "calibre_started": false,
+    "emx_started": false,
+    "authorized_queue_started": false,
+    "campaign_started": false,
+    "simulator_action_taken": false
+  },
+  "campaign_progress": {
+    "current_stage": "GOLDEN",
+    "accepted_unique_geometries": 0,
+    "s4p_artifacts": 0,
+    "geometry_frequency_rows": 0
+  },
+  "authorization_boundary": {
+    "full_campaign_candidate_created": false,
+    "exact_sha256_full_campaign_approval_recorded": false,
+    "capacity_readiness_alone_authorizes_simulator_launch": false
+  },
+  "next_legal_action": "While the zero-simulator supervisor continues five-minute capacity checks, build and verify the private V7 backend identity chain and the single V5 FULL_CAMPAIGN candidate; simulator launch remains forbidden until exact-SHA project-owner approval is recorded.",
+  "private_paths_pdk_proc_gds_s4p_license_details_or_hostnames_published": false,
+  "blocker": "Normalized one-minute and five-minute load exceed the approved thresholds and active swap thrashing is still present; exact-SHA FULL_CAMPAIGN approval is also not yet recorded."
+}
