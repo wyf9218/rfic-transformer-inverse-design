@@ -57,6 +57,11 @@ def main(argv: list[str] | None = None) -> int:
             any(fragment in error for fragment in fragments) for error in errors
         )
 
+    runtime_identities = manifest.get("runtime_identities")
+    stage_profile_present = isinstance(runtime_identities, Mapping) and isinstance(
+        runtime_identities.get("stage_execution_profile"), Mapping
+    )
+
     receipt = {
         "schema": BACKEND_VERIFICATION_SCHEMA,
         "generated_utc": datetime.now(timezone.utc).isoformat(timespec="seconds"),
@@ -80,6 +85,10 @@ def main(argv: list[str] | None = None) -> int:
             "all_named_file_sha256_values_match": lacks_errors(
                 ".sha256 mismatches file",
                 ".sha256 is not SHA-256",
+            ),
+            "stage_execution_profile_reparsed_and_validated": (
+                stage_profile_present
+                and lacks_errors("runtime_identities.stage_execution_profile")
             ),
             "all_required_executables_are_executable": lacks_errors(
                 ".executable must be true",

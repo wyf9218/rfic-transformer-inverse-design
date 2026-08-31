@@ -1,0 +1,123 @@
+{
+  "schema": "rfic_transformer.broadband56_v2_stage_execution_profile_builder_status.v1",
+  "generated_utc": "2026-08-31T02:50:36Z",
+  "overall_status": "PASS",
+  "decision": "USE_LOCAL_PROFILE_BUILDER_DO_NOT_LAUNCH_UNTIL_OWNER_STOP_REVERSAL_AND_PRIVATE_REBIND",
+  "campaign_id": "broadband56_real_emx_balanced200k_tsmc65_v2",
+  "scientific_contract_fingerprint_sha256": "f86a00efbf7756b7421b863bbb16c340db6b423640f63a3257d46c1af49eb55e",
+  "branch": "codex/broadband56-balanced200k-v2",
+  "base_commit": "da59628578c18b137f3b505894ccca174371ca19",
+  "supersedes_status": "docs/research/BROADBAND56_V2_PRODUCTION_STAGE_BACKEND_STATUS_20260831T022806Z.json",
+  "current_role_model": {
+    "private_backend_manifest_schema": "rfic_transformer.broadband56_v2_private_backend_identity.v6",
+    "private_backend_verification_schema": "rfic_transformer.broadband56_v2_private_backend_identity_verification.v2",
+    "full_campaign_candidate_schema": "rfic_transformer.broadband56_v2_full_campaign_authorization_candidate.v4",
+    "full_campaign_approval_schema": "rfic_transformer.broadband56_v2_full_campaign_authorization_approval.v4",
+    "stage_receipt_schema": "rfic_transformer.broadband56_v2_stage_receipt.v2",
+    "production_backend_id": "MARS_CADENCE_GDS_IDENTITY_CALIBRE_EMX_S4P_QA_V4",
+    "execution_command_plan_schema": "rfic_transformer.broadband56_v2_stage_execution_command_plan.v1",
+    "execution_profile_schema": "rfic_transformer.broadband56_v2_stage_execution_profile.v1",
+    "execution_profile_is_separate_private_hash_bound_artifact": true,
+    "execution_profile_is_semantically_reparsed_during_manifest_verification": true,
+    "approved_production_configuration_bytes_modified": false
+  },
+  "implementation": {
+    "execution_profile_builder": {
+      "path": "scripts/build_broadband56_v2_stage_execution_profile.py",
+      "sha256": "f9c777cc9366184ffe6819262c9e3e8832bb01978ad63b893deffdbfee97c17a",
+      "executable": true,
+      "process_execution_capability": false,
+      "no_clobber": true
+    },
+    "stage_execution_profile_contract": {
+      "path": "rfic_transformer_inverse_design/campaigns/broadband56_stage_execution.py",
+      "sha256": "6bf87fe0b2a7557a394041d6dc5be54ccf9c1e629e621f52d9bd4a5b0e42a051"
+    },
+    "production_contract_validator": {
+      "path": "rfic_transformer_inverse_design/campaigns/broadband56_production_backend.py",
+      "sha256": "36fa378767f63a651fd404464650f22d7b12d7de2501d208faee35afbb715a16"
+    },
+    "private_backend_identity_verifier": {
+      "path": "scripts/verify_broadband56_v2_private_backend_identity.py",
+      "sha256": "8a60062ecd0b4521bc2faa044f14f51e6714a9c4de82820bb98040aaa9186038",
+      "writes_profile_semantic_validation_check": true
+    }
+  },
+  "enforced_profile_contract": {
+    "ordered_stages": [
+      "GOLDEN",
+      "PILOT_32",
+      "PILOT_1000",
+      "PHASE_A",
+      "PHASE_B",
+      "PHASE_C"
+    ],
+    "shell_execution_forbidden": true,
+    "exact_role_order_required": true,
+    "unsafe_result_paths_rejected": true,
+    "stage_role_arguments_are_private": true,
+    "private_command_plan_or_profile_must_not_be_committed": true,
+    "profile_path_size_and_sha256_must_match_manifest": true,
+    "profile_reparsed_and_cross_validated_against_manifest": true,
+    "profile_change_during_validation_rejected": true,
+    "simulator_action_taken": false
+  },
+  "test_evidence": {
+    "initial_profile_builder_regression": {
+      "status": "EXPECTED_FAIL_THEN_REPAIRED",
+      "passed": 56,
+      "failed": 1,
+      "cause": "the first implementation resolved the command-plan path before checking whether the user-supplied path was a symlink",
+      "repair": "reject the user-supplied symlink before path resolution"
+    },
+    "focused_profile_manifest_authorization_backend_regression": {
+      "status": "PASS",
+      "passed": 59,
+      "failed": 0
+    },
+    "all_broadband56_tests": {
+      "status": "PASS",
+      "passed": 219,
+      "failed": 0
+    },
+    "adversarial_coverage": [
+      "no-clobber profile output",
+      "symlink command-plan rejection",
+      "shell execution rejection",
+      "stage-role reorder rejection",
+      "unsafe result-path rejection",
+      "semantic profile rejection after matching file size and SHA-256",
+      "builder rejection of invalid profile",
+      "profile builder has no process-execution capability"
+    ],
+    "python_compile": "PASS",
+    "full_repository_regression": "NOT_RERUN_KNOWN_UNRELATED_ARCHIVED_ASSET_FAILURES_ALREADY_RECORDED"
+  },
+  "runtime_authority": {
+    "owner_stop_still_authoritative": true,
+    "owner_stop_status": "docs/research/BROADBAND56_V2_OWNER_STOP_STATUS_20260830T195649Z.json",
+    "owner_stop_status_sha256": "b0d97d1266a138c3726e6e923b901f4cffc3ff126d3a453e6e80bd9c09e38431",
+    "restart_authorized": false,
+    "mars_write_action_taken": false,
+    "cadence_action_taken": false,
+    "calibre_action_taken": false,
+    "emx_action_taken": false,
+    "queue_or_supervisor_action_taken": false
+  },
+  "physical_counts": {
+    "accepted_geometries": 0,
+    "s4p_artifacts": 0,
+    "geometry_frequency_rows": 0
+  },
+  "remaining_runtime_requirements": {
+    "explicit_owner_stop_reversal": "REQUIRED",
+    "fresh_resource_license_isolation_storage_pass": "REQUIRED",
+    "private_stage_execution_command_plan": "NOT_CREATED_ON_MARS",
+    "private_stage_execution_profile": "NOT_CREATED_OR_HASH_BOUND_ON_MARS",
+    "private_backend_identity_manifest_v6": "NOT_CREATED",
+    "private_backend_identity_verification_receipt_v2": "NOT_CREATED",
+    "full_campaign_authorization_candidate_v4": "NOT_CREATED",
+    "exact_sha256_full_campaign_owner_approval": "NOT_RECORDED"
+  },
+  "next_legal_action": "After an explicit owner-stop reversal, perform a fresh read-only resource preflight, create the private command plan and no-clobber execution profile without changing the approved production configuration, build and verify the v6 private backend identity manifest, and then prepare the exact-SHA FULL_CAMPAIGN authorization candidate; no simulator or training launch is permitted before every gate passes."
+}

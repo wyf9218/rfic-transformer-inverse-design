@@ -25,11 +25,16 @@ from .broadband56_full_campaign_authorization import (
     expected_stage_contract,
     expected_terminal_contract,
 )
+from .broadband56_stage_execution import (
+    StageExecutionProfileError,
+    read_execution_profile,
+    validate_execution_profile,
+)
 
 
-BACKEND_MANIFEST_SCHEMA = "rfic_transformer.broadband56_v2_private_backend_identity.v5"
+BACKEND_MANIFEST_SCHEMA = "rfic_transformer.broadband56_v2_private_backend_identity.v6"
 BACKEND_VERIFICATION_SCHEMA = (
-    "rfic_transformer.broadband56_v2_private_backend_identity_verification.v1"
+    "rfic_transformer.broadband56_v2_private_backend_identity_verification.v2"
 )
 BACKEND_VERIFICATION_PASS_DECISION = "USE_HASH_BOUND_PRODUCTION_BACKEND"
 BACKEND_MANIFEST_EFFECT = "IDENTITY_ONLY_NO_EXECUTION"
@@ -42,6 +47,7 @@ BACKEND_VERIFICATION_PASS_CHECKS = {
     "all_named_files_exist": True,
     "all_named_file_sizes_match": True,
     "all_named_file_sha256_values_match": True,
+    "stage_execution_profile_reparsed_and_validated": True,
     "all_required_executables_are_executable": True,
     "all_stage_commands_hash_bound": True,
     "all_stage_commands_shell_free": True,
@@ -319,6 +325,12 @@ def validate_backend_identity_manifest(
         required_roles=REQUIRED_RUNTIME_ROLES,
         label="runtime_identities",
         verify_files=verify_files,
+    )
+    _validate_stage_execution_profile_identity(
+        errors,
+        manifest=manifest,
+        runtimes=runtimes,
+        verify_file=verify_files,
     )
 
     _validate_stage_commands(errors, manifest.get("stage_commands"), scripts=scripts)
@@ -680,6 +692,66 @@ def _validate_identity_records(
             errors.append(f"{label}.{role}.sha256 mismatches file")
         if must_be_executable and not os.access(path, os.X_OK):
             errors.append(f"{label}.{role}.path is not executable")
+
+
+def _validate_stage_execution_profile_identity(
+    errors: list[str],
+    *,
+    manifest: Mapping[str, Any],
+    runtimes: Any,
+    verify_file: bool,
+) -> None:
+    if not verify_file or not isinstance(runtimes, Mapping):
+        return
+    record = runtimes.get("stage_execution_profile")
+    if not isinstance(record, Mapping):
+        return
+    path_text = record.get("path")
+    digest = record.get("sha256")
+    size = record.get("size_bytes")
+    if (
+        not isinstance(path_text, str)
+        or not path_text
+        or not Path(path_text).is_absolute()
+        or not _is_sha256(digest)
+        or not isinstance(size, int)
+        or isinstance(size, bool)
+        or size <= 0
+    ):
+        return
+    path = Path(path_text).expanduser().resolve()
+    if not path.is_file() or path.stat().st_size != size or _sha256(path) != digest:
+        return
+    before = path.stat()
+    try:
+        profile = read_execution_profile(path)
+    except StageExecutionProfileError as exc:
+        errors.append(f"runtime_identities.stage_execution_profile is invalid: {exc}")
+        return
+    after = path.stat()
+    if (
+        before.st_dev,
+        before.st_ino,
+        before.st_size,
+        before.st_mtime_ns,
+        before.st_ctime_ns,
+    ) != (
+        after.st_dev,
+        after.st_ino,
+        after.st_size,
+        after.st_mtime_ns,
+        after.st_ctime_ns,
+    ) or _sha256(path) != digest:
+        errors.append("runtime_identities.stage_execution_profile changed while validating")
+        return
+    profile_errors = validate_execution_profile(
+        profile,
+        backend_manifest=manifest,
+    )
+    errors.extend(
+        f"runtime_identities.stage_execution_profile: {error}"
+        for error in profile_errors
+    )
 
 
 def _validate_artifact_root(

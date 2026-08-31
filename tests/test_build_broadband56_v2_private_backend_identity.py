@@ -15,6 +15,15 @@ from rfic_transformer_inverse_design.campaigns.broadband56_production_backend im
     REQUIRED_SCRIPT_ROLES,
     validate_backend_identity_manifest,
 )
+from rfic_transformer_inverse_design.campaigns.broadband56_full_campaign_authorization import (
+    PRODUCTION_BACKEND_ID,
+)
+from rfic_transformer_inverse_design.campaigns.broadband56_stage_execution import (
+    PROFILE_EXECUTION_MODE,
+    PROFILE_SCHEMA,
+    expected_result_path_fields,
+    expected_stage_role_order,
+)
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -45,6 +54,35 @@ def _write(path: Path, payload: str | dict) -> Path:
     return path
 
 
+def _execution_profile() -> dict:
+    return {
+        "schema": PROFILE_SCHEMA,
+        "campaign_id": "broadband56_real_emx_balanced200k_tsmc65_v2",
+        "contract_fingerprint_sha256": SCIENTIFIC_CONTRACT_FINGERPRINT,
+        "backend_id": PRODUCTION_BACKEND_ID,
+        "execution_mode": PROFILE_EXECUTION_MODE,
+        "shell_used": False,
+        "stages": {
+            stage.name: {
+                "commands": [
+                    {
+                        "role": role,
+                        "argv": ["--out-dir", "{role_out_dir}"],
+                        "receipt": "ROLE_RECEIPT.json",
+                        "shell_used": False,
+                    }
+                    for role in expected_stage_role_order(stage.name)
+                ],
+                "result_paths": {
+                    field: f"results/{field}.json"
+                    for field in expected_result_path_fields(stage.name)
+                },
+            }
+            for stage in STAGES
+        },
+    }
+
+
 def _build_args(tmp_path: Path) -> tuple[list[str], dict[str, Path], Path]:
     files = {
         role: _write(tmp_path / "private" / role, f"{role}\n")
@@ -52,6 +90,10 @@ def _build_args(tmp_path: Path) -> tuple[list[str], dict[str, Path], Path]:
     }
     files["production_stage_backend"].chmod(0o755)
     files["emx_wrapper"].chmod(0o755)
+    files["stage_execution_profile"] = _write(
+        files["stage_execution_profile"],
+        _execution_profile(),
+    )
     historical_one = _write(
         tmp_path / "historical" / "backend_one.json",
         {"overall_status": "PASS", "receipt_id": "one"},
@@ -182,6 +224,18 @@ def test_builder_rejects_non_sha_preparation_binding(tmp_path: Path) -> None:
 def test_builder_rejects_non_executable_stage_backend(tmp_path: Path) -> None:
     argv, files, out_dir = _build_args(tmp_path)
     files["production_stage_backend"].chmod(0o644)
+
+    assert MODULE.main(argv) == 2
+    assert not out_dir.exists()
+
+
+def test_builder_rejects_invalid_stage_execution_profile(tmp_path: Path) -> None:
+    argv, files, out_dir = _build_args(tmp_path)
+    profile_path = files["stage_execution_profile"]
+    profile = json.loads(profile_path.read_text(encoding="utf-8"))
+    commands = profile["stages"]["GOLDEN"]["commands"]
+    commands[0], commands[1] = commands[1], commands[0]
+    _write(profile_path, profile)
 
     assert MODULE.main(argv) == 2
     assert not out_dir.exists()

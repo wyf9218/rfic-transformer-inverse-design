@@ -10,6 +10,7 @@ the profile; it never launches a process or writes an artifact.
 
 from __future__ import annotations
 
+import copy
 import json
 import re
 from collections.abc import Mapping, Sequence
@@ -25,6 +26,7 @@ from .broadband56_full_campaign_authorization import PRODUCTION_BACKEND_ID
 
 PROFILE_KEY = "broadband56_stage_execution_profile"
 PROFILE_SCHEMA = "rfic_transformer.broadband56_v2_stage_execution_profile.v1"
+COMMAND_PLAN_SCHEMA = "rfic_transformer.broadband56_v2_stage_execution_command_plan.v1"
 PROFILE_EXECUTION_MODE = "HASH_BOUND_PYTHON_ROLE_COMMANDS"
 ROLE_RECEIPT_REQUIRED_STATUS = "PASS"
 
@@ -141,6 +143,48 @@ def read_execution_profile(profile_path: Path) -> dict[str, Any]:
             f"stage execution profile lacks an object at {PROFILE_KEY}"
         )
     return dict(profile)
+
+
+def profile_from_command_plan(plan: Mapping[str, Any]) -> dict[str, Any]:
+    """Convert one exact private command plan into the runtime profile."""
+
+    required_fields = {
+        "schema",
+        "campaign_id",
+        "contract_fingerprint_sha256",
+        "backend_id",
+        "shell_used",
+        "stages",
+    }
+    if not isinstance(plan, Mapping) or set(plan) != required_fields:
+        raise StageExecutionProfileError(
+            "command plan fields do not exactly match the frozen contract"
+        )
+    if plan.get("schema") != COMMAND_PLAN_SCHEMA:
+        raise StageExecutionProfileError("command plan schema mismatch")
+    if plan.get("campaign_id") != CAMPAIGN_ID:
+        raise StageExecutionProfileError("command plan campaign mismatch")
+    if (
+        plan.get("contract_fingerprint_sha256")
+        != SCIENTIFIC_CONTRACT_FINGERPRINT
+    ):
+        raise StageExecutionProfileError("command plan fingerprint mismatch")
+    if plan.get("backend_id") != PRODUCTION_BACKEND_ID:
+        raise StageExecutionProfileError("command plan backend mismatch")
+    if plan.get("shell_used") is not False:
+        raise StageExecutionProfileError("command plan shell_used must be false")
+    stages = plan.get("stages")
+    if not isinstance(stages, Mapping):
+        raise StageExecutionProfileError("command plan stages must be an object")
+    return {
+        "schema": PROFILE_SCHEMA,
+        "campaign_id": CAMPAIGN_ID,
+        "contract_fingerprint_sha256": SCIENTIFIC_CONTRACT_FINGERPRINT,
+        "backend_id": PRODUCTION_BACKEND_ID,
+        "execution_mode": PROFILE_EXECUTION_MODE,
+        "shell_used": False,
+        "stages": copy.deepcopy(dict(stages)),
+    }
 
 
 def validate_execution_profile(
@@ -305,6 +349,7 @@ def _equal(errors: list[str], label: str, actual: Any, expected: Any) -> None:
 __all__ = [
     "ALLOWED_ARGUMENT_PLACEHOLDERS",
     "BASE_RESULT_PATH_FIELDS",
+    "COMMAND_PLAN_SCHEMA",
     "PROFILE_EXECUTION_MODE",
     "PROFILE_KEY",
     "PROFILE_SCHEMA",
@@ -314,6 +359,7 @@ __all__ = [
     "expected_result_path_fields",
     "expected_stage_role_order",
     "expand_argument",
+    "profile_from_command_plan",
     "read_execution_profile",
     "resolve_under",
     "validate_execution_profile",

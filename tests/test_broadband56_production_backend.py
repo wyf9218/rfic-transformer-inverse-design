@@ -37,6 +37,12 @@ from rfic_transformer_inverse_design.campaigns.broadband56_production_backend im
     validate_stage_receipt,
     validate_stage_receipt_chain,
 )
+from rfic_transformer_inverse_design.campaigns.broadband56_stage_execution import (
+    PROFILE_EXECUTION_MODE,
+    PROFILE_SCHEMA,
+    expected_result_path_fields,
+    expected_stage_role_order,
+)
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -66,6 +72,35 @@ def _write(path: Path, value: str | dict) -> Path:
     return path
 
 
+def _execution_profile() -> dict:
+    return {
+        "schema": PROFILE_SCHEMA,
+        "campaign_id": "broadband56_real_emx_balanced200k_tsmc65_v2",
+        "contract_fingerprint_sha256": SCIENTIFIC_CONTRACT_FINGERPRINT,
+        "backend_id": PRODUCTION_BACKEND_ID,
+        "execution_mode": PROFILE_EXECUTION_MODE,
+        "shell_used": False,
+        "stages": {
+            stage.name: {
+                "commands": [
+                    {
+                        "role": role,
+                        "argv": ["--out-dir", "{role_out_dir}"],
+                        "receipt": "ROLE_RECEIPT.json",
+                        "shell_used": False,
+                    }
+                    for role in expected_stage_role_order(stage.name)
+                ],
+                "result_paths": {
+                    field: f"results/{field}.json"
+                    for field in expected_result_path_fields(stage.name)
+                },
+            }
+            for stage in STAGES
+        },
+    }
+
+
 def _backend_manifest(tmp_path: Path) -> tuple[dict, Path]:
     files = {
         role: _write(tmp_path / "files" / role, f"{role}\n")
@@ -73,6 +108,10 @@ def _backend_manifest(tmp_path: Path) -> tuple[dict, Path]:
     }
     files["production_stage_backend"].chmod(0o755)
     files["emx_wrapper"].chmod(0o755)
+    files["stage_execution_profile"] = _write(
+        files["stage_execution_profile"],
+        _execution_profile(),
+    )
     scripts = {role: _identity(files[role]) for role in REQUIRED_SCRIPT_ROLES}
     runtimes = {role: _identity(files[role]) for role in REQUIRED_RUNTIME_ROLES}
     scripts["production_stage_backend"]["executable"] = True
@@ -338,6 +377,27 @@ def test_backend_manifest_rejects_non_executable_emx_wrapper(tmp_path: Path) -> 
     errors = validate_backend_identity_manifest(manifest, verify_files=True)
 
     assert "runtime_identities.emx_wrapper.path is not executable" in errors
+
+
+def test_backend_manifest_reparses_stage_profile_after_identity_match(
+    tmp_path: Path,
+) -> None:
+    manifest, _ = _backend_manifest(tmp_path)
+    record = manifest["runtime_identities"]["stage_execution_profile"]
+    path = Path(record["path"])
+    profile = json.loads(path.read_text(encoding="utf-8"))
+    commands = profile["stages"]["GOLDEN"]["commands"]
+    commands[0], commands[1] = commands[1], commands[0]
+    _write(path, profile)
+    record.update(_identity(path))
+
+    errors = validate_backend_identity_manifest(manifest, verify_files=True)
+
+    assert any(
+        "stage_execution_profile: stages.GOLDEN.commands role order mismatch"
+        in error
+        for error in errors
+    )
 
 
 def test_backend_manifest_rejects_historical_receipt_file_tamper(

@@ -36,6 +36,12 @@ from rfic_transformer_inverse_design.campaigns.broadband56_production_backend im
     REQUIRED_SCRIPT_ROLES,
     STAGE_COMMAND_ARGUMENTS,
 )
+from rfic_transformer_inverse_design.campaigns.broadband56_stage_execution import (
+    PROFILE_EXECUTION_MODE,
+    PROFILE_SCHEMA,
+    expected_result_path_fields,
+    expected_stage_role_order,
+)
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -103,6 +109,35 @@ def _snapshot() -> dict:
             "project_owned_calibre_children": 0,
             "project_owned_emx_children": 0,
             "output_path_collision": False,
+        },
+    }
+
+
+def _execution_profile() -> dict:
+    return {
+        "schema": PROFILE_SCHEMA,
+        "campaign_id": CAMPAIGN_ID,
+        "contract_fingerprint_sha256": SCIENTIFIC_CONTRACT_FINGERPRINT,
+        "backend_id": PRODUCTION_BACKEND_ID,
+        "execution_mode": PROFILE_EXECUTION_MODE,
+        "shell_used": False,
+        "stages": {
+            stage.name: {
+                "commands": [
+                    {
+                        "role": role,
+                        "argv": ["--out-dir", "{role_out_dir}"],
+                        "receipt": "ROLE_RECEIPT.json",
+                        "shell_used": False,
+                    }
+                    for role in expected_stage_role_order(stage.name)
+                ],
+                "result_paths": {
+                    field: f"results/{field}.json"
+                    for field in expected_result_path_fields(stage.name)
+                },
+            }
+            for stage in STAGES
         },
     }
 
@@ -252,7 +287,12 @@ receipt = {
             script_identities[role]["executable"] = True
     runtime_identities = {}
     for role in REQUIRED_RUNTIME_ROLES:
-        path = _write(tmp_path / "runtime" / f"{role}.dat", f"{role}\n")
+        path = _write(
+            tmp_path / "runtime" / f"{role}.dat",
+            _execution_profile()
+            if role == "stage_execution_profile"
+            else f"{role}\n",
+        )
         if role == "emx_wrapper":
             path.chmod(0o755)
         runtime_identities[role] = {

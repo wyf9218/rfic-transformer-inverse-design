@@ -41,6 +41,12 @@ from rfic_transformer_inverse_design.campaigns.broadband56_production_backend im
     REQUIRED_SCRIPT_ROLES,
     STAGE_COMMAND_ARGUMENTS,
 )
+from rfic_transformer_inverse_design.campaigns.broadband56_stage_execution import (
+    PROFILE_EXECUTION_MODE,
+    PROFILE_SCHEMA,
+    expected_result_path_fields,
+    expected_stage_role_order,
+)
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -70,6 +76,35 @@ def _identity_record(path: Path, value: str) -> dict[str, object]:
         "path": str(written.resolve()),
         "sha256": _sha(written),
         "size_bytes": written.stat().st_size,
+    }
+
+
+def _execution_profile() -> dict:
+    return {
+        "schema": PROFILE_SCHEMA,
+        "campaign_id": CAMPAIGN_ID,
+        "contract_fingerprint_sha256": SCIENTIFIC_CONTRACT_FINGERPRINT,
+        "backend_id": PRODUCTION_BACKEND_ID,
+        "execution_mode": PROFILE_EXECUTION_MODE,
+        "shell_used": False,
+        "stages": {
+            stage.name: {
+                "commands": [
+                    {
+                        "role": role,
+                        "argv": ["--out-dir", "{role_out_dir}"],
+                        "receipt": "ROLE_RECEIPT.json",
+                        "shell_used": False,
+                    }
+                    for role in expected_stage_role_order(stage.name)
+                ],
+                "result_paths": {
+                    field: f"results/{field}.json"
+                    for field in expected_result_path_fields(stage.name)
+                },
+            }
+            for stage in STAGES
+        },
     }
 
 
@@ -119,13 +154,21 @@ def _valid_fixture(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> dict[str,
         )
         for role in REQUIRED_SCRIPT_ROLES
     }
-    runtime_identities = {
-        role: _identity_record(
-            private_root / "runtime" / f"{role}.dat",
-            f"test runtime identity: {role}\n",
-        )
-        for role in REQUIRED_RUNTIME_ROLES
-    }
+    runtime_identities = {}
+    for role in REQUIRED_RUNTIME_ROLES:
+        path = private_root / "runtime" / f"{role}.dat"
+        if role == "stage_execution_profile":
+            written = _write(path, _execution_profile())
+            runtime_identities[role] = {
+                "path": str(written.resolve()),
+                "sha256": _sha(written),
+                "size_bytes": written.stat().st_size,
+            }
+        else:
+            runtime_identities[role] = _identity_record(
+                path,
+                f"test runtime identity: {role}\n",
+            )
     production_backend = Path(
         str(script_identities["production_stage_backend"]["path"])
     )
