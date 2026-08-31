@@ -384,6 +384,9 @@ def _valid_fixture(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> dict[str,
                 "production_stage_backend"
             ],
             "phase_a_queue_builder_sha256": script_hashes["phase_a_queue_builder"],
+            "adaptive_checkpoint_materializer_sha256": script_hashes[
+                "adaptive_checkpoint_materializer"
+            ],
             "adaptive_candidate_pool_builder_sha256": script_hashes[
                 "adaptive_candidate_pool_builder"
             ],
@@ -579,6 +582,23 @@ def test_rejects_gds_physical_identity_role_hash_drift(
     assert isinstance(candidate_path, Path)
     candidate["runtime_and_backend_identity"][
         "gds_physical_identity_auditor_sha256"
+    ] = "f" * 64
+    _write(candidate_path, candidate)
+
+    assert MODULE.main(_argv(fixture, tmp_path / "receipt")) == 2
+
+
+def test_rejects_adaptive_checkpoint_materializer_hash_drift(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    fixture = _valid_fixture(tmp_path, monkeypatch)
+    candidate = fixture["candidate"]
+    candidate_path = fixture["candidate_path"]
+    assert isinstance(candidate, dict)
+    assert isinstance(candidate_path, Path)
+    candidate["runtime_and_backend_identity"][
+        "adaptive_checkpoint_materializer_sha256"
     ] = "f" * 64
     _write(candidate_path, candidate)
 

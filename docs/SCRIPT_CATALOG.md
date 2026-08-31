@@ -80,6 +80,7 @@ Total scripts: **257**.
 - [`scripts/backfill_ground_clearance_audit.py`](../scripts/backfill_ground_clearance_audit.py) - Backfill dataset-level signal-to-ground shield clearance evidence.
 - [`scripts/build_acceptance_matrix.py`](../scripts/build_acceptance_matrix.py) - Build a requirement-by-requirement acceptance matrix for the project.
 - [`scripts/build_broadband56_adaptive_candidate_pool.py`](../scripts/build_broadband56_adaptive_candidate_pool.py) - Build one contract-bound Phase-B/C geometry-only candidate pool.
+- [`scripts/materialize_broadband56_v2_adaptive_checkpoint.py`](../scripts/materialize_broadband56_v2_adaptive_checkpoint.py) - Materialize or reuse one exact real-EMX adaptive-round checkpoint without launching a simulator.
 - [`scripts/build_broadband56_phase_a_queue.py`](../scripts/build_broadband56_phase_a_queue.py) - Build an exact 10-D, label-free Phase-A queue for broadband56 V2.
 - [`scripts/build_calibration_execution_packet.py`](../scripts/build_calibration_execution_packet.py) - Build EMX and HFSS execution inputs for calibration structures.
 - [`scripts/build_clean_delivery_zip.py`](../scripts/build_clean_delivery_zip.py) - Rebuild a delivery package SHA manifest and clean deterministic zip.
@@ -176,7 +177,7 @@ Total scripts: **257**.
 - [`scripts/recommend_physical_feature_acquisition_mix.py`](../scripts/recommend_physical_feature_acquisition_mix.py) - Recommend a staged acquisition mix from a strict real-label uniformity audit.
 - [`scripts/select_balanced_mse_bni_temperature.py`](../scripts/select_balanced_mse_bni_temperature.py) - Freeze one Balanced-MSE BNI temperature from MSE validation history only.
 - [`scripts/select_balanced_physical_feature_checkpoint.py`](../scripts/select_balanced_physical_feature_checkpoint.py) - Select an exact, geometry-unique physical-feature checkpoint dataset.
-- [`scripts/select_broadband56_adaptive_candidates.py`](../scripts/select_broadband56_adaptive_candidates.py) - Select one contract-bound 5k Phase-B/C candidate queue.
+- [`scripts/select_broadband56_adaptive_candidates.py`](../scripts/select_broadband56_adaptive_candidates.py) - Select the exact remaining rows to one contract-bound 5k Phase-B/C accepted-count boundary.
 - [`scripts/select_hfss_validation_samples.py`](../scripts/select_hfss_validation_samples.py) - Select representative samples for HFSS/ADS cross-validation.
 - [`scripts/select_physical_feature_acquisition_mix.py`](../scripts/select_physical_feature_acquisition_mix.py) - Build a disjoint five-arm candidate queue for the next real-EMX round.
 - [`scripts/select_physical_feature_targeted_candidate_geometries.py`](../scripts/select_physical_feature_targeted_candidate_geometries.py) - Select candidate geometries for sparse physical-feature target bins.

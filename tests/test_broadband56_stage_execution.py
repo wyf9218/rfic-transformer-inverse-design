@@ -83,7 +83,8 @@ def test_exact_execution_profile_passes() -> None:
 def test_adaptive_role_order_matches_contract_runbook() -> None:
     roles = expected_stage_role_order("PHASE_B")
 
-    assert roles[:5] == (
+    assert roles[:6] == (
+        "adaptive_checkpoint_materializer",
         "acquisition_ensemble_trainer",
         "adaptive_round_stager",
         "adaptive_candidate_pool_builder",

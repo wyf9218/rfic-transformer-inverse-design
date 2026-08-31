@@ -25,6 +25,7 @@ if __package__ in {None, ""}:
     sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from rfic_transformer_inverse_design.campaigns.broadband56_balanced200k import (  # noqa: E402
+    ADAPTIVE_ROUND_END_COUNTS,
     CAMPAIGN_ID,
     FREQUENCY_GRID_HZ,
 )
@@ -208,6 +209,15 @@ def finalize_stage_attempt(
             source_artifacts=artifacts,
         )
         if accepted_after < spec.cumulative_target:
+            round_cumulative_outputs = None
+            if accepted_after in set(ADAPTIVE_ROUND_END_COUNTS):
+                round_cumulative_outputs = _write_cumulative_inputs(
+                    staging / CUMULATIVE_DIR_NAME,
+                    published_out_dir=out_dir / CUMULATIVE_DIR_NAME,
+                    prior_stage_artifacts=prior_stage_artifacts,
+                    prior_records=prior_records,
+                    current_artifacts=staged_artifacts,
+                )
             progress_path = staging / PROGRESS_RECEIPT_NAME
             progress = _progress_receipt(
                 stage=stage,
@@ -221,6 +231,7 @@ def finalize_stage_attempt(
                 backend_sha256=backend_sha256,
                 authorization_sha256=authorization_sha256,
                 simulator_action_taken=bool(args.simulator_action_taken),
+                round_cumulative_inputs=round_cumulative_outputs,
             )
             _write_json(progress_path, progress)
             cumulative_outputs = None
@@ -286,6 +297,7 @@ def _progress_receipt(
     backend_sha256: str,
     authorization_sha256: str,
     simulator_action_taken: bool,
+    round_cumulative_inputs: Mapping[str, Mapping[str, Any]] | None,
 ) -> dict[str, Any]:
     target = STAGE_BY_NAME[stage].cumulative_target
     accepted_after = accepted_before + accepted_count
@@ -314,6 +326,11 @@ def _progress_receipt(
         "safeguards": dict(STAGE_PROGRESS_SAFEGUARDS),
         "failure_accounting": dict(funnel),
         "artifacts": {field: dict(record) for field, record in artifact_records.items()},
+        "round_cumulative_inputs": (
+            {field: dict(record) for field, record in round_cumulative_inputs.items()}
+            if round_cumulative_inputs is not None
+            else None
+        ),
         "simulator_action_taken": simulator_action_taken,
         "stage_pass_receipt_created": False,
         "evidence_preserved": True,

@@ -436,6 +436,8 @@ def test_checkpoint_ensemble_predictor_writes_candidate_priority_only_rows(
             "acquisition_mode": "ENSEMBLE_ACQUISITION",
             "candidate_selection_policy": predictor.selection_policy_contract(),
             "round": {"accepted_start": 40, "accepted_target": 45},
+            "current_accepted": 40,
+            "raw_selection_count": 5,
             "preceding_real_emx_audit": {
                 "geometry_bounds_path": str(fixture["bounds_path"]),
                 "geometry_bounds_sha256": _sha256(fixture["bounds_path"]),

@@ -104,6 +104,7 @@ def _parse_args(argv: list[str] | None) -> argparse.Namespace:
     parser.add_argument("--stage-launcher-sha256", required=True)
     parser.add_argument("--production-stage-backend-sha256", required=True)
     parser.add_argument("--phase-a-queue-builder-sha256", required=True)
+    parser.add_argument("--adaptive-checkpoint-materializer-sha256", required=True)
     parser.add_argument("--adaptive-candidate-pool-builder-sha256", required=True)
     parser.add_argument("--acquisition-ensemble-trainer-sha256", required=True)
     parser.add_argument("--acquisition-predictor-sha256", required=True)
@@ -238,6 +239,9 @@ def build_candidate(args: argparse.Namespace, *, out_dir: Path) -> dict[str, str
             "stage_launcher_sha256": args.stage_launcher_sha256,
             "production_stage_backend_sha256": args.production_stage_backend_sha256,
             "phase_a_queue_builder_sha256": args.phase_a_queue_builder_sha256,
+            "adaptive_checkpoint_materializer_sha256": (
+                args.adaptive_checkpoint_materializer_sha256
+            ),
             "adaptive_candidate_pool_builder_sha256": (
                 args.adaptive_candidate_pool_builder_sha256
             ),

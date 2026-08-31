@@ -198,7 +198,7 @@ if os.environ.get('MOCK_LAUNCHER_PROGRESS') == '1':
     failure['raw_geometry_candidates'] = 1
     failure['analytical_failures'] = 1
     progress = {
-        'schema': 'rfic_transformer.broadband56_v2_stage_progress_receipt.v1',
+        'schema': 'rfic_transformer.broadband56_v2_stage_progress_receipt.v2',
         'overall_status': 'INCOMPLETE',
         'decision': 'CONTINUE_SAMPLING',
         'campaign_id': CAMPAIGN_ID,

@@ -86,10 +86,11 @@ simulator work must remain forbidden.
   not Cadence, Calibre, GDS, or EMX evidence.
 - `scripts/build_broadband56_adaptive_candidate_pool.py`:
   no-clobber Phase-B/C geometry-only pool builder. It requires an exact staged
-  5k round, hash-bound accepted ledger and frozen bounds, matching production
-  config bounds, exact 56-point/4-port settings, at least 4x batch-size rows,
-  canonical uniqueness, and disjointness from every accepted geometry. Prior
-  attempted or reserved identities may be supplied as additional exclusions.
+  5k accepted-count round, hash-bound accepted ledger and frozen bounds,
+  matching production config bounds, exact 56-point/4-port settings, and at
+  least 4x the exact rows remaining to that round boundary. It automatically
+  excludes all hash-bound accepted and rejected geometries from preceding
+  campaign attempts; additional reserved identities may also be supplied.
 - `rfic_transformer_inverse_design/campaigns/broadband56_adaptive_selection.py`:
   exact Phase-B/C candidate-priority policy. It combines real-EMX fixed-cell
   deficit, ensemble uncertainty, normalized 10-D geometry novelty, frozen
@@ -97,11 +98,19 @@ simulator work must remain forbidden.
   deterministic block-greedy batch diversity. Predictions remain ranking
   metadata and never become labels.
 - `scripts/select_broadband56_adaptive_candidates.py`:
-  no-clobber, hash-bound selector for one exact 5,000-candidate adaptive
-  queue. It requires a candidate pool of at least 20,000, exact source quotas,
-  canonical uniqueness against all accepted geometries, and internally
-  consistent coverage-cell evidence. Missing or inconsistent evidence emits a
-  FAIL receipt and no runnable candidate queue.
+  no-clobber, hash-bound selector for the exact rows remaining to one frozen
+  5,000-accepted adaptive boundary. A new round selects 5,000 from a pool of
+  at least 20,000; a replenishment shard selects only the deficit from a pool
+  at least 4x that deficit. It requires deterministically prorated source
+  quotas, canonical uniqueness against all prior attempted geometries, and
+  internally consistent coverage-cell evidence. Missing or inconsistent
+  evidence emits a FAIL receipt and no runnable candidate queue.
+- `scripts/materialize_broadband56_v2_adaptive_checkpoint.py`:
+  no-simulator adaptive checkpoint role. At each exact 5,000 accepted-count
+  boundary it rebuilds hash-bound cumulative raw products and runs the frozen
+  checkpoint auditor. During a shortfall replenishment it reuses the exact
+  checkpoint that began the same round. It never launches Cadence, Calibre,
+  EMX, a queue, or a supervisor.
 - `rfic_transformer_inverse_design/campaigns/broadband56_acquisition_ensemble.py`:
   deterministic geometry-identity splitting plus a minimum-five-member,
   independently seeded random-feature ridge forward ensemble. It predicts the
@@ -401,8 +410,28 @@ wrong-grid, wrong-port, fingerprint-mismatched, or failed checkpoint evidence.
 Its CLI and fail-closed behavior are covered by synthetic software tests; a
 real ETA remains `REVERIFY` until the contract-bound 32 and 1,000 pilots exist.
 
-After Phase A reaches an audited 50,000 and after every subsequent 5k batch,
-fit a checkpoint-bound candidate-priority ensemble without launching a solver:
+After Phase A reaches an audited 50,000 and after every subsequent exact 5k
+accepted-count boundary, materialize or expose the hash-bound real-EMX
+checkpoint without launching a solver:
+
+```bash
+python scripts/materialize_broadband56_v2_adaptive_checkpoint.py \
+  --stage PHASE_B \
+  --campaign-root /private/no-clobber/campaign_root \
+  --current-accepted 50000 \
+  --contract /private/no-clobber/campaign_contract_frozen.json \
+  --production-config /private/approved/broadband56_v2.yaml \
+  --geometry-bounds /private/no-clobber/GEOMETRY_BOUNDS_FROZEN.json \
+  --backend-identity-manifest /private/no-clobber/BACKEND_IDENTITY_MANIFEST.json \
+  --full-campaign-receipt /private/no-clobber/FULL_CAMPAIGN_APPROVAL.json \
+  --out-dir /private/no-clobber/adaptive_checkpoint_role
+```
+
+At a stage boundary this reuses the exact terminal checkpoint. At a later 5k
+boundary it materializes the cumulative accepted products and runs only the
+non-simulator checkpoint audit. Inside a partially accepted round it reuses
+that round's start checkpoint. Then fit a checkpoint-bound candidate-priority
+ensemble without launching a solver:
 
 ```bash
 python scripts/train_broadband56_acquisition_ensemble.py \
@@ -423,6 +452,7 @@ python scripts/stage_broadband56_adaptive_round.py \
   --contract /private/no-clobber/campaign_contract_frozen.json \
   --audit-dir /private/no-clobber/latest_real_emx_audit \
   --ensemble-receipt /private/no-clobber/acquisition_ensemble/ENSEMBLE_RECEIPT.json \
+  --current-accepted 50000 \
   --out-dir /private/no-clobber/next_adaptive_round
 ```
 
@@ -431,8 +461,12 @@ rows, and hash-binds the accepted-geometry ledger plus frozen geometry bounds.
 A valid five-or-more-member, geometry-split, sealed-validation,
 uncertainty-calibrated ensemble activates the exact Phase-B or Phase-C source
 quotas. A missing or invalid ensemble is recorded and activates the frozen
-5,000-sample maximin fallback instead. Neither mode creates labels or accepted
-samples; those remain dependent on fresh Cadence, Calibre, and EMX evidence.
+maximin fallback instead. The round contract always selects exactly the rows
+remaining to its 5,000-accepted boundary: for example, 4,900 accepted from the
+first attempt authorizes only a 100-row replenishment. Source quotas are
+deterministically prorated to that exact deficit. Neither mode creates labels
+or accepted samples; those remain dependent on fresh Cadence, Calibre, and EMX
+evidence.
 
 After staging, construct a large geometry-only pool from the same frozen
 bounds. The command performs no Cadence, Calibre, GDS, or EMX work:
@@ -443,15 +477,16 @@ python scripts/build_broadband56_adaptive_candidate_pool.py \
   --config /private/approved/broadband56_v2.yaml \
   --round-dir /private/no-clobber/next_adaptive_round \
   --out-dir /private/no-clobber/unevaluated_candidate_pool \
-  --count 20000 \
   --sampler sobol \
   --seed 20310828
 ```
 
 The example seed is the Phase-A base seed plus the 50,000 accepted round start;
-each later round must use and record its own deterministic seed. A pool must
-contain at least 20,000 rows for the frozen 5,000-candidate selection batch.
-Its local analytical/top-metal PASS fields are queue provenance only.
+each later round or replenishment shard must use and record its own
+deterministic seed. The builder derives the exact pool count as four times the
+round's remaining rows; supplying `--count` is optional and must equal that
+derived count. Its local analytical/top-metal PASS fields are queue provenance
+only.
 
 For an ensemble-authorized round, attach calibrated candidate-priority
 predictions:
@@ -470,9 +505,10 @@ width, or ridge metadata differs from the receipt. It does not create EMX
 labels or realized coverage. In maximin-fallback mode this prediction step is
 not used.
 
-Finally, select the exact unlabeled 5,000-candidate queue without launching a
-solver. In ensemble mode, `--candidate-csv` is the predictor output; in
-fallback mode it is the contract-matching geometry-only pool:
+Finally, select the exact unlabeled queue that closes the frozen 5,000-accepted
+boundary without launching a solver. In ensemble mode, `--candidate-csv` is
+the predictor output; in fallback mode it is the contract-matching
+geometry-only pool:
 
 ```bash
 python scripts/select_broadband56_adaptive_candidates.py \

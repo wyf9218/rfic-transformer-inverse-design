@@ -25,8 +25,8 @@ from .broadband56_full_campaign_authorization import PRODUCTION_BACKEND_ID
 
 
 PROFILE_KEY = "broadband56_stage_execution_profile"
-PROFILE_SCHEMA = "rfic_transformer.broadband56_v2_stage_execution_profile.v3"
-COMMAND_PLAN_SCHEMA = "rfic_transformer.broadband56_v2_stage_execution_command_plan.v3"
+PROFILE_SCHEMA = "rfic_transformer.broadband56_v2_stage_execution_profile.v4"
+COMMAND_PLAN_SCHEMA = "rfic_transformer.broadband56_v2_stage_execution_command_plan.v4"
 PROFILE_EXECUTION_MODE = "HASH_BOUND_PYTHON_ROLE_COMMANDS"
 ROLE_RECEIPT_REQUIRED_STATUS = "PASS"
 
@@ -61,6 +61,7 @@ TERMINAL_RESULT_PATH_FIELDS = (
 
 SPACE_FILLING_ACQUISITION_ROLES = ("phase_a_queue_builder",)
 ADAPTIVE_ACQUISITION_ROLES = (
+    "adaptive_checkpoint_materializer",
     "acquisition_ensemble_trainer",
     "adaptive_round_stager",
     "adaptive_candidate_pool_builder",

@@ -83,6 +83,7 @@ def main(argv: list[str] | None = None) -> int:
     ensemble_gate = round_contract.get("ensemble_gate") if isinstance(round_contract.get("ensemble_gate"), dict) else {}
     ensemble_gate_evidence = ensemble_gate.get("receipt") if isinstance(ensemble_gate.get("receipt"), dict) else {}
     accepted_start = _integer(round_info.get("accepted_start"))
+    raw_selection_count = _integer(round_contract.get("raw_selection_count"))
     checks.extend(
         [
             _check(
@@ -162,10 +163,12 @@ def main(argv: list[str] | None = None) -> int:
     checks.append(
         _check(
             "candidate_pool_minimum_size",
-            int(candidates.get("count") or 0) >= MINIMUM_CANDIDATE_POOL_FACTOR * ADAPTIVE_BATCH_SIZE,
+            1 <= raw_selection_count <= ADAPTIVE_BATCH_SIZE
+            and int(candidates.get("count") or 0)
+            >= MINIMUM_CANDIDATE_POOL_FACTOR * raw_selection_count,
             {
                 "actual": candidates.get("count"),
-                "minimum": MINIMUM_CANDIDATE_POOL_FACTOR * ADAPTIVE_BATCH_SIZE,
+                "minimum": MINIMUM_CANDIDATE_POOL_FACTOR * raw_selection_count,
             },
         )
     )

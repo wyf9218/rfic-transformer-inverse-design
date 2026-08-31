@@ -23,6 +23,7 @@ from rfic_transformer_inverse_design.campaigns.broadband56_balanced200k import (
     PRIMARY_FREQUENCY_CONDITIONED_CELLS,
     SECONDARY_FEATURES,
     TARGET_ACCEPTED_GEOMETRIES,
+    adaptive_round_for_current_accepted,
     adaptive_round_spec,
     build_phase_plan,
     canonical_geometry_sha256,
@@ -31,6 +32,7 @@ from rfic_transformer_inverse_design.campaigns.broadband56_balanced200k import (
     occupancy_metrics,
     primary_bin_edges,
     primary_cell_for_values,
+    prorate_adaptive_source_quotas,
     secondary_coverage_contract,
     validate_contract,
 )
@@ -480,6 +482,32 @@ def test_frozen_contract_has_exact_counts_grid_bins_and_phase_mixtures() -> None
         "maximin_geometry_exploration": 750,
     }
     assert dict(last_c.fallback_source_quotas) == {"maximin_geometry_exploration": 5_000}
+
+
+def test_adaptive_replenishment_closes_exact_boundary_and_prorates_sources() -> None:
+    round_spec, remaining = adaptive_round_for_current_accepted(54_900)
+
+    assert round_spec.accepted_start == 50_000
+    assert round_spec.accepted_target == 55_000
+    assert remaining == 100
+    assert dict(prorate_adaptive_source_quotas(round_spec.source_quotas, remaining)) == {
+        "underfilled_response_repair": 60,
+        "ensemble_uncertainty": 20,
+        "maximin_geometry_exploration": 20,
+    }
+    assert dict(
+        prorate_adaptive_source_quotas(round_spec.fallback_source_quotas, remaining)
+    ) == {"maximin_geometry_exploration": 100}
+
+
+def test_adaptive_replenishment_uses_deterministic_largest_remainders() -> None:
+    assert prorate_adaptive_source_quotas(
+        (("first", 3), ("second", 1), ("third", 1)),
+        2,
+    ) == (("first", 1), ("second", 1))
+
+    with np.testing.assert_raises(ValueError):
+        adaptive_round_for_current_accepted(200_000)
 
 
 def test_geometry_identity_is_ordered_quantized_and_primary_bins_include_upper_edges() -> None:
@@ -1242,6 +1270,54 @@ def test_adaptive_round_stager_enforces_ensemble_gate_and_phase_b_mixture(tmp_pa
     assert invalid["decision"] == "USE_MAXIMIN_FALLBACK_FOR_ROUND"
     assert invalid["ensemble_gate"]["status"] == "FAIL"
     assert "ensemble seeds are missing or duplicated" in invalid["ensemble_gate"]["errors"]
+
+
+def test_adaptive_round_stager_replenishes_only_remaining_rows(tmp_path: Path) -> None:
+    module = _load_adaptive_round_module()
+    contract = json.loads(CONTRACT.read_text(encoding="utf-8"))
+    fingerprint = contract_fingerprint(contract)
+    audit_dir = _write_adaptive_audit_fixture(
+        tmp_path,
+        accepted_count=50_000,
+        fingerprint=fingerprint,
+    )
+    ensemble = _write_ensemble_fixture(
+        tmp_path,
+        fingerprint=fingerprint,
+        audit_dir=audit_dir,
+        accepted_count=50_000,
+    )
+    out_dir = tmp_path / "adaptive_partial_replenishment"
+
+    status = module.main(
+        [
+            "--contract",
+            str(CONTRACT),
+            "--audit-dir",
+            str(audit_dir),
+            "--ensemble-receipt",
+            str(ensemble),
+            "--current-accepted",
+            "54900",
+            "--out-dir",
+            str(out_dir),
+        ]
+    )
+
+    staged = json.loads(
+        (out_dir / "ADAPTIVE_ROUND_CONTRACT.json").read_text(encoding="utf-8")
+    )
+    assert status == 0
+    assert staged["checkpoint_accepted"] == 50_000
+    assert staged["current_accepted"] == 54_900
+    assert staged["raw_selection_count"] == 100
+    assert staged["round"]["accepted_target"] == 55_000
+    assert staged["active_source_quotas"] == {
+        "underfilled_response_repair": 60,
+        "ensemble_uncertainty": 20,
+        "maximin_geometry_exploration": 20,
+    }
+    assert staged["candidate_pool_requirement"]["minimum_pool_count"] == 400
 
 
 def test_checkpoint_audit_accepts_exact_100_geometry_real_emx_shaped_fixture(tmp_path: Path) -> None:

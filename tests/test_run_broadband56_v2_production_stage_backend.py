@@ -136,12 +136,12 @@ if args.role == "stage_attempt_finalizer":
         funnel["raw_geometry_candidates"] = 1
         funnel["analytical_failures"] = 1
         progress = {
-            "schema": "rfic_transformer.broadband56_v2_stage_progress_receipt.v1",
+            "schema": "rfic_transformer.broadband56_v2_stage_progress_receipt.v2",
             "overall_status": "INCOMPLETE",
             "decision": "CONTINUE_SAMPLING",
             "campaign_id": CAMPAIGN_ID,
             "contract_fingerprint_sha256": FINGERPRINT,
-            "backend_id": "MARS_CADENCE_GDS_IDENTITY_CALIBRE_EMX_S4P_QA_V9",
+            "backend_id": "MARS_CADENCE_GDS_IDENTITY_CALIBRE_EMX_S4P_QA_V10",
             "stage": args.stage,
             "attempt_index": 1,
             "cumulative_target": args.cumulative_target,

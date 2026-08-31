@@ -393,6 +393,9 @@ def _backend_manifest_matches_candidate(
         "stage_launcher": "stage_launcher_sha256",
         "production_stage_backend": "production_stage_backend_sha256",
         "phase_a_queue_builder": "phase_a_queue_builder_sha256",
+        "adaptive_checkpoint_materializer": (
+            "adaptive_checkpoint_materializer_sha256"
+        ),
         "adaptive_candidate_pool_builder": "adaptive_candidate_pool_builder_sha256",
         "acquisition_ensemble_trainer": "acquisition_ensemble_trainer_sha256",
         "acquisition_predictor": "acquisition_predictor_sha256",

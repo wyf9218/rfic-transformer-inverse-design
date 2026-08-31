@@ -11,7 +11,7 @@ import math
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any
+from typing import Any, Mapping
 
 import numpy as np
 from scipy.stats import qmc
@@ -38,6 +38,9 @@ from rfic_transformer_inverse_design.campaigns.broadband56_balanced200k import (
     canonical_geometry_sha256,
     contract_fingerprint,
     validate_contract,
+)
+from rfic_transformer_inverse_design.campaigns.broadband56_capacity_policy import (  # noqa: E402
+    STAGE_BY_NAME,
 )
 from rfic_transformer_inverse_design.campaigns.broadband56_geometry_coverage import (  # noqa: E402
     validate_geometry_bounds_payload,
@@ -85,6 +88,8 @@ def main(argv: list[str] | None = None) -> int:
     round_receipt = _read_json(round_receipt_path, checks, "adaptive_round_receipt")
     round_info = round_contract.get("round") if isinstance(round_contract.get("round"), dict) else {}
     accepted_start = _integer(round_info.get("accepted_start"))
+    current_accepted = _integer(round_contract.get("current_accepted"))
+    raw_selection_count = _integer(round_contract.get("raw_selection_count"))
     try:
         expected_round = adaptive_round_spec(accepted_start)
     except ValueError as exc:
@@ -195,20 +200,50 @@ def main(argv: list[str] | None = None) -> int:
         bounds=bounds,
     )
     checks.extend(accepted.pop("checks"))
+    minimum_pool_count = MINIMUM_CANDIDATE_POOL_FACTOR * raw_selection_count
+    requested_count = (
+        int(args.count) if args.count is not None else minimum_pool_count
+    )
+    exclusion_paths = [
+        Path(value).expanduser().resolve() for value in args.exclude_geometry_csv
+    ]
+    if args.campaign_root:
+        exclusion_paths.extend(
+            _campaign_exclusion_paths(
+                Path(args.campaign_root).expanduser().resolve(),
+                stage=str(args.stage or "").upper(),
+                current_accepted=current_accepted,
+                checks=checks,
+            )
+        )
     extra_excluded = _read_excluded_hashes(
-        [Path(value).expanduser().resolve() for value in args.exclude_geometry_csv],
+        exclusion_paths,
         checks,
     )
-    requested_count = int(args.count)
     checks.extend(
         [
+            _check(
+                "round_replenishment_count_positive",
+                1 <= raw_selection_count <= ADAPTIVE_BATCH_SIZE,
+                raw_selection_count,
+            ),
+            _check(
+                "round_current_count_closes_to_target",
+                expected_round is not None
+                and current_accepted + raw_selection_count
+                == expected_round.accepted_target,
+                {
+                    "current_accepted": current_accepted,
+                    "raw_selection_count": raw_selection_count,
+                },
+            ),
             _check("requested_count_positive", requested_count > 0, requested_count),
             _check(
-                "requested_count_meets_pool_minimum",
-                requested_count >= MINIMUM_CANDIDATE_POOL_FACTOR * ADAPTIVE_BATCH_SIZE,
+                "requested_count_is_exact_pool_minimum",
+                requested_count == minimum_pool_count,
                 {
                     "actual": requested_count,
-                    "minimum": MINIMUM_CANDIDATE_POOL_FACTOR * ADAPTIVE_BATCH_SIZE,
+                    "expected": minimum_pool_count,
                 },
             ),
             _check(
@@ -327,6 +362,11 @@ def main(argv: list[str] | None = None) -> int:
                 len(set(row_hashes) & set(accepted.get("hashes") or ())),
             ),
             _check(
+                "candidate_geometries_disjoint_from_all_prior_attempts",
+                not (set(row_hashes) & set(extra_excluded)),
+                len(set(row_hashes) & set(extra_excluded)),
+            ),
+            _check(
                 "candidate_rows_are_geometry_only",
                 all(
                     not _looks_like_response_label(column)
@@ -359,7 +399,7 @@ def main(argv: list[str] | None = None) -> int:
 
     summary_path = out_dir / "ADAPTIVE_CANDIDATE_POOL_SUMMARY.json"
     summary = {
-        "schema": "broadband56_adaptive_candidate_pool_summary_v1",
+        "schema": "broadband56_adaptive_candidate_pool_summary_v2",
         "generated_utc": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "overall_status": overall,
         "decision": (
@@ -370,6 +410,8 @@ def main(argv: list[str] | None = None) -> int:
         "campaign_id": CAMPAIGN_ID,
         "campaign_contract_fingerprint": fingerprint,
         "round": expected_round.as_dict() if expected_round is not None else round_info,
+        "current_accepted": current_accepted,
+        "raw_selection_count": raw_selection_count,
         "acquisition_mode": round_contract.get("acquisition_mode"),
         "sampler": str(args.sampler),
         "seed": int(args.seed),
@@ -436,10 +478,12 @@ def _parse_args(argv: list[str] | None) -> argparse.Namespace:
     parser.add_argument("--config", required=True)
     parser.add_argument("--round-dir", required=True)
     parser.add_argument("--out-dir", required=True)
-    parser.add_argument("--count", type=int, required=True)
+    parser.add_argument("--count", type=int)
     parser.add_argument("--sampler", choices=("lhs_optimized", "sobol"), default="sobol")
     parser.add_argument("--seed", type=int, required=True)
     parser.add_argument("--exclude-geometry-csv", action="append", default=[])
+    parser.add_argument("--campaign-root")
+    parser.add_argument("--stage")
     parser.add_argument("--oversample-factor", type=float, default=1.25)
     parser.add_argument("--max-sampling-rounds", type=int, default=20)
     return parser.parse_args(argv)
@@ -525,6 +569,138 @@ def _read_excluded_hashes(
             if value:
                 excluded.add(value)
     return excluded
+
+
+def _campaign_exclusion_paths(
+    campaign_root: Path,
+    *,
+    stage: str,
+    current_accepted: int,
+    checks: list[dict[str, Any]],
+) -> list[Path]:
+    """Return verified accepted/rejected evidence from every prior attempt."""
+
+    paths: list[Path] = []
+    checks.append(_check("campaign_root_exists", campaign_root.is_dir(), str(campaign_root)))
+    spec = STAGE_BY_NAME.get(stage)
+    checks.append(_check("production_stage_known", spec is not None, stage))
+    checks.append(
+        _check(
+            "current_accepted_is_inside_stage",
+            spec is not None
+            and 0 <= current_accepted < spec.cumulative_target,
+            current_accepted,
+        )
+    )
+    if not campaign_root.is_dir() or spec is None:
+        return paths
+
+    accepted_hashes: set[str] = set()
+    rejected_hashes: set[str] = set()
+    for receipt_path in sorted((campaign_root / "stages").glob("*/STAGE_RECEIPT.json")):
+        receipt = _read_json(receipt_path, checks, "prior_stage_receipt")
+        if receipt.get("overall_status") != "PASS":
+            checks.append(_check("prior_stage_receipt_pass", False, str(receipt_path)))
+            continue
+        artifacts = receipt.get("artifacts")
+        if not isinstance(artifacts, Mapping):
+            checks.append(_check("prior_stage_receipt_artifacts", False, str(receipt_path)))
+            continue
+        for field, target in (
+            ("accepted_geometry_index", accepted_hashes),
+            ("rejected_geometry_index", rejected_hashes),
+        ):
+            path = _verified_campaign_evidence_path(
+                artifacts.get(field),
+                campaign_root=campaign_root,
+                checks=checks,
+                label=f"prior_stage::{field}",
+            )
+            if path is not None:
+                paths.append(path)
+                target.update(_geometry_hashes(path))
+
+    for receipt_path in sorted(
+        (campaign_root / "stages").glob("*/STAGE_PROGRESS_RECEIPT.json")
+    ):
+        receipt = _read_json(receipt_path, checks, "stage_progress_receipt")
+        if receipt.get("overall_status") != "INCOMPLETE":
+            checks.append(_check("stage_progress_receipt_incomplete", False, str(receipt_path)))
+            continue
+        artifacts = receipt.get("artifacts")
+        if not isinstance(artifacts, Mapping):
+            checks.append(_check("stage_progress_receipt_artifacts", False, str(receipt_path)))
+            continue
+        for field, target in (
+            ("accepted_geometry_increment", accepted_hashes),
+            ("rejected_geometry_increment", rejected_hashes),
+        ):
+            path = _verified_campaign_evidence_path(
+                artifacts.get(field),
+                campaign_root=campaign_root,
+                checks=checks,
+                label=f"stage_progress::{field}",
+            )
+            if path is not None:
+                paths.append(path)
+                target.update(_geometry_hashes(path))
+
+    checks.extend(
+        [
+            _check(
+                "campaign_accepted_geometry_count_matches_controller",
+                len(accepted_hashes) == current_accepted,
+                {
+                    "receipt_unique": len(accepted_hashes),
+                    "controller": current_accepted,
+                },
+            ),
+            _check(
+                "accepted_rejected_history_disjoint",
+                not (accepted_hashes & rejected_hashes),
+                len(accepted_hashes & rejected_hashes),
+            ),
+        ]
+    )
+    return paths
+
+
+def _verified_campaign_evidence_path(
+    value: Any,
+    *,
+    campaign_root: Path,
+    checks: list[dict[str, Any]],
+    label: str,
+) -> Path | None:
+    if not isinstance(value, Mapping):
+        checks.append(_check(f"{label}_evidence", False, "not an object"))
+        return None
+    path = Path(str(value.get("path") or "")).expanduser().resolve()
+    try:
+        path.relative_to(campaign_root)
+        inside = True
+    except ValueError:
+        inside = False
+    valid = (
+        inside
+        and path.is_file()
+        and value.get("size_bytes") == path.stat().st_size
+        and value.get("sha256") == _sha256(path)
+    )
+    checks.append(_check(f"{label}_evidence", valid, str(path)))
+    return path if valid else None
+
+
+def _geometry_hashes(path: Path) -> set[str]:
+    values: set[str] = set()
+    with path.open(newline="", encoding="utf-8-sig") as handle:
+        for row in csv.DictReader(handle):
+            value = str(
+                row.get("geometry_sha256") or row.get("geometry_id") or ""
+            ).strip().lower()
+            if value:
+                values.add(value)
+    return values
 
 
 def _candidate_row(

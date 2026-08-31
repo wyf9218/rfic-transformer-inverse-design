@@ -13,12 +13,15 @@ from collections.abc import Mapping, Sequence
 from pathlib import Path
 from typing import Any
 
-from .broadband56_balanced200k import CAMPAIGN_ID
+from .broadband56_balanced200k import (
+    ADAPTIVE_ROUND_END_COUNTS,
+    CAMPAIGN_ID,
+)
 from .broadband56_capacity_policy import SCIENTIFIC_CONTRACT_FINGERPRINT, STAGE_BY_NAME
 from .broadband56_full_campaign_authorization import PRODUCTION_BACKEND_ID
 
 
-STAGE_PROGRESS_SCHEMA = "rfic_transformer.broadband56_v2_stage_progress_receipt.v1"
+STAGE_PROGRESS_SCHEMA = "rfic_transformer.broadband56_v2_stage_progress_receipt.v2"
 STAGE_PROGRESS_STATUS = "INCOMPLETE"
 STAGE_PROGRESS_DECISION = "CONTINUE_SAMPLING"
 STAGE_ATTEMPT_FINALIZER_RECEIPT_SCHEMA = (
@@ -157,7 +160,23 @@ def validate_stage_progress_receipt(
         receipt.get("artifacts"),
         verify_files=verify_artifacts,
         artifact_root=artifact_root,
+        label="artifacts",
     )
+    round_inputs = receipt.get("round_cumulative_inputs")
+    round_boundary = (
+        stage_name in {"PHASE_B", "PHASE_C"}
+        and accepted_after in set(ADAPTIVE_ROUND_END_COUNTS)
+    )
+    if round_boundary:
+        _validate_artifacts(
+            errors,
+            round_inputs,
+            verify_files=verify_artifacts,
+            artifact_root=artifact_root,
+            label="round_cumulative_inputs",
+        )
+    elif round_inputs is not None:
+        errors.append("round_cumulative_inputs is allowed only at an adaptive 5k boundary")
     if not isinstance(receipt.get("simulator_action_taken"), bool):
         errors.append("simulator_action_taken must be boolean")
     if receipt.get("stage_pass_receipt_created") is not False:
@@ -256,47 +275,48 @@ def _validate_artifacts(
     *,
     verify_files: bool,
     artifact_root: Path | None,
+    label: str,
 ) -> None:
     if not isinstance(value, Mapping):
-        errors.append("artifacts must be an object")
+        errors.append(f"{label} must be an object")
         return
     if set(value) != set(STAGE_PROGRESS_ARTIFACT_FIELDS):
-        errors.append("artifacts fields do not exactly match the progress contract")
+        errors.append(f"{label} fields do not exactly match the progress contract")
         return
     root = Path(artifact_root).expanduser().resolve() if artifact_root is not None else None
     for role in STAGE_PROGRESS_ARTIFACT_FIELDS:
         record = value.get(role)
         if not isinstance(record, Mapping):
-            errors.append(f"artifacts.{role} must be an identity record")
+            errors.append(f"{label}.{role} must be an identity record")
             continue
         raw_path = record.get("path")
         digest = record.get("sha256")
         size = record.get("size_bytes")
         if not isinstance(raw_path, str) or not raw_path:
-            errors.append(f"artifacts.{role}.path is invalid")
+            errors.append(f"{label}.{role}.path is invalid")
             continue
         if not isinstance(digest, str) or SHA256_PATTERN.fullmatch(digest) is None:
-            errors.append(f"artifacts.{role}.sha256 is invalid")
+            errors.append(f"{label}.{role}.sha256 is invalid")
         if not isinstance(size, int) or isinstance(size, bool) or size <= 0:
-            errors.append(f"artifacts.{role}.size_bytes is invalid")
+            errors.append(f"{label}.{role}.size_bytes is invalid")
         if not verify_files:
             continue
         path = Path(raw_path).expanduser().resolve()
         if root is None:
-            errors.append(f"artifacts.{role} cannot be verified without artifact_root")
+            errors.append(f"{label}.{role} cannot be verified without artifact_root")
             continue
         try:
             path.relative_to(root)
         except ValueError:
-            errors.append(f"artifacts.{role}.path escapes the progress output root")
+            errors.append(f"{label}.{role}.path escapes the progress output root")
             continue
         if not path.is_file():
-            errors.append(f"artifacts.{role}.path is missing")
+            errors.append(f"{label}.{role}.path is missing")
             continue
         if path.stat().st_size != size:
-            errors.append(f"artifacts.{role}.size_bytes mismatches file")
+            errors.append(f"{label}.{role}.size_bytes mismatches file")
         if _sha256(path) != digest:
-            errors.append(f"artifacts.{role}.sha256 mismatches file")
+            errors.append(f"{label}.{role}.sha256 mismatches file")
 
 
 def _equal(errors: list[str], name: str, actual: Any, expected: Any) -> None:

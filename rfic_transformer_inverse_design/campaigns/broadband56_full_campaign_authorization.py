@@ -31,10 +31,10 @@ from .broadband56_capacity_policy import (
 
 
 FULL_CAMPAIGN_CANDIDATE_SCHEMA = (
-    "rfic_transformer.broadband56_v2_full_campaign_authorization_candidate.v9"
+    "rfic_transformer.broadband56_v2_full_campaign_authorization_candidate.v10"
 )
 FULL_CAMPAIGN_APPROVAL_SCHEMA = (
-    "rfic_transformer.broadband56_v2_full_campaign_authorization_approval.v9"
+    "rfic_transformer.broadband56_v2_full_campaign_authorization_approval.v10"
 )
 FULL_CAMPAIGN_APPROVAL_SCOPE = "FULL_CAMPAIGN"
 FULL_CAMPAIGN_PENDING_STATUS = "PENDING_EXPLICIT_PROJECT_OWNER_SHA256_APPROVAL"
@@ -42,7 +42,7 @@ FULL_CAMPAIGN_PASS_DECISION = "APPROVE_FULL_CAMPAIGN"
 FULL_CAMPAIGN_FAIL_DECISION = "DO_NOT_AUTHORIZE_FULL_CAMPAIGN"
 FULL_CAMPAIGN_CANDIDATE_EFFECT = "NONE_REQUEST_ONLY"
 FULL_CAMPAIGN_RECEIPT_EFFECT = "NONE_RECORD_ONLY"
-PRODUCTION_BACKEND_ID = "MARS_CADENCE_GDS_IDENTITY_CALIBRE_EMX_S4P_QA_V9"
+PRODUCTION_BACKEND_ID = "MARS_CADENCE_GDS_IDENTITY_CALIBRE_EMX_S4P_QA_V10"
 SHA256_PATTERN = re.compile(r"[0-9a-f]{64}")
 
 UNCHANGED_PHYSICAL_CONTRACT_ITEMS = (
@@ -149,6 +149,7 @@ BACKEND_SHA_FIELDS = (
     "stage_launcher_sha256",
     "production_stage_backend_sha256",
     "phase_a_queue_builder_sha256",
+    "adaptive_checkpoint_materializer_sha256",
     "adaptive_candidate_pool_builder_sha256",
     "acquisition_ensemble_trainer_sha256",
     "acquisition_predictor_sha256",

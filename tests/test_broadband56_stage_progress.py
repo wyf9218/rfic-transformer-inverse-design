@@ -48,6 +48,8 @@ def _receipt(
     accepted: int,
     raw: int,
     prior_sha: str | None,
+    stage: str = "PILOT_32",
+    cumulative_target: int = 32,
 ) -> tuple[Path, dict[str, object]]:
     root.mkdir(parents=True)
     artifacts = {}
@@ -67,13 +69,13 @@ def _receipt(
         "campaign_id": CAMPAIGN_ID,
         "contract_fingerprint_sha256": SCIENTIFIC_CONTRACT_FINGERPRINT,
         "backend_id": PRODUCTION_BACKEND_ID,
-        "stage": "PILOT_32",
+        "stage": stage,
         "attempt_index": attempt_index,
-        "cumulative_target": 32,
+        "cumulative_target": cumulative_target,
         "accepted_before": before,
         "accepted_this_attempt": accepted,
         "accepted_after": after,
-        "remaining_after": 32 - after,
+        "remaining_after": cumulative_target - after,
         "raw_candidates_this_attempt": raw,
         "terminal_attempts_this_attempt": raw,
         "prior_progress_receipt_sha256": prior_sha,
@@ -82,6 +84,7 @@ def _receipt(
         "safeguards": dict(STAGE_PROGRESS_SAFEGUARDS),
         "failure_accounting": funnel,
         "artifacts": artifacts,
+        "round_cumulative_inputs": None,
         "simulator_action_taken": False,
         "stage_pass_receipt_created": False,
         "evidence_preserved": True,
@@ -205,3 +208,73 @@ def test_progress_receipt_rejects_artifact_escape(tmp_path: Path) -> None:
     )
 
     assert "artifacts.attempt_ledger.path escapes the progress output root" in errors
+
+
+def test_adaptive_round_boundary_requires_exact_cumulative_inputs(tmp_path: Path) -> None:
+    path, receipt = _receipt(
+        tmp_path / "attempt",
+        attempt_index=1,
+        before=50_000,
+        accepted=5_000,
+        raw=5_000,
+        prior_sha=None,
+        stage="PHASE_B",
+        cumulative_target=150_000,
+    )
+
+    errors = validate_stage_progress_receipt(
+        receipt,
+        stage="PHASE_B",
+        attempt_index=1,
+        accepted_before=50_000,
+        prior_progress_receipt_sha256=None,
+        backend_manifest_sha256=BACKEND_SHA,
+        authorization_receipt_sha256=AUTHORIZATION_SHA,
+        verify_artifacts=True,
+        artifact_root=path.parent,
+    )
+    assert "round_cumulative_inputs must be an object" in errors
+
+    receipt["round_cumulative_inputs"] = receipt["artifacts"]
+    assert validate_stage_progress_receipt(
+        receipt,
+        stage="PHASE_B",
+        attempt_index=1,
+        accepted_before=50_000,
+        prior_progress_receipt_sha256=None,
+        backend_manifest_sha256=BACKEND_SHA,
+        authorization_receipt_sha256=AUTHORIZATION_SHA,
+        verify_artifacts=True,
+        artifact_root=path.parent,
+    ) == []
+
+
+def test_adaptive_mid_round_rejects_cumulative_inputs(tmp_path: Path) -> None:
+    path, receipt = _receipt(
+        tmp_path / "attempt",
+        attempt_index=1,
+        before=50_000,
+        accepted=4_900,
+        raw=5_000,
+        prior_sha=None,
+        stage="PHASE_B",
+        cumulative_target=150_000,
+    )
+    receipt["round_cumulative_inputs"] = receipt["artifacts"]
+
+    errors = validate_stage_progress_receipt(
+        receipt,
+        stage="PHASE_B",
+        attempt_index=1,
+        accepted_before=50_000,
+        prior_progress_receipt_sha256=None,
+        backend_manifest_sha256=BACKEND_SHA,
+        authorization_receipt_sha256=AUTHORIZATION_SHA,
+        verify_artifacts=True,
+        artifact_root=path.parent,
+    )
+
+    assert (
+        "round_cumulative_inputs is allowed only at an adaptive 5k boundary"
+        in errors
+    )

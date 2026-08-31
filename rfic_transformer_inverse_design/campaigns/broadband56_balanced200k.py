@@ -379,6 +379,73 @@ def adaptive_round_spec(accepted_start: int) -> AdaptiveRoundSpec:
     )
 
 
+def adaptive_round_for_current_accepted(
+    current_accepted: int,
+) -> tuple[AdaptiveRoundSpec, int]:
+    """Return the frozen 5k round and exact remaining accepted count.
+
+    A physical attempt may accept fewer rows than it submits.  Replenishment
+    stays inside the original 5k round and must select only the number still
+    required to reach that round's accepted-count boundary.
+    """
+
+    current = int(current_accepted)
+    if not 50_000 <= current < TARGET_ACCEPTED_GEOMETRIES:
+        raise ValueError(
+            "adaptive current accepted count must be in [50000,200000); "
+            f"got {current}"
+        )
+    start = 50_000 + ((current - 50_000) // ADAPTIVE_BATCH_SIZE) * ADAPTIVE_BATCH_SIZE
+    spec = adaptive_round_spec(start)
+    remaining = spec.accepted_target - current
+    if not 1 <= remaining <= ADAPTIVE_BATCH_SIZE:
+        raise AssertionError(
+            f"adaptive round remaining count outside [1,{ADAPTIVE_BATCH_SIZE}]: {remaining}"
+        )
+    return spec, remaining
+
+
+def prorate_adaptive_source_quotas(
+    source_quotas: Mapping[str, int] | Iterable[tuple[str, int]],
+    selected_count: int,
+) -> tuple[tuple[str, int], ...]:
+    """Scale frozen full-round quotas to one exact replenishment shard.
+
+    Integer allocation uses deterministic largest remainders with the frozen
+    source order as the tie-breaker.  Zero allocations are omitted because a
+    selector source is executable only when it receives at least one row.
+    """
+
+    items = (
+        tuple((str(name), int(value)) for name, value in source_quotas.items())
+        if isinstance(source_quotas, Mapping)
+        else tuple((str(name), int(value)) for name, value in source_quotas)
+    )
+    if not items or any(not name or value <= 0 for name, value in items):
+        raise ValueError("source quotas must be non-empty positive integers")
+    count = int(selected_count)
+    total = sum(value for _, value in items)
+    if not 1 <= count <= total:
+        raise ValueError(f"selected_count must be in [1,{total}]; got {count}")
+
+    floors = [value * count // total for _, value in items]
+    remainder_count = count - sum(floors)
+    order = sorted(
+        range(len(items)),
+        key=lambda index: (-(items[index][1] * count % total), index),
+    )
+    for index in order[:remainder_count]:
+        floors[index] += 1
+    result = tuple(
+        (items[index][0], allocation)
+        for index, allocation in enumerate(floors)
+        if allocation > 0
+    )
+    if sum(value for _, value in result) != count:
+        raise AssertionError("prorated source quotas do not close to selected_count")
+    return result
+
+
 def build_phase_plan() -> dict[str, Any]:
     """Return the deterministic accepted-count and acquisition-mixture plan."""
 

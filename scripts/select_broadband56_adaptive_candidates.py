@@ -93,6 +93,8 @@ def main(argv: list[str] | None = None) -> int:
     source_quotas = round_contract.get("active_source_quotas") if isinstance(round_contract.get("active_source_quotas"), dict) else {}
     accepted_start = _integer(round_info.get("accepted_start"))
     accepted_target = _integer(round_info.get("accepted_target"))
+    current_accepted = _integer(round_contract.get("current_accepted"))
+    raw_selection_count = _integer(round_contract.get("raw_selection_count"))
     phase = str(round_info.get("phase") or "")
     acquisition_mode = str(round_contract.get("acquisition_mode") or "")
     checks.extend(
@@ -128,8 +130,17 @@ def main(argv: list[str] | None = None) -> int:
             _check(
                 "round_size_and_source_quotas_exact",
                 accepted_target - accepted_start == ADAPTIVE_BATCH_SIZE
-                and sum(_integer(value) for value in source_quotas.values()) == ADAPTIVE_BATCH_SIZE,
-                {"accepted_start": accepted_start, "accepted_target": accepted_target, "source_quotas": source_quotas},
+                and accepted_start <= current_accepted < accepted_target
+                and raw_selection_count == accepted_target - current_accepted
+                and sum(_integer(value) for value in source_quotas.values())
+                == raw_selection_count,
+                {
+                    "accepted_start": accepted_start,
+                    "current_accepted": current_accepted,
+                    "accepted_target": accepted_target,
+                    "raw_selection_count": raw_selection_count,
+                    "source_quotas": source_quotas,
+                },
             ),
             _check(
                 "acquisition_mode_supported",
@@ -190,10 +201,12 @@ def main(argv: list[str] | None = None) -> int:
     checks.append(
         _check(
             "candidate_pool_is_large",
-            int(candidates.get("count") or 0) >= MINIMUM_CANDIDATE_POOL_FACTOR * ADAPTIVE_BATCH_SIZE,
+            1 <= raw_selection_count <= ADAPTIVE_BATCH_SIZE
+            and int(candidates.get("count") or 0)
+            >= MINIMUM_CANDIDATE_POOL_FACTOR * raw_selection_count,
             {
                 "actual": candidates.get("count"),
-                "minimum": MINIMUM_CANDIDATE_POOL_FACTOR * ADAPTIVE_BATCH_SIZE,
+                "minimum": MINIMUM_CANDIDATE_POOL_FACTOR * raw_selection_count,
             },
         )
     )
@@ -214,9 +227,18 @@ def main(argv: list[str] | None = None) -> int:
                 analysis,
                 phase=phase,
                 accepted_start=accepted_start,
+                current_accepted=current_accepted,
                 accepted_target=accepted_target,
             )
-            checks.extend(_selection_checks(analysis, selected_rows, source_quotas, accepted.get("hash_set") or set()))
+            checks.extend(
+                _selection_checks(
+                    analysis,
+                    selected_rows,
+                    source_quotas,
+                    accepted.get("hash_set") or set(),
+                    expected_count=raw_selection_count,
+                )
+            )
         except (KeyError, TypeError, ValueError) as exc:
             checks.append(_check("candidate_selection_completed", False, f"{type(exc).__name__}: {exc}"))
 
@@ -227,7 +249,7 @@ def main(argv: list[str] | None = None) -> int:
 
     summary_path = out_dir / "ADAPTIVE_SELECTION_SUMMARY.json"
     summary = {
-        "schema": "broadband56_adaptive_selection_summary_v1",
+        "schema": "broadband56_adaptive_selection_summary_v2",
         "generated_utc": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "overall_status": status,
         "decision": "USE_AS_UNLABELED_REAL_EMX_CANDIDATE_QUEUE" if status == "PASS" else "DO_NOT_RUN_CADENCE_CALIBRE_OR_EMX",
@@ -235,7 +257,9 @@ def main(argv: list[str] | None = None) -> int:
         "campaign_contract_fingerprint": fingerprint,
         "phase": phase,
         "accepted_start": accepted_start,
+        "current_accepted": current_accepted,
         "accepted_target": accepted_target,
+        "raw_selection_count": raw_selection_count,
         "acquisition_mode": acquisition_mode,
         "active_source_quotas": source_quotas,
         "candidate_pool_count": candidates.get("count", 0),
@@ -529,7 +553,13 @@ def _prediction_matrices(rows: list[dict[str, str]]) -> tuple[dict[str, np.ndarr
 
 
 def _materialize_selected_rows(
-    rows: list[dict[str, str]], analysis: dict[str, Any], *, phase: str, accepted_start: int, accepted_target: int
+    rows: list[dict[str, str]],
+    analysis: dict[str, Any],
+    *,
+    phase: str,
+    accepted_start: int,
+    current_accepted: int,
+    accepted_target: int,
 ) -> list[dict[str, Any]]:
     assignments = analysis.get("assignments") or {}
     components = analysis.get("components") or {}
@@ -544,6 +574,7 @@ def _materialize_selected_rows(
                 "campaign_phase": phase,
                 "acquisition_source": assignment["acquisition_source"],
                 "round_accepted_start": accepted_start,
+                "round_current_accepted": current_accepted,
                 "round_accepted_target": accepted_target,
                 "label_status": "AWAITING_FRESH_REAL_EMX",
                 "predictions_are_labels": "false",
@@ -570,14 +601,19 @@ def _materialize_selected_rows(
 
 
 def _selection_checks(
-    analysis: dict[str, Any], rows: list[dict[str, Any]], source_quotas: dict[str, Any], accepted_hashes: set[str]
+    analysis: dict[str, Any],
+    rows: list[dict[str, Any]],
+    source_quotas: dict[str, Any],
+    accepted_hashes: set[str],
+    *,
+    expected_count: int,
 ) -> list[dict[str, Any]]:
     selected_hashes = [str(row.get("geometry_sha256") or "") for row in rows]
     expected = {str(key): _integer(value) for key, value in source_quotas.items()}
     actual = analysis.get("selected_counts_by_source") or {}
     return [
-        _check("candidate_selection_completed", analysis.get("selected_count") == ADAPTIVE_BATCH_SIZE, analysis.get("selected_count")),
-        _check("selected_queue_count_exact", len(rows) == ADAPTIVE_BATCH_SIZE, len(rows)),
+        _check("candidate_selection_completed", analysis.get("selected_count") == expected_count, analysis.get("selected_count")),
+        _check("selected_queue_count_exact", len(rows) == expected_count, len(rows)),
         _check("selected_source_quotas_exact", actual == expected, {"actual": actual, "expected": expected}),
         _check("selected_geometries_unique", len(set(selected_hashes)) == len(rows), len(set(selected_hashes))),
         _check("selected_geometries_disjoint_from_accepted", not (set(selected_hashes) & accepted_hashes), len(set(selected_hashes) & accepted_hashes)),

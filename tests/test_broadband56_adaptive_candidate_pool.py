@@ -164,6 +164,8 @@ def _write_round_fixture(root: Path) -> dict[str, object]:
             "campaign_contract_fingerprint": fingerprint,
             "acquisition_mode": "FALLBACK_MAXIMIN",
             "round": round_spec.as_dict(),
+            "current_accepted": round_spec.accepted_start,
+            "raw_selection_count": round_spec.batch_size,
             "preceding_real_emx_audit": {
                 "accepted_geometries_path": str(accepted_path.resolve()),
                 "accepted_geometries_sha256": _sha256(accepted_path),

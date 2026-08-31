@@ -214,6 +214,30 @@ def test_shortfall_writes_valid_nonterminal_progress_receipt(tmp_path: Path, mon
     assert result["cumulative_stage_inputs"] is None
 
 
+def test_exact_adaptive_round_boundary_binds_cumulative_inputs(
+    tmp_path: Path,
+    monkeypatch,
+) -> None:
+    monkeypatch.setattr(MODULE, "validate_stage_receipt_chain", lambda *args, **kwargs: [])
+    monkeypatch.setattr(MODULE, "ADAPTIVE_ROUND_END_COUNTS", (21,))
+    args = _args(tmp_path, accepted=20, raw=24)
+    out_dir = Path(args.out_dir)
+
+    result = MODULE.finalize_stage_attempt(args, out_dir=out_dir)
+
+    progress = json.loads(
+        (out_dir / MODULE.PROGRESS_RECEIPT_NAME).read_text(encoding="utf-8")
+    )
+    cumulative = progress["round_cumulative_inputs"]
+    assert result["decision"] == "CONTINUE_SAMPLING"
+    assert cumulative is not None
+    assert set(cumulative) == set(MODULE.STAGE_PROGRESS_ARTIFACT_FIELDS)
+    for record in cumulative.values():
+        path = Path(record["path"])
+        assert path.is_file()
+        assert _sha(path) == record["sha256"]
+
+
 def test_exact_target_writes_cumulative_inputs_without_progress(tmp_path: Path, monkeypatch) -> None:
     monkeypatch.setattr(MODULE, "validate_stage_receipt_chain", lambda *args, **kwargs: [])
     args = _args(tmp_path, accepted=31, raw=31)

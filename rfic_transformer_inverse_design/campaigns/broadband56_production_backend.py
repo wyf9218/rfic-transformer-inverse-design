@@ -33,9 +33,9 @@ from .broadband56_stage_execution import (
 )
 
 
-BACKEND_MANIFEST_SCHEMA = "rfic_transformer.broadband56_v2_private_backend_identity.v11"
+BACKEND_MANIFEST_SCHEMA = "rfic_transformer.broadband56_v2_private_backend_identity.v12"
 BACKEND_VERIFICATION_SCHEMA = (
-    "rfic_transformer.broadband56_v2_private_backend_identity_verification.v6"
+    "rfic_transformer.broadband56_v2_private_backend_identity_verification.v7"
 )
 BACKEND_VERIFICATION_PASS_DECISION = "USE_HASH_BOUND_PRODUCTION_BACKEND"
 BACKEND_MANIFEST_EFFECT = "IDENTITY_ONLY_NO_EXECUTION"
@@ -79,6 +79,7 @@ STAGE_COMMAND_ARGUMENTS = (
 )
 
 PRODUCTION_CHAIN = (
+    "adaptive_real_emx_checkpoint_materialization",
     "deterministic_geometry_acquisition",
     "analytical_geometry_validation",
     "topology_validation",
@@ -100,6 +101,7 @@ REQUIRED_SCRIPT_ROLES = (
     "stage_launcher",
     "production_stage_backend",
     "phase_a_queue_builder",
+    "adaptive_checkpoint_materializer",
     "adaptive_candidate_pool_builder",
     "acquisition_ensemble_trainer",
     "acquisition_predictor",

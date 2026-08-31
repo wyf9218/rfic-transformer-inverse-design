@@ -30,8 +30,9 @@ from rfic_transformer_inverse_design.campaigns.broadband56_balanced200k import (
     PRIMARY_CELLS_PER_ANCHOR,
     PRIMARY_FREQUENCY_CONDITIONED_CELLS,
     REQUIRED_CHECKPOINT_COUNTS,
-    adaptive_round_spec,
+    adaptive_round_for_current_accepted,
     contract_fingerprint,
+    prorate_adaptive_source_quotas,
     validate_contract,
 )
 from rfic_transformer_inverse_design.campaigns.broadband56_adaptive_selection import (
@@ -41,6 +42,7 @@ from rfic_transformer_inverse_design.campaigns.broadband56_adaptive_selection im
 )
 
 ENSEMBLE_SCHEMA = "broadband56_acquisition_ensemble_receipt_v1"
+ADAPTIVE_ROUND_SCHEMA = "broadband56_adaptive_round_contract_v2"
 ENSEMBLE_FEATURES = (
     "xp_ohm",
     "xs_ohm",
@@ -76,29 +78,70 @@ def main(argv: list[str] | None = None) -> int:
     fingerprint = str(contract.get("contract_fingerprint_sha256") or contract_fingerprint(contract)) if contract else ""
 
     audit = _validate_preceding_audit(audit_dir, fingerprint, checks)
-    accepted_start = int(audit.get("accepted_geometries") or -1)
+    checkpoint_accepted = int(audit.get("accepted_geometries") or -1)
+    current_accepted = (
+        int(args.current_accepted)
+        if args.current_accepted is not None
+        else checkpoint_accepted
+    )
     round_spec = None
+    raw_selection_count = 0
     try:
-        round_spec = adaptive_round_spec(accepted_start)
-        checks.append(_check("accepted_count_is_adaptive_round_boundary", True, round_spec.as_dict()))
+        round_spec, raw_selection_count = adaptive_round_for_current_accepted(
+            current_accepted
+        )
+        checks.extend(
+            [
+                _check(
+                    "checkpoint_is_exact_adaptive_round_start",
+                    checkpoint_accepted == round_spec.accepted_start,
+                    {
+                        "checkpoint_accepted": checkpoint_accepted,
+                        "expected": round_spec.accepted_start,
+                    },
+                ),
+                _check(
+                    "current_accepted_stays_inside_frozen_round",
+                    round_spec.accepted_start
+                    <= current_accepted
+                    < round_spec.accepted_target,
+                    {
+                        "current_accepted": current_accepted,
+                        "round": round_spec.as_dict(),
+                    },
+                ),
+                _check(
+                    "raw_selection_count_closes_exact_round_boundary",
+                    raw_selection_count
+                    == round_spec.accepted_target - current_accepted,
+                    raw_selection_count,
+                ),
+            ]
+        )
     except ValueError as exc:
-        checks.append(_check("accepted_count_is_adaptive_round_boundary", False, str(exc)))
+        checks.append(_check("current_accepted_maps_to_adaptive_round", False, str(exc)))
 
     ensemble_path = Path(args.ensemble_receipt).expanduser().resolve() if args.ensemble_receipt else None
     ensemble = _validate_ensemble_receipt(
         ensemble_path,
         fingerprint,
-        accepted_start,
+        checkpoint_accepted,
         preceding_audit=audit,
     )
     base_pass = bool(checks) and all(item["pass"] for item in checks) and round_spec is not None
     use_ensemble = base_pass and ensemble["status"] == "PASS"
     acquisition_mode = "ENSEMBLE_ACQUISITION" if use_ensemble else "FALLBACK_MAXIMIN"
-    active_quotas = (
-        dict(round_spec.source_quotas)
-        if use_ensemble and round_spec is not None
-        else dict(round_spec.fallback_source_quotas) if round_spec is not None else {}
-    )
+    if round_spec is not None and raw_selection_count > 0:
+        frozen_quotas = (
+            round_spec.source_quotas
+            if use_ensemble
+            else round_spec.fallback_source_quotas
+        )
+        active_quotas = dict(
+            prorate_adaptive_source_quotas(frozen_quotas, raw_selection_count)
+        )
+    else:
+        active_quotas = {}
     status = "PASS" if base_pass else "FAIL"
     decision = (
         "USE_ENSEMBLE_ACQUISITION_FOR_ROUND"
@@ -108,13 +151,16 @@ def main(argv: list[str] | None = None) -> int:
         else "DO_NOT_BUILD_ADAPTIVE_ROUND"
     )
     round_contract = {
-        "schema": "broadband56_adaptive_round_contract_v1",
+        "schema": ADAPTIVE_ROUND_SCHEMA,
         "generated_utc": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "overall_status": status,
         "decision": decision,
         "campaign_id": CAMPAIGN_ID,
         "campaign_contract_fingerprint": fingerprint,
         "round": round_spec.as_dict() if round_spec is not None else None,
+        "checkpoint_accepted": checkpoint_accepted,
+        "current_accepted": current_accepted,
+        "raw_selection_count": raw_selection_count,
         "acquisition_mode": acquisition_mode if status == "PASS" else "NOT_AUTHORIZED",
         "active_source_quotas": active_quotas,
         "candidate_selection_policy": selection_policy_contract(),
@@ -124,6 +170,8 @@ def main(argv: list[str] | None = None) -> int:
             "analytical_gate": "PASS_REQUIRED_BEFORE_RANKING",
             "topology_gate": "PASS_REQUIRED_BEFORE_RANKING",
             "minimum_pool_factor": MINIMUM_CANDIDATE_POOL_FACTOR,
+            "minimum_pool_count": MINIMUM_CANDIDATE_POOL_FACTOR
+            * raw_selection_count,
             "minimum_ensemble_members": 5,
             "anchor_frequencies_ghz": list(ANCHOR_FREQUENCIES_GHZ),
             "predicted_features": list(ENSEMBLE_FEATURES),
@@ -171,6 +219,7 @@ def _parse_args(argv: list[str] | None) -> argparse.Namespace:
     parser.add_argument("--contract", required=True)
     parser.add_argument("--audit-dir", required=True)
     parser.add_argument("--ensemble-receipt")
+    parser.add_argument("--current-accepted", type=int)
     parser.add_argument("--out-dir", required=True)
     return parser.parse_args(argv)
 
