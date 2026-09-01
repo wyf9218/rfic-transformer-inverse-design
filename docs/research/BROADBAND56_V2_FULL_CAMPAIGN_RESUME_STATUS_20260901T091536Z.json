@@ -1,0 +1,86 @@
+{
+  "schema": "rfic_transformer.broadband56_v2_full_campaign_resume_public_status.v1",
+  "generated_utc": "2026-09-01T09:15:36+00:00",
+  "overall_status": "QUEUED_WAITING_FOR_CAPACITY",
+  "campaign_id": "broadband56_real_emx_balanced200k_tsmc65_v2",
+  "scientific_contract_fingerprint_sha256": "f86a00efbf7756b7421b863bbb16c340db6b423640f63a3257d46c1af49eb55e",
+  "owner_stop": "REVOKED_FOR_EMX_CAMPAIGN",
+  "nn_training_authorized": false,
+  "authorization": {
+    "scope": "FULL_CAMPAIGN",
+    "candidate_path": "docs/research/BROADBAND56_V2_FULL_CAMPAIGN_AUTHORIZATION_CANDIDATE_CALIBRE_ADAPTER_20260901T085456Z/BROADBAND56_V2_FULL_CAMPAIGN_AUTHORIZATION_CANDIDATE_20260901T085526Z.json",
+    "candidate_sha256": "af6cefbf52914affcd68f4b7b351eaaaf7980e5fec89de376ec3080c7adaf9c8",
+    "approval_receipt_sha256": "f5f603200c71c5b4db6521859a9ef192d0c4ac561eac801a0758ec087cc36b9b",
+    "approval_receipt_status": "PASS",
+    "approval_decision": "APPROVE_FULL_CAMPAIGN",
+    "approval_checks_passed": 46,
+    "approval_checks_total": 46,
+    "approved_utc": "2026-09-01T09:06:19Z",
+    "receipt_execution_effect": "NONE_RECORD_ONLY"
+  },
+  "runtime_identity": {
+    "code_commit": "69398a974e19e887d2d8a638a57d1fe35e950644",
+    "backend_id": "MARS_CADENCE_GDS_IDENTITY_CALIBRE_EMX_S4P_QA_V11",
+    "backend_identity_manifest_sha256": "8cf4657cd0525660893f69f9e2932b81fc9e6426fe883df8b743b13be237e87b",
+    "backend_identity_verification_receipt_sha256": "9b277e792039d4ce18e7e10f04bceca0890596a9ef5dae45b565867deb68cf81",
+    "calibre_runner_sha256": "ba34a66281a0a1a2548305d4b6805ffee602ca370d2e96f2112edd5617f6c258"
+  },
+  "durable_queue": {
+    "registered": true,
+    "queue_id": "b56-v2-queue-20260901T091027Z",
+    "authoritative_supervisor": "b56-v2-controller-2192656-20260901T091027Z",
+    "supervisor_count": 1,
+    "controller_alive": true,
+    "poll_seconds": 60,
+    "current_stage": "GOLDEN",
+    "check_index": 3,
+    "resource_gate": "WAIT",
+    "failed_resource_checks": [
+      "swap_thrash_gate"
+    ],
+    "load_gate": "PASS",
+    "memory_gate": "PASS",
+    "iowait_gate": "PASS",
+    "storage_gate": "PASS",
+    "license_gate": "PASS",
+    "isolation_gate": "PASS",
+    "active_simulator_jobs": 0,
+    "current_concurrency": 0,
+    "latest_resource_snapshot_sha256": "753dee3387cb4a85cdec179ea1edb5713113562b7b411399b190ed03b4845555",
+    "latest_resource_gate_sha256": "1f2f5ec7770607c4c281d672991dc7bfb24ab9aa2b0c830ebaa5f54ad2b0bc53",
+    "automatic_start_on_resource_pass": true
+  },
+  "progress": {
+    "current_accepted_unique_geometries": 0,
+    "target_accepted_unique_geometries": 200000,
+    "raw_candidates": 0,
+    "fresh_complete_s4p": 0,
+    "feature_rows": 0,
+    "expected_feature_rows": 11200000
+  },
+  "frequency_contract": {
+    "start_ghz": 5,
+    "stop_ghz": 60,
+    "step_ghz": 1,
+    "points": 56,
+    "ports": 4,
+    "touchstone_extension": ".s4p"
+  },
+  "launch_evidence": {
+    "initial_parameter_validation_attempt": "FAIL_CLOSED_BEFORE_QUEUE_REGISTRATION",
+    "initial_parameter_validation_error": "frozen contract identity mismatch",
+    "initial_parameter_validation_simulator_action_taken": false,
+    "successor_queue_registration": "PASS",
+    "predecessor_failure_evidence_preserved": true,
+    "failed_roots_resumed": false
+  },
+  "public_repository_boundary": {
+    "private_absolute_paths_published": false,
+    "license_server_details_published": false,
+    "pdk_or_proc_bytes_published": false,
+    "gds_or_s4p_published": false
+  },
+  "branch": "codex/broadband56-balanced200k-v2",
+  "base_public_commit": "ca60e30ef8c859d03d4fef73da144ccd2d063170",
+  "next_action": "Keep the single durable controller alive. Continue fresh 60-second resource checks and launch GOLDEN only after every approved gate is PASS; do not bypass active swap thrashing."
+}
