@@ -1,0 +1,78 @@
+{
+  "schema": "rfic_transformer.broadband56_v2_attempt_identity_compat_candidate_public_status.v1",
+  "generated_utc": "2026-09-01T14:41:26+00:00",
+  "overall_status": "PASS",
+  "decision": "REQUIRE_EXPLICIT_PROJECT_OWNER_APPROVAL_OF_NEW_EXACT_SHA256",
+  "campaign_id": "broadband56_real_emx_balanced200k_tsmc65_v2",
+  "scientific_contract_fingerprint_sha256": "f86a00efbf7756b7421b863bbb16c340db6b423640f63a3257d46c1af49eb55e",
+  "superseded_authorization": {
+    "candidate_sha256": "80e1552b1b5fbb8da7b1b792e6306c9aa90c5c032e74f4897f2aae0787ce5661",
+    "approval_receipt_sha256": "a92b811a0f7b40d7169c95c3b226c6e5f904c307bca5ee8097c827e8fe50fde2",
+    "reason_not_reusable": "The approved runtime encountered a fail-closed stage-attempt identity-field incompatibility, and the corrected runtime has a different hash-bound software identity."
+  },
+  "preserved_failed_golden": {
+    "failed_root_preserved": true,
+    "failed_root_may_be_resumed": false,
+    "cadence_streamout_status": "PASS",
+    "calibre_zero_blocking_status": "FAIL",
+    "blocking_drc_violation_count": 337,
+    "fresh_real_emx_executed": false,
+    "accepted_unique_geometries": 0,
+    "fresh_complete_s4p": 0
+  },
+  "software_fix": {
+    "code_commit": "7909017aed9145a40417808eac794df48dbc8c4a",
+    "component": "stage_attempt_product_builder",
+    "stage_attempt_product_builder_sha256": "0ab69b9f188771dd7babd27a6bb8f85f48cdf217ba272e57380f7eb4b6b735bf",
+    "scope": "Accept either frozen geometry identity field, normalize to one internal identity, and fail closed if both fields disagree.",
+    "physical_contract_modified": false,
+    "geometry_or_gds_modified": false,
+    "local_broadband56_tests": "296 passed, 35 warnings",
+    "mars_broadband56_tests": "296 passed"
+  },
+  "new_backend_identity": {
+    "runtime_commit": "7909017aed9145a40417808eac794df48dbc8c4a",
+    "runtime_worktree_clean": true,
+    "backend_identity_manifest_sha256": "2fdcd984b2a3dc1086d1445adb65ca1556014f19909f0c2f5b5f98ffd301e7f8",
+    "backend_identity_verification_receipt_sha256": "77cfa6f20238e836a7082cdae3e9cc773e3f9b3f36029498dd5bf856e2131b89",
+    "backend_identity_verification_status": "PASS",
+    "backend_identity_verification_decision": "USE_HASH_BOUND_PRODUCTION_BACKEND"
+  },
+  "new_authorization_candidate": {
+    "path": "docs/research/BROADBAND56_V2_FULL_CAMPAIGN_AUTHORIZATION_CANDIDATE_ATTEMPT_IDENTITY_COMPAT_20260901T143959Z/BROADBAND56_V2_FULL_CAMPAIGN_AUTHORIZATION_CANDIDATE_20260901T143959Z.json",
+    "sha256": "e78c6fe6dfc2801a4bfa131e0a21398f2402bff99e1199d3c5ebd79b42344946",
+    "size_bytes": 15706,
+    "authorization_scope": "FULL_CAMPAIGN",
+    "approval_status": "PENDING_EXPLICIT_PROJECT_OWNER_SHA256_APPROVAL",
+    "execution_effect": "NONE_REQUEST_ONLY",
+    "automatic_campaign_execution_authorized": false
+  },
+  "recursive_contract_comparison": {
+    "reference_candidate_sha256": "80e1552b1b5fbb8da7b1b792e6306c9aa90c5c032e74f4897f2aae0787ce5661",
+    "difference_count": 4,
+    "differences": [
+      "generated_utc",
+      "runtime_and_backend_identity.backend_identity_manifest_sha256",
+      "runtime_and_backend_identity.backend_identity_verification_receipt_sha256",
+      "runtime_and_backend_identity.stage_attempt_product_builder_sha256"
+    ],
+    "unexpected_differences": [],
+    "unchanged_scientific_and_physical_contract_check": "PASS",
+    "frequency_contract": "5_to_60_GHz_inclusive_step_1_GHz_56_points_4_port_s4p",
+    "terminal_contract": "200000_unique_accepted_geometries_200000_fresh_s4p_11200000_frequency_rows"
+  },
+  "current_execution_state": {
+    "active_exact_campaign_process_count": 0,
+    "simulator_action_taken_for_candidate_rebuild": false,
+    "new_controller_started": false,
+    "approval_receipt_recorded_for_new_candidate": false
+  },
+  "public_repository_boundary": {
+    "private_absolute_paths_published": false,
+    "license_server_details_published": false,
+    "pdk_or_proc_bytes_published": false,
+    "gds_or_s4p_published": false
+  },
+  "branch": "codex/broadband56-balanced200k-v2",
+  "next_action": "Require explicit project-owner approval naming exact candidate SHA-256 e78c6fe6dfc2801a4bfa131e0a21398f2402bff99e1199d3c5ebd79b42344946 and FULL_CAMPAIGN scope before recording a new receipt or launching any successor controller."
+}
