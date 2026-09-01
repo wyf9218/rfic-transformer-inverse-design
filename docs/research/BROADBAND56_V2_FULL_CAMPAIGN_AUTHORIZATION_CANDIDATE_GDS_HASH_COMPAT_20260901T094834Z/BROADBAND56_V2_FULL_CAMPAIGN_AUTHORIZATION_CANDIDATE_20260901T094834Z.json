@@ -1,0 +1,382 @@
+{
+  "approval_request": {
+    "candidate_file_alone_authorizes_execution": false,
+    "receipt_recorder": "scripts/record_broadband56_v2_full_campaign_authorization.py",
+    "required_approval_identity": "Yufeng Wang, project owner and project leader",
+    "required_binding": "EXACT_CANDIDATE_SHA256"
+  },
+  "approval_status": "PENDING_EXPLICIT_PROJECT_OWNER_SHA256_APPROVAL",
+  "attempt_replenishment_contract": {
+    "accepted_count_overshoot_forbidden": true,
+    "bounded_pending_work_window_required": true,
+    "bounded_replenished_shards_required": true,
+    "continue_sampling_until_exact_accepted_target": true,
+    "failed_or_duplicate_attempts_do_not_consume_accepted_target": true,
+    "no_clobber_attempt_paths_required": true,
+    "resource_gate_before_every_attempt_shard": true,
+    "retry_failed_shards_only": true,
+    "submitted_count_is_not_accepted_count": true
+  },
+  "authorization_scope": "FULL_CAMPAIGN",
+  "automatic_campaign_execution_authorized": false,
+  "campaign_id": "broadband56_real_emx_balanced200k_tsmc65_v2",
+  "execution_effect_of_candidate_file": "NONE_REQUEST_ONLY",
+  "frequency_contract": {
+    "exact_hz": [
+      5000000000,
+      6000000000,
+      7000000000,
+      8000000000,
+      9000000000,
+      10000000000,
+      11000000000,
+      12000000000,
+      13000000000,
+      14000000000,
+      15000000000,
+      16000000000,
+      17000000000,
+      18000000000,
+      19000000000,
+      20000000000,
+      21000000000,
+      22000000000,
+      23000000000,
+      24000000000,
+      25000000000,
+      26000000000,
+      27000000000,
+      28000000000,
+      29000000000,
+      30000000000,
+      31000000000,
+      32000000000,
+      33000000000,
+      34000000000,
+      35000000000,
+      36000000000,
+      37000000000,
+      38000000000,
+      39000000000,
+      40000000000,
+      41000000000,
+      42000000000,
+      43000000000,
+      44000000000,
+      45000000000,
+      46000000000,
+      47000000000,
+      48000000000,
+      49000000000,
+      50000000000,
+      51000000000,
+      52000000000,
+      53000000000,
+      54000000000,
+      55000000000,
+      56000000000,
+      57000000000,
+      58000000000,
+      59000000000,
+      60000000000
+    ],
+    "interpolation_allowed": false,
+    "points": 56,
+    "ports": 4,
+    "start_hz": 5000000000,
+    "step_hz": 1000000000,
+    "stop_hz": 60000000000,
+    "strictly_increasing": true,
+    "touchstone_extension": ".s4p"
+  },
+  "generated_utc": "2026-09-01T09:48:34+00:00",
+  "geometry_contract": {
+    "duplicate_geometries_accepted": false,
+    "field_bounds_um": {
+      "line_width_um": [
+        3.0,
+        12.0
+      ],
+      "offset_um": [
+        -90.0,
+        90.0
+      ],
+      "primary_feed_extension_um": [
+        100.0,
+        320.0
+      ],
+      "primary_outer_height_um": [
+        160.0,
+        520.0
+      ],
+      "primary_outer_width_um": [
+        160.0,
+        520.0
+      ],
+      "primary_terminal_y_span_um": [
+        20.0,
+        90.0
+      ],
+      "secondary_feed_extension_um": [
+        100.0,
+        320.0
+      ],
+      "secondary_outer_height_um": [
+        160.0,
+        520.0
+      ],
+      "secondary_outer_width_um": [
+        160.0,
+        520.0
+      ],
+      "secondary_terminal_y_span_um": [
+        20.0,
+        90.0
+      ]
+    },
+    "field_order": [
+      "primary_outer_width_um",
+      "primary_outer_height_um",
+      "secondary_outer_width_um",
+      "secondary_outer_height_um",
+      "line_width_um",
+      "primary_terminal_y_span_um",
+      "secondary_terminal_y_span_um",
+      "offset_um",
+      "primary_feed_extension_um",
+      "secondary_feed_extension_um"
+    ],
+    "geometry_identity": "canonical_ordered_10d_um_sha256_v2",
+    "manual_gds_modification_allowed": false
+  },
+  "label_contract": {
+    "cadence_or_gds_regeneration_after_calibre_forbidden": true,
+    "cadence_required": true,
+    "calibre_audited_gds_must_equal_emx_input_bytes": true,
+    "exact_audited_gds_emx_receipt_required": true,
+    "failed_or_duplicate_geometry_counted_as_accepted": false,
+    "final_label_source": "FRESH_REAL_EMX_ONLY",
+    "frequency_interpolation_forbidden": true,
+    "geometry_to_s4p_hash_chain_required": true,
+    "historical_label_reuse_forbidden": true,
+    "proxy_as_label_forbidden": true,
+    "proxy_may_rank_candidates_only": true,
+    "zero_blocking_calibre_required": true
+  },
+  "ordered_stages": [
+    {
+      "cumulative_accepted_unique_geometries": 1,
+      "prior_exact_pass_receipt_required": false,
+      "required_terminal_state": "GOLDEN_COMPLETE",
+      "stage": "GOLDEN"
+    },
+    {
+      "cumulative_accepted_unique_geometries": 32,
+      "prior_exact_pass_receipt_required": true,
+      "required_terminal_state": "PILOT_32_COMPLETE",
+      "stage": "PILOT_32"
+    },
+    {
+      "cumulative_accepted_unique_geometries": 1000,
+      "prior_exact_pass_receipt_required": true,
+      "required_terminal_state": "PILOT_1000_COMPLETE",
+      "stage": "PILOT_1000"
+    },
+    {
+      "cumulative_accepted_unique_geometries": 50000,
+      "prior_exact_pass_receipt_required": true,
+      "required_terminal_state": "PHASE_A_COMPLETE",
+      "stage": "PHASE_A"
+    },
+    {
+      "cumulative_accepted_unique_geometries": 150000,
+      "prior_exact_pass_receipt_required": true,
+      "required_terminal_state": "PHASE_B_COMPLETE",
+      "stage": "PHASE_B"
+    },
+    {
+      "cumulative_accepted_unique_geometries": 200000,
+      "prior_exact_pass_receipt_required": true,
+      "required_terminal_state": "COMPLETE_200K",
+      "stage": "PHASE_C"
+    }
+  ],
+  "port_and_grounding_contract": {
+    "cadence_pin_purpose": 51,
+    "ground_unused_s8p_ports": false,
+    "port_ground_reference": "shield",
+    "port_mode": "single_ended_shield_grounded",
+    "port_order": [
+      "P001",
+      "P002",
+      "P003",
+      "P004"
+    ],
+    "signal_port_count": 4,
+    "touchstone_extension": ".s4p",
+    "touchstone_mode": "signal_4_grounded_aux"
+  },
+  "private_preparation_evidence": {
+    "campaign_contract_frozen_sha256": "1b173a44a2ebca09e6fd0f3f163d12bdc4fb444a804e531f0f912347bd74b9a2",
+    "geometry_bounds_frozen_sha256": "5bc4223fb4654a2a18b79390305c21bc956bb73747ad19c1fdf9e068fbbfafac",
+    "historical_configuration_sha256": "c4ffcc8a424770e4b3c0c64d16c575271d29867d2b47dc3a29b7f642d2fd3655",
+    "operational_policy_approval_receipt_sha256": "a28fa3182bc5f5a39f64ac8f35b586273936eb541e638bb3bcc9cdc88b2c6742",
+    "phase_plan_frozen_sha256": "a97754b6245f66c5414cd8badbd77e9e9a0e0fd58e901d6eb8f74631a2452ae4",
+    "preparation_check_count": 40,
+    "preparation_decision": "PREPARED_FOR_GOLDEN_GATE",
+    "preparation_fail_count": 0,
+    "preparation_overall_status": "PASS",
+    "preparation_pass_count": 40,
+    "preparation_receipt_sha256": "1cbc646d0223a4f5655552eeb0339becf3d0cc5ac7a86a2bc72b19b0ea7b8ca6",
+    "preparation_receipt_size_bytes": 10439,
+    "primary_bins_frozen_sha256": "05bf4fe2ad6b6f87316c949980e4b480dd7f4818c7dc2157315c8f20b2c2df68",
+    "private_configuration_sha256": "d83114199dfe82e1f1d1fc90db8e021bad9b2d98118d1bba0011b5a9f8e24327",
+    "private_paths_published": false,
+    "secondary_coverage_frozen_sha256": "79cc803198f28b6ed4524a55a0796a4ed6894f296c53b371f212219e8fb9c911"
+  },
+  "public_evidence": {
+    "frozen_contract": {
+      "path": "configs/broadband56_real_emx_balanced200k_tsmc65_v2.json",
+      "sha256": "ebeb52f84262a971ab63f8295004e546f85e8becc8899356def1eaac277907ba",
+      "size_bytes": 9226
+    },
+    "operational_policy_candidate": {
+      "path": "docs/research/BROADBAND56_V2_CAPACITY_POLICY_AMENDMENT_CANDIDATE_20260830.json",
+      "sha256": "aca4883a08abca1d8309b6e1af4f6fd4916c03e7240056a434413a7b50d63a8d",
+      "size_bytes": 6702
+    },
+    "public_preparation_status": {
+      "path": "reports/broadband56_v2_preparation_preflight_r2_20260830T145300Z/PUBLIC_SAFE_PREPARATION_STATUS.json",
+      "sha256": "3273e498946e7170cc528ddc8027f408c943f52f0d1f07c264d5d15dd02529d9",
+      "size_bytes": 4528
+    },
+    "r2_approval_receipt": {
+      "path": "reports/broadband56_reconstructed_baseline_r2_approval_20260830T143319Z/RECONSTRUCTED_BASELINE_APPROVAL_RECEIPT.json",
+      "sha256": "c58c8a29e66855a44e923026666955b655f10c7355b53f815018be352483dbc8",
+      "size_bytes": 4495
+    },
+    "r2_candidate": {
+      "path": "docs/research/BROADBAND56_RECONSTRUCTED_BASELINE_V1_CANDIDATE_R2_20260829.json",
+      "sha256": "037889d41f41bbedbcd38188c44a5c8c1ccffa62943c334a72f0980f38bf864f",
+      "size_bytes": 5540
+    },
+    "sanitized_private_template": {
+      "path": "configs/mars_s4p_grounded_powerline_broadband56_balanced200k_v2_template.yaml",
+      "sha256": "69f8eabf3af40f2638cd66e0e46a0689fdbbe446df5c3f93c796ac43ac4c88a2",
+      "size_bytes": 2627
+    }
+  },
+  "queue_contract": {
+    "one_authoritative_supervisor": true,
+    "persistent_no_clobber_private_root": true,
+    "poll_seconds": 60,
+    "registration_authorized_before_full_campaign_approval": true,
+    "resource_shortage_is_terminal_blocker": false,
+    "resource_shortage_state": "QUEUED_WAITING_FOR_CAPACITY",
+    "survives_terminal_and_browser_disconnect": true,
+    "zero_simulator_before_exact_pass_receipt": true
+  },
+  "runtime_and_backend_identity": {
+    "acquisition_ensemble_trainer_sha256": "b34dd29e4d762624025de5096cee9580b1c163625d107ef6e149795d52e7737c",
+    "acquisition_predictor_sha256": "1709c477ce67d111f5a157543eb67c9212e2b5946c8a3fd39889c0cb46f66b82",
+    "adaptive_candidate_pool_builder_sha256": "4f0d095e127de8142575b7a1e1c01b9c28c5dee688b9315bc67b45f292885ea8",
+    "adaptive_candidate_selector_sha256": "baa35da2de0a71aef157cc213838d0e7bb8fcf50b706adce280c8288364b66de",
+    "adaptive_checkpoint_materializer_sha256": "c65f88f87d7d140067d9c1346ca3fe0fd1cc5919e865af3d5e3dfc0e7a749341",
+    "adaptive_round_stager_sha256": "53b4e543f55c79ff43804c51fa72e79638b6fec4d837c18fbdac21fdd5c91d15",
+    "backend_id": "MARS_CADENCE_GDS_IDENTITY_CALIBRE_EMX_S4P_QA_V11",
+    "backend_identity_manifest_sha256": "17447e2c0ecc5e83b503dad9cbe156b475530018a36ff233f5584b20c95aaecb",
+    "backend_identity_verification_receipt_sha256": "813dfe75e5b18a0a9e591349d72ad9bd9f47090e5ad7462107568c3de25edca0",
+    "cadence_identity_reverified": true,
+    "cadence_streamout_delegate_sha256": "7c7eaa15a9c050f2cc447636d77ee34936700efa91f415f15de6e3955b9d5d3d",
+    "cadence_streamout_runner_sha256": "333a7589f70424753d858df0b8b39e5bc78700d220b7feb6acf3005c96d47853",
+    "calibre_batch_delegate_sha256": "7f0c470646c75c5e0d76c6fdea9765433850d6e5569f9074f49238c568f45a37",
+    "calibre_runner_sha256": "3d13e5ca40fa6bfa0a94c61eeddf7573ae1015fe19ced0790f44e4d83c2b09bf",
+    "calibre_zero_blocking_gate_required": true,
+    "calibre_zero_blocking_receipt_builder_sha256": "f33c8506efc9ec1a1ec78e83e1ea71a02de405d4e069620341d2cdccd771d279",
+    "calibre_zero_blocking_single_receipt_builder_sha256": "70f52d579c408e59bb10625652395f90d36dab84ff4d4a7526d852c33ef11567",
+    "campaign_histories_finalizer_sha256": "7b4a3aaf97a0794ed971b40c70b64dbaac08166a6e6cf931c49c1ae001938344",
+    "candidate_gds_index_builder_sha256": "cec42af0a28e9fecae735d4f24f136a6e75da65614b6a5df7314bdefda6ffc33",
+    "checkpoint_auditor_sha256": "4f246f46d92a83ce00a73115e7bc6f1f10e55705c95f5ab4014561871d2438ab",
+    "checkpoint_figure_renderer_sha256": "1098373c6fb18041ccf815a1c6da34e5acc31e73ace6191dd282069c4327ff41",
+    "emx_process_identity_reverified": true,
+    "emx_wrapper_identity_reverified": true,
+    "exact_audited_gds_emx_module_sha256": "979424f74e86d7877798ac22e953a42e7dfa62265ea59075328d7419ab326813",
+    "exact_audited_gds_emx_runner_sha256": "7011b0dcf48c4850eb3cb646d4cb7a4ba153a21aee1e646578ce34c1a2902d38",
+    "exact_audited_gds_emx_single_runner_sha256": "a4759bb00aa611b96352e5245d6137c8b7b83e69f54da7ef24516d18f8fd1ee8",
+    "final_delivery_auditor_sha256": "cde7079a7dabe55d8230f8386769105b7229bd307274f1fd5d8defc09f2371a9",
+    "full_band_s4p_qa_builder_sha256": "de6e1ced2fdd37fdd79b302ea0d179fbcb17d72739566f95b1177298f209c80f",
+    "full_band_s4p_qa_module_sha256": "7c51b2592364b4ea28632269c0cc1c6398bb60b43eccac83f15ebb8c3a666f83",
+    "full_band_s4p_qa_required": true,
+    "gds_physical_identity_auditor_sha256": "449a127cb327ab8303108341e5d54da73b33e83f933121d0959d321703cd6c59",
+    "gds_physical_identity_delegate_sha256": "1519c4277ba587dcd2916fef0f73e27c90e9ed0a78e173a4e500aa8a09476d4d",
+    "gds_physical_identity_module_sha256": "d0e241b4bbc42e2fd7bd56515da2ae5e89a0ffbdf08107f1b6729e853a4e05fb",
+    "historical_backend_pass_receipts": [
+      {
+        "overall_status": "PASS",
+        "sha256": "dea44924af556e022720ae9e3d28b5576bb3352178359003fde746be5837787f",
+        "size_bytes": 4735
+      },
+      {
+        "overall_status": "PASS",
+        "sha256": "befee07da91752961a4bc7ea65f21f068a40f9e564125a91535e5045fc53977f",
+        "size_bytes": 1569
+      }
+    ],
+    "historical_gds_identity_pass_receipt_sha256": "cee3e8a3fe78fe21b7e086b9ae9424692ddbb5b0b67af703b9aeca8faf744f56",
+    "operational_policy_approval_scope": "APPROVE_CAPACITY_NORMALIZED_STAGED_EXECUTION",
+    "phase_a_queue_builder_sha256": "bbc7d30e28c6f776412be58777daac3e38f6eedf4cc266126850f5a291119dbb",
+    "private_paths_published": false,
+    "production_stage_backend_sha256": "6742ab960b6e2de827b3f82c26b8756afe88d27c29c9abecb6f73f7e1ea694ac",
+    "python_executable_sha256": "692c21b35b8baee648d2573c61196496df4b590586b735334137426cc1c1853e",
+    "queue_controller_sha256": "b3ae46672fa096419ba927cf5f38699833f05e670af26c0e444d0f799b3a75d0",
+    "raw_products_finalizer_sha256": "ced020f9b029d63f674333631c69bc26ba79b269766dd66003d9c86f7efce284",
+    "resource_gate_auditor_sha256": "7453b09c7689684adf7dd35bf12bd62bc2b135b95c627647985a0966b1d7f1fc",
+    "resource_policy": "CAPACITY_NORMALIZED_HIGH_LOAD_V1",
+    "resource_probe_sha256": "9a4da25b5cecdaeef075c1bd6dd06798662628057f3f45242a7642df5a25def8",
+    "stage_attempt_finalizer_sha256": "310b575729983af30dab0b12a77b714b2c02117964770a99e5dd22d84d6e4585",
+    "stage_attempt_product_builder_sha256": "bf61b8ce3b71393ed8eb012fd170e8127aa2429628ffac87dccfab36e45ba727",
+    "stage_launcher_sha256": "1cbdc60cd43ed5ebf9555b9a95d2f99f1ef263016aa32f441f1d0d3e799f17de",
+    "training_readiness_finalizer_sha256": "8bdde5e66c0b7ceee0044e4288fe20aea47351f4f027de9503b3de4a229c9196"
+  },
+  "schema": "rfic_transformer.broadband56_v2_full_campaign_authorization_candidate.v11",
+  "scientific_contract_fingerprint_sha256": "f86a00efbf7756b7421b863bbb16c340db6b423640f63a3257d46c1af49eb55e",
+  "stage_transition_contract": {
+    "bounded_pending_work_window_required": true,
+    "exact_200000_completion_required": true,
+    "golden_failure_blocks_later_stages": true,
+    "no_additional_human_approval_after_full_campaign_pass": true,
+    "no_clobber_shards_required": true,
+    "prior_stage_exact_pass_receipt_required": true,
+    "retry_failed_shards_only": true
+  },
+  "terminal_contract": {
+    "accepted_geometry_unique_s4p_geometries": 200000,
+    "feature_complete_geometries": 200000,
+    "frequency_rows_are_not_independent_geometries": true,
+    "geometry_frequency_rows": 11200000,
+    "label_source": "FRESH_REAL_EMX_ONLY",
+    "s4p_artifacts": 200000
+  },
+  "unchanged_physical_contract_items": [
+    "foundry_process",
+    "proc_file",
+    "pdk",
+    "metal_and_via_stack",
+    "m10_m9_winding_implementation",
+    "m4_cutout_and_keepout",
+    "topology",
+    "ten_geometry_variables",
+    "geometry_bounds",
+    "port_mode",
+    "pin_purposes",
+    "grounding",
+    "gds_generation",
+    "analytical_gates",
+    "cadence",
+    "calibre_drc",
+    "emx_except_frequency_grid",
+    "s_z_conversion",
+    "physical_feature_equations",
+    "provenance_and_no_clobber"
+  ]
+}
