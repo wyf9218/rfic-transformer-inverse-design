@@ -198,7 +198,7 @@ if os.environ.get('MOCK_LAUNCHER_PROGRESS') == '1':
     failure['raw_geometry_candidates'] = 1
     failure['analytical_failures'] = 1
     progress = {
-        'schema': 'rfic_transformer.broadband56_v2_stage_progress_receipt.v2',
+        'schema': 'rfic_transformer.broadband56_v2_stage_progress_receipt.v3',
         'overall_status': 'INCOMPLETE',
         'decision': 'CONTINUE_SAMPLING',
         'campaign_id': CAMPAIGN_ID,
@@ -226,6 +226,7 @@ if os.environ.get('MOCK_LAUNCHER_PROGRESS') == '1':
         },
         'failure_accounting': failure,
         'artifacts': artifacts,
+        'round_cumulative_inputs': None,
         'simulator_action_taken': False,
         'stage_pass_receipt_created': False,
         'evidence_preserved': True,

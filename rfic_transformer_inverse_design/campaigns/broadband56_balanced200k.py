@@ -49,6 +49,9 @@ ADAPTIVE_ROUND_END_COUNTS = tuple(value + ADAPTIVE_BATCH_SIZE for value in ADAPT
 ADAPTIVE_INTERMEDIATE_AUDIT_COUNTS = tuple(
     value for value in ADAPTIVE_ROUND_END_COUNTS if value not in REQUIRED_CHECKPOINT_COUNTS
 )
+FROZEN_INTERMEDIATE_ACCEPTED_BOUNDARIES = tuple(
+    sorted(set(REQUIRED_CHECKPOINT_COUNTS) | set(ADAPTIVE_ROUND_END_COUNTS))
+)
 
 SECONDARY_FEATURES = (
     "xp_ohm",
@@ -403,6 +406,67 @@ def adaptive_round_for_current_accepted(
             f"adaptive round remaining count outside [1,{ADAPTIVE_BATCH_SIZE}]: {remaining}"
         )
     return spec, remaining
+
+
+def next_frozen_accepted_boundary(
+    current_accepted: int,
+    *,
+    cumulative_target: int,
+) -> int:
+    """Return the next accepted-count boundary inside one ordered stage.
+
+    The production controller must not jump over a required checkpoint merely
+    because the surrounding scientific stage has a larger terminal target.
+    Adaptive Phase-B/C rounds add every frozen 5k endpoint to the same boundary
+    set.  The stage target is always included, even when it is not otherwise a
+    project checkpoint.
+    """
+
+    current = int(current_accepted)
+    target = int(cumulative_target)
+    if current < 0 or target <= current or target > TARGET_ACCEPTED_GEOMETRIES:
+        raise ValueError(
+            "accepted counts must satisfy 0 <= current < cumulative_target <= "
+            f"{TARGET_ACCEPTED_GEOMETRIES}; got current={current}, target={target}"
+        )
+    candidates = [
+        value
+        for value in (*FROZEN_INTERMEDIATE_ACCEPTED_BOUNDARIES, target)
+        if current < value <= target
+    ]
+    if not candidates:
+        raise AssertionError(
+            f"no frozen accepted boundary closes current={current} to target={target}"
+        )
+    return min(candidates)
+
+
+def frozen_checkpoint_start(
+    current_accepted: int,
+    *,
+    stage_base_accepted: int,
+    cumulative_target: int,
+) -> int:
+    """Return the exact checkpoint that starts the current bounded shard."""
+
+    current = int(current_accepted)
+    base = int(stage_base_accepted)
+    target = int(cumulative_target)
+    if not 0 <= base <= current < target <= TARGET_ACCEPTED_GEOMETRIES:
+        raise ValueError(
+            "accepted counts must satisfy 0 <= stage_base <= current < "
+            f"cumulative_target <= {TARGET_ACCEPTED_GEOMETRIES}; got "
+            f"base={base}, current={current}, target={target}"
+        )
+    boundaries = [
+        base,
+        *(
+            value
+            for value in FROZEN_INTERMEDIATE_ACCEPTED_BOUNDARIES
+            if base < value <= current and value < target
+        ),
+    ]
+    return max(boundaries)
 
 
 def prorate_adaptive_source_quotas(

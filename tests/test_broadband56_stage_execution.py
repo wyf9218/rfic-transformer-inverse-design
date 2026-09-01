@@ -93,6 +93,19 @@ def test_adaptive_role_order_matches_contract_runbook() -> None:
     )
 
 
+def test_nonadaptive_checkpointed_stage_role_orders_are_explicit() -> None:
+    assert expected_stage_role_order("GOLDEN")[0] == "phase_a_queue_builder"
+    assert expected_stage_role_order("PILOT_32")[0] == "phase_a_queue_builder"
+    assert expected_stage_role_order("PILOT_1000")[:2] == (
+        "adaptive_checkpoint_materializer",
+        "phase_a_queue_builder",
+    )
+    assert expected_stage_role_order("PHASE_A")[:2] == (
+        "adaptive_checkpoint_materializer",
+        "phase_a_queue_builder",
+    )
+
+
 def test_rejects_reordered_role_chain() -> None:
     profile, manifest = _profile()
     commands = profile["stages"]["GOLDEN"]["commands"]

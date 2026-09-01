@@ -39,6 +39,43 @@ def _load_module():
     return module
 
 
+def test_campaign_root_discovers_exact_figure_checkpoints(tmp_path: Path) -> None:
+    module = _load_module()
+    campaign = tmp_path / "campaign"
+    for index, count in enumerate(HISTORY_COUNTS, start=1):
+        directory = campaign / "stages" / f"{index:06d}_stage" / "checkpoint"
+        directory.mkdir(parents=True)
+        _write_json(
+            directory / "CHECKPOINT_STATUS.json",
+            {"accepted_geometries": count, "audit_mode": "checkpoint"},
+        )
+    discovered = module._discover_audit_dirs(
+        campaign,
+        required_counts=HISTORY_COUNTS,
+    )
+    assert [
+        json.loads((path / "CHECKPOINT_STATUS.json").read_text())["accepted_geometries"]
+        for path in discovered
+    ] == list(HISTORY_COUNTS)
+
+
+def test_campaign_root_figure_discovery_fails_on_missing_count(
+    tmp_path: Path,
+) -> None:
+    module = _load_module()
+    directory = tmp_path / "campaign" / "stages" / "one" / "checkpoint"
+    directory.mkdir(parents=True)
+    _write_json(
+        directory / "CHECKPOINT_STATUS.json",
+        {"accepted_geometries": 50_000, "audit_mode": "checkpoint"},
+    )
+    with pytest.raises(module.FigureBuildError, match="missing"):
+        module._discover_audit_dirs(
+            tmp_path / "campaign",
+            required_counts=HISTORY_COUNTS,
+        )
+
+
 def _sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 

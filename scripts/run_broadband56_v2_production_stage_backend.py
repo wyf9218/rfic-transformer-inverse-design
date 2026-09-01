@@ -29,6 +29,7 @@ if __package__ in {None, ""}:
 from rfic_transformer_inverse_design.campaigns.broadband56_balanced200k import (  # noqa: E402
     CAMPAIGN_ID,
     TARGET_ACCEPTED_GEOMETRIES,
+    next_frozen_accepted_boundary,
 )
 from rfic_transformer_inverse_design.campaigns.broadband56_capacity_policy import (  # noqa: E402
     CapacityPolicyError,
@@ -288,9 +289,14 @@ def run_stage_backend(
     start_monotonic = time.monotonic()
     started_utc = _utc_now()
     prior_path = prior_records[-1][0] if prior_records else None
+    selection_accepted_target = next_frozen_accepted_boundary(
+        current_accepted,
+        cumulative_target=spec.cumulative_target,
+    )
+    selection_count = selection_accepted_target - current_accepted
     context_path = out_dir / "STAGE_CONTEXT.json"
     context = {
-        "schema": "rfic_transformer.broadband56_v2_stage_context.v1",
+        "schema": "rfic_transformer.broadband56_v2_stage_context.v2",
         "generated_utc": started_utc,
         "campaign_id": CAMPAIGN_ID,
         "contract_fingerprint_sha256": SCIENTIFIC_CONTRACT_FINGERPRINT,
@@ -298,7 +304,9 @@ def run_stage_backend(
         "stage": stage,
         "cumulative_target": spec.cumulative_target,
         "current_accepted": current_accepted,
-        "remaining_accepted": spec.cumulative_target - current_accepted,
+        "stage_remaining_accepted": spec.cumulative_target - current_accepted,
+        "selection_accepted_target": selection_accepted_target,
+        "remaining_accepted": selection_count,
         "max_concurrency": max_concurrency,
         "backend_identity_manifest": _file_record(backend_manifest_path),
         "full_campaign_authorization_receipt": _file_record(authorization_path),
@@ -338,7 +346,7 @@ def run_stage_backend(
             "{max_concurrency}": str(max_concurrency),
             "{prior_stage_receipt}": str(prior_path or ""),
             "{current_accepted}": str(current_accepted),
-            "{remaining_accepted}": str(spec.cumulative_target - current_accepted),
+            "{remaining_accepted}": str(selection_count),
             "{private_configuration}": str(private_config_path),
         }
         role_identity = backend_manifest["script_identities"][role]

@@ -14,14 +14,14 @@ from pathlib import Path
 from typing import Any
 
 from .broadband56_balanced200k import (
-    ADAPTIVE_ROUND_END_COUNTS,
     CAMPAIGN_ID,
+    FROZEN_INTERMEDIATE_ACCEPTED_BOUNDARIES,
 )
 from .broadband56_capacity_policy import SCIENTIFIC_CONTRACT_FINGERPRINT, STAGE_BY_NAME
 from .broadband56_full_campaign_authorization import PRODUCTION_BACKEND_ID
 
 
-STAGE_PROGRESS_SCHEMA = "rfic_transformer.broadband56_v2_stage_progress_receipt.v2"
+STAGE_PROGRESS_SCHEMA = "rfic_transformer.broadband56_v2_stage_progress_receipt.v3"
 STAGE_PROGRESS_STATUS = "INCOMPLETE"
 STAGE_PROGRESS_DECISION = "CONTINUE_SAMPLING"
 STAGE_ATTEMPT_FINALIZER_RECEIPT_SCHEMA = (
@@ -163,11 +163,10 @@ def validate_stage_progress_receipt(
         label="artifacts",
     )
     round_inputs = receipt.get("round_cumulative_inputs")
-    round_boundary = (
-        stage_name in {"PHASE_B", "PHASE_C"}
-        and accepted_after in set(ADAPTIVE_ROUND_END_COUNTS)
+    materialization_boundary = accepted_after in set(
+        FROZEN_INTERMEDIATE_ACCEPTED_BOUNDARIES
     )
-    if round_boundary:
+    if materialization_boundary:
         _validate_artifacts(
             errors,
             round_inputs,
@@ -176,7 +175,9 @@ def validate_stage_progress_receipt(
             label="round_cumulative_inputs",
         )
     elif round_inputs is not None:
-        errors.append("round_cumulative_inputs is allowed only at an adaptive 5k boundary")
+        errors.append(
+            "round_cumulative_inputs is allowed only at a frozen intermediate accepted boundary"
+        )
     if not isinstance(receipt.get("simulator_action_taken"), bool):
         errors.append("simulator_action_taken must be boolean")
     if receipt.get("stage_pass_receipt_created") is not False:

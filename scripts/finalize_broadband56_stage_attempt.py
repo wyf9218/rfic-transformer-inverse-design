@@ -25,8 +25,8 @@ if __package__ in {None, ""}:
     sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from rfic_transformer_inverse_design.campaigns.broadband56_balanced200k import (  # noqa: E402
-    ADAPTIVE_ROUND_END_COUNTS,
     CAMPAIGN_ID,
+    FROZEN_INTERMEDIATE_ACCEPTED_BOUNDARIES,
     FREQUENCY_GRID_HZ,
 )
 from rfic_transformer_inverse_design.campaigns.broadband56_capacity_policy import (  # noqa: E402
@@ -210,7 +210,7 @@ def finalize_stage_attempt(
         )
         if accepted_after < spec.cumulative_target:
             round_cumulative_outputs = None
-            if accepted_after in set(ADAPTIVE_ROUND_END_COUNTS):
+            if accepted_after in set(FROZEN_INTERMEDIATE_ACCEPTED_BOUNDARIES):
                 round_cumulative_outputs = _write_cumulative_inputs(
                     staging / CUMULATIVE_DIR_NAME,
                     published_out_dir=out_dir / CUMULATIVE_DIR_NAME,

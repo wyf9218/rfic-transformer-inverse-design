@@ -214,12 +214,12 @@ def test_shortfall_writes_valid_nonterminal_progress_receipt(tmp_path: Path, mon
     assert result["cumulative_stage_inputs"] is None
 
 
-def test_exact_adaptive_round_boundary_binds_cumulative_inputs(
+def test_exact_frozen_boundary_binds_cumulative_inputs(
     tmp_path: Path,
     monkeypatch,
 ) -> None:
     monkeypatch.setattr(MODULE, "validate_stage_receipt_chain", lambda *args, **kwargs: [])
-    monkeypatch.setattr(MODULE, "ADAPTIVE_ROUND_END_COUNTS", (21,))
+    monkeypatch.setattr(MODULE, "FROZEN_INTERMEDIATE_ACCEPTED_BOUNDARIES", (21,))
     args = _args(tmp_path, accepted=20, raw=24)
     out_dir = Path(args.out_dir)
 

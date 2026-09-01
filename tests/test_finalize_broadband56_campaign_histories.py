@@ -275,6 +275,53 @@ def _patch_small_contract(module, monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr(module, "_round_expectations", lambda: rounds)
 
 
+def test_campaign_root_discovers_unique_formal_checkpoint_directories(
+    tmp_path: Path,
+) -> None:
+    module = _load_module()
+    campaign = tmp_path / "campaign"
+    expected = (100, 1_000)
+    for index, count in enumerate(expected, start=1):
+        directory = (
+            campaign
+            / "stages"
+            / f"{index:06d}_stage"
+            / "backend"
+            / "roles"
+            / "checkpoint"
+        )
+        directory.mkdir(parents=True)
+        (directory / "CHECKPOINT_STATUS.json").write_text(
+            json.dumps({"accepted_geometries": count, "audit_mode": "checkpoint"}),
+            encoding="utf-8",
+        )
+    discovered = module._discover_audit_dirs(
+        campaign,
+        required_counts=expected,
+    )
+    assert [path.name for path in discovered] == ["checkpoint", "checkpoint"]
+    assert [
+        json.loads((path / "CHECKPOINT_STATUS.json").read_text())["accepted_geometries"]
+        for path in discovered
+    ] == list(expected)
+
+
+def test_campaign_root_discovery_rejects_distinct_duplicate_count(
+    tmp_path: Path,
+) -> None:
+    module = _load_module()
+    campaign = tmp_path / "campaign"
+    for index in (1, 2):
+        directory = campaign / "stages" / f"{index:06d}_stage" / "checkpoint"
+        directory.mkdir(parents=True)
+        (directory / "CHECKPOINT_STATUS.json").write_text(
+            json.dumps({"accepted_geometries": 100, "audit_mode": "checkpoint"}),
+            encoding="utf-8",
+        )
+    with pytest.raises(module.HistoryFinalizationError, match="multiple distinct"):
+        module._discover_audit_dirs(campaign, required_counts=(100,))
+
+
 def test_terminal_audits_write_all_required_history_products(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:

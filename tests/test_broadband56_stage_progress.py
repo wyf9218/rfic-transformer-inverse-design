@@ -210,7 +210,7 @@ def test_progress_receipt_rejects_artifact_escape(tmp_path: Path) -> None:
     assert "artifacts.attempt_ledger.path escapes the progress output root" in errors
 
 
-def test_adaptive_round_boundary_requires_exact_cumulative_inputs(tmp_path: Path) -> None:
+def test_frozen_boundary_requires_exact_cumulative_inputs(tmp_path: Path) -> None:
     path, receipt = _receipt(
         tmp_path / "attempt",
         attempt_index=1,
@@ -249,7 +249,7 @@ def test_adaptive_round_boundary_requires_exact_cumulative_inputs(tmp_path: Path
     ) == []
 
 
-def test_adaptive_mid_round_rejects_cumulative_inputs(tmp_path: Path) -> None:
+def test_mid_shard_rejects_cumulative_inputs(tmp_path: Path) -> None:
     path, receipt = _receipt(
         tmp_path / "attempt",
         attempt_index=1,
@@ -275,6 +275,45 @@ def test_adaptive_mid_round_rejects_cumulative_inputs(tmp_path: Path) -> None:
     )
 
     assert (
-        "round_cumulative_inputs is allowed only at an adaptive 5k boundary"
+        "round_cumulative_inputs is allowed only at a frozen intermediate accepted boundary"
         in errors
     )
+
+
+def test_nonadaptive_100_boundary_requires_cumulative_inputs(tmp_path: Path) -> None:
+    path, receipt = _receipt(
+        tmp_path / "attempt",
+        attempt_index=1,
+        before=32,
+        accepted=68,
+        raw=70,
+        prior_sha=None,
+        stage="PILOT_1000",
+        cumulative_target=1_000,
+    )
+
+    errors = validate_stage_progress_receipt(
+        receipt,
+        stage="PILOT_1000",
+        attempt_index=1,
+        accepted_before=32,
+        prior_progress_receipt_sha256=None,
+        backend_manifest_sha256=BACKEND_SHA,
+        authorization_receipt_sha256=AUTHORIZATION_SHA,
+        verify_artifacts=True,
+        artifact_root=path.parent,
+    )
+    assert "round_cumulative_inputs must be an object" in errors
+
+    receipt["round_cumulative_inputs"] = receipt["artifacts"]
+    assert validate_stage_progress_receipt(
+        receipt,
+        stage="PILOT_1000",
+        attempt_index=1,
+        accepted_before=32,
+        prior_progress_receipt_sha256=None,
+        backend_manifest_sha256=BACKEND_SHA,
+        authorization_receipt_sha256=AUTHORIZATION_SHA,
+        verify_artifacts=True,
+        artifact_root=path.parent,
+    ) == []

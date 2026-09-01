@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-"""Expose one exact real-EMX checkpoint for an adaptive replenishment shard.
+"""Expose one exact real-EMX checkpoint for a frozen accepted-count shard.
 
-At an accepted-count 5k boundary this role builds the cumulative raw products
-and runs the non-simulator checkpoint auditor.  Inside a partially accepted
-round it reuses the exact checkpoint that began that round.  It never launches
-Cadence, Calibre, EMX, or a candidate queue.
+At a required checkpoint or adaptive 5k boundary this role builds the
+cumulative raw products and runs the non-simulator checkpoint auditor.  Inside
+a partially accepted shard it reuses the exact checkpoint that began that
+shard.  It never launches Cadence, Calibre, EMX, or a candidate queue.
 """
 
 from __future__ import annotations
@@ -28,9 +28,12 @@ from rfic_transformer_inverse_design.campaigns.broadband56_balanced200k import (
     FREQUENCY_POINTS,
     REQUIRED_CHECKPOINT_COUNTS,
     adaptive_round_for_current_accepted,
+    frozen_checkpoint_start,
+    next_frozen_accepted_boundary,
 )
 from rfic_transformer_inverse_design.campaigns.broadband56_capacity_policy import (  # noqa: E402
     SCIENTIFIC_CONTRACT_FINGERPRINT,
+    STAGE_BY_NAME,
 )
 from rfic_transformer_inverse_design.campaigns.broadband56_full_campaign_authorization import (  # noqa: E402
     ATTEMPT_REPLENISHMENT_CONTRACT,
@@ -51,7 +54,7 @@ from rfic_transformer_inverse_design.campaigns.broadband56_stage_progress import
 )
 
 
-RECEIPT_SCHEMA = "rfic_transformer.broadband56_v2_adaptive_checkpoint_materializer.v1"
+RECEIPT_SCHEMA = "rfic_transformer.broadband56_v2_adaptive_checkpoint_materializer.v2"
 RECEIPT_NAME = "ADAPTIVE_CHECKPOINT_MATERIALIZER_RECEIPT.json"
 ROLE_RECEIPT_NAME = "ROLE_RECEIPT.json"
 
@@ -102,16 +105,12 @@ def materialize_checkpoint(
         raise AdaptiveCheckpointError("no-clobber adaptive checkpoint output already exists")
 
     stage = str(args.stage).upper()
-    if stage not in {"PHASE_B", "PHASE_C"}:
-        raise AdaptiveCheckpointError(f"adaptive checkpoint role cannot run for {stage}")
-    current_accepted = int(args.current_accepted)
-    round_spec, raw_selection_count = adaptive_round_for_current_accepted(
-        current_accepted
-    )
-    if round_spec.phase != stage:
+    if stage not in {"PILOT_1000", "PHASE_A", "PHASE_B", "PHASE_C"}:
         raise AdaptiveCheckpointError(
-            f"adaptive round phase {round_spec.phase} differs from stage {stage}"
+            f"frozen checkpoint role cannot run for {stage}"
         )
+    current_accepted = int(args.current_accepted)
+    stage_spec = STAGE_BY_NAME[stage]
 
     campaign_root = Path(args.campaign_root).expanduser().resolve()
     contract_path = Path(args.contract).expanduser().resolve()
@@ -183,7 +182,33 @@ def materialize_checkpoint(
             f"controller current accepted {current_accepted} differs from receipt chain {observed_current}"
         )
 
-    checkpoint_count = round_spec.accepted_start
+    try:
+        checkpoint_count = frozen_checkpoint_start(
+            current_accepted,
+            stage_base_accepted=base_accepted,
+            cumulative_target=stage_spec.cumulative_target,
+        )
+        accepted_target = next_frozen_accepted_boundary(
+            current_accepted,
+            cumulative_target=stage_spec.cumulative_target,
+        )
+    except ValueError as exc:
+        raise AdaptiveCheckpointError(str(exc)) from exc
+    raw_selection_count = accepted_target - current_accepted
+    if stage in {"PHASE_B", "PHASE_C"}:
+        round_spec, adaptive_remaining = adaptive_round_for_current_accepted(
+            current_accepted
+        )
+        if (
+            round_spec.phase != stage
+            or round_spec.accepted_start != checkpoint_count
+            or round_spec.accepted_target != accepted_target
+            or adaptive_remaining != raw_selection_count
+        ):
+            raise AdaptiveCheckpointError(
+                "adaptive round contract differs from frozen shard boundary"
+            )
+
     subprocesses: list[dict[str, Any]] = []
     if current_accepted == checkpoint_count and current_accepted > base_accepted:
         checkpoint_dir, raw_receipt, subprocesses = _build_boundary_checkpoint(
@@ -196,20 +221,27 @@ def materialize_checkpoint(
             geometry_bounds_path=geometry_bounds_path,
             backend=backend,
         )
-        decision = "MATERIALIZE_EXACT_REAL_EMX_ROUND_CHECKPOINT"
+        decision = "MATERIALIZE_EXACT_REAL_EMX_FROZEN_CHECKPOINT"
         source = {
             "kind": "CURRENT_STAGE_PROGRESS_BOUNDARY",
             "progress_receipt": _file_record(progress_records[-1][0]),
             "raw_products_receipt": _file_record(raw_receipt),
         }
     elif current_accepted == checkpoint_count:
-        checkpoint_dir, source = _checkpoint_from_terminal_stage(
+        checkpoint_dir, source, subprocesses = _checkpoint_from_stage_boundary(
+            out_dir=out_dir,
             campaign_root=campaign_root,
             stage_records=stage_records,
             checkpoint_count=checkpoint_count,
+            contract_path=contract_path,
+            geometry_bounds_path=geometry_bounds_path,
+            backend=backend,
         )
-        _link_checkpoint(out_dir / "checkpoint", checkpoint_dir)
-        decision = "REUSE_EXACT_TERMINAL_STAGE_CHECKPOINT"
+        if checkpoint_dir.resolve() != (out_dir / "checkpoint").resolve():
+            _link_checkpoint(out_dir / "checkpoint", checkpoint_dir)
+            decision = "REUSE_EXACT_TERMINAL_STAGE_CHECKPOINT"
+        else:
+            decision = "MATERIALIZE_FORMAL_CHECKPOINT_FROM_TERMINAL_RAW_PRODUCTS"
     else:
         checkpoint_dir, source = _checkpoint_from_prior_materializer(
             campaign_root=campaign_root,
@@ -219,7 +251,7 @@ def materialize_checkpoint(
             authorization_sha=authorization_sha,
         )
         _link_checkpoint(out_dir / "checkpoint", checkpoint_dir)
-        decision = "REUSE_EXACT_ROUND_START_CHECKPOINT"
+        decision = "REUSE_EXACT_FROZEN_SHARD_START_CHECKPOINT"
 
     published_checkpoint = (out_dir / "checkpoint").resolve()
     checkpoint_receipt = published_checkpoint / "CHECKPOINT_RECEIPT.json"
@@ -239,7 +271,7 @@ def materialize_checkpoint(
         "stage": stage,
         "current_accepted": current_accepted,
         "checkpoint_accepted": checkpoint_count,
-        "round_accepted_target": round_spec.accepted_target,
+        "round_accepted_target": accepted_target,
         "raw_selection_count": raw_selection_count,
         "backend_identity_manifest": _file_record(backend_path),
         "full_campaign_authorization_receipt": _file_record(authorization_path),
@@ -252,8 +284,8 @@ def materialize_checkpoint(
             "full_campaign_authorization_exact": True,
             "backend_manifest_exact": True,
             "stage_and_progress_chains_valid": True,
-            "checkpoint_accepted_equals_frozen_round_start": True,
-            "raw_selection_count_closes_to_frozen_round_target": True,
+            "checkpoint_accepted_equals_frozen_shard_start": True,
+            "raw_selection_count_closes_to_frozen_boundary": True,
             "fresh_real_emx_checkpoint_pass": True,
             "simulator_action_taken": False,
         },
@@ -367,35 +399,157 @@ def _build_boundary_checkpoint(
     return checkpoint_out, raw_receipt, subprocesses
 
 
-def _checkpoint_from_terminal_stage(
+def _checkpoint_from_stage_boundary(
     *,
+    out_dir: Path,
     campaign_root: Path,
     stage_records: Sequence[tuple[Path, Mapping[str, Any]]],
     checkpoint_count: int,
-) -> tuple[Path, dict[str, Any]]:
+    contract_path: Path,
+    geometry_bounds_path: Path,
+    backend: Mapping[str, Any],
+) -> tuple[Path, dict[str, Any], list[dict[str, Any]]]:
     for receipt_path, receipt in reversed(stage_records):
         if int(receipt.get("accepted_unique_geometries") or -1) != checkpoint_count:
             continue
         artifacts = receipt.get("artifacts")
         if not isinstance(artifacts, Mapping):
-            break
+            raise AdaptiveCheckpointError(
+                "terminal stage receipt lacks artifact identities"
+            )
         checkpoint_receipt = _verified_file_record(
             artifacts.get("checkpoint_receipt"),
             label="terminal_stage.checkpoint_receipt",
         )
         checkpoint_dir = checkpoint_receipt.parent
         _require_under(checkpoint_dir, campaign_root, "terminal checkpoint")
-        _validate_checkpoint(
-            checkpoint_dir=checkpoint_dir,
-            expected_accepted=checkpoint_count,
+        checkpoint = _read_json(checkpoint_receipt, "terminal checkpoint receipt")
+        expected_mode = _expected_checkpoint_mode(checkpoint_count)
+        actual_mode = str(checkpoint.get("audit_mode") or "")
+        if actual_mode == expected_mode:
+            _validate_checkpoint(
+                checkpoint_dir=checkpoint_dir,
+                expected_accepted=checkpoint_count,
+            )
+            return checkpoint_dir, {
+                "kind": "TERMINAL_STAGE_RECEIPT",
+                "stage_receipt": _file_record(receipt_path),
+            }, []
+        if not (
+            checkpoint_count == 1_000
+            and actual_mode == "pilot"
+            and expected_mode == "checkpoint"
+        ):
+            raise AdaptiveCheckpointError(
+                "terminal checkpoint mode cannot satisfy frozen boundary: "
+                f"accepted={checkpoint_count}, actual={actual_mode}, "
+                f"expected={expected_mode}"
+            )
+        raw_receipt = _verified_file_record(
+            artifacts.get("raw_products_receipt"),
+            label="terminal_stage.raw_products_receipt",
+        )
+        checkpoint_dir, subprocesses = _build_checkpoint_from_raw_products(
+            out_dir=out_dir,
+            checkpoint_count=checkpoint_count,
+            raw_receipt=raw_receipt,
+            contract_path=contract_path,
+            geometry_bounds_path=geometry_bounds_path,
+            backend=backend,
         )
         return checkpoint_dir, {
-            "kind": "TERMINAL_STAGE_RECEIPT",
+            "kind": "TERMINAL_STAGE_RAW_PRODUCTS_REAUDIT",
             "stage_receipt": _file_record(receipt_path),
-        }
+            "raw_products_receipt": _file_record(raw_receipt),
+            "superseded_pilot_checkpoint_receipt": _file_record(
+                checkpoint_receipt
+            ),
+        }, subprocesses
     raise AdaptiveCheckpointError(
         f"no terminal stage checkpoint found at {checkpoint_count} accepted"
     )
+
+
+def _build_checkpoint_from_raw_products(
+    *,
+    out_dir: Path,
+    checkpoint_count: int,
+    raw_receipt: Path,
+    contract_path: Path,
+    geometry_bounds_path: Path,
+    backend: Mapping[str, Any],
+) -> tuple[Path, list[dict[str, Any]]]:
+    raw = _read_json(raw_receipt, "raw products receipt")
+    counts = raw.get("counts")
+    checks = raw.get("checks")
+    if not (
+        raw.get("schema") == "broadband56_raw_products_receipt_v1"
+        and raw.get("overall_status") == "PASS"
+        and raw.get("decision") == "USE_AS_FRESH_REAL_EMX_RAW_PRODUCTS"
+        and raw.get("campaign_id") == CAMPAIGN_ID
+        and raw.get("contract_fingerprint_sha256")
+        == SCIENTIFIC_CONTRACT_FINGERPRINT
+        and isinstance(counts, Mapping)
+        and int(counts.get("accepted_geometries") or -1) == checkpoint_count
+        and int(counts.get("s4p_artifacts") or -1) == checkpoint_count
+        and int(counts.get("geometry_frequency_rows") or -1)
+        == checkpoint_count * FREQUENCY_POINTS
+        and isinstance(checks, Mapping)
+        and checks.get("all_accepted_s4p_are_fresh_exact_56_point_four_port")
+        is True
+        and checks.get("long_features_bound_to_exact_s4p_s_and_z") is True
+        and checks.get("long_physical_features_recomputed_from_exact_s4p")
+        is True
+        and checks.get("proxy_values_excluded_from_labels") is True
+    ):
+        raise AdaptiveCheckpointError(
+            "terminal raw products are not exact fresh-real-EMX PASS evidence"
+        )
+    outputs = raw.get("outputs")
+    if not isinstance(outputs, Mapping):
+        raise AdaptiveCheckpointError("raw products receipt lacks outputs")
+    raw_paths = {
+        name: _verified_file_record(outputs.get(name), label=f"raw_outputs.{name}")
+        for name in (
+            "accepted_geometries",
+            "long_features",
+            "artifact_index",
+            "failure_funnel",
+        )
+    }
+    scripts = backend.get("script_identities")
+    if not isinstance(scripts, Mapping):
+        raise AdaptiveCheckpointError("backend manifest lacks script identities")
+    checkpoint_script = _verified_script(scripts, "checkpoint_auditor")
+    checkpoint_out = out_dir / "checkpoint"
+    command = [
+        sys.executable,
+        str(checkpoint_script),
+        "--contract",
+        str(contract_path),
+        "--accepted-geometries",
+        str(raw_paths["accepted_geometries"]),
+        "--geometry-bounds",
+        str(geometry_bounds_path),
+        "--long-features",
+        str(raw_paths["long_features"]),
+        "--artifact-index",
+        str(raw_paths["artifact_index"]),
+        "--failure-funnel",
+        str(raw_paths["failure_funnel"]),
+        "--audit-mode",
+        _expected_checkpoint_mode(checkpoint_count),
+        "--expected-accepted",
+        str(checkpoint_count),
+        "--out-dir",
+        str(checkpoint_out),
+    ]
+    subprocesses = [_run_bound_command(command, out_dir, "checkpoint_reaudit")]
+    _validate_checkpoint(
+        checkpoint_dir=checkpoint_out,
+        expected_accepted=checkpoint_count,
+    )
+    return checkpoint_out, subprocesses
 
 
 def _checkpoint_from_prior_materializer(
@@ -440,7 +594,7 @@ def _checkpoint_from_prior_materializer(
         expected_accepted=checkpoint_count,
     )
     return checkpoint_dir, {
-        "kind": "PRIOR_ADAPTIVE_CHECKPOINT_MATERIALIZER",
+        "kind": "PRIOR_FROZEN_CHECKPOINT_MATERIALIZER",
         "materializer_receipt": _file_record(path),
     }
 
@@ -451,14 +605,17 @@ def _validate_checkpoint(*, checkpoint_dir: Path, expected_accepted: int) -> Non
     receipt = _read_json(receipt_path, "checkpoint receipt")
     status = _read_json(status_path, "checkpoint status")
     receipt_checks = receipt.get("checks")
-    expected_mode = (
-        "checkpoint" if expected_accepted in REQUIRED_CHECKPOINT_COUNTS else "round"
-    )
-    expected_state = (
-        "CHECKPOINT_COMPLETE"
-        if expected_mode == "checkpoint"
-        else f"ROUND_{expected_accepted}_COMPLETE"
-    )
+    expected_mode = _expected_checkpoint_mode(expected_accepted)
+    if expected_accepted == TARGET_ACCEPTED_GEOMETRIES:
+        expected_state = "COMPLETE_200K"
+    elif expected_mode == "golden":
+        expected_state = "GOLDEN_COMPLETE"
+    elif expected_mode == "pilot":
+        expected_state = f"PILOT_{expected_accepted}_COMPLETE"
+    elif expected_mode == "checkpoint":
+        expected_state = "CHECKPOINT_COMPLETE"
+    else:
+        expected_state = f"ROUND_{expected_accepted}_COMPLETE"
     inputs = receipt.get("inputs")
     outputs = receipt.get("outputs")
     input_fields = {
@@ -524,6 +681,17 @@ def _validate_checkpoint(*, checkpoint_dir: Path, expected_accepted: int) -> Non
         raise AdaptiveCheckpointError(
             f"checkpoint at {checkpoint_dir} is not exact PASS evidence"
         )
+
+
+def _expected_checkpoint_mode(expected_accepted: int) -> str:
+    accepted = int(expected_accepted)
+    if accepted == 1:
+        return "golden"
+    if accepted == 32:
+        return "pilot"
+    if accepted in REQUIRED_CHECKPOINT_COUNTS:
+        return "checkpoint"
+    return "round"
 
 
 def _identity_record_matches_file(

@@ -99,10 +99,18 @@ def main(argv: list[str] | None = None) -> int:
     if out_dir.exists():
         raise SystemExit(f"output path already exists (no-clobber): {out_dir}")
     try:
+        audit_dirs = (
+            _discover_audit_dirs(
+                Path(args.campaign_root).expanduser().resolve(),
+                required_counts=REQUIRED_HISTORY_AUDIT_COUNTS,
+            )
+            if args.campaign_root
+            else [Path(value).expanduser().resolve() for value in args.audit_dir]
+        )
         result = finalize_campaign_histories(
             contract_path=Path(args.contract).expanduser().resolve(),
             accepted_path=Path(args.accepted_geometries).expanduser().resolve(),
-            audit_dirs=[Path(value).expanduser().resolve() for value in args.audit_dir],
+            audit_dirs=audit_dirs,
             out_dir=out_dir,
         )
     except HistoryFinalizationError as exc:
@@ -120,11 +128,15 @@ def _parse_args(argv: list[str] | None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--contract", required=True)
     parser.add_argument("--accepted-geometries", required=True)
-    parser.add_argument(
+    sources = parser.add_mutually_exclusive_group(required=True)
+    sources.add_argument(
         "--audit-dir",
         action="append",
-        required=True,
         help="Repeat once for every frozen Phase-A checkpoint and adaptive 5k endpoint.",
+    )
+    sources.add_argument(
+        "--campaign-root",
+        help="Discover exact hash-closed checkpoint audits below this campaign root.",
     )
     parser.add_argument("--out-dir", required=True)
     return parser.parse_args(argv)
@@ -355,6 +367,49 @@ def _load_all_audits(
             )
         by_count[evidence.accepted_count] = evidence
     return by_count
+
+
+def _discover_audit_dirs(
+    campaign_root: Path,
+    *,
+    required_counts: Sequence[int],
+) -> list[Path]:
+    root = Path(campaign_root).expanduser().resolve()
+    stages_root = root / "stages"
+    if not stages_root.is_dir():
+        raise HistoryFinalizationError(
+            f"campaign stages directory does not exist: {stages_root}"
+        )
+    expected = set(int(value) for value in required_counts)
+    by_count: dict[int, Path] = {}
+    for status_path in sorted(stages_root.glob("**/CHECKPOINT_STATUS.json")):
+        directory = status_path.parent.resolve()
+        try:
+            directory.relative_to(stages_root)
+        except ValueError as exc:
+            raise HistoryFinalizationError(
+                f"discovered checkpoint escapes campaign root: {directory}"
+            ) from exc
+        status = _read_json(status_path)
+        count = _as_int(status.get("accepted_geometries"))
+        if count not in expected:
+            continue
+        expected_mode = "checkpoint" if count in REQUIRED_CHECKPOINT_COUNTS else "round"
+        if status.get("audit_mode") != expected_mode:
+            continue
+        prior = by_count.get(count)
+        if prior is not None and prior != directory:
+            raise HistoryFinalizationError(
+                f"multiple distinct checkpoint audits discovered at {count}: "
+                f"{prior}, {directory}"
+            )
+        by_count[count] = directory
+    missing = expected - set(by_count)
+    if missing:
+        raise HistoryFinalizationError(
+            f"campaign-root audit discovery is incomplete: missing={sorted(missing)}"
+        )
+    return [by_count[count] for count in sorted(expected)]
 
 
 def _load_audit(directory: Path, *, fingerprint: str) -> AuditEvidence:

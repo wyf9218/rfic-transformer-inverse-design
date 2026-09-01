@@ -175,10 +175,18 @@ def main(argv: list[str] | None = None) -> int:
         print(f"overall_status=FAIL\nerror=output path already exists: {out_dir}", file=sys.stderr)
         return 2
     try:
+        audit_dirs = (
+            _discover_audit_dirs(
+                Path(args.campaign_root).expanduser().resolve(),
+                required_counts=FIGURE_CHECKPOINT_COUNTS,
+            )
+            if args.campaign_root
+            else [Path(value).expanduser().resolve() for value in args.audit_dir]
+        )
         result = render_checkpoint_figures(
             contract_path=Path(args.contract).expanduser().resolve(),
             history_dir=Path(args.history_dir).expanduser().resolve(),
-            audit_dirs=[Path(value).expanduser().resolve() for value in args.audit_dir],
+            audit_dirs=audit_dirs,
             out_dir=out_dir,
         )
     except FigureBuildError as exc:
@@ -196,11 +204,15 @@ def _parse_args(argv: list[str] | None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--contract", required=True)
     parser.add_argument("--history-dir", required=True)
-    parser.add_argument(
+    sources = parser.add_mutually_exclusive_group(required=True)
+    sources.add_argument(
         "--audit-dir",
         action="append",
-        required=True,
         help="Repeat for the exact 50k, 100k, 150k, and 200k PASS checkpoint audits.",
+    )
+    sources.add_argument(
+        "--campaign-root",
+        help="Discover exact hash-closed checkpoint audits below this campaign root.",
     )
     parser.add_argument("--out-dir", required=True)
     return parser.parse_args(argv)
@@ -354,6 +366,49 @@ def _load_audits(
             raise FigureBuildError(f"duplicate checkpoint audit: {bundle.accepted_count}")
         by_count[bundle.accepted_count] = bundle
     return by_count
+
+
+def _discover_audit_dirs(
+    campaign_root: Path,
+    *,
+    required_counts: Sequence[int],
+) -> list[Path]:
+    root = Path(campaign_root).expanduser().resolve()
+    stages_root = root / "stages"
+    if not stages_root.is_dir():
+        raise FigureBuildError(
+            f"campaign stages directory does not exist: {stages_root}"
+        )
+    expected = set(int(value) for value in required_counts)
+    by_count: dict[int, Path] = {}
+    for status_path in sorted(stages_root.glob("**/CHECKPOINT_STATUS.json")):
+        directory = status_path.parent.resolve()
+        try:
+            directory.relative_to(stages_root)
+        except ValueError as exc:
+            raise FigureBuildError(
+                f"discovered checkpoint escapes campaign root: {directory}"
+            ) from exc
+        status = _read_json(status_path)
+        try:
+            count = _as_int(status.get("accepted_geometries"), "accepted_geometries")
+        except FigureBuildError:
+            continue
+        if count not in expected or status.get("audit_mode") != "checkpoint":
+            continue
+        prior = by_count.get(count)
+        if prior is not None and prior != directory:
+            raise FigureBuildError(
+                f"multiple distinct checkpoint audits discovered at {count}: "
+                f"{prior}, {directory}"
+            )
+        by_count[count] = directory
+    missing = expected - set(by_count)
+    if missing:
+        raise FigureBuildError(
+            f"campaign-root checkpoint discovery is incomplete: missing={sorted(missing)}"
+        )
+    return [by_count[count] for count in sorted(expected)]
 
 
 def _load_audit(directory: Path, *, contract_path: Path, fingerprint: str) -> AuditBundle:

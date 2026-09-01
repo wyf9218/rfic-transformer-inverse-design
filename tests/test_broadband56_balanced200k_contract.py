@@ -28,7 +28,9 @@ from rfic_transformer_inverse_design.campaigns.broadband56_balanced200k import (
     build_phase_plan,
     canonical_geometry_sha256,
     contract_fingerprint,
+    frozen_checkpoint_start,
     matrix_columns,
+    next_frozen_accepted_boundary,
     occupancy_metrics,
     primary_bin_edges,
     primary_cell_for_values,
@@ -508,6 +510,38 @@ def test_adaptive_replenishment_uses_deterministic_largest_remainders() -> None:
 
     with np.testing.assert_raises(ValueError):
         adaptive_round_for_current_accepted(200_000)
+
+
+def test_frozen_boundaries_prevent_nonadaptive_checkpoint_skips() -> None:
+    assert next_frozen_accepted_boundary(32, cumulative_target=1_000) == 100
+    assert next_frozen_accepted_boundary(99, cumulative_target=1_000) == 100
+    assert next_frozen_accepted_boundary(100, cumulative_target=1_000) == 1_000
+    assert next_frozen_accepted_boundary(1_000, cumulative_target=50_000) == 5_000
+    assert next_frozen_accepted_boundary(4_999, cumulative_target=50_000) == 5_000
+    assert next_frozen_accepted_boundary(5_000, cumulative_target=50_000) == 20_000
+    assert next_frozen_accepted_boundary(50_000, cumulative_target=150_000) == 55_000
+    assert next_frozen_accepted_boundary(54_900, cumulative_target=150_000) == 55_000
+
+    assert frozen_checkpoint_start(
+        32,
+        stage_base_accepted=32,
+        cumulative_target=1_000,
+    ) == 32
+    assert frozen_checkpoint_start(
+        99,
+        stage_base_accepted=32,
+        cumulative_target=1_000,
+    ) == 32
+    assert frozen_checkpoint_start(
+        100,
+        stage_base_accepted=32,
+        cumulative_target=1_000,
+    ) == 100
+    assert frozen_checkpoint_start(
+        19_999,
+        stage_base_accepted=1_000,
+        cumulative_target=50_000,
+    ) == 5_000
 
 
 def test_geometry_identity_is_ordered_quantized_and_primary_bins_include_upper_edges() -> None:

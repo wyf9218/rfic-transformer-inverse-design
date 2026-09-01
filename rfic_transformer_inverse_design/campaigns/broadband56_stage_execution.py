@@ -25,8 +25,8 @@ from .broadband56_full_campaign_authorization import PRODUCTION_BACKEND_ID
 
 
 PROFILE_KEY = "broadband56_stage_execution_profile"
-PROFILE_SCHEMA = "rfic_transformer.broadband56_v2_stage_execution_profile.v4"
-COMMAND_PLAN_SCHEMA = "rfic_transformer.broadband56_v2_stage_execution_command_plan.v4"
+PROFILE_SCHEMA = "rfic_transformer.broadband56_v2_stage_execution_profile.v5"
+COMMAND_PLAN_SCHEMA = "rfic_transformer.broadband56_v2_stage_execution_command_plan.v5"
 PROFILE_EXECUTION_MODE = "HASH_BOUND_PYTHON_ROLE_COMMANDS"
 ROLE_RECEIPT_REQUIRED_STATUS = "PASS"
 
@@ -60,6 +60,10 @@ TERMINAL_RESULT_PATH_FIELDS = (
 )
 
 SPACE_FILLING_ACQUISITION_ROLES = ("phase_a_queue_builder",)
+CHECKPOINTED_SPACE_FILLING_ACQUISITION_ROLES = (
+    "adaptive_checkpoint_materializer",
+    "phase_a_queue_builder",
+)
 ADAPTIVE_ACQUISITION_ROLES = (
     "adaptive_checkpoint_materializer",
     "acquisition_ensemble_trainer",
@@ -102,11 +106,12 @@ def expected_stage_role_order(stage: str) -> tuple[str, ...]:
     stage_names = {item.name for item in STAGES}
     if stage_name not in stage_names:
         raise StageExecutionProfileError(f"unknown stage: {stage_name}")
-    acquisition = (
-        ADAPTIVE_ACQUISITION_ROLES
-        if stage_name in {"PHASE_B", "PHASE_C"}
-        else SPACE_FILLING_ACQUISITION_ROLES
-    )
+    if stage_name in {"PHASE_B", "PHASE_C"}:
+        acquisition = ADAPTIVE_ACQUISITION_ROLES
+    elif stage_name in {"GOLDEN", "PILOT_32"}:
+        acquisition = SPACE_FILLING_ACQUISITION_ROLES
+    else:
+        acquisition = CHECKPOINTED_SPACE_FILLING_ACQUISITION_ROLES
     terminal = TERMINAL_DELIVERY_ROLES if stage_name == "PHASE_C" else ()
     return (*acquisition, *PHYSICAL_PIPELINE_ROLES, *terminal)
 

@@ -60,12 +60,17 @@ def _write_checkpoint(root: Path, *, accepted: int) -> Path:
         path = root / f"output_{field}.txt"
         path.write_text(f"{field}\n", encoding="utf-8")
         outputs[field] = _identity(path)
-    audit_mode = "checkpoint" if accepted in MODULE.REQUIRED_CHECKPOINT_COUNTS else "round"
-    checkpoint_state = (
-        "CHECKPOINT_COMPLETE"
-        if audit_mode == "checkpoint"
-        else f"ROUND_{accepted}_COMPLETE"
-    )
+    audit_mode = MODULE._expected_checkpoint_mode(accepted)
+    if accepted == MODULE.TARGET_ACCEPTED_GEOMETRIES:
+        checkpoint_state = "COMPLETE_200K"
+    elif audit_mode == "golden":
+        checkpoint_state = "GOLDEN_COMPLETE"
+    elif audit_mode == "pilot":
+        checkpoint_state = f"PILOT_{accepted}_COMPLETE"
+    elif audit_mode == "checkpoint":
+        checkpoint_state = "CHECKPOINT_COMPLETE"
+    else:
+        checkpoint_state = f"ROUND_{accepted}_COMPLETE"
     receipt = {
         "overall_status": "PASS",
         "decision": "USE_CHECKPOINT",
@@ -168,7 +173,7 @@ def test_prior_materializer_reuses_only_exact_hash_bound_checkpoint(
     )
 
     assert resolved == checkpoint.resolve()
-    assert source["kind"] == "PRIOR_ADAPTIVE_CHECKPOINT_MATERIALIZER"
+    assert source["kind"] == "PRIOR_FROZEN_CHECKPOINT_MATERIALIZER"
     assert source["materializer_receipt"]["sha256"] == _sha(receipt_path)
 
 
@@ -205,6 +210,26 @@ def test_prior_materializer_rejects_changed_checkpoint_bytes(tmp_path: Path) -> 
         assert "identity mismatch" in str(exc)
     else:
         raise AssertionError("changed checkpoint receipt must fail closed")
+
+
+def test_checkpoint_modes_distinguish_golden_pilot_and_formal_counts(
+    tmp_path: Path,
+) -> None:
+    assert MODULE._expected_checkpoint_mode(1) == "golden"
+    assert MODULE._expected_checkpoint_mode(32) == "pilot"
+    assert MODULE._expected_checkpoint_mode(100) == "checkpoint"
+    assert MODULE._expected_checkpoint_mode(1_000) == "checkpoint"
+    assert MODULE._expected_checkpoint_mode(55_000) == "round"
+
+    for accepted in (1, 32, 100, 1_000, 55_000):
+        checkpoint = _write_checkpoint(
+            tmp_path / f"checkpoint_{accepted}",
+            accepted=accepted,
+        )
+        MODULE._validate_checkpoint(
+            checkpoint_dir=checkpoint,
+            expected_accepted=accepted,
+        )
 
 
 def test_main_refuses_nonempty_role_output_before_any_work(tmp_path: Path) -> None:
