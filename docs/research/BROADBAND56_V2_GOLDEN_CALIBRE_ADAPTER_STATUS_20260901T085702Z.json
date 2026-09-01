@@ -1,0 +1,86 @@
+{
+  "schema": "rfic_transformer.broadband56_v2_public_safe_runtime_fix_status.v2",
+  "generated_utc": "2026-09-01T08:57:02+00:00",
+  "overall_status": "FULL_CAMPAIGN_REAUTHORIZATION_REQUIRED",
+  "campaign_id": "broadband56_real_emx_balanced200k_tsmc65_v2",
+  "contract_fingerprint_sha256": "f86a00efbf7756b7421b863bbb16c340db6b423640f63a3257d46c1af49eb55e",
+  "nn_training_authorized": false,
+  "failed_golden_attempt": {
+    "previous_authorization_candidate_sha256": "d7ea9d3e4a97b0e87676e6165021fe52a4d8fa67221ad3ca118471fcbe1fba65",
+    "previous_full_campaign_approval_receipt_sha256": "ccb905159b697a316a2627a5f6bca2325d34cfd078d716c66e241bdafc783a01",
+    "cadence_gds_generated": true,
+    "candidate_bound_gds_count": 1,
+    "calibre_batch_wrapper_invoked": true,
+    "raw_foundry_drc_result_count": 0,
+    "drc_verdict": "NOT_AVAILABLE",
+    "emx_executed": false,
+    "s4p_count": 0,
+    "accepted_count": 0,
+    "failure_stage": "CALIBRE_GEOMETRY_AUDIT_COMPATIBILITY_PREFLIGHT",
+    "failure_reason": "The pinned historical Calibre delegate required an eleven-check historical geometry-audit schema that is not the frozen Broadband56 ten-dimensional physical contract, so it exited before producing any raw foundry DRC result.",
+    "failure_is_a_foundry_drc_violation": false,
+    "failure_evidence_preserved": true,
+    "failed_stage_reused": false
+  },
+  "runtime_fix": {
+    "code_commit": "69398a974e19e887d2d8a638a57d1fe35e950644",
+    "calibre_runner_sha256": "ba34a66281a0a1a2548305d4b6805ffee602ca370d2e96f2112edd5617f6c258",
+    "test_sha256": "215f6cc05a66c5f1dc4509fe1d2f7962d34c66fddb2716655b4cf3454bf44616",
+    "fix_scope": "Build a no-clobber compatibility audit from the immutable candidate-bound geometry audit, GDS physical-identity audit, evaluation geometry metrics, and process identity; invoke the unchanged pinned foundry Calibre delegate with the five checks that exist in the frozen Broadband56 contract.",
+    "effective_required_geometry_checks": [
+      "geometry_range_pass",
+      "topology_pass",
+      "line_width_sync_pass",
+      "angle_45_135_pass",
+      "ground_clearance_pass"
+    ],
+    "teacher_only_foundry_slotting_prechecks_applied": false,
+    "source_geometry_audits_mutated": false,
+    "gds_bytes_changed": false,
+    "physical_contract_changed": false,
+    "focused_regression": "6 passed",
+    "local_unique_broadband56_tests": "293 passed",
+    "mars_python312_unique_broadband56_tests": "293 passed in 118.99s",
+    "python_compile": "PASS",
+    "git_diff_check": "PASS",
+    "real_failed_golden_evidence_adapter_probe": {
+      "overall_status": "PASS",
+      "checks_passed": 5,
+      "checks_total": 5,
+      "foundry_drc_executed": false,
+      "fresh_real_emx_executed": false
+    },
+    "backend_identity_manifest_sha256": "8cf4657cd0525660893f69f9e2932b81fc9e6426fe883df8b743b13be237e87b",
+    "backend_identity_verification_receipt_sha256": "9b277e792039d4ce18e7e10f04bceca0890596a9ef5dae45b565867deb68cf81",
+    "backend_identity_verification": "PASS",
+    "simulator_action_taken_during_fix_and_verification": false
+  },
+  "new_full_campaign_candidate": {
+    "path": "docs/research/BROADBAND56_V2_FULL_CAMPAIGN_AUTHORIZATION_CANDIDATE_CALIBRE_ADAPTER_20260901T085456Z/BROADBAND56_V2_FULL_CAMPAIGN_AUTHORIZATION_CANDIDATE_20260901T085526Z.json",
+    "sha256": "af6cefbf52914affcd68f4b7b351eaaaf7980e5fec89de376ec3080c7adaf9c8",
+    "authorization_scope": "FULL_CAMPAIGN",
+    "approval_status": "PENDING_EXPLICIT_PROJECT_OWNER_SHA256_APPROVAL",
+    "automatic_campaign_execution_authorized": false,
+    "execution_effect": "NONE_REQUEST_ONLY",
+    "unchanged_contract_comparison": "PASS",
+    "differences_from_previous_candidate": [
+      "generated_utc",
+      "backend_identity_manifest_sha256",
+      "backend_identity_verification_receipt_sha256",
+      "calibre_runner_sha256"
+    ]
+  },
+  "current_progress": {
+    "stage": "GOLDEN",
+    "current_accepted": 0,
+    "target_accepted": 200000,
+    "s4p_artifacts": 0,
+    "emx_success": 0,
+    "feature_rows": 0,
+    "expected_feature_rows": 11200000,
+    "frequency_points": 56,
+    "authoritative_controller_alive": false
+  },
+  "next_action": "Record exact-SHA FULL_CAMPAIGN approval for the new candidate, then create a new no-clobber successor campaign root and run a fresh resource and license gate before GOLDEN.",
+  "branch": "codex/broadband56-balanced200k-v2"
+}
