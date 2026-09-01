@@ -333,7 +333,8 @@ def run_stage_backend(
         start=1,
     ):
         role_out_dir = out_dir / "roles" / f"{index:02d}_{role}"
-        role_out_dir.mkdir(parents=True, mode=0o700)
+        role_log_dir = out_dir / "role_logs" / f"{index:02d}_{role}"
+        role_log_dir.mkdir(parents=True, mode=0o700)
         substitutions = {
             "{stage}": stage,
             "{cumulative_target}": str(spec.cumulative_target),
@@ -363,8 +364,8 @@ def run_stage_backend(
         ).hexdigest()
         role_started = _utc_now()
         role_start = time.monotonic()
-        with (role_out_dir / "stdout.log").open("w", encoding="utf-8") as stdout, (
-            role_out_dir / "stderr.log"
+        with (role_log_dir / "stdout.log").open("w", encoding="utf-8") as stdout, (
+            role_log_dir / "stderr.log"
         ).open("w", encoding="utf-8") as stderr:
             result = subprocess.run(
                 command,
@@ -395,8 +396,8 @@ def run_stage_backend(
             "command_argv_sha256": command_digest,
             "shell_used": False,
             "return_code": int(result.returncode),
-            "stdout": _file_record(role_out_dir / "stdout.log"),
-            "stderr": _file_record(role_out_dir / "stderr.log"),
+            "stdout": _file_record(role_log_dir / "stdout.log"),
+            "stderr": _file_record(role_log_dir / "stderr.log"),
         }
         completed_roles.append(role_record)
         if result.returncode != 0:

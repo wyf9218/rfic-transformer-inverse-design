@@ -96,6 +96,9 @@ parser.add_argument("--role-out-dir", required=True)
 args = parser.parse_args()
 backend = Path(args.backend_out_dir)
 role_out = Path(args.role_out_dir)
+if role_out.exists():
+    raise SystemExit("role output directory must not exist before role execution")
+role_out.mkdir(parents=True)
 results = backend / "results"
 results.mkdir(parents=True, exist_ok=True)
 rows = args.cumulative_target * 56
@@ -550,6 +553,10 @@ def test_executes_exact_hash_bound_golden_role_chain(tmp_path: Path) -> None:
     assert receipt["accepted_unique_geometries"] == 1
     assert trace["role_order"] == list(expected_stage_role_order("GOLDEN"))
     assert all(item["shell_used"] is False for item in trace["roles"])
+    assert len(list((out / "role_logs").glob("*/stdout.log"))) == len(
+        expected_stage_role_order("GOLDEN")
+    )
+    assert not list((out / "roles").glob("*/stdout.log"))
 
 
 def test_failed_role_preserves_fail_receipt_and_no_stage_pass(
