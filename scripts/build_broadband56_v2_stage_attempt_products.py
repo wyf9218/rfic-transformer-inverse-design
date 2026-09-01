@@ -629,14 +629,32 @@ def _candidate_map(rows: Sequence[Mapping[str, str]]) -> dict[str, dict[str, str
 
 def _index_map(path: Path, label: str) -> dict[str, dict[str, str]]:
     rows, fields = _read_csv(path)
-    required = {"candidate_id_sha256", "geometry_sha256"}
-    if not required.issubset(fields):
+    if "candidate_id_sha256" not in fields or not {
+        "geometry_sha256",
+        "candidate_geometry_identity_sha256",
+    }.intersection(fields):
         raise AttemptProductError(f"{label} lacks candidate/geometry identity fields")
     result: dict[str, dict[str, str]] = {}
     geometries: set[str] = set()
-    for line, row in enumerate(rows, start=2):
+    for line, raw in enumerate(rows, start=2):
+        row = dict(raw)
         candidate = _sha_value(row.get("candidate_id_sha256"), f"{label} candidate")
-        geometry = _sha_value(row.get("geometry_sha256"), f"{label} geometry")
+        geometry = _sha_value(
+            row.get("geometry_sha256")
+            or row.get("candidate_geometry_identity_sha256"),
+            f"{label} geometry",
+        )
+        candidate_geometry = str(
+            row.get("candidate_geometry_identity_sha256") or ""
+        ).strip()
+        if candidate_geometry and _sha_value(
+            candidate_geometry,
+            f"{label} candidate geometry",
+        ) != geometry:
+            raise AttemptProductError(
+                f"{label} candidate/geometry identity aliases disagree at line {line}"
+            )
+        row["geometry_sha256"] = geometry
         if candidate in result or geometry in geometries:
             raise AttemptProductError(f"{label} contains duplicate candidate or geometry")
         result[candidate] = row

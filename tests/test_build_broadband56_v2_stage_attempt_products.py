@@ -91,6 +91,65 @@ def test_attempt_products_reject_gds_identity_failure(tmp_path: Path) -> None:
     assert not fixture["out_dir"].exists()
 
 
+def test_attempt_products_accept_role_geometry_identity_alias(tmp_path: Path) -> None:
+    fixture = _fixture(tmp_path)
+
+    gds_receipt = json.loads(fixture["gds_receipt"].read_text(encoding="utf-8"))
+    gds_failure_path = Path(gds_receipt["failure_index"]["path"])
+    _write_csv(
+        gds_failure_path,
+        ["candidate_id_sha256", "candidate_geometry_identity_sha256"],
+        [],
+    )
+    gds_receipt["failure_index"] = _record(gds_failure_path)
+    fixture["gds_receipt"].write_text(json.dumps(gds_receipt), encoding="utf-8")
+
+    calibre_receipt = json.loads(
+        fixture["calibre_receipt"].read_text(encoding="utf-8")
+    )
+    calibre_failure_path = Path(calibre_receipt["failure_index"]["path"])
+    calibre_failure = _read_csv(calibre_failure_path)
+    for row in calibre_failure:
+        row.pop("geometry_sha256")
+    calibre_fields = [
+        field for field in calibre_failure[0] if field != "geometry_sha256"
+    ]
+    _write_csv(calibre_failure_path, calibre_fields, calibre_failure)
+    calibre_receipt["failure_index"] = _record(calibre_failure_path)
+    fixture["calibre_receipt"].write_text(
+        json.dumps(calibre_receipt), encoding="utf-8"
+    )
+    _rebind_downstream(fixture)
+
+    result = _run(fixture)
+    assert result.returncode == 0, result.stderr
+    ledger = _read_csv(fixture["out_dir"] / "ATTEMPT_LEDGER.csv")
+    assert ledger[1]["terminal_stage"] == "CALIBRE_FAILURE"
+
+
+def test_attempt_products_reject_conflicting_geometry_identity_aliases(
+    tmp_path: Path,
+) -> None:
+    fixture = _fixture(tmp_path)
+    calibre_receipt = json.loads(
+        fixture["calibre_receipt"].read_text(encoding="utf-8")
+    )
+    calibre_failure_path = Path(calibre_receipt["failure_index"]["path"])
+    rows = _read_csv(calibre_failure_path)
+    rows[0]["candidate_geometry_identity_sha256"] = "f" * 64
+    _write_csv(calibre_failure_path, list(rows[0]), rows)
+    calibre_receipt["failure_index"] = _record(calibre_failure_path)
+    fixture["calibre_receipt"].write_text(
+        json.dumps(calibre_receipt), encoding="utf-8"
+    )
+    _rebind_downstream(fixture)
+
+    result = _run(fixture)
+    assert result.returncode == 2
+    assert "identity aliases disagree" in result.stderr
+    assert not fixture["out_dir"].exists()
+
+
 def test_attempt_products_are_no_clobber(tmp_path: Path) -> None:
     fixture = _fixture(tmp_path)
     first = _run(fixture)

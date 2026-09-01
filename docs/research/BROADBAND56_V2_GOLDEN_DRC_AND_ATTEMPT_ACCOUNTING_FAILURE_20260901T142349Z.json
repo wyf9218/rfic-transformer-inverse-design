@@ -1,0 +1,74 @@
+{
+  "schema": "rfic_transformer.broadband56_v2_golden_failure_public_status.v1",
+  "generated_utc": "2026-09-01T14:23:49+00:00",
+  "overall_status": "BLOCKED",
+  "decision": "PRESERVE_FAILED_ROOT_AND_REQUIRE_HASH_BOUND_RUNTIME_FIX",
+  "campaign_id": "broadband56_real_emx_balanced200k_tsmc65_v2",
+  "scientific_contract_fingerprint_sha256": "f86a00efbf7756b7421b863bbb16c340db6b423640f63a3257d46c1af49eb55e",
+  "authorization": {
+    "scope": "FULL_CAMPAIGN",
+    "candidate_sha256": "80e1552b1b5fbb8da7b1b792e6306c9aa90c5c032e74f4897f2aae0787ce5661",
+    "approval_receipt_sha256": "a92b811a0f7b40d7169c95c3b226c6e5f904c307bca5ee8097c827e8fe50fde2",
+    "approval_receipt_status": "PASS",
+    "approval_checks_passed": 46,
+    "approval_checks_total": 46
+  },
+  "runtime_identity": {
+    "code_commit": "b5a4453ef4c8aa284ef13bb5f8ab9ec45d267240",
+    "backend_identity_manifest_sha256": "17447e2c0ecc5e83b503dad9cbe156b475530018a36ff233f5584b20c95aaecb",
+    "backend_identity_verification_receipt_sha256": "813dfe75e5b18a0a9e591349d72ad9bd9f47090e5ad7462107568c3de25edca0"
+  },
+  "resource_and_queue": {
+    "resource_gate_before_launch": "PASS",
+    "resource_gate_sha256": "981c110a3a88392056dfc6ee6bcbd8495d2a40034a88aff55f24a31afdd3603e",
+    "queue_registered": true,
+    "queue_id": "b56-v2-queue-20260901T140821Z",
+    "authoritative_supervisor": "b56-v2-controller-1096894-20260901T140821Z",
+    "supervisor_count_during_launch": 1,
+    "controller_alive_after_failure": false,
+    "active_project_processes_after_failure": 0
+  },
+  "golden_attempt": {
+    "raw_candidate_count": 1,
+    "candidate_id_sha256": "0a37e7ef3adb453d04084a2596994d061bbbf8c7a08e10c9b4bd7143f707abb1",
+    "cadence_streamout_status": "PASS",
+    "candidate_gds_identity_status": "PASS",
+    "gds_sha256": "e81adbb871583d83815fddef211e0abaa99c1467d4e9db227d0e3542b4566b38",
+    "gds_timestamp_normalized_sha256": "01eb0f5f51444b2b8915a300779c3eec9346f14ee49eaa58eaadd3db9f24800e",
+    "calibre_executed": true,
+    "calibre_zero_blocking_status": "FAIL",
+    "raw_drc_result_count": 338,
+    "documented_warning_count": 1,
+    "blocking_drc_violation_count": 337,
+    "drc_summary_sha256": "0768e90de4c6644c4dfd685265b0ef8baab79155c66c80d647c634abea6d0ef8",
+    "fresh_real_emx_executed": false,
+    "fresh_complete_s4p": 0,
+    "accepted_unique_geometries": 0,
+    "feature_rows": 0
+  },
+  "software_failure": {
+    "component": "stage_attempt_product_builder",
+    "error": "GDS identity failure index lacks candidate/geometry identity fields",
+    "root_cause": "Upstream role indexes use the frozen candidate_geometry_identity_sha256 alias while the attempt assembler accepted only geometry_sha256.",
+    "evidence_sha256": "0e8f3d7b34a3ca2ded504975a74e6175f017c56c7cdda68924c2556bee660234",
+    "stage_launch_audit_sha256": "ede4c617a7740af8d9f2201c412278f3a907a644b236be27e16f04ab62c1d655",
+    "failed_stage_receipt_created": false,
+    "failed_root_preserved": true,
+    "failed_root_may_be_resumed": false
+  },
+  "fix_validation": {
+    "scope": "Normalize either frozen geometry identity field into one strict internal geometry_sha256 and reject conflicting aliases.",
+    "physical_contract_modified": false,
+    "gds_or_geometry_modified": false,
+    "focused_tests": "5 passed",
+    "broadband56_tests": "296 passed, 35 warnings"
+  },
+  "public_repository_boundary": {
+    "private_absolute_paths_published": false,
+    "license_server_details_published": false,
+    "pdk_or_proc_bytes_published": false,
+    "gds_or_s4p_published": false
+  },
+  "branch": "codex/broadband56-balanced200k-v2",
+  "next_action": "Commit the tested interface fix, rebuild and independently verify a new hash-bound backend manifest, create one new exact-SHA FULL_CAMPAIGN candidate, and require explicit owner approval before a new no-clobber successor controller can run."
+}
