@@ -4,12 +4,14 @@
 from __future__ import annotations
 
 import argparse
+import contextlib
 import csv
 import hashlib
+import importlib.util
+import io
 import json
 import os
 import re
-import subprocess
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
@@ -41,6 +43,10 @@ PASS_INDEX_NAME = "CALIBRE_PASS_INDEX.csv"
 FAILURE_INDEX_NAME = "CALIBRE_FAILURE_INDEX.csv"
 EVIDENCE_INDEX_NAME = "CALIBRE_EVIDENCE_INDEX.csv"
 DELEGATE_INPUT_INDEX_NAME = "CALIBRE_DELEGATE_INPUT_INDEX.csv"
+DELEGATE_GEOMETRY_AUDIT_DIR_NAME = "CALIBRE_DELEGATE_GEOMETRY_AUDITS"
+DELEGATE_GEOMETRY_AUDIT_INDEX_NAME = (
+    "CALIBRE_DELEGATE_GEOMETRY_AUDIT_INDEX.csv"
+)
 SHA256SUMS_NAME = "SHA256SUMS.txt"
 SHA256_PATTERN = re.compile(r"[0-9a-f]{64}")
 
@@ -49,6 +55,9 @@ EXPECTED_USER_GUIDE_MEMBER = "3_UserGuide.txt"
 EXPECTED_PROCESS_TOKEN = "/TSMC65_05_12_26/"
 EXPECTED_TOP_CELL = "TRANSFORMER"
 EXPECTED_CALIBRE_MODULE = "mentor/old/2025"
+DELEGATE_EXECUTION_MODE = (
+    "importlib-main-with-current-contract-required-checks-v1"
+)
 
 DELEGATE_REQUIRED_INPUT_FIELDS = (
     "candidate_id_sha256",
@@ -58,8 +67,37 @@ DELEGATE_REQUIRED_INPUT_FIELDS = (
     "gds_timestamp_normalization_algorithm",
     "geometry_audit_path",
 )
+DELEGATE_EFFECTIVE_REQUIRED_GEOMETRY_CHECKS = (
+    "geometry_range_pass",
+    "topology_pass",
+    "line_width_sync_pass",
+    "angle_45_135_pass",
+    "ground_clearance_pass",
+)
+LEGACY_DELEGATE_REQUIRED_GEOMETRY_CHECKS = (
+    *DELEGATE_EFFECTIVE_REQUIRED_GEOMETRY_CHECKS,
+    "foundry_layout_audit_pass",
+    "manufacturing_grid_canonicalization_pass",
+    "foundry_slotted_ground_frame_pass",
+    "foundry_power_line_contract_pass",
+    "foundry_via_stack_and_landing_pad_pass",
+    "foundry_bridge_connection_pass",
+)
 SOURCE_NORMALIZATION_ALGORITHM_FIELD = (
     "gds_timestamp_normalized_sha256_algorithm"
+)
+
+DELEGATE_GEOMETRY_AUDIT_INDEX_FIELDS = (
+    "candidate_id_sha256",
+    "candidate_geometry_identity_sha256",
+    "source_geometry_audit_path",
+    "source_geometry_audit_sha256",
+    "gds_physical_identity_audit_path",
+    "gds_physical_identity_audit_sha256",
+    "evaluation_summary_path",
+    "evaluation_summary_sha256",
+    "delegate_geometry_audit_path",
+    "delegate_geometry_audit_sha256",
 )
 
 FAILURE_FIELDS = (
@@ -154,6 +192,11 @@ def run_batch(args: argparse.Namespace, *, out_dir: Path) -> dict[str, Any]:
     user_guide_path = _identity_path(
         runtimes.get("calibre_user_guide"), "Calibre foundry user guide"
     )
+    process_path = _identity_path(
+        runtimes.get("emx_process_file"), "EMX process file"
+    )
+    if EXPECTED_PROCESS_TOKEN not in str(process_path):
+        raise CalibreBatchError("EMX process path lacks the expected process token")
     if not os.access(python_path, os.X_OK):
         raise CalibreBatchError("Python runtime is not executable")
 
@@ -189,10 +232,6 @@ def run_batch(args: argparse.Namespace, *, out_dir: Path) -> dict[str, Any]:
         if candidate in source_by_id:
             raise CalibreBatchError("Calibre input candidate identities are duplicated")
         source_by_id[candidate] = row
-    delegate_rows, delegate_fields = _prepare_delegate_input(
-        input_rows, input_fields
-    )
-
     pinned = {
         "manifest": (manifest_path, manifest_sha),
         "delegate": (delegate_path, _sha256(delegate_path)),
@@ -200,16 +239,36 @@ def run_batch(args: argparse.Namespace, *, out_dir: Path) -> dict[str, Any]:
         "archive": (archive_path, _sha256(archive_path)),
         "rule_deck": (rule_deck_path, _sha256(rule_deck_path)),
         "user_guide": (user_guide_path, _sha256(user_guide_path)),
+        "process": (process_path, _sha256(process_path)),
         "authorization": (authorization_path, _sha256(authorization_path)),
         "input_receipt": (input_receipt_path, _sha256(input_receipt_path)),
         "input_index": (input_index_path, _sha256(input_index_path)),
     }
     out_dir.mkdir(parents=True, mode=0o700)
+    delegate_rows, delegate_fields, audit_records, source_pins = (
+        _prepare_delegate_input(
+            input_rows,
+            input_fields,
+            out_dir=out_dir,
+            process_path=process_path,
+        )
+    )
+    pinned.update(source_pins)
     delegate_input_path = out_dir / DELEGATE_INPUT_INDEX_NAME
     _write_csv(delegate_input_path, delegate_fields, delegate_rows)
+    delegate_audit_index_path = out_dir / DELEGATE_GEOMETRY_AUDIT_INDEX_NAME
+    _write_csv(
+        delegate_audit_index_path,
+        list(DELEGATE_GEOMETRY_AUDIT_INDEX_FIELDS),
+        audit_records,
+    )
     pinned["delegate_input_index"] = (
         delegate_input_path,
         _sha256(delegate_input_path),
+    )
+    pinned["delegate_geometry_audit_index"] = (
+        delegate_audit_index_path,
+        _sha256(delegate_audit_index_path),
     )
     if not input_rows:
         pass_path = out_dir / PASS_INDEX_NAME
@@ -236,6 +295,12 @@ def run_batch(args: argparse.Namespace, *, out_dir: Path) -> dict[str, Any]:
             "backend_identity_manifest": _file_record(manifest_path),
             "input_role_receipt": _file_record(input_receipt_path),
             "delegate_input_index": _file_record(delegate_input_path),
+            "delegate_geometry_audit_index": _file_record(
+                delegate_audit_index_path
+            ),
+            "effective_delegate_required_geometry_checks": list(
+                DELEGATE_EFFECTIVE_REQUIRED_GEOMETRY_CHECKS
+            ),
             "full_campaign_authorization_receipt": _file_record(
                 authorization_path
             ),
@@ -259,9 +324,7 @@ def run_batch(args: argparse.Namespace, *, out_dir: Path) -> dict[str, Any]:
         _write_sums(out_dir)
         return receipt
     delegate_dir = out_dir / "delegate_run"
-    command = [
-        str(python_path),
-        str(delegate_path),
+    delegate_args = [
         "--input-index-csv",
         str(delegate_input_path),
         "--out-dir",
@@ -292,16 +355,35 @@ def run_batch(args: argparse.Namespace, *, out_dir: Path) -> dict[str, Any]:
         str(len(input_rows)),
         "--no-fail-exit",
     ]
+    command = [
+        str(python_path),
+        str(delegate_path),
+        *delegate_args,
+    ]
     command_sha = hashlib.sha256(
         json.dumps(command, separators=(",", ":")).encode("utf-8")
     ).hexdigest()
-    result = subprocess.run(
-        command,
-        stdin=subprocess.DEVNULL,
-        capture_output=True,
-        text=True,
-        check=False,
-        shell=False,
+    execution_contract = {
+        "execution_mode": DELEGATE_EXECUTION_MODE,
+        "delegate_sha256": pinned["delegate"][1],
+        "delegate_command_argv_sha256": command_sha,
+        "legacy_required_geometry_checks": list(
+            LEGACY_DELEGATE_REQUIRED_GEOMETRY_CHECKS
+        ),
+        "effective_required_geometry_checks": list(
+            DELEGATE_EFFECTIVE_REQUIRED_GEOMETRY_CHECKS
+        ),
+    }
+    execution_contract_sha = hashlib.sha256(
+        json.dumps(
+            execution_contract,
+            sort_keys=True,
+            separators=(",", ":"),
+        ).encode("utf-8")
+    ).hexdigest()
+    result = _run_delegate_with_current_contract(
+        delegate_path,
+        delegate_args,
     )
     stdout_path = out_dir / "delegate_stdout.log"
     stderr_path = out_dir / "delegate_stderr.log"
@@ -444,6 +526,12 @@ def run_batch(args: argparse.Namespace, *, out_dir: Path) -> dict[str, Any]:
         "backend_identity_manifest": _file_record(manifest_path),
         "input_role_receipt": _file_record(input_receipt_path),
         "delegate_input_index": _file_record(delegate_input_path),
+        "delegate_geometry_audit_index": _file_record(
+            delegate_audit_index_path
+        ),
+        "effective_delegate_required_geometry_checks": list(
+            DELEGATE_EFFECTIVE_REQUIRED_GEOMETRY_CHECKS
+        ),
         "full_campaign_authorization_receipt": _file_record(
             authorization_path
         ),
@@ -454,6 +542,11 @@ def run_batch(args: argparse.Namespace, *, out_dir: Path) -> dict[str, Any]:
         "delegate_drc_index": _file_record(drc_index_path),
         "delegate_return_code": int(result.returncode),
         "delegate_command_argv_sha256": command_sha,
+        "delegate_execution_mode": DELEGATE_EXECUTION_MODE,
+        "delegate_execution_contract_sha256": execution_contract_sha,
+        "legacy_delegate_required_geometry_checks": list(
+            LEGACY_DELEGATE_REQUIRED_GEOMETRY_CHECKS
+        ),
         "delegate_stdout": _file_record(stdout_path),
         "delegate_stderr": _file_record(stderr_path),
         "calibre_foundry_archive": _file_record(archive_path),
@@ -494,7 +587,10 @@ def _mapping(value: Any, label: str) -> Mapping[str, Any]:
 def _identity_path(value: Any, label: str) -> Path:
     record = _mapping(value, label)
     path = _regular_file(Path(str(record.get("path") or "")), label)
-    if record.get("size_bytes") != path.stat().st_size or record.get("sha256") != _sha256(path):
+    if (
+        record.get("size_bytes") != path.stat().st_size
+        or record.get("sha256") != _sha256(path)
+    ):
         raise CalibreBatchError(f"{label} identity mismatch")
     return path
 
@@ -520,13 +616,35 @@ def _read_csv(path: Path) -> tuple[list[dict[str, str]], list[str]]:
 
 
 def _prepare_delegate_input(
-    rows: list[dict[str, str]], fields: list[str]
-) -> tuple[list[dict[str, str]], list[str]]:
+    rows: list[dict[str, str]],
+    fields: list[str],
+    *,
+    out_dir: Path,
+    process_path: Path,
+) -> tuple[
+    list[dict[str, str]],
+    list[str],
+    list[dict[str, str]],
+    dict[str, tuple[Path, str]],
+]:
     delegate_fields = list(fields)
     if "gds_timestamp_normalization_algorithm" not in delegate_fields:
         delegate_fields.append("gds_timestamp_normalization_algorithm")
+    for field in (
+        "source_geometry_audit_path",
+        "source_geometry_audit_sha256",
+        "source_gds_physical_identity_audit_path",
+        "source_gds_physical_identity_audit_sha256",
+    ):
+        if field not in delegate_fields:
+            delegate_fields.append(field)
 
     prepared: list[dict[str, str]] = []
+    audit_records: list[dict[str, str]] = []
+    source_pins: dict[str, tuple[Path, str]] = {}
+    delegate_audit_dir = out_dir / DELEGATE_GEOMETRY_AUDIT_DIR_NAME
+    if rows:
+        delegate_audit_dir.mkdir()
     for row_number, row in enumerate(rows, start=2):
         prepared_row = dict(row)
         normalized_algorithm = str(
@@ -567,8 +685,318 @@ def _prepare_delegate_input(
             prepared_row.get("gds_timestamp_normalized_sha256"),
             "normalized GDS",
         )
+        candidate = _sha_value(
+            prepared_row.get("candidate_id_sha256"), "candidate"
+        )
+        geometry = _sha_value(
+            prepared_row.get("candidate_geometry_identity_sha256"),
+            "candidate geometry",
+        )
+        source_audit_path = _regular_file(
+            Path(str(prepared_row.get("geometry_audit_path") or "")),
+            "source geometry audit",
+        )
+        source_audit_sha = _sha256(source_audit_path)
+        recorded_source_audit_sha = str(
+            prepared_row.get("geometry_audit_sha256") or ""
+        ).strip().lower()
+        if (
+            recorded_source_audit_sha
+            and recorded_source_audit_sha != source_audit_sha
+        ):
+            raise CalibreBatchError(
+                f"Calibre input row {row_number} source geometry-audit SHA mismatch"
+            )
+        physical_audit_path = _regular_file(
+            Path(
+                str(
+                    prepared_row.get("gds_physical_identity_audit_path") or ""
+                )
+            ),
+            "GDS physical identity audit",
+        )
+        physical_audit_sha = _sha256(physical_audit_path)
+        if (
+            str(
+                prepared_row.get("gds_physical_identity_audit_sha256") or ""
+            ).strip().lower()
+            != physical_audit_sha
+        ):
+            raise CalibreBatchError(
+                f"Calibre input row {row_number} physical-identity audit SHA mismatch"
+            )
+        source_audit = _read_json(source_audit_path, "source geometry audit")
+        physical_audit = _read_json(
+            physical_audit_path, "GDS physical identity audit"
+        )
+        compatibility_audit = _current_contract_delegate_geometry_audit(
+            row=prepared_row,
+            source_audit=source_audit,
+            source_audit_path=source_audit_path,
+            physical_audit=physical_audit,
+            physical_audit_path=physical_audit_path,
+            process_path=process_path,
+        )
+        delegate_audit_path = delegate_audit_dir / f"{candidate}.json"
+        _write_json(delegate_audit_path, compatibility_audit)
+        delegate_audit_sha = _sha256(delegate_audit_path)
+        prepared_row["source_geometry_audit_path"] = str(source_audit_path)
+        prepared_row["source_geometry_audit_sha256"] = source_audit_sha
+        prepared_row["source_gds_physical_identity_audit_path"] = str(
+            physical_audit_path
+        )
+        prepared_row["source_gds_physical_identity_audit_sha256"] = (
+            physical_audit_sha
+        )
+        prepared_row["geometry_audit_path"] = str(delegate_audit_path)
+        prepared_row["geometry_audit_sha256"] = delegate_audit_sha
+        audit_records.append(
+            {
+                "candidate_id_sha256": candidate,
+                "candidate_geometry_identity_sha256": geometry,
+                "source_geometry_audit_path": str(source_audit_path),
+                "source_geometry_audit_sha256": source_audit_sha,
+                "gds_physical_identity_audit_path": str(physical_audit_path),
+                "gds_physical_identity_audit_sha256": physical_audit_sha,
+                "evaluation_summary_path": compatibility_audit[
+                    "source_evidence"
+                ]["evaluation_summary"]["path"],
+                "evaluation_summary_sha256": compatibility_audit[
+                    "source_evidence"
+                ]["evaluation_summary"]["sha256"],
+                "delegate_geometry_audit_path": str(delegate_audit_path),
+                "delegate_geometry_audit_sha256": delegate_audit_sha,
+            }
+        )
+        source_pins[f"source_geometry_audit::{candidate}"] = (
+            source_audit_path,
+            source_audit_sha,
+        )
+        source_pins[f"physical_identity_audit::{candidate}"] = (
+            physical_audit_path,
+            physical_audit_sha,
+        )
+        evaluation_record = compatibility_audit["source_evidence"][
+            "evaluation_summary"
+        ]
+        source_pins[f"evaluation_summary::{candidate}"] = (
+            Path(evaluation_record["path"]),
+            str(evaluation_record["sha256"]),
+        )
         prepared.append(prepared_row)
-    return prepared, delegate_fields
+    return prepared, delegate_fields, audit_records, source_pins
+
+
+def _current_contract_delegate_geometry_audit(
+    *,
+    row: Mapping[str, str],
+    source_audit: Mapping[str, Any],
+    source_audit_path: Path,
+    physical_audit: Mapping[str, Any],
+    physical_audit_path: Path,
+    process_path: Path,
+) -> dict[str, Any]:
+    candidate = _sha_value(row.get("candidate_id_sha256"), "candidate")
+    geometry = _sha_value(
+        row.get("candidate_geometry_identity_sha256"), "candidate geometry"
+    )
+    gds_sha = _sha_value(row.get("gds_sha256"), "GDS")
+    normalized_sha = _sha_value(
+        row.get("gds_timestamp_normalized_sha256"), "normalized GDS"
+    )
+    if not (
+        source_audit.get("overall_status") == "PASS"
+        and source_audit.get("candidate_id_sha256") == candidate
+        and source_audit.get("candidate_geometry_identity_sha256") == geometry
+        and source_audit.get("gds_sha256") == gds_sha
+        and source_audit.get("gds_timestamp_normalized_sha256")
+        == normalized_sha
+    ):
+        raise CalibreBatchError("source geometry-audit identity mismatch")
+    source_checks = _mapping(
+        source_audit.get("checks"), "source geometry-audit checks"
+    )
+    required_source_checks = (
+        "candidate_geometry_recomputed",
+        "dataset_geometry_recomputed",
+        "evaluation_geometry_recomputed",
+        "cadence_gds_present_and_nonempty",
+        "direct_gds_present_and_nonempty",
+        "layout_manifest_present_and_nonempty",
+    )
+    if any(
+        source_checks.get(name) is not True for name in required_source_checks
+    ):
+        raise CalibreBatchError("source geometry-audit checks are incomplete")
+    if not (
+        physical_audit.get("overall_status") == "PASS"
+        and physical_audit.get("candidate_id_sha256") == candidate
+        and physical_audit.get("candidate_geometry_identity_sha256") == geometry
+        and physical_audit.get("cadence_gds_sha256") == gds_sha
+        and physical_audit.get("cadence_gds_timestamp_normalized_sha256")
+        == normalized_sha
+    ):
+        raise CalibreBatchError("GDS physical-identity audit mismatch")
+    physical_checks = _mapping(
+        physical_audit.get("checks"), "GDS physical-identity checks"
+    )
+    if not physical_checks or any(
+        value is not True for value in physical_checks.values()
+    ):
+        raise CalibreBatchError("GDS physical-identity checks are not all PASS")
+
+    evaluation_path = _regular_file(
+        Path(str(source_audit.get("evaluation_summary_path") or "")),
+        "evaluation summary",
+    )
+    evaluation_sha = _sha256(evaluation_path)
+    if source_audit.get("evaluation_summary_sha256") != evaluation_sha:
+        raise CalibreBatchError("evaluation summary SHA mismatch")
+    evaluation = _read_json(evaluation_path, "evaluation summary")
+    geometry_check = _mapping(
+        evaluation.get("geometry_check"), "evaluation geometry check"
+    )
+    metrics = _mapping(
+        geometry_check.get("metrics"), "evaluation geometry metrics"
+    )
+    if not (
+        evaluation.get("ok") is True
+        and geometry_check.get("ok") is True
+        and list(geometry_check.get("errors") or []) == []
+    ):
+        raise CalibreBatchError("evaluation geometry check is not PASS")
+
+    line_width = _finite_float(row.get("geom__line_width_um"), "line width")
+    line_width_sync_pass = all(
+        _close_float(metrics.get(name), line_width)
+        for name in (
+            "power_line_8port_bridge_width_um",
+            "power_line_8port_primary_bridge_width_um",
+            "power_line_8port_secondary_bridge_width_um",
+        )
+    )
+    angle_45_135_pass = all(
+        _close_float(metrics.get(name), expected)
+        for name, expected in (
+            ("primary_winding_centerline_min_internal_angle_deg", 135.0),
+            ("primary_winding_centerline_max_internal_angle_deg", 135.0),
+            ("primary_winding_centerline_min_terminal_angle_deg", 90.0),
+            ("primary_winding_centerline_max_terminal_angle_deg", 90.0),
+            ("secondary_winding_centerline_min_internal_angle_deg", 135.0),
+            ("secondary_winding_centerline_max_internal_angle_deg", 135.0),
+            ("secondary_winding_centerline_min_terminal_angle_deg", 90.0),
+            ("secondary_winding_centerline_max_terminal_angle_deg", 90.0),
+        )
+    )
+    checks = {
+        "geometry_range_pass": row.get("analytical_status") == "PASS",
+        "topology_pass": row.get("topology_status") == "PASS",
+        "line_width_sync_pass": line_width_sync_pass,
+        "angle_45_135_pass": angle_45_135_pass,
+        "ground_clearance_pass": (
+            row.get("top_metal_drc_status") == "PASS"
+            and row.get("drc_status") == "PASS"
+        ),
+    }
+    failed = [name for name, value in checks.items() if value is not True]
+    if failed:
+        raise CalibreBatchError(
+            f"current-contract delegate geometry checks failed: {failed}"
+        )
+    return {
+        "schema": (
+            "rfic_transformer.broadband56_v2_current_contract_"
+            "calibre_delegate_geometry_audit.v1"
+        ),
+        "generated_utc": _utc_now(),
+        "overall_status": "PASS",
+        "decision": "CURRENT_CONTRACT_GDS_READY_FOR_FOUNDRY_CALIBRE",
+        "candidate_id_sha256": candidate,
+        "candidate_geometry_identity_sha256": geometry,
+        "gds_path": str(Path(str(row.get("gds_path") or "")).resolve()),
+        "gds_sha256": gds_sha,
+        "gds_timestamp_normalized_sha256": normalized_sha,
+        "gds_timestamp_normalization_algorithm": (
+            GDS_TIMESTAMP_NORMALIZED_SHA256_ALGORITHM
+        ),
+        "gds_top_cell": EXPECTED_TOP_CELL,
+        "process_token": EXPECTED_PROCESS_TOKEN,
+        "checks": checks,
+        "effective_required_geometry_checks": list(
+            DELEGATE_EFFECTIVE_REQUIRED_GEOMETRY_CHECKS
+        ),
+        "teacher_only_foundry_slotting_prechecks_applied": False,
+        "source_evidence": {
+            "source_geometry_audit": _file_record(source_audit_path),
+            "gds_physical_identity_audit": _file_record(physical_audit_path),
+            "evaluation_summary": _file_record(evaluation_path),
+            "emx_process_file": _file_record(process_path),
+        },
+        "foundry_drc_executed": False,
+        "fresh_real_emx_executed": False,
+        "simulator_action_taken": False,
+    }
+
+
+def _run_delegate_with_current_contract(
+    delegate_path: Path,
+    delegate_args: list[str],
+) -> argparse.Namespace:
+    module_name = f"_b56_calibre_delegate_{_sha256(delegate_path)[:16]}"
+    spec = importlib.util.spec_from_file_location(module_name, delegate_path)
+    if spec is None or spec.loader is None:
+        raise CalibreBatchError("cannot load the pinned Calibre delegate")
+    module = importlib.util.module_from_spec(spec)
+    try:
+        spec.loader.exec_module(module)
+    except (Exception, SystemExit) as exc:
+        raise CalibreBatchError(
+            f"cannot import the pinned Calibre delegate: {exc}"
+        ) from exc
+    legacy_checks = tuple(getattr(module, "REQUIRED_GEOMETRY_CHECKS", ()))
+    if legacy_checks != LEGACY_DELEGATE_REQUIRED_GEOMETRY_CHECKS:
+        raise CalibreBatchError("pinned Calibre delegate check contract drifted")
+    module.REQUIRED_GEOMETRY_CHECKS = (
+        DELEGATE_EFFECTIVE_REQUIRED_GEOMETRY_CHECKS
+    )
+    stdout = io.StringIO()
+    stderr = io.StringIO()
+    try:
+        with contextlib.redirect_stdout(stdout), contextlib.redirect_stderr(
+            stderr
+        ):
+            return_code = int(module.main(delegate_args))
+    except SystemExit as exc:
+        return_code = int(exc.code or 0)
+    except Exception as exc:
+        raise CalibreBatchError(
+            f"Calibre delegate raised {type(exc).__name__}: {exc}"
+        ) from exc
+    finally:
+        module.REQUIRED_GEOMETRY_CHECKS = legacy_checks
+    return argparse.Namespace(
+        returncode=return_code,
+        stdout=stdout.getvalue(),
+        stderr=stderr.getvalue(),
+    )
+
+
+def _finite_float(value: Any, label: str) -> float:
+    try:
+        result = float(value)
+    except (TypeError, ValueError) as exc:
+        raise CalibreBatchError(f"{label} is not numeric") from exc
+    if not (float("-inf") < result < float("inf")):
+        raise CalibreBatchError(f"{label} is not finite")
+    return result
+
+
+def _close_float(value: Any, expected: float, tolerance: float = 1.0e-9) -> bool:
+    try:
+        actual = float(value)
+    except (TypeError, ValueError):
+        return False
+    return abs(actual - expected) <= tolerance
 
 
 def _write_csv(

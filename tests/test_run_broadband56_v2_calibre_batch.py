@@ -6,6 +6,7 @@ import json
 import subprocess
 import sys
 from pathlib import Path
+from typing import Any
 
 from rfic_transformer_inverse_design.campaigns.broadband56_balanced200k import (
     CAMPAIGN_ID,
@@ -29,6 +30,13 @@ SCRIPT = ROOT / "scripts" / "run_broadband56_v2_calibre_batch.py"
 
 def test_calibre_batch_preserves_pass_and_failure(tmp_path: Path) -> None:
     fixture = _fixture(tmp_path)
+    source_evidence_before = {
+        path: path.read_bytes()
+        for path in [
+            *fixture["source_audits"],
+            *fixture["physical_audits"],
+        ]
+    }
     result = _run(fixture)
     assert result.returncode == 0, result.stderr
 
@@ -40,6 +48,10 @@ def test_calibre_batch_preserves_pass_and_failure(tmp_path: Path) -> None:
     assert receipt["calibre_fail_count"] == 1
     assert receipt["failed_candidates_counted_as_accepted"] is False
     assert receipt["simulator_action_taken"] is True
+    assert receipt["delegate_execution_mode"] == (
+        "importlib-main-with-current-contract-required-checks-v1"
+    )
+    assert len(receipt["delegate_execution_contract_sha256"]) == 64
     delegate_input = Path(receipt["delegate_input_index"]["path"])
     assert delegate_input.name == "CALIBRE_DELEGATE_INPUT_INDEX.csv"
     delegate_rows = _read_csv(delegate_input)
@@ -48,8 +60,37 @@ def test_calibre_batch_preserves_pass_and_failure(tmp_path: Path) -> None:
         == GDS_TIMESTAMP_NORMALIZED_SHA256_ALGORITHM
         for row in delegate_rows
     )
+    delegate_audit_index = _read_csv(
+        Path(receipt["delegate_geometry_audit_index"]["path"])
+    )
+    assert len(delegate_audit_index) == 2
+    for row in delegate_audit_index:
+        audit = json.loads(
+            Path(row["delegate_geometry_audit_path"]).read_text()
+        )
+        assert audit["overall_status"] == "PASS"
+        assert audit["gds_timestamp_normalization_algorithm"] == (
+            GDS_TIMESTAMP_NORMALIZED_SHA256_ALGORITHM
+        )
+        assert audit["teacher_only_foundry_slotting_prechecks_applied"] is False
+        assert set(audit["checks"]) == {
+            "geometry_range_pass",
+            "topology_pass",
+            "line_width_sync_pass",
+            "angle_45_135_pass",
+            "ground_clearance_pass",
+        }
+        assert all(audit["checks"].values())
     assert "gds_timestamp_normalization_algorithm" not in _csv_fields(
         fixture["input_index"]
+    )
+    for path in fixture["source_audits"]:
+        assert "gds_timestamp_normalization_algorithm" not in json.loads(
+            path.read_text()
+        )
+    assert all(
+        path.read_bytes() == before
+        for path, before in source_evidence_before.items()
     )
 
     passed = _read_csv(out / "CALIBRE_PASS_INDEX.csv")
@@ -93,35 +134,149 @@ def test_calibre_batch_propagates_an_empty_gds_partition(tmp_path: Path) -> None
     assert receipt["simulator_action_taken"] is False
 
 
-def _fixture(root: Path) -> dict[str, Path]:
-    input_index = root / "gds_pass_index.csv"
-    _write_csv(
-        input_index,
-        [
-            {
-                "candidate_id_sha256": "a" * 64,
-                "candidate_geometry_identity_sha256": "1" * 64,
-                "gds_physical_identity_status": "PASS",
-                "gds_path": "/tmp/a.gds",
-                "gds_timestamp_normalized_sha256": "b" * 64,
-                "gds_timestamp_normalized_sha256_algorithm": (
-                    GDS_TIMESTAMP_NORMALIZED_SHA256_ALGORITHM
-                ),
-                "geometry_audit_path": "/tmp/a_geometry_audit.json",
-            },
-            {
-                "candidate_id_sha256": "f" * 64,
-                "candidate_geometry_identity_sha256": "2" * 64,
-                "gds_physical_identity_status": "PASS",
-                "gds_path": "/tmp/f.gds",
-                "gds_timestamp_normalized_sha256": "c" * 64,
-                "gds_timestamp_normalized_sha256_algorithm": (
-                    GDS_TIMESTAMP_NORMALIZED_SHA256_ALGORITHM
-                ),
-                "geometry_audit_path": "/tmp/f_geometry_audit.json",
-            },
-        ],
+def test_calibre_batch_rejects_failed_physical_identity_check(
+    tmp_path: Path,
+) -> None:
+    fixture = _fixture(tmp_path)
+    physical_audit = fixture["physical_audits"][0]
+    payload = json.loads(physical_audit.read_text())
+    payload["checks"]["candidate_bound_gds_identity_pass"] = False
+    physical_audit.write_text(json.dumps(payload))
+    _refresh_input_evidence(fixture)
+
+    result = _run(fixture)
+    assert result.returncode == 2
+    assert "physical-identity checks are not all PASS" in result.stderr
+
+
+def test_calibre_batch_rejects_line_width_drift(tmp_path: Path) -> None:
+    fixture = _fixture(tmp_path)
+    rows = _read_csv(fixture["input_index"])
+    rows[0]["geom__line_width_um"] = "5.25"
+    _write_csv(fixture["input_index"], rows)
+    _refresh_input_receipt(fixture)
+
+    result = _run(fixture)
+    assert result.returncode == 2
+    assert "line_width_sync_pass" in result.stderr
+
+
+def test_calibre_batch_rejects_legacy_delegate_contract_drift(
+    tmp_path: Path,
+) -> None:
+    fixture = _fixture(tmp_path)
+    delegate = fixture["delegate"]
+    delegate.write_text(
+        delegate.read_text().replace(
+            '    "foundry_bridge_connection_pass",\n', "", 1
+        )
     )
+    _refresh_manifest_authorization(fixture)
+
+    result = _run(fixture)
+    assert result.returncode == 2
+    assert "pinned Calibre delegate check contract drifted" in result.stderr
+
+
+def _fixture(root: Path) -> dict[str, Any]:
+    process = root / "TSMC65_05_12_26" / "process.proc"
+    process.parent.mkdir()
+    process.write_text("process")
+    rows = []
+    source_audits = []
+    physical_audits = []
+    for candidate, geometry, normalized in (
+        ("a" * 64, "1" * 64, "b" * 64),
+        ("f" * 64, "2" * 64, "c" * 64),
+    ):
+        gds = root / f"{candidate[:1]}.gds"
+        gds.write_bytes(f"gds-{candidate[:1]}".encode())
+        evaluation = root / f"{candidate[:1]}_evaluation.json"
+        evaluation.write_text(
+            json.dumps(
+                {
+                    "ok": True,
+                    "geometry_check": {
+                        "ok": True,
+                        "errors": [],
+                        "metrics": {
+                            "power_line_8port_bridge_width_um": 5.0,
+                            "power_line_8port_primary_bridge_width_um": 5.0,
+                            "power_line_8port_secondary_bridge_width_um": 5.0,
+                            "primary_winding_centerline_min_internal_angle_deg": 135.0,
+                            "primary_winding_centerline_max_internal_angle_deg": 135.0,
+                            "primary_winding_centerline_min_terminal_angle_deg": 90.0,
+                            "primary_winding_centerline_max_terminal_angle_deg": 90.0,
+                            "secondary_winding_centerline_min_internal_angle_deg": 135.0,
+                            "secondary_winding_centerline_max_internal_angle_deg": 135.0,
+                            "secondary_winding_centerline_min_terminal_angle_deg": 90.0,
+                            "secondary_winding_centerline_max_terminal_angle_deg": 90.0,
+                        },
+                    },
+                }
+            )
+        )
+        source_audit = root / f"{candidate[:1]}_geometry_audit.json"
+        source_audit.write_text(
+            json.dumps(
+                {
+                    "overall_status": "PASS",
+                    "candidate_id_sha256": candidate,
+                    "candidate_geometry_identity_sha256": geometry,
+                    "gds_sha256": _sha(gds),
+                    "gds_timestamp_normalized_sha256": normalized,
+                    "evaluation_summary_path": str(evaluation),
+                    "evaluation_summary_sha256": _sha(evaluation),
+                    "checks": {
+                        "candidate_geometry_recomputed": True,
+                        "dataset_geometry_recomputed": True,
+                        "evaluation_geometry_recomputed": True,
+                        "cadence_gds_present_and_nonempty": True,
+                        "direct_gds_present_and_nonempty": True,
+                        "layout_manifest_present_and_nonempty": True,
+                    },
+                }
+            )
+        )
+        physical_audit = root / f"{candidate[:1]}_physical_audit.json"
+        physical_audit.write_text(
+            json.dumps(
+                {
+                    "overall_status": "PASS",
+                    "candidate_id_sha256": candidate,
+                    "candidate_geometry_identity_sha256": geometry,
+                    "cadence_gds_sha256": _sha(gds),
+                    "cadence_gds_timestamp_normalized_sha256": normalized,
+                    "checks": {"candidate_bound_gds_identity_pass": True},
+                }
+            )
+        )
+        source_audits.append(source_audit)
+        physical_audits.append(physical_audit)
+        rows.append(
+            {
+                "candidate_id_sha256": candidate,
+                "candidate_geometry_identity_sha256": geometry,
+                "analytical_status": "PASS",
+                "topology_status": "PASS",
+                "top_metal_drc_status": "PASS",
+                "drc_status": "PASS",
+                "gds_physical_identity_status": "PASS",
+                "geom__line_width_um": "5.0",
+                "gds_path": str(gds),
+                "gds_sha256": _sha(gds),
+                "gds_timestamp_normalized_sha256": normalized,
+                "gds_timestamp_normalized_sha256_algorithm": (
+                    GDS_TIMESTAMP_NORMALIZED_SHA256_ALGORITHM
+                ),
+                "geometry_audit_path": str(source_audit),
+                "geometry_audit_sha256": _sha(source_audit),
+                "gds_physical_identity_audit_path": str(physical_audit),
+                "gds_physical_identity_audit_sha256": _sha(physical_audit),
+            }
+        )
+    input_index = root / "gds_pass_index.csv"
+    _write_csv(input_index, rows)
     input_receipt = root / "GDS_PHYSICAL_IDENTITY_BATCH_ROLE_RECEIPT.json"
     input_receipt.write_text(
         json.dumps(
@@ -157,6 +312,7 @@ def _fixture(root: Path) -> dict[str, Path]:
                     "calibre_foundry_archive": _record(archive),
                     "calibre_rule_deck": _record(deck),
                     "calibre_user_guide": _record(guide),
+                    "emx_process_file": _record(process),
                 },
             }
         )
@@ -183,10 +339,12 @@ def _fixture(root: Path) -> dict[str, Path]:
         "manifest": manifest,
         "authorization": authorization,
         "out_dir": root / "out",
+        "source_audits": source_audits,
+        "physical_audits": physical_audits,
     }
 
 
-def _run(fixture: dict[str, Path]) -> subprocess.CompletedProcess[str]:
+def _run(fixture: dict[str, Any]) -> subprocess.CompletedProcess[str]:
     return subprocess.run(
         [
             sys.executable,
@@ -216,83 +374,153 @@ import hashlib
 import json
 from pathlib import Path
 
-p = argparse.ArgumentParser()
-p.add_argument("--input-index-csv", required=True)
-p.add_argument("--out-dir", required=True)
-p.add_argument("--foundry-archive", required=True)
-p.add_argument("--expected-archive-sha256", required=True)
-p.add_argument("--expected-deck-sha256", required=True)
-p.add_argument("--expected-user-guide-sha256", required=True)
-args, _ = p.parse_known_args()
-out = Path(args.out_dir)
-out.mkdir(parents=True)
-with Path(args.input_index_csv).open(newline="", encoding="utf-8") as h:
-    reader = csv.DictReader(h)
-    source_fields = set(reader.fieldnames or [])
-    source = list(reader)
-required_fields = {
-    "candidate_id_sha256",
-    "candidate_geometry_identity_sha256",
-    "gds_path",
-    "gds_timestamp_normalized_sha256",
-    "gds_timestamp_normalization_algorithm",
-    "geometry_audit_path",
-}
-if not required_fields.issubset(source_fields):
-    raise SystemExit(9)
-if any(
-    row["gds_timestamp_normalization_algorithm"]
-    != "gdsii-record-sha256-zero-bgnlib-bgnstr-timestamps-v1"
-    for row in source
-):
-    raise SystemExit(10)
-rows = []
-for row in source:
-    success = not row["candidate_id_sha256"].startswith("f")
-    candidate_dir = out / "candidates" / row["candidate_id_sha256"][:16]
-    candidate_dir.mkdir(parents=True)
-    summary_path = candidate_dir / "drc_summary.json"
-    if success:
-        summary = {
-            "overall_status": "PASS",
+REQUIRED_GEOMETRY_CHECKS = (
+    "geometry_range_pass",
+    "topology_pass",
+    "line_width_sync_pass",
+    "angle_45_135_pass",
+    "ground_clearance_pass",
+    "foundry_layout_audit_pass",
+    "manufacturing_grid_canonicalization_pass",
+    "foundry_slotted_ground_frame_pass",
+    "foundry_power_line_contract_pass",
+    "foundry_via_stack_and_landing_pad_pass",
+    "foundry_bridge_connection_pass",
+)
+
+
+def main(argv=None):
+    p = argparse.ArgumentParser()
+    p.add_argument("--input-index-csv", required=True)
+    p.add_argument("--out-dir", required=True)
+    p.add_argument("--foundry-archive", required=True)
+    p.add_argument("--expected-archive-sha256", required=True)
+    p.add_argument("--expected-deck-sha256", required=True)
+    p.add_argument("--expected-user-guide-sha256", required=True)
+    args, _ = p.parse_known_args(argv)
+    out = Path(args.out_dir)
+    out.mkdir(parents=True)
+    with Path(args.input_index_csv).open(newline="", encoding="utf-8") as h:
+        reader = csv.DictReader(h)
+        source_fields = set(reader.fieldnames or [])
+        source = list(reader)
+    required_fields = {
+        "candidate_id_sha256",
+        "candidate_geometry_identity_sha256",
+        "gds_path",
+        "gds_timestamp_normalized_sha256",
+        "gds_timestamp_normalization_algorithm",
+        "geometry_audit_path",
+    }
+    if not required_fields.issubset(source_fields):
+        return 9
+    if any(
+        row["gds_timestamp_normalization_algorithm"]
+        != "gdsii-record-sha256-zero-bgnlib-bgnstr-timestamps-v1"
+        for row in source
+    ):
+        return 10
+    expected_current_checks = (
+        "geometry_range_pass",
+        "topology_pass",
+        "line_width_sync_pass",
+        "angle_45_135_pass",
+        "ground_clearance_pass",
+    )
+    if REQUIRED_GEOMETRY_CHECKS != expected_current_checks:
+        return 11
+    rows = []
+    for row in source:
+        audit = json.loads(Path(row["geometry_audit_path"]).read_text())
+        if not (
+            audit["overall_status"] == "PASS"
+            and tuple(audit["effective_required_geometry_checks"])
+            == expected_current_checks
+            and audit["teacher_only_foundry_slotting_prechecks_applied"] is False
+            and all(audit["checks"].get(name) is True for name in expected_current_checks)
+        ):
+            return 12
+        success = not row["candidate_id_sha256"].startswith("f")
+        candidate_dir = out / "candidates" / row["candidate_id_sha256"][:16]
+        candidate_dir.mkdir(parents=True)
+        summary_path = candidate_dir / "drc_summary.json"
+        if success:
+            summary = {
+                "overall_status": "PASS",
+                "candidate_id_sha256": row["candidate_id_sha256"],
+                "candidate_geometry_identity_sha256": row["candidate_geometry_identity_sha256"],
+            }
+            summary_path.write_text(json.dumps(summary))
+            summary_sha = hashlib.sha256(summary_path.read_bytes()).hexdigest()
+        else:
+            summary_sha = ""
+        rows.append({
             "candidate_id_sha256": row["candidate_id_sha256"],
             "candidate_geometry_identity_sha256": row["candidate_geometry_identity_sha256"],
-        }
-        summary_path.write_text(json.dumps(summary))
-        summary_sha = hashlib.sha256(summary_path.read_bytes()).hexdigest()
-    else:
-        summary_sha = ""
-    rows.append({
-        "candidate_id_sha256": row["candidate_id_sha256"],
-        "candidate_geometry_identity_sha256": row["candidate_geometry_identity_sha256"],
-        "drc_summary_path": str(summary_path) if success else "",
-        "drc_summary_sha256": summary_sha,
-        "drc_violation_count": "0" if success else "4",
-        "blocking_drc_violation_count": "0" if success else "4",
-        "documented_warning_count": "0",
-        "overall_status": "PASS" if success else "FAIL",
-        "error": "" if success else "synthetic blocking violations",
-    })
-index = out / "drc_index.csv"
-with index.open("w", newline="", encoding="utf-8") as h:
-    w = csv.DictWriter(h, fieldnames=list(rows[0]))
-    w.writeheader(); w.writerows(rows)
-pass_count = sum(row["overall_status"] == "PASS" for row in rows)
-archive = Path(args.foundry_archive)
-summary = {
-    "schema": "tsmc65_calibre_macro_ip_back_end_drc_batch_v1",
-    "overall_status": "PASS" if pass_count == len(rows) else "FAIL",
-    "candidate_count": len(rows),
-    "pass_count": pass_count,
-    "fail_count": len(rows) - pass_count,
-    "foundry_archive_sha256": hashlib.sha256(archive.read_bytes()).hexdigest(),
-    "foundry_source_deck_sha256": args.expected_deck_sha256,
-    "foundry_user_guide_sha256": args.expected_user_guide_sha256,
-    "drc_index_csv": str(index),
-    "drc_index_sha256": hashlib.sha256(index.read_bytes()).hexdigest(),
-}
-(out / "tsmc65_calibre_macro_drc_batch_summary.json").write_text(json.dumps(summary))
+            "drc_summary_path": str(summary_path) if success else "",
+            "drc_summary_sha256": summary_sha,
+            "drc_violation_count": "0" if success else "4",
+            "blocking_drc_violation_count": "0" if success else "4",
+            "documented_warning_count": "0",
+            "overall_status": "PASS" if success else "FAIL",
+            "error": "" if success else "synthetic blocking violations",
+        })
+    index = out / "drc_index.csv"
+    with index.open("w", newline="", encoding="utf-8") as h:
+        w = csv.DictWriter(h, fieldnames=list(rows[0]))
+        w.writeheader()
+        w.writerows(rows)
+    pass_count = sum(row["overall_status"] == "PASS" for row in rows)
+    archive = Path(args.foundry_archive)
+    summary = {
+        "schema": "tsmc65_calibre_macro_ip_back_end_drc_batch_v1",
+        "overall_status": "PASS" if pass_count == len(rows) else "FAIL",
+        "candidate_count": len(rows),
+        "pass_count": pass_count,
+        "fail_count": len(rows) - pass_count,
+        "foundry_archive_sha256": hashlib.sha256(archive.read_bytes()).hexdigest(),
+        "foundry_source_deck_sha256": args.expected_deck_sha256,
+        "foundry_user_guide_sha256": args.expected_user_guide_sha256,
+        "drc_index_csv": str(index),
+        "drc_index_sha256": hashlib.sha256(index.read_bytes()).hexdigest(),
+    }
+    (out / "tsmc65_calibre_macro_drc_batch_summary.json").write_text(
+        json.dumps(summary)
+    )
+    return 0
 '''
+
+
+def _refresh_input_evidence(fixture: dict[str, Any]) -> None:
+    rows = _read_csv(fixture["input_index"])
+    physical_by_candidate = {
+        json.loads(path.read_text())["candidate_id_sha256"]: path
+        for path in fixture["physical_audits"]
+    }
+    for row in rows:
+        audit = physical_by_candidate[row["candidate_id_sha256"]]
+        row["gds_physical_identity_audit_sha256"] = _sha(audit)
+    _write_csv(fixture["input_index"], rows)
+    _refresh_input_receipt(fixture)
+
+
+def _refresh_input_receipt(fixture: dict[str, Any]) -> None:
+    receipt = json.loads(fixture["input_receipt"].read_text())
+    receipt["pass_index"] = _record(fixture["input_index"])
+    fixture["input_receipt"].write_text(json.dumps(receipt))
+
+
+def _refresh_manifest_authorization(fixture: dict[str, Any]) -> None:
+    manifest = json.loads(fixture["manifest"].read_text())
+    manifest["script_identities"]["calibre_batch_delegate"] = _record(
+        fixture["delegate"]
+    )
+    fixture["manifest"].write_text(json.dumps(manifest))
+    authorization = json.loads(fixture["authorization"].read_text())
+    authorization["backend_identity_manifest"]["sha256"] = _sha(
+        fixture["manifest"]
+    )
+    fixture["authorization"].write_text(json.dumps(authorization))
 
 
 def _read_csv(path: Path) -> list[dict[str, str]]:
