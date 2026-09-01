@@ -1,0 +1,71 @@
+{
+  "schema": "rfic_transformer.broadband56_v2_resource_gate_transition_public_status.v1",
+  "generated_utc": "2026-09-01T19:35:25+00:00",
+  "overall_status": "QUEUED_WAITING_FOR_CAPACITY",
+  "decision": "KEEP_ONE_AUTHORIZED_CONTROLLER_AND_WAIT_FOR_NORMALIZED_LOAD_GATES",
+  "campaign_id": "broadband56_real_emx_balanced200k_tsmc65_v2",
+  "scientific_contract_fingerprint_sha256": "f86a00efbf7756b7421b863bbb16c340db6b423640f63a3257d46c1af49eb55e",
+  "authorization": {
+    "scope": "FULL_CAMPAIGN",
+    "candidate_sha256": "e78c6fe6dfc2801a4bfa131e0a21398f2402bff99e1199d3c5ebd79b42344946",
+    "approval_receipt_sha256": "532e751d5b72b32243935d1df3095627dd5a4c713ac4342437fa709b4f9da588",
+    "approval_receipt_status": "PASS"
+  },
+  "queue": {
+    "queue_id": "b56-v2-queue-20260901T184307Z",
+    "controller_id": "b56-v2-controller-3184781-20260901T184307Z",
+    "controller_pid": 3184781,
+    "controller_alive": true,
+    "supervisor_count": 1,
+    "current_stage": "GOLDEN",
+    "current_concurrency": 0,
+    "active_simulator_jobs": 0
+  },
+  "material_gate_change": {
+    "previous_observed_check_index": 24,
+    "current_observed_check_index": 26,
+    "swap_thrash_gate_previous": "WAIT",
+    "swap_thrash_gate_current": "PASS",
+    "swap_in_pages_delta": 0,
+    "swap_out_pages_delta": 0,
+    "remaining_failed_checks": [
+      "normalized_load1_gate",
+      "normalized_load5_gate"
+    ]
+  },
+  "latest_capacity_state": {
+    "check_index": 26,
+    "resource_gate": "WAIT",
+    "normalized_load1": 1.6218490600585938,
+    "normalized_load5": 1.7587178548177083,
+    "normalized_load15": 1.8283742268880208,
+    "raw_load1": 311.39501953125,
+    "logical_cpu_count": 192,
+    "available_memory_fraction": 0.6662218602951945,
+    "iowait_percent": 0.0003473726900801649,
+    "license_capacity": 4,
+    "license_gate": "PASS",
+    "isolation_gate": "PASS",
+    "storage_gate": "PASS",
+    "memory_gate": "PASS",
+    "iowait_gate": "PASS",
+    "latest_resource_gate_sha256": "3cde674339db7395c98812e7d6ffb064202cc87438ed9bf95f8c4ad20ee7ac2d",
+    "latest_resource_snapshot_sha256": "e6b235408dd2ddf6b93913185e710401b4a22713ed3fd21f2319e9d931ef0200",
+    "simulator_action_taken_on_latest_iteration": false
+  },
+  "progress": {
+    "accepted_unique_geometries": 0,
+    "fresh_complete_s4p": 0,
+    "feature_rows": 0,
+    "target_accepted_unique_geometries": 200000,
+    "target_fresh_s4p": 200000,
+    "target_geometry_frequency_rows": 11200000
+  },
+  "public_repository_boundary": {
+    "private_absolute_paths_published": false,
+    "license_server_details_published": false,
+    "pdk_or_proc_bytes_published": false,
+    "gds_or_s4p_published": false
+  },
+  "next_action": "The existing controller continues polling. GOLDEN remains at concurrency zero until normalized load1 and load5, together with every other fresh gate, pass in the same capacity check."
+}
