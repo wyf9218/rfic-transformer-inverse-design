@@ -2,9 +2,11 @@ from __future__ import annotations
 
 import csv
 import hashlib
+import importlib.util
 import json
 import subprocess
 import sys
+import types
 from pathlib import Path
 from typing import Any
 
@@ -22,6 +24,7 @@ from rfic_transformer_inverse_design.campaigns.broadband56_full_campaign_authori
 from rfic_transformer_inverse_design.campaigns.broadband56_gds_identity import (
     GDS_TIMESTAMP_NORMALIZED_SHA256_ALGORITHM,
 )
+from rfic_transformer_inverse_design import layout as layout_package
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -176,6 +179,31 @@ def test_calibre_batch_rejects_legacy_delegate_contract_drift(
     result = _run(fixture)
     assert result.returncode == 2
     assert "pinned Calibre delegate check contract drifted" in result.stderr
+
+
+def test_legacy_gds_hash_compatibility_module_is_scoped(
+    tmp_path: Path,
+    monkeypatch: Any,
+) -> None:
+    runner = _load_runner_module()
+    module_name = runner.LEGACY_GDS_HASH_MODULE_NAME
+    delegate = tmp_path / "import_only_delegate.py"
+    delegate.write_text(_fake_import_only_delegate_source())
+
+    monkeypatch.delitem(sys.modules, module_name, raising=False)
+    monkeypatch.delattr(layout_package, "gds_hash", raising=False)
+    result = runner._run_delegate_with_current_contract(delegate, [])
+    assert result.returncode == 0
+    assert module_name not in sys.modules
+    assert not hasattr(layout_package, "gds_hash")
+
+    previous = types.ModuleType(module_name)
+    monkeypatch.setitem(sys.modules, module_name, previous)
+    monkeypatch.setattr(layout_package, "gds_hash", previous, raising=False)
+    result = runner._run_delegate_with_current_contract(delegate, [])
+    assert result.returncode == 0
+    assert sys.modules[module_name] is previous
+    assert layout_package.gds_hash is previous
 
 
 def _fixture(root: Path) -> dict[str, Any]:
@@ -374,6 +402,11 @@ import hashlib
 import json
 from pathlib import Path
 
+from rfic_transformer_inverse_design.layout.gds_hash import (
+    GDS_TIMESTAMP_NORMALIZED_SHA256_ALGORITHM,
+    gds_timestamp_normalized_sha256,
+)
+
 REQUIRED_GEOMETRY_CHECKS = (
     "geometry_range_pass",
     "topology_pass",
@@ -398,6 +431,14 @@ def main(argv=None):
     p.add_argument("--expected-deck-sha256", required=True)
     p.add_argument("--expected-user-guide-sha256", required=True)
     args, _ = p.parse_known_args(argv)
+    if GDS_TIMESTAMP_NORMALIZED_SHA256_ALGORITHM != (
+        "gdsii-record-sha256-zero-bgnlib-bgnstr-timestamps-v1"
+    ):
+        return 13
+    if gds_timestamp_normalized_sha256.__module__ != (
+        "rfic_transformer_inverse_design.campaigns.broadband56_gds_identity"
+    ):
+        return 14
     out = Path(args.out_dir)
     out.mkdir(parents=True)
     with Path(args.input_index_csv).open(newline="", encoding="utf-8") as h:
@@ -489,6 +530,50 @@ def main(argv=None):
     )
     return 0
 '''
+
+
+def _fake_import_only_delegate_source() -> str:
+    return r'''from rfic_transformer_inverse_design.layout.gds_hash import (
+    GDS_TIMESTAMP_NORMALIZED_SHA256_ALGORITHM,
+    gds_timestamp_normalized_sha256,
+)
+
+REQUIRED_GEOMETRY_CHECKS = (
+    "geometry_range_pass",
+    "topology_pass",
+    "line_width_sync_pass",
+    "angle_45_135_pass",
+    "ground_clearance_pass",
+    "foundry_layout_audit_pass",
+    "manufacturing_grid_canonicalization_pass",
+    "foundry_slotted_ground_frame_pass",
+    "foundry_power_line_contract_pass",
+    "foundry_via_stack_and_landing_pad_pass",
+    "foundry_bridge_connection_pass",
+)
+
+
+def main(argv=None):
+    if GDS_TIMESTAMP_NORMALIZED_SHA256_ALGORITHM != (
+        "gdsii-record-sha256-zero-bgnlib-bgnstr-timestamps-v1"
+    ):
+        return 21
+    if gds_timestamp_normalized_sha256.__module__ != (
+        "rfic_transformer_inverse_design.campaigns.broadband56_gds_identity"
+    ):
+        return 22
+    return 0
+'''
+
+
+def _load_runner_module() -> Any:
+    spec = importlib.util.spec_from_file_location(
+        "_test_run_broadband56_v2_calibre_batch", SCRIPT
+    )
+    assert spec is not None and spec.loader is not None
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
 
 
 def _refresh_input_evidence(fixture: dict[str, Any]) -> None:

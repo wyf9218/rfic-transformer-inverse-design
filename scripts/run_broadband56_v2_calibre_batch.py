@@ -13,6 +13,7 @@ import json
 import os
 import re
 import sys
+import types
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Mapping
@@ -20,6 +21,7 @@ from typing import Any, Mapping
 if __package__ in {None, ""}:
     sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
+from rfic_transformer_inverse_design import layout as _layout_package  # noqa: E402
 from rfic_transformer_inverse_design.campaigns.broadband56_balanced200k import (  # noqa: E402
     CAMPAIGN_ID,
 )
@@ -34,6 +36,7 @@ from rfic_transformer_inverse_design.campaigns.broadband56_full_campaign_authori
 )
 from rfic_transformer_inverse_design.campaigns.broadband56_gds_identity import (  # noqa: E402
     GDS_TIMESTAMP_NORMALIZED_SHA256_ALGORITHM,
+    gds_timestamp_normalized_sha256,
 )
 
 
@@ -58,6 +61,10 @@ EXPECTED_CALIBRE_MODULE = "mentor/old/2025"
 DELEGATE_EXECUTION_MODE = (
     "importlib-main-with-current-contract-required-checks-v1"
 )
+LEGACY_GDS_HASH_MODULE_NAME = (
+    "rfic_transformer_inverse_design.layout.gds_hash"
+)
+_MISSING_MODULE = object()
 
 DELEGATE_REQUIRED_INPUT_FIELDS = (
     "candidate_id_sha256",
@@ -947,38 +954,77 @@ def _run_delegate_with_current_contract(
     if spec is None or spec.loader is None:
         raise CalibreBatchError("cannot load the pinned Calibre delegate")
     module = importlib.util.module_from_spec(spec)
-    try:
-        spec.loader.exec_module(module)
-    except (Exception, SystemExit) as exc:
-        raise CalibreBatchError(
-            f"cannot import the pinned Calibre delegate: {exc}"
-        ) from exc
-    legacy_checks = tuple(getattr(module, "REQUIRED_GEOMETRY_CHECKS", ()))
-    if legacy_checks != LEGACY_DELEGATE_REQUIRED_GEOMETRY_CHECKS:
-        raise CalibreBatchError("pinned Calibre delegate check contract drifted")
-    module.REQUIRED_GEOMETRY_CHECKS = (
-        DELEGATE_EFFECTIVE_REQUIRED_GEOMETRY_CHECKS
-    )
-    stdout = io.StringIO()
-    stderr = io.StringIO()
-    try:
-        with contextlib.redirect_stdout(stdout), contextlib.redirect_stderr(
-            stderr
-        ):
-            return_code = int(module.main(delegate_args))
-    except SystemExit as exc:
-        return_code = int(exc.code or 0)
-    except Exception as exc:
-        raise CalibreBatchError(
-            f"Calibre delegate raised {type(exc).__name__}: {exc}"
-        ) from exc
-    finally:
-        module.REQUIRED_GEOMETRY_CHECKS = legacy_checks
+    with _legacy_gds_hash_compat_module():
+        try:
+            spec.loader.exec_module(module)
+        except (Exception, SystemExit) as exc:
+            raise CalibreBatchError(
+                f"cannot import the pinned Calibre delegate: {exc}"
+            ) from exc
+        legacy_checks = tuple(getattr(module, "REQUIRED_GEOMETRY_CHECKS", ()))
+        if legacy_checks != LEGACY_DELEGATE_REQUIRED_GEOMETRY_CHECKS:
+            raise CalibreBatchError(
+                "pinned Calibre delegate check contract drifted"
+            )
+        module.REQUIRED_GEOMETRY_CHECKS = (
+            DELEGATE_EFFECTIVE_REQUIRED_GEOMETRY_CHECKS
+        )
+        stdout = io.StringIO()
+        stderr = io.StringIO()
+        try:
+            with contextlib.redirect_stdout(stdout), contextlib.redirect_stderr(
+                stderr
+            ):
+                return_code = int(module.main(delegate_args))
+        except SystemExit as exc:
+            return_code = int(exc.code or 0)
+        except Exception as exc:
+            raise CalibreBatchError(
+                f"Calibre delegate raised {type(exc).__name__}: {exc}"
+            ) from exc
+        finally:
+            module.REQUIRED_GEOMETRY_CHECKS = legacy_checks
     return argparse.Namespace(
         returncode=return_code,
         stdout=stdout.getvalue(),
         stderr=stderr.getvalue(),
     )
+
+
+@contextlib.contextmanager
+def _legacy_gds_hash_compat_module():
+    """Expose the manifest-bound hash implementation to the legacy delegate."""
+
+    previous_module = sys.modules.get(
+        LEGACY_GDS_HASH_MODULE_NAME, _MISSING_MODULE
+    )
+    previous_attribute = getattr(_layout_package, "gds_hash", _MISSING_MODULE)
+    compatibility_module = types.ModuleType(LEGACY_GDS_HASH_MODULE_NAME)
+    compatibility_module.__package__ = "rfic_transformer_inverse_design.layout"
+    compatibility_module.GDS_TIMESTAMP_NORMALIZED_SHA256_ALGORITHM = (
+        GDS_TIMESTAMP_NORMALIZED_SHA256_ALGORITHM
+    )
+    compatibility_module.gds_timestamp_normalized_sha256 = (
+        gds_timestamp_normalized_sha256
+    )
+    compatibility_module.__all__ = (
+        "GDS_TIMESTAMP_NORMALIZED_SHA256_ALGORITHM",
+        "gds_timestamp_normalized_sha256",
+    )
+    sys.modules[LEGACY_GDS_HASH_MODULE_NAME] = compatibility_module
+    _layout_package.gds_hash = compatibility_module
+    try:
+        yield
+    finally:
+        if previous_module is _MISSING_MODULE:
+            sys.modules.pop(LEGACY_GDS_HASH_MODULE_NAME, None)
+        else:
+            sys.modules[LEGACY_GDS_HASH_MODULE_NAME] = previous_module
+        if previous_attribute is _MISSING_MODULE:
+            if hasattr(_layout_package, "gds_hash"):
+                delattr(_layout_package, "gds_hash")
+        else:
+            _layout_package.gds_hash = previous_attribute
 
 
 def _finite_float(value: Any, label: str) -> float:
