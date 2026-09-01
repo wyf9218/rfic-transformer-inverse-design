@@ -30,6 +30,9 @@ from rfic_transformer_inverse_design.campaigns.broadband56_full_campaign_authori
     FULL_CAMPAIGN_APPROVAL_SCOPE,
     FULL_CAMPAIGN_PASS_DECISION,
 )
+from rfic_transformer_inverse_design.campaigns.broadband56_gds_identity import (  # noqa: E402
+    GDS_TIMESTAMP_NORMALIZED_SHA256_ALGORITHM,
+)
 
 
 RECEIPT_SCHEMA = "rfic_transformer.broadband56_v2_calibre_batch.v1"
@@ -37,6 +40,7 @@ RECEIPT_NAME = "CALIBRE_BATCH_ROLE_RECEIPT.json"
 PASS_INDEX_NAME = "CALIBRE_PASS_INDEX.csv"
 FAILURE_INDEX_NAME = "CALIBRE_FAILURE_INDEX.csv"
 EVIDENCE_INDEX_NAME = "CALIBRE_EVIDENCE_INDEX.csv"
+DELEGATE_INPUT_INDEX_NAME = "CALIBRE_DELEGATE_INPUT_INDEX.csv"
 SHA256SUMS_NAME = "SHA256SUMS.txt"
 SHA256_PATTERN = re.compile(r"[0-9a-f]{64}")
 
@@ -45,6 +49,18 @@ EXPECTED_USER_GUIDE_MEMBER = "3_UserGuide.txt"
 EXPECTED_PROCESS_TOKEN = "/TSMC65_05_12_26/"
 EXPECTED_TOP_CELL = "TRANSFORMER"
 EXPECTED_CALIBRE_MODULE = "mentor/old/2025"
+
+DELEGATE_REQUIRED_INPUT_FIELDS = (
+    "candidate_id_sha256",
+    "candidate_geometry_identity_sha256",
+    "gds_path",
+    "gds_timestamp_normalized_sha256",
+    "gds_timestamp_normalization_algorithm",
+    "geometry_audit_path",
+)
+SOURCE_NORMALIZATION_ALGORITHM_FIELD = (
+    "gds_timestamp_normalized_sha256_algorithm"
+)
 
 FAILURE_FIELDS = (
     "submitted_sequence",
@@ -173,6 +189,9 @@ def run_batch(args: argparse.Namespace, *, out_dir: Path) -> dict[str, Any]:
         if candidate in source_by_id:
             raise CalibreBatchError("Calibre input candidate identities are duplicated")
         source_by_id[candidate] = row
+    delegate_rows, delegate_fields = _prepare_delegate_input(
+        input_rows, input_fields
+    )
 
     pinned = {
         "manifest": (manifest_path, manifest_sha),
@@ -186,6 +205,12 @@ def run_batch(args: argparse.Namespace, *, out_dir: Path) -> dict[str, Any]:
         "input_index": (input_index_path, _sha256(input_index_path)),
     }
     out_dir.mkdir(parents=True, mode=0o700)
+    delegate_input_path = out_dir / DELEGATE_INPUT_INDEX_NAME
+    _write_csv(delegate_input_path, delegate_fields, delegate_rows)
+    pinned["delegate_input_index"] = (
+        delegate_input_path,
+        _sha256(delegate_input_path),
+    )
     if not input_rows:
         pass_path = out_dir / PASS_INDEX_NAME
         failure_path = out_dir / FAILURE_INDEX_NAME
@@ -210,6 +235,7 @@ def run_batch(args: argparse.Namespace, *, out_dir: Path) -> dict[str, Any]:
             "failed_candidates_counted_as_accepted": False,
             "backend_identity_manifest": _file_record(manifest_path),
             "input_role_receipt": _file_record(input_receipt_path),
+            "delegate_input_index": _file_record(delegate_input_path),
             "full_campaign_authorization_receipt": _file_record(
                 authorization_path
             ),
@@ -237,7 +263,7 @@ def run_batch(args: argparse.Namespace, *, out_dir: Path) -> dict[str, Any]:
         str(python_path),
         str(delegate_path),
         "--input-index-csv",
-        str(input_index_path),
+        str(delegate_input_path),
         "--out-dir",
         str(delegate_dir),
         "--foundry-archive",
@@ -417,6 +443,7 @@ def run_batch(args: argparse.Namespace, *, out_dir: Path) -> dict[str, Any]:
         "failed_candidates_counted_as_accepted": False,
         "backend_identity_manifest": _file_record(manifest_path),
         "input_role_receipt": _file_record(input_receipt_path),
+        "delegate_input_index": _file_record(delegate_input_path),
         "full_campaign_authorization_receipt": _file_record(
             authorization_path
         ),
@@ -490,6 +517,58 @@ def _read_csv(path: Path) -> tuple[list[dict[str, str]], list[str]]:
     with path.open(newline="", encoding="utf-8-sig") as handle:
         reader = csv.DictReader(handle)
         return [dict(row) for row in reader], list(reader.fieldnames or [])
+
+
+def _prepare_delegate_input(
+    rows: list[dict[str, str]], fields: list[str]
+) -> tuple[list[dict[str, str]], list[str]]:
+    delegate_fields = list(fields)
+    if "gds_timestamp_normalization_algorithm" not in delegate_fields:
+        delegate_fields.append("gds_timestamp_normalization_algorithm")
+
+    prepared: list[dict[str, str]] = []
+    for row_number, row in enumerate(rows, start=2):
+        prepared_row = dict(row)
+        normalized_algorithm = str(
+            prepared_row.get("gds_timestamp_normalization_algorithm")
+            or prepared_row.get(SOURCE_NORMALIZATION_ALGORITHM_FIELD)
+            or ""
+        )
+        source_algorithm = str(
+            prepared_row.get(SOURCE_NORMALIZATION_ALGORITHM_FIELD) or ""
+        )
+        if (
+            source_algorithm
+            and normalized_algorithm
+            and source_algorithm != normalized_algorithm
+        ):
+            raise CalibreBatchError(
+                f"Calibre input row {row_number} has conflicting normalized-GDS "
+                "algorithm fields"
+            )
+        if normalized_algorithm != GDS_TIMESTAMP_NORMALIZED_SHA256_ALGORITHM:
+            raise CalibreBatchError(
+                f"Calibre input row {row_number} has an unsupported normalized-GDS "
+                "algorithm"
+            )
+        prepared_row["gds_timestamp_normalization_algorithm"] = (
+            normalized_algorithm
+        )
+        missing = [
+            field
+            for field in DELEGATE_REQUIRED_INPUT_FIELDS
+            if not str(prepared_row.get(field) or "")
+        ]
+        if missing:
+            raise CalibreBatchError(
+                f"Calibre input row {row_number} lacks delegate fields: {missing}"
+            )
+        _sha_value(
+            prepared_row.get("gds_timestamp_normalized_sha256"),
+            "normalized GDS",
+        )
+        prepared.append(prepared_row)
+    return prepared, delegate_fields
 
 
 def _write_csv(

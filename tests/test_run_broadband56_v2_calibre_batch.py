@@ -18,6 +18,9 @@ from rfic_transformer_inverse_design.campaigns.broadband56_full_campaign_authori
     FULL_CAMPAIGN_APPROVAL_SCOPE,
     FULL_CAMPAIGN_PASS_DECISION,
 )
+from rfic_transformer_inverse_design.campaigns.broadband56_gds_identity import (
+    GDS_TIMESTAMP_NORMALIZED_SHA256_ALGORITHM,
+)
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -37,6 +40,17 @@ def test_calibre_batch_preserves_pass_and_failure(tmp_path: Path) -> None:
     assert receipt["calibre_fail_count"] == 1
     assert receipt["failed_candidates_counted_as_accepted"] is False
     assert receipt["simulator_action_taken"] is True
+    delegate_input = Path(receipt["delegate_input_index"]["path"])
+    assert delegate_input.name == "CALIBRE_DELEGATE_INPUT_INDEX.csv"
+    delegate_rows = _read_csv(delegate_input)
+    assert all(
+        row["gds_timestamp_normalization_algorithm"]
+        == GDS_TIMESTAMP_NORMALIZED_SHA256_ALGORITHM
+        for row in delegate_rows
+    )
+    assert "gds_timestamp_normalization_algorithm" not in _csv_fields(
+        fixture["input_index"]
+    )
 
     passed = _read_csv(out / "CALIBRE_PASS_INDEX.csv")
     failed = _read_csv(out / "CALIBRE_FAILURE_INDEX.csv")
@@ -89,12 +103,22 @@ def _fixture(root: Path) -> dict[str, Path]:
                 "candidate_geometry_identity_sha256": "1" * 64,
                 "gds_physical_identity_status": "PASS",
                 "gds_path": "/tmp/a.gds",
+                "gds_timestamp_normalized_sha256": "b" * 64,
+                "gds_timestamp_normalized_sha256_algorithm": (
+                    GDS_TIMESTAMP_NORMALIZED_SHA256_ALGORITHM
+                ),
+                "geometry_audit_path": "/tmp/a_geometry_audit.json",
             },
             {
                 "candidate_id_sha256": "f" * 64,
                 "candidate_geometry_identity_sha256": "2" * 64,
                 "gds_physical_identity_status": "PASS",
                 "gds_path": "/tmp/f.gds",
+                "gds_timestamp_normalized_sha256": "c" * 64,
+                "gds_timestamp_normalized_sha256_algorithm": (
+                    GDS_TIMESTAMP_NORMALIZED_SHA256_ALGORITHM
+                ),
+                "geometry_audit_path": "/tmp/f_geometry_audit.json",
             },
         ],
     )
@@ -203,7 +227,25 @@ args, _ = p.parse_known_args()
 out = Path(args.out_dir)
 out.mkdir(parents=True)
 with Path(args.input_index_csv).open(newline="", encoding="utf-8") as h:
-    source = list(csv.DictReader(h))
+    reader = csv.DictReader(h)
+    source_fields = set(reader.fieldnames or [])
+    source = list(reader)
+required_fields = {
+    "candidate_id_sha256",
+    "candidate_geometry_identity_sha256",
+    "gds_path",
+    "gds_timestamp_normalized_sha256",
+    "gds_timestamp_normalization_algorithm",
+    "geometry_audit_path",
+}
+if not required_fields.issubset(source_fields):
+    raise SystemExit(9)
+if any(
+    row["gds_timestamp_normalization_algorithm"]
+    != "gdsii-record-sha256-zero-bgnlib-bgnstr-timestamps-v1"
+    for row in source
+):
+    raise SystemExit(10)
 rows = []
 for row in source:
     success = not row["candidate_id_sha256"].startswith("f")
@@ -256,6 +298,11 @@ summary = {
 def _read_csv(path: Path) -> list[dict[str, str]]:
     with path.open(newline="", encoding="utf-8") as handle:
         return list(csv.DictReader(handle))
+
+
+def _csv_fields(path: Path) -> list[str]:
+    with path.open(newline="", encoding="utf-8") as handle:
+        return list(csv.DictReader(handle).fieldnames or [])
 
 
 def _write_csv(path: Path, rows: list[dict[str, str]]) -> None:
