@@ -1,0 +1,72 @@
+{
+  "schema": "rfic_transformer.broadband56_corrected_foundry_layout_public_status.v1",
+  "generated_utc": "2026-09-02T14:31:17+00:00",
+  "campaign_id": "broadband56_real_emx_balanced200k_tsmc65_v2",
+  "overall_status": "FOUNDRY_LAYOUT_APPROVAL_REQUIRED",
+  "authoritative_public_implementation_commit": "1807d6a2ce248c38a20708a8a35dd7238bcb8b9d",
+  "control_plane_builder_commit": "09e8a9820feebe7ff5d63a6b46e0698821eb8a55",
+  "private_artifact_identities": {
+    "corrected_configuration": {
+      "filename": "mars_s4p_grounded_powerline_broadband56_56pt_foundry_layout_corrected.yaml",
+      "size_bytes": 3285,
+      "sha256": "431ad59c22df2471746ab5a2eb73a3a7a6484fa511b71c9d6e6c93fb4b3d04d7"
+    },
+    "configuration_diff": {
+      "filename": "FOUNDRY_LAYOUT_CONFIGURATION_DIFF.json",
+      "size_bytes": 3924,
+      "sha256": "2445756fa1b151374e039b4180def7ce107d06e3f11c0ca281a9db6a2ec05aa7"
+    },
+    "authorization_candidate": {
+      "filename": "CORRECTED_FOUNDRY_LAYOUT_CONFIGURATION_AUTHORIZATION_CANDIDATE_20260902T143117Z.json",
+      "size_bytes": 15372,
+      "sha256": "578a62022d20d2aea03aa25a346623491841ccfe16619da861659b7c206d04e9"
+    },
+    "verification_receipt": {
+      "filename": "CORRECTED_FOUNDRY_LAYOUT_CANDIDATE_VERIFICATION_RECEIPT.json",
+      "size_bytes": 4041,
+      "sha256": "d02a13251dac7046f436f7e8d78f565058a95f0f33365d9ca3a9601e7900044b"
+    }
+  },
+  "foundry_layout_contract": {
+    "enabled": true,
+    "manufacturing_grid_um": 0.005,
+    "power_line_stitch_pad_depth_um": 6.0,
+    "shield_strap_width_um": 10.0,
+    "shield_strap_pitch_um": 20.0
+  },
+  "machine_comparison": {
+    "changed_leaf_field_count": 5,
+    "unapproved_field_change_count": 0,
+    "drc_rule_change": false,
+    "geometry_bounds_change": false,
+    "frequency_contract_change": false,
+    "geometry_generation_correction": true,
+    "frequency_start_ghz": 5,
+    "frequency_stop_ghz": 60,
+    "frequency_step_ghz": 1,
+    "frequency_points": 56
+  },
+  "verification": {
+    "focused_tests": "41 passed",
+    "sha256sums_check": "PASS",
+    "independent_contract_check": "PASS",
+    "future_generated_layout_audits": "NOT_RUN_PENDING_CORRECTED_GDS",
+    "simulator_action_taken": false
+  },
+  "controller_state": {
+    "authoritative_controller_pid": 765117,
+    "controller_count": 1,
+    "observed_proc_state": "T (stopped)",
+    "project_active_simulator_count": 0,
+    "controller_signalled": false,
+    "controller_killed": false,
+    "controller_restarted": false,
+    "duplicate_action_taken": false,
+    "required_logical_state": "WAITING_FOR_CORRECTED_FOUNDRY_LAYOUT_APPROVAL"
+  },
+  "authorization_boundary": {
+    "requested_scope": "RESTORE_FOUNDRY_LAYOUT_CONTRACT_AND_RERUN_ONE_RESCUE_GOLDEN_THEN_AUTO_CONTINUE_FULL_CAMPAIGN",
+    "candidate_authorizes_execution": false,
+    "blocker": "Exact corrected foundry-layout candidate SHA requires project-owner approval."
+  }
+}
