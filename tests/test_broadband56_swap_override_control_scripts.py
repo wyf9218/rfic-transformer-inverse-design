@@ -3,6 +3,7 @@ from __future__ import annotations
 import hashlib
 import importlib.util
 import json
+from copy import deepcopy
 from pathlib import Path
 
 import pytest
@@ -65,8 +66,21 @@ def test_swap_controller_private_arguments_are_removed_before_rebound_parse() ->
         "swap-override-receipt",
         "operational-overlay-manifest",
         "operational-handoff-receipt",
+        "isolation-hotfix-handoff-receipt",
+        "isolation-identity-auditor",
+        "isolation-identity-module",
     ):
         values.extend((f"--{name}", f"/tmp/{name}", f"--{name}-sha256", digest))
+    values.extend(
+        (
+            "--isolation-lease",
+            "/tmp/SUPERVISOR_LEASE.json",
+            "--isolation-lease-generation",
+            "1",
+            "--expected-handoff-old-pid",
+            "2232746",
+        )
+    )
     values.extend(("--delegate-controller", "/tmp/delegate.py"))
 
     private, remaining = CONTROLLER._parse_private_args(values)
@@ -84,8 +98,21 @@ def test_swap_controller_rejects_non_sha_identity() -> None:
         "swap-override-receipt",
         "operational-overlay-manifest",
         "operational-handoff-receipt",
+        "isolation-hotfix-handoff-receipt",
+        "isolation-identity-auditor",
+        "isolation-identity-module",
     ):
         values.extend((f"--{name}", f"/tmp/{name}", f"--{name}-sha256", "bad"))
+    values.extend(
+        (
+            "--isolation-lease",
+            "/tmp/SUPERVISOR_LEASE.json",
+            "--isolation-lease-generation",
+            "1",
+            "--expected-handoff-old-pid",
+            "2232746",
+        )
+    )
 
     with pytest.raises(CONTROLLER.SwapOverrideControllerError, match="SHA-256"):
         CONTROLLER._parse_private_args(values)
@@ -125,9 +152,23 @@ def test_operational_handoff_is_bound_to_current_process() -> None:
         "nn_training_started": False,
     }
 
-    assert CONTROLLER._operational_handoff_exact(payload) is True
+    assert (
+        CONTROLLER._operational_handoff_exact(
+            payload,
+            expected_old_process_pid=676436,
+            expected_new_process_pid=CONTROLLER.os.getpid(),
+        )
+        is True
+    )
     payload["new_process_pid"] += 1
-    assert CONTROLLER._operational_handoff_exact(payload) is False
+    assert (
+        CONTROLLER._operational_handoff_exact(
+            payload,
+            expected_old_process_pid=676436,
+            expected_new_process_pid=CONTROLLER.os.getpid(),
+        )
+        is False
+    )
 
 
 def test_swap_snapshot_writer_is_no_clobber(tmp_path: Path) -> None:
@@ -139,16 +180,8 @@ def test_swap_snapshot_writer_is_no_clobber(tmp_path: Path) -> None:
     assert json.loads(path.read_text()) == {"pass": True}
 
 
-class _ControllerDouble:
-    ControllerError = RuntimeError
-
-    @staticmethod
-    def _read_json(path: Path, _label: str):
-        return json.loads(path.read_text())
-
-
-def _handoff_payload() -> dict:
-    return {
+def test_operational_handoff_rejects_wrong_previous_process() -> None:
+    payload = {
         "schema": CONTROLLER.HANDOFF_SCHEMA,
         "overall_status": "PASS",
         "decision": CONTROLLER.HANDOFF_DECISION,
@@ -156,7 +189,7 @@ def _handoff_payload() -> dict:
         "queue_id": CONTROLLER.QUEUE_ID,
         "supervisor_id": CONTROLLER.SUPERVISOR_ID,
         "contract_fingerprint_sha256": CONTROLLER.CONTRACT_FINGERPRINT,
-        "old_process_pid": 676436,
+        "old_process_pid": 2232746,
         "old_process_confirmed_exited": True,
         "new_process_pid": CONTROLLER.os.getpid(),
         "new_process_is_sole_authoritative_supervisor": True,
@@ -166,68 +199,71 @@ def _handoff_payload() -> dict:
         "nn_training_started": False,
     }
 
-
-def test_verified_current_supervisor_is_restored_after_ancestor_filter(
-    tmp_path: Path,
-) -> None:
-    handoff = tmp_path / "handoff.json"
-    handoff.write_text(json.dumps(_handoff_payload()) + "\n")
-    snapshot = {
-        "isolation": {
-            "authoritative_supervisor_count": 0,
-            "duplicate_supervisor_count": 0,
-        }
-    }
-
-    result = CONTROLLER._include_verified_current_supervisor(
-        snapshot,
-        controller=_ControllerDouble,
-        operational_handoff_path=handoff,
+    assert CONTROLLER._operational_handoff_exact(
+        payload,
+        expected_old_process_pid=2232746,
+        expected_new_process_pid=CONTROLLER.os.getpid(),
+    )
+    assert not CONTROLLER._operational_handoff_exact(
+        payload,
+        expected_old_process_pid=676436,
+        expected_new_process_pid=CONTROLLER.os.getpid(),
     )
 
-    isolation = result["isolation"]
-    assert isolation["authoritative_supervisor_count"] == 1
-    assert isolation["duplicate_supervisor_count"] == 0
-    assert isolation["supervisor_self_inclusion"]["external_supervisor_count"] == 0
-    assert snapshot["isolation"]["authoritative_supervisor_count"] == 0
 
-
-def test_external_supervisor_still_triggers_duplicate_detection(
-    tmp_path: Path,
+def test_hotfix_handoff_requires_live_start_bound_identity(
+    monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    handoff = tmp_path / "handoff.json"
-    handoff.write_text(json.dumps(_handoff_payload()) + "\n")
-    snapshot = {
-        "isolation": {
-            "authoritative_supervisor_count": 1,
-            "duplicate_supervisor_count": 0,
-        }
+    process = {
+        "pid": CONTROLLER.os.getpid(),
+        "parent_pid": 1,
+        "uid": 1001,
+        "state": "S",
+        "start_ticks": 12345,
+        "boot_id": "boot-id",
+        "command_line_sha256": "a" * 64,
+        "executable_path": "/usr/bin/python3",
+        "executable_sha256": "b" * 64,
     }
-
-    result = CONTROLLER._include_verified_current_supervisor(
-        snapshot,
-        controller=_ControllerDouble,
-        operational_handoff_path=handoff,
+    old_process = {**process, "pid": 2232746, "start_ticks": 12344}
+    payload = {
+        "schema": CONTROLLER.HANDOFF_SCHEMA,
+        "overall_status": "PASS",
+        "decision": CONTROLLER.HANDOFF_DECISION,
+        "campaign_id": CONTROLLER.CAMPAIGN_ID,
+        "queue_id": CONTROLLER.QUEUE_ID,
+        "supervisor_id": CONTROLLER.SUPERVISOR_ID,
+        "contract_fingerprint_sha256": CONTROLLER.CONTRACT_FINGERPRINT,
+        "old_process_pid": 2232746,
+        "old_process_identity": old_process,
+        "old_process_confirmed_exited": True,
+        "new_process_pid": CONTROLLER.os.getpid(),
+        "new_process_identity": deepcopy(process),
+        "new_process_is_sole_authoritative_supervisor": True,
+        "supervisor_count_after": 1,
+        "overlap_seconds": 0,
+        "new_queue_or_campaign_created": False,
+        "nn_training_started": False,
+        "handoff_scope": (
+            "ISOLATION_GATE_AUTHORIZED_SUPERVISOR_ANCESTOR_IDENTITY_FIX"
+        ),
+    }
+    monkeypatch.setattr(
+        CONTROLLER.isolation_identity,
+        "read_process_identity",
+        lambda _pid: deepcopy(process),
     )
 
-    assert result["isolation"]["authoritative_supervisor_count"] == 2
-    assert result["isolation"]["duplicate_supervisor_count"] == 1
-
-
-def test_supervisor_self_inclusion_rejects_unbound_pid(tmp_path: Path) -> None:
-    payload = _handoff_payload()
-    payload["new_process_pid"] += 1
-    handoff = tmp_path / "handoff.json"
-    handoff.write_text(json.dumps(payload) + "\n")
-
-    with pytest.raises(RuntimeError, match="not bound"):
-        CONTROLLER._include_verified_current_supervisor(
-            {
-                "isolation": {
-                    "authoritative_supervisor_count": 0,
-                    "duplicate_supervisor_count": 0,
-                }
-            },
-            controller=_ControllerDouble,
-            operational_handoff_path=handoff,
-        )
+    assert CONTROLLER._operational_handoff_exact(
+        payload,
+        expected_old_process_pid=2232746,
+        expected_new_process_pid=CONTROLLER.os.getpid(),
+        require_process_identities=True,
+    )
+    payload["new_process_identity"]["start_ticks"] += 1
+    assert not CONTROLLER._operational_handoff_exact(
+        payload,
+        expected_old_process_pid=2232746,
+        expected_new_process_pid=CONTROLLER.os.getpid(),
+        require_process_identities=True,
+    )

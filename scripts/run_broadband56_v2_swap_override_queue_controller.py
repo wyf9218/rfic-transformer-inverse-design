@@ -14,6 +14,7 @@ import hashlib
 import importlib.util
 import json
 import os
+import subprocess
 import sys
 from collections.abc import Mapping
 from datetime import datetime, timezone
@@ -24,6 +25,7 @@ if __package__ in {None, ""}:
     sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from rfic_transformer_inverse_design.campaigns import (  # noqa: E402
+    broadband56_isolation_identity as isolation_identity,
     broadband56_swap_override_policy as swap_policy,
 )
 
@@ -87,6 +89,25 @@ def main(argv: list[str] | None = None) -> int:
             private.operational_handoff_receipt_sha256,
             "operational handoff receipt",
         )
+        isolation_hotfix_handoff_path = _bound_file(
+            private.isolation_hotfix_handoff_receipt,
+            private.isolation_hotfix_handoff_receipt_sha256,
+            "isolation hotfix handoff receipt",
+        )
+        isolation_auditor_path = _bound_file(
+            private.isolation_identity_auditor,
+            private.isolation_identity_auditor_sha256,
+            "isolation identity auditor",
+        )
+        isolation_module_path = _bound_file(
+            private.isolation_identity_module,
+            private.isolation_identity_module_sha256,
+            "isolation identity module",
+        )
+        if Path(isolation_identity.__file__).resolve() != isolation_module_path:
+            raise SwapOverrideControllerError(
+                "loaded isolation identity module does not match bound path"
+            )
 
         os.environ[OVERRIDE_PATH_ENV] = str(override_path)
         os.environ[OVERRIDE_SHA_ENV] = private.swap_override_receipt_sha256
@@ -112,14 +133,32 @@ def main(argv: list[str] | None = None) -> int:
         )
         controller.evaluate_capacity_snapshot = swap_policy.evaluate_capacity_snapshot
         controller.adaptive_concurrency = swap_policy.adaptive_concurrency
+        campaign_root = Path(args.campaign_root).expanduser().resolve()
+        campaign_lock = (
+            Path(args.lock_path).expanduser().resolve()
+            if args.lock_path
+            else campaign_root.parent / controller.LOCK_NAME
+        )
         controller._run_probe = _swap_override_probe_factory(
             controller,
             original_run_probe=original_run_probe,
             override_receipt_path=override_path,
             overlay_manifest_path=overlay_path,
             operational_handoff_path=operational_handoff_path,
+            isolation_hotfix_handoff_path=isolation_hotfix_handoff_path,
+            isolation_auditor_path=isolation_auditor_path,
+            isolation_module_path=isolation_module_path,
+            isolation_lease_path=Path(private.isolation_lease)
+            .expanduser()
+            .resolve(),
+            isolation_lease_generation=private.isolation_lease_generation,
+            backend_manifest_path=Path(args.backend_identity_manifest)
+            .expanduser()
+            .resolve(),
+            campaign_root=campaign_root,
+            campaign_lock=campaign_lock,
+            python_bin=Path(args.python_bin).expanduser().resolve(),
         )
-        campaign_root = Path(args.campaign_root).expanduser().resolve()
         try:
             state = controller.run_controller(args, campaign_root=campaign_root)
         except controller.ControllerError as exc:
@@ -147,7 +186,26 @@ def _parse_private_args(argv: list[str]) -> tuple[argparse.Namespace, list[str]]
     parser.add_argument("--operational-overlay-manifest-sha256", required=True)
     parser.add_argument("--operational-handoff-receipt", required=True)
     parser.add_argument("--operational-handoff-receipt-sha256", required=True)
+    parser.add_argument("--isolation-hotfix-handoff-receipt", required=True)
+    parser.add_argument(
+        "--isolation-hotfix-handoff-receipt-sha256", required=True
+    )
+    parser.add_argument("--isolation-identity-auditor", required=True)
+    parser.add_argument("--isolation-identity-auditor-sha256", required=True)
+    parser.add_argument("--isolation-identity-module", required=True)
+    parser.add_argument("--isolation-identity-module-sha256", required=True)
+    parser.add_argument("--isolation-lease", required=True)
+    parser.add_argument("--isolation-lease-generation", type=int, required=True)
+    parser.add_argument("--expected-handoff-old-pid", type=int, required=True)
     private, remaining = parser.parse_known_args(argv)
+    if private.isolation_lease_generation < 1:
+        raise SwapOverrideControllerError(
+            "isolation lease generation must be positive"
+        )
+    if private.expected_handoff_old_pid < 1:
+        raise SwapOverrideControllerError(
+            "expected handoff old PID must be positive"
+        )
     for name, value in vars(private).items():
         if name.endswith("sha256") and not _is_sha256(value):
             raise SwapOverrideControllerError(
@@ -185,8 +243,33 @@ def _validate_control_evidence(
     operational_handoff = _read_json(
         operational_handoff_path, "operational handoff receipt"
     )
-    if not _operational_handoff_exact(operational_handoff):
-        raise SwapOverrideControllerError("operational handoff receipt mismatch")
+    hotfix_handoff_path = _bound_argument_file(
+        args,
+        "isolation_hotfix_handoff_receipt",
+        "isolation_hotfix_handoff_receipt_sha256",
+        "isolation hotfix handoff receipt",
+    )
+    hotfix_handoff = _read_json(
+        hotfix_handoff_path, "isolation hotfix handoff receipt"
+    )
+    previous_physical_pid = args.swap_override_expected_handoff_old_pid
+    if not _operational_handoff_exact(
+        operational_handoff,
+        expected_old_process_pid=int(operational_handoff.get("old_process_pid", 0)),
+        expected_new_process_pid=previous_physical_pid,
+    ):
+        raise SwapOverrideControllerError(
+            "previous operational handoff receipt mismatch"
+        )
+    if not _operational_handoff_exact(
+        hotfix_handoff,
+        expected_old_process_pid=previous_physical_pid,
+        expected_new_process_pid=os.getpid(),
+        require_process_identities=True,
+    ):
+        raise SwapOverrideControllerError(
+            "isolation hotfix handoff receipt mismatch"
+        )
 
     base_inputs = dict(inputs)
     base_inputs["resource_gate_auditor"] = base_auditor
@@ -216,6 +299,18 @@ def _validate_control_evidence(
         "rebound_helper_sha256",
         "rebound helper",
     )
+    isolation_auditor = _bound_argument_file(
+        args,
+        "isolation_identity_auditor",
+        "isolation_identity_auditor_sha256",
+        "isolation identity auditor",
+    )
+    isolation_module = _bound_argument_file(
+        args,
+        "isolation_identity_module",
+        "isolation_identity_module_sha256",
+        "isolation identity module",
+    )
     override = _read_json(override_path, "swap override receipt")
     overlay = _read_json(overlay_path, "operational overlay manifest")
     if not _override_exact(override):
@@ -228,6 +323,10 @@ def _validate_control_evidence(
         base_wrapper_path=base_wrapper,
         base_auditor_path=base_auditor,
         override_receipt_path=override_path,
+        isolation_auditor_path=isolation_auditor,
+        isolation_module_path=isolation_module,
+        previous_operational_handoff_path=operational_handoff_path,
+        isolation_hotfix_handoff_path=hotfix_handoff_path,
     ):
         raise SwapOverrideControllerError("operational overlay manifest mismatch")
 
@@ -236,6 +335,11 @@ def _validate_control_evidence(
     evidence["operational_handoff_receipt"] = _file_record(
         operational_handoff_path
     )
+    evidence["isolation_hotfix_handoff_receipt"] = _file_record(
+        hotfix_handoff_path
+    )
+    evidence["isolation_identity_auditor"] = _file_record(isolation_auditor)
+    evidence["isolation_identity_module"] = _file_record(isolation_module)
     evidence["swap_policy"] = swap_policy.SWAP_POLICY
     return evidence
 
@@ -247,6 +351,15 @@ def _swap_override_probe_factory(
     override_receipt_path: Path,
     overlay_manifest_path: Path,
     operational_handoff_path: Path,
+    isolation_hotfix_handoff_path: Path,
+    isolation_auditor_path: Path,
+    isolation_module_path: Path,
+    isolation_lease_path: Path,
+    isolation_lease_generation: int,
+    backend_manifest_path: Path,
+    campaign_root: Path,
+    campaign_lock: Path,
+    python_bin: Path,
 ) -> Any:
     def run_probe(probe_script: Path, out_dir: Path, check_index: int) -> Path:
         oom_before = _proc_counter(Path("/proc/vmstat"), "oom_kill")
@@ -268,11 +381,61 @@ def _swap_override_probe_factory(
         resources["active_swap_thrashing"] = swap_policy.combined_swap_thrashing(
             resources
         )["active"]
-        payload = _include_verified_current_supervisor(
-            payload,
+        base_isolation = payload.get("isolation")
+        if not isinstance(base_isolation, dict):
+            raise controller.ControllerError(
+                "base resource snapshot lacks isolation"
+            )
+        if not isolation_lease_path.exists():
+            lock_held, lock_contents = isolation_identity.campaign_lock_state(
+                campaign_lock
+            )
+            if not lock_held or lock_contents.strip() != SUPERVISOR_ID:
+                raise controller.ControllerError(
+                    "cannot create supervisor lease without the bound flock"
+                )
+            lease = isolation_identity.build_supervisor_lease(
+                physical_pid=os.getpid(),
+                backend_identity_manifest=backend_manifest_path,
+                queue_entry=campaign_root / "MARS_QUEUE_ENTRY.json",
+                supervisor_identity=campaign_root / "SUPERVISOR_IDENTITY.json",
+                operational_handoff_receipt=isolation_hotfix_handoff_path,
+                campaign_lock=campaign_lock,
+                lease_generation=isolation_lease_generation,
+                isolation_identity_auditor=isolation_auditor_path,
+            )
+            isolation_identity.write_json_exclusive(
+                isolation_lease_path, lease
+            )
+        audit_path = _run_isolation_identity_audit(
             controller=controller,
-            operational_handoff_path=operational_handoff_path,
+            python_bin=python_bin,
+            auditor_path=isolation_auditor_path,
+            lease_path=isolation_lease_path,
+            backend_manifest_path=backend_manifest_path,
+            campaign_lock=campaign_lock,
+            out_dir=out_dir,
+            check_index=check_index,
         )
+        audit = controller._read_json(audit_path, "isolation identity audit")
+        if not (
+            audit.get("schema") == isolation_identity.AUDIT_SCHEMA
+            and audit.get("campaign_id") == CAMPAIGN_ID
+            and audit.get("queue_id") == QUEUE_ID
+            and audit.get("logical_supervisor_id") == SUPERVISOR_ID
+            and isinstance(audit.get("isolation"), dict)
+            and audit.get("simulator_action_taken") is False
+            and audit.get("campaign_data_modified") is False
+        ):
+            raise controller.ControllerError(
+                "isolation identity audit contract mismatch"
+            )
+        corrected_isolation = copy.deepcopy(audit["isolation"])
+        corrected_isolation["output_path_collision"] = base_isolation.get(
+            "output_path_collision"
+        )
+        payload["base_probe_isolation"] = copy.deepcopy(base_isolation)
+        payload["isolation"] = corrected_isolation
         payload["schema"] = swap_policy.SNAPSHOT_SCHEMA
         payload["swap_policy"] = swap_policy.SWAP_POLICY
         payload["source_snapshot"] = _file_record(source_path)
@@ -282,6 +445,11 @@ def _swap_override_probe_factory(
         payload["operational_overlay_manifest"] = _file_record(
             overlay_manifest_path
         )
+        payload["isolation_identity_module"] = _file_record(
+            isolation_module_path
+        )
+        payload["isolation_identity_audit"] = _file_record(audit_path)
+        payload["supervisor_lease"] = _file_record(isolation_lease_path)
         timestamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S%fZ")
         path = out_dir / f"swap_override_{check_index:06d}_{timestamp}.json"
         _write_json_exclusive(path, payload)
@@ -290,58 +458,53 @@ def _swap_override_probe_factory(
     return run_probe
 
 
-def _include_verified_current_supervisor(
-    payload: Mapping[str, Any],
+def _run_isolation_identity_audit(
     *,
     controller: Any,
-    operational_handoff_path: Path,
-) -> dict[str, Any]:
-    """Restore the controller omitted by the ancestor-filtering base probe."""
-    updated = copy.deepcopy(payload)
-    isolation = updated.get("isolation")
-    if not isinstance(isolation, dict):
-        raise controller.ControllerError("base resource snapshot lacks isolation")
-    handoff = controller._read_json(
-        operational_handoff_path,
-        "operational handoff receipt",
+    python_bin: Path,
+    auditor_path: Path,
+    lease_path: Path,
+    backend_manifest_path: Path,
+    campaign_lock: Path,
+    out_dir: Path,
+    check_index: int,
+) -> Path:
+    timestamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S%fZ")
+    audit_dir = (
+        out_dir
+        / f"isolation_identity_{check_index:06d}_{timestamp}"
     )
-    if not _operational_handoff_exact(handoff):
-        raise controller.ControllerError(
-            "current supervisor is not bound by the operational handoff receipt"
+    log_path = out_dir / f"isolation_identity_{check_index:06d}_{timestamp}.log"
+    command = [
+        str(python_bin),
+        str(auditor_path),
+        "--lease",
+        str(lease_path),
+        "--backend-identity-manifest",
+        str(backend_manifest_path),
+        "--campaign-lock",
+        str(campaign_lock),
+        "--lease-registry-dir",
+        str(lease_path.parent),
+        "--out-dir",
+        str(audit_dir),
+    ]
+    with log_path.open("x", encoding="utf-8") as log_handle:
+        result = subprocess.run(
+            command,
+            stdin=subprocess.DEVNULL,
+            stdout=log_handle,
+            stderr=subprocess.STDOUT,
+            check=False,
+            timeout=60,
         )
-
-    external_count = isolation.get("authoritative_supervisor_count")
-    external_duplicates = isolation.get("duplicate_supervisor_count")
-    if (
-        not isinstance(external_count, int)
-        or isinstance(external_count, bool)
-        or external_count < 0
-        or not isinstance(external_duplicates, int)
-        or isinstance(external_duplicates, bool)
-        or external_duplicates < 0
-        or external_duplicates != max(0, external_count - 1)
-    ):
+    audit_path = audit_dir / "ISOLATION_IDENTITY_AUDIT.json"
+    if result.returncode != 0 or not audit_path.is_file():
         raise controller.ControllerError(
-            "base resource snapshot has inconsistent supervisor counts"
+            "isolation identity auditor failed closed; "
+            f"see {log_path}"
         )
-    if "supervisor_self_inclusion" in isolation:
-        raise controller.ControllerError(
-            "base resource snapshot already contains supervisor self-inclusion"
-        )
-
-    total_count = external_count + 1
-    isolation["authoritative_supervisor_count"] = total_count
-    isolation["duplicate_supervisor_count"] = max(0, total_count - 1)
-    isolation["supervisor_self_inclusion"] = {
-        "reason": "BASE_PROBE_EXCLUDES_ANCESTOR_CONTROLLER",
-        "external_supervisor_count": external_count,
-        "current_supervisor_pid": os.getpid(),
-        "logical_supervisor_id": SUPERVISOR_ID,
-        "operational_handoff_receipt": _file_record(
-            operational_handoff_path
-        ),
-    }
-    return updated
+    return audit_path
 
 
 def _override_exact(payload: Mapping[str, Any]) -> bool:
@@ -374,6 +537,10 @@ def _overlay_exact(
     base_wrapper_path: Path,
     base_auditor_path: Path,
     override_receipt_path: Path,
+    isolation_auditor_path: Path,
+    isolation_module_path: Path,
+    previous_operational_handoff_path: Path,
+    isolation_hotfix_handoff_path: Path,
 ) -> bool:
     scripts = payload.get("script_identities")
     return (
@@ -391,6 +558,14 @@ def _overlay_exact(
         and payload.get("nn_training_authorized") is False
         and _identity_exact(override_receipt_path, payload.get("override_receipt"))
         and _identity_exact(
+            previous_operational_handoff_path,
+            payload.get("previous_operational_handoff"),
+        )
+        and _identity_exact(
+            isolation_hotfix_handoff_path,
+            payload.get("isolation_hotfix_handoff"),
+        )
+        and _identity_exact(
             inputs["backend_identity_manifest"],
             payload.get("corrected_backend_manifest"),
         )
@@ -405,13 +580,27 @@ def _overlay_exact(
             base_auditor_path, scripts.get("base_resource_gate_auditor")
         )
         and _identity_exact(
+            isolation_auditor_path,
+            scripts.get("isolation_identity_auditor"),
+        )
+        and _identity_exact(
+            isolation_module_path,
+            scripts.get("isolation_identity_module"),
+        )
+        and _identity_exact(
             Path(swap_policy.__file__).resolve(), payload.get("policy_module")
         )
     )
 
 
-def _operational_handoff_exact(payload: Mapping[str, Any]) -> bool:
-    return (
+def _operational_handoff_exact(
+    payload: Mapping[str, Any],
+    *,
+    expected_old_process_pid: int,
+    expected_new_process_pid: int,
+    require_process_identities: bool = False,
+) -> bool:
+    base_valid = (
         payload.get("schema") == HANDOFF_SCHEMA
         and payload.get("overall_status") == "PASS"
         and payload.get("decision") == HANDOFF_DECISION
@@ -419,14 +608,59 @@ def _operational_handoff_exact(payload: Mapping[str, Any]) -> bool:
         and payload.get("queue_id") == QUEUE_ID
         and payload.get("supervisor_id") == SUPERVISOR_ID
         and payload.get("contract_fingerprint_sha256") == CONTRACT_FINGERPRINT
-        and payload.get("old_process_pid") == 676436
+        and payload.get("old_process_pid") == expected_old_process_pid
         and payload.get("old_process_confirmed_exited") is True
-        and payload.get("new_process_pid") == os.getpid()
+        and payload.get("new_process_pid") == expected_new_process_pid
         and payload.get("new_process_is_sole_authoritative_supervisor") is True
         and payload.get("supervisor_count_after") == 1
         and payload.get("overlap_seconds") == 0
         and payload.get("new_queue_or_campaign_created") is False
         and payload.get("nn_training_started") is False
+    )
+    if not base_valid or not require_process_identities:
+        return base_valid
+    old_identity = payload.get("old_process_identity")
+    new_identity = payload.get("new_process_identity")
+    observed_new = isolation_identity.read_process_identity(
+        expected_new_process_pid
+    )
+    return (
+        isinstance(old_identity, Mapping)
+        and old_identity.get("pid") == expected_old_process_pid
+        and _complete_process_identity(old_identity)
+        and isinstance(new_identity, Mapping)
+        and new_identity.get("pid") == expected_new_process_pid
+        and _complete_process_identity(new_identity)
+        and observed_new is not None
+        and isolation_identity.process_identity_matches(
+            observed_new, new_identity
+        )
+        and payload.get("handoff_scope")
+        == "ISOLATION_GATE_AUTHORIZED_SUPERVISOR_ANCESTOR_IDENTITY_FIX"
+    )
+
+
+def _complete_process_identity(value: Mapping[str, Any]) -> bool:
+    integer_fields = ("pid", "parent_pid", "uid", "start_ticks")
+    text_fields = (
+        "boot_id",
+        "command_line_sha256",
+        "executable_path",
+        "executable_sha256",
+    )
+    return (
+        all(
+            isinstance(value.get(field), int)
+            and not isinstance(value.get(field), bool)
+            and int(value[field]) >= 0
+            for field in integer_fields
+        )
+        and all(
+            isinstance(value.get(field), str) and bool(value[field])
+            for field in text_fields
+        )
+        and _is_sha256(value.get("command_line_sha256"))
+        and _is_sha256(value.get("executable_sha256"))
     )
 
 
