@@ -48,6 +48,7 @@ def test_cadence_batch_preserves_pass_and_failure(tmp_path: Path) -> None:
     assert [row["candidate_id_sha256"] for row in failed] == ["f" * 64]
     assert len(evidence) == 2
     assert len(dataset) == 1
+    assert evidence[0]["source_foundry_layout_audit_sha256"]
     copied_gds = list(
         (out / "cadence_pass_dataset").glob(
             "evaluations/*/streamout/transformer_layout_cadpins.gds"
@@ -57,6 +58,25 @@ def test_cadence_batch_preserves_pass_and_failure(tmp_path: Path) -> None:
     source_gds = Path(evidence[0]["source_gds_path"])
     assert copied_gds[0].stat().st_ino == source_gds.stat().st_ino
     assert _sha(copied_gds[0]) == _sha(source_gds)
+
+
+def test_cadence_batch_rejects_disabled_foundry_layout_audit(
+    tmp_path: Path,
+) -> None:
+    fixture = _fixture(tmp_path, candidate_ids=("d" * 64,))
+
+    result = _run(fixture)
+
+    assert result.returncode == 0, result.stderr
+    receipt = json.loads(
+        (fixture["out_dir"] / "CADENCE_STREAMOUT_BATCH_ROLE_RECEIPT.json").read_text()
+    )
+    failures = _read_csv(
+        fixture["out_dir"] / "CADENCE_STREAMOUT_FAILURE_INDEX.csv"
+    )
+    assert receipt["cadence_pass_count"] == 0
+    assert receipt["cadence_fail_count"] == 1
+    assert "foundry-layout audit" in failures[0]["error"]
 
 
 def test_cadence_batch_rejects_duplicate_geometry_before_delegate(
@@ -233,6 +253,40 @@ for index, row in enumerate(rows):
         (evaluation_dir / "summary.json").write_text('{"overall_status":"PASS"}')
         (evaluation_dir / "layout").mkdir()
         (evaluation_dir / "layout" / "geometry.json").write_text("{}")
+        foundry_enabled = not row["candidate_id_sha256"].startswith("d")
+        foundry_audit = {
+            "schema": "rfic_transformer_foundry_layout_audit.v1",
+            "enabled": foundry_enabled,
+            "overall_status": "PASS" if foundry_enabled else "NOT_ENABLED",
+            "manufacturing_grid_um": 0.005,
+            "grid_canonicalization": {
+                "schema": "rfic_transformer_foundry_grid_canonicalization.v1",
+                "overall_status": "PASS",
+                "grid_um": 0.005,
+            },
+            "ground_frame": {
+                "schema": "rfic_transformer_foundry_slotted_ground_frame.v1",
+                "manufacturing_grid_um": 0.005,
+                "strap_width_um": 10.0,
+                "strap_pitch_um": 20.0,
+                "polygon_count": 122,
+            },
+            "power_line_bridge_connections": {
+                "schema": "rfic_transformer_foundry_bridge_connections.v1",
+                "overall_status": "PASS",
+                "primary_bridge": {
+                    "overall_status": "PASS",
+                    "same_connected_component_after_grid_snap": True,
+                },
+                "secondary_bridge": {
+                    "overall_status": "PASS",
+                    "same_connected_component_after_grid_snap": True,
+                },
+            },
+        }
+        (evaluation_dir / "layout" / "foundry_layout_audit.json").write_text(
+            json.dumps(foundry_audit)
+        )
     shard_summary = {
         "overall_status": "PASS" if success else "FAIL",
         "run_emx": False,

@@ -40,7 +40,7 @@ from rfic_transformer_inverse_design.campaigns.broadband56_gds_identity import (
 )
 
 
-RECEIPT_SCHEMA = "rfic_transformer.broadband56_v2_calibre_batch.v1"
+RECEIPT_SCHEMA = "rfic_transformer.broadband56_v2_calibre_batch.v2"
 RECEIPT_NAME = "CALIBRE_BATCH_ROLE_RECEIPT.json"
 PASS_INDEX_NAME = "CALIBRE_PASS_INDEX.csv"
 FAILURE_INDEX_NAME = "CALIBRE_FAILURE_INDEX.csv"
@@ -59,7 +59,7 @@ EXPECTED_PROCESS_TOKEN = "/TSMC65_05_12_26/"
 EXPECTED_TOP_CELL = "TRANSFORMER"
 EXPECTED_CALIBRE_MODULE = "mentor/old/2025"
 DELEGATE_EXECUTION_MODE = (
-    "importlib-main-with-current-contract-required-checks-v1"
+    "importlib-main-with-full-foundry-contract-required-checks-v2"
 )
 LEGACY_GDS_HASH_MODULE_NAME = (
     "rfic_transformer_inverse_design.layout.gds_hash"
@@ -80,15 +80,15 @@ DELEGATE_EFFECTIVE_REQUIRED_GEOMETRY_CHECKS = (
     "line_width_sync_pass",
     "angle_45_135_pass",
     "ground_clearance_pass",
-)
-LEGACY_DELEGATE_REQUIRED_GEOMETRY_CHECKS = (
-    *DELEGATE_EFFECTIVE_REQUIRED_GEOMETRY_CHECKS,
     "foundry_layout_audit_pass",
     "manufacturing_grid_canonicalization_pass",
     "foundry_slotted_ground_frame_pass",
     "foundry_power_line_contract_pass",
     "foundry_via_stack_and_landing_pad_pass",
     "foundry_bridge_connection_pass",
+)
+LEGACY_DELEGATE_REQUIRED_GEOMETRY_CHECKS = (
+    DELEGATE_EFFECTIVE_REQUIRED_GEOMETRY_CHECKS
 )
 SOURCE_NORMALIZATION_ALGORITHM_FIELD = (
     "gds_timestamp_normalized_sha256_algorithm"
@@ -790,6 +790,13 @@ def _prepare_delegate_input(
             Path(evaluation_record["path"]),
             str(evaluation_record["sha256"]),
         )
+        foundry_record = compatibility_audit["source_evidence"][
+            "foundry_layout_audit"
+        ]
+        source_pins[f"foundry_layout_audit::{candidate}"] = (
+            Path(foundry_record["path"]),
+            str(foundry_record["sha256"]),
+        )
         prepared.append(prepared_row)
     return prepared, delegate_fields, audit_records, source_pins
 
@@ -873,6 +880,76 @@ def _current_contract_delegate_geometry_audit(
     ):
         raise CalibreBatchError("evaluation geometry check is not PASS")
 
+    foundry_audit_path = _regular_file(
+        evaluation_path.parent / "layout" / "foundry_layout_audit.json",
+        "foundry-layout audit",
+    )
+    foundry_audit = _read_json(foundry_audit_path, "foundry-layout audit")
+    grid_audit = _mapping(
+        foundry_audit.get("grid_canonicalization"),
+        "foundry grid-canonicalization audit",
+    )
+    ground_frame = _mapping(
+        foundry_audit.get("ground_frame"),
+        "foundry slotted-ground-frame audit",
+    )
+    bridge_audit = _mapping(
+        foundry_audit.get("power_line_bridge_connections"),
+        "foundry bridge-connection audit",
+    )
+    primary_bridge = _mapping(
+        bridge_audit.get("primary_bridge"),
+        "foundry primary-bridge audit",
+    )
+    secondary_bridge = _mapping(
+        bridge_audit.get("secondary_bridge"),
+        "foundry secondary-bridge audit",
+    )
+    power_line_audit = _mapping(
+        geometry_check.get("power_line_8port_geometry_audit"),
+        "power-line geometry audit",
+    )
+    stitch_values = power_line_audit.get("power_line_ground_stitches")
+    stitches = (
+        [value for value in stitch_values if isinstance(value, Mapping)]
+        if isinstance(stitch_values, list)
+        else []
+    )
+    stitches_by_label = {str(value.get("label") or ""): value for value in stitches}
+    expected_stacks = {
+        "P005": (39, 35, 5, 4, False),
+        "P006": (39, 35, 5, 4, False),
+        "P007": (74, 35, 6, 5, True),
+        "P008": (74, 35, 6, 5, True),
+    }
+    foundry_power_line_contract_pass = (
+        power_line_audit.get("schema")
+        == "rfic_transformer_power_line_8port_geometry.v1"
+        and power_line_audit.get("enabled") is True
+        and power_line_audit.get("touchstone_mode") == "signal_4_grounded_aux"
+        and set(stitches_by_label) == set(expected_stacks)
+        and len(stitches) == 4
+        and metrics.get("power_line_8port_port_ground_overlap_verified_port_count")
+        == 8
+        and _close_float(
+            metrics.get("power_line_8port_port_ground_overlap_max_abs_error_um"),
+            0.0,
+        )
+        and all(value.get("foundry_layout_enabled") is True for value in stitches)
+    )
+    foundry_via_stack_and_landing_pad_pass = (
+        foundry_power_line_contract_pass
+        and all(
+            int(stitches_by_label[label].get("source_layer") or -1) == source
+            and int(stitches_by_label[label].get("target_ground_layer") or -1)
+            == target
+            and len(stitches_by_label[label].get("metal_stack") or []) == metals
+            and len(stitches_by_label[label].get("via_stack") or []) == vias
+            and stitches_by_label[label].get("landing_pad_expanded") is pad_expanded
+            for label, (source, target, metals, vias, pad_expanded) in expected_stacks.items()
+        )
+    )
+
     line_width = _finite_float(row.get("geom__line_width_um"), "line width")
     line_width_sync_pass = all(
         _close_float(metrics.get(name), line_width)
@@ -904,6 +981,42 @@ def _current_contract_delegate_geometry_audit(
             row.get("top_metal_drc_status") == "PASS"
             and row.get("drc_status") == "PASS"
         ),
+        "foundry_layout_audit_pass": (
+            foundry_audit.get("schema")
+            == "rfic_transformer_foundry_layout_audit.v1"
+            and foundry_audit.get("enabled") is True
+            and foundry_audit.get("overall_status") == "PASS"
+            and _close_float(foundry_audit.get("manufacturing_grid_um"), 0.005)
+        ),
+        "manufacturing_grid_canonicalization_pass": (
+            grid_audit.get("schema")
+            == "rfic_transformer_foundry_grid_canonicalization.v1"
+            and grid_audit.get("overall_status") == "PASS"
+            and _close_float(grid_audit.get("grid_um"), 0.005)
+        ),
+        "foundry_slotted_ground_frame_pass": (
+            ground_frame.get("schema")
+            == "rfic_transformer_foundry_slotted_ground_frame.v1"
+            and _close_float(ground_frame.get("manufacturing_grid_um"), 0.005)
+            and _close_float(ground_frame.get("strap_width_um"), 10.0)
+            and _close_float(ground_frame.get("strap_pitch_um"), 20.0)
+            and int(ground_frame.get("polygon_count") or 0) > 0
+        ),
+        "foundry_power_line_contract_pass": foundry_power_line_contract_pass,
+        "foundry_via_stack_and_landing_pad_pass": (
+            foundry_via_stack_and_landing_pad_pass
+        ),
+        "foundry_bridge_connection_pass": (
+            bridge_audit.get("schema")
+            == "rfic_transformer_foundry_bridge_connections.v1"
+            and bridge_audit.get("overall_status") == "PASS"
+            and primary_bridge.get("overall_status") == "PASS"
+            and secondary_bridge.get("overall_status") == "PASS"
+            and primary_bridge.get("same_connected_component_after_grid_snap")
+            is True
+            and secondary_bridge.get("same_connected_component_after_grid_snap")
+            is True
+        ),
     }
     failed = [name for name, value in checks.items() if value is not True]
     if failed:
@@ -913,7 +1026,7 @@ def _current_contract_delegate_geometry_audit(
     return {
         "schema": (
             "rfic_transformer.broadband56_v2_current_contract_"
-            "calibre_delegate_geometry_audit.v1"
+            "calibre_delegate_geometry_audit.v2"
         ),
         "generated_utc": _utc_now(),
         "overall_status": "PASS",
@@ -933,10 +1046,12 @@ def _current_contract_delegate_geometry_audit(
             DELEGATE_EFFECTIVE_REQUIRED_GEOMETRY_CHECKS
         ),
         "teacher_only_foundry_slotting_prechecks_applied": False,
+        "foundry_layout_prechecks_applied": True,
         "source_evidence": {
             "source_geometry_audit": _file_record(source_audit_path),
             "gds_physical_identity_audit": _file_record(physical_audit_path),
             "evaluation_summary": _file_record(evaluation_path),
+            "foundry_layout_audit": _file_record(foundry_audit_path),
             "emx_process_file": _file_record(process_path),
         },
         "foundry_drc_executed": False,

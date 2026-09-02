@@ -1033,6 +1033,66 @@ def test_preparation_requires_hash_bound_previous_contract_and_identical_private
     assert tuple(frozen_bounds["field_bounds_um"]) == GEOMETRY_FIELDS
 
 
+def test_preparation_rejects_matching_configs_without_foundry_layout_contract(
+    tmp_path: Path,
+) -> None:
+    module = _load_prepare_module()
+    previous_config, production_config = _write_preparation_config_fixture(tmp_path)
+    foundry_block = (
+        "  foundry_layout:\n"
+        "    enabled: true\n"
+        "    manufacturing_grid_um: 0.005\n"
+        "    power_line_stitch_pad_depth_um: 6.0\n"
+        "    shield_strap_width_um: 10.0\n"
+        "    shield_strap_pitch_um: 20.0\n"
+    )
+    for path in (previous_config, production_config):
+        config_text = path.read_text(encoding="utf-8")
+        assert foundry_block in config_text
+        path.write_text(config_text.replace(foundry_block, ""), encoding="utf-8")
+
+    previous_contract = tmp_path / "previous_contract.json"
+    previous_contract.write_text(
+        json.dumps(
+            {
+                "campaign_id": "broadband56_real_emx_tsmc65_v1",
+                "frequency_grid": {
+                    "start_ghz": 5.0,
+                    "stop_ghz": 60.0,
+                    "step_ghz": 1.0,
+                    "points": 56,
+                },
+            }
+        ),
+        encoding="utf-8",
+    )
+    out_dir = tmp_path / "missing_foundry_layout"
+
+    status = module.main(
+        [
+            "--override-contract",
+            str(CONTRACT),
+            "--previous-contract",
+            str(previous_contract),
+            "--previous-contract-sha256",
+            _sha256(previous_contract),
+            "--previous-config",
+            str(previous_config),
+            "--production-config",
+            str(production_config),
+            "--out-dir",
+            str(out_dir),
+        ]
+    )
+
+    receipt = json.loads((out_dir / "PREPARATION_RECEIPT.json").read_text())
+    failed = {item["name"] for item in receipt["checks"] if not item["pass"]}
+    assert status == 2
+    assert receipt["overall_status"] == "FAIL"
+    assert "previous_config_foundry_layout_contract_exact" in failed
+    assert "production_config_foundry_layout_contract_exact" in failed
+
+
 def test_reconstructed_baseline_requires_explicit_matching_approval_receipt(tmp_path: Path) -> None:
     module = _load_prepare_module()
     previous_config, production_config = _write_preparation_config_fixture(tmp_path)

@@ -53,6 +53,12 @@ emx:
   execution_mode: local
   differential_port_pairs: 1,2:3,4
   ground_unused_s8p_ports: false
+  foundry_layout:
+    enabled: true
+    manufacturing_grid_um: 0.005
+    power_line_stitch_pad_depth_um: 6.0
+    shield_strap_width_um: 10.0
+    shield_strap_pitch_um: 20.0
   power_line_8port:
     enabled: true
     touchstone_mode: signal_4_grounded_aux

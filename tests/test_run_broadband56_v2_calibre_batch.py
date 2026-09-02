@@ -38,6 +38,7 @@ def test_calibre_batch_preserves_pass_and_failure(tmp_path: Path) -> None:
         for path in [
             *fixture["source_audits"],
             *fixture["physical_audits"],
+            *fixture["foundry_audits"],
         ]
     }
     result = _run(fixture)
@@ -52,7 +53,7 @@ def test_calibre_batch_preserves_pass_and_failure(tmp_path: Path) -> None:
     assert receipt["failed_candidates_counted_as_accepted"] is False
     assert receipt["simulator_action_taken"] is True
     assert receipt["delegate_execution_mode"] == (
-        "importlib-main-with-current-contract-required-checks-v1"
+        "importlib-main-with-full-foundry-contract-required-checks-v2"
     )
     assert len(receipt["delegate_execution_contract_sha256"]) == 64
     delegate_input = Path(receipt["delegate_input_index"]["path"])
@@ -76,12 +77,19 @@ def test_calibre_batch_preserves_pass_and_failure(tmp_path: Path) -> None:
             GDS_TIMESTAMP_NORMALIZED_SHA256_ALGORITHM
         )
         assert audit["teacher_only_foundry_slotting_prechecks_applied"] is False
+        assert audit["foundry_layout_prechecks_applied"] is True
         assert set(audit["checks"]) == {
             "geometry_range_pass",
             "topology_pass",
             "line_width_sync_pass",
             "angle_45_135_pass",
             "ground_clearance_pass",
+            "foundry_layout_audit_pass",
+            "manufacturing_grid_canonicalization_pass",
+            "foundry_slotted_ground_frame_pass",
+            "foundry_power_line_contract_pass",
+            "foundry_via_stack_and_landing_pad_pass",
+            "foundry_bridge_connection_pass",
         }
         assert all(audit["checks"].values())
     assert "gds_timestamp_normalization_algorithm" not in _csv_fields(
@@ -164,6 +172,22 @@ def test_calibre_batch_rejects_line_width_drift(tmp_path: Path) -> None:
     assert "line_width_sync_pass" in result.stderr
 
 
+def test_calibre_batch_rejects_disabled_foundry_layout_audit(
+    tmp_path: Path,
+) -> None:
+    fixture = _fixture(tmp_path)
+    foundry_audit = fixture["foundry_audits"][0]
+    payload = json.loads(foundry_audit.read_text())
+    payload["enabled"] = False
+    payload["overall_status"] = "NOT_ENABLED"
+    foundry_audit.write_text(json.dumps(payload))
+
+    result = _run(fixture)
+
+    assert result.returncode == 2
+    assert "foundry_layout_audit_pass" in result.stderr
+
+
 def test_calibre_batch_rejects_legacy_delegate_contract_drift(
     tmp_path: Path,
 ) -> None:
@@ -206,6 +230,64 @@ def test_legacy_gds_hash_compatibility_module_is_scoped(
     assert layout_package.gds_hash is previous
 
 
+def _power_line_audit_payload() -> dict[str, Any]:
+    stitches = []
+    for label, source_layer, metal_count, via_count, pad_expanded in (
+        ("P005", 39, 5, 4, False),
+        ("P006", 39, 5, 4, False),
+        ("P007", 74, 6, 5, True),
+        ("P008", 74, 6, 5, True),
+    ):
+        stitches.append(
+            {
+                "label": label,
+                "foundry_layout_enabled": True,
+                "landing_pad_expanded": pad_expanded,
+                "source_layer": source_layer,
+                "target_ground_layer": 35,
+                "metal_stack": [{} for _ in range(metal_count)],
+                "via_stack": [{} for _ in range(via_count)],
+            }
+        )
+    return {
+        "schema": "rfic_transformer_power_line_8port_geometry.v1",
+        "enabled": True,
+        "touchstone_mode": "signal_4_grounded_aux",
+        "power_line_ground_stitches": stitches,
+    }
+
+
+def _foundry_layout_audit_payload() -> dict[str, Any]:
+    bridge = {
+        "overall_status": "PASS",
+        "same_connected_component_after_grid_snap": True,
+    }
+    return {
+        "schema": "rfic_transformer_foundry_layout_audit.v1",
+        "enabled": True,
+        "overall_status": "PASS",
+        "manufacturing_grid_um": 0.005,
+        "grid_canonicalization": {
+            "schema": "rfic_transformer_foundry_grid_canonicalization.v1",
+            "overall_status": "PASS",
+            "grid_um": 0.005,
+        },
+        "ground_frame": {
+            "schema": "rfic_transformer_foundry_slotted_ground_frame.v1",
+            "manufacturing_grid_um": 0.005,
+            "strap_width_um": 10.0,
+            "strap_pitch_um": 20.0,
+            "polygon_count": 122,
+        },
+        "power_line_bridge_connections": {
+            "schema": "rfic_transformer_foundry_bridge_connections.v1",
+            "overall_status": "PASS",
+            "primary_bridge": dict(bridge),
+            "secondary_bridge": dict(bridge),
+        },
+    }
+
+
 def _fixture(root: Path) -> dict[str, Any]:
     process = root / "TSMC65_05_12_26" / "process.proc"
     process.parent.mkdir()
@@ -213,13 +295,16 @@ def _fixture(root: Path) -> dict[str, Any]:
     rows = []
     source_audits = []
     physical_audits = []
+    foundry_audits = []
     for candidate, geometry, normalized in (
         ("a" * 64, "1" * 64, "b" * 64),
         ("f" * 64, "2" * 64, "c" * 64),
     ):
         gds = root / f"{candidate[:1]}.gds"
         gds.write_bytes(f"gds-{candidate[:1]}".encode())
-        evaluation = root / f"{candidate[:1]}_evaluation.json"
+        evaluation_dir = root / f"{candidate[:1]}_evaluation"
+        (evaluation_dir / "layout").mkdir(parents=True)
+        evaluation = evaluation_dir / "summary.json"
         evaluation.write_text(
             json.dumps(
                 {
@@ -239,11 +324,16 @@ def _fixture(root: Path) -> dict[str, Any]:
                             "secondary_winding_centerline_max_internal_angle_deg": 135.0,
                             "secondary_winding_centerline_min_terminal_angle_deg": 90.0,
                             "secondary_winding_centerline_max_terminal_angle_deg": 90.0,
+                            "power_line_8port_port_ground_overlap_verified_port_count": 8,
+                            "power_line_8port_port_ground_overlap_max_abs_error_um": 0.0,
                         },
+                        "power_line_8port_geometry_audit": _power_line_audit_payload(),
                     },
                 }
             )
         )
+        foundry_audit = evaluation_dir / "layout" / "foundry_layout_audit.json"
+        foundry_audit.write_text(json.dumps(_foundry_layout_audit_payload()))
         source_audit = root / f"{candidate[:1]}_geometry_audit.json"
         source_audit.write_text(
             json.dumps(
@@ -281,6 +371,7 @@ def _fixture(root: Path) -> dict[str, Any]:
         )
         source_audits.append(source_audit)
         physical_audits.append(physical_audit)
+        foundry_audits.append(foundry_audit)
         rows.append(
             {
                 "candidate_id_sha256": candidate,
@@ -369,6 +460,7 @@ def _fixture(root: Path) -> dict[str, Any]:
         "out_dir": root / "out",
         "source_audits": source_audits,
         "physical_audits": physical_audits,
+        "foundry_audits": foundry_audits,
     }
 
 
@@ -467,6 +559,12 @@ def main(argv=None):
         "line_width_sync_pass",
         "angle_45_135_pass",
         "ground_clearance_pass",
+        "foundry_layout_audit_pass",
+        "manufacturing_grid_canonicalization_pass",
+        "foundry_slotted_ground_frame_pass",
+        "foundry_power_line_contract_pass",
+        "foundry_via_stack_and_landing_pad_pass",
+        "foundry_bridge_connection_pass",
     )
     if REQUIRED_GEOMETRY_CHECKS != expected_current_checks:
         return 11
@@ -478,6 +576,7 @@ def main(argv=None):
             and tuple(audit["effective_required_geometry_checks"])
             == expected_current_checks
             and audit["teacher_only_foundry_slotting_prechecks_applied"] is False
+            and audit["foundry_layout_prechecks_applied"] is True
             and all(audit["checks"].get(name) is True for name in expected_current_checks)
         ):
             return 12

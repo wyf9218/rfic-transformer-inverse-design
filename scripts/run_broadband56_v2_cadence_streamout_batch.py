@@ -40,7 +40,7 @@ from rfic_transformer_inverse_design.campaigns.broadband56_full_campaign_authori
 )
 
 
-RECEIPT_SCHEMA = "rfic_transformer.broadband56_v2_cadence_streamout_batch.v1"
+RECEIPT_SCHEMA = "rfic_transformer.broadband56_v2_cadence_streamout_batch.v2"
 RECEIPT_NAME = "CADENCE_STREAMOUT_BATCH_ROLE_RECEIPT.json"
 PASS_QUEUE_NAME = "CADENCE_PASS_CANDIDATE_QUEUE.csv"
 FAILURE_INDEX_NAME = "CADENCE_STREAMOUT_FAILURE_INDEX.csv"
@@ -84,6 +84,8 @@ EVIDENCE_FIELDS = (
     "source_evaluation_dir",
     "source_gds_path",
     "source_gds_sha256",
+    "source_foundry_layout_audit_path",
+    "source_foundry_layout_audit_sha256",
 )
 
 
@@ -369,6 +371,8 @@ def _classify_shard(
         "source_evaluation_dir": "",
         "source_gds_path": "",
         "source_gds_sha256": "",
+        "source_foundry_layout_audit_path": "",
+        "source_foundry_layout_audit_sha256": "",
     }
     try:
         if not summary_path.is_file():
@@ -414,6 +418,13 @@ def _classify_shard(
             )
         gds_path = _regular_file(gds_paths[0], "candidate-bound Cadence GDS")
         evaluation_dir = gds_path.parents[1]
+        foundry_audit_path = _regular_file(
+            evaluation_dir / "layout" / "foundry_layout_audit.json",
+            "foundry-layout audit",
+        )
+        foundry_audit = _read_json(foundry_audit_path, "foundry-layout audit")
+        _validate_foundry_layout_audit(foundry_audit)
+        foundry_audit_sha = _sha256(foundry_audit_path)
         destination = aggregate_evaluations_dir / evaluation_dir.name
         if destination.exists():
             raise CadenceBatchError("aggregate evaluation key collision")
@@ -421,6 +432,9 @@ def _classify_shard(
         copied_gds = destination / "streamout" / gds_path.name
         if _sha256(copied_gds) != _sha256(gds_path):
             raise CadenceBatchError("hard-linked aggregate GDS hash mismatch")
+        copied_foundry_audit = destination / "layout" / foundry_audit_path.name
+        if _sha256(copied_foundry_audit) != foundry_audit_sha:
+            raise CadenceBatchError("hard-linked foundry-layout audit hash mismatch")
         return {
             **base,
             "overall_status": "PASS",
@@ -429,6 +443,8 @@ def _classify_shard(
             "source_evaluation_dir": str(evaluation_dir),
             "source_gds_path": str(gds_path),
             "source_gds_sha256": _sha256(gds_path),
+            "source_foundry_layout_audit_path": str(foundry_audit_path),
+            "source_foundry_layout_audit_sha256": foundry_audit_sha,
             "dataset_row": dataset_row,
         }
     except (CadenceBatchError, OSError, json.JSONDecodeError) as exc:
@@ -438,6 +454,44 @@ def _classify_shard(
             "terminal_stage": "cadence_streamout",
             "error": f"{type(exc).__name__}: {exc}",
         }
+
+
+def _validate_foundry_layout_audit(audit: Mapping[str, Any]) -> None:
+    grid = _mapping(audit.get("grid_canonicalization"), "foundry grid audit")
+    frame = _mapping(audit.get("ground_frame"), "foundry ground-frame audit")
+    bridges = _mapping(
+        audit.get("power_line_bridge_connections"),
+        "foundry bridge audit",
+    )
+    primary = _mapping(bridges.get("primary_bridge"), "primary bridge audit")
+    secondary = _mapping(bridges.get("secondary_bridge"), "secondary bridge audit")
+    exact = (
+        audit.get("schema") == "rfic_transformer_foundry_layout_audit.v1"
+        and audit.get("enabled") is True
+        and audit.get("overall_status") == "PASS"
+        and _close_float(audit.get("manufacturing_grid_um"), 0.005)
+        and grid.get("schema")
+        == "rfic_transformer_foundry_grid_canonicalization.v1"
+        and grid.get("overall_status") == "PASS"
+        and _close_float(grid.get("grid_um"), 0.005)
+        and frame.get("schema")
+        == "rfic_transformer_foundry_slotted_ground_frame.v1"
+        and _close_float(frame.get("manufacturing_grid_um"), 0.005)
+        and _close_float(frame.get("strap_width_um"), 10.0)
+        and _close_float(frame.get("strap_pitch_um"), 20.0)
+        and int(frame.get("polygon_count") or 0) > 0
+        and bridges.get("schema")
+        == "rfic_transformer_foundry_bridge_connections.v1"
+        and bridges.get("overall_status") == "PASS"
+        and primary.get("overall_status") == "PASS"
+        and secondary.get("overall_status") == "PASS"
+        and primary.get("same_connected_component_after_grid_snap") is True
+        and secondary.get("same_connected_component_after_grid_snap") is True
+    )
+    if not exact:
+        raise CadenceBatchError(
+            "foundry-layout audit does not satisfy the frozen production contract"
+        )
 
 
 def _candidate_queue_record(receipt: Mapping[str, Any]) -> Mapping[str, Any]:
@@ -609,6 +663,13 @@ def _integer(value: Any, label: str) -> int:
         return int(value)
     except (TypeError, ValueError) as exc:
         raise CadenceBatchError(f"{label} is not an integer") from exc
+
+
+def _close_float(value: Any, expected: float, tolerance: float = 1e-12) -> bool:
+    try:
+        return abs(float(value) - expected) <= tolerance
+    except (TypeError, ValueError):
+        return False
 
 
 def _truthy(value: Any) -> bool:

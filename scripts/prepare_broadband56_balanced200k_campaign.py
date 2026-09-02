@@ -12,6 +12,7 @@ exactly SHA-bound approval receipt limited to preparation preflight.
 from __future__ import annotations
 
 import argparse
+import copy
 import hashlib
 import json
 import os
@@ -20,6 +21,8 @@ from dataclasses import asdict
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
+
+import yaml
 
 if __package__ in {None, ""}:
     sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
@@ -45,6 +48,13 @@ FREQUENCY_FIELDS = {
     "frequency_stop_hz",
     "frequency_step_hz",
     "band_points",
+}
+FOUNDRY_LAYOUT_CONTRACT = {
+    "enabled": True,
+    "manufacturing_grid_um": 0.005,
+    "power_line_stitch_pad_depth_um": 6.0,
+    "shield_strap_width_um": 10.0,
+    "shield_strap_pitch_um": 20.0,
 }
 RECONSTRUCTED_BASELINE_ORIGIN = "NEW_RECONSTRUCTION_NOT_HISTORICAL_V1"
 RECONSTRUCTED_APPROVAL_SCHEMA = "rfic_transformer.broadband56_reconstructed_baseline_approval.v1"
@@ -102,9 +112,22 @@ def main(argv: list[str] | None = None) -> int:
 
     previous_cfg = _load_config(previous_config_path, checks, "previous_config")
     production_cfg = _load_config(production_config_path, checks, "production_config")
+    previous_raw = _load_raw_config(previous_config_path, checks, "previous_config")
+    production_raw = _load_raw_config(production_config_path, checks, "production_config")
     geometry_bounds: dict[str, tuple[float, float]] = {}
-    if previous_cfg is not None and production_cfg is not None:
-        _validate_inherited_configuration(checks, previous_cfg, production_cfg)
+    if (
+        previous_cfg is not None
+        and production_cfg is not None
+        and previous_raw is not None
+        and production_raw is not None
+    ):
+        _validate_inherited_configuration(
+            checks,
+            previous_cfg,
+            production_cfg,
+            previous_raw=previous_raw,
+            production_raw=production_raw,
+        )
         _validate_private_runtime_paths(checks, production_cfg)
         try:
             geometry_bounds = canonical_geometry_bounds(
@@ -307,7 +330,65 @@ def _load_config(path: Path, checks: list[dict[str, Any]], name: str) -> Any | N
     return config
 
 
-def _validate_inherited_configuration(checks: list[dict[str, Any]], previous: Any, production: Any) -> None:
+def _load_raw_config(
+    path: Path,
+    checks: list[dict[str, Any]],
+    name: str,
+) -> dict[str, Any] | None:
+    try:
+        payload = yaml.safe_load(path.read_text(encoding="utf-8"))
+    except Exception as exc:  # noqa: BLE001
+        checks.append(
+            _check(
+                f"{name}_raw_yaml_parses",
+                False,
+                f"{type(exc).__name__}: {exc}",
+            )
+        )
+        return None
+    valid = isinstance(payload, dict)
+    checks.append(_check(f"{name}_raw_yaml_parses", valid, type(payload).__name__))
+    return payload if valid else None
+
+
+def _without_frequency_fields(payload: dict[str, Any]) -> dict[str, Any]:
+    canonical = copy.deepcopy(payload)
+    target_value = canonical.get("target")
+    target = dict(target_value) if isinstance(target_value, dict) else {}
+    for field in FREQUENCY_FIELDS:
+        target.pop(field, None)
+    canonical["target"] = target
+    return canonical
+
+
+def _validate_foundry_layout_contract(
+    checks: list[dict[str, Any]],
+    payload: dict[str, Any],
+    *,
+    name: str,
+) -> None:
+    emx_value = payload.get("emx")
+    emx = emx_value if isinstance(emx_value, dict) else {}
+    foundry_value = emx.get("foundry_layout")
+    foundry = foundry_value if isinstance(foundry_value, dict) else {}
+    observed = {field: foundry.get(field) for field in FOUNDRY_LAYOUT_CONTRACT}
+    checks.append(
+        _check(
+            f"{name}_foundry_layout_contract_exact",
+            observed == FOUNDRY_LAYOUT_CONTRACT,
+            json.dumps(observed, sort_keys=True, separators=(",", ":")),
+        )
+    )
+
+
+def _validate_inherited_configuration(
+    checks: list[dict[str, Any]],
+    previous: Any,
+    production: Any,
+    *,
+    previous_raw: dict[str, Any],
+    production_raw: dict[str, Any],
+) -> None:
     previous_payload = asdict(previous)
     production_payload = asdict(production)
     previous_target = dict(previous_payload.get("target") or {})
@@ -323,6 +404,24 @@ def _validate_inherited_configuration(checks: list[dict[str, Any]], previous: An
             previous_payload == production_payload,
             "canonical dataclass comparison with only four frequency fields removed",
         )
+    )
+    checks.append(
+        _check(
+            "all_non_frequency_raw_configuration_is_identical_to_previous_broadband56",
+            _without_frequency_fields(previous_raw)
+            == _without_frequency_fields(production_raw),
+            "raw YAML mapping comparison with only four frequency fields removed",
+        )
+    )
+    _validate_foundry_layout_contract(
+        checks,
+        previous_raw,
+        name="previous_config",
+    )
+    _validate_foundry_layout_contract(
+        checks,
+        production_raw,
+        name="production_config",
     )
     grid = tuple(int(round(value)) for value in production.target.frequency_points_hz())
     checks.append(_check("production_frequency_grid_exact_56", grid == FREQUENCY_GRID_HZ, str(grid)))
