@@ -116,6 +116,7 @@ def _validate_control_evidence(
     inputs: Mapping[str, Path],
     args: argparse.Namespace,
     wrapper_path: Path,
+    expected_handoff_pid: int | None = None,
 ) -> dict[str, Any]:
     contract = _read_json(inputs["frozen_contract"], "frozen contract")
     errors = controller.validate_contract(contract)
@@ -138,6 +139,7 @@ def _validate_control_evidence(
     )
 
     preparation = _read_json(inputs["preparation_receipt"], "preparation receipt")
+    handoff_pid = os.getpid() if expected_handoff_pid is None else expected_handoff_pid
     if not (
         preparation.get("overall_status") == "PASS"
         and preparation.get("decision") == "PREPARED_FOR_GOLDEN_GATE"
@@ -307,7 +309,7 @@ def _validate_control_evidence(
         and handoff.get("old_process_confirmed_exited") is True
         and handoff.get("new_process_is_sole_authoritative_supervisor") is True
         and handoff.get("overlap_seconds") == 0
-        and handoff.get("new_process_pid") == os.getpid()
+        and handoff.get("new_process_pid") == handoff_pid
         and handoff.get("supervisor_count_after") == 1
     ):
         raise ReboundControllerError("supervisor handoff receipt mismatch")
