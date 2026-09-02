@@ -28,6 +28,7 @@ SUPERVISOR_MARKERS = (
     "run_broadband56_v2_swap_override_queue_controller.py",
     "launch_repaired_backend",
     "launch_isolation_hotfix",
+    "launch_broadband56_v2_supervisor_recovery",
 )
 RUNNER_MARKERS = (
     "run_broadband56_v2_stage_launcher.py",
@@ -260,6 +261,144 @@ def build_supervisor_lease(
         "operational_handoff_receipt": file_record(
             operational_handoff_receipt
         ),
+        "isolation_identity_module": file_record(Path(__file__)),
+        "isolation_identity_auditor": file_record(
+            isolation_identity_auditor
+        ),
+        "campaign_lock": {
+            "path": str(campaign_lock.resolve()),
+            "expected_contents": SUPERVISOR_ID,
+            "exclusive_flock_required": True,
+        },
+        "pid_reuse_protection": {
+            "uid_required": True,
+            "start_ticks_required": True,
+            "boot_id_required": True,
+            "command_line_sha256_required": True,
+            "executable_sha256_required": True,
+        },
+        "renewal_policy": "PROCESS_BOUND_NO_WALL_CLOCK_EXPIRY",
+    }
+
+
+def build_restarted_supervisor_lease(
+    *,
+    physical_pid: int,
+    backend_identity_manifest: Path,
+    queue_entry: Path,
+    supervisor_identity: Path,
+    operational_handoff_receipt: Path,
+    prior_supervisor_lease: Path,
+    restart_failure_receipt: Path,
+    campaign_lock: Path,
+    lease_generation: int,
+    isolation_identity_auditor: Path,
+    proc_root: Path = Path("/proc"),
+) -> dict[str, Any]:
+    """Build a process-bound lease after a recorded supervisor failure.
+
+    The immutable queue identity names the original physical controller. A
+    durable restart therefore chains the new handoff to the immediately prior
+    process-bound lease instead of rewriting that historical identity.
+    """
+    if lease_generation < 2:
+        raise IsolationIdentityError(
+            "restart lease generation must be at least two"
+        )
+    process = read_process_identity(physical_pid, proc_root=proc_root)
+    if process is None:
+        raise IsolationIdentityError("restart supervisor process is unavailable")
+    queue = read_json(queue_entry, "queue entry")
+    supervisor = read_json(supervisor_identity, "supervisor identity")
+    handoff = read_json(operational_handoff_receipt, "restart handoff receipt")
+    prior_lease = read_json(prior_supervisor_lease, "prior supervisor lease")
+    failure = read_json(restart_failure_receipt, "restart failure receipt")
+    backend_record = file_record(backend_identity_manifest)
+    queue_record = file_record(queue_entry)
+    supervisor_record = file_record(supervisor_identity)
+    prior_process = prior_lease.get("physical_process")
+    prior_pid = (
+        int(prior_process.get("pid", 0))
+        if isinstance(prior_process, Mapping)
+        else 0
+    )
+    observed_prior = read_process_identity(prior_pid, proc_root=proc_root)
+    prior_generation = prior_lease.get("lease_generation")
+    if not (
+        _campaign_process(str(process.get("command_text", "")))
+        and _contains_marker(
+            str(process.get("command_text", "")), SUPERVISOR_MARKERS
+        )
+        and prior_lease.get("schema") == LEASE_SCHEMA
+        and prior_lease.get("validity_state") == "CURRENT"
+        and prior_lease.get("campaign_id") == CAMPAIGN_ID
+        and prior_lease.get("queue_id") == QUEUE_ID
+        and prior_lease.get("logical_supervisor_id") == SUPERVISOR_ID
+        and isinstance(prior_generation, int)
+        and not isinstance(prior_generation, bool)
+        and prior_generation == lease_generation - 1
+        and isinstance(prior_process, Mapping)
+        and prior_pid > 0
+        and prior_lease.get("backend_identity_manifest", {}).get("sha256")
+        == backend_record["sha256"]
+        and prior_lease.get("queue_entry") == queue_record
+        and prior_lease.get("supervisor_identity") == supervisor_record
+        and observed_prior is None
+        and queue.get("campaign_id") == CAMPAIGN_ID
+        and queue.get("queue_id") == QUEUE_ID
+        and queue.get("one_authoritative_supervisor") == SUPERVISOR_ID
+        and queue.get("backend_identity_manifest", {}).get("sha256")
+        == backend_record["sha256"]
+        and supervisor.get("campaign_id") == CAMPAIGN_ID
+        and supervisor.get("controller_id") == SUPERVISOR_ID
+        and supervisor.get("backend_identity_manifest", {}).get("sha256")
+        == backend_record["sha256"]
+        and handoff.get("campaign_id") == CAMPAIGN_ID
+        and handoff.get("queue_id") == QUEUE_ID
+        and handoff.get("supervisor_id") == SUPERVISOR_ID
+        and handoff.get("old_process_pid") == prior_pid
+        and handoff.get("old_process_identity") == prior_process
+        and handoff.get("old_process_confirmed_exited") is True
+        and handoff.get("new_process_pid") == physical_pid
+        and isinstance(handoff.get("new_process_identity"), Mapping)
+        and process_identity_matches(process, handoff["new_process_identity"])
+        and handoff.get("new_process_is_sole_authoritative_supervisor") is True
+        and handoff.get("supervisor_count_after") == 1
+        and handoff.get("overlap_seconds") == 0
+        and handoff.get("new_queue_or_campaign_created") is False
+        and handoff.get("nn_training_started") is False
+        and failure.get("overall_status") == "PASS"
+        and failure.get("failed_physical_pid") == prior_pid
+        and failure.get("failed_physical_pid_alive") is False
+        and failure.get("active_simulator_jobs") == 0
+        and failure.get("current_accepted") == 0
+        and failure.get("current_feature_rows") == 0
+        and failure.get("simulator_action_taken") is False
+    ):
+        raise IsolationIdentityError(
+            "queue, prior lease, failure, backend, or restart handoff mismatch"
+        )
+    return {
+        "schema": LEASE_SCHEMA,
+        "generated_utc": utc_now(),
+        "validity_state": "CURRENT",
+        "expires_utc": None,
+        "validity_model": LEASE_VALIDITY_MODEL,
+        "lease_generation": lease_generation,
+        "lease_nonce": uuid.uuid4().hex,
+        "campaign_id": CAMPAIGN_ID,
+        "queue_id": QUEUE_ID,
+        "logical_supervisor_id": SUPERVISOR_ID,
+        "physical_process": _public_process_record(process),
+        "backend_identity_manifest": backend_record,
+        "queue_entry": queue_record,
+        "supervisor_identity": supervisor_record,
+        "operational_handoff_receipt": file_record(
+            operational_handoff_receipt
+        ),
+        "prior_supervisor_lease": file_record(prior_supervisor_lease),
+        "restart_failure_receipt": file_record(restart_failure_receipt),
+        "restart_chain_validated": True,
         "isolation_identity_module": file_record(Path(__file__)),
         "isolation_identity_auditor": file_record(
             isolation_identity_auditor

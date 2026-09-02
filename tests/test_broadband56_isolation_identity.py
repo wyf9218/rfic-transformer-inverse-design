@@ -1,8 +1,10 @@
 from __future__ import annotations
 
 import hashlib
+import json
 from copy import deepcopy
 from datetime import datetime, timezone
+from pathlib import Path
 
 import pytest
 
@@ -254,3 +256,154 @@ def test_unbound_runner_or_simulator_fails_closed() -> None:
     assert result["runner_count"] == 1
     assert result["active_simulator_jobs"] == 1
     assert result["isolation_gate_pass"] is False
+
+
+def _write_json(path: Path, value: dict) -> None:
+    path.write_text(json.dumps(value, sort_keys=True) + "\n", encoding="utf-8")
+
+
+def _file_record(path: Path) -> dict:
+    return {
+        "path": str(path.resolve()),
+        "size_bytes": path.stat().st_size,
+        "sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
+    }
+
+
+def _restart_lease_inputs(tmp_path: Path) -> tuple[dict, dict]:
+    backend = tmp_path / "backend.json"
+    backend.write_text("{}\n", encoding="utf-8")
+    backend_record = _file_record(backend)
+    queue = tmp_path / "queue.json"
+    supervisor = tmp_path / "supervisor.json"
+    auditor = tmp_path / "auditor.py"
+    lock = tmp_path / "campaign.lock"
+    handoff = tmp_path / "restart-handoff.json"
+    prior_lease_path = tmp_path / "prior-lease.json"
+    failure = tmp_path / "failure.json"
+    auditor.write_text("# test auditor\n", encoding="utf-8")
+    lock.write_text(identity.SUPERVISOR_ID + "\n", encoding="utf-8")
+    _write_json(
+        queue,
+        {
+            "campaign_id": identity.CAMPAIGN_ID,
+            "queue_id": identity.QUEUE_ID,
+            "one_authoritative_supervisor": identity.SUPERVISOR_ID,
+            "backend_identity_manifest": {"sha256": backend_record["sha256"]},
+        },
+    )
+    _write_json(
+        supervisor,
+        {
+            "campaign_id": identity.CAMPAIGN_ID,
+            "controller_id": identity.SUPERVISOR_ID,
+            "backend_identity_manifest": {"sha256": backend_record["sha256"]},
+        },
+    )
+    prior_process = _process(526588)
+    current_process = _process(
+        700001,
+        command=(
+            "python launch_broadband56_v2_supervisor_recovery.py "
+            f"--campaign {identity.CAMPAIGN_ID}"
+        ),
+    )
+    prior_public = {
+        key: value for key, value in prior_process.items() if key != "command_text"
+    }
+    current_public = {
+        key: value for key, value in current_process.items() if key != "command_text"
+    }
+    prior_lease = {
+        **_lease(prior_process),
+        "lease_generation": 2,
+        "physical_process": prior_public,
+        "backend_identity_manifest": backend_record,
+        "queue_entry": _file_record(queue),
+        "supervisor_identity": _file_record(supervisor),
+    }
+    _write_json(prior_lease_path, prior_lease)
+    _write_json(
+        failure,
+        {
+            "overall_status": "PASS",
+            "failed_physical_pid": 526588,
+            "failed_physical_pid_alive": False,
+            "active_simulator_jobs": 0,
+            "current_accepted": 0,
+            "current_feature_rows": 0,
+            "simulator_action_taken": False,
+        },
+    )
+    _write_json(
+        handoff,
+        {
+            "campaign_id": identity.CAMPAIGN_ID,
+            "queue_id": identity.QUEUE_ID,
+            "supervisor_id": identity.SUPERVISOR_ID,
+            "old_process_pid": 526588,
+            "old_process_identity": prior_public,
+            "old_process_confirmed_exited": True,
+            "new_process_pid": 700001,
+            "new_process_identity": current_public,
+            "new_process_is_sole_authoritative_supervisor": True,
+            "supervisor_count_after": 1,
+            "overlap_seconds": 0,
+            "new_queue_or_campaign_created": False,
+            "nn_training_started": False,
+        },
+    )
+    paths = {
+        "backend_identity_manifest": backend,
+        "queue_entry": queue,
+        "supervisor_identity": supervisor,
+        "operational_handoff_receipt": handoff,
+        "prior_supervisor_lease": prior_lease_path,
+        "restart_failure_receipt": failure,
+        "campaign_lock": lock,
+        "isolation_identity_auditor": auditor,
+    }
+    processes = {526588: prior_process, 700001: current_process}
+    return paths, processes
+
+
+def test_restart_lease_chains_dead_prior_process(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    paths, processes = _restart_lease_inputs(tmp_path)
+    monkeypatch.setattr(
+        identity,
+        "read_process_identity",
+        lambda pid, **_kwargs: None if pid == 526588 else processes.get(pid),
+    )
+
+    lease = identity.build_restarted_supervisor_lease(
+        physical_pid=700001,
+        lease_generation=3,
+        **paths,
+    )
+
+    assert lease["lease_generation"] == 3
+    assert lease["physical_process"]["pid"] == 700001
+    assert lease["restart_chain_validated"] is True
+    assert lease["prior_supervisor_lease"]["path"] == str(
+        paths["prior_supervisor_lease"].resolve()
+    )
+
+
+def test_restart_lease_rejects_live_or_reused_prior_pid(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    paths, processes = _restart_lease_inputs(tmp_path)
+    monkeypatch.setattr(
+        identity,
+        "read_process_identity",
+        lambda pid, **_kwargs: processes.get(pid),
+    )
+
+    with pytest.raises(identity.IsolationIdentityError, match="restart handoff"):
+        identity.build_restarted_supervisor_lease(
+            physical_pid=700001,
+            lease_generation=3,
+            **paths,
+        )
