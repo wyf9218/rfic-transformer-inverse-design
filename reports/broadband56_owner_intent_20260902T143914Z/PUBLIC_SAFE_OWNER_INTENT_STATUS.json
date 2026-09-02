@@ -1,0 +1,41 @@
+{
+  "schema": "rfic_transformer.broadband56_public_owner_intent_status.v1",
+  "generated_utc": "2026-09-02T14:39:14+00:00",
+  "campaign_id": "broadband56_real_emx_balanced200k_tsmc65_v2",
+  "decision": "OWNER_STOP_REVOKED_FOR_THIS_REAL_EMX_CAMPAIGN_ONLY",
+  "owner_intent_receipt": {
+    "filename": "OWNER_INTENT_RECEIPT.json",
+    "size_bytes": 1401,
+    "sha256": "b4326ec7da01c0b43e4a5a32a7eef776595f21772a8d4b7ffaa4e022ddaae7dd"
+  },
+  "active_goal": "FRESH_REAL_EMX_DATA_GENERATION",
+  "unrelated_job_owner_stop_remains_in_force": true,
+  "nn_training_authorized": false,
+  "target_accepted_unique_geometries": 200000,
+  "expected_geometry_frequency_rows": 11200000,
+  "frequency_contract": {
+    "start_ghz": 5,
+    "stop_ghz": 60,
+    "step_ghz": 1,
+    "points": 56,
+    "ports": 4,
+    "touchstone_extension": ".s4p"
+  },
+  "authorization_state": {
+    "existing_full_campaign_authorization_sha256": "532e751d5b72b32243935d1df3095627dd5a4c713ac4342437fa709b4f9da588",
+    "corrected_foundry_layout_candidate_sha256": "578a62022d20d2aea03aa25a346623491841ccfe16619da861659b7c206d04e9",
+    "corrected_foundry_layout_candidate_status": "PENDING_EXPLICIT_PROJECT_OWNER_SHA256_APPROVAL",
+    "owner_intent_receipt_approves_corrected_candidate": false,
+    "simulator_execution_authorized_by_owner_intent_receipt": false
+  },
+  "queue_state": {
+    "authoritative_controller_pid": 765117,
+    "controller_count": 1,
+    "campaign_lock": "LOCKED_BY_AUTHORITATIVE_CONTROLLER",
+    "controller_process_state": "T (stopped)",
+    "active_simulator_jobs": 0,
+    "current_accepted": 0,
+    "required_logical_state": "WAITING_FOR_CORRECTED_FOUNDRY_LAYOUT_APPROVAL"
+  },
+  "simulator_action_taken": false
+}
