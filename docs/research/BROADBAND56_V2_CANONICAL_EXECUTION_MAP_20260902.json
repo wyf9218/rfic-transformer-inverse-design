@@ -1,0 +1,176 @@
+{
+  "schema": "rfic_transformer.broadband56_v2_canonical_execution_map.v1",
+  "generated_utc": "2026-09-02T17:34:43Z",
+  "canonical_status": "CANONICAL_CURRENT_REBIND_WAITING_RESOURCE_GATE",
+  "campaign_id": "broadband56_real_emx_balanced200k_tsmc65_v2",
+  "queue_id": "b56-v2-queue-20260901T184307Z",
+  "supervisor_id": "b56-v2-controller-3184781-20260901T184307Z",
+  "branch": "codex/broadband56-balanced200k-v2",
+  "contract_fingerprint_sha256": "f86a00efbf7756b7421b863bbb16c340db6b423640f63a3257d46c1af49eb55e",
+  "public_runtime": {
+    "commit": "1807d6a2ce248c38a20708a8a35dd7238bcb8b9d",
+    "tree_sha1": "a190f562a48e5fa61a5b25f0df5acfc921bc6205",
+    "working_tree_clean_at_binding": true
+  },
+  "canonical_public_code": [
+    {
+      "role": "corrected_golden_and_phase_queue_builder",
+      "path": "scripts/run_broadband56_v2_bound_queue_builder.py",
+      "sha256": "394db8a67c1ece878de482792d523a47cf744b3c79ad0f8bdaba90ac5e0b4422"
+    },
+    {
+      "role": "authorization_composing_queue_controller",
+      "path": "scripts/run_broadband56_v2_rebound_queue_controller.py",
+      "sha256": "2a230f68dadc57e5f79f97f0fad4597c84944c58edb0036d7ee96759be9b3944"
+    },
+    {
+      "role": "stage_launcher",
+      "path": "scripts/run_broadband56_v2_stage_launcher.py",
+      "sha256": "1cbdc60cd43ed5ebf9555b9a95d2f99f1ef263016aa32f441f1d0d3e799f17de"
+    },
+    {
+      "role": "production_stage_backend",
+      "path": "scripts/run_broadband56_v2_production_stage_backend.py",
+      "sha256": "6742ab960b6e2de827b3f82c26b8756afe88d27c29c9abecb6f73f7e1ea694ac"
+    },
+    {
+      "role": "cadence_streamout_batch",
+      "path": "scripts/run_broadband56_v2_cadence_streamout_batch.py",
+      "sha256": "97cfd1221f58514bda79344b36be4d7bb5636be5446cf565bec4049b56e1616f"
+    },
+    {
+      "role": "candidate_gds_index_builder",
+      "path": "scripts/run_broadband56_v2_candidate_gds_index_batch.py",
+      "sha256": "cec42af0a28e9fecae735d4f24f136a6e75da65614b6a5df7314bdefda6ffc33"
+    },
+    {
+      "role": "gds_physical_identity_auditor",
+      "path": "scripts/run_broadband56_v2_gds_physical_identity_batch.py",
+      "sha256": "449a127cb327ab8303108341e5d54da73b33e83f933121d0959d321703cd6c59"
+    },
+    {
+      "role": "calibre_batch",
+      "path": "scripts/run_broadband56_v2_calibre_batch.py",
+      "sha256": "746bde54f090585f46c26b88e4bd2bdaab2a5072d002a0b43dda6d9b5e18d2b9"
+    },
+    {
+      "role": "zero_blocking_calibre_receipt",
+      "path": "scripts/run_broadband56_v2_calibre_zero_blocking_batch.py",
+      "sha256": "f33c8506efc9ec1a1ec78e83e1ea71a02de405d4e069620341d2cdccd771d279"
+    },
+    {
+      "role": "fresh_exact_gds_to_emx",
+      "path": "scripts/run_broadband56_v2_exact_gds_emx_batch.py",
+      "sha256": "7011b0dcf48c4850eb3cb646d4cb7a4ba153a21aee1e646578ce34c1a2902d38"
+    },
+    {
+      "role": "four_port_exact56_s4p_qa",
+      "path": "scripts/run_broadband56_v2_exact56_s4p_qa_batch.py",
+      "sha256": "de6e1ced2fdd37fdd79b302ea0d179fbcb17d72739566f95b1177298f209c80f"
+    },
+    {
+      "role": "stage_attempt_finalizer",
+      "path": "scripts/finalize_broadband56_stage_attempt.py",
+      "sha256": "310b575729983af30dab0b12a77b714b2c02117964770a99e5dd22d84d6e4585"
+    },
+    {
+      "role": "stage_attempt_product_builder",
+      "path": "scripts/build_broadband56_v2_stage_attempt_products.py",
+      "sha256": "0ab69b9f188771dd7babd27a6bb8f85f48cdf217ba272e57380f7eb4b6b735bf"
+    }
+  ],
+  "canonical_contract_and_data_identities": {
+    "public_reconstructed_baseline_r2": {
+      "path": "docs/research/BROADBAND56_RECONSTRUCTED_BASELINE_V1_CANDIDATE_R2_20260829.json",
+      "sha256": "037889d41f41bbedbcd38188c44a5c8c1ccffa62943c334a72f0980f38bf864f"
+    },
+    "approved_corrected_private_configuration": {
+      "publication": "PRIVATE_MARS_ARTIFACT_NOT_COMMITTED",
+      "sha256": "431ad59c22df2471746ab5a2eb73a3a7a6484fa511b71c9d6e6c93fb4b3d04d7"
+    },
+    "corrected_configuration_approval_receipt": {
+      "publication": "PRIVATE_MARS_RECEIPT_NOT_COMMITTED",
+      "sha256": "9c1c6c5997b292843134526d91987ae2a9175ebe7cb991f5af68790c9cec2eb5"
+    },
+    "existing_full_campaign_authorization_receipt": {
+      "publication": "PRIVATE_MARS_RECEIPT_NOT_COMMITTED",
+      "sha256": "532e751d5b72b32243935d1df3095627dd5a4c713ac4342437fa709b4f9da588"
+    },
+    "corrected_backend_manifest": {
+      "publication": "PRIVATE_MARS_MANIFEST_NOT_COMMITTED",
+      "sha256": "24310e15a2518cf0298d6b55b84dfb74da37e1ad1b25d9e50ba243ce1bd902b8"
+    },
+    "stage_execution_profile": {
+      "publication": "PRIVATE_MARS_MANIFEST_NOT_COMMITTED",
+      "sha256": "b3a2c9e22fe8dec75f60e8c9907a03dd696df0cb821d36d5322a5e3e56942b94"
+    },
+    "queue_backend_rebind_receipt": {
+      "publication": "PRIVATE_MARS_RECEIPT_NOT_COMMITTED",
+      "sha256": "32869fac406f5b01fd010f08c35f28358801c3294c033fb98868b63502ab133c"
+    },
+    "authoritative_queue_binding": {
+      "publication": "PRIVATE_MARS_RECEIPT_NOT_COMMITTED",
+      "sha256": "28340d911043dfc9923ccd8196a800ac1b440cb99680b852f868ba2063a6772a"
+    },
+    "golden_geometry_only_safe_anchor": {
+      "source_receipt_sha256": "76c15a014642ad5bb7fa21c6dd8111fa34184e4430f71695935d6fcf2bd2dd27",
+      "source_queue_sha256": "2fb3c63e861b90773f03530fb303b5f23b3317ba9f4dd78ff791d6f446c179ea",
+      "canonical_geometry_sha256": "964f87d16b7739c0851eeb970ccdeeea845023808a1ba1166208eaee9dac00b3",
+      "reuse_boundary": "GEOMETRY_BYTES_ONLY_NO_HISTORICAL_GDS_S4P_OR_LABELS"
+    }
+  },
+  "canonical_process_flow": [
+    "RESOURCE_AND_LICENSE_GATE",
+    "GOLDEN_GEOMETRY_FREEZE",
+    "ANALYTICAL_GATE",
+    "TOPOLOGY_GATE",
+    "FRESH_CADENCE_GDS",
+    "FOUNDRY_LAYOUT_AUDIT",
+    "CALIBRE_ZERO_BLOCKING_DRC",
+    "FRESH_REAL_EMX",
+    "FOUR_PORT_EXACT56_S4P_QA",
+    "S_TO_Z_AND_PHYSICAL_FEATURE_EXTRACTION",
+    "PILOT_32",
+    "PILOT_1000",
+    "PHASE_A_TO_50000",
+    "PHASE_B_TO_150000",
+    "PHASE_C_TO_200000"
+  ],
+  "current_observation": {
+    "observed_utc": "2026-09-02T17:34:43Z",
+    "queue_rebind": "PASS",
+    "supervisor_rebind": "PASS",
+    "supervisor_count": 1,
+    "current_stage": "GOLDEN",
+    "current_accepted": 0,
+    "active_simulator_jobs": 0,
+    "post_rebind_execution_gate": "WAIT",
+    "wait_reasons": [
+      "active_swap_thrashing"
+    ],
+    "license_gate": "PASS",
+    "physical_results": "NOT_RUN",
+    "reverify_live_state_before_reporting": true
+  },
+  "public_code_verification": {
+    "canonical_map_sha_check": "PASS",
+    "targeted_rebind_tests": {
+      "passed": 4,
+      "failed": 0
+    },
+    "all_broadband56_tests": {
+      "passed": 312,
+      "failed": 0,
+      "warnings": 35
+    }
+  },
+  "retention_and_cleanup_policy": {
+    "obsolete_backend_status": "SUPERSEDED_FOR_EXECUTION_PRESERVED_FOR_AUDIT",
+    "failed_golden_attempts_status": "NO_GO_PRESERVED_FOR_AUDIT",
+    "delete_private_pdk_or_process_files": false,
+    "delete_historical_fail_or_pass_receipts": false,
+    "stale_public_code_deletion_gate": "ONLY_AFTER_CORRECTED_GOLDEN_PASS_AND_CANONICAL_DEPENDENCY_AUDIT",
+    "github_publication_boundary": "PUBLIC_CODE_AND_PUBLIC_SAFE_STATUS_ONLY_NO_PDK_MODEL_WEIGHT_SENSITIVE_GDS_OR_CREDENTIALS"
+  },
+  "scientific_boundary": "No corrected rescue Golden physical result exists yet. Proxy values, historical S4P files, and prior failed GDS files are not current labels or validation evidence."
+}

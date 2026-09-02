@@ -2,16 +2,17 @@
 
 ## Start Here
 
-1. [2026-08-23 Chinese research handoff](research/ENGINEERING_HANDOFF_20260823_CN.md)
-2. [Machine-readable handoff state](research/HANDOFF_STATE_20260823.json)
-3. [Known NO-GO evidence](research/KNOWN_NO_GO_20260823.md)
-4. [Useful-code map](research/CODE_MAP_20260823.md)
-5. [Latest Monday-report code/status snapshot](../research_snapshot/20260823/monday_advisor_goal_v1/README.md)
-6. [Latest GitHub sync status](research/MONDAY_ADVISOR_SYNC_STATUS_20260823_CN.md)
-7. [System overview](architecture/SYSTEM_OVERVIEW.md)
-8. [End-to-end pipeline](workflows/END_TO_END_PIPELINE.md)
-9. [Million-data campaign](workflows/MILLION_DATA_CAMPAIGN.md)
-10. [Checkpoint model tests](workflows/CHECKPOINT_MODEL_TESTS.md)
+1. [Canonical Broadband56 V2 execution map](research/BROADBAND56_V2_CANONICAL_EXECUTION_MAP_20260902.json)
+2. [2026-08-23 Chinese research handoff](research/ENGINEERING_HANDOFF_20260823_CN.md)
+3. [Machine-readable handoff state](research/HANDOFF_STATE_20260823.json)
+4. [Known NO-GO evidence](research/KNOWN_NO_GO_20260823.md)
+5. [Useful-code map](research/CODE_MAP_20260823.md)
+6. [Latest Monday-report code/status snapshot](../research_snapshot/20260823/monday_advisor_goal_v1/README.md)
+7. [Latest GitHub sync status](research/MONDAY_ADVISOR_SYNC_STATUS_20260823_CN.md)
+8. [System overview](architecture/SYSTEM_OVERVIEW.md)
+9. [End-to-end pipeline](workflows/END_TO_END_PIPELINE.md)
+10. [Million-data campaign](workflows/MILLION_DATA_CAMPAIGN.md)
+11. [Checkpoint model tests](workflows/CHECKPOINT_MODEL_TESTS.md)
 
 ## Workflows
 
