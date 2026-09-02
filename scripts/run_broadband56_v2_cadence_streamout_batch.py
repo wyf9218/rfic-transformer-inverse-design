@@ -186,6 +186,8 @@ def run_batch(args: argparse.Namespace, *, out_dir: Path) -> dict[str, Any]:
 
     out_dir.mkdir(parents=True, mode=0o700)
     delegate_dir = out_dir / "delegate_run"
+    # The wrapper has already hash-bound the config; the legacy delegate has
+    # no config-hash CLI option and receives only its supported arguments.
     command = [
         str(python_path),
         str(delegate_path),
@@ -195,8 +197,6 @@ def run_batch(args: argparse.Namespace, *, out_dir: Path) -> dict[str, Any]:
         str(delegate_dir),
         "--config",
         str(config_path),
-        "--expected-config-sha256",
-        pinned["config"][1],
         "--jobs",
         str(max_concurrency),
         "--chunk-size",

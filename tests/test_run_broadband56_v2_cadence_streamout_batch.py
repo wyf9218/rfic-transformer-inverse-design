@@ -218,8 +218,11 @@ def _fake_delegate_source() -> str:
     return r'''import argparse
 import csv
 import json
+import sys
 from pathlib import Path
 
+if "--expected-config-sha256" in sys.argv:
+    raise SystemExit("unsupported config hash argument reached legacy delegate")
 p = argparse.ArgumentParser()
 p.add_argument("--candidate-csv", required=True)
 p.add_argument("--out-dir", required=True)
