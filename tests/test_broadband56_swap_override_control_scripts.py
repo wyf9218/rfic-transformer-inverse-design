@@ -137,3 +137,97 @@ def test_swap_snapshot_writer_is_no_clobber(tmp_path: Path) -> None:
     with pytest.raises(FileExistsError):
         CONTROLLER._write_json_exclusive(path, {"pass": False})
     assert json.loads(path.read_text()) == {"pass": True}
+
+
+class _ControllerDouble:
+    ControllerError = RuntimeError
+
+    @staticmethod
+    def _read_json(path: Path, _label: str):
+        return json.loads(path.read_text())
+
+
+def _handoff_payload() -> dict:
+    return {
+        "schema": CONTROLLER.HANDOFF_SCHEMA,
+        "overall_status": "PASS",
+        "decision": CONTROLLER.HANDOFF_DECISION,
+        "campaign_id": CONTROLLER.CAMPAIGN_ID,
+        "queue_id": CONTROLLER.QUEUE_ID,
+        "supervisor_id": CONTROLLER.SUPERVISOR_ID,
+        "contract_fingerprint_sha256": CONTROLLER.CONTRACT_FINGERPRINT,
+        "old_process_pid": 676436,
+        "old_process_confirmed_exited": True,
+        "new_process_pid": CONTROLLER.os.getpid(),
+        "new_process_is_sole_authoritative_supervisor": True,
+        "supervisor_count_after": 1,
+        "overlap_seconds": 0,
+        "new_queue_or_campaign_created": False,
+        "nn_training_started": False,
+    }
+
+
+def test_verified_current_supervisor_is_restored_after_ancestor_filter(
+    tmp_path: Path,
+) -> None:
+    handoff = tmp_path / "handoff.json"
+    handoff.write_text(json.dumps(_handoff_payload()) + "\n")
+    snapshot = {
+        "isolation": {
+            "authoritative_supervisor_count": 0,
+            "duplicate_supervisor_count": 0,
+        }
+    }
+
+    result = CONTROLLER._include_verified_current_supervisor(
+        snapshot,
+        controller=_ControllerDouble,
+        operational_handoff_path=handoff,
+    )
+
+    isolation = result["isolation"]
+    assert isolation["authoritative_supervisor_count"] == 1
+    assert isolation["duplicate_supervisor_count"] == 0
+    assert isolation["supervisor_self_inclusion"]["external_supervisor_count"] == 0
+    assert snapshot["isolation"]["authoritative_supervisor_count"] == 0
+
+
+def test_external_supervisor_still_triggers_duplicate_detection(
+    tmp_path: Path,
+) -> None:
+    handoff = tmp_path / "handoff.json"
+    handoff.write_text(json.dumps(_handoff_payload()) + "\n")
+    snapshot = {
+        "isolation": {
+            "authoritative_supervisor_count": 1,
+            "duplicate_supervisor_count": 0,
+        }
+    }
+
+    result = CONTROLLER._include_verified_current_supervisor(
+        snapshot,
+        controller=_ControllerDouble,
+        operational_handoff_path=handoff,
+    )
+
+    assert result["isolation"]["authoritative_supervisor_count"] == 2
+    assert result["isolation"]["duplicate_supervisor_count"] == 1
+
+
+def test_supervisor_self_inclusion_rejects_unbound_pid(tmp_path: Path) -> None:
+    payload = _handoff_payload()
+    payload["new_process_pid"] += 1
+    handoff = tmp_path / "handoff.json"
+    handoff.write_text(json.dumps(payload) + "\n")
+
+    with pytest.raises(RuntimeError, match="not bound"):
+        CONTROLLER._include_verified_current_supervisor(
+            {
+                "isolation": {
+                    "authoritative_supervisor_count": 0,
+                    "duplicate_supervisor_count": 0,
+                }
+            },
+            controller=_ControllerDouble,
+            operational_handoff_path=handoff,
+        )

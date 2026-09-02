@@ -82,7 +82,7 @@ def main(argv: list[str] | None = None) -> int:
             private.operational_overlay_manifest_sha256,
             "operational overlay manifest",
         )
-        _bound_file(
+        operational_handoff_path = _bound_file(
             private.operational_handoff_receipt,
             private.operational_handoff_receipt_sha256,
             "operational handoff receipt",
@@ -117,6 +117,7 @@ def main(argv: list[str] | None = None) -> int:
             original_run_probe=original_run_probe,
             override_receipt_path=override_path,
             overlay_manifest_path=overlay_path,
+            operational_handoff_path=operational_handoff_path,
         )
         campaign_root = Path(args.campaign_root).expanduser().resolve()
         try:
@@ -245,6 +246,7 @@ def _swap_override_probe_factory(
     original_run_probe: Any,
     override_receipt_path: Path,
     overlay_manifest_path: Path,
+    operational_handoff_path: Path,
 ) -> Any:
     def run_probe(probe_script: Path, out_dir: Path, check_index: int) -> Path:
         oom_before = _proc_counter(Path("/proc/vmstat"), "oom_kill")
@@ -266,6 +268,11 @@ def _swap_override_probe_factory(
         resources["active_swap_thrashing"] = swap_policy.combined_swap_thrashing(
             resources
         )["active"]
+        payload = _include_verified_current_supervisor(
+            payload,
+            controller=controller,
+            operational_handoff_path=operational_handoff_path,
+        )
         payload["schema"] = swap_policy.SNAPSHOT_SCHEMA
         payload["swap_policy"] = swap_policy.SWAP_POLICY
         payload["source_snapshot"] = _file_record(source_path)
@@ -281,6 +288,60 @@ def _swap_override_probe_factory(
         return path
 
     return run_probe
+
+
+def _include_verified_current_supervisor(
+    payload: Mapping[str, Any],
+    *,
+    controller: Any,
+    operational_handoff_path: Path,
+) -> dict[str, Any]:
+    """Restore the controller omitted by the ancestor-filtering base probe."""
+    updated = copy.deepcopy(payload)
+    isolation = updated.get("isolation")
+    if not isinstance(isolation, dict):
+        raise controller.ControllerError("base resource snapshot lacks isolation")
+    handoff = controller._read_json(
+        operational_handoff_path,
+        "operational handoff receipt",
+    )
+    if not _operational_handoff_exact(handoff):
+        raise controller.ControllerError(
+            "current supervisor is not bound by the operational handoff receipt"
+        )
+
+    external_count = isolation.get("authoritative_supervisor_count")
+    external_duplicates = isolation.get("duplicate_supervisor_count")
+    if (
+        not isinstance(external_count, int)
+        or isinstance(external_count, bool)
+        or external_count < 0
+        or not isinstance(external_duplicates, int)
+        or isinstance(external_duplicates, bool)
+        or external_duplicates < 0
+        or external_duplicates != max(0, external_count - 1)
+    ):
+        raise controller.ControllerError(
+            "base resource snapshot has inconsistent supervisor counts"
+        )
+    if "supervisor_self_inclusion" in isolation:
+        raise controller.ControllerError(
+            "base resource snapshot already contains supervisor self-inclusion"
+        )
+
+    total_count = external_count + 1
+    isolation["authoritative_supervisor_count"] = total_count
+    isolation["duplicate_supervisor_count"] = max(0, total_count - 1)
+    isolation["supervisor_self_inclusion"] = {
+        "reason": "BASE_PROBE_EXCLUDES_ANCESTOR_CONTROLLER",
+        "external_supervisor_count": external_count,
+        "current_supervisor_pid": os.getpid(),
+        "logical_supervisor_id": SUPERVISOR_ID,
+        "operational_handoff_receipt": _file_record(
+            operational_handoff_path
+        ),
+    }
+    return updated
 
 
 def _override_exact(payload: Mapping[str, Any]) -> bool:
