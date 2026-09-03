@@ -37,6 +37,12 @@ RECOVERY_APPROVAL_SCHEMA = (
     "rfic_transformer.broadband56_v2_supervisor_recovery_authorization.v2"
 )
 RECOVERY_APPROVAL_DECISION = "APPROVE_" + RECOVERY_SCOPE
+RECOVERY_RUNTIME_SCHEMA = (
+    "rfic_transformer.broadband56_v2_supervisor_recovery_runtime.v2"
+)
+RECOVERY_BACKEND_OVERLAY_SCHEMA = (
+    "rfic_transformer.broadband56_v2_supervisor_recovery_backend_overlay.v2"
+)
 HANDOFF_SCHEMA = "rfic_transformer.broadband56_v2_swap_policy_supervisor_handoff.v1"
 HANDOFF_DECISION = "HANDOFF_SAME_LOGICAL_SUPERVISOR_FOR_SWAP_POLICY_OVERLAY"
 OVERLAY_SCHEMA = "rfic_transformer.broadband56_v2_operational_policy_overlay.v1"
@@ -441,13 +447,59 @@ def run(args: argparse.Namespace) -> None:
         approval_path,
         args.recovery_approval_sha256,
     )
-    runtime_manifest = read_json(
-        bound_path(candidate["runtime_manifest"], "runtime manifest"),
-        "runtime manifest",
-    )
+    runtime_manifest_path = bound_path(candidate["runtime_manifest"], "runtime manifest")
+    runtime_manifest = read_json(runtime_manifest_path, "runtime manifest")
     runtime = runtime_manifest.get("runtime")
-    if not isinstance(runtime, Mapping):
-        raise RecoveryError("runtime manifest lacks runtime identities")
+    focused_tests = runtime_manifest.get("focused_tests")
+    if not (
+        runtime_manifest.get("schema") == RECOVERY_RUNTIME_SCHEMA
+        and runtime_manifest.get("overall_status") == "PASS"
+        and runtime_manifest.get("campaign_id") == CAMPAIGN_ID
+        and runtime_manifest.get("queue_id") == QUEUE_ID
+        and runtime_manifest.get("logical_supervisor_id") == SUPERVISOR_ID
+        and runtime_manifest.get("new_queue_or_campaign_created") is False
+        and runtime_manifest.get("scientific_contract_changed") is False
+        and runtime_manifest.get("simulator_contract_changed") is False
+        and runtime_manifest.get("simulator_action_taken") is False
+        and runtime_manifest.get("nn_training_started") is False
+        and isinstance(focused_tests, Mapping)
+        and focused_tests.get("result") == "PASS"
+        and focused_tests.get("passed") == 59
+        and focused_tests.get("failed") == 0
+        and isinstance(runtime, Mapping)
+        and runtime.get("head_commit") == candidate.get("patch_commit")
+    ):
+        raise RecoveryError("runtime manifest contract mismatch")
+    backend_overlay_path = bound_path(
+        candidate["backend_overlay_manifest"], "recovery backend overlay"
+    )
+    backend_overlay = read_json(backend_overlay_path, "recovery backend overlay")
+    if not (
+        backend_overlay.get("schema") == RECOVERY_BACKEND_OVERLAY_SCHEMA
+        and backend_overlay.get("overall_status") == "PASS"
+        and backend_overlay.get("campaign_id") == CAMPAIGN_ID
+        and backend_overlay.get("queue_id") == QUEUE_ID
+        and backend_overlay.get("logical_supervisor_id") == SUPERVISOR_ID
+        and backend_overlay.get("contract_fingerprint_sha256") == FINGERPRINT
+        and backend_overlay.get("recovery_runtime_manifest")
+        == file_record(runtime_manifest_path)
+        and backend_overlay.get("approved_hotfix_runtime_manifest")
+        == candidate["approved_hotfix_runtime_manifest"]
+        and backend_overlay.get("approved_hotfix_backend_manifest")
+        == candidate["approved_hotfix_backend_manifest"]
+        and backend_overlay.get("prior_supervisor_lease")
+        == candidate["prior_supervisor_lease"]
+        and backend_overlay.get("recovery_chain_failure_receipt")
+        == candidate["recovery_chain_failure_receipt"]
+        and backend_overlay.get("backend_content_changed") is False
+        and backend_overlay.get("queue_binding_changed") is False
+        and backend_overlay.get("new_queue_or_campaign_created") is False
+        and backend_overlay.get("scientific_contract_changed") is False
+        and backend_overlay.get("simulator_contract_changed") is False
+        and backend_overlay.get("simulator_action_taken") is False
+        and backend_overlay.get("nn_training_started") is False
+    ):
+        raise RecoveryError("recovery backend overlay contract mismatch")
     if file_record(Path(__file__)) != runtime.get("recovery_launcher"):
         raise RecoveryError("recovery launcher identity mismatch")
     runtime_root = Path(str(runtime.get("runtime_root") or "")).resolve()
@@ -485,6 +537,13 @@ def run(args: argparse.Namespace) -> None:
     ):
         raise RecoveryError("approved hotfix runtime or backend identity mismatch")
     bindings = dict(base_candidate["evidence_bindings"])
+    production_backend = bound_path(
+        bindings["production_backend_manifest"], "production backend"
+    )
+    if backend_overlay.get("production_backend_manifest") != file_record(
+        production_backend
+    ):
+        raise RecoveryError("recovery backend production identity mismatch")
     bindings["post_rebind_execution_gate"] = candidate[
         "post_rebind_execution_gate"
     ]
