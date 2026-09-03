@@ -243,7 +243,7 @@ def test_recorded_failure_rejects_unknown_classification() -> None:
 
 
 def test_bound_python_identity_accepts_current_interpreter() -> None:
-    identity = RECOVERY.verify_bound_python(Path(sys.executable).resolve())
+    identity = RECOVERY.verify_bound_python(Path(sys.executable))
     assert identity["numpy_version"]
     assert identity["resolved_executable"]["sha256"]
 
