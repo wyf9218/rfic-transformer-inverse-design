@@ -9,6 +9,7 @@ import hashlib
 import importlib.util
 import json
 import os
+import subprocess
 import sys
 import time
 from datetime import datetime, timezone
@@ -124,15 +125,47 @@ def bound_path(record: Any, label: str) -> Path:
     return path
 
 
-def verify_bound_python(expected_python: Path) -> None:
-    """Require the recovery launcher to run under the approved Python binary."""
-    current_python = Path(sys.executable).expanduser().resolve()
-    if not (
-        current_python.is_file()
-        and expected_python.is_file()
-        and os.path.samefile(current_python, expected_python)
-    ):
-        raise RecoveryError("recovery launcher Python identity mismatch")
+def _current_python_runtime_identity() -> dict[str, Any]:
+    import numpy as np
+
+    executable = Path(sys.executable).expanduser()
+    numpy_file = Path(np.__file__).resolve()
+    return {
+        "resolved_executable": file_record(executable),
+        "sys_prefix": str(Path(sys.prefix).resolve()),
+        "sys_base_prefix": str(Path(sys.base_prefix).resolve()),
+        "virtual_env": str(Path(os.environ["VIRTUAL_ENV"]).resolve())
+        if os.environ.get("VIRTUAL_ENV")
+        else None,
+        "numpy_version": np.__version__,
+        "numpy_module": file_record(numpy_file),
+    }
+
+
+def verify_bound_python(expected_python: Path) -> dict[str, Any]:
+    """Require the launcher runtime to match the approved Python wrapper."""
+    probe = (
+        "import importlib.util,json;"
+        f"p={str(Path(__file__).resolve())!r};"
+        "s=importlib.util.spec_from_file_location('b56_runtime_probe',p);"
+        "m=importlib.util.module_from_spec(s);s.loader.exec_module(m);"
+        "print(json.dumps(m._current_python_runtime_identity(),sort_keys=True))"
+    )
+    try:
+        completed = subprocess.run(
+            [str(expected_python), "-c", probe],
+            check=True,
+            capture_output=True,
+            text=True,
+            timeout=30,
+        )
+        expected = json.loads(completed.stdout)
+        observed = _current_python_runtime_identity()
+    except (OSError, subprocess.SubprocessError, ValueError, ImportError) as error:
+        raise RecoveryError("recovery launcher Python runtime mismatch") from error
+    if observed != expected:
+        raise RecoveryError("recovery launcher Python runtime mismatch")
+    return observed
 
 
 def parse_utc(value: Any) -> datetime | None:

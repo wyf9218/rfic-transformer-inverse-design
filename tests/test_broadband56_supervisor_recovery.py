@@ -243,13 +243,15 @@ def test_recorded_failure_rejects_unknown_classification() -> None:
 
 
 def test_bound_python_identity_accepts_current_interpreter() -> None:
-    RECOVERY.verify_bound_python(Path(sys.executable).resolve())
+    identity = RECOVERY.verify_bound_python(Path(sys.executable).resolve())
+    assert identity["numpy_version"]
+    assert identity["resolved_executable"]["sha256"]
 
 
 def test_bound_python_identity_rejects_different_file(tmp_path: Path) -> None:
     different_python = tmp_path / "python"
     different_python.write_bytes(b"not the running Python executable\n")
-    with pytest.raises(RECOVERY.RecoveryError, match="Python identity mismatch"):
+    with pytest.raises(RECOVERY.RecoveryError, match="Python runtime mismatch"):
         RECOVERY.verify_bound_python(different_python)
 
 
