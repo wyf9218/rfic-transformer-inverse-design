@@ -1,0 +1,67 @@
+{
+  "schema": "rfic_transformer.broadband56_v2_supervisor_recovery_generation5_status.v1",
+  "generated_utc": "2026-09-03T03:28:22Z",
+  "overall_status": "WAITING_FOR_EXACT_SHA_PROJECT_OWNER_APPROVAL",
+  "campaign_id": "broadband56_real_emx_balanced200k_tsmc65_v2",
+  "queue_id": "b56-v2-queue-20260901T184307Z",
+  "logical_supervisor_id": "b56-v2-controller-3184781-20260901T184307Z",
+  "current_state": {
+    "physical_supervisor_count": 0,
+    "runner_count": 0,
+    "active_simulator_jobs": 0,
+    "stage_files": 0,
+    "gds_files": 0,
+    "s4p_files": 0,
+    "accepted_geometries": 0,
+    "feature_rows": 0
+  },
+  "latest_failure": {
+    "classification": "RECOVERY_LAUNCHER_INTERPRETER_MISSING_NUMPY",
+    "failed_physical_pid": 2700705,
+    "simulator_action_taken": false,
+    "receipt": {
+      "path": "/volumes/research-localdata/ywang3652/broadband56_v2_recovery_chain_failure_v3_20260903T031857Z/SUPERVISOR_RECOVERY_CHAIN_FAILURE_RECEIPT.json",
+      "size_bytes": 3712,
+      "sha256": "d4c1ceaf34f8d73aff28da7f6bc28c635fe700e9252a6a56574b33f651d80c55"
+    }
+  },
+  "correction": {
+    "description": "Bind recovery to the approved private Python wrapper and compare the delegated virtual-environment runtime fingerprint before acquiring the generation-5 lease.",
+    "head_commit": "8b12018524a1e2f1cfc9aa92afbe435d7cf396af",
+    "tree_sha1": "77d9dd66550316ce081c3cb8cead8dbf00386fcc",
+    "local_broadband56_tests": "171/171 PASS",
+    "mars_focused_tests": "59/59 PASS"
+  },
+  "authorization_candidate": {
+    "path": "/volumes/research-localdata/ywang3652/broadband56_v2_supervisor_recovery_candidate_v4r3_20260903T032650Z/BROADBAND56_SUPERVISOR_RECOVERY_AUTHORIZATION_CANDIDATE_V4_20260903T032650Z.json",
+    "size_bytes": 9798,
+    "sha256": "cca79b1ec58efac329b319e251fed94b42cdf2bef7a393eb5135e82655ad8b2a",
+    "candidate_status": "PENDING_EXACT_SHA_PROJECT_OWNER_APPROVAL"
+  },
+  "candidate_verification": {
+    "path": "/volumes/research-localdata/ywang3652/broadband56_v2_supervisor_recovery_candidate_v4r3_20260903T032650Z/CANDIDATE_VERIFICATION_RECEIPT.json",
+    "sha256": "93e893ebf02eac65b5b5a068226455ed627f16ff93891af11b93c146c9daadea",
+    "overall_status": "PASS",
+    "sha256sums_check": "PASS"
+  },
+  "runtime_manifest": {
+    "path": "/volumes/research-localdata/ywang3652/broadband56_v2_supervisor_recovery_candidate_v4r3_20260903T032650Z/RECOVERY_RUNTIME_MANIFEST_V4.json",
+    "size_bytes": 5994,
+    "sha256": "9d41de7304063091ac4aeadd85c38b4f4838582dce020d9accb64c2e10fca230"
+  },
+  "backend_overlay_manifest": {
+    "path": "/volumes/research-localdata/ywang3652/broadband56_v2_supervisor_recovery_candidate_v4r3_20260903T032650Z/RECOVERY_BACKEND_OVERLAY_MANIFEST_V4.json",
+    "size_bytes": 4326,
+    "sha256": "96640cc8f80cf2d4213639a49f5167ce2a3cc0dd844ce236f9558409a594a825"
+  },
+  "unchanged_contracts": {
+    "scientific_contract_changed": false,
+    "simulator_contract_changed": false,
+    "new_campaign_or_queue_created": false,
+    "nn_training_authorized": false
+  },
+  "why_generation_has_not_started": "The generation-5 recovery candidate has not yet received explicit project-owner approval of its exact SHA-256; the consumed generation-4 approval cannot be transferred.",
+  "next_legal_action": "Project owner approves exact candidate SHA-256 cca79b1ec58efac329b319e251fed94b42cdf2bef7a393eb5135e82655ad8b2a; then record a no-clobber approval receipt and launch exactly one physical supervisor through the bound private Python wrapper.",
+  "simulator_action_taken": false,
+  "nn_training_started": false
+}
