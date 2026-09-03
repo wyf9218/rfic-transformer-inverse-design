@@ -25,6 +25,8 @@ if __package__ in {None, ""}:
     sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from rfic_transformer_inverse_design.campaigns import (  # noqa: E402
+    broadband56_capacity_policy as capacity_policy,
+    broadband56_capacity_snapshot_adapter as capacity_adapter,
     broadband56_isolation_identity as isolation_identity,
     broadband56_swap_override_policy as swap_policy,
 )
@@ -127,6 +129,7 @@ def main(argv: list[str] | None = None) -> int:
         os.environ[OVERLAY_SHA_ENV] = private.operational_overlay_manifest_sha256
 
         original_run_probe = controller._run_probe
+        original_run_stage_launcher = controller._run_stage_launcher
 
         def validate(
             inputs: Mapping[str, Path], parsed: argparse.Namespace
@@ -171,6 +174,11 @@ def main(argv: list[str] | None = None) -> int:
             campaign_root=campaign_root,
             campaign_lock=campaign_lock,
             python_bin=Path(args.python_bin).expanduser().resolve(),
+        )
+        controller._run_stage_launcher = _capacity_adapter_stage_launcher_factory(
+            controller,
+            original_run_stage_launcher=original_run_stage_launcher,
+            poll_seconds=int(args.poll_seconds),
         )
         try:
             state = controller.run_controller(args, campaign_root=campaign_root)
@@ -375,6 +383,13 @@ def _validate_control_evidence(
     evidence["isolation_identity_auditor"] = _file_record(isolation_auditor)
     evidence["isolation_identity_module"] = _file_record(isolation_module)
     evidence["swap_policy"] = swap_policy.SWAP_POLICY
+    evidence["capacity_schema_adapter"] = _file_record(
+        Path(capacity_adapter.__file__).resolve()
+    )
+    evidence["capacity_policy_module"] = _file_record(
+        Path(capacity_policy.__file__).resolve()
+    )
+    evidence["capacity_schema_adapter_profile"] = capacity_adapter.ADAPTER_PROFILE
     return evidence
 
 
@@ -498,6 +513,181 @@ def _swap_override_probe_factory(
     return run_probe
 
 
+def _capacity_adapter_stage_launcher_factory(
+    controller: Any,
+    *,
+    original_run_stage_launcher: Any,
+    poll_seconds: int,
+) -> Any:
+    """Adapt only at the final controller-to-stage-launcher boundary."""
+
+    def run_stage_launcher(
+        *,
+        inputs: Mapping[str, Path],
+        campaign_root: Path,
+        stage: str,
+        concurrency: int,
+        snapshot_path: Path,
+        check_index: int,
+    ) -> dict[str, Any]:
+        source_path = snapshot_path.expanduser().resolve()
+        source_check_index = int(check_index)
+        refresh_attempt = 0
+        gate_path = _resource_gate_for_snapshot(
+            controller,
+            campaign_root=campaign_root,
+            snapshot_path=source_path,
+        )
+        initial_snapshot = True
+        while True:
+            gate = controller._read_json(gate_path, "source resource gate")
+            gate_status = gate.get("overall_status")
+            if gate_status not in {"PASS", "WAIT"}:
+                raise controller.ControllerError(
+                    "source resource gate has an invalid terminal status"
+                )
+            gate_passed = gate_status == "PASS"
+            if initial_snapshot and not gate_passed:
+                raise controller.ControllerError(
+                    "stage launch requested from a non-PASS resource gate"
+                )
+            if gate_passed:
+                timestamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S%fZ")
+                adapter_out = (
+                    campaign_root
+                    / "resource_snapshot_adapters"
+                    / f"{source_check_index:09d}_{timestamp}"
+                )
+                try:
+                    adapted = (
+                        capacity_adapter.normalize_capacity_snapshot_for_stage_launcher(
+                            source_path,
+                            gate_path,
+                            adapter_out,
+                        )
+                    )
+                    adapted_path = adapted["adapted_snapshot_path"]
+                    fresh_at_child_launch = capacity_adapter.adapted_snapshot_is_fresh(
+                        adapted_path
+                    )
+                    adapted_payload = controller._read_json(
+                        adapted_path,
+                        "adapted capacity snapshot",
+                    )
+                    policy = None
+                    if fresh_at_child_launch:
+                        policy = capacity_adapter.evaluate_adapted_capacity_snapshot(
+                            adapted_payload,
+                            stage=stage,
+                            current_accepted=int(gate["current_accepted"]),
+                            measured_pilot_bytes_per_geometry=(
+                                controller._pilot_bytes_per_geometry(campaign_root)
+                            ),
+                        )
+                except (
+                    capacity_adapter.CapacitySnapshotAdapterError,
+                    swap_policy.CapacityPolicyError,
+                    KeyError,
+                    TypeError,
+                    ValueError,
+                ) as exc:
+                    raise controller.ControllerError(str(exc)) from exc
+                if fresh_at_child_launch:
+                    if policy is None:
+                        raise controller.ControllerError(
+                            "fresh adapted snapshot lacks a policy decision"
+                        )
+                    allowed = swap_policy.adaptive_concurrency(
+                        stage=stage,
+                        logical_cpu_count=policy["metrics"]["logical_cpu_count"],
+                        simulator_license_capacity=policy["metrics"][
+                            "simulator_license_capacity"
+                        ],
+                        current_concurrency=None,
+                        healthy_check_streak=0,
+                        normalized_load1=policy["metrics"]["normalized_load1"],
+                        iowait_percent=policy["metrics"]["iowait_percent"],
+                        available_memory_fraction=policy["metrics"][
+                            "available_memory_fraction"
+                        ],
+                        active_swap_thrashing=policy["metrics"][
+                            "active_swap_thrashing"
+                        ],
+                        licenses_available=policy["checks"]["license_gate"],
+                        pilot_1000_safe_concurrency=(
+                            controller._pilot_safe_concurrency(campaign_root)
+                        ),
+                    )
+                    launch_concurrency = min(
+                        int(concurrency),
+                        int(allowed["concurrency"]),
+                    )
+                    if launch_concurrency >= 1:
+                        return original_run_stage_launcher(
+                            inputs=inputs,
+                            campaign_root=campaign_root,
+                            stage=stage,
+                            concurrency=launch_concurrency,
+                            snapshot_path=adapted_path,
+                            check_index=check_index,
+                        )
+
+            refresh_attempt += 1
+            if controller.STOP_REQUESTED:
+                raise controller.ControllerError(
+                    "controller stop requested while refreshing a stale snapshot"
+                )
+            if not gate_passed:
+                controller._interruptible_sleep(poll_seconds)
+                if controller.STOP_REQUESTED:
+                    raise controller.ControllerError(
+                        "controller stop requested while waiting for a fresh PASS gate"
+                    )
+            refresh_index = int(check_index) * 1_000_000 + refresh_attempt
+            source_path = controller._run_probe(
+                inputs["probe_script"],
+                campaign_root / "resource_snapshots",
+                refresh_index,
+            )
+            source_check_index = refresh_index
+            gate_path = controller._write_resource_gate(
+                inputs=inputs,
+                snapshot_path=source_path,
+                campaign_root=campaign_root,
+                check_index=refresh_index,
+                stage=stage,
+                current_accepted=int(gate["current_accepted"]),
+            )
+            initial_snapshot = False
+
+    return run_stage_launcher
+
+
+def _resource_gate_for_snapshot(
+    controller: Any,
+    *,
+    campaign_root: Path,
+    snapshot_path: Path,
+) -> Path:
+    expected = _file_record(snapshot_path)
+    matches: list[Path] = []
+    for path in sorted(
+        (campaign_root / "resource_gates").glob("*/CAPACITY_RESOURCE_GATE.json")
+    ):
+        try:
+            payload = controller._read_json(path, "capacity resource gate")
+        except (OSError, ValueError, json.JSONDecodeError):
+            continue
+        evidence = payload.get("evidence")
+        if isinstance(evidence, Mapping) and evidence.get("resource_snapshot") == expected:
+            matches.append(path.resolve())
+    if len(matches) != 1:
+        raise controller.ControllerError(
+            "expected exactly one resource gate bound to the source snapshot"
+        )
+    return matches[0]
+
+
 def _run_isolation_identity_audit(
     *,
     controller: Any,
@@ -558,6 +748,14 @@ def _override_exact(payload: Mapping[str, Any]) -> bool:
         and payload.get("supervisor_id") == SUPERVISOR_ID
         and payload.get("contract_fingerprint_sha256") == CONTRACT_FINGERPRINT
         and payload.get("swap_policy") == swap_policy.SWAP_POLICY
+        and payload.get("capacity_schema_adapter_profile")
+        == capacity_adapter.ADAPTER_PROFILE
+        and payload.get("capacity_schema_source_schema")
+        == capacity_adapter.SOURCE_SNAPSHOT_SCHEMA
+        and payload.get("capacity_schema_target_schema")
+        == capacity_adapter.TARGET_SNAPSHOT_SCHEMA
+        and payload.get("capacity_snapshot_maximum_launch_age_seconds")
+        == capacity_adapter.MAX_LAUNCH_AGE_SECONDS
         and payload.get("swap_zero_requirement_removed") is True
         and payload.get("nonzero_swap_in_alone_is_advisory") is True
         and payload.get("scientific_contract_changed") is False
@@ -632,6 +830,14 @@ def _overlay_exact(
         )
         and _identity_exact(
             Path(swap_policy.__file__).resolve(), payload.get("policy_module")
+        )
+        and _identity_exact(
+            Path(capacity_policy.__file__).resolve(),
+            scripts.get("capacity_policy_module"),
+        )
+        and _identity_exact(
+            Path(capacity_adapter.__file__).resolve(),
+            scripts.get("capacity_schema_adapter"),
         )
     )
 

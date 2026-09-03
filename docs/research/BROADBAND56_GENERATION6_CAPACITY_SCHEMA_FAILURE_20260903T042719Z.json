@@ -1,0 +1,61 @@
+{
+  "schema": "rfic_transformer.broadband56_generation6_capacity_schema_failure_status.v1",
+  "generated_utc": "2026-09-03T04:27:19Z",
+  "overall_status": "FAIL",
+  "decision": "DO_NOT_REUSE_GENERATION_6",
+  "failure_classification": "GENERATION_6_FAILED_PRE_CADENCE_CAPACITY_SCHEMA_MISMATCH",
+  "campaign_id": "broadband56_real_emx_balanced200k_tsmc65_v2",
+  "queue_id": "b56-v2-queue-20260901T184307Z",
+  "logical_supervisor_id": "b56-v2-controller-3184781-20260901T184307Z",
+  "failed_physical_pid": 457259,
+  "facts": {
+    "fresh_resource_probe_completed": true,
+    "resource_gate_status": "PASS",
+    "source_snapshot_schema": "rfic_transformer.broadband56_v2_swap_operational_override_snapshot.v1",
+    "stage_launcher_expected_schema": "rfic_transformer.broadband56_v2_capacity_resource_snapshot.v1",
+    "stage_launcher_exception": "CapacityPolicyError: capacity snapshot schema mismatch",
+    "failure_before_cadence": true,
+    "campaign_status_golden_running_is_stale": true,
+    "active_supervisor_count_after_failure": 0,
+    "active_runner_count_after_failure": 0,
+    "active_simulator_count_after_failure": 0,
+    "accepted_unique_real_emx_geometries": 0,
+    "geometry_frequency_feature_rows": 0,
+    "gds_produced": false,
+    "calibre_result_produced": false,
+    "s4p_produced": false,
+    "fresh_real_emx_label_produced": false
+  },
+  "evidence": {
+    "resource_gate": {
+      "basename": "CAPACITY_RESOURCE_GATE.json",
+      "sha256": "cb3fecc6774028c87bfbc3848f0dce1fd1aecf7d97539071fe44961edf012b3e"
+    },
+    "source_snapshot": {
+      "basename": "swap_override_000001_20260903T040918248489Z.json",
+      "sha256": "0f2f85d25f9c632f11fb00ac6d882d304e409e36f0998f3b56f2eb93ae42f22a"
+    },
+    "stage_stderr": {
+      "basename": "000001_golden_20260903T040918Z.stderr.log",
+      "sha256": "ff803585fa8c6c52abb33e19737677baaa0c5a8dc4802d468391b1dd9c889e3a"
+    },
+    "generation_status": {
+      "basename": "GENERATION6_STARTUP_STATUS.json",
+      "sha256": "363f9d8b803a483c809d31c6c392e0505ffc09dbf9e23f02152d2d245d9c0552"
+    },
+    "supervisor_log": {
+      "basename": "GENERATION6_SUPERVISOR.log",
+      "sha256": "3910ea7159a47859c885afa0987ab37aef5dca5ead0fdf8194493ee38277ce36"
+    }
+  },
+  "repair_boundary": {
+    "adapter_profile": "SWAP_OVERRIDE_V1_TO_CAPACITY_RESOURCE_V1_STRICT_ADAPTER",
+    "resource_thresholds_changed": false,
+    "scientific_contract_changed": false,
+    "drc_contract_changed": false,
+    "frequency_contract_changed": false,
+    "nn_training_authorized": false
+  },
+  "private_paths_published": false,
+  "simulator_action_taken_by_this_status": false
+}

@@ -110,6 +110,26 @@ def evaluate_capacity_snapshot(
 
     if snapshot.get("schema") != SNAPSHOT_SCHEMA:
         raise CapacityPolicyError("capacity snapshot schema mismatch")
+    adapter = snapshot.get("capacity_schema_adapter")
+    if adapter is not None:
+        if not isinstance(adapter, Mapping) or adapter.get("profile") != (
+            "SWAP_OVERRIDE_V1_TO_CAPACITY_RESOURCE_V1_STRICT_ADAPTER"
+        ):
+            raise CapacityPolicyError("capacity snapshot adapter profile mismatch")
+        from .broadband56_capacity_snapshot_adapter import (
+            CapacitySnapshotAdapterError,
+            evaluate_adapted_capacity_snapshot,
+        )
+
+        try:
+            return evaluate_adapted_capacity_snapshot(
+                snapshot,
+                stage=stage,
+                current_accepted=current_accepted,
+                measured_pilot_bytes_per_geometry=measured_pilot_bytes_per_geometry,
+            )
+        except CapacitySnapshotAdapterError as exc:
+            raise CapacityPolicyError(str(exc)) from exc
     if snapshot.get("campaign_id") != CAMPAIGN_ID:
         raise CapacityPolicyError("capacity snapshot campaign mismatch")
     if snapshot.get("contract_fingerprint_sha256") != SCIENTIFIC_CONTRACT_FINGERPRINT:
