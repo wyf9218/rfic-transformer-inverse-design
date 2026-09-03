@@ -1,0 +1,73 @@
+{
+  "schema": "rfic_transformer.broadband56_generation9_resource_wait_status.v1",
+  "generated_utc": "2026-09-03T16:45:02Z",
+  "overall_status": "QUEUED_WAITING_FOR_CAPACITY",
+  "campaign_id": "broadband56_real_emx_balanced200k_tsmc65_v2",
+  "queue_id": "b56-v2-queue-20260901T184307Z",
+  "logical_supervisor_id": "b56-v2-controller-3184781-20260901T184307Z",
+  "physical_generation": 9,
+  "physical_supervisor_pid": 955642,
+  "supervisor_alive_at_snapshot": true,
+  "approval": {
+    "candidate_basename": "BROADBAND56_REBIND_PLAN_COMPAT_FINAL_START_AUTHORIZATION_CANDIDATE_20260903T053914Z.json",
+    "candidate_sha256": "88eab53ca00582903ee675c939faf893b397824c8c27773be8e0533900b21dc9",
+    "approval_receipt_basename": "CAPACITY_SCHEMA_COMPAT_FINAL_START_AUTHORIZATION_RECEIPT.json",
+    "approval_receipt_sha256": "40ae128c077e6a946055e793d9f02a971296ae7b6bee2dc6c1c812aba0b82cf7",
+    "approval_receipt_status": "PASS",
+    "approved_by": "Yufeng Wang, project owner and project leader",
+    "approved_utc": "2026-09-03T15:36:50.106610+00:00",
+    "automatic_existing_200k_stage_chain_authorized": true,
+    "nn_training_authorized": false
+  },
+  "startup": {
+    "rebind_plan_compatibility_fix_applied": true,
+    "one_physical_supervisor_started": true,
+    "duplicate_supervisor_started": false,
+    "fresh_resource_probe_active": true,
+    "simulator_action_taken": false
+  },
+  "latest_resource_gate": {
+    "gate_index": 2,
+    "overall_status": "WAIT",
+    "decision": "WAITING_FOR_CAPACITY",
+    "failed_checks": [
+      "normalized_load1_gate",
+      "normalized_load5_gate"
+    ],
+    "logical_cpu_count": 192,
+    "raw_load1": 185.46240234375,
+    "normalized_load1": 0.9659500122070312,
+    "normalized_load5": 0.9546407063802084,
+    "normalized_load15": 0.8400446573893229,
+    "available_memory_fraction": 0.6663816301338151,
+    "active_swap_thrashing": false,
+    "swap_in_60s_pages": 1176.0,
+    "swap_out_60s_pages": 0.0,
+    "iowait_percent": 0.0006947906335274695,
+    "license_gate_pass": true,
+    "isolation_gate_pass": true,
+    "storage_gate_pass": true,
+    "active_simulator_jobs": 0,
+    "resource_thresholds_changed": false
+  },
+  "progress": {
+    "current_stage": "GOLDEN",
+    "accepted_unique_real_emx_geometries": 0,
+    "geometry_frequency_feature_rows": 0,
+    "gds_produced": false,
+    "s4p_produced": false,
+    "fresh_real_emx_label_produced": false
+  },
+  "contracts": {
+    "scientific_contract_changed": false,
+    "drc_contract_changed": false,
+    "frequency_contract_changed": false,
+    "frequency_points": 56,
+    "frequency_start_ghz": 5,
+    "frequency_stop_ghz": 60,
+    "frequency_step_ghz": 1,
+    "ports": 4
+  },
+  "next_action": "THE_EXISTING_GENERATION9_SUPERVISOR_RECHECKS_CAPACITY_AUTOMATICALLY_AND_STARTS_EXACTLY_ONE_RESCUE_GOLDEN_WHEN_ALL_GATES_PASS",
+  "private_paths_published": false
+}
