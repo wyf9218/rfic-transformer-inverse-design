@@ -11,6 +11,7 @@ from .topology import default_topology_fields
 from .types import (
     BridgeSectionConfig,
     CMAESOptimizerConfig,
+    FoundryLayoutSpec,
     ShieldSpec,
     TopologyMode,
     TransformerEmxConfig,
@@ -721,6 +722,9 @@ def load_run_config_from_raw(raw: dict[str, object] | None = None) -> Transforme
         power_line_8port=_load_power_line_8port_spec(
             emx_raw.get("power_line_8port", cfg.emx.power_line_8port)
         ),
+        foundry_layout=_load_foundry_layout_spec(
+            emx_raw.get("foundry_layout", cfg.emx.foundry_layout)
+        ),
         ap_layer=primary_coil_layer,
         m9_layer=secondary_coil_layer,
         m5_layer=int(emx_raw.get("m5_layer", cfg.emx.m5_layer)),
@@ -1186,6 +1190,19 @@ def _load_power_line_8port_spec(value: object) -> PowerLine8PortSpec:
         port_ground_reference=str(raw.get("port_ground_reference", "shield")),  # type: ignore[arg-type]
         port_map=port_map,
         role_labels=role_labels,
+    )
+
+
+def _load_foundry_layout_spec(value: object) -> FoundryLayoutSpec:
+    if isinstance(value, FoundryLayoutSpec):
+        return value
+    raw = dict(value or {})
+    return FoundryLayoutSpec(
+        enabled=bool(raw.get("enabled", False)),
+        manufacturing_grid_um=float(raw.get("manufacturing_grid_um", 0.005)),
+        power_line_stitch_pad_depth_um=float(raw.get("power_line_stitch_pad_depth_um", 6.0)),
+        shield_strap_width_um=float(raw.get("shield_strap_width_um", 10.0)),
+        shield_strap_pitch_um=float(raw.get("shield_strap_pitch_um", 20.0)),
     )
 
 

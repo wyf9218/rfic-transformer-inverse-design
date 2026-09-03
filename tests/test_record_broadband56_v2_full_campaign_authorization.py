@@ -404,6 +404,9 @@ def _valid_fixture(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> dict[str,
             "cadence_streamout_delegate_sha256": script_hashes[
                 "cadence_streamout_delegate"
             ],
+            "foundry_layout_audit_producer_sha256": script_hashes[
+                "foundry_layout_audit_producer"
+            ],
             "candidate_gds_index_builder_sha256": script_hashes[
                 "candidate_gds_index_builder"
             ],

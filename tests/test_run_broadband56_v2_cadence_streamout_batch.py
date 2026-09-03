@@ -5,10 +5,12 @@ import hashlib
 import json
 import subprocess
 import sys
+from dataclasses import replace
 from pathlib import Path
 
 from rfic_transformer_inverse_design.campaigns.broadband56_balanced200k import (
     CAMPAIGN_ID,
+    canonical_geometry_sha256,
 )
 from rfic_transformer_inverse_design.campaigns.broadband56_capacity_policy import (
     SCIENTIFIC_CONTRACT_FINGERPRINT,
@@ -18,18 +20,26 @@ from rfic_transformer_inverse_design.campaigns.broadband56_full_campaign_authori
     FULL_CAMPAIGN_APPROVAL_SCOPE,
     FULL_CAMPAIGN_PASS_DECISION,
 )
+from rfic_transformer_inverse_design.core import (
+    FoundryLayoutSpec,
+    PowerLine8PortSpec,
+    default_run_config,
+)
+from rfic_transformer_inverse_design.layout import export_transformer_layout
+from rfic_transformer_inverse_design.layout import foundry_audit as foundry_audit_module
 
 
 ROOT = Path(__file__).resolve().parents[1]
 SCRIPT = ROOT / "scripts" / "run_broadband56_v2_cadence_streamout_batch.py"
+CONTRACT = ROOT / "docs" / "research" / "FOUNDRY_LAYOUT_AUDIT_CONTRACT.json"
 
 
-def test_cadence_batch_preserves_pass_and_failure(tmp_path: Path) -> None:
-    fixture = _fixture(tmp_path, candidate_ids=("a" * 64, "f" * 64))
+def test_cadence_batch_produces_audit_before_pass_partition(tmp_path: Path) -> None:
+    fixture = _fixture(tmp_path, candidate_count=2, delegate_fail_indexes={1})
     result = _run(fixture)
     assert result.returncode == 0, result.stderr
 
-    out = fixture["out_dir"]
+    out = Path(fixture["out_dir"])
     receipt = json.loads(
         (out / "CADENCE_STREAMOUT_BATCH_ROLE_RECEIPT.json").read_text()
     )
@@ -37,18 +47,20 @@ def test_cadence_batch_preserves_pass_and_failure(tmp_path: Path) -> None:
     assert receipt["submitted_count"] == 2
     assert receipt["cadence_pass_count"] == 1
     assert receipt["cadence_fail_count"] == 1
-    assert receipt["candidate_failures_counted_as_accepted"] is False
-    assert receipt["simulator_action_taken"] is True
+    assert receipt["downstream_calibre_authorized"] is True
 
     passed = _read_csv(out / "CADENCE_PASS_CANDIDATE_QUEUE.csv")
-    failed = _read_csv(out / "CADENCE_STREAMOUT_FAILURE_INDEX.csv")
     evidence = _read_csv(out / "CADENCE_STREAMOUT_DELEGATE_EVIDENCE_INDEX.csv")
-    dataset = _read_csv(out / "cadence_pass_dataset" / "dataset_rows.csv")
-    assert [row["candidate_id_sha256"] for row in passed] == ["a" * 64]
-    assert [row["candidate_id_sha256"] for row in failed] == ["f" * 64]
-    assert len(evidence) == 2
-    assert len(dataset) == 1
-    assert evidence[0]["source_foundry_layout_audit_sha256"]
+    assert [row["candidate_id_sha256"] for row in passed] == [fixture["first_sha"]]
+    audit_path = Path(evidence[0]["source_foundry_layout_audit_path"])
+    assert audit_path.is_file() and audit_path.stat().st_size > 0
+    audit = json.loads(audit_path.read_text())
+    assert audit["audit_boundary"] == (
+        "POST_CADENCE_STREAMOUT_PRE_CADENCE_PASS_PARTITION"
+    )
+    assert audit["overall_status"] == "PASS"
+    assert audit["gds_sha256"] == evidence[0]["source_gds_sha256"]
+
     copied_gds = list(
         (out / "cadence_pass_dataset").glob(
             "evaluations/*/streamout/transformer_layout_cadpins.gds"
@@ -60,47 +72,51 @@ def test_cadence_batch_preserves_pass_and_failure(tmp_path: Path) -> None:
     assert _sha(copied_gds[0]) == _sha(source_gds)
 
 
-def test_cadence_batch_rejects_disabled_foundry_layout_audit(
-    tmp_path: Path,
-) -> None:
-    fixture = _fixture(tmp_path, candidate_ids=("d" * 64,))
-
+def test_zero_cadence_pass_is_terminal_upstream_failure(tmp_path: Path) -> None:
+    fixture = _fixture(tmp_path, candidate_count=1, invalid_source_audit=True)
     result = _run(fixture)
 
-    assert result.returncode == 0, result.stderr
+    assert result.returncode == 2
+    out = Path(fixture["out_dir"])
     receipt = json.loads(
-        (fixture["out_dir"] / "CADENCE_STREAMOUT_BATCH_ROLE_RECEIPT.json").read_text()
+        (out / "CADENCE_STREAMOUT_BATCH_ROLE_RECEIPT.json").read_text()
     )
-    failures = _read_csv(
-        fixture["out_dir"] / "CADENCE_STREAMOUT_FAILURE_INDEX.csv"
-    )
+    failures = _read_csv(out / "CADENCE_STREAMOUT_FAILURE_INDEX.csv")
+    assert receipt["overall_status"] == "FAIL"
     assert receipt["cadence_pass_count"] == 0
     assert receipt["cadence_fail_count"] == 1
-    assert "foundry-layout audit" in failures[0]["error"]
+    assert receipt["downstream_calibre_authorized"] is False
+    assert receipt["upstream_terminal_failure"]["calibre_invocation_forbidden"] is True
+    assert "source foundry-layout audit is not PASS" in failures[0]["error"]
+    assert not (out / "roles" / "05_calibre_runner").exists()
 
 
 def test_cadence_batch_rejects_duplicate_geometry_before_delegate(
     tmp_path: Path,
 ) -> None:
-    fixture = _fixture(tmp_path, candidate_ids=("a" * 64, "b" * 64))
-    rows = _read_csv(fixture["candidate_queue"])
+    fixture = _fixture(tmp_path, candidate_count=2)
+    candidate_queue = Path(fixture["candidate_queue"])
+    rows = _read_csv(candidate_queue)
     rows[1]["geometry_sha256"] = rows[0]["geometry_sha256"]
-    _write_csv(fixture["candidate_queue"], rows)
-    receipt = json.loads(fixture["input_receipt"].read_text())
-    receipt["candidate_queue"] = _record(fixture["candidate_queue"])
-    fixture["input_receipt"].write_text(json.dumps(receipt))
+    _write_csv(candidate_queue, rows)
+    input_receipt = Path(fixture["input_receipt"])
+    receipt = json.loads(input_receipt.read_text())
+    receipt["candidate_queue"] = _record(candidate_queue)
+    input_receipt.write_text(json.dumps(receipt))
 
     result = _run(fixture)
     assert result.returncode == 2
     assert "duplicated" in result.stderr
-    assert not fixture["out_dir"].exists()
+    assert not Path(fixture["out_dir"]).exists()
 
 
 def test_cadence_batch_is_no_clobber(tmp_path: Path) -> None:
-    fixture = _fixture(tmp_path, candidate_ids=("a" * 64,))
+    fixture = _fixture(tmp_path, candidate_count=1)
     first = _run(fixture)
     assert first.returncode == 0, first.stderr
-    receipt_path = fixture["out_dir"] / "CADENCE_STREAMOUT_BATCH_ROLE_RECEIPT.json"
+    receipt_path = (
+        Path(fixture["out_dir"]) / "CADENCE_STREAMOUT_BATCH_ROLE_RECEIPT.json"
+    )
     before = receipt_path.read_bytes()
 
     second = _run(fixture)
@@ -109,26 +125,55 @@ def test_cadence_batch_is_no_clobber(tmp_path: Path) -> None:
     assert receipt_path.read_bytes() == before
 
 
-def _fixture(root: Path, *, candidate_ids: tuple[str, ...]) -> dict[str, Path]:
+def _fixture(
+    root: Path,
+    *,
+    candidate_count: int,
+    delegate_fail_indexes: set[int] | None = None,
+    invalid_source_audit: bool = False,
+) -> dict[str, Path | str]:
+    template_dir, geometry = _build_real_foundry_layout(root)
+    if invalid_source_audit:
+        source_path = template_dir / "foundry_layout_source_audit.json"
+        source = json.loads(source_path.read_text())
+        source["overall_status"] = "FAIL"
+        source_path.write_text(json.dumps(source))
+
     config = root / "config.yaml"
-    config.write_text("frozen: true\n")
+    config.write_text(
+        "emx:\n"
+        "  foundry_layout:\n"
+        "    enabled: true\n"
+        "    manufacturing_grid_um: 0.005\n"
+        "    power_line_stitch_pad_depth_um: 6.0\n"
+        "    shield_strap_width_um: 10.0\n"
+        "    shield_strap_pitch_um: 20.0\n"
+    )
     delegate = root / "fake_cadence_delegate.py"
-    delegate.write_text(_fake_delegate_source())
-    rows = []
-    for index, candidate_id in enumerate(candidate_ids, start=1):
+    delegate.write_text(
+        _fake_delegate_source(delegate_fail_indexes or set()), encoding="utf-8"
+    )
+    rows: list[dict[str, str]] = []
+    first_sha = ""
+    for index in range(candidate_count):
+        values = dict(geometry)
+        values["offset_um"] += float(index)
+        digest = canonical_geometry_sha256(values)
+        if index == 0:
+            first_sha = digest
         rows.append(
             {
-                "candidate_id": f"candidate_{index}",
-                "candidate_id_sha256": candidate_id,
-                "candidate_geometry_identity_sha256": candidate_id,
+                "candidate_id": f"candidate_{index + 1}",
+                "candidate_id_sha256": digest,
+                "candidate_geometry_identity_sha256": digest,
                 "campaign_id": CAMPAIGN_ID,
                 "campaign_contract_fingerprint": SCIENTIFIC_CONTRACT_FINGERPRINT,
                 "campaign_phase": "PHASE_A",
                 "acquisition_source": "base_space_filling",
-                "geometry_sha256": f"{index:x}" * 64,
+                "geometry_sha256": digest,
                 "analytical_status": "PASS",
                 "topology_status": "PASS",
-                "geom__primary_outer_width_um": str(200 + index),
+                **{f"geom__{name}": str(value) for name, value in values.items()},
             }
         )
     candidate_queue = root / "candidate_queue.csv"
@@ -153,10 +198,14 @@ def _fixture(root: Path, *, candidate_ids: tuple[str, ...]) -> dict[str, Path]:
                 "script_identities": {
                     "cadence_streamout_runner": _record(SCRIPT),
                     "cadence_streamout_delegate": _record(delegate),
+                    "foundry_layout_audit_producer": _record(
+                        Path(foundry_audit_module.__file__).resolve()
+                    ),
                 },
                 "runtime_identities": {
                     "python_executable": _record(Path(sys.executable).resolve()),
                     "private_configuration": _record(config),
+                    "foundry_layout_audit_contract": _record(CONTRACT),
                 },
             }
         )
@@ -184,10 +233,81 @@ def _fixture(root: Path, *, candidate_ids: tuple[str, ...]) -> dict[str, Path]:
         "manifest": manifest,
         "authorization": authorization,
         "out_dir": root / "out",
+        "first_sha": first_sha,
     }
 
 
-def _run(fixture: dict[str, Path]) -> subprocess.CompletedProcess[str]:
+def _build_real_foundry_layout(root: Path) -> tuple[Path, dict[str, float]]:
+    cfg = default_run_config("1t1t")
+    cfg = replace(
+        cfg,
+        emx=replace(
+            cfg.emx,
+            port_mode="single_ended_shield_grounded",
+            differential_port_pairs=((0, 1), (2, 3)),
+            power_line_8port=PowerLine8PortSpec(
+                enabled=True,
+                touchstone_mode="signal_4_grounded_aux",
+                bridge_width_um=10.0,
+                port_map=("P001", "P002", "P003", "P004"),
+                role_labels=(
+                    ("primary_top", "P001"),
+                    ("primary_bottom", "P002"),
+                    ("secondary_top", "P003"),
+                    ("secondary_bottom", "P004"),
+                    ("left_power_top", "P005"),
+                    ("left_power_bottom", "P006"),
+                    ("right_power_top", "P007"),
+                    ("right_power_bottom", "P008"),
+                ),
+            ),
+            foundry_layout=FoundryLayoutSpec(enabled=True),
+        ),
+        bounds=replace(
+            cfg.bounds,
+            primary=replace(
+                cfg.bounds.primary,
+                center_tap=True,
+                vdd_bar=replace(
+                    cfg.bounds.primary.vdd_bar,
+                    enabled=True,
+                    bar_layer=cfg.emx.ap_layer,
+                    width_um=10.0,
+                    offset_um=12.0,
+                ),
+            ),
+            secondary=replace(
+                cfg.bounds.secondary,
+                center_tap=True,
+                vdd_bar=replace(
+                    cfg.bounds.secondary.vdd_bar,
+                    enabled=True,
+                    bar_layer=cfg.emx.m9_layer,
+                    width_um=10.0,
+                    offset_um=12.0,
+                ),
+            ),
+        ),
+    )
+    geometry = cfg.bounds.midpoint()
+    template_dir = root / "template_layout"
+    export_transformer_layout(geometry, cfg, template_dir, validate_geometry=False)
+    values = {
+        "primary_outer_width_um": geometry.primary.outer_width_um,
+        "primary_outer_height_um": geometry.primary.outer_height_um,
+        "secondary_outer_width_um": geometry.secondary.outer_width_um,
+        "secondary_outer_height_um": geometry.secondary.outer_height_um,
+        "line_width_um": geometry.primary.trace_width_um,
+        "primary_terminal_y_span_um": geometry.primary.terminal_y_span_um,
+        "secondary_terminal_y_span_um": geometry.secondary.terminal_y_span_um,
+        "offset_um": geometry.offset_um,
+        "primary_feed_extension_um": geometry.primary.feed_extension_um,
+        "secondary_feed_extension_um": geometry.secondary.feed_extension_um,
+    }
+    return template_dir, values
+
+
+def _run(fixture: dict[str, Path | str]) -> subprocess.CompletedProcess[str]:
     return subprocess.run(
         [
             sys.executable,
@@ -214,10 +334,11 @@ def _run(fixture: dict[str, Path]) -> subprocess.CompletedProcess[str]:
     )
 
 
-def _fake_delegate_source() -> str:
-    return r'''import argparse
+def _fake_delegate_source(fail_indexes: set[int]) -> str:
+    return f'''import argparse
 import csv
 import json
+import shutil
 import sys
 from pathlib import Path
 
@@ -229,94 +350,66 @@ p.add_argument("--out-dir", required=True)
 args, _ = p.parse_known_args()
 out = Path(args.out_dir)
 out.mkdir(parents=True)
+template = Path(__file__).resolve().parent / "template_layout"
 with Path(args.candidate_csv).open(newline="", encoding="utf-8") as h:
     rows = list(csv.DictReader(h))
 shards = []
+fail_indexes = {sorted(fail_indexes)!r}
 for index, row in enumerate(rows):
-    shard = out / "parallel_shards" / f"shard_{index:03d}"
+    shard = out / "parallel_shards" / f"shard_{{index:03d}}"
     shard.mkdir(parents=True)
-    success = not row["candidate_id_sha256"].startswith("f")
+    success = index not in fail_indexes
     dataset = shard / "dataset_rows.csv"
     fields = ["queue__candidate_id_sha256", "ok", "evaluation"]
-    evaluation = f"eval_{index:03d}"
+    evaluation = f"eval_{{index:03d}}"
     with dataset.open("w", newline="", encoding="utf-8") as h:
         w = csv.DictWriter(h, fieldnames=fields)
         w.writeheader()
-        w.writerow({
+        w.writerow({{
             "queue__candidate_id_sha256": row["candidate_id_sha256"],
             "ok": "true" if success else "false",
             "evaluation": evaluation,
-        })
+        }})
     if success:
         evaluation_dir = shard / "evaluations" / evaluation
         (evaluation_dir / "streamout").mkdir(parents=True)
-        (evaluation_dir / "streamout" / "transformer_layout_cadpins.gds").write_bytes(
-            f"gds-{index}".encode("ascii")
-        )
-        (evaluation_dir / "summary.json").write_text('{"overall_status":"PASS"}')
         (evaluation_dir / "layout").mkdir()
-        (evaluation_dir / "layout" / "geometry.json").write_text("{}")
-        foundry_enabled = not row["candidate_id_sha256"].startswith("d")
-        foundry_audit = {
-            "schema": "rfic_transformer_foundry_layout_audit.v1",
-            "enabled": foundry_enabled,
-            "overall_status": "PASS" if foundry_enabled else "NOT_ENABLED",
-            "manufacturing_grid_um": 0.005,
-            "grid_canonicalization": {
-                "schema": "rfic_transformer_foundry_grid_canonicalization.v1",
-                "overall_status": "PASS",
-                "grid_um": 0.005,
-            },
-            "ground_frame": {
-                "schema": "rfic_transformer_foundry_slotted_ground_frame.v1",
-                "manufacturing_grid_um": 0.005,
-                "strap_width_um": 10.0,
-                "strap_pitch_um": 20.0,
-                "polygon_count": 122,
-            },
-            "power_line_bridge_connections": {
-                "schema": "rfic_transformer_foundry_bridge_connections.v1",
-                "overall_status": "PASS",
-                "primary_bridge": {
-                    "overall_status": "PASS",
-                    "same_connected_component_after_grid_snap": True,
-                },
-                "secondary_bridge": {
-                    "overall_status": "PASS",
-                    "same_connected_component_after_grid_snap": True,
-                },
-            },
-        }
-        (evaluation_dir / "layout" / "foundry_layout_audit.json").write_text(
-            json.dumps(foundry_audit)
+        shutil.copyfile(
+            template / "transformer_layout.gds",
+            evaluation_dir / "streamout" / "transformer_layout_cadpins.gds",
         )
-    shard_summary = {
+        for name in (
+            "foundry_layout_source_audit.json",
+            "power_line_8port_geometry.json",
+        ):
+            shutil.copyfile(template / name, evaluation_dir / "layout" / name)
+    shard_summary = {{
         "overall_status": "PASS" if success else "FAIL",
         "run_emx": False,
         "create_only": False,
         "cadence_streamout_only": True,
-        "cadence_streamout_output_contract": {
+        "cadence_streamout_output_contract": {{
             "checked": True,
             "valid_candidate_bound_gds_count": 1 if success else 0,
             "touchstone_file_count": 0,
-        },
-    }
+        }},
+    }}
     summary_path = shard / "candidate_queue_dataset_summary.json"
     summary_path.write_text(json.dumps(shard_summary))
-    shards.append({
+    shards.append({{
         "index": index,
         "returncode": 0,
         "overall_status": shard_summary["overall_status"],
         "out_dir": str(shard),
         "summary_path": str(summary_path),
         "dataset_rows_csv": str(dataset),
-    })
-parent = {
+    }})
+parent = {{
     "overall_status": "PASS" if all(x["overall_status"] == "PASS" for x in shards) else "FAIL",
     "input_row_count": len(rows),
     "shard_count": len(shards),
     "shards": shards,
-}
+}}
 (out / "parallel_candidate_queue_dataset_summary.json").write_text(json.dumps(parent))
 '''
 

@@ -112,6 +112,7 @@ def _parse_args(argv: list[str] | None) -> argparse.Namespace:
     parser.add_argument("--adaptive-round-stager-sha256", required=True)
     parser.add_argument("--cadence-streamout-runner-sha256", required=True)
     parser.add_argument("--cadence-streamout-delegate-sha256", required=True)
+    parser.add_argument("--foundry-layout-audit-producer-sha256", required=True)
     parser.add_argument("--candidate-gds-index-builder-sha256", required=True)
     parser.add_argument("--gds-physical-identity-auditor-sha256", required=True)
     parser.add_argument("--gds-physical-identity-delegate-sha256", required=True)
@@ -256,6 +257,9 @@ def build_candidate(args: argparse.Namespace, *, out_dir: Path) -> dict[str, str
             "cadence_streamout_runner_sha256": args.cadence_streamout_runner_sha256,
             "cadence_streamout_delegate_sha256": (
                 args.cadence_streamout_delegate_sha256
+            ),
+            "foundry_layout_audit_producer_sha256": (
+                args.foundry_layout_audit_producer_sha256
             ),
             "candidate_gds_index_builder_sha256": (
                 args.candidate_gds_index_builder_sha256

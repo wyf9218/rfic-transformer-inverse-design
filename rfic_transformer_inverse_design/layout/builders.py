@@ -6,6 +6,7 @@ import math
 from dataclasses import dataclass
 
 from ..core.types import InductorSpec
+from .foundry import FoundryViaArrayRule
 
 @dataclass(frozen=True)
 class InductorLayoutSpec:
@@ -22,6 +23,9 @@ class InductorLayoutSpec:
     bridge_lower_layer: int | None = None
     bridge_lower_via_layer: int | None = None
     layer_datatypes: tuple[tuple[int, int], ...] = tuple()
+    fixed_via_array_rules: tuple[
+        tuple[int, FoundryViaArrayRule], ...
+    ] = tuple()
     mirror_x: bool = False
 
     @property
@@ -298,6 +302,9 @@ def _build_inductor(
     metal_layer: int,
     metal_datatype: int,
     layer_datatypes: tuple[tuple[int, int], ...] = tuple(),
+    fixed_via_array_rules: tuple[
+        tuple[int, FoundryViaArrayRule], ...
+    ] = tuple(),
     mirror_x: bool,
     center_tap_width_um: float | None = None,
 ) -> InductorTerminals:
@@ -315,6 +322,7 @@ def _build_inductor(
             metal_layer=metal_layer,
             metal_datatype=metal_datatype,
             layer_datatypes=layer_datatypes,
+            fixed_via_array_rules=fixed_via_array_rules,
             mirror_x=mirror_x,
         )
         return _build_center_tapped_inductor(
@@ -375,6 +383,9 @@ def _build_inductor_layout_spec(
     metal_layer: int,
     metal_datatype: int = 0,
     layer_datatypes: tuple[tuple[int, int], ...] = tuple(),
+    fixed_via_array_rules: tuple[
+        tuple[int, FoundryViaArrayRule], ...
+    ] = tuple(),
     mirror_x: bool,
 ) -> InductorLayoutSpec:
     if geometry.turns != 2:
@@ -395,6 +406,7 @@ def _build_inductor_layout_spec(
             if not layer_datatypes
             else tuple((int(layer), int(datatype)) for layer, datatype in layer_datatypes)
         ),
+        fixed_via_array_rules=tuple(fixed_via_array_rules),
         bridge_layer=int(geometry.bridge_layer),
         bridge_via_layer=geometry.bridge_via_layer,
         bridge_lower_layer=geometry.bridge_lower_layer,
@@ -511,6 +523,9 @@ def _build_gdstk_check_bundle(
     bridge_anchor_gap_cap_um: float | None,
     metal_layer: int,
     mirror_x: bool,
+    fixed_via_array_rules: tuple[
+        tuple[int, FoundryViaArrayRule], ...
+    ] = tuple(),
 ) -> CenterTappedInductorGeometry | None:
     if inductor.turns != 2:
         return None
@@ -520,6 +535,7 @@ def _build_gdstk_check_bundle(
         center_y_um=0.0,
         bridge_anchor_gap_cap_um=bridge_anchor_gap_cap_um,
         metal_layer=metal_layer,
+        fixed_via_array_rules=fixed_via_array_rules,
         mirror_x=mirror_x,
     )
     return _build_center_tapped_inductor_geometry(
@@ -760,6 +776,49 @@ def _build_center_tapped_inductor_geometry(
         1.0e-6,
         min(bridge_pad_height_um, bridge_pad_height_um * via_size_ratio),
     )
+    fixed_via_rule_by_layer = dict(spec.fixed_via_array_rules)
+    for via_layer in (
+        spec.bridge_via_layer,
+        spec.bridge_lower_via_layer,
+    ):
+        if via_layer is None:
+            continue
+        fixed_rule = fixed_via_rule_by_layer.get(int(via_layer))
+        if fixed_rule is None:
+            continue
+        required_width_um = (
+            int(fixed_rule.columns) * float(fixed_rule.size_um)
+            + max(0, int(fixed_rule.columns) - 1)
+            * float(fixed_rule.spacing_um)
+            + 2.0 * float(fixed_rule.enclosure_um)
+        )
+        required_height_um = (
+            int(fixed_rule.rows) * float(fixed_rule.size_um)
+            + max(0, int(fixed_rule.rows) - 1)
+            * float(fixed_rule.spacing_um)
+            + 2.0 * float(fixed_rule.enclosure_um)
+        )
+        via_pad_width_um = max(via_pad_width_um, required_width_um)
+        via_pad_height_um = max(via_pad_height_um, required_height_um)
+    foundry_bridge_landing_pads: list[object] = []
+    if fixed_via_rule_by_layer and spec.bridge_via_layer is not None:
+        foundry_bridge_landing_pads = [
+            _pad_from_center(
+                center=start_pad_center,
+                width_um=via_pad_width_um,
+                height_um=via_pad_height_um,
+                layer=spec.metal_layer,
+                datatype=14,
+            ),
+            _pad_from_center(
+                center=end_pad_center,
+                width_um=via_pad_width_um,
+                height_um=via_pad_height_um,
+                layer=spec.metal_layer,
+                datatype=14,
+            ),
+        ]
+        coil_polygons.extend(foundry_bridge_landing_pads)
     bridge_route_start = start_pad_center
     bridge_route_end = end_pad_center
     bridge_path_polygons = _vertical_45_polyline_route(
@@ -807,17 +866,27 @@ def _build_center_tapped_inductor_geometry(
     outer_bridge_stage: tuple[object, ...] = (outer_overlap_pad,)
 
     if spec.bridge_lower_layer is not None:
+        anchor_pad_width_um = (
+            via_pad_width_um
+            if fixed_via_rule_by_layer
+            else interface_pad_width_um
+        )
+        anchor_pad_height_um = (
+            via_pad_height_um
+            if fixed_via_rule_by_layer
+            else bridge_pad_height_um
+        )
         anchor_inner_overlap_pad = _pad_from_center(
             center=start_pad_center,
-            width_um=interface_pad_width_um,
-            height_um=bridge_pad_height_um,
+            width_um=anchor_pad_width_um,
+            height_um=anchor_pad_height_um,
             layer=anchor_layer,
             datatype=11,
         )
         anchor_outer_overlap_pad = _pad_from_center(
             center=end_pad_center,
-            width_um=interface_pad_width_um,
-            height_um=bridge_pad_height_um,
+            width_um=anchor_pad_width_um,
+            height_um=anchor_pad_height_um,
             layer=anchor_layer,
             datatype=11,
         )
@@ -1476,13 +1545,46 @@ def _via_grid_polygons(
 ):
     import gdstk
 
-    min_extent_um = max(1.0e-6, min(width_um, height_um))
-    via_width_um = max(0.20, min(min_extent_um, _bridge_section_via_width_ratio(spec) * min_extent_um))
-    via_spacing_um = max(0.15, _bridge_section_via_spacing_ratio(spec) * via_width_um)
-    nx = max(1, int((width_um + via_spacing_um) / (via_width_um + via_spacing_um)))
-    ny = max(1, int((height_um + via_spacing_um) / (via_width_um + via_spacing_um)))
+    fixed_rule = dict(spec.fixed_via_array_rules).get(int(layer))
+    if fixed_rule is None:
+        min_extent_um = max(1.0e-6, min(width_um, height_um))
+        via_width_um = max(
+            0.20,
+            min(
+                min_extent_um,
+                _bridge_section_via_width_ratio(spec) * min_extent_um,
+            ),
+        )
+        via_spacing_um = max(
+            0.15,
+            _bridge_section_via_spacing_ratio(spec) * via_width_um,
+        )
+        nx = max(
+            1,
+            int(
+                (width_um + via_spacing_um)
+                / (via_width_um + via_spacing_um)
+            ),
+        )
+        ny = max(
+            1,
+            int(
+                (height_um + via_spacing_um)
+                / (via_width_um + via_spacing_um)
+            ),
+        )
+    else:
+        via_width_um = float(fixed_rule.size_um)
+        via_spacing_um = float(fixed_rule.spacing_um)
+        nx = int(fixed_rule.columns)
+        ny = int(fixed_rule.rows)
     diff_x_um = width_um - nx * via_width_um - (nx - 1) * via_spacing_um
     diff_y_um = height_um - ny * via_width_um - (ny - 1) * via_spacing_um
+    if diff_x_um < -1.0e-9 or diff_y_um < -1.0e-9:
+        raise ValueError(
+            f"fixed foundry via array on layer {layer} does not fit "
+            f"the {width_um:.3f}x{height_um:.3f} um bridge footprint"
+        )
 
     x_origin_um = center[0] - 0.5 * width_um + 0.5 * diff_x_um
     y_origin_um = center[1] - 0.5 * height_um + 0.5 * diff_y_um
@@ -1590,12 +1692,15 @@ def _build_bridge_endpoint_stacks(
 def _bridge_path(points: list[tuple[float, float]], width_um: float, layer: int):
     import gdstk
 
+    # A bevel between vertical/horizontal and 45-degree centerline segments
+    # introduces 22.5/67.5-degree polygon edges.  Miter joins preserve the
+    # route's H/V/45 edge set required by the foundry grid canonicalizer.
     path = gdstk.FlexPath(
         points,
         width_um,
         layer=layer,
         datatype=0,
-        joins="bevel",
+        joins="miter",
         ends="flush",
     )
     return path.to_polygons()

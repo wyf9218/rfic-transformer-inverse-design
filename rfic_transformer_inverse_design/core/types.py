@@ -159,6 +159,36 @@ class PowerLine8PortSpec:
 
 
 @dataclass(frozen=True)
+class FoundryLayoutSpec:
+    """Optional manufacturability corrections for foundry-bound closure layouts."""
+
+    enabled: bool = False
+    manufacturing_grid_um: float = 0.005
+    power_line_stitch_pad_depth_um: float = 6.0
+    shield_strap_width_um: float = 10.0
+    shield_strap_pitch_um: float = 20.0
+
+    def __post_init__(self) -> None:
+        if float(self.manufacturing_grid_um) <= 0.0:
+            raise ValueError("manufacturing_grid_um must be positive")
+        if float(self.power_line_stitch_pad_depth_um) <= 0.0:
+            raise ValueError("power_line_stitch_pad_depth_um must be positive")
+        if float(self.shield_strap_width_um) <= 0.0:
+            raise ValueError("shield_strap_width_um must be positive")
+        if float(self.shield_strap_pitch_um) < float(self.shield_strap_width_um):
+            raise ValueError("shield_strap_pitch_um must be at least shield_strap_width_um")
+
+    def as_dict(self) -> dict[str, object]:
+        return {
+            "enabled": bool(self.enabled),
+            "manufacturing_grid_um": float(self.manufacturing_grid_um),
+            "power_line_stitch_pad_depth_um": float(self.power_line_stitch_pad_depth_um),
+            "shield_strap_width_um": float(self.shield_strap_width_um),
+            "shield_strap_pitch_um": float(self.shield_strap_pitch_um),
+        }
+
+
+@dataclass(frozen=True)
 class InductorFixedSpec:
     """Fixed topology/process settings for one inductor."""
 
@@ -546,6 +576,7 @@ class TransformerEmxConfig:
     differential_port_pairs: tuple[tuple[int, int], tuple[int, int]] | None = None
     ground_unused_s8p_ports: bool = False
     power_line_8port: PowerLine8PortSpec = field(default_factory=PowerLine8PortSpec)
+    foundry_layout: FoundryLayoutSpec = field(default_factory=FoundryLayoutSpec)
     ap_layer: int = 74
     m9_layer: int = 39
     m5_layer: int = 35

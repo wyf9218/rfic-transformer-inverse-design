@@ -1,0 +1,84 @@
+{
+  "schema": "rfic_transformer.broadband56_foundry_layout_audit_contract.v1",
+  "campaign_id": "broadband56_real_emx_balanced200k_tsmc65_v2",
+  "output_relative_path": "layout/foundry_layout_audit.json",
+  "source_audit_relative_path": "layout/foundry_layout_source_audit.json",
+  "audit_schema": "rfic_transformer_foundry_layout_audit.v1",
+  "audit_boundary": "POST_CADENCE_STREAMOUT_PRE_CADENCE_PASS_PARTITION",
+  "top_cell": "TRANSFORMER",
+  "foundry_layout": {
+    "enabled": true,
+    "manufacturing_grid_um": 0.005,
+    "power_line_stitch_pad_depth_um": 6.0,
+    "shield_strap_width_um": 10.0,
+    "shield_strap_pitch_um": 20.0
+  },
+  "geometry_identity": {
+    "schema": "ordered_10d_um_sha256_v2",
+    "decimal_places": 9,
+    "fields": [
+      "primary_outer_width_um",
+      "primary_outer_height_um",
+      "secondary_outer_width_um",
+      "secondary_outer_height_um",
+      "line_width_um",
+      "primary_terminal_y_span_um",
+      "secondary_terminal_y_span_um",
+      "offset_um",
+      "primary_feed_extension_um",
+      "secondary_feed_extension_um"
+    ]
+  },
+  "layer_map": {
+    "m5": {"layer": 35, "datatype": 0},
+    "m9": {"layer": 39, "datatype": 60},
+    "m10": {"layer": 74, "datatype": 0},
+    "via5": {"layer": 55, "datatype": 0},
+    "via6": {"layer": 56, "datatype": 0},
+    "via7": {"layer": 57, "datatype": 40},
+    "via8": {"layer": 58, "datatype": 40},
+    "via9": {"layer": 85, "datatype": 0}
+  },
+  "required_checks": [
+    "actual_gds_present_and_nonempty",
+    "actual_gds_sha256_bound",
+    "top_cell_exact",
+    "all_polygon_vertices_on_manufacturing_grid",
+    "all_polygon_edges_horizontal_vertical_or_45_degree",
+    "slotted_ground_frame_matches_generated_geometry",
+    "power_line_bridge_primary_connected",
+    "power_line_bridge_secondary_connected",
+    "via_arrays_match_generated_geometry",
+    "metal_landing_pads_match_generated_geometry",
+    "required_foundry_layers_present",
+    "geometry_identity_recomputed",
+    "private_configuration_sha256_bound",
+    "candidate_and_stage_identity_bound"
+  ],
+  "required_bindings": [
+    "campaign_id",
+    "stage_id",
+    "candidate_id",
+    "candidate_id_sha256",
+    "geometry_vector",
+    "geometry_sha256",
+    "private_configuration",
+    "foundry_layout_contract",
+    "gds",
+    "gds_top_cell",
+    "audit_implementation"
+  ],
+  "consumer": {
+    "path": "scripts/run_broadband56_v2_cadence_streamout_batch.py",
+    "function": "_classify_shard",
+    "pass_rule": "Only a validated PASS audit bound to the exact candidate, geometry, configuration, stage, and Cadence GDS may enter CADENCE_PASS_CANDIDATE_QUEUE.csv"
+  },
+  "failure_policy": {
+    "atomic_write_required": true,
+    "file_existence_alone_is_not_pass": true,
+    "missing_empty_malformed_or_identity_mismatched_audit_fails_closed": true,
+    "calibre_forbidden_without_validated_pass_audit": true,
+    "emx_forbidden_before_zero_blocking_calibre": true,
+    "generation_9_retroactive_acceptance_forbidden": true
+  }
+}

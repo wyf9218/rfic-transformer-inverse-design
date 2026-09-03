@@ -157,6 +157,7 @@ BACKEND_SHA_FIELDS = (
     "adaptive_round_stager_sha256",
     "cadence_streamout_runner_sha256",
     "cadence_streamout_delegate_sha256",
+    "foundry_layout_audit_producer_sha256",
     "candidate_gds_index_builder_sha256",
     "gds_physical_identity_auditor_sha256",
     "gds_physical_identity_delegate_sha256",

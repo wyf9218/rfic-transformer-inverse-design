@@ -38,6 +38,16 @@ from rfic_transformer_inverse_design.campaigns.broadband56_full_campaign_authori
     FULL_CAMPAIGN_APPROVAL_SCOPE,
     FULL_CAMPAIGN_PASS_DECISION,
 )
+from rfic_transformer_inverse_design.layout import (  # noqa: E402
+    foundry_audit as foundry_audit_module,
+)
+from rfic_transformer_inverse_design.layout.foundry_audit import (  # noqa: E402
+    FINAL_AUDIT_FILENAME,
+    SOURCE_AUDIT_FILENAME,
+    FoundryLayoutAuditError,
+    load_and_validate_foundry_layout_audit,
+    produce_foundry_layout_audit,
+)
 
 
 RECEIPT_SCHEMA = "rfic_transformer.broadband56_v2_cadence_streamout_batch.v2"
@@ -107,6 +117,9 @@ def main(argv: list[str] | None = None) -> int:
     except (CadenceBatchError, OSError, json.JSONDecodeError) as exc:
         print(f"overall_status=FAIL\nerror={exc}", file=sys.stderr)
         return 2
+    if receipt["overall_status"] != "PASS":
+        print(f"overall_status=FAIL\nerror={receipt['decision']}", file=sys.stderr)
+        return 2
     print("overall_status=PASS")
     print(f"cadence_pass_count={receipt['cadence_pass_count']}")
     print(f"cadence_fail_count={receipt['cadence_fail_count']}")
@@ -150,9 +163,19 @@ def run_batch(args: argparse.Namespace, *, out_dir: Path) -> dict[str, Any]:
     delegate_path = _identity_path(
         scripts.get("cadence_streamout_delegate"), "Cadence streamout delegate"
     )
+    audit_producer_path = _identity_path(
+        scripts.get("foundry_layout_audit_producer"),
+        "foundry-layout audit producer",
+    )
+    if audit_producer_path != Path(foundry_audit_module.__file__).resolve():
+        raise CadenceBatchError("foundry-layout audit producer identity mismatch")
     python_path = _identity_path(runtimes.get("python_executable"), "Python runtime")
     config_path = _identity_path(
         runtimes.get("private_configuration"), "private configuration"
+    )
+    audit_contract_path = _identity_path(
+        runtimes.get("foundry_layout_audit_contract"),
+        "foundry-layout audit contract",
     )
     requested_config = _regular_file(Path(args.config), "private configuration")
     if requested_config != config_path:
@@ -177,6 +200,8 @@ def run_batch(args: argparse.Namespace, *, out_dir: Path) -> dict[str, Any]:
     pinned = {
         "manifest": (manifest_path, manifest_sha),
         "delegate": (delegate_path, _sha256(delegate_path)),
+        "audit_producer": (audit_producer_path, _sha256(audit_producer_path)),
+        "audit_contract": (audit_contract_path, _sha256(audit_contract_path)),
         "python": (python_path, _sha256(python_path)),
         "config": (config_path, _sha256(config_path)),
         "authorization": (authorization_path, _sha256(authorization_path)),
@@ -284,6 +309,9 @@ def run_batch(args: argparse.Namespace, *, out_dir: Path) -> dict[str, Any]:
             candidate=candidate,
             submitted_sequence=sequence,
             aggregate_evaluations_dir=evaluations_dir,
+            config_path=config_path,
+            audit_contract_path=audit_contract_path,
+            stage_id=stage,
         )
         evidence.append({field: terminal.get(field, "") for field in EVIDENCE_FIELDS})
         if terminal["overall_status"] == "PASS":
@@ -308,11 +336,16 @@ def run_batch(args: argparse.Namespace, *, out_dir: Path) -> dict[str, Any]:
 
     for label, (path, digest) in pinned.items():
         _require_unchanged(path, digest, label)
+    zero_pass_terminal_failure = bool(candidate_rows) and not pass_candidates
     receipt = {
         "schema": RECEIPT_SCHEMA,
         "generated_utc": _utc_now(),
-        "overall_status": "PASS",
-        "decision": "TERMINAL_PARTITION_CANDIDATE_BOUND_CADENCE_STREAMOUT",
+        "overall_status": "FAIL" if zero_pass_terminal_failure else "PASS",
+        "decision": (
+            "BLOCK_DOWNSTREAM_ZERO_CADENCE_PASS_FOUNDRY_AUDIT_OR_CADENCE_FAILURE"
+            if zero_pass_terminal_failure
+            else "TERMINAL_PARTITION_CANDIDATE_BOUND_CADENCE_STREAMOUT"
+        ),
         "campaign_id": CAMPAIGN_ID,
         "contract_fingerprint_sha256": SCIENTIFIC_CONTRACT_FINGERPRINT,
         "stage": stage,
@@ -342,6 +375,17 @@ def run_batch(args: argparse.Namespace, *, out_dir: Path) -> dict[str, Any]:
         "delegate_stderr": _file_record(stderr_path),
         "gds_bytes_modified": False,
         "aggregate_dataset_uses_byte_identical_hard_links": True,
+        "downstream_calibre_authorized": not zero_pass_terminal_failure,
+        "upstream_terminal_failure": (
+            {
+                "classification": "ZERO_CADENCE_PASS_CANDIDATES",
+                "failure_index": _file_record(failure_path),
+                "calibre_invocation_forbidden": True,
+                "zero_blocking_receipt_builder_invocation_forbidden": True,
+            }
+            if zero_pass_terminal_failure
+            else None
+        ),
         "simulator_action_taken": True,
     }
     receipt_path = out_dir / RECEIPT_NAME
@@ -356,6 +400,9 @@ def _classify_shard(
     candidate: Mapping[str, str],
     submitted_sequence: int,
     aggregate_evaluations_dir: Path,
+    config_path: Path,
+    audit_contract_path: Path,
+    stage_id: str,
 ) -> dict[str, Any]:
     candidate_sha = _sha_value(candidate.get("candidate_id_sha256"), "candidate")
     geometry_sha = _sha_value(candidate.get("geometry_sha256"), "geometry")
@@ -418,13 +465,49 @@ def _classify_shard(
             )
         gds_path = _regular_file(gds_paths[0], "candidate-bound Cadence GDS")
         evaluation_dir = gds_path.parents[1]
-        foundry_audit_path = _regular_file(
-            evaluation_dir / "layout" / "foundry_layout_audit.json",
-            "foundry-layout audit",
+        source_audit_path = _regular_file(
+            evaluation_dir / "layout" / SOURCE_AUDIT_FILENAME,
+            "source foundry-layout audit",
         )
-        foundry_audit = _read_json(foundry_audit_path, "foundry-layout audit")
-        _validate_foundry_layout_audit(foundry_audit)
+        power_line_audit_path = _regular_file(
+            evaluation_dir / "layout" / "power_line_8port_geometry.json",
+            "power-line geometry audit",
+        )
+        foundry_audit_path = evaluation_dir / "layout" / FINAL_AUDIT_FILENAME
+        foundry_audit = produce_foundry_layout_audit(
+            gds_path=gds_path,
+            source_audit_path=source_audit_path,
+            power_line_audit_path=power_line_audit_path,
+            config_path=config_path,
+            contract_path=audit_contract_path,
+            candidate=candidate,
+            stage_id=stage_id,
+            output_path=foundry_audit_path,
+        )
+        foundry_audit_path = _regular_file(
+            foundry_audit_path, "foundry-layout audit"
+        )
         foundry_audit_sha = _sha256(foundry_audit_path)
+        base.update(
+            {
+                "source_evaluation_dir": str(evaluation_dir),
+                "source_gds_path": str(gds_path),
+                "source_gds_sha256": _sha256(gds_path),
+                "source_foundry_layout_audit_path": str(foundry_audit_path),
+                "source_foundry_layout_audit_sha256": foundry_audit_sha,
+            }
+        )
+        load_and_validate_foundry_layout_audit(
+            foundry_audit_path,
+            expected_stage_id=stage_id,
+            expected_candidate_id_sha256=candidate_sha,
+            expected_geometry_sha256=geometry_sha,
+            expected_config_sha256=_sha256(config_path),
+            expected_gds_sha256=_sha256(gds_path),
+            expected_contract_sha256=_sha256(audit_contract_path),
+            require_pass=True,
+            verify_files=True,
+        )
         destination = aggregate_evaluations_dir / evaluation_dir.name
         if destination.exists():
             raise CadenceBatchError("aggregate evaluation key collision")
@@ -447,52 +530,18 @@ def _classify_shard(
             "source_foundry_layout_audit_sha256": foundry_audit_sha,
             "dataset_row": dataset_row,
         }
-    except (CadenceBatchError, OSError, json.JSONDecodeError) as exc:
+    except (
+        CadenceBatchError,
+        FoundryLayoutAuditError,
+        OSError,
+        json.JSONDecodeError,
+    ) as exc:
         return {
             **base,
             "overall_status": "FAIL",
             "terminal_stage": "cadence_streamout",
             "error": f"{type(exc).__name__}: {exc}",
         }
-
-
-def _validate_foundry_layout_audit(audit: Mapping[str, Any]) -> None:
-    grid = _mapping(audit.get("grid_canonicalization"), "foundry grid audit")
-    frame = _mapping(audit.get("ground_frame"), "foundry ground-frame audit")
-    bridges = _mapping(
-        audit.get("power_line_bridge_connections"),
-        "foundry bridge audit",
-    )
-    primary = _mapping(bridges.get("primary_bridge"), "primary bridge audit")
-    secondary = _mapping(bridges.get("secondary_bridge"), "secondary bridge audit")
-    exact = (
-        audit.get("schema") == "rfic_transformer_foundry_layout_audit.v1"
-        and audit.get("enabled") is True
-        and audit.get("overall_status") == "PASS"
-        and _close_float(audit.get("manufacturing_grid_um"), 0.005)
-        and grid.get("schema")
-        == "rfic_transformer_foundry_grid_canonicalization.v1"
-        and grid.get("overall_status") == "PASS"
-        and _close_float(grid.get("grid_um"), 0.005)
-        and frame.get("schema")
-        == "rfic_transformer_foundry_slotted_ground_frame.v1"
-        and _close_float(frame.get("manufacturing_grid_um"), 0.005)
-        and _close_float(frame.get("strap_width_um"), 10.0)
-        and _close_float(frame.get("strap_pitch_um"), 20.0)
-        and int(frame.get("polygon_count") or 0) > 0
-        and bridges.get("schema")
-        == "rfic_transformer_foundry_bridge_connections.v1"
-        and bridges.get("overall_status") == "PASS"
-        and primary.get("overall_status") == "PASS"
-        and secondary.get("overall_status") == "PASS"
-        and primary.get("same_connected_component_after_grid_snap") is True
-        and secondary.get("same_connected_component_after_grid_snap") is True
-    )
-    if not exact:
-        raise CadenceBatchError(
-            "foundry-layout audit does not satisfy the frozen production contract"
-        )
-
 
 def _candidate_queue_record(receipt: Mapping[str, Any]) -> Mapping[str, Any]:
     if receipt.get("overall_status") != "PASS":

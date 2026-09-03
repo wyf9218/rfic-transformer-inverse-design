@@ -23,6 +23,11 @@ from .builders import (
     _polygons_on_layer,
     _signal_label_point,
 )
+from .foundry import (
+    FoundryViaArrayRule,
+    foundry_via_array_rule,
+    foundry_via_array_rules_for_process,
+)
 from .shields import (
     _polygon_bbox,
     _rectangular_ring,
@@ -44,6 +49,7 @@ POWER_LINE_8PORT_DEFAULT_HEIGHT_RATIO = 1.5
 POWER_LINE_8PORT_PLACEMENT_POLICY = "coil_opening_fixed_10um_port_ground_overlap"
 SIGNAL_SHIELD_CLEARANCE_AUDIT_FILENAME = "signal_shield_clearance_audit.json"
 POWER_LINE_8PORT_GEOMETRY_AUDIT_FILENAME = "power_line_8port_geometry.json"
+FOUNDRY_LAYOUT_SOURCE_AUDIT_FILENAME = "foundry_layout_source_audit.json"
 
 
 @dataclass(frozen=True)
@@ -259,6 +265,318 @@ def _add_ground_stitch_rectangle(
     )
 
 
+def _required_foundry_ground_stitch_footprint_um(
+    *,
+    source_metal: int,
+    target_metal: int,
+) -> tuple[float, float]:
+    """Return the smallest landing pad that encloses every via in the stack."""
+
+    required_width_um = 0.0
+    required_height_um = 0.0
+    for via_number in range(int(target_metal), int(source_metal)):
+        rule = foundry_via_array_rule(via_number)
+        size_um = float(rule.size_um)
+        spacing_um = float(rule.spacing_um)
+        enclosure_um = float(rule.enclosure_um)
+        columns = int(rule.columns)
+        rows = int(rule.rows)
+        array_width_um = columns * size_um + max(0, columns - 1) * spacing_um
+        array_height_um = rows * size_um + max(0, rows - 1) * spacing_um
+        required_width_um = max(required_width_um, array_width_um + 2.0 * enclosure_um)
+        required_height_um = max(required_height_um, array_height_um + 2.0 * enclosure_um)
+    return required_width_um, required_height_um
+
+
+def _add_centered_ground_stitch_via_array(
+    *,
+    cell,
+    center: tuple[float, float],
+    footprint_um: tuple[float, float],
+    layer: int,
+    datatype: int,
+    rule: FoundryViaArrayRule,
+) -> dict[str, Any]:
+    import gdstk
+
+    size_um = float(rule.size_um)
+    spacing_um = float(rule.spacing_um)
+    enclosure_um = float(rule.enclosure_um)
+    columns = int(rule.columns)
+    rows = int(rule.rows)
+    array_width_um = columns * size_um + max(0, columns - 1) * spacing_um
+    array_height_um = rows * size_um + max(0, rows - 1) * spacing_um
+    footprint_width_um, footprint_height_um = map(float, footprint_um)
+    if array_width_um + 2.0 * enclosure_um > footprint_width_um + 1.0e-9:
+        raise ValueError(
+            f"via array width {array_width_um:.3f} um plus enclosure does not fit "
+            f"the {footprint_width_um:.3f} um ground-stitch footprint"
+        )
+    if array_height_um + 2.0 * enclosure_um > footprint_height_um + 1.0e-9:
+        raise ValueError(
+            f"via array height {array_height_um:.3f} um plus enclosure does not fit "
+            f"the {footprint_height_um:.3f} um ground-stitch footprint"
+        )
+
+    first_x = float(center[0]) - 0.5 * array_width_um + 0.5 * size_um
+    first_y = float(center[1]) - 0.5 * array_height_um + 0.5 * size_um
+    cut_centers: list[dict[str, float]] = []
+    for row in range(rows):
+        for column in range(columns):
+            cut_center_x = first_x + column * (size_um + spacing_um)
+            cut_center_y = first_y + row * (size_um + spacing_um)
+            half_size = 0.5 * size_um
+            cell.add(
+                gdstk.rectangle(
+                    (cut_center_x - half_size, cut_center_y - half_size),
+                    (cut_center_x + half_size, cut_center_y + half_size),
+                    layer=int(layer),
+                    datatype=int(datatype),
+                )
+            )
+            cut_centers.append({"x_um": cut_center_x, "y_um": cut_center_y})
+    return {
+        "size_um": size_um,
+        "spacing_um": spacing_um,
+        "enclosure_um": enclosure_um,
+        "columns": columns,
+        "rows": rows,
+        "count": columns * rows,
+        "array_width_um": array_width_um,
+        "array_height_um": array_height_um,
+        "cut_centers_um": cut_centers,
+    }
+
+
+def _grid_edge_direction(
+    dx_um: float,
+    dy_um: float,
+    *,
+    grid_um: float,
+) -> tuple[tuple[int, int], float, str, float]:
+    """Classify an exported edge as H, V, or 45 degrees before grid snapping."""
+
+    abs_dx = abs(float(dx_um))
+    abs_dy = abs(float(dy_um))
+    tolerance_um = 0.51 * float(grid_um)
+    if abs_dy <= tolerance_um and abs_dx > tolerance_um:
+        return ((1 if dx_um > 0.0 else -1, 0), abs_dx / grid_um, "H", abs_dy)
+    if abs_dx <= tolerance_um and abs_dy > tolerance_um:
+        return ((0, 1 if dy_um > 0.0 else -1), abs_dy / grid_um, "V", abs_dx)
+    diagonal_error_um = abs(abs_dx - abs_dy)
+    if abs_dx > tolerance_um and abs_dy > tolerance_um and diagonal_error_um <= tolerance_um:
+        return (
+            (1 if dx_um > 0.0 else -1, 1 if dy_um > 0.0 else -1),
+            0.5 * (abs_dx + abs_dy) / grid_um,
+            "D",
+            diagonal_error_um,
+        )
+    raise ValueError(
+        "foundry grid canonicalization requires only horizontal, vertical, or 45-degree edges; "
+        f"received dx={dx_um:.9f} um, dy={dy_um:.9f} um"
+    )
+
+
+def _closed_grid_edge_lengths(
+    units: list[tuple[int, int]],
+    target_lengths: list[float],
+) -> tuple[list[int], tuple[int, int], tuple[int, ...]]:
+    """Round edge lengths to integer grid units while preserving polygon closure."""
+
+    base = [max(1, int(round(length))) for length in target_lengths]
+    residual_x = sum(unit[0] * length for unit, length in zip(units, base))
+    residual_y = sum(unit[1] * length for unit, length in zip(units, base))
+    target = (-residual_x, -residual_y)
+    if target == (0, 0):
+        return base, (residual_x, residual_y), tuple(0 for _ in base)
+
+    radius = max(2, abs(target[0]) + abs(target[1]) + 1)
+    if radius > 16:
+        raise ValueError(
+            "foundry grid canonicalization requires an unexpectedly large closure correction: "
+            f"{target} grid units"
+        )
+    state_limit = max(4, abs(target[0]) + abs(target[1]) + radius)
+    states: dict[tuple[int, int], tuple[float, tuple[int, ...]]] = {(0, 0): (0.0, tuple())}
+    for unit, target_length, base_length in zip(units, target_lengths, base):
+        options: list[tuple[float, int]] = []
+        for delta in range(-radius, radius + 1):
+            candidate_length = base_length + delta
+            if candidate_length < 1:
+                continue
+            incremental_cost = (
+                (candidate_length - target_length) ** 2
+                - (base_length - target_length) ** 2
+            )
+            options.append((incremental_cost, delta))
+        options.sort(key=lambda item: (item[0], abs(item[1]), item[1]))
+
+        next_states: dict[tuple[int, int], tuple[float, tuple[int, ...]]] = {}
+        for (state_x, state_y), (cost, deltas) in states.items():
+            for incremental_cost, delta in options:
+                next_key = (
+                    state_x + unit[0] * delta,
+                    state_y + unit[1] * delta,
+                )
+                if abs(next_key[0]) > state_limit or abs(next_key[1]) > state_limit:
+                    continue
+                next_value = (cost + incremental_cost, deltas + (delta,))
+                existing = next_states.get(next_key)
+                if existing is None or next_value < existing:
+                    next_states[next_key] = next_value
+        states = next_states
+
+    solution = states.get(target)
+    if solution is None:
+        raise ValueError(
+            "could not preserve polygon closure while snapping to the foundry grid; "
+            f"required correction={target}"
+        )
+    deltas = solution[1]
+    return (
+        [length + delta for length, delta in zip(base, deltas)],
+        (residual_x, residual_y),
+        deltas,
+    )
+
+
+def _remove_subgrid_polygon_edges(
+    points: list[tuple[float, float]],
+    *,
+    grid_um: float,
+) -> tuple[list[tuple[float, float]], int]:
+    """Collapse edges that cannot survive rounding to the manufacturing grid."""
+
+    cleaned = list(points)
+    tolerance_um = 0.51 * float(grid_um)
+    removed_count = 0
+    while len(cleaned) > 3:
+        short_edge_index = next(
+            (
+                index
+                for index, point in enumerate(cleaned)
+                if max(
+                    abs(cleaned[(index + 1) % len(cleaned)][0] - point[0]),
+                    abs(cleaned[(index + 1) % len(cleaned)][1] - point[1]),
+                )
+                <= tolerance_um
+            ),
+            None,
+        )
+        if short_edge_index is None:
+            break
+        next_index = (short_edge_index + 1) % len(cleaned)
+        # Preserve the first point when the short edge closes the polygon so
+        # the canonical start grid coordinate remains deterministic.
+        del cleaned[short_edge_index if next_index == 0 else next_index]
+        removed_count += 1
+    return cleaned, removed_count
+
+
+def _canonicalize_cell_to_foundry_grid(*, cell, grid_um: float) -> dict[str, Any]:
+    """Snap polygon geometry to a grid without introducing non-H/V/45 edges."""
+
+    import gdstk
+
+    grid_um = float(grid_um)
+    original_polygons = tuple(cell.polygons)
+    canonical_polygons: list[object] = []
+    corrected_polygon_count = 0
+    total_correction_units = 0
+    removed_subgrid_vertex_count = 0
+    max_orientation_error_um = 0.0
+    max_relative_area_change = 0.0
+    edge_kind_counts = {"H": 0, "V": 0, "D": 0}
+
+    for polygon_index, polygon in enumerate(original_polygons):
+        points = [(float(point[0]), float(point[1])) for point in polygon.points]
+        if len(points) < 3:
+            raise ValueError(f"polygon {polygon_index} has fewer than three vertices")
+        points, removed_count = _remove_subgrid_polygon_edges(
+            points,
+            grid_um=grid_um,
+        )
+        removed_subgrid_vertex_count += removed_count
+        units: list[tuple[int, int]] = []
+        target_lengths: list[float] = []
+        for point_index, point in enumerate(points):
+            next_point = points[(point_index + 1) % len(points)]
+            unit, target_length, edge_kind, orientation_error_um = _grid_edge_direction(
+                next_point[0] - point[0],
+                next_point[1] - point[1],
+                grid_um=grid_um,
+            )
+            units.append(unit)
+            target_lengths.append(target_length)
+            edge_kind_counts[edge_kind] += 1
+            max_orientation_error_um = max(max_orientation_error_um, orientation_error_um)
+
+        lengths, residual, deltas = _closed_grid_edge_lengths(units, target_lengths)
+        correction_units = sum(abs(delta) for delta in deltas)
+        if residual != (0, 0) or correction_units:
+            corrected_polygon_count += 1
+        total_correction_units += correction_units
+
+        current = (
+            int(round(points[0][0] / grid_um)),
+            int(round(points[0][1] / grid_um)),
+        )
+        snapped_points: list[tuple[float, float]] = []
+        for unit, length in zip(units, lengths):
+            snapped_points.append((current[0] * grid_um, current[1] * grid_um))
+            current = (
+                current[0] + unit[0] * length,
+                current[1] + unit[1] * length,
+            )
+        expected_start = (
+            int(round(points[0][0] / grid_um)),
+            int(round(points[0][1] / grid_um)),
+        )
+        if current != expected_start:
+            raise ValueError(
+                f"polygon {polygon_index} did not close after foundry grid canonicalization"
+            )
+
+        canonical = gdstk.Polygon(
+            snapped_points,
+            layer=int(polygon.layer),
+            datatype=int(polygon.datatype),
+        )
+        original_area = float(polygon.area())
+        canonical_area = float(canonical.area())
+        relative_area_change = abs(canonical_area - original_area) / max(abs(original_area), 1.0e-12)
+        max_relative_area_change = max(max_relative_area_change, relative_area_change)
+        if relative_area_change > 0.005:
+            raise ValueError(
+                f"polygon {polygon_index} changed area by {relative_area_change:.6%} during "
+                "foundry grid canonicalization"
+            )
+        canonical_polygons.append(canonical)
+
+    if original_polygons:
+        cell.remove(*original_polygons)
+        cell.add(*canonical_polygons)
+
+    for label in cell.labels:
+        label.origin = (
+            round(float(label.origin[0]) / grid_um) * grid_um,
+            round(float(label.origin[1]) / grid_um) * grid_um,
+        )
+
+    return {
+        "schema": "rfic_transformer_foundry_grid_canonicalization.v1",
+        "overall_status": "PASS",
+        "grid_um": grid_um,
+        "polygon_count": len(original_polygons),
+        "corrected_polygon_count": corrected_polygon_count,
+        "removed_subgrid_vertex_count": removed_subgrid_vertex_count,
+        "total_edge_length_correction_grid_units": total_correction_units,
+        "max_orientation_error_before_snap_um": max_orientation_error_um,
+        "max_relative_area_change": max_relative_area_change,
+        "edge_kind_counts": edge_kind_counts,
+    }
+
+
 def _add_power_line_ground_stitch_stack(
     *,
     cell,
@@ -271,6 +589,7 @@ def _add_power_line_ground_stitch_stack(
     source_datatype: int,
     target_ground_layer: int | None,
     fallback_datatype: int,
+    foundry_layout_enabled: bool = False,
 ) -> dict[str, Any]:
     """Draw and record the local metal/via stack tying a power-line endpoint to M5."""
 
@@ -286,7 +605,19 @@ def _add_power_line_ground_stitch_stack(
     if int(source_metal) < int(target_metal):
         raise ValueError(f"power-line ground stitch source metal{source_metal} is below target metal{target_metal}")
 
-    width_um, height_um = (float(footprint_um[0]), float(footprint_um[1]))
+    requested_width_um, requested_height_um = (
+        float(footprint_um[0]),
+        float(footprint_um[1]),
+    )
+    required_width_um = 0.0
+    required_height_um = 0.0
+    if foundry_layout_enabled:
+        required_width_um, required_height_um = _required_foundry_ground_stitch_footprint_um(
+            source_metal=int(source_metal),
+            target_metal=int(target_metal),
+        )
+    width_um = max(requested_width_um, required_width_um)
+    height_um = max(requested_height_um, required_height_um)
     metal_records: list[dict[str, Any]] = []
     via_records: list[dict[str, Any]] = []
     used_layers: list[int] = []
@@ -332,14 +663,25 @@ def _add_power_line_ground_stitch_stack(
             fallback_datatype=int(fallback_datatype),
             role="drawing",
         )
-        _add_ground_stitch_rectangle(
-            cell=cell,
-            center=center,
-            width_um=width_um,
-            height_um=height_um,
-            layer=layer,
-            datatype=datatype,
-        )
+        via_array = None
+        if foundry_layout_enabled:
+            via_array = _add_centered_ground_stitch_via_array(
+                cell=cell,
+                center=center,
+                footprint_um=(width_um, height_um),
+                layer=layer,
+                datatype=datatype,
+                rule=foundry_via_array_rule(via_number),
+            )
+        else:
+            _add_ground_stitch_rectangle(
+                cell=cell,
+                center=center,
+                width_um=width_um,
+                height_um=height_um,
+                layer=layer,
+                datatype=datatype,
+            )
         used_layers.append(int(layer))
         via_records.append(
             {
@@ -347,6 +689,7 @@ def _add_power_line_ground_stitch_stack(
                 "layer": int(layer),
                 "datatype": int(datatype),
                 "connects_metal": [int(via_number), int(via_number) + 1],
+                "array": via_array,
                 "process": _proc_pair_dict(
                     proc_info,
                     layer=int(layer),
@@ -359,12 +702,25 @@ def _add_power_line_ground_stitch_stack(
         "label": str(label),
         "ground_label": str(ground_label),
         "center_um": {"x_um": float(center[0]), "y_um": float(center[1])},
+        "requested_footprint_um": {
+            "width_um": requested_width_um,
+            "height_um": requested_height_um,
+        },
+        "required_foundry_footprint_um": {
+            "width_um": required_width_um,
+            "height_um": required_height_um,
+        },
         "footprint_um": {"width_um": width_um, "height_um": height_um},
+        "landing_pad_expanded": bool(
+            width_um > requested_width_um + 1.0e-9
+            or height_um > requested_height_um + 1.0e-9
+        ),
         "source_layer": int(source_layer),
         "source_datatype": int(source_datatype),
         "source_metal": f"metal{int(source_metal)}",
         "target_ground_layer": None if target_ground_layer is None else int(target_ground_layer),
         "target_ground_metal": f"metal{int(target_metal)}",
+        "foundry_layout_enabled": bool(foundry_layout_enabled),
         "metal_stack": metal_records,
         "via_stack": via_records,
         "used_layers": sorted(dict.fromkeys(used_layers)),
@@ -840,6 +1196,142 @@ def _shield_ground_frame_width_um(transformer, run_config: TransformerRunConfig)
     return max(width_um, margin_um)
 
 
+def _centered_axis_positions(start_um: float, stop_um: float, pitch_um: float) -> tuple[float, ...]:
+    center_um = 0.5 * (float(start_um) + float(stop_um))
+    half_span_um = 0.5 * abs(float(stop_um) - float(start_um))
+    steps = int(half_span_um // float(pitch_um))
+    return tuple(center_um + index * float(pitch_um) for index in range(-steps, steps + 1))
+
+
+def _foundry_slotted_ground_frame(
+    *,
+    inner_bbox: tuple[float, float, float, float],
+    frame_width_um: float,
+    strap_width_um: float,
+    strap_pitch_um: float,
+    manufacturing_grid_um: float,
+    layer: int,
+    datatype: int,
+) -> tuple[list[object], dict[str, Any]]:
+    """Build a connected slotted M5 frame without a foundry-illegal wide solid plate."""
+
+    import gdstk
+
+    requested_inner_bbox = tuple(map(float, inner_bbox))
+    requested_frame_width_um = float(frame_width_um)
+    requested_strap_width_um = float(strap_width_um)
+    requested_strap_pitch_um = float(strap_pitch_um)
+    manufacturing_grid_um = float(manufacturing_grid_um)
+    if manufacturing_grid_um <= 0.0:
+        raise ValueError("foundry manufacturing grid must be positive")
+
+    def snap_to_grid(value_um: float) -> float:
+        return round(float(value_um) / manufacturing_grid_um) * manufacturing_grid_um
+
+    snapped_inner_bbox = tuple(snap_to_grid(value_um) for value_um in requested_inner_bbox)
+    inner_min_x, inner_min_y, inner_max_x, inner_max_y = snapped_inner_bbox
+    frame_width_um = snap_to_grid(requested_frame_width_um)
+    strap_width_um = snap_to_grid(requested_strap_width_um)
+    strap_pitch_um = snap_to_grid(requested_strap_pitch_um)
+    if inner_min_x >= inner_max_x or inner_min_y >= inner_max_y:
+        raise ValueError("foundry ground-frame inner bbox must have positive width and height")
+    if frame_width_um <= 0.0 or strap_width_um <= 0.0 or strap_pitch_um <= 0.0:
+        raise ValueError("foundry ground-frame dimensions must remain positive after grid snapping")
+    if strap_width_um > 12.0 + 1.0e-9:
+        raise ValueError("TSMC65 foundry M5 shield straps must not exceed 12.0 um")
+    if frame_width_um < strap_width_um:
+        raise ValueError("foundry ground-frame width must be at least one shield strap wide")
+
+    outer_bbox = (
+        inner_min_x - frame_width_um,
+        inner_min_y - frame_width_um,
+        inner_max_x + frame_width_um,
+        inner_max_y + frame_width_um,
+    )
+    polygons: list[object] = []
+    polygons.extend(
+        _rectangular_ring(
+            inner_bbox=snapped_inner_bbox,
+            width_um=strap_width_um,
+            layer=int(layer),
+            datatype=int(datatype),
+        )
+    )
+    outer_inner_bbox = (
+        outer_bbox[0] + strap_width_um,
+        outer_bbox[1] + strap_width_um,
+        outer_bbox[2] - strap_width_um,
+        outer_bbox[3] - strap_width_um,
+    )
+    polygons.extend(
+        _rectangular_ring(
+            inner_bbox=outer_inner_bbox,
+            width_um=strap_width_um,
+            layer=int(layer),
+            datatype=int(datatype),
+        )
+    )
+
+    half_strap = 0.5 * strap_width_um
+    top_bottom_x = _centered_axis_positions(inner_min_x, inner_max_x, strap_pitch_um)
+    left_right_y = _centered_axis_positions(inner_min_y, inner_max_y, strap_pitch_um)
+    for x_um in top_bottom_x:
+        polygons.append(
+            gdstk.rectangle(
+                (x_um - half_strap, inner_max_y),
+                (x_um + half_strap, outer_bbox[3]),
+                layer=int(layer),
+                datatype=int(datatype),
+            )
+        )
+        polygons.append(
+            gdstk.rectangle(
+                (x_um - half_strap, outer_bbox[1]),
+                (x_um + half_strap, inner_min_y),
+                layer=int(layer),
+                datatype=int(datatype),
+            )
+        )
+    for y_um in left_right_y:
+        polygons.append(
+            gdstk.rectangle(
+                (outer_bbox[0], y_um - half_strap),
+                (inner_min_x, y_um + half_strap),
+                layer=int(layer),
+                datatype=int(datatype),
+            )
+        )
+        polygons.append(
+            gdstk.rectangle(
+                (inner_max_x, y_um - half_strap),
+                (outer_bbox[2], y_um + half_strap),
+                layer=int(layer),
+                datatype=int(datatype),
+            )
+        )
+
+    return polygons, {
+        "schema": "rfic_transformer_foundry_slotted_ground_frame.v1",
+        "manufacturing_grid_um": manufacturing_grid_um,
+        "requested_inner_bbox_um": list(requested_inner_bbox),
+        "snapped_inner_bbox_um": list(snapped_inner_bbox),
+        "input_snap_max_delta_um": max(
+            abs(snapped - requested)
+            for snapped, requested in zip(snapped_inner_bbox, requested_inner_bbox)
+        ),
+        "requested_frame_width_um": requested_frame_width_um,
+        "requested_strap_width_um": requested_strap_width_um,
+        "requested_strap_pitch_um": requested_strap_pitch_um,
+        "frame_width_um": frame_width_um,
+        "strap_width_um": strap_width_um,
+        "strap_pitch_um": strap_pitch_um,
+        "top_bottom_connector_count_each": len(top_bottom_x),
+        "left_right_connector_count_each": len(left_right_y),
+        "polygon_count": len(polygons),
+        "outer_bbox_um": list(outer_bbox),
+    }
+
+
 def _power_line_height_ratio(run_config: TransformerRunConfig) -> float:
     return float(run_config.emx.power_line_8port.vertical_length_diameter_ratio)
 
@@ -870,6 +1362,8 @@ def _write_power_line_8port_geometry_audit(
     vertical_length_diameter_ratio: float | None = None,
     line_width_um: float | None = None,
     bridge_width_um: float | None = None,
+    foundry_bridge_overlap_um: float | None = None,
+    foundry_bridge_connections: dict[str, Any] | None = None,
     primary_bar: VddBarPlacement | None = None,
     secondary_bar: VddBarPlacement | None = None,
     primary_terminals=None,
@@ -912,6 +1406,10 @@ def _write_power_line_8port_geometry_audit(
             else float(max_outer_height_um) * float(vertical_length_diameter_ratio)
         ),
         "bridge_width_um": None if bridge_width_um is None else float(bridge_width_um),
+        "foundry_bridge_overlap_um": (
+            None if foundry_bridge_overlap_um is None else float(foundry_bridge_overlap_um)
+        ),
+        "foundry_bridge_connections": foundry_bridge_connections,
         "line_width_um": None if line_width_um is None else float(line_width_um),
         "primary_power_line": _vdd_bar_audit_dict(primary_bar),
         "secondary_power_line": _vdd_bar_audit_dict(secondary_bar),
@@ -933,6 +1431,7 @@ def _write_power_line_8port_geometry_audit(
             terminals=primary_terminals,
             power_line=primary_bar,
             bridge_width_um=bridge_width_um,
+            required_overlap_um=foundry_bridge_overlap_um,
             coil_center_x_um=primary_coil_center_x_um,
             coil_outer_width_um=primary_coil_outer_width_um,
         ),
@@ -940,6 +1439,7 @@ def _write_power_line_8port_geometry_audit(
             terminals=secondary_terminals,
             power_line=secondary_bar,
             bridge_width_um=bridge_width_um,
+            required_overlap_um=foundry_bridge_overlap_um,
             coil_center_x_um=secondary_coil_center_x_um,
             coil_outer_width_um=secondary_coil_outer_width_um,
         ),
@@ -1179,6 +1679,7 @@ def _power_line_bridge_audit_dict(
     terminals,
     power_line: VddBarPlacement | None,
     bridge_width_um: float | None,
+    required_overlap_um: float | None,
     coil_center_x_um: float,
     coil_outer_width_um: float,
 ) -> dict[str, Any] | None:
@@ -1202,6 +1703,19 @@ def _power_line_bridge_audit_dict(
     left_edge = float(power_line.center_x_um) - half_width
     right_edge = float(power_line.center_x_um) + half_width
     nearest_edge = left_edge if abs(x1 - left_edge) <= abs(x1 - right_edge) else right_edge
+    endpoint_inside_bar = left_edge - 1.0e-12 <= x1 <= right_edge + 1.0e-12
+    contact_overlap_um = (
+        min(abs(x1 - left_edge), abs(right_edge - x1))
+        if endpoint_inside_bar
+        else 0.0
+    )
+    required_overlap = None if required_overlap_um is None else float(required_overlap_um)
+    if contact_overlap_um > 1.0e-12:
+        connection_mode = "overlap"
+    elif abs(x1 - nearest_edge) <= 1.0e-12:
+        connection_mode = "edge_aligned"
+    else:
+        connection_mode = "separated"
     actual_bridge_width_um = float(power_line.route_width_um)
     return {
         "coil_anchor": _point_audit_dict(coil_anchor),
@@ -1220,7 +1734,134 @@ def _power_line_bridge_audit_dict(
         "power_line_right_edge_x_um": right_edge,
         "nearest_power_line_edge_x_um": nearest_edge,
         "power_line_edge_alignment_error_um": abs(x1 - nearest_edge),
+        "power_line_contact_overlap_um": contact_overlap_um,
+        "required_foundry_overlap_um": required_overlap,
+        "foundry_overlap_pass": (
+            None
+            if required_overlap is None
+            else contact_overlap_um + 1.0e-12 >= required_overlap
+        ),
+        "connection_mode": connection_mode,
         "is_horizontal": abs(y1 - y0) <= 1.0e-12,
+    }
+
+
+def _foundry_bridge_connection_record(
+    *,
+    cell,
+    terminals,
+    power_line: VddBarPlacement | None,
+    grid_um: float,
+) -> dict[str, Any]:
+    """Verify the snapped center-tap bridge and vertical bar share one metal component."""
+
+    import gdstk
+
+    if terminals is None or power_line is None:
+        return {
+            "overall_status": "FAIL",
+            "reason": "missing center-tap terminals or power-line placement",
+        }
+    anchor = getattr(terminals, "center_tap_anchor", None)
+    endpoint = getattr(terminals, "center_tap", None)
+    if anchor is None or endpoint is None:
+        return {
+            "overall_status": "FAIL",
+            "reason": "missing center-tap anchor or endpoint",
+        }
+
+    anchor_x_um = float(anchor[0])
+    endpoint_x_um = float(endpoint[0])
+    center_y_um = float(power_line.center_y_um)
+    half_width_um = 0.5 * float(power_line.width_um)
+    left_edge_um = float(power_line.center_x_um) - half_width_um
+    right_edge_um = float(power_line.center_x_um) + half_width_um
+    nearest_edge_um = (
+        left_edge_um
+        if abs(endpoint_x_um - left_edge_um) <= abs(endpoint_x_um - right_edge_um)
+        else right_edge_um
+    )
+    direction_toward_coil = 1.0 if anchor_x_um > nearest_edge_um else -1.0
+    bridge_probe = (
+        nearest_edge_um + direction_toward_coil * 2.0 * float(grid_um),
+        center_y_um,
+    )
+    bar_probe = (
+        nearest_edge_um - direction_toward_coil * 2.0 * float(grid_um),
+        center_y_um,
+    )
+    matching_polygons = [
+        polygon
+        for polygon in cell.polygons
+        if int(polygon.layer) == int(power_line.bar_layer)
+        and int(polygon.datatype) == int(power_line.bar_datatype)
+    ]
+    union_polygons = gdstk.boolean(
+        matching_polygons,
+        [],
+        "or",
+        precision=max(float(grid_um) * 0.1, 1.0e-6),
+        layer=int(power_line.bar_layer),
+        datatype=int(power_line.bar_datatype),
+    )
+    connected_component_index = next(
+        (
+            index
+            for index, polygon in enumerate(union_polygons)
+            if polygon.contain(bridge_probe) and polygon.contain(bar_probe)
+        ),
+        None,
+    )
+    same_component = connected_component_index is not None
+    return {
+        "overall_status": "PASS" if same_component else "FAIL",
+        "reason": None if same_component else "bridge and power line are disconnected after grid snapping",
+        "layer": int(power_line.bar_layer),
+        "datatype": int(power_line.bar_datatype),
+        "grid_um": float(grid_um),
+        "bridge_endpoint_x_um_before_snap": endpoint_x_um,
+        "nearest_power_line_edge_x_um_before_snap": nearest_edge_um,
+        "bridge_probe": _point_audit_dict(bridge_probe),
+        "bar_probe": _point_audit_dict(bar_probe),
+        "matching_polygon_count": len(matching_polygons),
+        "union_component_count": len(union_polygons),
+        "connected_component_index": connected_component_index,
+        "same_connected_component_after_grid_snap": same_component,
+    }
+
+
+def _foundry_bridge_connections_audit(
+    *,
+    cell,
+    primary_terminals,
+    primary_bar: VddBarPlacement | None,
+    secondary_terminals,
+    secondary_bar: VddBarPlacement | None,
+    grid_um: float,
+) -> dict[str, Any]:
+    primary = _foundry_bridge_connection_record(
+        cell=cell,
+        terminals=primary_terminals,
+        power_line=primary_bar,
+        grid_um=grid_um,
+    )
+    secondary = _foundry_bridge_connection_record(
+        cell=cell,
+        terminals=secondary_terminals,
+        power_line=secondary_bar,
+        grid_um=grid_um,
+    )
+    overall_status = (
+        "PASS"
+        if primary.get("overall_status") == "PASS" and secondary.get("overall_status") == "PASS"
+        else "FAIL"
+    )
+    return {
+        "schema": "rfic_transformer_foundry_bridge_connections.v1",
+        "overall_status": overall_status,
+        "grid_um": float(grid_um),
+        "primary_bridge": primary,
+        "secondary_bridge": secondary,
     }
 
 
@@ -1458,13 +2099,17 @@ def _center_tap_target_x_for_bar(
     tap_side: str,
     bar_center_x_um: float,
     bar_width_um: float,
+    bridge_overlap_um: float = 0.0,
 ) -> float:
     bar_center_x_um = float(bar_center_x_um)
     half_bar_width_um = 0.5 * float(bar_width_um)
+    bridge_overlap_um = float(bridge_overlap_um)
+    if bridge_overlap_um < 0.0 or bridge_overlap_um > half_bar_width_um:
+        raise ValueError("bridge overlap must fit within the power-line half width")
     if tap_side == "left":
-        return bar_center_x_um + half_bar_width_um
+        return bar_center_x_um + half_bar_width_um - bridge_overlap_um
     if tap_side == "right":
-        return bar_center_x_um - half_bar_width_um
+        return bar_center_x_um - half_bar_width_um + bridge_overlap_um
     raise ValueError(f"Unsupported tap side: {tap_side}")
 
 
@@ -1725,9 +2370,24 @@ def export_transformer_layout(
     preview_path = out_dir / "transformer_layout_preview.png"
     debug_preview_path = out_dir / "transformer_port_debug.png"
 
-    lib = gdstk.Library(unit=1e-6, precision=1e-9)
+    foundry_layout_enabled = bool(run_config.emx.foundry_layout.enabled)
+    manufacturing_grid_um = float(run_config.emx.foundry_layout.manufacturing_grid_um)
+    foundry_bridge_overlap_um = (
+        manufacturing_grid_um
+        if foundry_layout_enabled and power_line_8port_enabled
+        else None
+    )
+    lib = gdstk.Library(
+        unit=1e-6,
+        precision=1e-9,
+    )
     cell = lib.new_cell(top_cell)
     proc_info = parse_proc_file(run_config.emx.emx_process_file)
+    fixed_via_array_rules = (
+        foundry_via_array_rules_for_process(proc_info)
+        if foundry_layout_enabled
+        else tuple()
+    )
     signal_shield_clearance_audit = _build_signal_shield_clearance_audit(
         [],
         enabled=False,
@@ -1888,7 +2548,7 @@ def export_transformer_layout(
     primary_bar_center_x_um = None
     primary_center_tap_target_x_um = None
     if (
-        export_primary_geometry.turns == 1
+        (export_primary_geometry.turns == 1 or power_line_8port_enabled)
         and export_primary_geometry.center_tap
         and export_primary_geometry.vdd_bar is not None
         and export_primary_geometry.vdd_bar.enabled
@@ -1926,6 +2586,7 @@ def export_transformer_layout(
             tap_side=primary_vdd_bar_tap_side,
             bar_center_x_um=primary_bar_center_x_um,
             bar_width_um=primary_bar_width_um,
+            bridge_overlap_um=(0.0 if foundry_bridge_overlap_um is None else foundry_bridge_overlap_um),
         )
 
     secondary_bar_width_um = None
@@ -1933,7 +2594,7 @@ def export_transformer_layout(
     secondary_bar_center_x_um = None
     secondary_center_tap_target_x_um = None
     if (
-        export_secondary_geometry.turns == 1
+        (export_secondary_geometry.turns == 1 or power_line_8port_enabled)
         and export_secondary_geometry.center_tap
         and export_secondary_geometry.vdd_bar is not None
         and export_secondary_geometry.vdd_bar.enabled
@@ -1971,6 +2632,7 @@ def export_transformer_layout(
             tap_side=secondary_vdd_bar_tap_side,
             bar_center_x_um=secondary_bar_center_x_um,
             bar_width_um=secondary_bar_width_um,
+            bridge_overlap_um=(0.0 if foundry_bridge_overlap_um is None else foundry_bridge_overlap_um),
         )
 
     primary_terminals = _build_inductor(
@@ -1983,6 +2645,7 @@ def export_transformer_layout(
         metal_layer=int(primary_draw_layer if primary_draw_layer is not None else run_config.emx.ap_layer),
         metal_datatype=int(primary_draw_datatype),
         layer_datatypes=primary_layer_datatypes,
+        fixed_via_array_rules=fixed_via_array_rules,
         mirror_x=False,
         center_tap_width_um=power_line_shared_line_width_um if power_line_8port_enabled else None,
     )
@@ -1996,6 +2659,7 @@ def export_transformer_layout(
         metal_layer=int(secondary_draw_layer if secondary_draw_layer is not None else run_config.emx.m9_layer),
         metal_datatype=int(secondary_draw_datatype),
         layer_datatypes=secondary_layer_datatypes,
+        fixed_via_array_rules=fixed_via_array_rules,
         mirror_x=True,
         center_tap_width_um=power_line_shared_line_width_um if power_line_8port_enabled else None,
     )
@@ -2278,6 +2942,7 @@ def export_transformer_layout(
     shield_opening_clearance_for_audit: float | None = None
     port_ground_overlap_for_audit: float | None = None
     port_ground_overlap_evidence_for_audit: dict[str, Any] | None = None
+    foundry_ground_frame_audit: dict[str, Any] | None = None
     if transformer.shield.enabled:
         if run_config.emx.shield_layer is None:
             raise ValueError("Shield is enabled but emx.shield_layer is not configured")
@@ -2332,12 +2997,23 @@ def export_transformer_layout(
                 largest_coil_height_um=shield_height_basis_um,
                 margin_um=vertical_margin_um,
             )
-        shield_ring = _rectangular_ring(
-            inner_bbox=inner_bbox,
-            width_um=float(shield_ground_frame_width_um),
-            layer=int(shield_draw_layer if shield_draw_layer is not None else run_config.emx.shield_layer),
-            datatype=int(shield_draw_datatype),
-        )
+        if foundry_layout_enabled and power_line_8port_enabled:
+            shield_ring, foundry_ground_frame_audit = _foundry_slotted_ground_frame(
+                inner_bbox=inner_bbox,
+                frame_width_um=float(shield_ground_frame_width_um),
+                strap_width_um=float(run_config.emx.foundry_layout.shield_strap_width_um),
+                strap_pitch_um=float(run_config.emx.foundry_layout.shield_strap_pitch_um),
+                manufacturing_grid_um=manufacturing_grid_um,
+                layer=int(shield_draw_layer if shield_draw_layer is not None else run_config.emx.shield_layer),
+                datatype=int(shield_draw_datatype),
+            )
+        else:
+            shield_ring = _rectangular_ring(
+                inner_bbox=inner_bbox,
+                width_um=float(shield_ground_frame_width_um),
+                layer=int(shield_draw_layer if shield_draw_layer is not None else run_config.emx.shield_layer),
+                datatype=int(shield_draw_datatype),
+            )
         cell.add(*shield_ring)
         should_audit_signal_shield_clearance = (
             run_config.emx.uses_shield_as_port_ground()
@@ -2526,6 +3202,29 @@ def export_transformer_layout(
                     pin_width_um=pin_width_um,
                     pin_height_um=pin_height_um,
                 )
+                stitch_height_um = pin_height_um
+                top_stitch_center = top_ground_center
+                bottom_stitch_center = bottom_ground_center
+                if foundry_layout_enabled:
+                    stitch_height_um = float(
+                        run_config.emx.foundry_layout.power_line_stitch_pad_depth_um
+                    )
+                    overlap_um = _power_line_port_ground_overlap_um()
+                    if stitch_height_um > overlap_um + 1.0e-9:
+                        raise ValueError(
+                            "foundry power-line stitch pad depth must fit within the fixed "
+                            f"{overlap_um:.3f} um port-ground overlap"
+                        )
+                    top_edge_y_um = placement.center_y_um + placement.half_height_um
+                    bottom_edge_y_um = placement.center_y_um - placement.half_height_um
+                    top_stitch_center = (
+                        placement.center_x_um,
+                        top_edge_y_um - 0.5 * overlap_um,
+                    )
+                    bottom_stitch_center = (
+                        placement.center_x_um,
+                        bottom_edge_y_um + 0.5 * overlap_um,
+                    )
                 for name, point in (
                     (placement.resolved_top_port_label(), top_center),
                     (placement.resolved_bottom_port_label(), bottom_center),
@@ -2573,11 +3272,11 @@ def export_transformer_layout(
                             )
                         )
                 for name, ground_name, point in (
-                    (placement.resolved_top_port_label(), placement.resolved_top_ground_label(), top_ground_center),
+                    (placement.resolved_top_port_label(), placement.resolved_top_ground_label(), top_stitch_center),
                     (
                         placement.resolved_bottom_port_label(),
                         placement.resolved_bottom_ground_label(),
-                        bottom_ground_center,
+                        bottom_stitch_center,
                     ),
                 ):
                     stitch = _add_power_line_ground_stitch_stack(
@@ -2586,11 +3285,12 @@ def export_transformer_layout(
                         label=name,
                         ground_label=ground_name,
                         center=point,
-                        footprint_um=(pin_width_um, pin_height_um),
+                        footprint_um=(pin_width_um, stitch_height_um),
                         source_layer=placement.bar_layer,
                         source_datatype=placement.bar_datatype,
                         target_ground_layer=shield_draw_layer,
                         fallback_datatype=run_config.emx.metal_datatype,
+                        foundry_layout_enabled=foundry_layout_enabled,
                     )
                     power_line_ground_stitches_for_audit.append(stitch)
                     power_line_ground_stitch_layers_for_manifest.extend(int(layer) for layer in stitch["used_layers"])
@@ -2673,6 +3373,52 @@ def export_transformer_layout(
             )
         )
 
+    foundry_layout_audit: dict[str, Any] = {
+        "schema": "rfic_transformer_foundry_layout_audit.v1",
+        "enabled": foundry_layout_enabled,
+        "overall_status": "NOT_ENABLED",
+    }
+    foundry_bridge_connections = None
+    if foundry_layout_enabled:
+        grid_audit = _canonicalize_cell_to_foundry_grid(
+            cell=cell,
+            grid_um=manufacturing_grid_um,
+        )
+        if power_line_8port_enabled:
+            foundry_bridge_connections = _foundry_bridge_connections_audit(
+                cell=cell,
+                primary_terminals=primary_terminals,
+                primary_bar=primary_vdd_bar,
+                secondary_terminals=secondary_terminals,
+                secondary_bar=secondary_vdd_bar,
+                grid_um=manufacturing_grid_um,
+            )
+        foundry_layout_audit = {
+            "schema": "rfic_transformer_foundry_layout_audit.v1",
+            "enabled": True,
+            "overall_status": (
+                "FAIL"
+                if foundry_bridge_connections is not None
+                and foundry_bridge_connections.get("overall_status") != "PASS"
+                else "PASS"
+            ),
+            "manufacturing_grid_um": manufacturing_grid_um,
+            "grid_canonicalization": grid_audit,
+            "ground_frame": foundry_ground_frame_audit,
+            "power_line_bridge_connections": foundry_bridge_connections,
+            "automatic_emx_execution_authorized": False,
+            "foundry_drc_executed": False,
+        }
+    # This is the pre-Cadence construction evidence.  The authoritative
+    # foundry_layout_audit.json is produced only after Cadence stream-out has
+    # completed and is bound to those exact GDS bytes.
+    foundry_layout_audit["audit_boundary"] = "PRE_CADENCE_LAYOUT_CONSTRUCTION"
+    (out_dir / FOUNDRY_LAYOUT_SOURCE_AUDIT_FILENAME).write_text(
+        json.dumps(foundry_layout_audit, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
+    if foundry_layout_audit.get("overall_status") == "FAIL":
+        raise ValueError("foundry bridge connectivity check failed after manufacturing-grid snapping")
     lib.write_gds(str(gds_path))
 
     if power_line_8port_enabled:
@@ -2844,6 +3590,8 @@ def export_transformer_layout(
         ),
         line_width_um=power_line_shared_line_width_um if power_line_8port_enabled else None,
         bridge_width_um=power_line_shared_line_width_um if power_line_8port_enabled else None,
+        foundry_bridge_overlap_um=foundry_bridge_overlap_um,
+        foundry_bridge_connections=foundry_bridge_connections,
         primary_bar=primary_vdd_bar,
         secondary_bar=secondary_vdd_bar,
         primary_terminals=primary_terminals,
@@ -2862,7 +3610,11 @@ def export_transformer_layout(
         shield_outer_bbox_um=shield_outer_bbox_for_audit,
         ground_frame_width_um=shield_ground_frame_width_um if power_line_8port_enabled else None,
         ground_frame_policy=(
-            "power_line_8port_uses_max_shield_width_and_margin_as_rectangular_ground_frame"
+            (
+                "foundry_connected_slotted_m5_ground_frame"
+                if foundry_layout_enabled
+                else "power_line_8port_uses_max_shield_width_and_margin_as_rectangular_ground_frame"
+            )
             if power_line_8port_enabled
             else None
         ),

@@ -249,6 +249,7 @@ def test_builds_public_safe_exact_candidate(
     assert candidate["automatic_campaign_execution_authorized"] is False
     runtime = candidate["runtime_and_backend_identity"]
     assert runtime["candidate_gds_index_builder_sha256"]
+    assert runtime["foundry_layout_audit_producer_sha256"]
     assert runtime["gds_physical_identity_auditor_sha256"]
     assert runtime["gds_physical_identity_module_sha256"]
     assert runtime["resource_gate_auditor_sha256"]

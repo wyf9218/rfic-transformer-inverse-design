@@ -14,6 +14,12 @@ from .builders import (
 )
 from .checks import TransformerGdstkCheckResult, _generic_same_layer_spacing_checks, run_transformer_gdstk_checks
 from .export import export_transformer_layout
+from .foundry_audit import (
+    FoundryLayoutAuditError,
+    load_and_validate_foundry_layout_audit,
+    produce_foundry_layout_audit,
+    validate_foundry_layout_audit,
+)
 
 __all__ = [
     "BridgeCornerAnchors",
@@ -24,6 +30,10 @@ __all__ = [
     "InductorTerminals",
     "LayerPolygonGroup",
     "TransformerGdstkCheckResult",
+    "FoundryLayoutAuditError",
     "export_transformer_layout",
+    "load_and_validate_foundry_layout_audit",
+    "produce_foundry_layout_audit",
     "run_transformer_gdstk_checks",
+    "validate_foundry_layout_audit",
 ]

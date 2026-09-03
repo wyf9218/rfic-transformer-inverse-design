@@ -33,9 +33,9 @@ from .broadband56_stage_execution import (
 )
 
 
-BACKEND_MANIFEST_SCHEMA = "rfic_transformer.broadband56_v2_private_backend_identity.v13"
+BACKEND_MANIFEST_SCHEMA = "rfic_transformer.broadband56_v2_private_backend_identity.v14"
 BACKEND_VERIFICATION_SCHEMA = (
-    "rfic_transformer.broadband56_v2_private_backend_identity_verification.v8"
+    "rfic_transformer.broadband56_v2_private_backend_identity_verification.v9"
 )
 BACKEND_VERIFICATION_PASS_DECISION = "USE_HASH_BOUND_PRODUCTION_BACKEND"
 BACKEND_MANIFEST_EFFECT = "IDENTITY_ONLY_NO_EXECUTION"
@@ -109,6 +109,7 @@ REQUIRED_SCRIPT_ROLES = (
     "adaptive_round_stager",
     "cadence_streamout_runner",
     "cadence_streamout_delegate",
+    "foundry_layout_audit_producer",
     "candidate_gds_index_builder",
     "gds_physical_identity_auditor",
     "gds_physical_identity_delegate",
@@ -143,6 +144,7 @@ REQUIRED_RUNTIME_ROLES = (
     "calibre_foundry_archive",
     "calibre_rule_deck",
     "calibre_user_guide",
+    "foundry_layout_audit_contract",
 )
 
 PREPARATION_BINDING_FIELDS = (
