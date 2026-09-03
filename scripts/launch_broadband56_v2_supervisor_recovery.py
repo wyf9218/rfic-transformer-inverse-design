@@ -46,6 +46,12 @@ RECOVERY_BACKEND_OVERLAY_SCHEMA = (
 HANDOFF_SCHEMA = "rfic_transformer.broadband56_v2_swap_policy_supervisor_handoff.v1"
 HANDOFF_DECISION = "HANDOFF_SAME_LOGICAL_SUPERVISOR_FOR_SWAP_POLICY_OVERLAY"
 OVERLAY_SCHEMA = "rfic_transformer.broadband56_v2_operational_policy_overlay.v1"
+FAILURE_SIGNATURES = {
+    "FOURTH_HANDOFF_NOT_PROPAGATED_TO_BASE_REBOUND_VALIDATOR": (
+        "supervisor handoff receipt mismatch"
+    ),
+    "RECOVERY_LAUNCHER_INTERPRETER_MISSING_NUMPY": "No module named 'numpy'",
+}
 
 
 class RecoveryError(RuntimeError):
@@ -118,6 +124,17 @@ def bound_path(record: Any, label: str) -> Path:
     return path
 
 
+def verify_bound_python(expected_python: Path) -> None:
+    """Require the recovery launcher to run under the approved Python binary."""
+    current_python = Path(sys.executable).expanduser().resolve()
+    if not (
+        current_python.is_file()
+        and expected_python.is_file()
+        and os.path.samefile(current_python, expected_python)
+    ):
+        raise RecoveryError("recovery launcher Python identity mismatch")
+
+
 def parse_utc(value: Any) -> datetime | None:
     if not isinstance(value, str) or not value:
         return None
@@ -134,11 +151,15 @@ def verify_recorded_supervisor_failure(
     *,
     prior_pid: int,
     recovery_generation: int,
+    failure_classification: str,
     prior_lease_payload: Mapping[str, Any],
     failed_status: Mapping[str, Any],
     failure_log: str,
 ) -> None:
-    """Verify the immutable failed run without requiring nonexistent wrapper text."""
+    """Verify a supported immutable failed run by its exact bound signature."""
+    signature = FAILURE_SIGNATURES.get(failure_classification)
+    if signature is None:
+        raise RecoveryError("unsupported supervisor failure classification")
     if not (
         prior_pid > 0
         and prior_lease_payload.get("lease_generation")
@@ -148,9 +169,8 @@ def verify_recorded_supervisor_failure(
         and failed_status.get("logical_supervisor_id") == SUPERVISOR_ID
         and failed_status.get("queue_id") == QUEUE_ID
         and failed_status.get("simulator_action_taken") is False
-        and failed_status.get("blocker")
-        == "supervisor handoff receipt mismatch"
-        and "supervisor handoff receipt mismatch" in failure_log
+        and failed_status.get("blocker") == signature
+        and signature in failure_log
     ):
         raise RecoveryError("recorded supervisor failure evidence mismatch")
 
@@ -234,8 +254,7 @@ def verify_recovery_approval(
         bound_path(record, f"prior recovery handoff {index}")
     if not (
         candidate.get("recovery_generation") == len(handoffs) + 3
-        and candidate.get("failure_classification")
-        == "FOURTH_HANDOFF_NOT_PROPAGATED_TO_BASE_REBOUND_VALIDATOR"
+        and candidate.get("failure_classification") in FAILURE_SIGNATURES
         and candidate.get("approved_hotfix_runtime_manifest", {}).get("sha256")
         == APPROVED_HOTFIX_RUNTIME_SHA256
         and candidate.get("approved_hotfix_backend_manifest", {}).get("sha256")
@@ -562,6 +581,9 @@ def run(args: argparse.Namespace) -> None:
     ):
         raise RecoveryError("approved hotfix runtime or backend identity mismatch")
     bindings = dict(base_candidate["evidence_bindings"])
+    verify_bound_python(
+        bound_path(bindings["private_python"], "private Python")
+    )
     production_backend = bound_path(
         bindings["production_backend_manifest"], "production backend"
     )
@@ -609,6 +631,7 @@ def run(args: argparse.Namespace) -> None:
     verify_recorded_supervisor_failure(
         prior_pid=prior_pid,
         recovery_generation=recovery_generation,
+        failure_classification=str(candidate["failure_classification"]),
         prior_lease_payload=prior_lease_payload,
         failed_status=failed_status,
         failure_log=failure_log,
@@ -628,12 +651,23 @@ def run(args: argparse.Namespace) -> None:
     )
     failure = read_json(failure_receipt, "recovery chain failure receipt")
     failure_evidence = failure.get("evidence")
+    failure_lease_record = (
+        failure_evidence.get("prior_supervisor_lease")
+        if isinstance(failure_evidence, Mapping)
+        else None
+    )
+    if failure_lease_record is None and isinstance(failure_evidence, Mapping):
+        failure_lease_record = failure_evidence.get(
+            f"generation_{recovery_generation - 1}_lease"
+        )
     if not (
         failure.get("overall_status") == "PASS"
         and failure.get("failure_classification")
         == candidate["failure_classification"]
         and failure.get("failed_physical_pid") == prior_pid
         and failure.get("failed_physical_pid_alive") is False
+        and failure.get("failed_recovery_generation", recovery_generation - 1)
+        == recovery_generation - 1
         and failure.get("active_simulator_jobs") == 0
         and failure.get("current_accepted") == 0
         and failure.get("current_feature_rows") == 0
@@ -649,7 +683,7 @@ def run(args: argparse.Namespace) -> None:
         == file_record(prior_recovery_approval)
         and failure_evidence.get("recovery_binding")
         == file_record(prior_recovery_binding)
-        and failure_evidence.get("generation_3_lease") == file_record(prior_lease)
+        and failure_lease_record == file_record(prior_lease)
         and failure_evidence.get("recovery_handoff")
         == file_record(prior_recovery_handoffs[-1])
     ):

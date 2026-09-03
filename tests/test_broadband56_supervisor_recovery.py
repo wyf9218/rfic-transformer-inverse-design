@@ -3,6 +3,7 @@ from __future__ import annotations
 import hashlib
 import importlib.util
 import json
+import sys
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
@@ -169,6 +170,9 @@ def test_recorded_failure_accepts_exact_immutable_log_without_wrapper_text() -> 
     RECOVERY.verify_recorded_supervisor_failure(
         prior_pid=prior_pid,
         recovery_generation=4,
+        failure_classification=(
+            "FOURTH_HANDOFF_NOT_PROPAGATED_TO_BASE_REBOUND_VALIDATOR"
+        ),
         prior_lease_payload={"lease_generation": 3},
         failed_status={
             "status": "BLOCKED",
@@ -191,6 +195,9 @@ def test_recorded_failure_rejects_log_without_handoff_mismatch() -> None:
         RECOVERY.verify_recorded_supervisor_failure(
             prior_pid=prior_pid,
             recovery_generation=4,
+            failure_classification=(
+                "FOURTH_HANDOFF_NOT_PROPAGATED_TO_BASE_REBOUND_VALIDATOR"
+            ),
             prior_lease_payload={"lease_generation": 3},
             failed_status={
                 "status": "BLOCKED",
@@ -202,6 +209,48 @@ def test_recorded_failure_rejects_log_without_handoff_mismatch() -> None:
             },
             failure_log="overall_status=BLOCKED\nerror=some other failure\n",
         )
+
+
+def test_recorded_failure_accepts_private_python_import_failure() -> None:
+    prior_pid = 2700705
+    RECOVERY.verify_recorded_supervisor_failure(
+        prior_pid=prior_pid,
+        recovery_generation=5,
+        failure_classification="RECOVERY_LAUNCHER_INTERPRETER_MISSING_NUMPY",
+        prior_lease_payload={"lease_generation": 4},
+        failed_status={
+            "status": "BLOCKED",
+            "physical_supervisor_pid": prior_pid,
+            "logical_supervisor_id": RECOVERY.SUPERVISOR_ID,
+            "queue_id": RECOVERY.QUEUE_ID,
+            "simulator_action_taken": False,
+            "blocker": "No module named 'numpy'",
+        },
+        failure_log="overall_status=BLOCKED\nerror=No module named 'numpy'\n",
+    )
+
+
+def test_recorded_failure_rejects_unknown_classification() -> None:
+    with pytest.raises(RECOVERY.RecoveryError, match="unsupported.*classification"):
+        RECOVERY.verify_recorded_supervisor_failure(
+            prior_pid=1,
+            recovery_generation=5,
+            failure_classification="UNAPPROVED_FAILURE_CLASS",
+            prior_lease_payload={"lease_generation": 4},
+            failed_status={},
+            failure_log="",
+        )
+
+
+def test_bound_python_identity_accepts_current_interpreter() -> None:
+    RECOVERY.verify_bound_python(Path(sys.executable).resolve())
+
+
+def test_bound_python_identity_rejects_different_file(tmp_path: Path) -> None:
+    different_python = tmp_path / "python"
+    different_python.write_bytes(b"not the running Python executable\n")
+    with pytest.raises(RECOVERY.RecoveryError, match="Python identity mismatch"):
+        RECOVERY.verify_bound_python(different_python)
 
 
 def test_recovery_controller_argv_binds_immediate_predecessor(tmp_path: Path) -> None:
