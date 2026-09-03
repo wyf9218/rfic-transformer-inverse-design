@@ -25,10 +25,10 @@ FINGERPRINT = (
 HOTFIX_SCOPE = "ISOLATION_GATE_AUTHORIZED_SUPERVISOR_ANCESTOR_IDENTITY_FIX"
 RECOVERY_SCOPE = "SUPERVISOR_RECOVERY_AFTER_STAGE_PARENT_INITIALIZATION_FAILURE"
 RECOVERY_CANDIDATE_SCHEMA = (
-    "rfic_transformer.broadband56_v2_supervisor_recovery_candidate.v1"
+    "rfic_transformer.broadband56_v2_supervisor_recovery_candidate.v2"
 )
 RECOVERY_APPROVAL_SCHEMA = (
-    "rfic_transformer.broadband56_v2_supervisor_recovery_authorization.v1"
+    "rfic_transformer.broadband56_v2_supervisor_recovery_authorization.v2"
 )
 RECOVERY_APPROVAL_DECISION = "APPROVE_" + RECOVERY_SCOPE
 HANDOFF_SCHEMA = "rfic_transformer.broadband56_v2_swap_policy_supervisor_handoff.v1"
@@ -182,8 +182,23 @@ def verify_recovery_approval(
         ("failed_operation_log", "failed operation log"),
         ("stage_parent_repair_receipt", "stage parent repair receipt"),
         ("post_rebind_execution_gate", "post-rebind execution gate"),
+        ("prior_recovery_candidate", "prior recovery candidate"),
+        ("prior_recovery_approval", "prior recovery approval"),
+        ("prior_recovery_binding", "prior recovery binding"),
+        ("recovery_chain_failure_receipt", "recovery chain failure receipt"),
     ):
         bound_path(candidate.get(key), label)
+    handoffs = candidate.get("prior_recovery_handoffs")
+    if not isinstance(handoffs, list) or not handoffs:
+        raise RecoveryError("recovery candidate lacks prior recovery handoff chain")
+    for index, record in enumerate(handoffs, start=1):
+        bound_path(record, f"prior recovery handoff {index}")
+    if not (
+        candidate.get("recovery_generation") == len(handoffs) + 3
+        and candidate.get("failure_classification")
+        == "FOURTH_HANDOFF_NOT_PROPAGATED_TO_BASE_REBOUND_VALIDATOR"
+    ):
+        raise RecoveryError("recovery generation or failure classification mismatch")
     return candidate, approval
 
 
@@ -234,8 +249,9 @@ def _build_overlay(
     path: Path,
     bindings: Mapping[str, Any],
     runtime: Mapping[str, Any],
-    prior_handoff: Path,
-    restart_handoff: Path,
+    operational_handoff: Path,
+    hotfix_handoff: Path,
+    recovery_handoffs: list[Path],
     failure_receipt: Path,
 ) -> None:
     write_json_new(
@@ -257,8 +273,11 @@ def _build_overlay(
             "override_receipt": file_record(
                 bound_path(bindings["swap_override_receipt"], "swap override")
             ),
-            "previous_operational_handoff": file_record(prior_handoff),
-            "isolation_hotfix_handoff": file_record(restart_handoff),
+            "previous_operational_handoff": file_record(operational_handoff),
+            "isolation_hotfix_handoff": file_record(hotfix_handoff),
+            "supervisor_recovery_handoffs": [
+                file_record(item) for item in recovery_handoffs
+            ],
             "corrected_backend_manifest": file_record(
                 bound_path(
                     bindings["production_backend_manifest"],
@@ -320,10 +339,12 @@ def _controller_argv(
     bindings: Mapping[str, Any],
     runtime: Mapping[str, Any],
     overlay: Path,
-    prior_handoff: Path,
-    restart_handoff: Path,
+    operational_handoff: Path,
+    hotfix_handoff: Path,
+    recovery_handoffs: list[Path],
     lease: Path,
-    prior_physical_pid: int,
+    hotfix_old_pid: int,
+    lease_generation: int,
 ) -> list[str]:
     def p(source: Mapping[str, Any], key: str, label: str) -> Path:
         return bound_path(source[key], label)
@@ -340,17 +361,17 @@ def _controller_argv(
         "--swap-override-receipt-sha256", sha256(p(bindings, "swap_override_receipt", "swap override")),
         "--operational-overlay-manifest", str(overlay),
         "--operational-overlay-manifest-sha256", sha256(overlay),
-        "--operational-handoff-receipt", str(prior_handoff),
-        "--operational-handoff-receipt-sha256", sha256(prior_handoff),
-        "--isolation-hotfix-handoff-receipt", str(restart_handoff),
-        "--isolation-hotfix-handoff-receipt-sha256", sha256(restart_handoff),
+        "--operational-handoff-receipt", str(operational_handoff),
+        "--operational-handoff-receipt-sha256", sha256(operational_handoff),
+        "--isolation-hotfix-handoff-receipt", str(hotfix_handoff),
+        "--isolation-hotfix-handoff-receipt-sha256", sha256(hotfix_handoff),
         "--isolation-identity-auditor", str(p(runtime, "isolation_identity_auditor", "isolation auditor")),
         "--isolation-identity-auditor-sha256", sha256(p(runtime, "isolation_identity_auditor", "isolation auditor")),
         "--isolation-identity-module", str(p(runtime, "isolation_identity_module", "isolation module")),
         "--isolation-identity-module-sha256", sha256(p(runtime, "isolation_identity_module", "isolation module")),
         "--isolation-lease", str(lease),
-        "--isolation-lease-generation", "3",
-        "--expected-handoff-old-pid", str(prior_physical_pid),
+        "--isolation-lease-generation", str(lease_generation),
+        "--expected-handoff-old-pid", str(hotfix_old_pid),
         "--delegate-controller", str(p(bindings, "delegate_controller", "delegate controller")),
         "--delegate-controller-sha256", sha256(p(bindings, "delegate_controller", "delegate controller")),
         "--old-full-campaign-receipt", str(p(bindings, "old_full_campaign_receipt", "old FULL receipt")),
@@ -383,6 +404,15 @@ def _controller_argv(
         "--max-checks", "0",
         "--max-age-seconds", "300",
         "--resume",
+    ] + [
+        item
+        for handoff in recovery_handoffs
+        for item in (
+            "--supervisor-recovery-handoff-receipt",
+            str(handoff),
+            "--supervisor-recovery-handoff-receipt-sha256",
+            sha256(handoff),
+        )
     ]
 
 
@@ -442,9 +472,18 @@ def run(args: argparse.Namespace) -> None:
     campaign_root = Path(str(bindings["campaign_root"])).resolve()
     if campaign_root != Path(args.campaign_root).expanduser().resolve():
         raise RecoveryError("campaign root differs from recovery candidate")
-    prior_handoff = bound_path(
+    hotfix_handoff = bound_path(
         candidate["prior_hotfix_handoff"], "prior hotfix handoff"
     )
+    operational_handoff = bound_path(
+        bindings["previous_operational_handoff"], "previous operational handoff"
+    )
+    prior_recovery_handoffs = [
+        bound_path(record, f"prior recovery handoff {index}")
+        for index, record in enumerate(
+            candidate["prior_recovery_handoffs"], start=1
+        )
+    ]
     prior_lease = bound_path(
         candidate["prior_supervisor_lease"], "prior supervisor lease"
     )
@@ -463,35 +502,107 @@ def run(args: argparse.Namespace) -> None:
     )
     failed_status = read_json(failed_status_path, "failed operation status")
     failure_log = failed_log_path.read_text(encoding="utf-8")
+    recovery_generation = int(candidate["recovery_generation"])
     if not (
         prior_pid > 0
-        and prior_lease_payload.get("lease_generation") == 2
+        and prior_lease_payload.get("lease_generation") == recovery_generation - 1
         and failed_status.get("status") == "BLOCKED"
         and failed_status.get("physical_supervisor_pid") == prior_pid
         and failed_status.get("logical_supervisor_id") == SUPERVISOR_ID
         and failed_status.get("queue_id") == QUEUE_ID
         and failed_status.get("simulator_action_taken") is False
-        and "No such file or directory" in failure_log
-        and "/stages/" in failure_log
+        and "supervisor handoff receipt mismatch" in failure_log
         and "queue controller returned 2" in failure_log
     ):
         raise RecoveryError("recorded supervisor failure evidence mismatch")
+    failure_receipt = bound_path(
+        candidate["recovery_chain_failure_receipt"],
+        "recovery chain failure receipt",
+    )
+    prior_recovery_candidate = bound_path(
+        candidate["prior_recovery_candidate"], "prior recovery candidate"
+    )
+    prior_recovery_approval = bound_path(
+        candidate["prior_recovery_approval"], "prior recovery approval"
+    )
+    prior_recovery_binding = bound_path(
+        candidate["prior_recovery_binding"], "prior recovery binding"
+    )
+    failure = read_json(failure_receipt, "recovery chain failure receipt")
+    failure_evidence = failure.get("evidence")
+    if not (
+        failure.get("overall_status") == "PASS"
+        and failure.get("failure_classification")
+        == candidate["failure_classification"]
+        and failure.get("failed_physical_pid") == prior_pid
+        and failure.get("failed_physical_pid_alive") is False
+        and failure.get("active_simulator_jobs") == 0
+        and failure.get("current_accepted") == 0
+        and failure.get("current_feature_rows") == 0
+        and failure.get("stage_entries") == 0
+        and failure.get("simulator_action_taken") is False
+        and isinstance(failure_evidence, Mapping)
+        and failure_evidence.get("failed_runtime_status")
+        == file_record(failed_status_path)
+        and failure_evidence.get("failure_log") == file_record(failed_log_path)
+        and failure_evidence.get("approved_recovery_candidate")
+        == file_record(prior_recovery_candidate)
+        and failure_evidence.get("approved_recovery_receipt")
+        == file_record(prior_recovery_approval)
+        and failure_evidence.get("recovery_binding")
+        == file_record(prior_recovery_binding)
+        and failure_evidence.get("generation_3_lease") == file_record(prior_lease)
+        and failure_evidence.get("recovery_handoff")
+        == file_record(prior_recovery_handoffs[-1])
+    ):
+        raise RecoveryError("recovery chain failure receipt mismatch")
+    hotfix_payload = read_json(hotfix_handoff, "prior hotfix handoff")
+    expected_old_pid = int(hotfix_payload.get("new_process_pid", 0))
+    for index, handoff_path in enumerate(prior_recovery_handoffs, start=1):
+        handoff = read_json(handoff_path, f"prior recovery handoff {index}")
+        if not (
+            handoff.get("schema") == HANDOFF_SCHEMA
+            and handoff.get("overall_status") == "PASS"
+            and handoff.get("decision") == HANDOFF_DECISION
+            and handoff.get("campaign_id") == CAMPAIGN_ID
+            and handoff.get("queue_id") == QUEUE_ID
+            and handoff.get("supervisor_id") == SUPERVISOR_ID
+            and handoff.get("contract_fingerprint_sha256") == FINGERPRINT
+            and handoff.get("old_process_pid") == expected_old_pid
+            and handoff.get("old_process_confirmed_exited") is True
+            and handoff.get("recovery_scope") == RECOVERY_SCOPE
+            and handoff.get("new_process_is_sole_authoritative_supervisor") is True
+            and handoff.get("supervisor_count_after") == 1
+            and handoff.get("overlap_seconds") == 0
+            and handoff.get("new_queue_or_campaign_created") is False
+            and handoff.get("nn_training_started") is False
+        ):
+            raise RecoveryError(f"prior recovery handoff {index} mismatch")
+        expected_old_pid = int(handoff.get("new_process_pid", 0))
+    if not (
+        expected_old_pid == prior_pid
+        and prior_lease_payload.get("operational_handoff_receipt")
+        == file_record(prior_recovery_handoffs[-1])
+    ):
+        raise RecoveryError("prior recovery handoff-to-lease chain mismatch")
     stages = campaign_root / "stages"
-    repair = read_json(
-        bound_path(
-            candidate["stage_parent_repair_receipt"],
-            "stage parent repair receipt",
-        ),
-        "stage parent repair receipt",
+    stage_parent_repair = bound_path(
+        candidate["stage_parent_repair_receipt"], "stage parent repair receipt"
+    )
+    repair = read_json(stage_parent_repair, "stage parent repair receipt")
+    repair_failure_status = bound_path(
+        repair.get("failure_operation_status"), "stage-parent failure status"
+    )
+    repair_failure_log = bound_path(
+        repair.get("failure_log"), "stage-parent failure log"
     )
     if not (
         repair.get("overall_status") == "PASS"
         and repair.get("failure_classification")
         == "STAGE_STDOUT_PARENT_DIRECTORY_MISSING_BEFORE_LAUNCH"
-        and repair.get("failed_physical_pid") == prior_pid
         and repair.get("failure_operation_status")
-        == file_record(failed_status_path)
-        and repair.get("failure_log") == file_record(failed_log_path)
+        == file_record(repair_failure_status)
+        and repair.get("failure_log") == file_record(repair_failure_log)
         and repair.get("stage_parent_path") == str(stages)
         and repair.get("stage_parent_created") is True
         and stages.is_dir()
@@ -500,9 +611,6 @@ def run(args: argparse.Namespace) -> None:
         and repair.get("current_accepted") == 0
     ):
         raise RecoveryError("stage parent repair evidence mismatch")
-    failure_receipt = bound_path(
-        candidate["stage_parent_repair_receipt"], "failure repair receipt"
-    )
     if not isinstance(prior_process, Mapping):
         raise RecoveryError("prior supervisor lease lacks physical identity")
     if module.read_process_identity(prior_pid) is not None:
@@ -570,17 +678,21 @@ def run(args: argparse.Namespace) -> None:
         },
     )
     overlay = operation_root / "OPERATIONAL_POLICY_OVERLAY_RECOVERY.json"
+    recovery_handoffs = [*prior_recovery_handoffs, restart_handoff]
     _build_overlay(
         path=overlay,
         bindings=bindings,
         runtime=runtime,
-        prior_handoff=prior_handoff,
-        restart_handoff=restart_handoff,
+        operational_handoff=operational_handoff,
+        hotfix_handoff=hotfix_handoff,
+        recovery_handoffs=recovery_handoffs,
         failure_receipt=failure_receipt,
     )
     lease_dir = operation_root / "supervisor_leases"
     lease_dir.mkdir(mode=0o700, parents=False, exist_ok=False)
-    lease_path = lease_dir / "SUPERVISOR_LEASE_GENERATION_0003.json"
+    lease_path = (
+        lease_dir / f"SUPERVISOR_LEASE_GENERATION_{recovery_generation:04d}.json"
+    )
     lease = module.build_restarted_supervisor_lease(
         physical_pid=os.getpid(),
         backend_identity_manifest=bound_path(
@@ -594,7 +706,7 @@ def run(args: argparse.Namespace) -> None:
         prior_supervisor_lease=prior_lease,
         restart_failure_receipt=failure_receipt,
         campaign_lock=lock_path,
-        lease_generation=3,
+        lease_generation=recovery_generation,
         isolation_identity_auditor=bound_path(
             runtime["isolation_identity_auditor"], "isolation auditor"
         ),
@@ -604,15 +716,17 @@ def run(args: argparse.Namespace) -> None:
         bindings=bindings,
         runtime=runtime,
         overlay=overlay,
-        prior_handoff=prior_handoff,
-        restart_handoff=restart_handoff,
+        operational_handoff=operational_handoff,
+        hotfix_handoff=hotfix_handoff,
+        recovery_handoffs=recovery_handoffs,
         lease=lease_path,
-        prior_physical_pid=prior_pid,
+        hotfix_old_pid=int(hotfix_payload["old_process_pid"]),
+        lease_generation=recovery_generation,
     )
     write_json_new(
         operation_root / "SUPERVISOR_RECOVERY_BINDING.json",
         {
-            "schema": "rfic_transformer.broadband56_v2_supervisor_recovery_binding.v1",
+            "schema": "rfic_transformer.broadband56_v2_supervisor_recovery_binding.v2",
             "generated_utc": utc_now(),
             "overall_status": "PASS",
             "decision": "START_EXISTING_LOGICAL_SUPERVISOR_AFTER_RECORDED_FAILURE",
@@ -623,8 +737,12 @@ def run(args: argparse.Namespace) -> None:
             "recovery_candidate": file_record(candidate_path),
             "recovery_approval": file_record(approval_path),
             "restart_handoff": file_record(restart_handoff),
+            "prior_recovery_handoffs": [
+                file_record(item) for item in prior_recovery_handoffs
+            ],
             "supervisor_lease": file_record(lease_path),
-            "stage_parent_repair_receipt": file_record(failure_receipt),
+            "stage_parent_repair_receipt": file_record(stage_parent_repair),
+            "restart_failure_receipt": file_record(failure_receipt),
             "controller_argv_sha256": hashlib.sha256(
                 json.dumps(argv, separators=(",", ":")).encode("utf-8")
             ).hexdigest(),

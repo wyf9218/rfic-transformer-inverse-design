@@ -41,6 +41,7 @@ HANDOFF_SCHEMA = (
     "rfic_transformer.broadband56_v2_swap_policy_supervisor_handoff.v1"
 )
 HANDOFF_DECISION = "HANDOFF_SAME_LOGICAL_SUPERVISOR_FOR_SWAP_POLICY_OVERLAY"
+RECOVERY_SCOPE = "SUPERVISOR_RECOVERY_AFTER_STAGE_PARENT_INITIALIZATION_FAILURE"
 OVERRIDE_PATH_ENV = "B56_SWAP_OVERRIDE_RECEIPT"
 OVERRIDE_SHA_ENV = "B56_SWAP_OVERRIDE_RECEIPT_SHA256"
 OVERLAY_PATH_ENV = "B56_SWAP_OPERATIONAL_OVERLAY"
@@ -94,6 +95,17 @@ def main(argv: list[str] | None = None) -> int:
             private.isolation_hotfix_handoff_receipt_sha256,
             "isolation hotfix handoff receipt",
         )
+        recovery_handoff_paths = [
+            _bound_file(path, digest, f"supervisor recovery handoff receipt {index}")
+            for index, (path, digest) in enumerate(
+                zip(
+                    private.supervisor_recovery_handoff_receipt,
+                    private.supervisor_recovery_handoff_receipt_sha256,
+                    strict=True,
+                ),
+                start=1,
+            )
+        ]
         isolation_auditor_path = _bound_file(
             private.isolation_identity_auditor,
             private.isolation_identity_auditor_sha256,
@@ -146,6 +158,7 @@ def main(argv: list[str] | None = None) -> int:
             overlay_manifest_path=overlay_path,
             operational_handoff_path=operational_handoff_path,
             isolation_hotfix_handoff_path=isolation_hotfix_handoff_path,
+            supervisor_recovery_handoff_paths=recovery_handoff_paths,
             isolation_auditor_path=isolation_auditor_path,
             isolation_module_path=isolation_module_path,
             isolation_lease_path=Path(private.isolation_lease)
@@ -190,6 +203,10 @@ def _parse_private_args(argv: list[str]) -> tuple[argparse.Namespace, list[str]]
     parser.add_argument(
         "--isolation-hotfix-handoff-receipt-sha256", required=True
     )
+    parser.add_argument("--supervisor-recovery-handoff-receipt", action="append", default=[])
+    parser.add_argument(
+        "--supervisor-recovery-handoff-receipt-sha256", action="append", default=[]
+    )
     parser.add_argument("--isolation-identity-auditor", required=True)
     parser.add_argument("--isolation-identity-auditor-sha256", required=True)
     parser.add_argument("--isolation-identity-module", required=True)
@@ -206,8 +223,17 @@ def _parse_private_args(argv: list[str]) -> tuple[argparse.Namespace, list[str]]
         raise SwapOverrideControllerError(
             "expected handoff old PID must be positive"
         )
+    if len(private.supervisor_recovery_handoff_receipt) != len(
+        private.supervisor_recovery_handoff_receipt_sha256
+    ):
+        raise SwapOverrideControllerError(
+            "each supervisor recovery handoff path must have one paired SHA"
+        )
     for name, value in vars(private).items():
-        if name.endswith("sha256") and not _is_sha256(value):
+        if not name.endswith("sha256"):
+            continue
+        digests = value if isinstance(value, list) else [value]
+        if any(not _is_sha256(digest) for digest in digests):
             raise SwapOverrideControllerError(
                 f"{name} is not a lowercase SHA-256 digest"
             )
@@ -252,24 +278,28 @@ def _validate_control_evidence(
     hotfix_handoff = _read_json(
         hotfix_handoff_path, "isolation hotfix handoff receipt"
     )
-    previous_physical_pid = args.swap_override_expected_handoff_old_pid
-    if not _operational_handoff_exact(
-        operational_handoff,
-        expected_old_process_pid=int(operational_handoff.get("old_process_pid", 0)),
-        expected_new_process_pid=previous_physical_pid,
-    ):
-        raise SwapOverrideControllerError(
-            "previous operational handoff receipt mismatch"
+    recovery_handoff_paths = [
+        _bound_file(path, digest, f"supervisor recovery handoff receipt {index}")
+        for index, (path, digest) in enumerate(
+            zip(
+                args.swap_override_supervisor_recovery_handoff_receipt,
+                args.swap_override_supervisor_recovery_handoff_receipt_sha256,
+                strict=True,
+            ),
+            start=1,
         )
-    if not _operational_handoff_exact(
-        hotfix_handoff,
-        expected_old_process_pid=previous_physical_pid,
-        expected_new_process_pid=os.getpid(),
-        require_process_identities=True,
-    ):
-        raise SwapOverrideControllerError(
-            "isolation hotfix handoff receipt mismatch"
-        )
+    ]
+    recovery_handoffs = [
+        _read_json(path, f"supervisor recovery handoff receipt {index}")
+        for index, path in enumerate(recovery_handoff_paths, start=1)
+    ]
+    base_handoff_pid = _validate_handoff_chain(
+        operational_handoff=operational_handoff,
+        hotfix_handoff=hotfix_handoff,
+        recovery_handoffs=recovery_handoffs,
+        expected_hotfix_old_pid=args.swap_override_expected_handoff_old_pid,
+        current_pid=os.getpid(),
+    )
 
     base_inputs = dict(inputs)
     base_inputs["resource_gate_auditor"] = base_auditor
@@ -278,7 +308,7 @@ def _validate_control_evidence(
         inputs=base_inputs,
         args=args,
         wrapper_path=base_wrapper,
-        expected_handoff_pid=int(operational_handoff["old_process_pid"]),
+        expected_handoff_pid=base_handoff_pid,
     )
 
     override_path = _bound_argument_file(
@@ -327,6 +357,7 @@ def _validate_control_evidence(
         isolation_module_path=isolation_module,
         previous_operational_handoff_path=operational_handoff_path,
         isolation_hotfix_handoff_path=hotfix_handoff_path,
+        supervisor_recovery_handoff_paths=recovery_handoff_paths,
     ):
         raise SwapOverrideControllerError("operational overlay manifest mismatch")
 
@@ -338,6 +369,9 @@ def _validate_control_evidence(
     evidence["isolation_hotfix_handoff_receipt"] = _file_record(
         hotfix_handoff_path
     )
+    evidence["supervisor_recovery_handoff_receipts"] = [
+        _file_record(path) for path in recovery_handoff_paths
+    ]
     evidence["isolation_identity_auditor"] = _file_record(isolation_auditor)
     evidence["isolation_identity_module"] = _file_record(isolation_module)
     evidence["swap_policy"] = swap_policy.SWAP_POLICY
@@ -352,6 +386,7 @@ def _swap_override_probe_factory(
     overlay_manifest_path: Path,
     operational_handoff_path: Path,
     isolation_hotfix_handoff_path: Path,
+    supervisor_recovery_handoff_paths: list[Path],
     isolation_auditor_path: Path,
     isolation_module_path: Path,
     isolation_lease_path: Path,
@@ -394,12 +429,17 @@ def _swap_override_probe_factory(
                 raise controller.ControllerError(
                     "cannot create supervisor lease without the bound flock"
                 )
+            authoritative_handoff = (
+                supervisor_recovery_handoff_paths[-1]
+                if supervisor_recovery_handoff_paths
+                else isolation_hotfix_handoff_path
+            )
             lease = isolation_identity.build_supervisor_lease(
                 physical_pid=os.getpid(),
                 backend_identity_manifest=backend_manifest_path,
                 queue_entry=campaign_root / "MARS_QUEUE_ENTRY.json",
                 supervisor_identity=campaign_root / "SUPERVISOR_IDENTITY.json",
-                operational_handoff_receipt=isolation_hotfix_handoff_path,
+                operational_handoff_receipt=authoritative_handoff,
                 campaign_lock=campaign_lock,
                 lease_generation=isolation_lease_generation,
                 isolation_identity_auditor=isolation_auditor_path,
@@ -541,8 +581,10 @@ def _overlay_exact(
     isolation_module_path: Path,
     previous_operational_handoff_path: Path,
     isolation_hotfix_handoff_path: Path,
+    supervisor_recovery_handoff_paths: list[Path] | None = None,
 ) -> bool:
     scripts = payload.get("script_identities")
+    recovery_paths = supervisor_recovery_handoff_paths or []
     return (
         payload.get("schema") == OVERLAY_SCHEMA
         and payload.get("overall_status") == "PASS"
@@ -565,6 +607,7 @@ def _overlay_exact(
             isolation_hotfix_handoff_path,
             payload.get("isolation_hotfix_handoff"),
         )
+        and _recovery_handoffs_exact(payload, recovery_paths)
         and _identity_exact(
             inputs["backend_identity_manifest"],
             payload.get("corrected_backend_manifest"),
@@ -599,6 +642,7 @@ def _operational_handoff_exact(
     expected_old_process_pid: int,
     expected_new_process_pid: int,
     require_process_identities: bool = False,
+    require_new_process_live: bool = True,
 ) -> bool:
     base_valid = (
         payload.get("schema") == HANDOFF_SCHEMA
@@ -621,22 +665,99 @@ def _operational_handoff_exact(
         return base_valid
     old_identity = payload.get("old_process_identity")
     new_identity = payload.get("new_process_identity")
-    observed_new = isolation_identity.read_process_identity(
-        expected_new_process_pid
-    )
-    return (
+    identities_valid = (
         isinstance(old_identity, Mapping)
         and old_identity.get("pid") == expected_old_process_pid
         and _complete_process_identity(old_identity)
         and isinstance(new_identity, Mapping)
         and new_identity.get("pid") == expected_new_process_pid
         and _complete_process_identity(new_identity)
-        and observed_new is not None
-        and isolation_identity.process_identity_matches(
-            observed_new, new_identity
-        )
         and payload.get("handoff_scope")
         == "ISOLATION_GATE_AUTHORIZED_SUPERVISOR_ANCESTOR_IDENTITY_FIX"
+    )
+    if not identities_valid or not require_new_process_live:
+        return identities_valid
+    observed_new = isolation_identity.read_process_identity(
+        expected_new_process_pid
+    )
+    return observed_new is not None and isolation_identity.process_identity_matches(
+        observed_new, new_identity
+    )
+
+
+def _validate_handoff_chain(
+    *,
+    operational_handoff: Mapping[str, Any],
+    hotfix_handoff: Mapping[str, Any],
+    recovery_handoffs: list[Mapping[str, Any]],
+    expected_hotfix_old_pid: int,
+    current_pid: int,
+) -> int:
+    """Validate every physical PID transition and return the base handoff PID."""
+    base_handoff_pid = int(operational_handoff.get("old_process_pid", 0))
+    if not _operational_handoff_exact(
+        operational_handoff,
+        expected_old_process_pid=base_handoff_pid,
+        expected_new_process_pid=expected_hotfix_old_pid,
+    ):
+        raise SwapOverrideControllerError(
+            "previous operational handoff receipt mismatch"
+        )
+    hotfix_new_pid = (
+        int(recovery_handoffs[0].get("old_process_pid", 0))
+        if recovery_handoffs
+        else current_pid
+    )
+    if not _operational_handoff_exact(
+        hotfix_handoff,
+        expected_old_process_pid=expected_hotfix_old_pid,
+        expected_new_process_pid=hotfix_new_pid,
+        require_process_identities=True,
+        require_new_process_live=not recovery_handoffs,
+    ):
+        raise SwapOverrideControllerError(
+            "isolation hotfix handoff receipt mismatch"
+        )
+    for index, recovery_handoff in enumerate(recovery_handoffs):
+        expected_old_pid = (
+            hotfix_new_pid
+            if index == 0
+            else int(recovery_handoffs[index - 1].get("new_process_pid", 0))
+        )
+        expected_new_pid = (
+            int(recovery_handoffs[index + 1].get("old_process_pid", 0))
+            if index + 1 < len(recovery_handoffs)
+            else current_pid
+        )
+        if not (
+            recovery_handoff.get("recovery_scope") == RECOVERY_SCOPE
+            and _operational_handoff_exact(
+                recovery_handoff,
+                expected_old_process_pid=expected_old_pid,
+                expected_new_process_pid=expected_new_pid,
+                require_process_identities=True,
+                require_new_process_live=index + 1 == len(recovery_handoffs),
+            )
+        ):
+            raise SwapOverrideControllerError(
+                f"supervisor recovery handoff receipt {index + 1} mismatch"
+            )
+    return base_handoff_pid
+
+
+def _recovery_handoffs_exact(
+    payload: Mapping[str, Any], recovery_paths: list[Path]
+) -> bool:
+    records = payload.get("supervisor_recovery_handoffs")
+    if not recovery_paths:
+        return records in (None, []) and payload.get("supervisor_recovery_handoff") is None
+    if isinstance(records, list):
+        return len(records) == len(recovery_paths) and all(
+            _identity_exact(path, record)
+            for path, record in zip(recovery_paths, records, strict=True)
+        )
+    return len(recovery_paths) == 1 and _identity_exact(
+        recovery_paths[0], payload.get("supervisor_recovery_handoff")
     )
 
 

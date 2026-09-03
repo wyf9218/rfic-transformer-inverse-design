@@ -118,6 +118,38 @@ def test_swap_controller_rejects_non_sha_identity() -> None:
         CONTROLLER._parse_private_args(values)
 
 
+def test_swap_controller_requires_paired_recovery_handoff_sha() -> None:
+    digest = "a" * 64
+    values = []
+    for name in (
+        "rebound-helper",
+        "base-rebound-controller",
+        "base-resource-gate-auditor",
+        "swap-override-receipt",
+        "operational-overlay-manifest",
+        "operational-handoff-receipt",
+        "isolation-hotfix-handoff-receipt",
+        "isolation-identity-auditor",
+        "isolation-identity-module",
+    ):
+        values.extend((f"--{name}", f"/tmp/{name}", f"--{name}-sha256", digest))
+    values.extend(
+        (
+            "--supervisor-recovery-handoff-receipt",
+            "/tmp/recovery-1.json",
+            "--isolation-lease",
+            "/tmp/SUPERVISOR_LEASE.json",
+            "--isolation-lease-generation",
+            "4",
+            "--expected-handoff-old-pid",
+            "2232746",
+        )
+    )
+
+    with pytest.raises(CONTROLLER.SwapOverrideControllerError, match="paired SHA"):
+        CONTROLLER._parse_private_args(values)
+
+
 def test_auditor_environment_file_requires_exact_sha(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
@@ -267,3 +299,87 @@ def test_hotfix_handoff_requires_live_start_bound_identity(
         expected_new_process_pid=CONTROLLER.os.getpid(),
         require_process_identities=True,
     )
+
+
+def test_handoff_chain_validates_all_recovery_generations(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    current_pid = CONTROLLER.os.getpid()
+
+    def process(pid: int, ticks: int) -> dict:
+        return {
+            "pid": pid,
+            "parent_pid": 1,
+            "uid": 1001,
+            "state": "S",
+            "start_ticks": ticks,
+            "boot_id": "boot-id",
+            "command_line_sha256": f"{ticks:064x}"[-64:],
+            "executable_path": "/usr/bin/python3",
+            "executable_sha256": "b" * 64,
+        }
+
+    def handoff(old_pid: int, new_pid: int, *, recovery: bool) -> dict:
+        payload = {
+            "schema": CONTROLLER.HANDOFF_SCHEMA,
+            "overall_status": "PASS",
+            "decision": CONTROLLER.HANDOFF_DECISION,
+            "campaign_id": CONTROLLER.CAMPAIGN_ID,
+            "queue_id": CONTROLLER.QUEUE_ID,
+            "supervisor_id": CONTROLLER.SUPERVISOR_ID,
+            "contract_fingerprint_sha256": CONTROLLER.CONTRACT_FINGERPRINT,
+            "old_process_pid": old_pid,
+            "old_process_confirmed_exited": True,
+            "new_process_pid": new_pid,
+            "new_process_is_sole_authoritative_supervisor": True,
+            "supervisor_count_after": 1,
+            "overlap_seconds": 0,
+            "new_queue_or_campaign_created": False,
+            "nn_training_started": False,
+        }
+        if old_pid == 676436:
+            return payload
+        payload.update(
+            {
+                "old_process_identity": process(old_pid, old_pid),
+                "new_process_identity": process(new_pid, new_pid),
+                "handoff_scope": (
+                    "ISOLATION_GATE_AUTHORIZED_SUPERVISOR_ANCESTOR_IDENTITY_FIX"
+                ),
+            }
+        )
+        if recovery:
+            payload["recovery_scope"] = CONTROLLER.RECOVERY_SCOPE
+        return payload
+
+    operational = handoff(676436, 2232746, recovery=False)
+    hotfix = handoff(2232746, 526588, recovery=False)
+    recovery_1 = handoff(526588, 510227, recovery=True)
+    recovery_2 = handoff(510227, current_pid, recovery=True)
+    monkeypatch.setattr(
+        CONTROLLER.isolation_identity,
+        "read_process_identity",
+        lambda pid: process(pid, pid) if pid == current_pid else None,
+    )
+
+    assert CONTROLLER._validate_handoff_chain(
+        operational_handoff=operational,
+        hotfix_handoff=hotfix,
+        recovery_handoffs=[recovery_1, recovery_2],
+        expected_hotfix_old_pid=2232746,
+        current_pid=current_pid,
+    ) == 676436
+
+    broken = deepcopy(recovery_1)
+    broken["new_process_pid"] = 510228
+    with pytest.raises(
+        CONTROLLER.SwapOverrideControllerError,
+        match="recovery handoff receipt 1 mismatch",
+    ):
+        CONTROLLER._validate_handoff_chain(
+            operational_handoff=operational,
+            hotfix_handoff=hotfix,
+            recovery_handoffs=[broken, recovery_2],
+            expected_hotfix_old_pid=2232746,
+            current_pid=current_pid,
+        )

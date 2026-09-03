@@ -42,7 +42,7 @@ def _record(path: Path) -> dict:
 
 def test_recovery_approval_requires_exact_candidate_binding(tmp_path: Path) -> None:
     evidence = []
-    for index in range(10):
+    for index in range(15):
         path = tmp_path / f"evidence-{index}.json"
         path.write_text("{}\n", encoding="utf-8")
         evidence.append(path)
@@ -73,9 +73,18 @@ def test_recovery_approval_requires_exact_candidate_binding(tmp_path: Path) -> N
         "failed_operation_log",
         "stage_parent_repair_receipt",
         "post_rebind_execution_gate",
+        "prior_recovery_candidate",
+        "prior_recovery_approval",
+        "prior_recovery_binding",
+        "recovery_chain_failure_receipt",
     )
-    assert len(keys) == len(evidence)
+    assert len(keys) + 1 == len(evidence)
     candidate.update({key: _record(path) for key, path in zip(keys, evidence)})
+    candidate["prior_recovery_handoffs"] = [_record(evidence[-1])]
+    candidate["recovery_generation"] = 4
+    candidate["failure_classification"] = (
+        "FOURTH_HANDOFF_NOT_PROPAGATED_TO_BASE_REBOUND_VALIDATOR"
+    )
     _write_json(candidate_path, candidate)
     candidate_sha = hashlib.sha256(candidate_path.read_bytes()).hexdigest()
     approval_path = tmp_path / "approval.json"
@@ -170,6 +179,7 @@ def test_recovery_controller_argv_binds_immediate_predecessor(tmp_path: Path) ->
         "resource_probe",
         "private_python",
         "campaign_lock",
+        "previous_operational_handoff",
     )
     bindings = {key: record for key in binding_keys}
     bindings["campaign_root"] = str(campaign_root)
@@ -178,28 +188,48 @@ def test_recovery_controller_argv_binds_immediate_predecessor(tmp_path: Path) ->
         "isolation_identity_module": record,
         "resource_gate_auditor": record,
     }
-    prior_handoff = tmp_path / "prior-handoff.json"
-    restart_handoff = tmp_path / "restart-handoff.json"
+    operational_handoff = tmp_path / "operational-handoff.json"
+    hotfix_handoff = tmp_path / "hotfix-handoff.json"
+    recovery_1 = tmp_path / "recovery-1.json"
+    recovery_2 = tmp_path / "recovery-2.json"
     lease = tmp_path / "lease.json"
     overlay = tmp_path / "overlay.json"
-    for path in (prior_handoff, restart_handoff, lease, overlay):
+    for path in (
+        operational_handoff,
+        hotfix_handoff,
+        recovery_1,
+        recovery_2,
+        lease,
+        overlay,
+    ):
         path.write_text("{}\n", encoding="utf-8")
 
     argv = RECOVERY._controller_argv(
         bindings=bindings,
         runtime=runtime,
         overlay=overlay,
-        prior_handoff=prior_handoff,
-        restart_handoff=restart_handoff,
+        operational_handoff=operational_handoff,
+        hotfix_handoff=hotfix_handoff,
+        recovery_handoffs=[recovery_1, recovery_2],
         lease=lease,
-        prior_physical_pid=526588,
+        hotfix_old_pid=2232746,
+        lease_generation=4,
     )
 
-    assert argv[argv.index("--expected-handoff-old-pid") + 1] == "526588"
-    assert argv[argv.index("--isolation-lease-generation") + 1] == "3"
+    assert argv[argv.index("--expected-handoff-old-pid") + 1] == "2232746"
+    assert argv[argv.index("--isolation-lease-generation") + 1] == "4"
     assert argv[argv.index("--operational-handoff-receipt") + 1] == str(
-        prior_handoff
+        operational_handoff
     )
     assert argv[argv.index("--isolation-hotfix-handoff-receipt") + 1] == str(
-        restart_handoff
+        hotfix_handoff
     )
+    recovery_indices = [
+        index
+        for index, value in enumerate(argv)
+        if value == "--supervisor-recovery-handoff-receipt"
+    ]
+    assert [argv[index + 1] for index in recovery_indices] == [
+        str(recovery_1),
+        str(recovery_2),
+    ]
