@@ -105,7 +105,9 @@ def produce_foundry_layout_audit(
             stage_id and candidate.get("candidate_id") and candidate_sha
         ),
     }
-    failure_reasons = [name for name, passed in checks.items() if passed is not True]
+    failure_reasons = sorted(
+        name for name, passed in checks.items() if passed is not True
+    )
     overall_status = "PASS" if not failure_reasons else "FAIL"
     payload: dict[str, Any] = {
         "schema": AUDIT_SCHEMA,

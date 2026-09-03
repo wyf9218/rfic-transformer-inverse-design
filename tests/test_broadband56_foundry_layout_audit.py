@@ -222,6 +222,46 @@ def test_actual_checks_are_required_and_producer_launches_no_external_process(
     _validate(audit, valid_audit, verify_files=True)
 
 
+def test_multiple_actual_failures_write_atomic_fail_receipt(
+    valid_audit: dict[str, Any], tmp_path: Path
+) -> None:
+    import gdstk
+
+    library = gdstk.read_gds(valid_audit["gds"])
+    for cell in library.cells:
+        for polygon in cell.polygons:
+            polygon.translate(0.001, 0.0)
+    changed_gds = tmp_path / "off_grid.gds"
+    library.write_gds(changed_gds)
+    output = tmp_path / "foundry_layout_audit.json"
+    original = valid_audit["audit"]
+    audit = produce_foundry_layout_audit(
+        gds_path=changed_gds,
+        source_audit_path=Path(original["source_layout_audit"]["path"]),
+        power_line_audit_path=Path(original["source_power_line_audit"]["path"]),
+        config_path=valid_audit["config"],
+        contract_path=CONTRACT,
+        candidate=valid_audit["candidate"],
+        stage_id="GOLDEN",
+        output_path=output,
+    )
+    assert output.is_file() and output.stat().st_size > 0
+    assert audit["overall_status"] == "FAIL"
+    assert len(audit["failure_reasons"]) > 1
+    assert audit["failure_reasons"] == sorted(audit["failure_reasons"])
+    validate_foundry_layout_audit(
+        audit,
+        expected_stage_id="GOLDEN",
+        expected_candidate_id_sha256=valid_audit["geometry_sha"],
+        expected_geometry_sha256=valid_audit["geometry_sha"],
+        expected_config_sha256=valid_audit["config_sha"],
+        expected_gds_sha256=_sha(changed_gds),
+        expected_contract_sha256=valid_audit["contract_sha"],
+        require_pass=False,
+        verify_files=True,
+    )
+
+
 def _load(path: Path, fixture: dict[str, Any]) -> dict[str, Any]:
     return load_and_validate_foundry_layout_audit(
         path,
