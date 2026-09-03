@@ -22,6 +22,12 @@ SUPERVISOR_ID = "b56-v2-controller-3184781-20260901T184307Z"
 FINGERPRINT = (
     "f86a00efbf7756b7421b863bbb16c340db6b423640f63a3257d46c1af49eb55e"
 )
+APPROVED_HOTFIX_RUNTIME_SHA256 = (
+    "a48c97087f6853c70fc360f8db9111fafb1dc34e89b7bae2457b267946c51027"
+)
+APPROVED_HOTFIX_BACKEND_SHA256 = (
+    "3f7c62d50c7bb707e1df55503a0950e180749cc7d09bf436dbfb453fcec2826c"
+)
 HOTFIX_SCOPE = "ISOLATION_GATE_AUTHORIZED_SUPERVISOR_ANCESTOR_IDENTITY_FIX"
 RECOVERY_SCOPE = "SUPERVISOR_RECOVERY_AFTER_STAGE_PARENT_INITIALIZATION_FAILURE"
 RECOVERY_CANDIDATE_SCHEMA = (
@@ -176,6 +182,8 @@ def verify_recovery_approval(
         ("backend_overlay_manifest", "recovery backend overlay"),
         ("base_hotfix_candidate", "base hotfix candidate"),
         ("base_hotfix_approval", "base hotfix approval"),
+        ("approved_hotfix_runtime_manifest", "approved hotfix runtime manifest"),
+        ("approved_hotfix_backend_manifest", "approved hotfix backend manifest"),
         ("prior_hotfix_handoff", "prior hotfix handoff"),
         ("prior_supervisor_lease", "prior supervisor lease"),
         ("failed_operation_status", "failed operation status"),
@@ -197,6 +205,10 @@ def verify_recovery_approval(
         candidate.get("recovery_generation") == len(handoffs) + 3
         and candidate.get("failure_classification")
         == "FOURTH_HANDOFF_NOT_PROPAGATED_TO_BASE_REBOUND_VALIDATOR"
+        and candidate.get("approved_hotfix_runtime_manifest", {}).get("sha256")
+        == APPROVED_HOTFIX_RUNTIME_SHA256
+        and candidate.get("approved_hotfix_backend_manifest", {}).get("sha256")
+        == APPROVED_HOTFIX_BACKEND_SHA256
     ):
         raise RecoveryError("recovery generation or failure classification mismatch")
     return candidate, approval
@@ -465,6 +477,13 @@ def run(args: argparse.Namespace) -> None:
         base_approval_path,
         candidate["base_hotfix_approval"]["sha256"],
     )
+    if not (
+        base_candidate.get("new_runtime_manifest")
+        == candidate["approved_hotfix_runtime_manifest"]
+        and base_candidate.get("new_backend_manifest")
+        == candidate["approved_hotfix_backend_manifest"]
+    ):
+        raise RecoveryError("approved hotfix runtime or backend identity mismatch")
     bindings = dict(base_candidate["evidence_bindings"])
     bindings["post_rebind_execution_gate"] = candidate[
         "post_rebind_execution_gate"

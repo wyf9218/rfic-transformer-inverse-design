@@ -40,9 +40,11 @@ def _record(path: Path) -> dict:
     }
 
 
-def test_recovery_approval_requires_exact_candidate_binding(tmp_path: Path) -> None:
+def test_recovery_approval_requires_exact_candidate_binding(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
     evidence = []
-    for index in range(15):
+    for index in range(17):
         path = tmp_path / f"evidence-{index}.json"
         path.write_text("{}\n", encoding="utf-8")
         evidence.append(path)
@@ -67,6 +69,8 @@ def test_recovery_approval_requires_exact_candidate_binding(tmp_path: Path) -> N
         "backend_overlay_manifest",
         "base_hotfix_candidate",
         "base_hotfix_approval",
+        "approved_hotfix_runtime_manifest",
+        "approved_hotfix_backend_manifest",
         "prior_hotfix_handoff",
         "prior_supervisor_lease",
         "failed_operation_status",
@@ -84,6 +88,16 @@ def test_recovery_approval_requires_exact_candidate_binding(tmp_path: Path) -> N
     candidate["recovery_generation"] = 4
     candidate["failure_classification"] = (
         "FOURTH_HANDOFF_NOT_PROPAGATED_TO_BASE_REBOUND_VALIDATOR"
+    )
+    monkeypatch.setattr(
+        RECOVERY,
+        "APPROVED_HOTFIX_RUNTIME_SHA256",
+        candidate["approved_hotfix_runtime_manifest"]["sha256"],
+    )
+    monkeypatch.setattr(
+        RECOVERY,
+        "APPROVED_HOTFIX_BACKEND_SHA256",
+        candidate["approved_hotfix_backend_manifest"]["sha256"],
     )
     _write_json(candidate_path, candidate)
     candidate_sha = hashlib.sha256(candidate_path.read_bytes()).hexdigest()
