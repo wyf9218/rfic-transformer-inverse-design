@@ -237,7 +237,9 @@ def _fixture(
     }
 
 
-def _build_real_foundry_layout(root: Path) -> tuple[Path, dict[str, float]]:
+def _build_real_foundry_layout(
+    root: Path, *, fractional_geometry: bool = False
+) -> tuple[Path, dict[str, float]]:
     cfg = default_run_config("1t1t")
     cfg = replace(
         cfg,
@@ -290,6 +292,25 @@ def _build_real_foundry_layout(root: Path) -> tuple[Path, dict[str, float]]:
         ),
     )
     geometry = cfg.bounds.midpoint()
+    if fractional_geometry:
+        from rfic_transformer_inverse_design.core.adapter import TransformerOptimizationAdapter
+
+        adapter = TransformerOptimizationAdapter(cfg.bounds)
+        offsets = {
+            "primary_outer_width_um": 0.123456,
+            "primary_outer_height_um": 0.234567,
+            "secondary_outer_width_um": 0.345678,
+            "secondary_outer_height_um": 0.456789,
+            "primary_width_um": 0.012345,
+            "secondary_width_um": 0.012345,
+            "offset_um": 0.123456,
+        }
+        geometry = adapter.from_vector(
+            [
+                value + offsets.get(name, 0.0)
+                for name, value in zip(adapter.field_order(), adapter.to_vector(geometry))
+            ]
+        )
     template_dir = root / "template_layout"
     export_transformer_layout(geometry, cfg, template_dir, validate_geometry=False)
     values = {

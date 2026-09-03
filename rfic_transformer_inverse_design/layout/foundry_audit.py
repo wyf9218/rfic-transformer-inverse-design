@@ -20,7 +20,11 @@ from ..campaigns.broadband56_balanced200k import (
 )
 from ..core.defaults import load_run_config
 from ..process import parse_proc_file
-from .export import _foundry_slotted_ground_frame, _resolve_export_pair
+from .export import (
+    _canonicalize_cell_to_foundry_grid,
+    _foundry_slotted_ground_frame,
+    _resolve_export_pair,
+)
 
 
 AUDIT_SCHEMA = "rfic_transformer_foundry_layout_audit.v1"
@@ -452,8 +456,9 @@ def _audit_actual_gds(
         layer=int(shield_layer),
         datatype=int(shield_datatype),
     )
+    frame_polygons = _canonical_expected_polygons(frame_polygons, grid_um=grid_um)
     expected_metal_polygons, expected_via_polygons = _expected_stitch_polygons(
-        power_line_audit
+        power_line_audit, grid_um=grid_um
     )
     actual_by_pair: dict[tuple[int, int], list[Any]] = {}
     for polygon in polygons:
@@ -648,6 +653,8 @@ def _actual_grid_audit(
 
 def _expected_stitch_polygons(
     power_line_audit: Mapping[str, Any],
+    *,
+    grid_um: float,
 ) -> tuple[dict[tuple[int, int], list[Any]], dict[tuple[int, int], list[tuple[list[Any], Any]]]]:
     import gdstk
 
@@ -696,8 +703,29 @@ def _expected_stitch_polygons(
                             datatype=pair[1],
                         )
                     )
-            vias.setdefault(pair, []).append((expected, footprint_polygon))
+            vias.setdefault(pair, []).append(
+                (
+                    _canonical_expected_polygons(expected, grid_um=grid_um),
+                    _canonical_expected_polygons(
+                        [footprint_polygon], grid_um=grid_um
+                    )[0],
+                )
+            )
+    metal = {
+        pair: _canonical_expected_polygons(polygons, grid_um=grid_um)
+        for pair, polygons in metal.items()
+    }
     return metal, vias
+
+
+def _canonical_expected_polygons(polygons: Sequence[Any], *, grid_um: float) -> list[Any]:
+    import gdstk
+
+    # Reference polygons must undergo the same frozen grid conversion as export.
+    cell = gdstk.Cell("FOUNDRY_AUDIT_EXPECTED_ONLY")
+    cell.add(*polygons)
+    _canonicalize_cell_to_foundry_grid(cell=cell, grid_um=grid_um)
+    return list(cell.polygons)
 
 
 def _actual_bridge_record(

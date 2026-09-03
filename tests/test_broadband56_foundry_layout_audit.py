@@ -262,6 +262,35 @@ def test_multiple_actual_failures_write_atomic_fail_receipt(
     )
 
 
+def test_fractional_geometry_matches_frozen_export_grid_conversion(tmp_path: Path) -> None:
+    layout, geometry = _build_real_foundry_layout(tmp_path, fractional_geometry=True)
+    config = tmp_path / "config.yaml"
+    config.write_text("emx:\n  foundry_layout:\n    enabled: true\n")
+    digest = canonical_geometry_sha256(geometry)
+    candidate = {
+        "candidate_id": "fractional-grid-fixture",
+        "candidate_id_sha256": digest,
+        "candidate_geometry_identity_sha256": digest,
+        "geometry_sha256": digest,
+        **{f"geom__{name}": value for name, value in geometry.items()},
+    }
+    audit = produce_foundry_layout_audit(
+        gds_path=layout / "transformer_layout.gds",
+        source_audit_path=layout / "foundry_layout_source_audit.json",
+        power_line_audit_path=layout / "power_line_8port_geometry.json",
+        config_path=config,
+        contract_path=CONTRACT,
+        candidate=candidate,
+        stage_id="GOLDEN",
+        output_path=layout / "foundry_layout_audit.json",
+    )
+    assert audit["overall_status"] == "PASS", audit["failure_reasons"]
+    assert audit["ground_frame"]["actual_missing_area_um2"] == 0.0
+    assert audit["ground_frame"]["actual_unexpected_area_um2"] == 0.0
+    assert audit["via_and_landing"]["via_missing_area_um2"] == 0.0
+    assert audit["via_and_landing"]["metal_landing_missing_area_um2"] == 0.0
+
+
 def _load(path: Path, fixture: dict[str, Any]) -> dict[str, Any]:
     return load_and_validate_foundry_layout_audit(
         path,
