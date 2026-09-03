@@ -130,6 +130,31 @@ def parse_utc(value: Any) -> datetime | None:
     return parsed
 
 
+def verify_recorded_supervisor_failure(
+    *,
+    prior_pid: int,
+    recovery_generation: int,
+    prior_lease_payload: Mapping[str, Any],
+    failed_status: Mapping[str, Any],
+    failure_log: str,
+) -> None:
+    """Verify the immutable failed run without requiring nonexistent wrapper text."""
+    if not (
+        prior_pid > 0
+        and prior_lease_payload.get("lease_generation")
+        == recovery_generation - 1
+        and failed_status.get("status") == "BLOCKED"
+        and failed_status.get("physical_supervisor_pid") == prior_pid
+        and failed_status.get("logical_supervisor_id") == SUPERVISOR_ID
+        and failed_status.get("queue_id") == QUEUE_ID
+        and failed_status.get("simulator_action_taken") is False
+        and failed_status.get("blocker")
+        == "supervisor handoff receipt mismatch"
+        and "supervisor handoff receipt mismatch" in failure_log
+    ):
+        raise RecoveryError("recorded supervisor failure evidence mismatch")
+
+
 def verify_recovery_approval(
     candidate_path: Path,
     candidate_sha: str,
@@ -581,18 +606,13 @@ def run(args: argparse.Namespace) -> None:
     failed_status = read_json(failed_status_path, "failed operation status")
     failure_log = failed_log_path.read_text(encoding="utf-8")
     recovery_generation = int(candidate["recovery_generation"])
-    if not (
-        prior_pid > 0
-        and prior_lease_payload.get("lease_generation") == recovery_generation - 1
-        and failed_status.get("status") == "BLOCKED"
-        and failed_status.get("physical_supervisor_pid") == prior_pid
-        and failed_status.get("logical_supervisor_id") == SUPERVISOR_ID
-        and failed_status.get("queue_id") == QUEUE_ID
-        and failed_status.get("simulator_action_taken") is False
-        and "supervisor handoff receipt mismatch" in failure_log
-        and "queue controller returned 2" in failure_log
-    ):
-        raise RecoveryError("recorded supervisor failure evidence mismatch")
+    verify_recorded_supervisor_failure(
+        prior_pid=prior_pid,
+        recovery_generation=recovery_generation,
+        prior_lease_payload=prior_lease_payload,
+        failed_status=failed_status,
+        failure_log=failure_log,
+    )
     failure_receipt = bound_path(
         candidate["recovery_chain_failure_receipt"],
         "recovery chain failure receipt",

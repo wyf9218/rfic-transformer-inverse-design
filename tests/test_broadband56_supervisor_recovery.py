@@ -164,6 +164,46 @@ def test_recovery_process_count_detects_duplicate_supervisor() -> None:
     assert result["active_simulator_jobs"] == 0
 
 
+def test_recorded_failure_accepts_exact_immutable_log_without_wrapper_text() -> None:
+    prior_pid = 510227
+    RECOVERY.verify_recorded_supervisor_failure(
+        prior_pid=prior_pid,
+        recovery_generation=4,
+        prior_lease_payload={"lease_generation": 3},
+        failed_status={
+            "status": "BLOCKED",
+            "physical_supervisor_pid": prior_pid,
+            "logical_supervisor_id": RECOVERY.SUPERVISOR_ID,
+            "queue_id": RECOVERY.QUEUE_ID,
+            "simulator_action_taken": False,
+            "blocker": "supervisor handoff receipt mismatch",
+        },
+        failure_log=(
+            "overall_status=BLOCKED\n"
+            "error=supervisor handoff receipt mismatch\n"
+        ),
+    )
+
+
+def test_recorded_failure_rejects_log_without_handoff_mismatch() -> None:
+    prior_pid = 510227
+    with pytest.raises(RECOVERY.RecoveryError, match="failure evidence mismatch"):
+        RECOVERY.verify_recorded_supervisor_failure(
+            prior_pid=prior_pid,
+            recovery_generation=4,
+            prior_lease_payload={"lease_generation": 3},
+            failed_status={
+                "status": "BLOCKED",
+                "physical_supervisor_pid": prior_pid,
+                "logical_supervisor_id": RECOVERY.SUPERVISOR_ID,
+                "queue_id": RECOVERY.QUEUE_ID,
+                "simulator_action_taken": False,
+                "blocker": "supervisor handoff receipt mismatch",
+            },
+            failure_log="overall_status=BLOCKED\nerror=some other failure\n",
+        )
+
+
 def test_recovery_controller_argv_binds_immediate_predecessor(tmp_path: Path) -> None:
     artifact = tmp_path / "artifact"
     artifact.write_text("bound\n", encoding="utf-8")
