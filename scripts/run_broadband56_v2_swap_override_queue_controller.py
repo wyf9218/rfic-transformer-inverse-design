@@ -748,14 +748,6 @@ def _override_exact(payload: Mapping[str, Any]) -> bool:
         and payload.get("supervisor_id") == SUPERVISOR_ID
         and payload.get("contract_fingerprint_sha256") == CONTRACT_FINGERPRINT
         and payload.get("swap_policy") == swap_policy.SWAP_POLICY
-        and payload.get("capacity_schema_adapter_profile")
-        == capacity_adapter.ADAPTER_PROFILE
-        and payload.get("capacity_schema_source_schema")
-        == capacity_adapter.SOURCE_SNAPSHOT_SCHEMA
-        and payload.get("capacity_schema_target_schema")
-        == capacity_adapter.TARGET_SNAPSHOT_SCHEMA
-        and payload.get("capacity_snapshot_maximum_launch_age_seconds")
-        == capacity_adapter.MAX_LAUNCH_AGE_SECONDS
         and payload.get("swap_zero_requirement_removed") is True
         and payload.get("nonzero_swap_in_alone_is_advisory") is True
         and payload.get("scientific_contract_changed") is False
@@ -792,6 +784,14 @@ def _overlay_exact(
         and payload.get("supervisor_id") == SUPERVISOR_ID
         and payload.get("contract_fingerprint_sha256") == CONTRACT_FINGERPRINT
         and payload.get("swap_policy") == swap_policy.SWAP_POLICY
+        and payload.get("capacity_schema_adapter_profile")
+        == capacity_adapter.ADAPTER_PROFILE
+        and payload.get("capacity_schema_source_schema")
+        == capacity_adapter.SOURCE_SNAPSHOT_SCHEMA
+        and payload.get("capacity_schema_target_schema")
+        == capacity_adapter.TARGET_SNAPSHOT_SCHEMA
+        and payload.get("capacity_snapshot_maximum_launch_age_seconds")
+        == capacity_adapter.MAX_LAUNCH_AGE_SECONDS
         and payload.get("new_backend_created") is False
         and payload.get("new_queue_or_campaign_created") is False
         and payload.get("scientific_contract_changed") is False

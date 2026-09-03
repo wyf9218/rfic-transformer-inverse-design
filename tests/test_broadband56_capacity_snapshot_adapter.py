@@ -242,6 +242,124 @@ def test_legacy_capacity_schema_keeps_legacy_semantics() -> None:
     assert "adapter_profile" not in result
 
 
+def test_historical_swap_override_receipt_does_not_require_new_adapter_fields() -> None:
+    historical_shape = {
+        "schema": swap_policy.OVERRIDE_RECEIPT_SCHEMA,
+        "overall_status": "PASS",
+        "decision": swap_policy.OVERRIDE_DECISION,
+        "authorization_scope": "OPERATIONAL_SWAP_GATE_ONLY",
+        "campaign_id": CAMPAIGN_ID,
+        "queue_id": SWAP_CONTROLLER.QUEUE_ID,
+        "supervisor_id": SWAP_CONTROLLER.SUPERVISOR_ID,
+        "contract_fingerprint_sha256": SWAP_CONTROLLER.CONTRACT_FINGERPRINT,
+        "swap_policy": swap_policy.SWAP_POLICY,
+        "swap_zero_requirement_removed": True,
+        "nonzero_swap_in_alone_is_advisory": True,
+        "scientific_contract_changed": False,
+        "new_queue_or_campaign_authorized": False,
+        "nn_training_authorized": False,
+        "execution_effect": "NONE_RECORD_ONLY",
+        "checks": [{"name": "historical_approval", "pass": True}],
+    }
+
+    assert SWAP_CONTROLLER._override_exact(historical_shape) is True
+
+
+def test_new_adapter_identity_is_bound_by_operational_overlay(tmp_path: Path) -> None:
+    def identity_file(name: str) -> Path:
+        path = tmp_path / name
+        path.write_text(name, encoding="utf-8")
+        return path
+
+    paths = {
+        name: identity_file(name)
+        for name in (
+            "override.json",
+            "operational_handoff.json",
+            "hotfix_handoff.json",
+            "backend.json",
+            "controller.py",
+            "rebound_helper.py",
+            "base_controller.py",
+            "resource_auditor.py",
+            "base_auditor.py",
+            "isolation_auditor.py",
+            "isolation_module.py",
+        )
+    }
+    inputs = {
+        "backend_identity_manifest": paths["backend.json"],
+        "resource_gate_auditor": paths["resource_auditor.py"],
+    }
+    overlay = {
+        "schema": SWAP_CONTROLLER.OVERLAY_SCHEMA,
+        "overall_status": "PASS",
+        "decision": "BIND_OPERATIONAL_SWAP_POLICY_OVERLAY",
+        "campaign_id": CAMPAIGN_ID,
+        "queue_id": SWAP_CONTROLLER.QUEUE_ID,
+        "supervisor_id": SWAP_CONTROLLER.SUPERVISOR_ID,
+        "contract_fingerprint_sha256": SWAP_CONTROLLER.CONTRACT_FINGERPRINT,
+        "swap_policy": swap_policy.SWAP_POLICY,
+        "capacity_schema_adapter_profile": adapter.ADAPTER_PROFILE,
+        "capacity_schema_source_schema": adapter.SOURCE_SNAPSHOT_SCHEMA,
+        "capacity_schema_target_schema": adapter.TARGET_SNAPSHOT_SCHEMA,
+        "capacity_snapshot_maximum_launch_age_seconds": (
+            adapter.MAX_LAUNCH_AGE_SECONDS
+        ),
+        "new_backend_created": False,
+        "new_queue_or_campaign_created": False,
+        "scientific_contract_changed": False,
+        "nn_training_authorized": False,
+        "override_receipt": _record(paths["override.json"]),
+        "previous_operational_handoff": _record(paths["operational_handoff.json"]),
+        "isolation_hotfix_handoff": _record(paths["hotfix_handoff.json"]),
+        "supervisor_recovery_handoffs": [],
+        "corrected_backend_manifest": _record(paths["backend.json"]),
+        "policy_module": _record(Path(swap_policy.__file__)),
+        "script_identities": {
+            "queue_controller": _record(paths["controller.py"]),
+            "rebound_helper": _record(paths["rebound_helper.py"]),
+            "base_rebound_controller": _record(paths["base_controller.py"]),
+            "resource_gate_auditor": _record(paths["resource_auditor.py"]),
+            "base_resource_gate_auditor": _record(paths["base_auditor.py"]),
+            "isolation_identity_auditor": _record(paths["isolation_auditor.py"]),
+            "isolation_identity_module": _record(paths["isolation_module.py"]),
+            "capacity_policy_module": _record(Path(capacity_policy.__file__)),
+            "capacity_schema_adapter": _record(Path(adapter.__file__)),
+        },
+    }
+
+    assert SWAP_CONTROLLER._overlay_exact(
+        overlay,
+        inputs=inputs,
+        current_wrapper_path=paths["controller.py"],
+        rebound_helper_path=paths["rebound_helper.py"],
+        base_wrapper_path=paths["base_controller.py"],
+        base_auditor_path=paths["base_auditor.py"],
+        override_receipt_path=paths["override.json"],
+        isolation_auditor_path=paths["isolation_auditor.py"],
+        isolation_module_path=paths["isolation_module.py"],
+        previous_operational_handoff_path=paths["operational_handoff.json"],
+        isolation_hotfix_handoff_path=paths["hotfix_handoff.json"],
+        supervisor_recovery_handoff_paths=[],
+    ) is True
+    overlay.pop("capacity_schema_adapter_profile")
+    assert SWAP_CONTROLLER._overlay_exact(
+        overlay,
+        inputs=inputs,
+        current_wrapper_path=paths["controller.py"],
+        rebound_helper_path=paths["rebound_helper.py"],
+        base_wrapper_path=paths["base_controller.py"],
+        base_auditor_path=paths["base_auditor.py"],
+        override_receipt_path=paths["override.json"],
+        isolation_auditor_path=paths["isolation_auditor.py"],
+        isolation_module_path=paths["isolation_module.py"],
+        previous_operational_handoff_path=paths["operational_handoff.json"],
+        isolation_hotfix_handoff_path=paths["hotfix_handoff.json"],
+        supervisor_recovery_handoff_paths=[],
+    ) is False
+
+
 def test_unknown_source_schema_fails_closed(tmp_path: Path) -> None:
     source_path, gate_path, *_ = _materialize(
         tmp_path,
