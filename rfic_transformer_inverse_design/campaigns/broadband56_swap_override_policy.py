@@ -214,9 +214,10 @@ def evaluate_capacity_snapshot(
         and collision is False
     )
 
+    initial_launch = str(stage).strip().upper() in {"GOLDEN", "PILOT_32"}
     checks = {
-        "normalized_load1_gate": metrics["normalized_load1"] <= 0.90,
-        "normalized_load5_gate": metrics["normalized_load5"] <= 0.95,
+        "normalized_load1_gate": metrics["normalized_load1"] <= (1.10 if initial_launch else 0.90),
+        "normalized_load5_gate": metrics["normalized_load5"] <= (1.10 if initial_launch else 0.95),
         "memory_gate": (
             metrics["available_memory_fraction"]
             >= MIN_AVAILABLE_MEMORY_FRACTION

@@ -12,6 +12,8 @@ from rfic_transformer_inverse_design.campaigns.broadband56_capacity_policy impor
 from rfic_transformer_inverse_design.campaigns.broadband56_swap_override_policy import (
     SNAPSHOT_SCHEMA,
     SWAP_POLICY,
+    adaptive_concurrency,
+    combined_swap_thrashing,
     evaluate_capacity_snapshot,
 )
 
@@ -211,3 +213,105 @@ def test_snapshot_is_not_mutated() -> None:
     _evaluate(snapshot)
 
     assert snapshot == before
+
+
+@pytest.fixture
+def no_child_processes(monkeypatch):
+    def forbidden(*args, **kwargs):
+        pytest.fail("Resource-policy tests must not launch child processes")
+
+    monkeypatch.setattr("subprocess.Popen", forbidden)
+    monkeypatch.setattr("os.system", forbidden)
+    monkeypatch.setattr("os.fork", forbidden)
+    monkeypatch.setattr("os.posix_spawn", forbidden)
+
+
+def _cpu_snapshot(load1: float = 0.999006, load5: float = 0.992912) -> dict:
+    snapshot = _snapshot()
+    cpus = snapshot["resources"]["logical_cpu_count"]
+    snapshot["resources"].update(load_1m=load1 * cpus, load_5m=load5 * cpus)
+    return snapshot
+
+
+@pytest.mark.parametrize("stage", ["GOLDEN", "PILOT_32"])
+@pytest.mark.parametrize("load1,load5", [(0.999006, 0.992912), (1.10, 1.10)])
+def test_initial_cpu_thresholds_pass_at_owner_values_and_boundary(
+    stage, load1, load5, no_child_processes
+) -> None:
+    result = evaluate_capacity_snapshot(_cpu_snapshot(load1, load5), stage=stage, current_accepted=0)
+
+    assert result["pass"] is True
+    metrics = result["metrics"]
+    concurrency = adaptive_concurrency(
+        stage=stage,
+        logical_cpu_count=metrics["logical_cpu_count"],
+        simulator_license_capacity=metrics["simulator_license_capacity"],
+        current_concurrency=None,
+        healthy_check_streak=0,
+        normalized_load1=metrics["normalized_load1"],
+        iowait_percent=metrics["iowait_percent"],
+        available_memory_fraction=metrics["available_memory_fraction"],
+        active_swap_thrashing=metrics["active_swap_thrashing"],
+        licenses_available=result["checks"]["license_gate"],
+    )
+    assert concurrency["concurrency"] == 1
+
+
+@pytest.mark.parametrize("stage", ["GOLDEN", "PILOT_32"])
+@pytest.mark.parametrize(
+    "load1,load5,failed_check",
+    [(1.100001, 0.992912, "normalized_load1_gate"), (0.999006, 1.100001, "normalized_load5_gate")],
+)
+def test_initial_cpu_thresholds_reject_either_value_above_boundary(
+    stage, load1, load5, failed_check, no_child_processes
+) -> None:
+    result = evaluate_capacity_snapshot(_cpu_snapshot(load1, load5), stage=stage, current_accepted=0)
+
+    assert result["pass"] is False
+    assert result["failed_checks"] == [failed_check]
+
+
+@pytest.mark.parametrize("stage", ["GOLDEN", "PILOT_32"])
+@pytest.mark.parametrize(
+    "section,field,value,failed_check",
+    [
+        ("resources", "memory_available_bytes", 399_000, "memory_gate"),
+        ("resources", "oom_kill_delta", 1, "no_oom_gate"),
+        ("resources", "swap_out_pages_delta", 60, "swap_thrash_gate"),
+        ("resources", "iowait_percent", 5.0, "iowait_gate"),
+        ("resources", "filesystem_free_bytes", 0, "storage_gate"),
+        ("licenses", "cadence_available", False, "license_gate"),
+        ("licenses", "calibre_available", False, "license_gate"),
+        ("licenses", "emx_available", False, "license_gate"),
+        ("isolation", "authoritative_supervisor_count", 0, "isolation_gate"),
+        ("isolation", "authoritative_supervisor_count", 2, "isolation_gate"),
+        ("isolation", "duplicate_supervisor_count", 1, "isolation_gate"),
+        ("isolation", "duplicate_runner_count", 1, "isolation_gate"),
+        ("isolation", "unexpected_project_child_count", 1, "isolation_gate"),
+        ("isolation", "output_path_collision", True, "isolation_gate"),
+    ],
+)
+def test_hard_gates_still_block_at_newly_admitted_cpu_load(
+    stage, section, field, value, failed_check, no_child_processes
+) -> None:
+    snapshot = _cpu_snapshot()
+    snapshot[section][field] = value
+    snapshot["resources"]["active_swap_thrashing"] = combined_swap_thrashing(snapshot["resources"])["active"]
+
+    result = evaluate_capacity_snapshot(snapshot, stage=stage, current_accepted=0)
+
+    assert result["pass"] is False
+    assert result["checks"][failed_check] is False
+
+
+@pytest.mark.parametrize("stage", ["PILOT_1000", "PHASE_A", "PHASE_B", "PHASE_C"])
+def test_later_stage_cpu_thresholds_are_unchanged(stage, no_child_processes) -> None:
+    snapshot = _cpu_snapshot()
+    snapshot["resources"]["filesystem_free_bytes"] = 10**15
+    result = evaluate_capacity_snapshot(
+        snapshot, stage=stage, current_accepted=0, measured_pilot_bytes_per_geometry=1024
+    )
+
+    assert result["pass"] is False
+    assert result["checks"]["normalized_load1_gate"] is False
+    assert result["checks"]["normalized_load5_gate"] is False
