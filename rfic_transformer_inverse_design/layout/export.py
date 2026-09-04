@@ -2202,6 +2202,23 @@ def _inductor_export_layer_datatypes(
     )
 
 
+def _port_ground_endpoint_grid_units(
+    *, ground_reference_um: float, outward_sign: int, grid_um: float,
+) -> int:
+    """Construct a terminal from a snapped ground edge, never a rounded span."""
+    from decimal import Decimal, ROUND_HALF_EVEN
+
+    grid = Decimal(str(grid_um))
+    reference = Decimal(str(ground_reference_um))
+    if not grid.is_finite() or grid <= 0 or not reference.is_finite():
+        raise ValueError("port-ground reference and grid must be finite and grid positive")
+    overlap = Decimal(str(POWER_LINE_8PORT_PORT_GROUND_OVERLAP_UM)) / grid
+    if outward_sign not in (-1, 1) or overlap != overlap.to_integral_value():
+        raise ValueError("port-ground overlap must be an integral number of grid units")
+    anchor = int((reference / grid).to_integral_value(rounding=ROUND_HALF_EVEN))
+    return anchor + outward_sign * int(overlap)
+
+
 def _add_vdd_bar(
     *,
     cell,
@@ -2221,6 +2238,7 @@ def _add_vdd_bar(
     bottom_port_label: str | None = None,
     top_ground_label: str | None = None,
     bottom_ground_label: str | None = None,
+    port_ground_grid_um: float | None = None,
 ) -> VddBarPlacement | None:
     import gdstk
 
@@ -2264,9 +2282,25 @@ def _add_vdd_bar(
                 datatype=metal_datatype,
             )
         )
+    bar_bottom_um = center_y_um - half_bar_height_um
+    bar_top_um = center_y_um + half_bar_height_um
+    if port_ground_grid_um is not None:
+        # The frame snaps its inner edge independently. Anchor both bar ends
+        # there before polygon canonicalization, avoiding round(start)+round(span).
+        overlap_um = _power_line_port_ground_overlap_um()
+        bottom_units = _port_ground_endpoint_grid_units(
+            ground_reference_um=bar_bottom_um + overlap_um,
+            outward_sign=-1, grid_um=port_ground_grid_um,
+        )
+        top_units = _port_ground_endpoint_grid_units(
+            ground_reference_um=bar_top_um - overlap_um,
+            outward_sign=1, grid_um=port_ground_grid_um,
+        )
+        bar_bottom_um = bottom_units * port_ground_grid_um
+        bar_top_um = top_units * port_ground_grid_um
     bar = gdstk.rectangle(
-        (center_x_um - 0.5 * bar_width_um, center_y_um - half_bar_height_um),
-        (center_x_um + 0.5 * bar_width_um, center_y_um + half_bar_height_um),
+        (center_x_um - 0.5 * bar_width_um, bar_bottom_um),
+        (center_x_um + 0.5 * bar_width_um, bar_top_um),
         layer=bar_layer,
         datatype=metal_datatype,
     )
@@ -2825,6 +2859,7 @@ def export_transformer_layout(
                 else None
             ),
             target_center_x_um=primary_bar_center_x_um,
+            port_ground_grid_um=(manufacturing_grid_um if foundry_layout_enabled and power_line_8port_enabled else None),
         )
     if secondary_terminals.center_tap is not None and export_secondary_geometry.vdd_bar is not None and export_secondary_geometry.vdd_bar.enabled:
         secondary_vdd_bar = _add_vdd_bar(
@@ -2861,6 +2896,7 @@ def export_transformer_layout(
                 else None
             ),
             target_center_x_um=secondary_bar_center_x_um,
+            port_ground_grid_um=(manufacturing_grid_um if foundry_layout_enabled and power_line_8port_enabled else None),
         )
     cadence_pin_labels = run_config.emx.uses_cadence_pins()
     signal_label_layers = {
