@@ -72,8 +72,51 @@ def test_direct_to_cadence_polygon_drift_fails_closed(tmp_path: Path) -> None:
     record = json.loads(
         next((fixture["out_dir"] / "records").glob("*.json")).read_text()
     )
-    assert record["checks"]["direct_and_cadence_polygon_multisets_equal"] is False
+    assert record["checks"]["direct_and_cadence_layer_unions_equal"] is False
     assert record["automatic_calibre_authorized"] is False
+
+
+def test_equivalent_polygon_partition_passes_physical_identity(
+    tmp_path: Path,
+) -> None:
+    fixture = _fixture(tmp_path, offsets=(0.0,))
+    cadence_gds = fixture["cadence_gds_paths"][0]
+    _write_gds(cadence_gds, offset=0.0, cadence=True, partitioned=True)
+    _refresh_index_and_audit(fixture, row_index=0)
+
+    result = _run(fixture)
+
+    assert result["overall_status"] == "PASS"
+    record = json.loads(
+        next((fixture["out_dir"] / "records").glob("*.json")).read_text()
+    )
+    assert record["checks"]["direct_and_cadence_layer_unions_equal"] is True
+    assert record["checks"][
+        "direct_and_cadence_physical_structures_equal"
+    ] is True
+    assert record["diagnostics"][
+        "direct_and_cadence_polygon_multisets_equal"
+    ] is False
+
+
+def test_contained_duplicate_pin_polygon_passes_physical_identity(
+    tmp_path: Path,
+) -> None:
+    fixture = _fixture(tmp_path, offsets=(0.0,))
+    cadence_gds = fixture["cadence_gds_paths"][0]
+    _write_gds(cadence_gds, offset=0.0, cadence=True, contained_overlay=True)
+    _refresh_index_and_audit(fixture, row_index=0)
+
+    result = _run(fixture)
+
+    assert result["overall_status"] == "PASS"
+    record = json.loads(
+        next((fixture["out_dir"] / "records").glob("*.json")).read_text()
+    )
+    assert record["checks"]["direct_and_cadence_layer_unions_equal"] is True
+    assert record["diagnostics"][
+        "direct_and_cadence_polygon_multisets_equal"
+    ] is False
 
 
 def test_duplicate_physical_gds_is_not_counted_as_two_geometries(
@@ -295,18 +338,45 @@ def _write_gds(
     offset: float,
     cadence: bool,
     pin_offset_um: float = 0.001,
+    partitioned: bool = False,
+    contained_overlay: bool = False,
 ) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     library = gdstk.Library(unit=1.0e-6, precision=1.0e-9)
     cell = gdstk.Cell("TRANSFORMER")
-    cell.add(
-        gdstk.rectangle(
-            (offset, 0.0),
-            (offset + 10.0, 10.0),
-            layer=35,
-            datatype=0,
+    if partitioned:
+        cell.add(
+            gdstk.rectangle(
+                (offset, 0.0),
+                (offset + 5.0, 10.0),
+                layer=35,
+                datatype=0,
+            ),
+            gdstk.rectangle(
+                (offset + 5.0, 0.0),
+                (offset + 10.0, 10.0),
+                layer=35,
+                datatype=0,
+            ),
         )
-    )
+    else:
+        cell.add(
+            gdstk.rectangle(
+                (offset, 0.0),
+                (offset + 10.0, 10.0),
+                layer=35,
+                datatype=0,
+            )
+        )
+    if contained_overlay:
+        cell.add(
+            gdstk.rectangle(
+                (offset + 1.0, 1.0),
+                (offset + 9.0, 9.0),
+                layer=35,
+                datatype=0,
+            )
+        )
     layers = {
         "P001": 126,
         "P002": 126,

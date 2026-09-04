@@ -167,6 +167,7 @@ class TransformerZeusCadenceTest(unittest.TestCase):
         self.assertIn("pinFig = _xfmrCreateLabelPinRect(cv label pinFig manufacturingGrid)", skill)
         self.assertIn('pinLpp = list(car(labelFig~>lpp) "pin")', skill)
         self.assertIn('pin~>accessDir = accessDir', skill)
+        self.assertNotIn("dbDeleteObject(pinFig)", skill)
         self.assertNotIn("labelFig~>xy =", skill)
 
     def test_build_create_pins_batch_skill_handles_multiple_cells(self) -> None:

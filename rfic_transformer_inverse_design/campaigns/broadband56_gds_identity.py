@@ -2,9 +2,11 @@
 
 The audit binds each canonical candidate and geometry identity to one Cadence
 stream-out GDS, then compares its flattened physical representation with the
-direct-layout GDS from the same evaluation directory. Only polygons and base
-layout label markers contribute to the physical hash. Cadence OA display-pin
-labels are checked separately and may move by at most one 5 nm grid step.
+direct-layout GDS from the same evaluation directory. Polygon partitioning is
+canonicalized as a per-layer Boolean union before it contributes to the
+physical hash. Base layout label markers also contribute to the hash. Cadence
+OA display-pin labels are checked separately and may move by at most one 5 nm
+grid step.
 
 This module performs no simulator action and has no subprocess capability.
 """
@@ -29,7 +31,7 @@ from rfic_transformer_inverse_design.campaigns.broadband56_capacity_policy impor
     SCIENTIFIC_CONTRACT_FINGERPRINT,
 )
 AUDIT_SCHEMA = "rfic_transformer.broadband56_v2_gds_physical_identity_audit.v1"
-STRUCTURAL_SCHEMA = "flattened_gds_polygon_label_pin_physical_identity_pm_v1"
+STRUCTURAL_SCHEMA = "flattened_gds_layer_union_label_pin_physical_identity_pm_v2"
 GDS_TIMESTAMP_NORMALIZED_SHA256_ALGORITHM = (
     "gdsii-record-sha256-zero-bgnlib-bgnstr-timestamps-v1"
 )
@@ -274,7 +276,7 @@ def audit_gds_physical_identity(
             "maximum_cadence_pin_label_offset_pm": (
                 MAX_CADENCE_PIN_LABEL_OFFSET_PM
             ),
-            "direct_and_cadence_polygon_multisets_must_match": True,
+            "direct_and_cadence_layer_unions_must_match": True,
             "direct_and_cadence_base_label_sets_must_match": True,
             "candidate_physical_hashes_must_be_unique": True,
         },
@@ -314,6 +316,11 @@ def gds_structural_identity(path: Path) -> dict[str, Any]:
     polygon_records = sorted(
         _polygon_record(polygon, unit_m=float(library.unit))
         for polygon in polygons
+    )
+    layer_union_records = _layer_union_polygon_records(
+        polygons,
+        unit_m=float(library.unit),
+        precision_m=float(library.precision),
     )
     base_label_records = [
         _label_marker_record(label, unit_m=float(library.unit))
@@ -368,6 +375,13 @@ def gds_structural_identity(path: Path) -> dict[str, Any]:
             "records": polygon_records,
         }
     )
+    layer_union_hash = _json_sha256(
+        {
+            "schema": STRUCTURAL_SCHEMA,
+            "kind": "layer_union",
+            "records": layer_union_records,
+        }
+    )
     label_hash = _json_sha256(
         {
             "schema": STRUCTURAL_SCHEMA,
@@ -378,7 +392,7 @@ def gds_structural_identity(path: Path) -> dict[str, Any]:
     structural_hash = _json_sha256(
         {
             "schema": STRUCTURAL_SCHEMA,
-            "polygon_multiset_sha256": polygon_hash,
+            "layer_union_sha256": layer_union_hash,
             "label_pin_set_sha256": label_hash,
         }
     )
@@ -387,8 +401,10 @@ def gds_structural_identity(path: Path) -> dict[str, Any]:
         "structural_schema": STRUCTURAL_SCHEMA,
         "structural_sha256": structural_hash,
         "polygon_multiset_sha256": polygon_hash,
+        "layer_union_sha256": layer_union_hash,
         "label_pin_set_sha256": label_hash,
         "polygon_count": len(polygon_records),
+        "layer_union_polygon_count": len(layer_union_records),
         "base_layout_label_marker_count": len(base_label_set),
         "cadence_oa_pin_label_marker_count": len(cadence_pin_records),
         "cadence_oa_pin_label_max_offset_pm": _maximum_pin_offset_pm(
@@ -539,10 +555,10 @@ def _audit_candidate(
         == "PASS",
         "cadence_structural_audit_pass": cadence_identity["overall_status"]
         == "PASS",
-        "direct_and_cadence_polygon_multisets_equal": direct_identity[
-            "polygon_multiset_sha256"
+        "direct_and_cadence_layer_unions_equal": direct_identity[
+            "layer_union_sha256"
         ]
-        == cadence_identity["polygon_multiset_sha256"],
+        == cadence_identity["layer_union_sha256"],
         "direct_and_cadence_base_label_sets_equal": direct_identity[
             "label_pin_set_sha256"
         ]
@@ -575,6 +591,12 @@ def _audit_candidate(
         ],
         "direct_structure": direct_identity,
         "cadence_structure": cadence_identity,
+        "diagnostics": {
+            "direct_and_cadence_polygon_multisets_equal": direct_identity[
+                "polygon_multiset_sha256"
+            ]
+            == cadence_identity["polygon_multiset_sha256"],
+        },
         "checks": checks,
         "failed_checks": [name for name, passed in checks.items() if not passed],
         "automatic_calibre_authorized": False,
@@ -597,6 +619,49 @@ def _polygon_record(polygon: Any, *, unit_m: float) -> tuple[Any, ...]:
     if len(points) < 3:
         raise GdsIdentityError("flattened polygon has fewer than three vertices")
     return (int(polygon.layer), int(polygon.datatype), _canonical_ring(points))
+
+
+def _layer_union_polygon_records(
+    polygons: Iterable[Any],
+    *,
+    unit_m: float,
+    precision_m: float,
+) -> list[tuple[Any, ...]]:
+    """Canonicalize polygon partitioning without tolerating physical drift."""
+
+    try:
+        import gdstk
+    except ImportError as exc:  # pragma: no cover - production environment gate.
+        raise GdsIdentityError("gdstk is required for GDS identity audit") from exc
+
+    if not math.isfinite(precision_m) or precision_m <= 0.0:
+        raise GdsIdentityError("GDS precision must be finite and positive")
+    if not math.isfinite(unit_m) or unit_m <= 0.0:
+        raise GdsIdentityError("GDS unit must be finite and positive")
+
+    grouped: dict[tuple[int, int], list[Any]] = defaultdict(list)
+    for polygon in polygons:
+        grouped[(int(polygon.layer), int(polygon.datatype))].append(polygon)
+
+    precision_user_units = precision_m / unit_m
+    records: list[tuple[Any, ...]] = []
+    for (layer, datatype), group in sorted(grouped.items()):
+        union = gdstk.boolean(
+            group,
+            [],
+            "or",
+            precision=precision_user_units,
+            layer=layer,
+            datatype=datatype,
+        )
+        if not union:
+            raise GdsIdentityError(
+                f"layer union unexpectedly empty: layer={layer}, datatype={datatype}"
+            )
+        records.extend(
+            _polygon_record(polygon, unit_m=unit_m) for polygon in union
+        )
+    return sorted(records)
 
 
 def _remove_redundant_ring_points(

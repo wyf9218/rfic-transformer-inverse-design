@@ -551,7 +551,6 @@ def build_create_pins_batch_skill(
         "    bbox = nil\n"
         "    when(pinFig\n"
         "      bbox = pinFig~>bBox\n"
-        "      dbDeleteObject(pinFig)\n"
         "    )\n"
         "    pinLpp = list(car(labelFig~>lpp) \"pin\")\n"
         "    if(bbox then\n"
