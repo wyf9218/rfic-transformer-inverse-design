@@ -4,6 +4,11 @@ import csv
 import importlib.util
 import json
 from pathlib import Path
+from types import SimpleNamespace
+
+import pytest
+
+from rfic_transformer_inverse_design.campaigns.broadband56_balanced200k import canonical_geometry_sha256
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -38,7 +43,7 @@ def _fixture(tmp_path: Path) -> list[str]:
         },
     )
     geometry = {name: float(index + 1) for index, name in enumerate(MODULE.GEOMETRY_FIELDS)}
-    geometry_sha = "a" * 64
+    geometry_sha = canonical_geometry_sha256(geometry)
     source = _write_json(
         tmp_path / "source.json",
         {
@@ -58,6 +63,8 @@ def _fixture(tmp_path: Path) -> list[str]:
     queue = tmp_path / "queue.csv"
     row = {
         "campaign_id": MODULE.CAMPAIGN_ID,
+        "campaign_phase": "PHASE_A",
+        "acquisition_source": MODULE.SAFE_ANCHOR_SOURCE,
         "campaign_contract_fingerprint": MODULE.CONTRACT_FINGERPRINT,
         "analytical_status": "PASS",
         "topology_status": "PASS",
@@ -125,13 +132,39 @@ def test_materializes_exact_geometry_only_golden(tmp_path: Path) -> None:
     assert MODULE.main(argv) == 0
     receipt = json.loads((tmp_path / "out" / MODULE.OUTPUT_NAME).read_text())
     assert receipt["overall_status"] == "PASS"
-    assert receipt["safe_anchor_geometry_sha256"] == "a" * 64
+    assert receipt["safe_anchor_geometry_sha256"] == argv[argv.index("--expected-safe-anchor-geometry-sha256") + 1]
+    assert receipt["source_contract"] == MODULE.SOURCE_CONTRACT
     assert receipt["historical_gds_reused"] is False
     assert receipt["historical_s4p_reused"] is False
     assert receipt["proxy_or_physical_labels_present"] is False
     assert MODULE._sha256(tmp_path / "out" / MODULE.QUEUE_NAME) == MODULE._sha256(
         tmp_path / "queue.csv"
     )
+
+
+def test_pilot_delegate_always_excludes_exact_historical_anchor(tmp_path, monkeypatch):
+    private, argv = MODULE._parse_private_args(_fixture(tmp_path))
+    argv[argv.index("--stage") + 1] = "PILOT_32"
+    observed = []
+    def run(command, **kwargs):
+        observed.append((command, kwargs))
+        return SimpleNamespace(returncode=0)
+    monkeypatch.setattr(MODULE.subprocess, "run", run)
+    assert MODULE._run_delegate(private, argv) == 0
+    command, kwargs = observed[0]
+    assert command[-2:] == ["--exclude-geometry-csv", str(tmp_path / "queue.csv")]
+    assert command[2:-2] == argv
+    assert kwargs["shell"] is False
+
+
+def test_pilot_delegate_rejects_changed_anchor_before_child(tmp_path, monkeypatch):
+    private, argv = MODULE._parse_private_args(_fixture(tmp_path))
+    (tmp_path / "queue.csv").write_text("changed")
+    def forbidden(*args, **kwargs):
+        raise AssertionError("must reject before delegation")
+    monkeypatch.setattr(MODULE.subprocess, "run", forbidden)
+    with pytest.raises(MODULE.BoundQueueError, match="exclusion queue SHA"):
+        MODULE._run_delegate(private, argv)
 
 
 def test_rejects_approval_config_identity_drift(tmp_path: Path) -> None:

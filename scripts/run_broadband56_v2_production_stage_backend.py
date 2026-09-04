@@ -75,6 +75,7 @@ from rfic_transformer_inverse_design.campaigns.broadband56_stage_progress import
     validate_stage_progress_chain,
     validate_stage_progress_receipt,
 )
+from rfic_transformer_inverse_design.campaigns import broadband56_golden_stage as golden_stage
 
 
 TRACE_SCHEMA = "rfic_transformer.broadband56_v2_stage_execution_trace.v1"
@@ -328,6 +329,7 @@ def run_stage_backend(
         )
     progress_source_path: Path | None = None
     progress_receipt: dict[str, Any] | None = None
+    golden_finalizer_record: dict[str, Any] | None = None
     for index, (role, command_profile) in enumerate(
         zip(expected_roles, commands),
         start=1,
@@ -428,6 +430,11 @@ def run_stage_backend(
                 progress_source_path = candidate_progress_path
                 progress_receipt = candidate_progress
                 break
+            if decision == golden_stage.FINALIZER_DECISION:
+                if stage_profile.get("golden_terminal_mode") != golden_stage.TERMINAL_MODE:
+                    raise ProductionStageBackendError("profile lacks the explicit Golden validation-only terminal")
+                golden_finalizer_record = _file_record(receipt_path)
+                break
 
     trace_path = out_dir / "STAGE_EXECUTION_TRACE.json"
     trace = {
@@ -435,14 +442,19 @@ def run_stage_backend(
         "generated_utc": _utc_now(),
         "overall_status": "INCOMPLETE" if progress_receipt else "PASS",
         "decision": (
-            STAGE_PROGRESS_DECISION if progress_receipt else "COMPLETE_STAGE_ROLE_CHAIN"
+            STAGE_PROGRESS_DECISION if progress_receipt else (
+                golden_stage.FINALIZER_DECISION if golden_finalizer_record else "COMPLETE_STAGE_ROLE_CHAIN"
+            )
         ),
         "campaign_id": CAMPAIGN_ID,
         "contract_fingerprint_sha256": SCIENTIFIC_CONTRACT_FINGERPRINT,
         "backend_id": PRODUCTION_BACKEND_ID,
         "stage": stage,
         "role_order": [item["role"] for item in completed_roles],
-        "expected_terminal_role_order": list(expected_roles),
+        "expected_terminal_role_order": (
+            list(expected_roles[:expected_roles.index("stage_attempt_finalizer") + 1])
+            if golden_finalizer_record else list(expected_roles)
+        ),
         "roles": completed_roles,
         "all_role_return_codes_zero": all(
             item["return_code"] == 0 for item in completed_roles
@@ -497,25 +509,25 @@ def run_stage_backend(
         )
         return progress_receipt
 
-    result_paths = {
-        field: resolve_under(
-            out_dir,
-            str(relative),
-            label=f"result_paths.{field}",
+    if golden_finalizer_record is not None:
+        receipt = _build_golden_validation_stage_receipt(
+            golden_finalizer_record, context_path=context_path, trace_path=trace_path,
+            resource_summary_path=resource_summary_path,
+            backend_sha256=backend_sha256, authorization_sha256=authorization_sha256,
         )
-        for field, relative in stage_profile["result_paths"].items()
-    }
-    receipt = _build_stage_receipt(
-        stage=stage,
-        cumulative_target=spec.cumulative_target,
-        backend_manifest_sha256=backend_sha256,
-        authorization_receipt_sha256=authorization_sha256,
-        prior_stage_receipt_sha256=_sha256(prior_path) if prior_path else None,
-        out_dir=out_dir,
-        result_paths=result_paths,
-        trace_path=trace_path,
-        resource_summary_path=resource_summary_path,
-    )
+    else:
+        result_paths = {
+            field: resolve_under(out_dir, str(relative), label=f"result_paths.{field}")
+            for field, relative in stage_profile["result_paths"].items()
+        }
+        receipt = _build_stage_receipt(
+            stage=stage, cumulative_target=spec.cumulative_target,
+            backend_manifest_sha256=backend_sha256,
+            authorization_receipt_sha256=authorization_sha256,
+            prior_stage_receipt_sha256=_sha256(prior_path) if prior_path else None,
+            out_dir=out_dir, result_paths=result_paths,
+            trace_path=trace_path, resource_summary_path=resource_summary_path,
+        )
     receipt_errors = validate_stage_receipt(
         receipt,
         stage=stage,
@@ -584,6 +596,17 @@ def _validate_stage_attempt_finalizer_receipt(
         )
 
     decision = receipt.get("decision")
+    if decision == golden_stage.FINALIZER_DECISION:
+        if stage != "GOLDEN" or progress_records or current_accepted != 0 or accepted_after != 0:
+            raise ProductionStageBackendError("validation-only finalizer is not the initial Golden")
+        _evidence_path(receipt.get("golden_attempt_products_receipt"),
+                       label="Golden attempt products", artifact_root=backend_out_dir)
+        try:
+            golden_stage.validate_finalizer(receipt, backend_sha256=backend_manifest_sha256,
+                                            authorization_sha256=authorization_receipt_sha256)
+        except (golden_stage.GoldenSourceError, OSError, ValueError, TypeError, KeyError) as exc:
+            raise ProductionStageBackendError(f"Golden finalizer evidence failed: {exc}") from exc
+        return decision, None, None
     if decision == STAGE_PROGRESS_DECISION:
         if accepted_after >= cumulative_target:
             raise ProductionStageBackendError(
@@ -645,6 +668,52 @@ def _validate_stage_attempt_finalizer_receipt(
             artifact_root=role_out_dir,
         )
     return STAGE_ATTEMPT_TARGET_REACHED_DECISION, None, None
+
+
+def _build_golden_validation_stage_receipt(
+    finalizer_record: Mapping[str, Any], *, context_path: Path, trace_path: Path,
+    resource_summary_path: Path, backend_sha256: str, authorization_sha256: str,
+) -> dict[str, Any]:
+    finalizer = _read_json(Path(finalizer_record["path"]), "Golden finalizer")
+    attempt = golden_stage.validate_finalizer(finalizer, backend_sha256=backend_sha256,
+                                              authorization_sha256=authorization_sha256)
+    return {
+        "schema": STAGE_RECEIPT_SCHEMA, "generated_utc": _utc_now(), "overall_status": "PASS",
+        "decision": "ACCEPT_STAGE", "campaign_id": CAMPAIGN_ID,
+        "contract_fingerprint_sha256": SCIENTIFIC_CONTRACT_FINGERPRINT,
+        "backend_id": PRODUCTION_BACKEND_ID, "stage": "GOLDEN",
+        "terminal_state": STAGE_BY_NAME["GOLDEN"].receipt_status, "cumulative_target": 1,
+        "accepted_unique_geometries": 0, "production_accepted_count_delta": 0,
+        "golden_terminal_mode": golden_stage.TERMINAL_MODE,
+        "validation_geometry_count": 1, "validation_feature_rows": 56,
+        "golden_validation": attempt["golden_validation"],
+        "backend_identity_manifest_sha256": backend_sha256,
+        "full_campaign_authorization_receipt_sha256": authorization_sha256,
+        "prior_stage_receipt_sha256": None, "frequency_contract": expected_frequency_contract(),
+        "port_and_grounding_contract": PORT_AND_GROUNDING_CONTRACT, "label_source": "FRESH_REAL_EMX_ONLY",
+        "counts": {key: 0 for key in (
+            "accepted_unique_geometries", "valid_s4p_geometries", "feature_complete_geometries",
+            "s4p_artifacts", "independent_designs", "geometry_frequency_rows",
+            "broadband_descriptor_valid_rows", "strict_lumped_valid_rows",
+        )},
+        "safeguards": {key: 0 for key in (
+            "proxy_label_count", "historical_label_count", "interpolated_frequency_record_count",
+            "accepted_duplicate_geometry_count", "accepted_blocking_calibre_count",
+            "manual_gds_modification_count", "mixed_contract_fingerprint_count",
+        )},
+        "gates": {key: True for key in STAGE_GATE_FIELDS},
+        "failure_accounting": attempt["failure_accounting"],
+        "artifacts": {
+            "golden_attempt_products_receipt": finalizer["golden_attempt_products_receipt"],
+            "stage_attempt_finalizer_receipt": dict(finalizer_record),
+            "stage_execution_trace": _file_record(trace_path),
+            "resource_summary": _file_record(resource_summary_path),
+            "stage_context": _file_record(context_path),
+            "accepted_geometry_index": attempt["accepted_geometry_increment"],
+            "rejected_geometry_index": attempt["rejected_geometry_increment"],
+            "validation_geometry": attempt["validation_products"]["validation_geometry"],
+        },
+    }
 
 
 def _build_stage_receipt(

@@ -7,6 +7,8 @@ import subprocess
 import sys
 from pathlib import Path
 
+from scripts.broadband56_emx_runtime import REQUIRED_MODULES, SCHEMA
+
 from rfic_transformer_inverse_design.campaigns.broadband56_balanced200k import (
     CAMPAIGN_ID,
     TARGET_ACCEPTED_GEOMETRIES,
@@ -147,6 +149,18 @@ def _fixture(root: Path, *, candidate_ids: tuple[str, ...]) -> dict:
     module.write_text("VALUE = 1\n", encoding="utf-8")
     runner = root / "fake_exact_runner.py"
     runner.write_text(_fake_runner_source(), encoding="utf-8")
+    runtime = root / "emx_runtime.json"
+    runtime.write_text(json.dumps({
+        "schema": SCHEMA,
+        "python_launcher": _file_record(Path(sys.executable).resolve()),
+        "python_runtime": _file_record(Path(sys.executable).resolve()),
+        "entrypoint": _file_record(runner),
+        "bootstrap": _file_record(ROOT / "scripts/broadband56_emx_runtime.py"),
+        "runtime_root": str(root.resolve()),
+        "dependency_roots": [],
+        "environment": {"PATH": "/usr/bin:/bin"},
+        "modules": {name: _file_record(module) for name in REQUIRED_MODULES},
+    }))
 
     rows = []
     for index, candidate_id in enumerate(candidate_ids, start=1):
@@ -195,6 +209,7 @@ def _fixture(root: Path, *, candidate_ids: tuple[str, ...]) -> dict:
             {
                 "campaign_id": CAMPAIGN_ID,
                 "contract_fingerprint_sha256": SCIENTIFIC_CONTRACT_FINGERPRINT,
+                "emx_python_runtime": _file_record(runtime),
                 "script_identities": {
                     "exact_audited_gds_emx_runner": _file_record(SCRIPT),
                     "exact_audited_gds_emx_single_runner": _file_record(runner),

@@ -31,6 +31,9 @@ from rfic_transformer_inverse_design.campaigns.broadband56_full_campaign_authori
     FULL_CAMPAIGN_APPROVAL_SCOPE,
     FULL_CAMPAIGN_PASS_DECISION,
 )
+from rfic_transformer_inverse_design.campaigns.broadband56_golden_source import (  # noqa: E402
+    GoldenSourceError, validate_safe_anchor_source,
+)
 
 
 RECEIPT_SCHEMA = "rfic_transformer.broadband56_v2_exact56_s4p_qa_batch.v1"
@@ -93,7 +96,7 @@ def main(argv: list[str] | None = None) -> int:
         return 2
     try:
         receipt = run_batch(args, out_dir=out_dir)
-    except (Exact56QaBatchError, OSError, json.JSONDecodeError) as exc:
+    except (Exact56QaBatchError, GoldenSourceError, OSError, json.JSONDecodeError) as exc:
         print(f"overall_status=FAIL\nerror={exc}", file=sys.stderr)
         return 2
     print("overall_status=PASS")
@@ -112,6 +115,7 @@ def _parse_args(argv: list[str] | None) -> argparse.Namespace:
     parser.add_argument("--full-campaign-receipt", required=True)
     parser.add_argument("--max-concurrency", type=int, required=True)
     parser.add_argument("--out-dir", required=True)
+    parser.add_argument("--golden-source-receipt")
     return parser.parse_args(argv)
 
 
@@ -169,6 +173,20 @@ def run_batch(args: argparse.Namespace, *, out_dir: Path) -> dict[str, Any]:
         "input_receipt": (input_receipt_path, _sha256(input_receipt_path)),
         "input_index": (input_index_path, _sha256(input_index_path)),
     }
+    golden_source = None
+    if getattr(args, "golden_source_receipt", None):
+        source_path = _regular_file(Path(args.golden_source_receipt), "Golden source receipt")
+        golden_source = _file_record(source_path)
+        source = _read_json(source_path, "Golden source receipt")
+        validate_safe_anchor_source(
+            golden_source, stage=stage,
+            geometry_sha256=source.get("safe_anchor_geometry_sha256"),
+            config_sha256=source.get("corrected_private_configuration", {}).get("sha256"),
+            contract_fingerprint=SCIENTIFIC_CONTRACT_FINGERPRINT,
+        )
+        if len(rows) > 1:
+            raise Exact56QaBatchError("historical Golden QA cannot contain multiple geometries")
+        pins["golden_source_receipt"] = (source_path, golden_source["sha256"])
 
     out_dir.mkdir(parents=True, mode=0o700)
     candidates_dir = out_dir / "candidates"
@@ -183,6 +201,8 @@ def run_batch(args: argparse.Namespace, *, out_dir: Path) -> dict[str, Any]:
                 submitted_sequence=index + 1,
                 candidate_dir=candidates_dir
                 / f"{index + 1:06d}_{row['candidate_id_sha256']}",
+                stage=stage,
+                golden_source_receipt=golden_source,
             ): index
             for index, row in enumerate(rows)
         }
@@ -273,6 +293,11 @@ def run_batch(args: argparse.Namespace, *, out_dir: Path) -> dict[str, Any]:
         "evidence_index": _file_record(evidence_path),
         "simulator_action_taken": False,
     }
+    if golden_source is not None:
+        receipt["golden_source_receipt"] = golden_source
+        receipt["golden_validation"] = passed[0]["golden_validation"] if passed else None
+        receipt["production_accepted_count_delta"] = 0
+        receipt["production_geometry_frequency_rows"] = 0
     receipt_path = out_dir / RECEIPT_NAME
     _write_json(receipt_path, receipt)
     _write_sums(
@@ -294,6 +319,8 @@ def _run_one(
     row: Mapping[str, str],
     submitted_sequence: int,
     candidate_dir: Path,
+    stage: str | None = None,
+    golden_source_receipt: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     candidate_dir.mkdir(mode=0o700)
     input_path = candidate_dir / "FRESH_EMX_RECEIPT_INDEX.csv"
@@ -306,6 +333,8 @@ def _run_one(
             input_index_path=input_path,
             out_dir=qa_dir,
             expected_geometry_count=1,
+            stage=stage,
+            golden_source_receipt=golden_source_receipt,
         )
         receipt_path = _regular_file(
             Path(result["receipt_path"]), "candidate QA receipt"
@@ -317,6 +346,10 @@ def _run_one(
             and receipt.get("geometry_frequency_rows") == len(FREQUENCY_GRID_HZ)
             and receipt.get("proxy_or_historical_labels_used") is False
             and receipt.get("simulator_action_taken") is False
+            and receipt.get("decision") == (
+                qa_module.VALIDATION_QA_PASS_DECISION if golden_source_receipt is not None
+                else qa_module.QA_PASS_DECISION
+            )
         ):
             raise Exact56QaBatchError("candidate QA receipt contract mismatch")
         qa_rows, _ = _read_csv(Path(result["qa_index_path"]))
@@ -335,6 +368,7 @@ def _run_one(
             "source_row": dict(row),
             "qa_row": qa_rows[0],
             "feature_rows": feature_rows,
+            "golden_validation": receipt.get("golden_validation"),
         }
     except Exception as exc:
         return _failure_result(

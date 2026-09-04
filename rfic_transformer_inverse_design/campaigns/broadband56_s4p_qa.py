@@ -38,10 +38,12 @@ from .broadband56_exact_gds_emx import (
     EXACT_GDS_EMX_RECEIPT_SCHEMA,
 )
 from .broadband56_full_campaign_authorization import PORT_AND_GROUNDING_CONTRACT
+from .broadband56_golden_source import SAFE_ANCHOR_SOURCE, validate_safe_anchor_emx_binding
 
 
 QA_RECEIPT_SCHEMA = "rfic_transformer.broadband56_v2_exact56_s4p_qa_receipt.v1"
 QA_PASS_DECISION = "ACCEPT_EXACT56_FRESH_EMX_S4P_FEATURE_PRODUCTS"
+VALIDATION_QA_PASS_DECISION = "VALIDATE_EXACT56_GOLDEN_ONLY_NOT_PRODUCTION_ACCEPTED"
 QA_FAILURE_NAME = "S4P_QA_FAILURE.json"
 QA_RECEIPT_NAME = "S4P_QA_RECEIPT.json"
 QA_INDEX_NAME = "S4P_QA_INDEX.csv"
@@ -187,6 +189,8 @@ def build_exact56_s4p_qa_products(
     input_index_path: Path,
     out_dir: Path,
     expected_geometry_count: int | None = None,
+    golden_source_receipt: Mapping[str, Any] | None = None,
+    stage: str | None = None,
 ) -> dict[str, Any]:
     """Build no-clobber exact56 QA products from a fresh-EMX receipt index."""
 
@@ -218,6 +222,7 @@ def build_exact56_s4p_qa_products(
     strict_valid_rows = 0
     seen_geometry_sha256: set[str] = set()
     seen_candidate_sha256: set[str] = set()
+    golden_binding = None
 
     try:
         with Path(source_pin.path).open(newline="", encoding="utf-8-sig") as source, feature_path.open(
@@ -272,7 +277,15 @@ def build_exact56_s4p_qa_products(
                     raise Broadband56S4pQaError(
                         f"line {line_number} has unsupported campaign_phase {phase!r}"
                     )
-                if source_name not in ACQUISITION_SOURCES_BY_PHASE[phase]:
+                historical_golden = source_name == SAFE_ANCHOR_SOURCE
+                if golden_source_receipt is not None and not (
+                    historical_golden and stage == "GOLDEN" and phase == "PHASE_A"
+                    and geometry_count == 0
+                ):
+                    raise Broadband56S4pQaError("Golden source binding requires exactly one historical GOLDEN row")
+                if source_name not in ACQUISITION_SOURCES_BY_PHASE[phase] and not (
+                    historical_golden and golden_source_receipt is not None and stage == "GOLDEN"
+                ):
                     raise Broadband56S4pQaError(
                         f"line {line_number} acquisition_source is invalid for {phase}"
                     )
@@ -309,6 +322,10 @@ def build_exact56_s4p_qa_products(
                     geometry_sha256=geometry_sha256,
                     line_number=line_number,
                 )
+                if historical_golden:
+                    golden_binding = validate_safe_anchor_emx_binding(
+                        golden_source_receipt, stage=stage, emx_receipt=emx_receipt,
+                    )
                 s4p_path = _resolve_artifact_path(
                     Path(receipt_pin.path),
                     emx_contract["touchstone_path"],
@@ -329,6 +346,19 @@ def build_exact56_s4p_qa_products(
                 artifact = audit_exact56_s4p(Path(s4p_pin.path))
                 _reverify_pin(receipt_pin, "exact-GDS fresh-EMX receipt")
                 _reverify_pin(s4p_pin, "fresh-EMX Touchstone")
+                if historical_golden:
+                    # Recheck source/GDS/Calibre after numerical QA, before claiming eligibility.
+                    golden_binding = validate_safe_anchor_emx_binding(
+                        golden_source_receipt, stage=stage, emx_receipt=emx_receipt,
+                    )
+                    golden_binding.update({
+                        "golden_stage_gate_eligible": True,
+                        "eligibility_status": "FRESH_EMX_AND_EXACT56_QA_PASS",
+                        "exact_gds_emx_receipt": receipt_pin.public_record(),
+                        "s4p": s4p_pin.public_record(),
+                        "validation_geometry_count": 1,
+                        "validation_feature_rows": len(artifact.rows),
+                    })
 
                 identity = {
                     "accepted_sequence": sequence,
@@ -442,6 +472,9 @@ def build_exact56_s4p_qa_products(
                 }
             ],
         }
+        if golden_binding is not None:
+            manifest["dataset_role"] = "GOLDEN_VALIDATION_ONLY_NOT_PRODUCTION"
+            manifest["production_accepted_count_delta"] = 0
         _write_json_new(manifest_path, manifest)
         manifest_pin, _ = _pin_regular_file(
             manifest_path,
@@ -454,7 +487,7 @@ def build_exact56_s4p_qa_products(
             "schema": QA_RECEIPT_SCHEMA,
             "generated_utc": _utc_now(),
             "overall_status": "PASS",
-            "decision": QA_PASS_DECISION,
+            "decision": VALIDATION_QA_PASS_DECISION if golden_binding is not None else QA_PASS_DECISION,
             "campaign_id": CAMPAIGN_ID,
             "contract_fingerprint_sha256": SCIENTIFIC_CONTRACT_FINGERPRINT,
             "source_fresh_emx_receipt_index": source_pin.public_record(),
@@ -500,6 +533,11 @@ def build_exact56_s4p_qa_products(
             "proxy_or_historical_labels_used": False,
             "simulator_action_taken": False,
         }
+        if golden_binding is not None:
+            receipt["golden_validation"] = golden_binding
+            receipt["production_accepted_count_delta"] = 0
+            receipt["production_geometry_frequency_rows"] = 0
+            receipt["accepted_sequence_semantics"] = "LOCAL_QA_INDEX_NOT_PRODUCTION_ACCEPTED_SEQUENCE"
         _write_json_new(receipt_path, receipt)
         _write_sums_new(
             sums_path,

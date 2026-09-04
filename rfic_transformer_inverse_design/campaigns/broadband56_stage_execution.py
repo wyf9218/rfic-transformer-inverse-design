@@ -108,7 +108,7 @@ def expected_stage_role_order(stage: str) -> tuple[str, ...]:
         raise StageExecutionProfileError(f"unknown stage: {stage_name}")
     if stage_name in {"PHASE_B", "PHASE_C"}:
         acquisition = ADAPTIVE_ACQUISITION_ROLES
-    elif stage_name in {"GOLDEN", "PILOT_32"}:
+    elif stage_name == "GOLDEN":
         acquisition = SPACE_FILLING_ACQUISITION_ROLES
     else:
         acquisition = CHECKPOINTED_SPACE_FILLING_ACQUISITION_ROLES
@@ -240,7 +240,13 @@ def validate_execution_profile(
         if not isinstance(stage_profile, Mapping):
             errors.append(f"stages.{stage} must be an object")
             continue
-        if set(stage_profile) != {"commands", "result_paths"}:
+        allowed_fields = {"commands", "result_paths"}
+        if "golden_terminal_mode" in stage_profile:
+            from .broadband56_golden_stage import TERMINAL_MODE
+            allowed_fields.add("golden_terminal_mode")
+            if stage != "GOLDEN" or stage_profile["golden_terminal_mode"] != TERMINAL_MODE:
+                errors.append(f"stages.{stage}.golden_terminal_mode is not authorized")
+        if set(stage_profile) != allowed_fields:
             errors.append(f"stages.{stage} fields do not exactly match the profile contract")
         commands = stage_profile.get("commands")
         expected_roles = expected_stage_role_order(stage)

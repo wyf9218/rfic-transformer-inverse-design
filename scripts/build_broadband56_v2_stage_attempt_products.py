@@ -42,10 +42,16 @@ from rfic_transformer_inverse_design.campaigns.broadband56_full_campaign_authori
 from rfic_transformer_inverse_design.campaigns.broadband56_stage_progress import (  # noqa: E402
     ATTEMPT_FAILURE_ACCOUNTING_FIELDS,
 )
+from rfic_transformer_inverse_design.campaigns.broadband56_golden_source import (  # noqa: E402
+    GoldenSourceError, SAFE_ANCHOR_SOURCE, validate_safe_anchor_source,
+    validate_safe_anchor_qa_receipt,
+)
 
 
 RECEIPT_SCHEMA = "rfic_transformer.broadband56_v2_stage_attempt_products.v1"
 RECEIPT_NAME = "STAGE_ATTEMPT_PRODUCTS_ROLE_RECEIPT.json"
+VALIDATION_RECEIPT_SCHEMA = "rfic_transformer.broadband56_v2_golden_validation_attempt_products.v1"
+VALIDATION_DECISION = "USE_GOLDEN_VALIDATION_ONLY_TERMINAL_PRODUCTS"
 ATTEMPT_LEDGER_NAME = "ATTEMPT_LEDGER.csv"
 ACCEPTED_INCREMENT_NAME = "ACCEPTED_GEOMETRY_INCREMENT.csv"
 REJECTED_INCREMENT_NAME = "REJECTED_GEOMETRY_INCREMENT.csv"
@@ -86,6 +92,7 @@ STATUS_BY_TERMINAL = {
     "S_TO_Z_FAILURE": ("PASS", "PASS", "PASS", "PASS", "PASS", "PASS", "PASS", "PASS", "FAIL", "NOT_RUN"),
     "FEATURE_EXTRACTION_FAILURE": ("PASS", "PASS", "PASS", "PASS", "PASS", "PASS", "PASS", "PASS", "PASS", "FAIL"),
     "ACCEPTED": ("PASS",) * 10,
+    "GOLDEN_VALIDATION_PASS": ("HISTORICAL_NOT_PRODUCTION",) + ("PASS",) * 9,
 }
 FUNNEL_BY_TERMINAL = {
     "CADENCE_FAILURE": "cadence_failures",
@@ -96,6 +103,7 @@ FUNNEL_BY_TERMINAL = {
     "S_TO_Z_FAILURE": "s_to_z_failures",
     "FEATURE_EXTRACTION_FAILURE": "feature_extraction_failures",
     "ACCEPTED": "accepted_geometries",
+    "GOLDEN_VALIDATION_PASS": "golden_validation_geometries",
 }
 PATH_HASH_FIELDS = (
     ("candidate_source_path", "candidate_source_sha256"),
@@ -139,7 +147,7 @@ def main(argv: list[str] | None = None) -> int:
         return 2
     try:
         receipt = build_attempt_products(args, out_dir=out_dir)
-    except (AttemptProductError, OSError, json.JSONDecodeError) as exc:
+    except (AttemptProductError, GoldenSourceError, OSError, json.JSONDecodeError) as exc:
         print(f"overall_status=FAIL\nerror={exc}", file=sys.stderr)
         return 2
     print("overall_status=PASS")
@@ -163,6 +171,7 @@ def _parse_args(argv: list[str] | None) -> argparse.Namespace:
     parser.add_argument("--exact-gds-emx-role-receipt", required=True)
     parser.add_argument("--exact56-role-receipt", required=True)
     parser.add_argument("--out-dir", required=True)
+    parser.add_argument("--golden-source-receipt")
     return parser.parse_args(argv)
 
 
@@ -248,7 +257,17 @@ def build_attempt_products(
         roles["cadence"].get("input_candidate_queue"), "raw candidate queue"
     )
     raw_rows, _ = _read_csv(candidate_path)
-    raw = _candidate_map(raw_rows)
+    golden_source = None
+    if getattr(args, "golden_source_receipt", None):
+        if stage != "GOLDEN" or current_accepted != 0:
+            raise AttemptProductError("validation-only anchor requires GOLDEN at accepted=0")
+        source_path = _regular_file(Path(args.golden_source_receipt), "Golden source receipt")
+        golden_source = _file_record(source_path)
+        summary = _read_json(source_path, "Golden source receipt")
+        _assert_record_matches(summary.get("candidate_queue"), candidate_path, "Golden raw queue")
+        if roles["exact56"].get("golden_source_receipt") != golden_source:
+            raise AttemptProductError("Golden source receipt is not bound to exact56 QA role")
+    raw = _candidate_map(raw_rows, golden_source_receipt=golden_source)
     if not raw:
         raise AttemptProductError("raw candidate queue is empty")
     candidate_source_sha = _sha256(candidate_path)
@@ -342,7 +361,26 @@ def build_attempt_products(
     for candidate, row in qa_fail.items():
         terminal = _qa_failure_terminal(row)
         _add_terminal(terminal_by_candidate, candidate, terminal, row)
-    _add_terminal_rows(terminal_by_candidate, qa_pass, "ACCEPTED")
+    golden_validation = None
+    if golden_source is not None and qa_pass:
+        if len(qa_pass) != 1 or len(raw) != 1:
+            raise AttemptProductError("Golden validation must cover exactly one candidate")
+        evidence = _index_map(
+            _identity_path(roles["exact56"].get("evidence_index"), "Golden QA evidence"),
+            "Golden QA evidence",
+        )
+        candidate = next(iter(qa_pass))
+        qa_row = evidence.get(candidate, {})
+        qa_receipt_path = _pinned_file(Path(str(qa_row.get("qa_receipt_path", ""))), qa_row.get("qa_receipt_sha256"), "Golden QA receipt")
+        exact_row = exact_pass[candidate]
+        exact_receipt_path = _pinned_file(Path(exact_row["exact_gds_emx_receipt_path"]), exact_row["exact_gds_emx_receipt_sha256"], "Golden EMX receipt")
+        golden_validation = validate_safe_anchor_qa_receipt(
+            golden_source, _file_record(qa_receipt_path),
+            exact_emx_receipt_record=_file_record(exact_receipt_path),
+        )
+        if roles["exact56"].get("golden_validation") != golden_validation:
+            raise AttemptProductError("Golden QA role/per-candidate eligibility mismatch")
+    _add_terminal_rows(terminal_by_candidate, qa_pass, "GOLDEN_VALIDATION_PASS" if golden_source is not None else "ACCEPTED")
     if set(terminal_by_candidate) != set(raw):
         missing = sorted(set(raw) - set(terminal_by_candidate))[:5]
         extra = sorted(set(terminal_by_candidate) - set(raw))[:5]
@@ -395,7 +433,8 @@ def build_attempt_products(
         raise AttemptProductError("failure funnel does not close to raw candidates")
 
     accepted_rows = [row for row in ledgers if row["terminal_stage"] == "ACCEPTED"]
-    rejected_rows = [row for row in ledgers if row["terminal_stage"] != "ACCEPTED"]
+    validation_rows = [row for row in ledgers if row["terminal_stage"] == "GOLDEN_VALIDATION_PASS"]
+    rejected_rows = [row for row in ledgers if row["terminal_stage"] not in {"ACCEPTED", "GOLDEN_VALIDATION_PASS"}]
     exact_rows, exact_fields = _read_csv(qa_pass_path)
     artifact_rows, artifact_fields = _read_csv(
         _identity_path(roles["exact56"].get("s4p_artifact_index"), "S4P artifact index")
@@ -403,15 +442,26 @@ def build_attempt_products(
     feature_rows, feature_fields = _read_csv(
         _identity_path(roles["exact56"].get("long_features"), "long-feature table")
     )
+    if golden_validation is not None:
+        individual_qa = _read_json(qa_receipt_path, "Golden individual QA")
+        for key, actual in (
+            ("source_fresh_emx_receipt_index", exact_rows),
+            ("qa_index", artifact_rows), ("broadband_features_long", feature_rows),
+        ):
+            expected_rows, _ = _read_csv(_identity_path(individual_qa.get(key), f"Golden {key}"))
+            if actual != expected_rows:
+                raise AttemptProductError("Golden batch products differ from the verified per-candidate QA")
+    product_sequence = {row["geometry_sha256"]: index for index, row in enumerate(validation_rows, start=1)} if golden_source is not None else accepted_sequence
     _renumber_accepted_products(
-        accepted_sequence,
+        product_sequence,
         exact_rows=exact_rows,
         artifact_rows=artifact_rows,
         feature_rows=feature_rows,
     )
-    if len(exact_rows) != len(accepted_rows) or len(artifact_rows) != len(accepted_rows):
+    product_count = len(validation_rows) if golden_source is not None else len(accepted_rows)
+    if len(exact_rows) != product_count or len(artifact_rows) != product_count:
         raise AttemptProductError("accepted product indexes do not match accepted ledger rows")
-    if len(feature_rows) != len(accepted_rows) * len(FREQUENCY_GRID_HZ):
+    if len(feature_rows) != product_count * len(FREQUENCY_GRID_HZ):
         raise AttemptProductError("long-feature count is not accepted count times 56")
 
     pins = {
@@ -420,6 +470,8 @@ def build_attempt_products(
         **{f"{name}_role_receipt": (path, _sha256(path)) for name, path in role_paths.items()},
         "raw_candidate_queue": (candidate_path, candidate_source_sha),
     }
+    if golden_source is not None:
+        pins["golden_source_receipt"] = (Path(golden_source["path"]), golden_source["sha256"])
 
     out_dir.mkdir(parents=True, mode=0o700)
     attempt_path = out_dir / ATTEMPT_LEDGER_NAME
@@ -429,6 +481,20 @@ def build_attempt_products(
     artifact_path = out_dir / S4P_ARTIFACT_INDEX_NAME
     feature_path = out_dir / LONG_FEATURES_NAME
     funnel_path = out_dir / FAILURE_FUNNEL_NAME
+    validation_products = {}
+    validation_files = []
+    if golden_source is not None:
+        for key, name, fields, rows in (
+            ("validation_geometry", "GOLDEN_VALIDATION_GEOMETRY.csv", list(LEDGER_FIELDS), validation_rows),
+            ("exact_gds_emx_receipt_index", "GOLDEN_VALIDATION_EXACT_GDS_EMX_RECEIPT_INDEX.csv", exact_fields, exact_rows),
+            ("s4p_artifact_index", "GOLDEN_VALIDATION_S4P_ARTIFACT_INDEX.csv", artifact_fields, artifact_rows),
+            ("long_features", "GOLDEN_VALIDATION_FEATURES_LONG.csv", feature_fields, feature_rows),
+        ):
+            path = out_dir / name
+            _write_csv(path, fields, rows)
+            validation_products[key] = _file_record(path)
+            validation_files.append(path)
+        exact_rows, artifact_rows, feature_rows = [], [], []
     _write_csv(attempt_path, list(LEDGER_FIELDS), ledgers)
     _write_csv(accepted_path, list(LEDGER_FIELDS), accepted_rows)
     _write_csv(rejected_path, list(LEDGER_FIELDS), rejected_rows)
@@ -440,17 +506,17 @@ def build_attempt_products(
         ["stage", "count"],
         [
             {"stage": field, "count": funnel[field]}
-            for field in ATTEMPT_FAILURE_ACCOUNTING_FIELDS
+            for field in funnel
         ],
     )
     for label, (path, digest) in pins.items():
         _require_unchanged(path, digest, label)
 
     receipt = {
-        "schema": RECEIPT_SCHEMA,
+        "schema": VALIDATION_RECEIPT_SCHEMA if golden_source is not None else RECEIPT_SCHEMA,
         "generated_utc": _utc_now(),
         "overall_status": "PASS",
-        "decision": "USE_EXACT_TERMINAL_ATTEMPT_PRODUCTS",
+        "decision": VALIDATION_DECISION if golden_source is not None else "USE_EXACT_TERMINAL_ATTEMPT_PRODUCTS",
         "campaign_id": CAMPAIGN_ID,
         "contract_fingerprint_sha256": SCIENTIFIC_CONTRACT_FINGERPRINT,
         "stage": stage,
@@ -477,6 +543,17 @@ def build_attempt_products(
         "failure_accounting": dict(funnel),
         "simulator_action_taken": False,
     }
+    if golden_source is not None:
+        receipt.update({
+            "golden_source_receipt": golden_source,
+            "golden_validation": golden_validation,
+            "golden_validation_status": "PASS" if golden_validation is not None else "FAIL",
+            "validation_geometry_count": len(validation_rows),
+            "validation_feature_rows": len(validation_rows) * len(FREQUENCY_GRID_HZ),
+            "validation_products": validation_products,
+            "production_accepted_count_delta": 0,
+            "production_geometry_frequency_rows": 0,
+        })
     receipt_path = out_dir / RECEIPT_NAME
     _write_json(receipt_path, receipt)
     _write_sums(
@@ -490,6 +567,7 @@ def build_attempt_products(
             artifact_path,
             feature_path,
             funnel_path,
+            *validation_files,
         ],
     )
     return receipt
@@ -572,7 +650,11 @@ def _validate_counts(
         raise AttemptProductError(f"{prefix} receipt counts do not match its indexes")
 
 
-def _candidate_map(rows: Sequence[Mapping[str, str]]) -> dict[str, dict[str, str]]:
+def _candidate_map(
+    rows: Sequence[Mapping[str, str]], *, golden_source_receipt: Mapping[str, Any] | None = None,
+) -> dict[str, dict[str, str]]:
+    if golden_source_receipt is not None and len(rows) != 1:
+        raise AttemptProductError("historical Golden source must bind exactly one row")
     required = {
         "candidate_id_sha256",
         "candidate_geometry_identity_sha256",
@@ -618,7 +700,16 @@ def _candidate_map(rows: Sequence[Mapping[str, str]]) -> dict[str, dict[str, str
         ):
             raise AttemptProductError("raw candidate contract or pre-simulator gates mismatch")
         phase = row["campaign_phase"]
-        if (
+        if golden_source_receipt is not None:
+            source = _read_json(_identity_path(golden_source_receipt, "Golden source receipt"), "Golden source receipt")
+            validate_safe_anchor_source(
+                golden_source_receipt, stage="GOLDEN", geometry_sha256=geometry,
+                config_sha256=source.get("corrected_private_configuration", {}).get("sha256"),
+                contract_fingerprint=SCIENTIFIC_CONTRACT_FINGERPRINT,
+            )
+            if row["acquisition_source"] != SAFE_ANCHOR_SOURCE or phase != "PHASE_A":
+                raise AttemptProductError("Golden candidate source does not match bound source")
+        elif (
             phase not in ACQUISITION_SOURCES_BY_PHASE
             or row["acquisition_source"] not in ACQUISITION_SOURCES_BY_PHASE[phase]
         ):
@@ -822,6 +913,7 @@ def _ledger_row(
         "S_TO_Z_FAILURE",
         "FEATURE_EXTRACTION_FAILURE",
         "ACCEPTED",
+        "GOLDEN_VALIDATION_PASS",
     }:
         if zero_row is None:
             raise AttemptProductError("post-Calibre terminal row lacks zero-blocking evidence")
@@ -844,6 +936,7 @@ def _ledger_row(
         "S_TO_Z_FAILURE",
         "FEATURE_EXTRACTION_FAILURE",
         "ACCEPTED",
+        "GOLDEN_VALIDATION_PASS",
     }:
         if exact_pass_row is None:
             raise AttemptProductError("post-EMX QA terminal lacks exact fresh-EMX receipt")

@@ -48,6 +48,9 @@ from rfic_transformer_inverse_design.campaigns.broadband56_full_campaign_authori
     FULL_CAMPAIGN_PASS_DECISION,
 )
 from rfic_transformer_inverse_design.sim.touchstone import load_touchstone  # noqa: E402
+from scripts.broadband56_emx_runtime import (  # noqa: E402
+    EmxRuntimeIdentityError, launch_spec, load_identity,
+)
 
 
 BATCH_RECEIPT_SCHEMA = (
@@ -137,7 +140,7 @@ def main(argv: list[str] | None = None) -> int:
         return 2
     try:
         receipt = run_batch(args, out_dir=out_dir)
-    except (ExactGdsEmxBatchError, OSError, json.JSONDecodeError) as exc:
+    except (ExactGdsEmxBatchError, EmxRuntimeIdentityError, OSError, json.JSONDecodeError) as exc:
         print(f"overall_status=FAIL\nerror={exc}", file=sys.stderr)
         return 2
     print("overall_status=PASS")
@@ -213,6 +216,15 @@ def run_batch(args: argparse.Namespace, *, out_dir: Path) -> dict[str, Any]:
     python_sha256 = _sha256(python_path)
     if not os.access(python_path, os.X_OK):
         raise ExactGdsEmxBatchError("Python executable is not executable")
+    runtime_identity_path = _file_from_record(
+        backend_manifest.get("emx_python_runtime"), "EMX Python runtime identity"
+    )
+    runtime_identity_sha256 = _sha256(runtime_identity_path)
+    runtime_identity = load_identity(runtime_identity_path, runtime_identity_sha256)
+    if Path(runtime_identity["python_launcher"]["path"]) != python_path:
+        raise ExactGdsEmxBatchError("EMX private Python differs from backend")
+    if Path(runtime_identity["entrypoint"]["path"]) != runner_path:
+        raise ExactGdsEmxBatchError("EMX entrypoint differs from backend")
 
     rows = _read_input_rows(input_path)
     if int(args.max_concurrency) < 1:
@@ -239,6 +251,8 @@ def run_batch(args: argparse.Namespace, *, out_dir: Path) -> dict[str, Any]:
                 authorization_sha256=authorization_sha256,
                 runner_sha256=runner_sha256,
                 module_sha256=module_sha256,
+                runtime_identity_path=runtime_identity_path,
+                runtime_identity_sha256=runtime_identity_sha256,
             ): index
             for index, row in enumerate(rows)
         }
@@ -329,6 +343,7 @@ def run_batch(args: argparse.Namespace, *, out_dir: Path) -> dict[str, Any]:
         "runner_script": _file_record(runner_path),
         "runner_module": _file_record(module_path),
         "python_executable": _file_record(python_path),
+        "emx_python_runtime": _file_record(runtime_identity_path),
         "pass_index": _file_record(pass_index_path),
         "failure_index": _file_record(failure_index_path),
         "delegate_evidence_index": _file_record(evidence_index_path),
@@ -357,13 +372,13 @@ def _run_one(
     authorization_sha256: str,
     runner_sha256: str,
     module_sha256: str,
+    runtime_identity_path: Path,
+    runtime_identity_sha256: str,
 ) -> dict[str, Any]:
     candidate_id = row["candidate_id_sha256"]
     geometry_sha = row["geometry_sha256"]
     candidate_dir = candidates_dir / f"{submitted_sequence:06d}_{candidate_id}"
-    command = [
-        str(python_path),
-        str(runner_path),
+    arguments = [
         "--config",
         str(config_path),
         "--expected-config-sha256",
@@ -395,18 +410,19 @@ def _run_one(
         "--expected-module-sha256",
         module_sha256,
     ]
+    specification = launch_spec(runtime_identity_path, runtime_identity_sha256, arguments)
+    command = specification["args"]
     command_digest = hashlib.sha256(
         json.dumps(command, separators=(",", ":")).encode("utf-8")
     ).hexdigest()
     started_utc = _utc_now()
     completed = subprocess.run(
-        command,
+        **specification,
         stdin=subprocess.DEVNULL,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         text=True,
         check=False,
-        shell=False,
     )
     finished_utc = _utc_now()
     candidate_dir.mkdir(parents=True, exist_ok=True)

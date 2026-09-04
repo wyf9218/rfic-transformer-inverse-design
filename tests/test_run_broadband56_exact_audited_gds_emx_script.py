@@ -3,6 +3,9 @@ from __future__ import annotations
 import hashlib
 import importlib.util
 from pathlib import Path
+from types import SimpleNamespace
+
+import rfic_transformer_inverse_design.campaigns.broadband56_exact_gds_emx as exact_gds_emx
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -24,8 +27,9 @@ def test_cli_binds_runner_and_module_sha_before_dispatch(monkeypatch, tmp_path) 
         }
 
     monkeypatch.setattr(
-        MODULE.exact_gds_emx, "run_exact_audited_gds_fresh_emx", _fake_run
+        exact_gds_emx, "run_exact_audited_gds_fresh_emx", _fake_run
     )
+    _stub_runtime(monkeypatch)
     argv = _argv(tmp_path)
 
     assert MODULE.main(argv) == 0
@@ -42,14 +46,23 @@ def test_cli_rejects_module_sha_drift_before_dispatch(monkeypatch, tmp_path) -> 
         raise AssertionError("runner must not be dispatched")
 
     monkeypatch.setattr(
-        MODULE.exact_gds_emx, "run_exact_audited_gds_fresh_emx", _must_not_run
+        exact_gds_emx, "run_exact_audited_gds_fresh_emx", _must_not_run
     )
+    _stub_runtime(monkeypatch)
     argv = _argv(tmp_path)
     marker = argv.index("--expected-module-sha256")
     argv[marker + 1] = "f" * 64
 
     assert MODULE.main(argv) == 2
     assert calls == []
+
+
+def _stub_runtime(monkeypatch):
+    # Dispatch-only unit tests; isolation is exercised in real child-process tests.
+    monkeypatch.setattr(
+        MODULE, "_load_runtime",
+        lambda args: (SimpleNamespace(activate_and_verify=lambda identity: {}), {}),
+    )
 
 
 def _argv(tmp_path: Path) -> list[str]:
@@ -83,7 +96,9 @@ def _argv(tmp_path: Path) -> list[str]:
         "--expected-runner-sha256",
         _sha256(SCRIPT),
         "--expected-module-sha256",
-        _sha256(Path(MODULE.exact_gds_emx.__file__)),
+        _sha256(Path(exact_gds_emx.__file__)),
+        "--runtime-identity", str(tmp_path / "runtime.json"),
+        "--expected-runtime-identity-sha256", "8" * 64,
     ]
 
 

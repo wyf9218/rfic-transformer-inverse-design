@@ -259,6 +259,8 @@ def stage_for_progress(
 ) -> str:
     """Return the only next legal stage from exact ordered PASS receipts."""
 
+    from .broadband56_golden_stage import TERMINAL_MODE
+
     accepted = _nonnegative_int(current_accepted, "current_accepted")
     if accepted > TARGET_ACCEPTED_GEOMETRIES:
         raise CapacityPolicyError("current_accepted exceeds the exact 200K target")
@@ -267,11 +269,16 @@ def stage_for_progress(
         raise CapacityPolicyError("too many stage receipts")
     for index, receipt in enumerate(receipts):
         expected = STAGES[index]
+        validation_only = receipt.get("golden_terminal_mode") == TERMINAL_MODE
+        expected_accepted = 0 if validation_only and index == 0 else expected.cumulative_target
         if (
             receipt.get("stage") != expected.name
             or receipt.get("overall_status") != "PASS"
             or receipt.get("terminal_state") != expected.receipt_status
-            or receipt.get("accepted_unique_geometries") != expected.cumulative_target
+            or receipt.get("accepted_unique_geometries") != expected_accepted
+            or (validation_only and (index != 0 or receipt.get("validation_geometry_count") != 1
+                                     or receipt.get("validation_feature_rows") != 56
+                                     or receipt.get("production_accepted_count_delta") != 0))
         ):
             raise CapacityPolicyError(
                 f"stage receipt {index} is not exact ordered PASS for {expected.name}"
@@ -280,8 +287,7 @@ def stage_for_progress(
         if accepted != 0:
             raise CapacityPolicyError("accepted geometries exist before golden PASS receipt")
         return "GOLDEN"
-    last = STAGES[len(receipts) - 1]
-    if accepted != last.cumulative_target:
+    if accepted != receipts[-1]["accepted_unique_geometries"]:
         raise CapacityPolicyError("accepted count is not bound to the latest stage receipt")
     return "COMPLETE" if len(receipts) == len(STAGES) else STAGES[len(receipts)].name
 

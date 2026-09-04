@@ -52,6 +52,9 @@ from rfic_transformer_inverse_design.campaigns.broadband56_stage_progress import
     accepted_after_progress,
     validate_stage_progress_chain,
 )
+from rfic_transformer_inverse_design.campaigns.broadband56_golden_stage import (  # noqa: E402
+    TERMINAL_MODE as GOLDEN_VALIDATION_ONLY,
+)
 
 
 RECEIPT_SCHEMA = "rfic_transformer.broadband56_v2_adaptive_checkpoint_materializer.v2"
@@ -105,7 +108,7 @@ def materialize_checkpoint(
         raise AdaptiveCheckpointError("no-clobber adaptive checkpoint output already exists")
 
     stage = str(args.stage).upper()
-    if stage not in {"PILOT_1000", "PHASE_A", "PHASE_B", "PHASE_C"}:
+    if stage not in {"PILOT_32", "PILOT_1000", "PHASE_A", "PHASE_B", "PHASE_C"}:
         raise AdaptiveCheckpointError(
             f"frozen checkpoint role cannot run for {stage}"
         )
@@ -195,6 +198,36 @@ def materialize_checkpoint(
     except ValueError as exc:
         raise AdaptiveCheckpointError(str(exc)) from exc
     raw_selection_count = accepted_target - current_accepted
+    if current_accepted == 0:
+        if not (
+            stage == "PILOT_32" and base_accepted == 0 and accepted_target == 1
+            and len(stage_records) == 1
+            and stage_records[0][1].get("golden_terminal_mode") == GOLDEN_VALIDATION_ONLY
+        ):
+            raise AdaptiveCheckpointError("zero-production start requires the exact validation-only Golden")
+        # No production checkpoint exists yet. Never relabel validation evidence as one.
+        receipt = {
+            "schema": RECEIPT_SCHEMA, "generated_utc": _utc_now(),
+            "overall_status": "PASS", "decision": "FIRST_PRODUCTION_CHECKPOINT_PENDING",
+            "campaign_id": CAMPAIGN_ID, "contract_fingerprint_sha256": SCIENTIFIC_CONTRACT_FINGERPRINT,
+            "backend_id": PRODUCTION_BACKEND_ID, "stage": stage,
+            "current_accepted": 0, "checkpoint_accepted": None,
+            "round_accepted_target": 1, "raw_selection_count": 1,
+            "backend_identity_manifest": _file_record(backend_path),
+            "full_campaign_authorization_receipt": _file_record(authorization_path),
+            "source": {"kind": "HISTORICAL_GOLDEN_VALIDATION_ONLY",
+                       "stage_receipt": _file_record(stage_records[0][0])},
+            "checkpoint_dir": None, "checkpoint_receipt": None, "checkpoint_status": None,
+            "subprocesses": [],
+            "checks": {"full_campaign_authorization_exact": True, "backend_manifest_exact": True,
+                       "stage_and_progress_chains_valid": True,
+                       "raw_selection_count_closes_to_frozen_boundary": True,
+                       "production_checkpoint_not_created": True},
+            "simulator_action_taken": False, "cadence_action_taken": False,
+            "calibre_action_taken": False, "emx_action_taken": False,
+        }
+        _write_json(out_dir / RECEIPT_NAME, receipt)
+        return receipt
     if stage in {"PHASE_B", "PHASE_C"}:
         round_spec, adaptive_remaining = adaptive_round_for_current_accepted(
             current_accepted
@@ -368,9 +401,7 @@ def _build_boundary_checkpoint(
             "failure_funnel",
         )
     }
-    audit_mode = (
-        "checkpoint" if checkpoint_count in REQUIRED_CHECKPOINT_COUNTS else "round"
-    )
+    audit_mode = _expected_checkpoint_mode(checkpoint_count)
     checkpoint_command = [
         sys.executable,
         str(checkpoint_script),

@@ -27,6 +27,7 @@ from rfic_transformer_inverse_design.campaigns.broadband56_balanced200k import (
     canonical_geometry_bounds,
     canonical_geometry_sha256,
     contract_fingerprint,
+    next_frozen_accepted_boundary,
     validate_contract,
 )
 from rfic_transformer_inverse_design.campaigns.broadband56_capacity_policy import (  # noqa: E402
@@ -297,11 +298,15 @@ def _campaign_exclusion_paths(
     )
     if not campaign_root.is_dir() or spec is None or current_accepted is None:
         return paths
+    if not 0 <= current_accepted < spec.cumulative_target:
+        checks.append(_check("current_accepted_below_stage_target", False, current_accepted))
+        return paths
+    next_boundary = next_frozen_accepted_boundary(current_accepted, cumulative_target=spec.cumulative_target)
     checks.append(
         _check(
-            "requested_count_matches_remaining_stage_target",
-            requested_count == spec.cumulative_target - current_accepted,
-            f"requested={requested_count}, remaining={spec.cumulative_target - current_accepted}",
+            "requested_count_matches_next_frozen_checkpoint",
+            requested_count == next_boundary - current_accepted,
+            f"requested={requested_count}, next_boundary={next_boundary}, current={current_accepted}",
         )
     )
 
@@ -316,6 +321,19 @@ def _campaign_exclusion_paths(
         if not isinstance(artifacts, Mapping):
             checks.append(_check("prior_stage_receipt_artifacts", False, str(receipt_path)))
             continue
+        if "golden_terminal_mode" in receipt:
+            from rfic_transformer_inverse_design.campaigns import broadband56_golden_stage as golden_stage
+            try:
+                golden_stage.validate_stage_evidence(receipt)
+            except (golden_stage.GoldenSourceError, ValueError, OSError, KeyError, TypeError) as exc:
+                checks.append(_check("prior_golden_validation_evidence", False, str(exc)))
+                continue
+            anchor = _verified_campaign_evidence_path(
+                artifacts.get("validation_geometry"), campaign_root=campaign_root,
+                checks=checks, label="prior_golden_validation_geometry",
+            )
+            if anchor is not None:
+                paths.append(anchor)
         for field, target in (
             ("accepted_geometry_index", accepted_hashes),
             ("rejected_geometry_index", rejected_hashes),

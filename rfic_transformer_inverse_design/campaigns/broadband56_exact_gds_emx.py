@@ -22,7 +22,7 @@ import numpy as np
 
 from ..core.defaults import load_run_config
 from ..core.types import TransformerLayoutExport
-from ..execution.zeus_cadence import _run_emx, load_emx_layout_manifest
+from ..execution.zeus_cadence import _prepare_emx_simulation, _run_emx, load_emx_layout_manifest
 from ..sim.touchstone import load_touchstone
 from .broadband56_balanced200k import (
     CAMPAIGN_ID,
@@ -91,6 +91,7 @@ def run_exact_audited_gds_fresh_emx(
     geometry_identity_sha256: str,
     out_dir: Path,
     run_emx_fn: Callable[..., Mapping[str, Any]] | None = None,
+    preflight_only: bool = False,
 ) -> dict[str, Any]:
     """Execute one no-regeneration EMX run and write a hash-bound receipt."""
 
@@ -172,20 +173,54 @@ def run_exact_audited_gds_fresh_emx(
     _validate_gds_top_cell(Path(gds_pin.path), manifest.top_cell)
     _reverify_pins(source_pins)
 
+    layout = TransformerLayoutExport(
+        gds_path=Path(gds_pin.path),
+        manifest_path=Path(manifest_pin.path),
+        preview_path=Path(gds_pin.path).with_suffix(".png"),
+        debug_preview_path=Path(gds_pin.path).with_name("transformer_port_debug.png"),
+        top_cell=manifest.top_cell,
+    )
+    if preflight_only:
+        sim, command = _prepare_emx_simulation(
+            run_config=run_config, work_dir=output, layout=layout, manifest=manifest,
+        )
+        sim.connect()  # Path resolution only; never run_solver.
+        resolved_command = sim._build_emx_command(layout.gds_path)
+        proc_pin, _ = _pin_regular_file(
+            sim._resolve_process_path(), expected_sha256=None, label="EMX process file",
+        )
+        wrapper_pin, _ = _pin_regular_file(
+            Path(command[0]), expected_sha256=None, label="configured EMX executable",
+        )
+        if not os.access(wrapper_pin.path, os.X_OK):
+            raise ExactAuditedGdsEmxError("configured EMX executable is not executable")
+        existing_parent = output.parent
+        while not existing_parent.exists():
+            existing_parent = existing_parent.parent
+        if not os.access(existing_parent, os.W_OK | os.X_OK):
+            raise ExactAuditedGdsEmxError("output ancestor is not writable")
+        _reverify_pins([*source_pins, proc_pin, wrapper_pin])
+        return {
+            "overall_status": "PASS", "decision": "PREFLIGHT_ONLY_NO_SIMULATOR",
+            "candidate_id_sha256": candidate_id, "geometry_identity_sha256": geometry_id,
+            "source_pins": [pin.public_record() for pin in source_pins],
+            "proc_identity": proc_pin.public_record(),
+            "configured_emx_executable": wrapper_pin.public_record(),
+            "command": command, "resolved_solver_command": resolved_command,
+            "frequency_grid_hz": list(FREQUENCY_GRID_HZ),
+            "frequency_points": len(FREQUENCY_GRID_HZ),
+            "port_count": len(manifest.ports), "manifest_contract": manifest_contract,
+            "s4p_output_path": str(sim._expected_touchstone_path()),
+            "parser": "rfic_transformer_inverse_design.sim.touchstone.load_touchstone",
+            "output_parent_writable": True, "output_created": False,
+            "simulator_action_taken": False,
+        }
+
     output.parent.mkdir(parents=True, exist_ok=True)
     output.mkdir(mode=0o700, exist_ok=False)
     emx_attempted = False
     try:
         _reverify_pins(source_pins)
-        layout = TransformerLayoutExport(
-            gds_path=Path(gds_pin.path),
-            manifest_path=Path(manifest_pin.path),
-            preview_path=Path(gds_pin.path).with_suffix(".png"),
-            debug_preview_path=Path(gds_pin.path).with_name(
-                "transformer_port_debug.png"
-            ),
-            top_cell=manifest.top_cell,
-        )
         emx_attempted = True
         runner = _run_emx if run_emx_fn is None else run_emx_fn
         emx_payload = dict(

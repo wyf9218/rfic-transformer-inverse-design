@@ -513,6 +513,11 @@ def test_adaptive_replenishment_uses_deterministic_largest_remainders() -> None:
 
 
 def test_frozen_boundaries_prevent_nonadaptive_checkpoint_skips() -> None:
+    assert next_frozen_accepted_boundary(0, cumulative_target=32) == 1
+    assert next_frozen_accepted_boundary(1, cumulative_target=32) == 32
+    assert frozen_checkpoint_start(0, stage_base_accepted=0, cumulative_target=32) == 0
+    assert frozen_checkpoint_start(1, stage_base_accepted=0, cumulative_target=32) == 1
+    assert frozen_checkpoint_start(17, stage_base_accepted=0, cumulative_target=32) == 1
     assert next_frozen_accepted_boundary(32, cumulative_target=1_000) == 100
     assert next_frozen_accepted_boundary(99, cumulative_target=1_000) == 100
     assert next_frozen_accepted_boundary(100, cumulative_target=1_000) == 1_000
@@ -763,7 +768,7 @@ def test_synthetic_golden_audit_writes_golden_complete_without_claiming_physical
                 "analytical_failures",
                 "topology_failures",
                 "cadence_failures",
-                "calibre_failures",
+                "calibre_blocking_failures",
                 "emx_failures",
                 "incomplete_frequency_failures",
                 "s4p_parsing_failures",
@@ -1528,7 +1533,7 @@ def test_checkpoint_audit_accepts_exact_100_geometry_real_emx_shaped_fixture(tmp
             {"stage": "analytical_failures", "count": 0},
             {"stage": "topology_failures", "count": 0},
             {"stage": "cadence_failures", "count": 0},
-            {"stage": "calibre_failures", "count": 0},
+            {"stage": "calibre_blocking_failures", "count": 0},
             {"stage": "emx_failures", "count": 0},
             {"stage": "incomplete_frequency_failures", "count": 0},
             {"stage": "s4p_parsing_failures", "count": 0},

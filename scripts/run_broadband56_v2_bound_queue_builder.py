@@ -22,6 +22,13 @@ from decimal import Decimal, InvalidOperation
 from pathlib import Path
 from typing import Any
 
+if __package__ in {None, ""}:
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+from rfic_transformer_inverse_design.campaigns.broadband56_golden_source import (  # noqa: E402
+    SAFE_ANCHOR_SOURCE, SOURCE_CONTRACT,
+)
+
 
 CAMPAIGN_ID = "broadband56_real_emx_balanced200k_tsmc65_v2"
 CONTRACT_FINGERPRINT = (
@@ -174,6 +181,8 @@ def _materialize_golden(private: argparse.Namespace, argv: list[str]) -> Path:
         raise BoundQueueError("safe-anchor queue geometry identity aliases mismatch")
     if not (
         row.get("campaign_id") == CAMPAIGN_ID
+        and row.get("campaign_phase") == "PHASE_A"
+        and row.get("acquisition_source") == SAFE_ANCHOR_SOURCE
         and row.get("campaign_contract_fingerprint") == CONTRACT_FINGERPRINT
         and row.get("analytical_status") == "PASS"
         and row.get("topology_status") == "PASS"
@@ -206,6 +215,7 @@ def _materialize_golden(private: argparse.Namespace, argv: list[str]) -> Path:
         "contract_fingerprint_sha256": CONTRACT_FINGERPRINT,
         "stage": "GOLDEN",
         "queue_count": 1,
+        "source_contract": dict(SOURCE_CONTRACT),
         "candidate_queue": _file_record(queue_path),
         "safe_anchor_id": expected_id,
         "safe_anchor_geometry_sha256": expected_geometry,
@@ -230,13 +240,20 @@ def _materialize_golden(private: argparse.Namespace, argv: list[str]) -> Path:
 def _run_delegate(private: argparse.Namespace, argv: list[str]) -> int:
     delegate = _regular_file(private.delegate_script, "queue-builder delegate")
     _require_sha(delegate, private.delegate_sha256, "queue-builder delegate")
+    anchor = _regular_file(private.safe_anchor_queue, "safe-anchor exclusion queue")
+    _require_sha(anchor, private.safe_anchor_queue_sha256, "safe-anchor exclusion queue")
+    rows = _read_csv(anchor)
+    if len(rows) != 1 or rows[0].get("geometry_sha256") != private.expected_safe_anchor_geometry_sha256:
+        raise BoundQueueError("safe-anchor exclusion geometry identity mismatch")
+    delegated = [*argv, "--exclude-geometry-csv", str(anchor)]
     result = subprocess.run(
-        [sys.executable, str(delegate), *argv],
+        [sys.executable, str(delegate), *delegated],
         stdin=subprocess.DEVNULL,
         shell=False,
         check=False,
     )
     _require_sha(delegate, private.delegate_sha256, "queue-builder delegate")
+    _require_sha(anchor, private.safe_anchor_queue_sha256, "safe-anchor exclusion queue")
     return int(result.returncode)
 
 

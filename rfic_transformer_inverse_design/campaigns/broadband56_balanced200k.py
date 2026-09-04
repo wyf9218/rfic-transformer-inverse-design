@@ -50,7 +50,8 @@ ADAPTIVE_INTERMEDIATE_AUDIT_COUNTS = tuple(
     value for value in ADAPTIVE_ROUND_END_COUNTS if value not in REQUIRED_CHECKPOINT_COUNTS
 )
 FROZEN_INTERMEDIATE_ACCEPTED_BOUNDARIES = tuple(
-    sorted(set(REQUIRED_CHECKPOINT_COUNTS) | set(ADAPTIVE_ROUND_END_COUNTS))
+    # A historical validation-only Golden leaves the first production checkpoint pending.
+    sorted({1} | set(REQUIRED_CHECKPOINT_COUNTS) | set(ADAPTIVE_ROUND_END_COUNTS))
 )
 
 SECONDARY_FEATURES = (

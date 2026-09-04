@@ -351,7 +351,7 @@ def _build_fixture(root: Path) -> dict[str, object]:
     }
 
 
-def _run_fixture(fixture: dict[str, object], *, run_emx_fn):
+def _run_fixture(fixture: dict[str, object], *, run_emx_fn=None, preflight_only=False):
     return run_exact_audited_gds_fresh_emx(
         config_path=fixture["config"],
         expected_config_sha256=fixture["config_sha256"],
@@ -369,6 +369,7 @@ def _run_fixture(fixture: dict[str, object], *, run_emx_fn):
         geometry_identity_sha256=GEOMETRY_ID,
         out_dir=fixture["out_dir"],
         run_emx_fn=run_emx_fn,
+        preflight_only=preflight_only,
     )
 
 
@@ -424,6 +425,46 @@ def _write_s4p(path: Path, frequencies_hz) -> None:
 
 def _sha256(path: Path) -> str:
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
+
+
+def test_preflight_builds_production_arguments_without_simulator_or_output(tmp_path, monkeypatch):
+    import subprocess
+    import yaml
+
+    fixture = _build_fixture(tmp_path)
+    process = tmp_path / "test_only.proc"
+    process.write_text("synthetic process fixture; not for simulation\n")
+    executable = tmp_path / "test_only_emx"
+    executable.write_text("#!/bin/sh\nexit 99\n")
+    executable.chmod(0o700)
+    config = yaml.safe_load(fixture["config"].read_text())
+    config["emx"]["emx_process_file"] = str(process)
+    config["emx"]["emx_binary"] = str(executable)
+    config["emx"]["emx_home"] = None
+    fixture["config"].write_text(yaml.safe_dump(config))
+    fixture["config_sha256"] = _sha256(fixture["config"])
+    receipt = json.loads(fixture["calibre_receipt"].read_text())
+    receipt["config_sha256"] = fixture["config_sha256"]
+    receipt["config_size_bytes"] = fixture["config"].stat().st_size
+    fixture["calibre_receipt"].write_text(json.dumps(receipt))
+    fixture["calibre_receipt_sha256"] = _sha256(fixture["calibre_receipt"])
+
+    def denied(*args, **kwargs):
+        raise AssertionError("no simulator or child process is permitted")
+
+    monkeypatch.setattr(subprocess, "Popen", denied)
+    before = {str(p): _sha256(p) for p in tmp_path.rglob("*") if p.is_file()}
+    result = _run_fixture(fixture, preflight_only=True, run_emx_fn=denied)
+    assert result["decision"] == "PREFLIGHT_ONLY_NO_SIMULATOR"
+    assert result["frequency_grid_hz"] == list(FREQUENCY_GRID_HZ)
+    assert result["port_count"] == 4
+    assert result["s4p_output_path"].endswith("/emx/emx.s4p")
+    assert result["command"] == result["resolved_solver_command"]
+    assert result["command"][0:4] == [str(executable), str(fixture["gds"]), "TRANSFORMER", str(process)]
+    assert result["command"][-5:] == ["--sweep", "5000000000", "60000000000", "--sweep-stepsize", "1000000000"]
+    assert result["simulator_action_taken"] is False
+    assert not fixture["out_dir"].exists()
+    assert {str(p): _sha256(p) for p in tmp_path.rglob("*") if p.is_file()} == before
 
 
 if __name__ == "__main__":

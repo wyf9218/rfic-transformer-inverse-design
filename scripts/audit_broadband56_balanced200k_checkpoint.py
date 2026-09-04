@@ -745,7 +745,7 @@ def _audit_failure_funnel(path: Path, accepted_count: int, checks: list[dict[str
     rows, fieldnames = _read_csv(path, checks, "failure_funnel")
     required_stages = {
         "raw_geometry_candidates", "analytical_failures", "topology_failures", "cadence_failures",
-        "calibre_failures", "emx_failures", "incomplete_frequency_failures", "s4p_parsing_failures",
+        "calibre_blocking_failures", "emx_failures", "incomplete_frequency_failures", "s4p_parsing_failures",
         "feature_extraction_failures", "accepted_geometries",
     }
     stages = {str(row.get("stage") or "") for row in rows}

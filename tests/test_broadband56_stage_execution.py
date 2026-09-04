@@ -80,6 +80,23 @@ def test_exact_execution_profile_passes() -> None:
     assert validate_execution_profile(profile, backend_manifest=manifest) == []
 
 
+def test_explicit_historical_golden_terminal_keeps_full_physical_role_order():
+    from rfic_transformer_inverse_design.campaigns.broadband56_golden_stage import TERMINAL_MODE
+    profile, manifest = _profile()
+    profile["stages"]["GOLDEN"]["golden_terminal_mode"] = TERMINAL_MODE
+    assert validate_execution_profile(profile, backend_manifest=manifest) == []
+    profile["stages"]["GOLDEN"]["commands"].pop(4)
+    assert validate_execution_profile(profile, backend_manifest=manifest)
+
+
+@pytest.mark.parametrize("stage,mode", [("PILOT_32", "HISTORICAL_GOLDEN_VALIDATION_ONLY_ZERO_PRODUCTION"),
+                                        ("GOLDEN", "SKIP_PHYSICAL_GATES")])
+def test_profile_rejects_validation_terminal_outside_exact_golden(stage, mode):
+    profile, manifest = _profile()
+    profile["stages"][stage]["golden_terminal_mode"] = mode
+    assert validate_execution_profile(profile, backend_manifest=manifest)
+
+
 def test_adaptive_role_order_matches_contract_runbook() -> None:
     roles = expected_stage_role_order("PHASE_B")
 
@@ -95,7 +112,10 @@ def test_adaptive_role_order_matches_contract_runbook() -> None:
 
 def test_nonadaptive_checkpointed_stage_role_orders_are_explicit() -> None:
     assert expected_stage_role_order("GOLDEN")[0] == "phase_a_queue_builder"
-    assert expected_stage_role_order("PILOT_32")[0] == "phase_a_queue_builder"
+    assert expected_stage_role_order("PILOT_32")[:2] == (
+        "adaptive_checkpoint_materializer",
+        "phase_a_queue_builder",
+    )
     assert expected_stage_role_order("PILOT_1000")[:2] == (
         "adaptive_checkpoint_materializer",
         "phase_a_queue_builder",

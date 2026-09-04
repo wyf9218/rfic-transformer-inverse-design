@@ -4,8 +4,11 @@ import argparse
 import hashlib
 import importlib.util
 import json
+import subprocess
 import sys
 from pathlib import Path
+
+import pytest
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -27,6 +30,110 @@ def _identity(path: Path) -> dict[str, object]:
         "size_bytes": path.stat().st_size,
         "sha256": _sha(path),
     }
+
+
+def _load_test_module(name, relative):
+    spec = importlib.util.spec_from_file_location(name, ROOT / relative)
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[name] = module
+    spec.loader.exec_module(module)
+    return module
+
+
+def test_checkpoint_and_delivery_require_the_actual_producer_calibre_field(tmp_path):
+    raw_fixture = _load_test_module("funnel_schema_raw_fixture", "tests/test_finalize_broadband56_balanced200k_raw_products.py")
+    raw = raw_fixture._load_module()
+    checkpoint = _load_test_module("funnel_schema_checkpoint", "scripts/audit_broadband56_balanced200k_checkpoint.py")
+    delivery = _load_test_module("funnel_schema_delivery", "scripts/audit_broadband56_balanced200k_final_delivery.py")
+    assert "calibre_blocking_failures" in raw.FAILURE_FUNNEL_ORDER
+    assert "calibre_blocking_failures" in delivery.FAILURE_FUNNEL_STAGES
+    path = tmp_path / "funnel.csv"
+    counts = {field: 0 for field in raw.FAILURE_FUNNEL_ORDER}
+    counts.update(raw_geometry_candidates=200_000, accepted_geometries=200_000)
+    raw._write_failure_funnel(path, counts)
+    checks = []
+    checkpoint._audit_failure_funnel(path, 200_000, checks)
+    assert all(item["pass"] for item in checks), checks
+    delivery._audit_failure_funnel(path)
+    path.write_text(path.read_text().replace("calibre_blocking_failures", "calibre_failures"))
+    checks = []
+    checkpoint._audit_failure_funnel(path, 200_000, checks)
+    assert any(item["name"] == "failure_funnel_all_stages" and not item["pass"] for item in checks)
+    with pytest.raises(delivery.DeliveryAuditError, match="omits stages"):
+        delivery._audit_failure_funnel(path)
+
+
+@pytest.mark.parametrize("tamper_s4p", [False, True])
+def test_first_production_boundary_runs_real_software_audits_without_solver(tmp_path, monkeypatch, tamper_s4p):
+    # The S4P and receipts are synthetic fixtures, not fresh physical labels.
+    raw_fixture = _load_test_module("first_checkpoint_raw_fixture", "tests/test_finalize_broadband56_balanced200k_raw_products.py")
+    raw = raw_fixture._load_module()
+    audit = _load_test_module("first_checkpoint_auditor", "scripts/audit_broadband56_balanced200k_checkpoint.py")
+    contract_fixture = _load_test_module("first_checkpoint_contract_fixture", "tests/test_broadband56_balanced200k_contract.py")
+    fixture = raw_fixture._fixture(tmp_path)
+    # This integration fixture has a temporary self-consistent contract rather
+    # than the private production contract.  Bind the materializer to that
+    # fixture identity for this test only; production entry-point tests retain
+    # the frozen campaign fingerprint.
+    assert fixture["fingerprint"] != MODULE.SCIENTIFIC_CONTRACT_FINGERPRINT
+    monkeypatch.setattr(
+        MODULE,
+        "SCIENTIFIC_CONTRACT_FINGERPRINT",
+        fixture["fingerprint"],
+    )
+    attempt = fixture["attempts"][0]
+    raw_fixture._write_csv(fixture["ledger"], [attempt])
+    raw_fixture._write_csv(fixture["features"], raw_fixture._feature_rows([attempt]))
+    bounds = tmp_path / "geometry_bounds.json"
+    bounds.write_text(json.dumps(contract_fixture.geometry_bounds_payload(
+        bounds=contract_fixture._test_geometry_bounds(), contract_fingerprint_sha256=fixture["fingerprint"])))
+    cumulative = {}
+    for field in MODULE.STAGE_PROGRESS_ARTIFACT_FIELDS:
+        if field == "attempt_ledger":
+            path = fixture["ledger"]
+        elif field == "long_features":
+            path = fixture["features"]
+        else:
+            path = tmp_path / (field + ".csv")
+            path.write_text("geometry_sha256\n" + attempt["geometry_sha256"] + "\n")
+        cumulative[field] = _identity(path)
+    progress = {"accepted_after": 1, "round_cumulative_inputs": cumulative}
+    progress_path = tmp_path / "STAGE_PROGRESS_RECEIPT.json"
+    progress_path.write_text(json.dumps(progress))
+    backend = {"script_identities": {"raw_products_finalizer": _identity(Path(raw.__file__)),
+                                     "checkpoint_auditor": _identity(Path(audit.__file__))}}
+    calls = []
+    def deny_process(*args, **kwargs):
+        raise AssertionError("no simulator or subprocess permitted by this test")
+    monkeypatch.setattr(subprocess, "Popen", deny_process)
+    def run_in_process(argv, out, label):
+        assert argv[0] == sys.executable
+        module = raw if label == "raw_products" else audit
+        assert argv[1] == module.__file__
+        calls.append(argv)
+        if module.main(argv[2:]) != 0:
+            raise MODULE.AdaptiveCheckpointError("in-process delegated audit failed")
+        return {"return_code": 0, "shell_used": False, "test_only_in_process": True}
+    monkeypatch.setattr(MODULE, "_run_bound_command", run_in_process)
+    if tamper_s4p:
+        Path(attempt["s4p_path"]).write_text("tampered synthetic S4P")
+    out = tmp_path / "materializer"
+    out.mkdir()
+    kwargs = dict(out_dir=out, stage="PILOT_32", checkpoint_count=1,
+        progress_records=[(progress_path, progress)], contract_path=fixture["contract"],
+        production_config_path=fixture["production_config"], geometry_bounds_path=bounds, backend=backend)
+    if tamper_s4p:
+        with pytest.raises(MODULE.AdaptiveCheckpointError, match="delegated audit failed"):
+            MODULE._build_boundary_checkpoint(**kwargs)
+        assert not (out / "checkpoint/CHECKPOINT_RECEIPT.json").exists()
+    else:
+        checkpoint, _, _ = MODULE._build_boundary_checkpoint(**kwargs)
+        assert calls[1][calls[1].index("--audit-mode") + 1] == "golden"
+        assert calls[1][calls[1].index("--expected-accepted") + 1] == "1"
+        MODULE._validate_checkpoint(checkpoint_dir=checkpoint, expected_accepted=1)
+        status = json.loads((checkpoint / "CHECKPOINT_STATUS.json").read_text())
+        assert status["accepted_geometries"] == status["s4p_artifacts"] == 1
+        assert status["geometry_frequency_rows"] == 56
 
 
 def _write_checkpoint(root: Path, *, accepted: int) -> Path:

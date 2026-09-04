@@ -830,15 +830,15 @@ def _render_lumped_compare(*, work_dir: Path, run_config: TransformerRunConfig, 
     return out_path
 
 
-def _run_emx(
+def _prepare_emx_simulation(
     *,
     run_config: TransformerRunConfig,
     work_dir: Path,
     layout: TransformerLayoutExport,
     manifest: EMXLayoutManifest,
-) -> dict[str, object]:
+) -> tuple[EMXSimulation, list[str]]:
+    """Construct the production solver arguments without creating files or children."""
     emx_dir = Path(work_dir) / "emx"
-    emx_dir.mkdir(parents=True, exist_ok=True)
     sim = EMXSimulation(
         emx_binary=run_config.emx.emx_binary,
         process_file=run_config.emx.emx_process_file,
@@ -850,7 +850,7 @@ def _run_emx(
     sim._license_file = run_config.emx.license_file
     sim._cdslmd_license_file = run_config.emx.cdslmd_license_file
     sim._skip_os_check = run_config.emx.skip_os_check
-    sim.create_project(emx_dir)
+    sim._project_dir = emx_dir.resolve()
     frequency_points_hz = run_config.target.frequency_points_hz()
     f_start_hz = float(frequency_points_hz[0])
     f_stop_hz = float(frequency_points_hz[-1])
@@ -865,6 +865,22 @@ def _run_emx(
     sim._layout_manifest = manifest
     sim._top_cell = layout.top_cell
     command = sim._build_emx_command(layout.gds_path)
+    return sim, command
+
+
+def _run_emx(
+    *,
+    run_config: TransformerRunConfig,
+    work_dir: Path,
+    layout: TransformerLayoutExport,
+    manifest: EMXLayoutManifest,
+) -> dict[str, object]:
+    emx_dir = Path(work_dir) / "emx"
+    emx_dir.mkdir(parents=True, exist_ok=True)
+    sim, command = _prepare_emx_simulation(
+        run_config=run_config, work_dir=work_dir, layout=layout, manifest=manifest,
+    )
+    sim.create_project(emx_dir)
     (emx_dir / "emx_command.json").write_text(json.dumps(command, indent=2), encoding="utf-8")
     sim.connect()
     try:

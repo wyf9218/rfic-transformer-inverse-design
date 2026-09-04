@@ -395,6 +395,11 @@ def validate_stage_receipt(
     spec = specs.get(stage_name)
     if spec is None:
         return [f"unknown stage: {stage_name}"]
+    from . import broadband56_golden_stage as golden_stage
+    validation_only = receipt.get("golden_terminal_mode") == golden_stage.TERMINAL_MODE
+    if "golden_terminal_mode" in receipt and (not validation_only or stage_name != "GOLDEN"):
+        errors.append("validation-only terminal is permitted only for historical GOLDEN")
+    accepted_target = 0 if validation_only else cumulative_target
     _require_equal(errors, "schema", receipt.get("schema"), STAGE_RECEIPT_SCHEMA)
     _require_equal(errors, "overall_status", receipt.get("overall_status"), "PASS")
     _require_equal(errors, "decision", receipt.get("decision"), "ACCEPT_STAGE")
@@ -428,7 +433,7 @@ def validate_stage_receipt(
         errors,
         "accepted_unique_geometries",
         receipt.get("accepted_unique_geometries"),
-        cumulative_target,
+        accepted_target,
     )
     _require_equal(
         errors,
@@ -468,13 +473,13 @@ def validate_stage_receipt(
     )
 
     counts = receipt.get("counts")
-    expected_rows = int(cumulative_target) * 56
+    expected_rows = int(accepted_target) * 56
     expected_counts = {
-        "accepted_unique_geometries": int(cumulative_target),
-        "valid_s4p_geometries": int(cumulative_target),
-        "feature_complete_geometries": int(cumulative_target),
-        "s4p_artifacts": int(cumulative_target),
-        "independent_designs": int(cumulative_target),
+        "accepted_unique_geometries": int(accepted_target),
+        "valid_s4p_geometries": int(accepted_target),
+        "feature_complete_geometries": int(accepted_target),
+        "s4p_artifacts": int(accepted_target),
+        "independent_designs": int(accepted_target),
         "geometry_frequency_rows": expected_rows,
     }
     if not isinstance(counts, Mapping):
@@ -521,12 +526,13 @@ def validate_stage_receipt(
             if gates.get(field) is not True:
                 errors.append(f"gates.{field} must be true")
 
-    _validate_failure_accounting(errors, receipt.get("failure_accounting"), cumulative_target)
+    if not validation_only:
+        _validate_failure_accounting(errors, receipt.get("failure_accounting"), cumulative_target)
     artifacts = receipt.get("artifacts")
     _validate_identity_records(
         errors,
         artifacts,
-        required_roles=stage_artifact_fields(stage_name),
+        required_roles=golden_stage.ARTIFACT_FIELDS if validation_only else stage_artifact_fields(stage_name),
         label="artifacts",
         verify_files=verify_artifacts,
     )
@@ -535,6 +541,13 @@ def validate_stage_receipt(
         artifacts,
         artifact_root=artifact_root,
     )
+    if validation_only:
+        # A PASS flag or zero count alone never authorizes advancing the chain.
+        try:
+            golden_stage.validate_stage_evidence(receipt)
+        except (golden_stage.GoldenSourceError, ValueError, OSError, KeyError, TypeError) as exc:
+            errors.append(f"Golden validation-only evidence: {exc}")
+        return errors
     if isinstance(artifacts, Mapping):
         raw_record = artifacts.get("raw_products_receipt")
         if isinstance(raw_record, Mapping):

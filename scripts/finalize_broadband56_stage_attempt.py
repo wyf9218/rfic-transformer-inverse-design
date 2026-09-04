@@ -27,6 +27,7 @@ if __package__ in {None, ""}:
 from rfic_transformer_inverse_design.campaigns.broadband56_balanced200k import (  # noqa: E402
     CAMPAIGN_ID,
     FROZEN_INTERMEDIATE_ACCEPTED_BOUNDARIES,
+    next_frozen_accepted_boundary,
     FREQUENCY_GRID_HZ,
 )
 from rfic_transformer_inverse_design.campaigns.broadband56_capacity_policy import (  # noqa: E402
@@ -40,6 +41,8 @@ from rfic_transformer_inverse_design.campaigns.broadband56_full_campaign_authori
 from rfic_transformer_inverse_design.campaigns.broadband56_production_backend import (  # noqa: E402
     validate_stage_receipt_chain,
 )
+from rfic_transformer_inverse_design.campaigns.broadband56_golden_source import GoldenSourceError
+from rfic_transformer_inverse_design.campaigns import broadband56_golden_stage as golden_stage
 from rfic_transformer_inverse_design.campaigns.broadband56_stage_progress import (  # noqa: E402
     ATTEMPT_FAILURE_ACCOUNTING_FIELDS,
     STAGE_PROGRESS_ARTIFACT_FIELDS,
@@ -115,6 +118,7 @@ def _parse_args(argv: list[str] | None) -> argparse.Namespace:
     parser.add_argument("--failure-funnel", required=True)
     parser.add_argument("--out-dir", required=True)
     parser.add_argument("--simulator-action-taken", action="store_true")
+    parser.add_argument("--golden-attempt-products-receipt")
     return parser.parse_args(argv)
 
 
@@ -146,7 +150,7 @@ def finalize_stage_attempt(
     }
 
     prior_records = _progress_records(campaign_root, stage=stage)
-    base_accepted = _stage_base_accepted(stage)
+    base_accepted = 0 if stage == "PILOT_32" and not prior_stage_artifacts else _stage_base_accepted(stage)
     progress_errors = validate_stage_progress_chain(
         prior_records,
         stage=stage,
@@ -164,6 +168,41 @@ def finalize_stage_attempt(
         base_accepted=base_accepted,
     )
     attempt_index = len(prior_records) + 1
+
+    golden_path = getattr(args, "golden_attempt_products_receipt", None)
+    if golden_path is not None:
+        if stage != "GOLDEN" or prior_records or accepted_before != 0:
+            raise StageAttemptFinalizationError("validation-only Golden requires the first Golden attempt")
+        path = _required_file(Path(golden_path), "Golden attempt products")
+        record = _published_file_record(path, path)
+        try:
+            attempt = golden_stage.validate_attempt(
+                record, backend_sha256=backend_sha256, authorization_sha256=authorization_sha256,
+            )
+            for field, artifact in artifacts.items():
+                if attempt.get(field) != _published_file_record(artifact, artifact):
+                    raise GoldenSourceError(f"Golden finalizer {field} is not the bound attempt input")
+        except (GoldenSourceError, OSError, ValueError, KeyError, TypeError) as exc:
+            raise StageAttemptFinalizationError(f"Golden validation failed: {exc}") from exc
+        receipt = {
+            "schema": ROLE_RECEIPT_SCHEMA, "generated_utc": _utc_now(), "overall_status": "PASS",
+            "decision": golden_stage.FINALIZER_DECISION, "campaign_id": CAMPAIGN_ID,
+            "contract_fingerprint_sha256": SCIENTIFIC_CONTRACT_FINGERPRINT,
+            "backend_id": PRODUCTION_BACKEND_ID, "stage": "GOLDEN", "attempt_index": 1,
+            "accepted_before": 0, "accepted_this_attempt": 0, "accepted_after": 0,
+            "cumulative_target": 1, "raw_candidates_this_attempt": 1,
+            "progress_receipt": None, "cumulative_stage_inputs": None,
+            "simulator_action_taken": bool(args.simulator_action_taken),
+            "simulator_invoked_by_finalizer": False,
+            "golden_terminal_mode": golden_stage.TERMINAL_MODE,
+            "golden_attempt_products_receipt": record,
+            "golden_validation": attempt["golden_validation"],
+            "production_accepted_count_delta": 0,
+        }
+        out_dir.mkdir(parents=True, exist_ok=False)
+        _write_json(out_dir / ROLE_RECEIPT_NAME, receipt)
+        _write_sha256s(out_dir)
+        return receipt
 
     tables = {
         field: _read_csv(artifacts[field], field)
@@ -193,9 +232,12 @@ def finalize_stage_attempt(
     )
 
     accepted_after = accepted_before + accepted_count
-    if accepted_after > spec.cumulative_target:
+    next_boundary = next_frozen_accepted_boundary(
+        accepted_before, cumulative_target=spec.cumulative_target
+    )
+    if accepted_after > next_boundary:
         raise StageAttemptFinalizationError(
-            f"accepted count overshoots {stage}: {accepted_after}>{spec.cumulative_target}"
+            f"accepted count overshoots {stage} checkpoint: {accepted_after}>{next_boundary}"
         )
 
     staging = out_dir.with_name(f".{out_dir.name}.staging.{os.getpid()}")
@@ -423,6 +465,11 @@ def _prior_stage_cumulative_artifacts(
 
     _, prior_receipt = records[-1]
     expected_prior = STAGES[stage_index - 1]
+    if prior_receipt.get("golden_terminal_mode") == golden_stage.TERMINAL_MODE:
+        if stage != "PILOT_32" or prior_receipt.get("accepted_unique_geometries") != 0:
+            raise StageAttemptFinalizationError("validation-only Golden precedes only PILOT_32 with zero accepted")
+        # Its independently verified evidence stays in the Golden stage, not production tables.
+        return {}
     if (
         prior_receipt.get("stage") != expected_prior.name
         or prior_receipt.get("accepted_unique_geometries")

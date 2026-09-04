@@ -115,7 +115,7 @@ FAILURE_FUNNEL_STAGES = {
     "analytical_failures",
     "topology_failures",
     "cadence_failures",
-    "calibre_failures",
+    "calibre_blocking_failures",
     "emx_failures",
     "incomplete_frequency_failures",
     "s4p_parsing_failures",
