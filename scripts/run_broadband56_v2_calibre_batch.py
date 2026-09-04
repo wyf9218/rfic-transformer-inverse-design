@@ -38,6 +38,10 @@ from rfic_transformer_inverse_design.campaigns.broadband56_gds_identity import (
     GDS_TIMESTAMP_NORMALIZED_SHA256_ALGORITHM,
     gds_timestamp_normalized_sha256,
 )
+from rfic_transformer_inverse_design.layout.port_ground_metrics import (  # noqa: E402
+    NOT_EVALUATED,
+    validate_metric_evidence,
+)
 
 
 RECEIPT_SCHEMA = "rfic_transformer.broadband56_v2_calibre_batch.v2"
@@ -909,6 +913,7 @@ def _current_contract_delegate_geometry_audit(
         geometry_check.get("power_line_8port_geometry_audit"),
         "power-line geometry audit",
     )
+    metric_states = validate_metric_evidence(geometry_check, gds_sha256=gds_sha)
     stitch_values = power_line_audit.get("power_line_ground_stitches")
     stitches = (
         [value for value in stitch_values if isinstance(value, Mapping)]
@@ -929,6 +934,7 @@ def _current_contract_delegate_geometry_audit(
         and power_line_audit.get("touchstone_mode") == "signal_4_grounded_aux"
         and set(stitches_by_label) == set(expected_stacks)
         and len(stitches) == 4
+        and metric_states["power_line_check"] == "PASS"
         and metrics.get("power_line_8port_port_ground_overlap_verified_port_count")
         == 8
         and _close_float(
@@ -939,6 +945,7 @@ def _current_contract_delegate_geometry_audit(
     )
     foundry_via_stack_and_landing_pad_pass = (
         foundry_power_line_contract_pass
+        and metric_states["via_stack_check"] == "PASS"
         and all(
             int(stitches_by_label[label].get("source_layer") or -1) == source
             and int(stitches_by_label[label].get("target_ground_layer") or -1)
@@ -1020,8 +1027,14 @@ def _current_contract_delegate_geometry_audit(
     }
     failed = [name for name, value in checks.items() if value is not True]
     if failed:
+        via_state = (
+            NOT_EVALUATED if not foundry_power_line_contract_pass else
+            "PASS" if foundry_via_stack_and_landing_pad_pass else "FAIL"
+        )
         raise CalibreBatchError(
-            f"current-contract delegate geometry checks failed: {failed}"
+            f"current-contract delegate geometry checks failed: {failed}; "
+            f"power_line_check={metric_states['power_line_check']}; "
+            f"via_stack_check={via_state}; evidence_error={metric_states['error']}"
         )
     return {
         "schema": (
@@ -1047,6 +1060,7 @@ def _current_contract_delegate_geometry_audit(
         ),
         "teacher_only_foundry_slotting_prechecks_applied": False,
         "foundry_layout_prechecks_applied": True,
+        "geometry_metric_states": metric_states,
         "source_evidence": {
             "source_geometry_audit": _file_record(source_audit_path),
             "gds_physical_identity_audit": _file_record(physical_audit_path),

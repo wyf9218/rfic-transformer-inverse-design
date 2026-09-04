@@ -48,6 +48,9 @@ from rfic_transformer_inverse_design.layout.foundry_audit import (  # noqa: E402
     load_and_validate_foundry_layout_audit,
     produce_foundry_layout_audit,
 )
+from rfic_transformer_inverse_design.layout.port_ground_metrics import (  # noqa: E402
+    attach_actual_gds_metrics,
+)
 
 
 RECEIPT_SCHEMA = "rfic_transformer.broadband56_v2_cadence_streamout_batch.v2"
@@ -508,6 +511,7 @@ def _classify_shard(
             require_pass=True,
             verify_files=True,
         )
+        _produce_post_streamout_metrics(evaluation_dir, gds_path, foundry_audit)
         destination = aggregate_evaluations_dir / evaluation_dir.name
         if destination.exists():
             raise CadenceBatchError("aggregate evaluation key collision")
@@ -542,6 +546,35 @@ def _classify_shard(
             "terminal_stage": "cadence_streamout",
             "error": f"{type(exc).__name__}: {exc}",
         }
+
+def _produce_post_streamout_metrics(
+    evaluation_dir: Path, gds_path: Path, foundry_audit: Mapping[str, Any]
+) -> dict[str, Any]:
+    # Only a new delegate evaluation is writable. Preserve its pre-audit bytes
+    # before the GDS-index role binds the enriched summary to the candidate.
+    summary_path = evaluation_dir / "summary.json"
+    previous = summary_path.read_bytes()
+    summary = json.loads(previous)
+    result = attach_actual_gds_metrics(
+        summary["geometry_check"], gds_path=gds_path,
+        power_line_audit=summary["geometry_check"]["power_line_8port_geometry_audit"],
+        foundry_audit=foundry_audit,
+    )
+    with (evaluation_dir / "summary.pre_port_ground_metrics.json").open("xb") as handle:
+        handle.write(previous)
+    with (evaluation_dir / "layout" / "actual_gds_port_ground_metrics.json").open("x") as handle:
+        json.dump(result, handle, indent=2, allow_nan=False)
+    temporary = evaluation_dir / "summary.port_ground_metrics.tmp"
+    with temporary.open("x") as handle:
+        json.dump(summary, handle, indent=2, allow_nan=False)
+    temporary.replace(summary_path)
+    if result["power_line_check"] != "PASS" or result["via_stack_check"]["overall_status"] != "PASS":
+        raise CadenceBatchError(
+            f"post-streamout geometry metric contract FAIL: {result['metrics']}; "
+            f"via_stack_check={result['via_stack_check']['overall_status']}"
+        )
+    return result
+
 
 def _candidate_queue_record(receipt: Mapping[str, Any]) -> Mapping[str, Any]:
     if receipt.get("overall_status") != "PASS":

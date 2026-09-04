@@ -301,7 +301,10 @@ def _fixture(root: Path) -> dict[str, Any]:
         ("f" * 64, "2" * 64, "c" * 64),
     ):
         gds = root / f"{candidate[:1]}.gds"
-        gds.write_bytes(f"gds-{candidate[:1]}".encode())
+        from tests.port_ground_fixture import make_fixture
+        from rfic_transformer_inverse_design.layout.port_ground_metrics import attach_actual_gds_metrics
+
+        power_line, actual_foundry = make_fixture(gds)
         evaluation_dir = root / f"{candidate[:1]}_evaluation"
         (evaluation_dir / "layout").mkdir(parents=True)
         evaluation = evaluation_dir / "summary.json"
@@ -324,14 +327,18 @@ def _fixture(root: Path) -> dict[str, Any]:
                             "secondary_winding_centerline_max_internal_angle_deg": 135.0,
                             "secondary_winding_centerline_min_terminal_angle_deg": 90.0,
                             "secondary_winding_centerline_max_terminal_angle_deg": 90.0,
-                            "power_line_8port_port_ground_overlap_verified_port_count": 8,
-                            "power_line_8port_port_ground_overlap_max_abs_error_um": 0.0,
                         },
-                        "power_line_8port_geometry_audit": _power_line_audit_payload(),
+                        "power_line_8port_geometry_audit": power_line,
                     },
                 }
             )
         )
+        payload = json.loads(evaluation.read_text())
+        attach_actual_gds_metrics(
+            payload["geometry_check"], gds_path=gds,
+            power_line_audit=power_line, foundry_audit=actual_foundry,
+        )
+        evaluation.write_text(json.dumps(payload))
         foundry_audit = evaluation_dir / "layout" / "foundry_layout_audit.json"
         foundry_audit.write_text(json.dumps(_foundry_layout_audit_payload()))
         source_audit = root / f"{candidate[:1]}_geometry_audit.json"

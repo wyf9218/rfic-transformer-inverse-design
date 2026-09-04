@@ -1,0 +1,283 @@
+{
+  "schema": "rfic_transformer.power_line_8port_geometry_metric_contract.v1",
+  "campaign_id": "broadband56_real_emx_balanced200k_tsmc65_v2",
+  "scientific_contract_fingerprint": "f86a00efbf7756b7421b863bbb16c340db6b423640f63a3257d46c1af49eb55e",
+  "purpose": "Evidence interface for the existing contract; not authorization to change geometry or launch simulators.",
+  "implementation_bindings": [
+    {
+      "path": "rfic_transformer_inverse_design/layout/port_ground_metrics.py",
+      "sha256": "53c9fc68aaeaf784d9071b6fb53a0d02d54e7ffeb9be8b894dd894f983c3489d",
+      "symbol": "attach_actual_gds_metrics / measure_port_ground_metrics / validate_metric_evidence"
+    },
+    {
+      "path": "scripts/run_broadband56_v2_calibre_batch.py",
+      "sha256": "2f363c3ea87a72949067e233631f0d7c4e4f6eb00797bc09fdca293c799a16b9",
+      "symbol": "_current_contract_delegate_geometry_audit"
+    },
+    {
+      "path": "scripts/run_broadband56_v2_cadence_streamout_batch.py",
+      "sha256": "8924bac85b1a6626f5f4f9793db3bde9799af7f8a081b1e1f7e18551ebaabd2f",
+      "symbol": "_classify_shard / _produce_post_streamout_metrics"
+    },
+    {
+      "path": "rfic_transformer_inverse_design/execution/evaluator.py",
+      "sha256": "71a06113e925bc87ebb69ae0664e498ba0e5cfee2c58dcb7eb7c05dd6e722f1a",
+      "symbol": "TransformerEmxEvaluator._evaluate_export / _attach_power_line_8port_geometry_audit"
+    },
+    {
+      "path": "rfic_transformer_inverse_design/layout/export.py",
+      "sha256": "68f5a127c9094c07a123c35f8f8460f3196aa006c187071741cb532b6b3c6028",
+      "symbol": "_power_line_8port_port_overlap_evidence / _canonicalize_cell_to_foundry_grid"
+    },
+    {
+      "path": "rfic_transformer_inverse_design/layout/foundry_audit.py",
+      "sha256": "18345730dab23fbdf4a88dfab227622a889ca043122089652f68db6a38eb04c3",
+      "symbol": "produce_foundry_layout_audit / _expected_stitch_polygons"
+    }
+  ],
+  "top_cell": "TRANSFORMER",
+  "metric_path": "geometry_check.metrics",
+  "detailed_evidence_path": "geometry_check.actual_gds_port_ground_metrics.power_line_8port_port_ground_overlap_checks",
+  "measurement_boundary": "POST_CADENCE_STREAMOUT_PRE_CADENCE_PASS_PARTITION",
+  "legacy_producer_trace": "execution/evaluator.py attaches nominal exporter attributes before streamout but did not produce the two required overlap aggregates. The new post-streamout producer enriches only new evaluation summaries before the GDS-index role freezes their hashes.",
+  "expected_pairs": [
+    {
+      "port_id": "P001",
+      "ground_id": "P001_G",
+      "side": "left",
+      "signal_pair": [
+        74,
+        0
+      ],
+      "ground_pair": [
+        35,
+        0
+      ],
+      "source_object": "primary_top",
+      "via_numbers": []
+    },
+    {
+      "port_id": "P002",
+      "ground_id": "P002_G",
+      "side": "left",
+      "signal_pair": [
+        74,
+        0
+      ],
+      "ground_pair": [
+        35,
+        0
+      ],
+      "source_object": "primary_bottom",
+      "via_numbers": []
+    },
+    {
+      "port_id": "P003",
+      "ground_id": "P003_G",
+      "side": "right",
+      "signal_pair": [
+        39,
+        60
+      ],
+      "ground_pair": [
+        35,
+        0
+      ],
+      "source_object": "secondary_top",
+      "via_numbers": []
+    },
+    {
+      "port_id": "P004",
+      "ground_id": "P004_G",
+      "side": "right",
+      "signal_pair": [
+        39,
+        60
+      ],
+      "ground_pair": [
+        35,
+        0
+      ],
+      "source_object": "secondary_bottom",
+      "via_numbers": []
+    },
+    {
+      "port_id": "P005",
+      "ground_id": "P005",
+      "side": "top",
+      "signal_pair": [
+        39,
+        60
+      ],
+      "ground_pair": [
+        35,
+        0
+      ],
+      "source_object": "secondary_power_line.top_port_label",
+      "via_numbers": [
+        5,
+        6,
+        7,
+        8
+      ]
+    },
+    {
+      "port_id": "P006",
+      "ground_id": "P006",
+      "side": "bottom",
+      "signal_pair": [
+        39,
+        60
+      ],
+      "ground_pair": [
+        35,
+        0
+      ],
+      "source_object": "secondary_power_line.bottom_port_label",
+      "via_numbers": [
+        5,
+        6,
+        7,
+        8
+      ]
+    },
+    {
+      "port_id": "P007",
+      "ground_id": "P007",
+      "side": "top",
+      "signal_pair": [
+        74,
+        0
+      ],
+      "ground_pair": [
+        35,
+        0
+      ],
+      "source_object": "primary_power_line.top_port_label",
+      "via_numbers": [
+        5,
+        6,
+        7,
+        8,
+        9
+      ]
+    },
+    {
+      "port_id": "P008",
+      "ground_id": "P008",
+      "side": "bottom",
+      "signal_pair": [
+        74,
+        0
+      ],
+      "ground_pair": [
+        35,
+        0
+      ],
+      "source_object": "primary_power_line.bottom_port_label",
+      "via_numbers": [
+        5,
+        6,
+        7,
+        8,
+        9
+      ]
+    }
+  ],
+  "pair_authority": "Existing export.py labels/primary_power_line/secondary_power_line/power_line_ground_stitches objects and the consumer's four expected stacks; confirmed against the Gen10 source audit and actual GDS. P005-P008 are grounded auxiliary bar ends, not extra S4P ports.",
+  "pin_layers": {
+    "primary": [
+      126,
+      0
+    ],
+    "secondary": [
+      139,
+      0
+    ],
+    "ground": [
+      135,
+      0
+    ]
+  },
+  "metal_stack_pairs": [
+    [
+      35,
+      0
+    ],
+    [
+      36,
+      0
+    ],
+    [
+      37,
+      0
+    ],
+    [
+      38,
+      40
+    ],
+    [
+      39,
+      60
+    ],
+    [
+      74,
+      0
+    ]
+  ],
+  "via_layer_pairs": {
+    "via5": [
+      55,
+      0
+    ],
+    "via6": [
+      56,
+      0
+    ],
+    "via7": [
+      57,
+      40
+    ],
+    "via8": [
+      58,
+      40
+    ],
+    "via9": [
+      85,
+      0
+    ]
+  },
+  "coordinate_reference_frame": "GDS_TOP_CELL_LOCAL_XY_UM_AFTER_SNAP",
+  "manufacturing_grid_um": 0.005,
+  "coordinate_tolerance_um": 1e-9,
+  "area_tolerance_um2": 0.000001,
+  "expected_overlap_um": 10,
+  "definition": "Measure the outward signal/bar edge and inward M5 frame edge from actual polygons intersecting the source-object cross-section. Left/bottom: ground edge minus signal edge; right/top: signal edge minus ground edge. A positive actual planar intersection is required; signal P001-P004 must not be shorted with a via. P005-P008 additionally require the independent approved via/landing geometry.",
+  "error_definition": "Maximum of absolute overlap-minus-10um and absolute observed-versus-expected snapped signal/ground edge displacement. Grid-aligned coordinates are compared in integer grid units, so one grid step remains 0.005um. Missing measurements are null, never zero.",
+  "aggregate_rules": {
+    "verified_port_count": "Count only individually passed relationships.",
+    "max_abs_error_um": "Maximum across all eight actual errors; null when any measurement is unavailable.",
+    "consumer_requires": {
+      "verified_port_count": 8,
+      "max_abs_error_um": 0
+    }
+  },
+  "via_dependency": {
+    "upstream_failure_state": "NOT_EVALUATED_DUE_TO_UPSTREAM_CONTRACT_FAILURE",
+    "after_overlap_pass": "Independent Boolean comparisons of actual GDS via cuts and metal landing pads against the existing generated stitch objects; PASS or genuine FAIL.",
+    "calibre_requires": "Both overlap and via checks PASS; missing metrics and inconsistent evidence fail closed."
+  },
+  "no_clobber": "Never write into the historical failed stage. New delegate evaluations preserve summary.pre_port_ground_metrics.json before enriching the current summary. No retry into an existing output directory.",
+  "regression_fixture": {
+    "classification": "GOLDEN_FAILED_POST_CADENCE_PRE_CALIBRE_GEOMETRY_METRIC_CONTRACT_MISMATCH",
+    "gds_sha256": "fcf3c243a2976468e3c2081cf50a6cf79c4fdad44e3e11fc6329eb3067eb5403",
+    "retroactive_acceptance": false
+  },
+  "resource_patch": {
+    "commit": "6b18b7daf42eb36b19c342c138cd546423357736",
+    "foundry_parent_commit": "95d3ff91f86a3a47c68c57612f7a0b6f3a664d95",
+    "load1_start_threshold": 1.1,
+    "load5_start_threshold": 1.1,
+    "scope": "Existing GOLDEN and PILOT_32 initial launch only; other resource policy unchanged."
+  }
+}

@@ -404,6 +404,11 @@ for index, row in enumerate(rows):
             "power_line_8port_geometry.json",
         ):
             shutil.copyfile(template / name, evaluation_dir / "layout" / name)
+        power_line = json.loads((template / "power_line_8port_geometry.json").read_text())
+        (evaluation_dir / "summary.json").write_text(json.dumps({{
+            "ok": True, "geometry_check": {{"ok": True, "errors": [], "metrics": {{}},
+            "power_line_8port_geometry_audit": power_line}}
+        }}))
     shard_summary = {{
         "overall_status": "PASS" if success else "FAIL",
         "run_emx": False,
