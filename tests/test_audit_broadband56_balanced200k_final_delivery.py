@@ -182,6 +182,33 @@ def _fixture(tmp_path: Path, module) -> dict[str, Path]:
             for stage in sorted(module.FAILURE_FUNNEL_STAGES)
         ],
     )
+    raw_receipt = raw_dir / "RAW_PRODUCTS_RECEIPT.json"
+    _write_json(
+        raw_receipt,
+        {
+            "schema": "broadband56_raw_products_receipt_v1",
+            "overall_status": "PASS",
+            "decision": "USE_AS_FRESH_REAL_EMX_RAW_PRODUCTS",
+            "campaign_id": CAMPAIGN_ID,
+            "contract_fingerprint_sha256": fingerprint,
+            "counts": {
+                "accepted_geometries": 4,
+                "geometry_frequency_rows": 4 * len(FREQUENCY_GRID_HZ),
+            },
+            "checks": {"synthetic_raw_products": True},
+            "inputs": {
+                "production_config": _evidence(production_config_path),
+                "production_config_authorization": {
+                    "mode": "FROZEN_CONTRACT_DIRECT",
+                    "frozen_config_sha256": process_sha,
+                    "effective_config_sha256": process_sha,
+                    "full_campaign_receipt": None,
+                    "corrected_foundry_layout_approval_receipt": None,
+                },
+            },
+        },
+    )
+    _write_index(raw_dir, recursive=False)
 
     checkpoint_dir = tmp_path / "checkpoint"
     checkpoint_dir.mkdir()

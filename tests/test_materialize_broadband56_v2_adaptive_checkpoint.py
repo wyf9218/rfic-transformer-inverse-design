@@ -100,6 +100,8 @@ def test_first_production_boundary_runs_real_software_audits_without_solver(tmp_
     progress = {"accepted_after": 1, "round_cumulative_inputs": cumulative}
     progress_path = tmp_path / "STAGE_PROGRESS_RECEIPT.json"
     progress_path.write_text(json.dumps(progress))
+    authorization_path = tmp_path / "FULL_CAMPAIGN_AUTHORIZATION_RECEIPT.json"
+    authorization_path.write_text("{}\n", encoding="utf-8")
     backend = {"script_identities": {"raw_products_finalizer": _identity(Path(raw.__file__)),
                                      "checkpoint_auditor": _identity(Path(audit.__file__))}}
     calls = []
@@ -121,13 +123,18 @@ def test_first_production_boundary_runs_real_software_audits_without_solver(tmp_
     out.mkdir()
     kwargs = dict(out_dir=out, stage="PILOT_32", checkpoint_count=1,
         progress_records=[(progress_path, progress)], contract_path=fixture["contract"],
-        production_config_path=fixture["production_config"], geometry_bounds_path=bounds, backend=backend)
+        production_config_path=fixture["production_config"],
+        authorization_path=authorization_path,
+        geometry_bounds_path=bounds, backend=backend)
     if tamper_s4p:
         with pytest.raises(MODULE.AdaptiveCheckpointError, match="delegated audit failed"):
             MODULE._build_boundary_checkpoint(**kwargs)
         assert not (out / "checkpoint/CHECKPOINT_RECEIPT.json").exists()
     else:
         checkpoint, _, _ = MODULE._build_boundary_checkpoint(**kwargs)
+        assert calls[0][calls[0].index("--full-campaign-receipt") + 1] == str(
+            authorization_path
+        )
         assert calls[1][calls[1].index("--audit-mode") + 1] == "golden"
         assert calls[1][calls[1].index("--expected-accepted") + 1] == "1"
         MODULE._validate_checkpoint(checkpoint_dir=checkpoint, expected_accepted=1)

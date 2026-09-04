@@ -110,20 +110,58 @@ def _write_sha256s(directory: Path) -> None:
     index.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
-def _frozen_contract(tmp_path: Path) -> tuple[Path, str]:
+def _frozen_contract(tmp_path: Path) -> tuple[Path, str, Path]:
+    production_config = tmp_path / "production_config.yaml"
+    production_config.write_text("synthetic: true\n", encoding="utf-8")
     contract = json.loads(CONTRACT.read_text(encoding="utf-8"))
     contract["inherited_contract_evidence"] = {
         "previous_campaign_id": "synthetic_previous_campaign",
         "previous_contract_sha256": "1" * 64,
         "previous_config_sha256": "2" * 64,
-        "production_config_sha256": "3" * 64,
+        "production_config_sha256": _sha256(production_config),
         "private_runtime_paths_not_for_publication": True,
     }
     contract["preparation_status"] = "PASS"
     contract["contract_fingerprint_sha256"] = contract_fingerprint(contract)
     path = tmp_path / "campaign_contract_frozen.json"
     _write_json(path, contract)
-    return path, contract["contract_fingerprint_sha256"]
+    return path, contract["contract_fingerprint_sha256"], production_config
+
+
+def _write_raw_products(
+    root: Path, *, fingerprint: str, production_config: Path
+) -> Path:
+    directory = root / "raw_products"
+    directory.mkdir()
+    receipt = directory / "RAW_PRODUCTS_RECEIPT.json"
+    config_sha = _sha256(production_config)
+    _write_json(
+        receipt,
+        {
+            "schema": "broadband56_raw_products_receipt_v1",
+            "overall_status": "PASS",
+            "decision": "USE_AS_FRESH_REAL_EMX_RAW_PRODUCTS",
+            "campaign_id": "broadband56_real_emx_balanced200k_tsmc65_v2",
+            "contract_fingerprint_sha256": fingerprint,
+            "counts": {
+                "accepted_geometries": 200_000,
+                "geometry_frequency_rows": 11_200_000,
+            },
+            "checks": {"synthetic_raw_products": True},
+            "inputs": {
+                "production_config": _evidence(production_config),
+                "production_config_authorization": {
+                    "mode": "FROZEN_CONTRACT_DIRECT",
+                    "frozen_config_sha256": config_sha,
+                    "effective_config_sha256": config_sha,
+                    "full_campaign_receipt": None,
+                    "corrected_foundry_layout_approval_receipt": None,
+                },
+            },
+        },
+    )
+    _write_sha256s(directory)
+    return directory
 
 
 def _distributed_counts(total: int, bins: int) -> list[int]:
@@ -401,9 +439,14 @@ def _write_history(root: Path, *, fingerprint: str) -> Path:
 
 
 def _fixture(tmp_path: Path) -> dict[str, Path]:
-    contract_path, fingerprint = _frozen_contract(tmp_path)
+    contract_path, fingerprint, production_config = _frozen_contract(tmp_path)
     return {
         "contract": contract_path,
+        "raw": _write_raw_products(
+            tmp_path,
+            fingerprint=fingerprint,
+            production_config=production_config,
+        ),
         "history": _write_history(tmp_path, fingerprint=fingerprint),
         "audit": _write_audit(
             tmp_path,
@@ -456,6 +499,7 @@ def test_renders_fourteen_hash_bound_png_and_svg_figures(
 
     result = module.render_checkpoint_figures(
         contract_path=fixture["contract"],
+        raw_dir=fixture["raw"],
         history_dir=fixture["history"],
         audit_dirs=[fixture["audit"]],
         out_dir=out_dir,
@@ -509,6 +553,7 @@ def test_tampered_checkpoint_csv_fails_without_output(
     with pytest.raises(module.FigureBuildError, match="SHA index mismatch"):
         module.render_checkpoint_figures(
             contract_path=fixture["contract"],
+            raw_dir=fixture["raw"],
             history_dir=fixture["history"],
             audit_dirs=[fixture["audit"]],
             out_dir=out_dir,

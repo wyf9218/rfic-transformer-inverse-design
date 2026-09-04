@@ -193,6 +193,11 @@ def main(argv: list[str] | None = None) -> int:
         result = finalize_raw_products(
             contract_path=Path(args.contract).expanduser().resolve(),
             production_config_path=Path(args.production_config).expanduser().resolve(),
+            full_campaign_receipt_path=(
+                Path(args.full_campaign_receipt).expanduser().resolve()
+                if args.full_campaign_receipt
+                else None
+            ),
             attempt_ledger_path=Path(args.attempt_ledger).expanduser().resolve(),
             long_features_path=Path(args.long_features).expanduser().resolve(),
             out_dir=out_dir,
@@ -212,6 +217,7 @@ def _parse_args(argv: list[str] | None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--contract", required=True)
     parser.add_argument("--production-config", required=True)
+    parser.add_argument("--full-campaign-receipt")
     parser.add_argument("--attempt-ledger", required=True)
     parser.add_argument("--long-features", required=True)
     parser.add_argument("--out-dir", required=True)
@@ -226,6 +232,7 @@ def finalize_raw_products(
     *,
     contract_path: Path,
     production_config_path: Path,
+    full_campaign_receipt_path: Path | None = None,
     attempt_ledger_path: Path,
     long_features_path: Path,
     out_dir: Path,
@@ -233,9 +240,15 @@ def finalize_raw_products(
 ) -> dict[str, int]:
     if out_dir.exists():
         raise RawProductFinalizationError(f"output path already exists: {out_dir}")
-    contract, fingerprint, production_config_sha256 = _validate_contract_and_config(
+    (
+        contract,
+        fingerprint,
+        production_config_sha256,
+        production_config_authorization,
+    ) = _validate_contract_and_config(
         contract_path,
         production_config_path,
+        full_campaign_receipt_path,
     )
     attempt_audit = _audit_attempt_ledger(
         attempt_ledger_path,
@@ -292,7 +305,8 @@ def finalize_raw_products(
         receipt_path = staging / "RAW_PRODUCTS_RECEIPT.json"
         checks = {
             "contract_static_validation_pass": True,
-            "production_config_hash_matches_frozen_contract": True,
+            "production_config_hash_matches_frozen_contract_or_approved_replacement": True,
+            "production_config_authorization_chain_verified": True,
             "attempt_ledger_terminal_partition_exact": sum(funnel_counts.values())
             == attempt_audit.attempt_count,
             "accepted_count_exact": len(accepted) == expected_accepted,
@@ -344,6 +358,7 @@ def finalize_raw_products(
             "inputs": {
                 "contract": _file_evidence(contract_path),
                 "production_config": _file_evidence(production_config_path),
+                "production_config_authorization": production_config_authorization,
                 "attempt_ledger": _file_evidence(attempt_ledger_path),
                 "long_features": _file_evidence(long_features_path),
             },
@@ -397,7 +412,8 @@ def finalize_raw_products(
 def _validate_contract_and_config(
     contract_path: Path,
     production_config_path: Path,
-) -> tuple[dict[str, Any], str, str]:
+    full_campaign_receipt_path: Path | None,
+) -> tuple[dict[str, Any], str, str, dict[str, Any]]:
     contract = _read_json(contract_path, "contract")
     errors = validate_contract(contract)
     if errors:
@@ -414,11 +430,135 @@ def _validate_contract_and_config(
     if not production_config_path.is_file() or production_config_path.stat().st_size <= 0:
         raise RawProductFinalizationError(f"production config is missing or empty: {production_config_path}")
     actual_config_sha = _sha256(production_config_path)
-    if actual_config_sha != expected_config_sha:
+    if actual_config_sha == expected_config_sha:
+        return contract, fingerprint, actual_config_sha, {
+            "mode": "FROZEN_CONTRACT_DIRECT",
+            "frozen_config_sha256": expected_config_sha,
+            "effective_config_sha256": actual_config_sha,
+            "full_campaign_receipt": None,
+            "corrected_foundry_layout_approval_receipt": None,
+        }
+    authorization = _validate_corrected_config_authorization(
+        contract_path=contract_path,
+        contract_fingerprint_sha256=fingerprint,
+        frozen_config_sha256=expected_config_sha,
+        production_config_path=production_config_path,
+        production_config_sha256=actual_config_sha,
+        full_campaign_receipt_path=full_campaign_receipt_path,
+    )
+    return contract, fingerprint, actual_config_sha, authorization
+
+
+def _validate_corrected_config_authorization(
+    *,
+    contract_path: Path,
+    contract_fingerprint_sha256: str,
+    frozen_config_sha256: str,
+    production_config_path: Path,
+    production_config_sha256: str,
+    full_campaign_receipt_path: Path | None,
+) -> dict[str, Any]:
+    if full_campaign_receipt_path is None:
         raise RawProductFinalizationError(
-            "production config SHA-256 does not match frozen inherited-contract evidence"
+            "production config SHA-256 differs from the frozen contract without a FULL_CAMPAIGN receipt"
         )
-    return contract, fingerprint, actual_config_sha
+    full = _read_json(full_campaign_receipt_path, "FULL_CAMPAIGN receipt")
+    if not (
+        full.get("overall_status") == "PASS"
+        and full.get("campaign_id") == CAMPAIGN_ID
+        and full.get("contract_fingerprint_sha256")
+        == contract_fingerprint_sha256
+        and full.get("campaign_200k_authorized") is True
+    ):
+        raise RawProductFinalizationError(
+            "FULL_CAMPAIGN receipt does not authorize this frozen campaign"
+        )
+    composition = full.get("authorization_composition")
+    if not isinstance(composition, Mapping):
+        raise RawProductFinalizationError(
+            "FULL_CAMPAIGN receipt lacks authorization composition"
+        )
+    corrected_record = composition.get(
+        "corrected_foundry_layout_approval_receipt"
+    )
+    corrected_path = _verified_identity_path(
+        corrected_record,
+        label="corrected foundry-layout approval receipt",
+    )
+    corrected = _read_json(corrected_path, "corrected foundry-layout approval")
+    if not (
+        corrected.get("schema")
+        == "rfic_transformer.broadband56_corrected_foundry_layout_authorization.v1"
+        and corrected.get("overall_status") == "PASS"
+        and corrected.get("authorization_scope")
+        == "RESTORE_FOUNDRY_LAYOUT_CONTRACT_AND_RERUN_ONE_RESCUE_GOLDEN_THEN_AUTO_CONTINUE_FULL_CAMPAIGN"
+        and corrected.get("restore_corrected_foundry_layout_contract_authorized")
+        is True
+    ):
+        raise RawProductFinalizationError(
+            "corrected foundry-layout approval receipt is not exact PASS authorization"
+        )
+    bound = corrected.get("verified_bound_files")
+    if not isinstance(bound, Mapping):
+        raise RawProductFinalizationError(
+            "corrected foundry-layout approval lacks verified bound files"
+        )
+    previous_path = _verified_identity_path(
+        bound.get("previous_private_configuration"),
+        label="previous private configuration",
+    )
+    if _sha256(previous_path) != frozen_config_sha256:
+        raise RawProductFinalizationError(
+            "corrected approval previous config does not match frozen contract"
+        )
+    corrected_config_path = _verified_identity_path(
+        bound.get("corrected_private_configuration"),
+        label="corrected private configuration",
+    )
+    if (
+        corrected_config_path != production_config_path.resolve()
+        or _sha256(corrected_config_path) != production_config_sha256
+    ):
+        raise RawProductFinalizationError(
+            "production config does not match the corrected approved configuration"
+        )
+    frozen_contract_path = _verified_identity_path(
+        bound.get("private_evidence.campaign_contract_frozen"),
+        label="corrected approval frozen campaign contract",
+    )
+    if frozen_contract_path != contract_path.resolve():
+        raise RawProductFinalizationError(
+            "corrected approval is not bound to this frozen campaign contract"
+        )
+    return {
+        "mode": "APPROVED_CORRECTED_FOUNDRY_LAYOUT_REPLACEMENT",
+        "frozen_config_sha256": frozen_config_sha256,
+        "effective_config_sha256": production_config_sha256,
+        "full_campaign_receipt": _file_evidence(full_campaign_receipt_path),
+        "corrected_foundry_layout_approval_receipt": _file_evidence(
+            corrected_path
+        ),
+    }
+
+
+def _verified_identity_path(record: Any, *, label: str) -> Path:
+    if not isinstance(record, Mapping):
+        raise RawProductFinalizationError(f"{label} identity is missing")
+    path = Path(str(record.get("path") or "")).expanduser().resolve()
+    digest = str(record.get("sha256") or "").lower()
+    try:
+        expected_size = int(record.get("size_bytes"))
+    except (TypeError, ValueError) as exc:
+        raise RawProductFinalizationError(f"{label} size is invalid") from exc
+    if (
+        not path.is_file()
+        or expected_size <= 0
+        or path.stat().st_size != expected_size
+        or not _is_sha256(digest)
+        or _sha256(path) != digest
+    ):
+        raise RawProductFinalizationError(f"{label} identity does not match bytes")
+    return path
 
 
 def _audit_attempt_ledger(

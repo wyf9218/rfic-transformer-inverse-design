@@ -45,6 +45,14 @@ def _sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
+def _file_record(path: Path) -> dict[str, object]:
+    return {
+        "path": str(path.resolve()),
+        "size_bytes": path.stat().st_size,
+        "sha256": _sha256(path),
+    }
+
+
 def _write_csv(path: Path, rows: list[dict[str, object]]) -> None:
     assert rows
     with path.open("w", newline="", encoding="utf-8") as handle:
@@ -317,6 +325,11 @@ def _run(module, fixture: dict[str, object], out_dir: Path) -> dict[str, int]:
     return module.finalize_raw_products(
         contract_path=Path(fixture["contract"]),
         production_config_path=Path(fixture["production_config"]),
+        full_campaign_receipt_path=(
+            Path(fixture["full_campaign_receipt"])
+            if fixture.get("full_campaign_receipt")
+            else None
+        ),
         attempt_ledger_path=Path(fixture["ledger"]),
         long_features_path=Path(fixture["features"]),
         out_dir=out_dir,
@@ -413,6 +426,81 @@ def test_production_config_hash_mismatch_is_rejected(tmp_path: Path) -> None:
     Path(fixture["production_config"]).write_text("changed: true\n", encoding="utf-8")
 
     with pytest.raises(module.RawProductFinalizationError, match="production config SHA-256"):
+        _run(module, fixture, tmp_path / "raw_products")
+
+
+def test_approved_corrected_foundry_layout_config_is_bound_to_receipt_chain(
+    tmp_path: Path,
+) -> None:
+    module = _load_module()
+    fixture = _fixture(tmp_path)
+    previous_config = Path(fixture["production_config"])
+    corrected_config = tmp_path / "production_corrected.yaml"
+    corrected_config.write_text(
+        previous_config.read_text(encoding="utf-8")
+        + "foundry_layout:\n  enabled: true\n  manufacturing_grid_um: 0.005\n",
+        encoding="utf-8",
+    )
+    contract_path = Path(fixture["contract"])
+    corrected_receipt = tmp_path / "CORRECTED_FOUNDRY_LAYOUT_AUTHORIZATION_RECEIPT.json"
+    corrected_payload = {
+        "schema": "rfic_transformer.broadband56_corrected_foundry_layout_authorization.v1",
+        "overall_status": "PASS",
+        "authorization_scope": (
+            "RESTORE_FOUNDRY_LAYOUT_CONTRACT_AND_RERUN_ONE_RESCUE_GOLDEN_THEN_AUTO_CONTINUE_FULL_CAMPAIGN"
+        ),
+        "restore_corrected_foundry_layout_contract_authorized": True,
+        "verified_bound_files": {
+            "previous_private_configuration": _file_record(previous_config),
+            "corrected_private_configuration": _file_record(corrected_config),
+            "private_evidence.campaign_contract_frozen": _file_record(contract_path),
+        },
+    }
+    corrected_receipt.write_text(
+        json.dumps(corrected_payload, indent=2) + "\n", encoding="utf-8"
+    )
+    full_receipt = tmp_path / "FULL_CAMPAIGN_AUTHORIZATION_RECEIPT.json"
+    full_receipt.write_text(
+        json.dumps(
+            {
+                "overall_status": "PASS",
+                "campaign_id": module.CAMPAIGN_ID,
+                "contract_fingerprint_sha256": fixture["fingerprint"],
+                "campaign_200k_authorized": True,
+                "authorization_composition": {
+                    "corrected_foundry_layout_approval_receipt": _file_record(
+                        corrected_receipt
+                    )
+                },
+            },
+            indent=2,
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    fixture["production_config"] = corrected_config
+    fixture["full_campaign_receipt"] = full_receipt
+
+    out_dir = tmp_path / "raw_products_corrected"
+    result = _run(module, fixture, out_dir)
+
+    assert result == {"accepted_geometries": 2, "geometry_frequency_rows": 112}
+    receipt = json.loads(
+        (out_dir / "RAW_PRODUCTS_RECEIPT.json").read_text(encoding="utf-8")
+    )
+    authorization = receipt["inputs"]["production_config_authorization"]
+    assert authorization["mode"] == "APPROVED_CORRECTED_FOUNDRY_LAYOUT_REPLACEMENT"
+    assert authorization["frozen_config_sha256"] == _sha256(previous_config)
+    assert authorization["effective_config_sha256"] == _sha256(corrected_config)
+    assert receipt["checks"]["production_config_authorization_chain_verified"] is True
+
+
+def test_corrected_config_without_approval_chain_is_rejected(tmp_path: Path) -> None:
+    module = _load_module()
+    fixture = _fixture(tmp_path)
+    Path(fixture["production_config"]).write_text("changed: true\n", encoding="utf-8")
+
+    with pytest.raises(module.RawProductFinalizationError, match="FULL_CAMPAIGN receipt"):
         _run(module, fixture, tmp_path / "raw_products")
 
 

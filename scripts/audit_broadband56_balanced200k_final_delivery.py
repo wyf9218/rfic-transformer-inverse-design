@@ -33,6 +33,10 @@ from rfic_transformer_inverse_design.campaigns.broadband56_balanced200k import (
     contract_fingerprint,
     validate_contract,
 )
+from rfic_transformer_inverse_design.campaigns.broadband56_raw_products_identity import (  # noqa: E402
+    RawProductsIdentityError,
+    resolve_effective_production_config,
+)
 
 
 EXPECTED_FEATURE_ROWS = TARGET_ACCEPTED_GEOMETRIES * len(FREQUENCY_GRID_HZ)
@@ -158,7 +162,7 @@ def main(argv: list[str] | None = None) -> int:
             figure_dir=Path(args.figure_dir).expanduser().resolve(),
             out_dir=out_dir,
         )
-    except DeliveryAuditError as exc:
+    except (DeliveryAuditError, RawProductsIdentityError) as exc:
         print(f"overall_status=FAIL\nerror={exc}", file=sys.stderr)
         return 2
     print("overall_status=PASS")
@@ -204,7 +208,7 @@ def audit_final_delivery(
         raw_dir,
         terminal=terminal,
         fingerprint=contract.fingerprint,
-        production_config_sha256=contract.production_config_sha256,
+        frozen_production_config_sha256=contract.production_config_sha256,
     )
     history = _load_history_products(
         history_dir,
@@ -221,7 +225,7 @@ def audit_final_delivery(
     figures = _load_figure_products(
         figure_dir,
         fingerprint=contract.fingerprint,
-        production_config_sha256=contract.production_config_sha256,
+        production_config_sha256=raw["effective_config"].sha256,
     )
 
     coverage_status = str(terminal.status.get("coverage_status") or "")
@@ -279,7 +283,10 @@ def audit_final_delivery(
             "decision": "REPORT_COMPLETE_200K_WITH_SEPARATE_COVERAGE_STATUS",
             "campaign_id": CAMPAIGN_ID,
             "contract_fingerprint_sha256": contract.fingerprint,
-            "production_process_config_sha256": contract.production_config_sha256,
+            "production_process_config_sha256": raw["effective_config"].sha256,
+            "frozen_contract_production_config_sha256": (
+                contract.production_config_sha256
+            ),
             "execution_completion": "COMPLETE_200K",
             "coverage_status": coverage_status,
             "terminal_counts": {
@@ -300,6 +307,15 @@ def audit_final_delivery(
                     checkpoint_dir, "CHECKPOINT_RECEIPT.json"
                 ),
                 "raw_products": raw["evidence"],
+                "effective_production_config": {
+                    "path": str(raw["effective_config"].config_path),
+                    "size_bytes": raw["effective_config"].config_size_bytes,
+                    "sha256": raw["effective_config"].sha256,
+                    "authorization_mode": raw["effective_config"].mode,
+                    "raw_products_receipt_sha256": (
+                        raw["effective_config"].receipt_sha256
+                    ),
+                },
                 "campaign_history": history,
                 "training_readiness": training,
                 "checkpoint_figures": figures,
@@ -413,9 +429,19 @@ def _load_raw_products(
     *,
     terminal: TerminalEvidence,
     fingerprint: str,
-    production_config_sha256: str,
+    frozen_production_config_sha256: str,
 ) -> dict[str, Any]:
     _require_directory(directory, "raw product")
+    _require_files(directory, ("RAW_PRODUCTS_RECEIPT.json", "SHA256SUMS.txt"))
+    _verify_sha_index(directory, recursive=False, require_all=True)
+    effective_config = resolve_effective_production_config(
+        raw_dir=directory,
+        campaign_id=CAMPAIGN_ID,
+        contract_fingerprint_sha256=fingerprint,
+        frozen_config_sha256=frozen_production_config_sha256,
+        expected_accepted=TARGET_ACCEPTED_GEOMETRIES,
+        expected_feature_rows=EXPECTED_FEATURE_ROWS,
+    )
     paths = {key: directory / name for key, name in RAW_PRODUCT_NAMES.items()}
     for key, path in paths.items():
         if not path.is_file():
@@ -438,14 +464,21 @@ def _load_raw_products(
         accepted=accepted,
         artifact_hashes=artifact_hashes,
         fingerprint=fingerprint,
-        production_config_sha256=production_config_sha256,
+        production_config_sha256=effective_config.sha256,
     )
     if _csv_row_count(paths["long_features"]) != EXPECTED_FEATURE_ROWS:
         raise DeliveryAuditError("broadband_features_11p2m_long.csv row count is not 11,200,000")
     _audit_failure_funnel(paths["failure_funnel"])
     return {
         "paths": paths,
-        "evidence": {key: _file_evidence(path) for key, path in paths.items()},
+        "evidence": {
+            **{key: _file_evidence(path) for key, path in paths.items()},
+            "raw_products_receipt": _file_evidence(
+                directory / "RAW_PRODUCTS_RECEIPT.json"
+            ),
+            "sha256_index": _file_evidence(directory / "SHA256SUMS.txt"),
+        },
+        "effective_config": effective_config,
     }
 
 

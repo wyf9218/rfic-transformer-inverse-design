@@ -47,6 +47,10 @@ from rfic_transformer_inverse_design.campaigns.broadband56_balanced200k import (
     phase_for_accepted_sequence,
     validate_contract,
 )
+from rfic_transformer_inverse_design.campaigns.broadband56_raw_products_identity import (  # noqa: E402
+    RawProductsIdentityError,
+    resolve_effective_production_config,
+)
 
 
 FIGURE_CHECKPOINT_COUNTS = (50_000, 100_000, 150_000, 200_000)
@@ -185,11 +189,12 @@ def main(argv: list[str] | None = None) -> int:
         )
         result = render_checkpoint_figures(
             contract_path=Path(args.contract).expanduser().resolve(),
+            raw_dir=Path(args.raw_dir).expanduser().resolve(),
             history_dir=Path(args.history_dir).expanduser().resolve(),
             audit_dirs=audit_dirs,
             out_dir=out_dir,
         )
-    except FigureBuildError as exc:
+    except (FigureBuildError, RawProductsIdentityError) as exc:
         print(f"overall_status=FAIL\nerror={exc}", file=sys.stderr)
         return 2
     print("overall_status=PASS")
@@ -203,6 +208,7 @@ def main(argv: list[str] | None = None) -> int:
 def _parse_args(argv: list[str] | None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--contract", required=True)
+    parser.add_argument("--raw-dir", required=True)
     parser.add_argument("--history-dir", required=True)
     sources = parser.add_mutually_exclusive_group(required=True)
     sources.add_argument(
@@ -221,6 +227,7 @@ def _parse_args(argv: list[str] | None) -> argparse.Namespace:
 def render_checkpoint_figures(
     *,
     contract_path: Path,
+    raw_dir: Path,
     history_dir: Path,
     audit_dirs: Sequence[Path],
     out_dir: Path,
@@ -229,7 +236,16 @@ def render_checkpoint_figures(
 
     if out_dir.exists():
         raise FigureBuildError(f"output path already exists (no-clobber): {out_dir}")
-    contract, fingerprint, process_sha = _load_contract(contract_path)
+    contract, fingerprint, frozen_process_sha = _load_contract(contract_path)
+    effective_config = resolve_effective_production_config(
+        raw_dir=raw_dir,
+        campaign_id=CAMPAIGN_ID,
+        contract_fingerprint_sha256=fingerprint,
+        frozen_config_sha256=frozen_process_sha,
+        expected_accepted=TARGET_ACCEPTED_GEOMETRIES,
+        expected_feature_rows=TARGET_ACCEPTED_GEOMETRIES * len(FREQUENCY_GRID_HZ),
+    )
+    process_sha = effective_config.sha256
     history = _load_history(history_dir, fingerprint=fingerprint)
     audits = _load_audits(audit_dirs, contract_path=contract_path, fingerprint=fingerprint)
     expected_counts = set(FIGURE_CHECKPOINT_COUNTS)
@@ -292,6 +308,16 @@ def render_checkpoint_figures(
             },
             "inputs": {
                 "contract": _file_record(contract_path, label="frozen_campaign_contract"),
+                "raw_products_receipt": _file_record(
+                    effective_config.receipt_path,
+                    label="effective_production_config_raw_products_receipt",
+                ),
+                "effective_production_config": {
+                    "path": str(effective_config.config_path),
+                    "size_bytes": effective_config.config_size_bytes,
+                    "sha256": effective_config.sha256,
+                    "authorization_mode": effective_config.mode,
+                },
                 "history_receipt_sha256": history.receipt_sha256,
                 "checkpoint_receipts": [
                     {

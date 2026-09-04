@@ -251,6 +251,7 @@ def materialize_checkpoint(
             progress_records=progress_records,
             contract_path=contract_path,
             production_config_path=production_config_path,
+            authorization_path=authorization_path,
             geometry_bounds_path=geometry_bounds_path,
             backend=backend,
         )
@@ -339,6 +340,7 @@ def _build_boundary_checkpoint(
     progress_records: Sequence[tuple[Path, Mapping[str, Any]]],
     contract_path: Path,
     production_config_path: Path,
+    authorization_path: Path,
     geometry_bounds_path: Path,
     backend: Mapping[str, Any],
 ) -> tuple[Path, Path, list[dict[str, Any]]]:
@@ -375,6 +377,8 @@ def _build_boundary_checkpoint(
         str(contract_path),
         "--production-config",
         str(production_config_path),
+        "--full-campaign-receipt",
+        str(authorization_path),
         "--attempt-ledger",
         str(inputs["attempt_ledger"]),
         "--long-features",
