@@ -339,7 +339,9 @@ def run_batch(args: argparse.Namespace, *, out_dir: Path) -> dict[str, Any]:
 
     for label, (path, digest) in pinned.items():
         _require_unchanged(path, digest, label)
-    zero_pass_terminal_failure = bool(candidate_rows) and not pass_candidates
+    zero_pass_terminal_failure = (
+        stage == "GOLDEN" and bool(candidate_rows) and not pass_candidates
+    )
     receipt = {
         "schema": RECEIPT_SCHEMA,
         "generated_utc": _utc_now(),
@@ -356,6 +358,8 @@ def run_batch(args: argparse.Namespace, *, out_dir: Path) -> dict[str, Any]:
         "terminal_count": len(evidence),
         "cadence_pass_count": len(pass_candidates),
         "cadence_fail_count": len(failures),
+        "all_candidates_rejected_before_calibre": bool(candidate_rows)
+        and not pass_candidates,
         "candidate_failures_counted_as_accepted": False,
         "backend_identity_manifest": _file_record(manifest_path),
         "input_role_receipt": _file_record(input_receipt_path),

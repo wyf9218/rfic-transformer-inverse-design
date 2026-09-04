@@ -91,6 +91,31 @@ def test_zero_cadence_pass_is_terminal_upstream_failure(tmp_path: Path) -> None:
     assert not (out / "roles" / "05_calibre_runner").exists()
 
 
+def test_zero_cadence_pass_is_terminal_partition_for_production(
+    tmp_path: Path,
+) -> None:
+    fixture = _fixture(tmp_path, candidate_count=1, invalid_source_audit=True)
+    result = _run(fixture, stage="PILOT_32")
+
+    assert result.returncode == 0, result.stderr
+    out = Path(fixture["out_dir"])
+    receipt = json.loads(
+        (out / "CADENCE_STREAMOUT_BATCH_ROLE_RECEIPT.json").read_text()
+    )
+    failures = _read_csv(out / "CADENCE_STREAMOUT_FAILURE_INDEX.csv")
+    assert receipt["overall_status"] == "PASS"
+    assert receipt["decision"] == (
+        "TERMINAL_PARTITION_CANDIDATE_BOUND_CADENCE_STREAMOUT"
+    )
+    assert receipt["cadence_pass_count"] == 0
+    assert receipt["cadence_fail_count"] == 1
+    assert receipt["all_candidates_rejected_before_calibre"] is True
+    assert receipt["downstream_calibre_authorized"] is True
+    assert receipt["upstream_terminal_failure"] is None
+    assert len(failures) == 1
+    assert _read_csv(out / "CADENCE_PASS_CANDIDATE_QUEUE.csv") == []
+
+
 def test_cadence_batch_rejects_duplicate_geometry_before_delegate(
     tmp_path: Path,
 ) -> None:
@@ -328,13 +353,15 @@ def _build_real_foundry_layout(
     return template_dir, values
 
 
-def _run(fixture: dict[str, Path | str]) -> subprocess.CompletedProcess[str]:
+def _run(
+    fixture: dict[str, Path | str], *, stage: str = "GOLDEN"
+) -> subprocess.CompletedProcess[str]:
     return subprocess.run(
         [
             sys.executable,
             str(SCRIPT),
             "--stage",
-            "GOLDEN",
+            stage,
             "--input-role-receipt",
             str(fixture["input_receipt"]),
             "--backend-identity-manifest",
