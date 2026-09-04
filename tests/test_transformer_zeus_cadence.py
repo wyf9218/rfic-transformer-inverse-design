@@ -159,9 +159,15 @@ class TransformerZeusCadenceTest(unittest.TestCase):
         self.assertIn("unless(found", skill)
         self.assertIn("bbox = pinFig~>bBox", skill)
         self.assertIn("halfHeight = _xfmrTraceWidthForLabel(cv labelFig) / 2.0", skill)
-        self.assertIn("pinFig = _xfmrCreateLabelPinRect(cv label pinFig)", skill)
+        self.assertIn("procedure(_xfmrGridCenteredContainedBBox(bbox pt grid)", skill)
+        self.assertIn("center = list(_xfmrSnapToGrid(car(pt) grid)", skill)
+        self.assertIn("halfWidth = floor((min(car(center) - car(ll) car(ur) - car(center))", skill)
+        self.assertIn("bbox = _xfmrGridCenteredContainedBBox(list(ll ur) pt manufacturingGrid)", skill)
+        self.assertIn("manufacturingGrid = 0.005", skill)
+        self.assertIn("pinFig = _xfmrCreateLabelPinRect(cv label pinFig manufacturingGrid)", skill)
         self.assertIn('pinLpp = list(car(labelFig~>lpp) "pin")', skill)
         self.assertIn('pin~>accessDir = accessDir', skill)
+        self.assertNotIn("labelFig~>xy =", skill)
 
     def test_build_create_pins_batch_skill_handles_multiple_cells(self) -> None:
         skill = build_create_pins_batch_skill(
@@ -176,6 +182,25 @@ class TransformerZeusCadenceTest(unittest.TestCase):
         self.assertIn('dbOpenCellViewByType("xfmr_test" "TOP_B" "layout" "" "a")', skill)
         self.assertIn('foreach(port \'("P001" "P002_G")', skill)
         self.assertIn('foreach(port \'("P003" "P004_G")', skill)
+
+    def test_build_create_pins_batch_skill_uses_requested_manufacturing_grid(self) -> None:
+        skill = build_create_pins_batch_skill(
+            oa_lib_name="xfmr_test",
+            cells=(("TOP", ("P001",)),),
+            manufacturing_grid_um=0.01,
+        )
+
+        self.assertIn("manufacturingGrid = 0.01", skill)
+
+    def test_build_create_pins_batch_skill_rejects_invalid_manufacturing_grid(self) -> None:
+        for invalid in (0.0, -0.005, float("nan"), float("inf")):
+            with self.subTest(invalid=invalid):
+                with self.assertRaisesRegex(ValueError, "finite and positive"):
+                    build_create_pins_batch_skill(
+                        oa_lib_name="xfmr_test",
+                        cells=(("TOP", ("P001",)),),
+                        manufacturing_grid_um=invalid,
+                    )
 
     def test_build_strmout_command_uses_geometry_and_text_pin_export(self) -> None:
         with tempfile.TemporaryDirectory() as tmpdir:

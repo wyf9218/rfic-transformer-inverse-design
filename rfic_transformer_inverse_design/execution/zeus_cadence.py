@@ -319,6 +319,7 @@ def build_create_pins_skill(
     top_cell: str,
     labels: tuple[str, ...],
     access_dirs: tuple[str, ...] = DEFAULT_CADENCE_ACCESS_DIRS,
+    manufacturing_grid_um: float = 0.005,
 ) -> str:
     """Build the SKILL snippet that converts manifest pin labels into OA pins."""
 
@@ -326,6 +327,7 @@ def build_create_pins_skill(
         oa_lib_name=oa_lib_name,
         cells=((top_cell, labels),),
         access_dirs=access_dirs,
+        manufacturing_grid_um=manufacturing_grid_um,
     )
 
 
@@ -334,11 +336,16 @@ def build_create_pins_batch_skill(
     oa_lib_name: str,
     cells: tuple[tuple[str, tuple[str, ...]], ...],
     access_dirs: tuple[str, ...] = DEFAULT_CADENCE_ACCESS_DIRS,
+    manufacturing_grid_um: float = 0.005,
 ) -> str:
     """Build one SKILL snippet that creates OA pins across many imported cells."""
 
     if not cells:
         raise ValueError("Cadence pin-creation batch must include at least one cell")
+    manufacturing_grid_um = float(manufacturing_grid_um)
+    if not np.isfinite(manufacturing_grid_um) or manufacturing_grid_um <= 0.0:
+        raise ValueError("manufacturing_grid_um must be finite and positive")
+    manufacturing_grid_literal = f"{manufacturing_grid_um:.12g}"
     access_items = " ".join(f"\"{direction}\"" for direction in access_dirs)
     body = (
         "procedure(_xfmrBBoxContainsPoint(bbox pt)\n"
@@ -511,7 +518,34 @@ def build_create_pins_batch_skill(
         "  )\n"
         ")\n"
         "\n"
-        "procedure(_xfmrCreateLabelPinRect(cv labelFig pinFig)\n"
+        "procedure(_xfmrSnapToGrid(value grid)\n"
+        "  grid * round(value / grid)\n"
+        ")\n"
+        "\n"
+        "procedure(_xfmrGridCenteredContainedBBox(bbox pt grid)\n"
+        "  let((ll ur center halfWidth halfHeight tolerance)\n"
+        "    ll = car(bbox)\n"
+        "    ur = cadr(bbox)\n"
+        "    tolerance = grid / 1000.0\n"
+        "    center = list(_xfmrSnapToGrid(car(pt) grid) _xfmrSnapToGrid(cadr(pt) grid))\n"
+        "    unless(\n"
+        "      abs(car(center) - car(pt)) <= tolerance &&\n"
+        "      abs(cadr(center) - cadr(pt)) <= tolerance\n"
+        "      error(sprintf(nil \"Imported pin label is off manufacturing grid: %L\" pt))\n"
+        "    )\n"
+        "    halfWidth = floor((min(car(center) - car(ll) car(ur) - car(center)) + tolerance) / grid) * grid\n"
+        "    halfHeight = floor((min(cadr(center) - cadr(ll) cadr(ur) - cadr(center)) + tolerance) / grid) * grid\n"
+        "    unless(halfWidth > 0.0 && halfHeight > 0.0\n"
+        "      error(sprintf(nil \"Pin rectangle cannot be centered on manufacturing grid: bbox=%L label=%L\" bbox pt))\n"
+        "    )\n"
+        "    list(\n"
+        "      list(car(center) - halfWidth cadr(center) - halfHeight)\n"
+        "      list(car(center) + halfWidth cadr(center) + halfHeight)\n"
+        "    )\n"
+        "  )\n"
+        ")\n"
+        "\n"
+        "procedure(_xfmrCreateLabelPinRect(cv labelFig pinFig manufacturingGrid)\n"
         "  let((pt halfWidth halfHeight ll ur pinLpp bbox)\n"
         "    pt = labelFig~>xy\n"
         "    bbox = nil\n"
@@ -529,12 +563,16 @@ def build_create_pins_batch_skill(
         "      ll = list(car(pt) - halfWidth cadr(pt) - halfHeight)\n"
         "      ur = list(car(pt) + halfWidth cadr(pt) + halfHeight)\n"
         "    )\n"
+        "    bbox = _xfmrGridCenteredContainedBBox(list(ll ur) pt manufacturingGrid)\n"
+        "    ll = car(bbox)\n"
+        "    ur = cadr(bbox)\n"
         "    dbCreateRect(cv pinLpp list(ll ur))\n"
         "  )\n"
         ")\n"
         "\n"
-        "let((accessDir)\n"
+        "let((accessDir manufacturingGrid)\n"
         f"  accessDir = list({access_items})\n"
+        f"  manufacturingGrid = {manufacturing_grid_literal}\n"
     )
     for top_cell, labels in cells:
         label_items = " ".join(f"\"{label}\"" for label in labels)
@@ -551,7 +589,7 @@ def build_create_pins_batch_skill(
             "          error(sprintf(nil \"Missing imported label %s\" port))\n"
             "        )\n"
             "        pinFig = _xfmrFindPinFigure(cv label)\n"
-            "        pinFig = _xfmrCreateLabelPinRect(cv label pinFig)\n"
+            "        pinFig = _xfmrCreateLabelPinRect(cv label pinFig manufacturingGrid)\n"
             "        net = dbMakeNet(cv port)\n"
             "        term = dbFindTermByName(cv port)\n"
             "        unless(term\n"
@@ -999,6 +1037,7 @@ def run_transformer_zeus_cadence_roundtrip(
                 oa_lib_name=workspace.oa_lib_name,
                 top_cell=export_result.layout.top_cell,
                 labels=pin_labels,
+                manufacturing_grid_um=run_config.emx.foundry_layout.manufacturing_grid_um,
             ),
             encoding="ascii",
         )
@@ -1258,6 +1297,7 @@ def run_transformer_zeus_cadence_roundtrip_batch(
                         (export.layout.top_cell, pin_labels_by_key[export.cache_key])
                         for export in valid_exports
                     ),
+                    manufacturing_grid_um=run_config.emx.foundry_layout.manufacturing_grid_um,
                 ),
                 encoding="ascii",
             )
