@@ -4,10 +4,12 @@ Research-grade Python tooling for parameterized RFIC transformer layout,
 Cadence EMX data generation, Touchstone quality control, physical-feature
 learning, inverse design, and EMX/HFSS cross-solver validation.
 
-The current research target maps desired `[Lp, Ls, Q, |K|]` values to ten
-manufacturable geometry variables. The production campaign is designed for up
-to one million real EM simulations with a fixed model test at every cumulative
-100,000-sample checkpoint.
+The inverse-design tooling maps desired `[Lp, Ls, Q, |K|]` values to ten
+geometry variables. The currently authorized campaign targets exactly 200,000
+unique accepted fresh real-EMX geometries, with four-port S4P outputs at
+5-60 GHz, 1 GHz spacing and 56 points. NN training is not authorized in this
+data-generation campaign; earlier million-sample and model-training protocols
+are historical workflows, not its current execution contract.
 
 > This repository contains code, synthetic examples, templates, and tests. It
 > intentionally excludes foundry PDK files, licenses, credentials, real
@@ -19,9 +21,15 @@ to one million real EM simulations with a fixed model test at every cumulative
 
 ## Start Here: Current Goals And Status
 
-The primary handoff for the current research state, the owner's Monday-report
-goals, completion status, blocked claims, and next legal actions is the
-[Chinese current-goals and engineering handoff](docs/research/ENGINEERING_HANDOFF_20260823_CN.md).
+Start with [Current Evidence Status](docs/research/CURRENT_STATUS.md) and the
+[timestamped Broadband56 production snapshot](docs/research/BROADBAND56_PUBLIC_PROGRESS_20260905T003832Z.json).
+At the published observation, 31 accepted geometries and 1,736 frequency rows
+were independently verified; the sole supervisor was waiting for hard resource
+gates. This is not a live counter or a completed 200K dataset.
+
+The earlier Monday-report goals, model-comparison results and blocked claims
+are preserved in the
+[historical Chinese engineering handoff](docs/research/ENGINEERING_HANDOFF_20260823_CN.md).
 The architecture-matched engineering diagnostic completed at
 `2026-08-24T03:45:26Z`; see the
 [deployed-100k exact-contract on historical-200k status](docs/research/DEPLOYED100K_EXACT_CONTRACT_ON_200K_STATUS_20260824.json)
@@ -41,7 +49,9 @@ its exact status and public-sanitized review-code boundary are summarized in
 
 | Area | Entry point |
 |---|---|
-| Current goals, status, and Chinese research handoff | [当前情况、目标与科研工程交接](docs/research/ENGINEERING_HANDOFF_20260823_CN.md) |
+| Current authorized 200K data generation | [Current evidence status](docs/research/CURRENT_STATUS.md) |
+| Verified production counts and evidence identities | [Broadband56 public progress snapshot](docs/research/BROADBAND56_PUBLIC_PROGRESS_20260905T003832Z.json) |
+| Historical goals and Chinese research handoff | [历史目标与科研工程交接](docs/research/ENGINEERING_HANDOFF_20260823_CN.md) |
 | Architecture-matched 200k engineering-run status | [Terminal status, proxy metrics, and evidence JSON](docs/research/DEPLOYED100K_EXACT_CONTRACT_ON_200K_STATUS_20260824.json) |
 | Strict exact-contract completion blocker | [Frozen-trainer and array-identity blocker JSON](docs/research/DEPLOYED100K_EXACT_CONTRACT_ON_200K_STRICT_BLOCKER_20260824.json) |
 | Deployed/presented 100k selection identity | [Reference identity audit](docs/research/REFERENCE_100K_SELECTION_UNPROVEN.json) |
@@ -56,8 +66,8 @@ its exact status and public-sanitized review-code boundary are summarized in
 | Repository map | [Documentation index](docs/INDEX.md) |
 | System components | [System overview](docs/architecture/SYSTEM_OVERVIEW.md) |
 | End-to-end workflow | [Pipeline guide](docs/workflows/END_TO_END_PIPELINE.md) |
-| Million-sample campaign | [Campaign protocol](docs/workflows/MILLION_DATA_CAMPAIGN.md) |
-| 100k checkpoint tests | [Checkpoint protocol](docs/workflows/CHECKPOINT_MODEL_TESTS.md) |
+| Historical million-sample campaign | [Campaign protocol](docs/workflows/MILLION_DATA_CAMPAIGN.md) |
+| Historical 100k model checkpoint tests | [Checkpoint protocol](docs/workflows/CHECKPOINT_MODEL_TESTS.md) |
 | EMX/HFSS validation | [Cross-solver validation](docs/workflows/EMX_HFSS_VALIDATION.md) |
 | Three-input MLP Q sweep and MARS GUI | [Exact-Q synthesis application](docs/workflows/MLP_Q_SWEEP_GUI.md) |
 | Neural-network models | [Model catalog](docs/models/MODEL_CATALOG.md) |
