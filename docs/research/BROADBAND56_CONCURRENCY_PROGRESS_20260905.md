@@ -1,6 +1,37 @@
 # Concurrency Work: Partial, Not a Performance Result
 
-## Latest Control Readiness (06:11 UTC)
+## Latest Boundary Preparation (06:22 UTC)
+
+The prepared benchmark hook now also recognizes the first PHASE_A boundary
+at exactly 1,000 accepted geometries. This avoids missing calibration when
+the current pilot finishes in one batch. It still accepts PILOT_1000 only
+between 32 and 999 accepted; inconsistent counts fail closed. Later PHASE_A
+production and other scientific stages do not trigger it. The callback must
+validate the complete prior-stage receipt chain, and an active child or
+existing terminal benchmark evidence still prevents another benchmark run.
+
+The same 115 targeted software tests passed locally and with the private
+execution interpreter. A fresh no-child-process component preflight rechecked
+the unchanged real workload and backend dependencies, then installed the hook
+inside a helper only. Source GDS, production configuration, current lease,
+runtime/backend bytes and all seven requested levels remain unchanged.
+
+This revised component is **not deployed**. The earlier prepared control
+manifest still binds the old hook; activation must bind the new component
+and reverify the current startup/idle boundary. No healthy production process
+was signaled or restarted and no benchmark trial ran. At 06:18:03 UTC the
+same production supervisor was alive, with 277 current-batch GDS files and
+zero current-batch S4P files; official accepted progress remained 100 / 5,600
+rows. The current single-worker batch and throughput bottleneck remain.
+
+Private software-test / component-preflight receipt SHA-256:
+`95be0ae0a66c45b954f1f6c94b2c48de413c6d04c83e8cde30477e0f24c46560` /
+`ad906263a9c09a1faea32856b2af80cb3a4b5bd494aa9e91d70da17c992233b9`.
+Two preliminary command errors were retained: a local test collection used
+the wrong import root, and a remote argument-construction command lost shell
+quoting. Neither started a simulator; corrected invocations passed.
+
+## Prior Control Readiness (06:11 UTC)
 
 The current supervisor's full startup command was reconstructed and its hash
 matched the actual startup receipt. All 26 recorded recovery handoffs, the
