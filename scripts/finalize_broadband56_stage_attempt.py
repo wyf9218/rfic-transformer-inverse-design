@@ -498,6 +498,78 @@ def _prior_stage_cumulative_artifacts(
         raw_outputs.get("long_features"),
         "prior stage long features",
     )
+    if "stage_execution_trace" in evidence:
+        # Published raw-product indexes are projections, not append-compatible
+        # attempt tables. Reuse the full inputs bound by the completed execution.
+        return _trace_bound_cumulative_inputs(prior_receipt, raw_receipt, resolved)
+    return resolved
+
+
+def _trace_bound_cumulative_inputs(
+    stage_receipt: Mapping[str, Any],
+    raw_receipt: Mapping[str, Any],
+    published: Mapping[str, Path],
+) -> dict[str, Path]:
+    trace_path = _verified_evidence_path(
+        stage_receipt["artifacts"]["stage_execution_trace"], "prior stage execution trace"
+    )
+    trace = _read_json(trace_path, "prior stage execution trace")
+    if (
+        trace.get("overall_status") != "PASS"
+        or trace.get("campaign_id") != CAMPAIGN_ID
+        or trace.get("contract_fingerprint_sha256") != SCIENTIFIC_CONTRACT_FINGERPRINT
+        or trace.get("stage") != stage_receipt["stage"]
+        or trace.get("all_role_return_codes_zero") is not True
+        or trace.get("all_role_receipts_pass") is not True
+    ):
+        raise StageAttemptFinalizationError("prior cumulative execution trace identity mismatch")
+    roles = trace.get("roles")
+    if not isinstance(roles, list):
+        raise StageAttemptFinalizationError("prior cumulative execution trace lacks roles")
+    finalizers = [r for r in roles if isinstance(r, Mapping) and r.get("role") == "stage_attempt_finalizer"]
+    if len(finalizers) != 1 or finalizers[0].get("return_code") != 0:
+        raise StageAttemptFinalizationError("prior cumulative finalizer role is not unique and successful")
+    finalizer_path = _verified_evidence_path(finalizers[0].get("receipt"), "prior cumulative finalizer")
+    finalizer = _read_json(finalizer_path, "prior cumulative finalizer")
+    if (
+        finalizer.get("schema") != ROLE_RECEIPT_SCHEMA
+        or finalizer.get("overall_status") != "PASS"
+        or finalizer.get("decision") != STAGE_ATTEMPT_TARGET_REACHED_DECISION
+        or finalizer.get("campaign_id") != CAMPAIGN_ID
+        or finalizer.get("contract_fingerprint_sha256") != SCIENTIFIC_CONTRACT_FINGERPRINT
+        or finalizer.get("stage") != stage_receipt["stage"]
+        or finalizer.get("accepted_after") != stage_receipt["accepted_unique_geometries"]
+    ):
+        raise StageAttemptFinalizationError("prior cumulative finalizer identity mismatch")
+    records = finalizer.get("cumulative_stage_inputs")
+    if not isinstance(records, Mapping) or set(records) != set(STAGE_PROGRESS_ARTIFACT_FIELDS):
+        raise StageAttemptFinalizationError("prior cumulative finalizer input schema mismatch")
+    resolved = {
+        field: _verified_evidence_path(records[field], f"prior full cumulative {field}")
+        for field in STAGE_PROGRESS_ARTIFACT_FIELDS
+    }
+    raw_inputs = raw_receipt.get("inputs")
+    if not isinstance(raw_inputs, Mapping):
+        raise StageAttemptFinalizationError("prior raw products lack source input bindings")
+    for field in ("attempt_ledger", "long_features"):
+        source = _verified_evidence_path(raw_inputs.get(field), f"prior raw source {field}")
+        if source != resolved[field]:
+            raise StageAttemptFinalizationError(f"prior cumulative {field} differs from audited raw source")
+    for field in ("attempt_ledger", "long_features", "exact_gds_emx_receipt_index", "failure_funnel"):
+        if _sha256(resolved[field]) != _sha256(published[field]):
+            raise StageAttemptFinalizationError(f"prior cumulative {field} differs from published evidence")
+    tables = {field: _read_csv(resolved[field], field) for field in CSV_ARTIFACT_FIELDS}
+    _validate_geometry_identity_sets(tables)
+    if len(tables["accepted_geometry_increment"][1]) != stage_receipt["accepted_unique_geometries"]:
+        raise StageAttemptFinalizationError("prior cumulative accepted count mismatch")
+    # Compare every shared published value; aliases remain distinct, not filled.
+    for field in ("accepted_geometry_increment", "rejected_geometry_increment", "s4p_artifact_index"):
+        fields, rows = _read_csv(published[field], field)
+        full_fields, full_rows = tables[field]
+        common = set(fields) & set(full_fields)
+        projection = lambda values: Counter(tuple(row[k] for k in sorted(common)) for row in values)
+        if projection(rows) != projection(full_rows):
+            raise StageAttemptFinalizationError(f"prior cumulative {field} differs from published rows")
     return resolved
 
 

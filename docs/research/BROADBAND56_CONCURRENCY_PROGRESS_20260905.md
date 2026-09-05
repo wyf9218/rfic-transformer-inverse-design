@@ -1,6 +1,45 @@
 # Concurrency Work: Partial, Not a Performance Result
 
-## Latest State (04:04 UTC)
+## Latest State (04:25 UTC)
+
+Production reached **97 published accepted geometries / 5,432 rows**. Three
+more geometries completed fresh EMX and exact 56-point QA. At the resulting
+100-geometry boundary, cumulative finalization failed and the physical
+supervisor exited. The older `PILOT_1000_RUNNING` snapshot is stale: it is
+not evidence of a live supervisor or active production.
+
+The failed concatenation mixed the preceding stage's projected public-output
+indexes with full attempt tables. The preceding execution trace already binds
+the full cumulative inputs. The fix follows that trace and finalizer receipt,
+checks their identities and source/output agreement, and preserves the full
+tables. Unexplained CSV header differences still fail closed; no fields or
+physical values are invented, and no prior artifact is overwritten.
+
+A private result-only recovery has now verified **100 unique geometries,
+100 S4P artifacts and 5,600 frequency rows**, including recomputing the
+physical values from those existing S4Ps and passing the checkpoint audit.
+It ran zero subprocesses and zero simulations. Coverage remains partial.
+These results are in a separate no-clobber directory: the three recovered
+geometries are **not yet published to the live queue**. Backend/control rebind,
+progress restoration and supervisor recovery remain pending. No production
+restart, new authorization request, or NN training occurred in this recovery.
+
+The finalizer regression set passed 14 tests locally and with the private
+interpreter; the related local finalizer/progress/raw-product/materializer
+set passed 47 tests. This is not a full-suite or throughput claim.
+
+Result recovery receipt SHA-256:
+`88d9c085a3dbaa52db3ac6f89b64fd08544dd0d1a1fcff729c0152c3ae3e91fb`.
+Recovered 100-geometry checkpoint receipt SHA-256:
+`0f9ffb547ba6945dc1a52b849fda69530311a9e38cb03dccea826bae48f00c86`.
+Private software test receipt SHA-256:
+`a80dc7945cc0f4f98b73f7988c70319d7a7235d490796d00265118494220f200`.
+
+The following observations are history. In particular, the reported live
+two-worker production and benchmark-hook state below must not be treated
+as the current execution state.
+
+## Historical State (04:04 UTC)
 
 The production batch completed its full acceptance path: **93 canonical
 unique geometries / 5,208 frequency rows** are now accepted. Its 61 new

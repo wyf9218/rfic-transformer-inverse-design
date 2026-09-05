@@ -7,6 +7,8 @@ import importlib.util
 import json
 from pathlib import Path
 
+import pytest
+
 from rfic_transformer_inverse_design.campaigns.broadband56_stage_progress import (
     ATTEMPT_FAILURE_ACCOUNTING_FIELDS,
     validate_stage_progress_receipt,
@@ -273,6 +275,99 @@ def test_overshoot_fails_closed(tmp_path: Path, monkeypatch) -> None:
         assert "overshoots" in str(exc)
     else:
         raise AssertionError("overshoot must fail")
+
+
+def _bind_full_prior_inputs(args):
+    stage_path = Path(args.campaign_root) / "stages/000001_golden/STAGE_RECEIPT.json"
+    stage = json.loads(stage_path.read_text())
+    evidence = stage["artifacts"]
+    raw_path = Path(evidence["raw_products_receipt"]["path"])
+    raw = json.loads(raw_path.read_text())
+    records = {field: evidence[source] for field, source in MODULE.PRIOR_STAGE_ARTIFACT_FIELDS.items()}
+    records["long_features"] = raw["outputs"]["long_features"]
+    full = raw_path.parent / "full_accepted.csv"
+    original = list(csv.DictReader(Path(records["accepted_geometry_increment"]["path"]).open()))
+    _write_csv(full, ["geometry_sha256", "extra_provenance"],
+               [dict(row, extra_provenance="retained") for row in original])
+    records["accepted_geometry_increment"] = _evidence(full)
+    raw["inputs"] = {k: records[k] for k in ("attempt_ledger", "long_features")}
+    raw_path.write_text(json.dumps(raw))
+    evidence["raw_products_receipt"] = _evidence(raw_path)
+    finalizer_path = raw_path.parent / "finalizer.json"
+    finalizer = dict(schema=MODULE.ROLE_RECEIPT_SCHEMA, overall_status="PASS",
+        decision=MODULE.STAGE_ATTEMPT_TARGET_REACHED_DECISION, campaign_id=MODULE.CAMPAIGN_ID,
+        contract_fingerprint_sha256=MODULE.SCIENTIFIC_CONTRACT_FINGERPRINT,
+        stage="GOLDEN", accepted_after=1, cumulative_stage_inputs=records)
+    finalizer_path.write_text(json.dumps(finalizer))
+    trace_path = raw_path.parent / "trace.json"
+    trace = dict(overall_status="PASS", campaign_id=MODULE.CAMPAIGN_ID,
+        contract_fingerprint_sha256=MODULE.SCIENTIFIC_CONTRACT_FINGERPRINT,
+        stage="GOLDEN", all_role_return_codes_zero=True, all_role_receipts_pass=True,
+        roles=[dict(role="stage_attempt_finalizer", return_code=0, receipt=_evidence(finalizer_path))])
+    trace_path.write_text(json.dumps(trace))
+    evidence["stage_execution_trace"] = _evidence(trace_path)
+    stage_path.write_text(json.dumps(stage))
+    return stage_path, trace_path, finalizer_path, full
+
+
+def test_boundary_reuses_trace_bound_full_tables_not_published_projection(tmp_path, monkeypatch):
+    monkeypatch.setattr(MODULE, "validate_stage_receipt_chain", lambda *a, **kw: [])
+    args = _args(tmp_path, accepted=31, raw=31)
+    stage_path, trace_path, finalizer_path, full = _bind_full_prior_inputs(args)
+    current = Path(args.accepted_geometry_increment)
+    rows = list(csv.DictReader(current.open()))
+    _write_csv(current, ["geometry_sha256", "extra_provenance"],
+               [dict(row, extra_provenance="new") for row in rows])
+    pins_before = {p: _sha(p) for p in (stage_path, trace_path, finalizer_path, full, current)}
+    result = MODULE.finalize_stage_attempt(args, out_dir=Path(args.out_dir))
+    merged = Path(result["cumulative_stage_inputs"]["accepted_geometry_increment"]["path"])
+    rows = list(csv.DictReader(merged.open()))
+    assert len(rows) == 32
+    assert rows[0]["extra_provenance"] == "retained"
+    assert {r["extra_provenance"] for r in rows[1:]} == {"new"}
+    assert pins_before == {p: _sha(p) for p in pins_before}
+    assert result["simulator_invoked_by_finalizer"] is False
+
+
+@pytest.mark.parametrize("mutation", ["artifact_drift", "trace_drift", "duplicate_role", "failed_role", "wrong_count", "wrong_rows", "missing_inputs"])
+def test_full_prior_inputs_fail_closed_on_binding_or_content_drift(tmp_path, monkeypatch, mutation):
+    monkeypatch.setattr(MODULE, "validate_stage_receipt_chain", lambda *a, **kw: [])
+    args = _args(tmp_path, accepted=1, raw=1)
+    stage_path, trace_path, finalizer_path, full = _bind_full_prior_inputs(args)
+    if mutation == "artifact_drift":
+        full.write_text(full.read_text() + "\n")
+    elif mutation == "trace_drift":
+        trace_path.write_text(trace_path.read_text() + "\n")
+    else:
+        stage = json.loads(stage_path.read_text())
+        trace = json.loads(trace_path.read_text())
+        finalizer = json.loads(finalizer_path.read_text())
+        if mutation == "duplicate_role":
+            trace["roles"].append(dict(trace["roles"][0]))
+        elif mutation == "failed_role":
+            trace["roles"][0]["return_code"] = 2
+        elif mutation == "wrong_count":
+            finalizer["accepted_after"] = 2
+        elif mutation == "wrong_rows":
+            full.write_text(full.read_text().replace("f" * 64, "a" * 64))
+            finalizer["cumulative_stage_inputs"]["accepted_geometry_increment"] = _evidence(full)
+        elif mutation == "missing_inputs":
+            del finalizer["cumulative_stage_inputs"]["s4p_artifact_index"]
+        finalizer_path.write_text(json.dumps(finalizer))
+        trace["roles"][0]["receipt"] = _evidence(finalizer_path)
+        trace_path.write_text(json.dumps(trace))
+        stage["artifacts"]["stage_execution_trace"] = _evidence(trace_path)
+        stage_path.write_text(json.dumps(stage))
+    with pytest.raises(MODULE.StageAttemptFinalizationError):
+        MODULE.finalize_stage_attempt(args, out_dir=Path(args.out_dir))
+    assert not Path(args.out_dir).exists()
+
+
+def test_merge_still_rejects_unexplained_schema_drift(tmp_path):
+    a = _write_csv(tmp_path / "a.csv", ["geometry_sha256"], [])
+    b = _write_csv(tmp_path / "b.csv", ["geometry_sha256", "unknown"], [])
+    with pytest.raises(MODULE.StageAttemptFinalizationError, match="header mismatch"):
+        MODULE._merge_csv([a, b], tmp_path / "merged.csv")
 
 
 def test_feature_grain_mismatch_fails_before_output(tmp_path: Path, monkeypatch) -> None:
