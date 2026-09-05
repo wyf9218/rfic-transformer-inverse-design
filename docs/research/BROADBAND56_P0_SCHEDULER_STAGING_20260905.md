@@ -72,6 +72,13 @@ Formal acceptance remained 100 / 5,600. One native EMX was observed;
 no production modification, signal, extra solver, or feature acceptance was
 performed by the audit. The correct terminal checkpoint paths were absent.
 
+Update at 13:18:41 UTC: the same independent checks passed for 119 completed
+fresh S4P files, with 761 zero-blocking GDS and formal acceptance still
+100 / 5,600. The same protected supervisor and one native EMX remained live.
+Read-only audit SHA:
+`8153bcd584ec69bcd541138286ec64b591aa801f73b6720a01fbc395b4379d7c`.
+These are not 119 newly accepted geometries or a throughput benchmark.
+
 The deployed Cadence runner submits all pending futures upfront. Neither it
 nor the synchronous role runner exposes a live dispatch-pause interface.
 The first supported end-to-end checkpoint is the **whole current attempt**,
@@ -373,6 +380,48 @@ The later telemetry binding assertions initially used `_sha256` rather than
 the fixture's `_sha` helper (two NameErrors); this fixture-only failure was
 corrected before the latest regression above.
 
+## Scheduler History Compatibility
+
+The staged Golden reuse validator now recognizes only three exact old/new
+scheduler SHA pairs: shared-admission stage launcher, bounded/observed backend,
+and the license parser grammar correction. Each requires explicit original
+and replacement pins and no repeated Golden execution. Unknown code, unused
+rebind entries, any scientific-contract change and changed original results
+remain rejected. This does not grant deployment or replace target authority.
+
+The new profile transform is likewise exact: relocate the pinned queue
+delegate, bind its tested bounded-cohort SHA, and add a 32-candidate attempt
+limit plus cohort reuse only to PILOT_1000. Seeds, counts, all simulator
+arguments, stage/role order and other profile content stay unchanged. The old
+path-only route retains its original restrictions. Local regression passed
+501 tests; private-runtime regression passed 376 tests under the no-process,
+no-signal fixture harness. Private receipt SHA:
+`f76d9b3c37196defee4c837ef5ed8754d255c65644eb3ab862c54784eb7b670f`.
+The first targeted run had eight fixture KeyErrors because its synthetic
+backend omitted the production-backend role; that failure was preserved and
+the fixture was corrected, without relaxing production validation.
+
+A first isolated package was rejected because relocating the EMX dependency
+manifest into the scheduler runtime would change an imported capacity-policy
+module. The prepared package instead retains the complete existing isolated
+single-EMX runtime, entrypoint and module bytes. It is still an active
+dependency, not obsolete code to delete. A second preparation rejected an
+already approved interpreter symlink under an unnecessarily stricter helper;
+the next attempt used the existing EMX runtime's identity verifier and exact
+realpath check. Neither failure changed production or triggered a simulator.
+Backend/profile and original Golden evidence preparation then passed. Receipt:
+`9287c81a9fa9c5b65fede58941dc418b0f0f32e9c2b80126e6ca75aa8e061989`.
+
+A separate real-history replay copied 50 original artifacts byte-for-byte,
+validated the preserved Golden/PILOT_32 stage chain and completed PILOT_1000
+progress, and exercised the actual bounded queue exclusion consumer. Both
+original and replayed accepted counts remained 100, with 5,600 rows and zero
+new simulations or accepted increment. Replay SHA:
+`025b6f77ed934eb8fb030c19707646604705980f4e25f3f8ffb4f7661b476c1f`.
+The derived records are explicitly fixtures, not a second campaign or launch
+authority. This verifies history compatibility, not a full startup, production
+switch, completed current attempt, or measured parallel execution.
+
 ## Remaining Before Any Switch
 
 1. Bind the tested capacity producer and corrected private license parser
@@ -393,15 +442,12 @@ corrected before the latest regression above.
    preserve all prior-stage evidence, and run the entire actual startup chain
    preflight. Verify the tested cohort lifecycle and selected-count binding
    across that final private profile and real post-attempt checkpoint.
-   Source review found that `broadband56_golden_stage::_validate_operational_reuse`
-   rejects changed backend-role bytes, and its existing queue-profile rebind
-   permits only path relocation of an identical delegate. The bounded-batch
-   scheduler changes cannot be represented as that old path-only operation.
-   The consolidated rebind must explicitly preserve the original Golden and
-   other completed evidence without relabeling or rerunning them. This is a
-   verified validator limitation, not a failed new startup or a request to
-   rerun Golden; no new authorization candidate has been created.
-   The development source directory is NOT a deployable bundle.
+   The exact scheduler/profile compatibility and real completed-history replay
+   above now pass. The prepared backend retains the original isolated EMX
+   runtime. Next bind the sole-supervisor controls, probe and benchmark hooks
+   into this same package and validate the entire startup/handoff boundary;
+   no such full-startup proof or new authorization candidate exists yet.
+   Neither the development source nor the partial prepared package is deployable.
 4. Switch only after the complete current attempt has committed its checkpoint,
    with verified authority, supported graceful drain, and required binding.
 

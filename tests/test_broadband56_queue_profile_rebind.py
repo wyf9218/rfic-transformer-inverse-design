@@ -2,6 +2,7 @@
 import copy
 import hashlib
 import json
+from pathlib import Path
 
 import pytest
 
@@ -63,3 +64,89 @@ def test_queue_profile_rebind_is_strictly_path_only(tmp_path, mutation):
     else:
         with pytest.raises(golden.GoldenSourceError):
             golden.validate_queue_delegate_profile_rebind(a, b, backend, binding)
+
+
+@pytest.mark.parametrize("mutation", [None, "seed", "count", "config", "calibre_args", "role",
+    "removed_stage", "extra_stage", "golden_limit", "other_stage_limit", "limit", "missing_cohort",
+    "duplicate_option", "source_limit", "source_duplicate", "missing_pilot", "old_kind", "binding_limit",
+    "unknown_code", "drift", "source_drift", "external_path", "fake_boolean", "null_binding", "symlink"])
+def test_bounded_pilot_profile_only_permits_exact_scheduler_transform(tmp_path, monkeypatch, mutation):
+    old, new = tmp_path / "old", tmp_path / "new"
+    old.mkdir(); new.mkdir()
+    source = old / "build_broadband56_phase_a_queue.py"
+    target = new / source.name
+    source.write_text("# old test-only queue delegate\n")
+    target.write_text("# bounded test-only queue delegate\n")
+    wrapper = new / "run_broadband56_v2_bound_queue_builder.py"
+    wrapper.write_text("# unchanged test-only wrapper\n")
+    source_pin, target_pin = pin(source), pin(target)
+    monkeypatch.setattr(golden, "GOLDEN_COMPATIBLE_QUEUE_BATCH_REBINDS",
+                        frozenset({(source_pin["sha256"], target_pin["sha256"])}))
+    command = dict(role="phase_a_queue_builder", receipt="summary.json", shell_used=False,
+        argv=["--delegate-script", str(source), "--delegate-sha256", source_pin["sha256"],
+              "--seed", "20260828", "--config", "{private_configuration}", "--count", "{remaining_accepted}"])
+    before = dict(stages={s: dict(commands=[copy.deepcopy(command), dict(role="calibre_runner", argv=["--strict"])],
+                                result_paths={}) for s in ("GOLDEN", "PILOT_32", "PILOT_1000", "PHASE_A")})
+    after = copy.deepcopy(before)
+    for spec in after["stages"].values():
+        spec["commands"][0]["argv"][1] = str(target)
+        spec["commands"][0]["argv"][3] = target_pin["sha256"]
+    pilot = after["stages"]["PILOT_1000"]
+    pilot["max_candidates_per_attempt"] = 32
+    c = pilot["commands"][0]
+    c["argv"] += ["--attempt-candidate-limit", "32", "--reuse-campaign-frozen-cohort"]
+    if mutation == "seed": c["argv"][5] = "7"
+    if mutation == "count": c["argv"][9] = "900"
+    if mutation == "config": c["argv"][7] = "other.yaml"
+    if mutation == "calibre_args": pilot["commands"][1]["argv"] = ["--ignore-errors"]
+    if mutation == "role": c["role"] = "calibre_runner"
+    if mutation == "removed_stage": after["stages"].pop("GOLDEN")
+    if mutation == "extra_stage": after["stages"]["EXTRA"] = copy.deepcopy(pilot)
+    if mutation == "golden_limit": after["stages"]["GOLDEN"]["max_candidates_per_attempt"] = 32
+    if mutation == "other_stage_limit": after["stages"]["PHASE_A"]["max_candidates_per_attempt"] = 32
+    if mutation == "limit": pilot["max_candidates_per_attempt"] = 31
+    if mutation == "missing_cohort": c["argv"].pop()
+    if mutation == "duplicate_option": c["argv"] += ["--attempt-candidate-limit", "32"]
+    if mutation == "source_limit": before["stages"]["PILOT_1000"]["max_candidates_per_attempt"] = 32
+    if mutation == "source_duplicate": before["stages"]["PILOT_1000"]["commands"][0]["argv"] += ["--delegate-script", str(source)]
+    if mutation == "missing_pilot":
+        before["stages"].pop("PILOT_1000"); after["stages"].pop("PILOT_1000")
+    if mutation == "unknown_code": monkeypatch.setattr(golden, "GOLDEN_COMPATIBLE_QUEUE_BATCH_REBINDS", frozenset())
+    if mutation == "drift": target.write_text("# other code\n")
+    if mutation == "source_drift": source.write_text("# other source\n")
+    if mutation == "external_path": c["argv"][1] = str(source)
+    if mutation == "symlink":
+        alternate = new / "alternate.py"
+        target.rename(alternate)
+        target.symlink_to(alternate)
+    a, b = save(tmp_path / "original.json", before), save(tmp_path / "replacement.json", after)
+    binding = dict(original=a, replacement=b, kind=golden.BOUNDED_PILOT_PROFILE_REBIND,
+                   golden_execution_repeated=False, max_candidates_per_attempt=32)
+    if mutation == "old_kind": binding["kind"] = "IDENTICAL_QUEUE_DELEGATE_CURRENT_RUNTIME_PATH_ONLY"
+    if mutation == "binding_limit": binding["max_candidates_per_attempt"] = 31
+    if mutation == "fake_boolean": binding["golden_execution_repeated"] = 0
+    if mutation == "null_binding": binding = None
+    backend = dict(script_identities=dict(phase_a_queue_builder=pin(wrapper)))
+    if mutation is None:
+        golden.validate_queue_delegate_profile_rebind(a, b, backend, binding)
+        assert json.loads(Path(a["path"]).read_text()) == before
+    else:
+        with pytest.raises(golden.GoldenSourceError):
+            golden.validate_queue_delegate_profile_rebind(a, b, backend, binding)
+
+
+def test_pinned_scheduler_pairs_match_the_actual_staged_scripts():
+    root = Path(__file__).resolve().parents[1]
+    roles = dict(production_stage_backend="run_broadband56_v2_production_stage_backend.py",
+                 stage_launcher="run_broadband56_v2_stage_launcher.py")
+    assert len(golden.GOLDEN_COMPATIBLE_SCHEDULER_REBINDS) == 3
+    for group, role, before, after in golden.GOLDEN_COMPATIBLE_SCHEDULER_REBINDS:
+        assert len(before) == len(after) == 64
+        if group == "script_identities":
+            assert after == pin(root / "scripts" / roles[role])["sha256"]
+        else:
+            assert (group, role) == ("runtime_identities", "resource_probe")
+    assert golden.GOLDEN_COMPATIBLE_QUEUE_BATCH_REBINDS == frozenset({(
+        "1e1fb5f55fa64a99ffb01f41abcb35a08787fd16cf4d300f91f3b89cf02185ba",
+        pin(root / "scripts/build_broadband56_phase_a_queue.py")["sha256"],
+    )})

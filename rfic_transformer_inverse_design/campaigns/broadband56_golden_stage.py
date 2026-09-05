@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import copy
 import csv
+import hashlib
 import json
 from collections.abc import Mapping
 from pathlib import Path
@@ -27,6 +28,25 @@ GOLDEN_COMPATIBLE_FINALIZER_REBINDS = frozenset({(
     "33bc608c24f85ec6024ddaa64b85a05492f774a9824592d6215d0cd1837b72d8",
     "f51bb3c94424e9e0b60c1c1d8ad3e585e7fc5d8d3729f4aac99d109f93ca8eea",
 )})
+# These exact changes implement shared admission, bounded dispatch and native
+# observation, plus the license parser's singular/plural correction. They do
+# not certify deployment: target authorization and original physics still bind.
+GOLDEN_COMPATIBLE_SCHEDULER_REBINDS = frozenset({
+    ("script_identities", "production_stage_backend",
+     "073ac6f04e761314b4ed9686792b8ac1891107168af8faf6687e95b5e4788fca",
+     "0261eee73e1d14a36bf840362cd7e2023cc7d1ae2f6b52b8a1a1aed22c4b3d85"),
+    ("script_identities", "stage_launcher",
+     "1cbdc60cd43ed5ebf9555b9a95d2f99f1ef263016aa32f441f1d0d3e799f17de",
+     "97b82183a754ed0a857ffa990d15693b0d00e6e18b153f8a02b6dd3622a18906"),
+    ("runtime_identities", "resource_probe",
+     "9a4da25b5cecdaeef075c1bd6dd06798662628057f3f45242a7642df5a25def8",
+     "f2e5d532bb9b73c391e1bab950cb02ee2f27bad0d35d0a3d63a5c99426a76f8f"),
+})
+GOLDEN_COMPATIBLE_QUEUE_BATCH_REBINDS = frozenset({(
+    "1e1fb5f55fa64a99ffb01f41abcb35a08787fd16cf4d300f91f3b89cf02185ba",
+    "d3c53169370ff9695a9b0b7086f8f76e6ee794063b6d39946538dbb947b09349",
+)})
+BOUNDED_PILOT_PROFILE_REBIND = "FROZEN_COHORT_BOUNDED_PILOT_SCHEDULING_ONLY"
 
 
 def _load(record: Mapping[str, Any], label: str) -> dict[str, Any]:
@@ -264,6 +284,10 @@ def _validate_operational_reuse(receipt: Mapping[str, Any]) -> None:
         raise GoldenSourceError("Golden reuse scientific contract changed")
     # All simulator entrypoints, extraction code, PDK, configuration and rules
     # must have the original bytes. Only their installation paths may differ.
+    scheduler_bindings = binding.get("scheduling_only_role_rebinds", {})
+    if not isinstance(scheduler_bindings, Mapping):
+        raise GoldenSourceError("Golden scheduling rebind must be an object")
+    used_scheduler_bindings = set()
     for group in ("script_identities", "runtime_identities"):
         if set(target.get(group, {})) != set(old_backend.get(group, {})):
             raise GoldenSourceError("Golden reuse backend role set changed")
@@ -285,12 +309,28 @@ def _validate_operational_reuse(receipt: Mapping[str, Any]) -> None:
                     group == "runtime_identities" and name == "stage_execution_profile"
                     and "queue_delegate_profile_rebind" in binding
                 )
+                scheduler_key = group + "." + name
+                scheduler_record = scheduler_bindings.get(scheduler_key)
+                compatible_scheduler = (
+                    (group, name, old_pin.get("sha256"), new_pin.get("sha256"))
+                    in GOLDEN_COMPATIBLE_SCHEDULER_REBINDS
+                    and isinstance(scheduler_record, Mapping)
+                    and scheduler_record == {
+                        "original": old_pin, "replacement": new_pin,
+                        "golden_execution_repeated": False,
+                    }
+                    and scheduler_record.get("golden_execution_repeated") is False
+                )
                 if compatible_profile:
                     validate_queue_delegate_profile_rebind(
                         old_pin, new_pin, target, binding["queue_delegate_profile_rebind"]
                     )
+                elif compatible_scheduler:
+                    used_scheduler_bindings.add(scheduler_key)
                 elif not compatible_finalizer:
                     raise GoldenSourceError("Golden reuse computational identity changed: " + name)
+    if set(scheduler_bindings) != used_scheduler_bindings:
+        raise GoldenSourceError("Golden scheduling rebind has unconsumed roles")
     if ("emx_python_runtime" in target) != ("emx_python_runtime" in old_backend):
         raise GoldenSourceError("Golden reuse EMX runtime binding changed")
     if "emx_python_runtime" in old_backend:
@@ -330,12 +370,18 @@ def validate_queue_delegate_profile_rebind(
     original_pin: Mapping[str, Any], replacement_pin: Mapping[str, Any],
     target_backend: Mapping[str, Any], binding: Mapping[str, Any],
 ) -> None:
-    """Allow only relocation of an identical queue delegate into its bound runtime."""
-    if binding != {
+    """Validate exact path-only reuse or the pinned bounded-pilot scheduler change."""
+    if not isinstance(binding, Mapping):
+        raise GoldenSourceError("Golden queue profile rebind must be an object")
+    bounded = binding.get("kind") == BOUNDED_PILOT_PROFILE_REBIND
+    expected_binding = {
         "original": original_pin, "replacement": replacement_pin,
-        "kind": "IDENTICAL_QUEUE_DELEGATE_CURRENT_RUNTIME_PATH_ONLY",
+        "kind": BOUNDED_PILOT_PROFILE_REBIND if bounded else "IDENTICAL_QUEUE_DELEGATE_CURRENT_RUNTIME_PATH_ONLY",
         "golden_execution_repeated": False,
-    }:
+    }
+    if bounded:
+        expected_binding["max_candidates_per_attempt"] = 32
+    if binding != expected_binding or binding.get("golden_execution_repeated") is not False:
         raise GoldenSourceError("Golden queue profile rebind identity mismatch")
     original = _load(original_pin, "original queue execution profile")
     replacement = _load(replacement_pin, "replacement queue execution profile")
@@ -347,7 +393,8 @@ def validate_queue_delegate_profile_rebind(
     if not isinstance(stages, Mapping) or not stages:
         raise GoldenSourceError("queue profile stages missing")
     changed = 0
-    for stage in stages.values():
+    bounded_commands = 0
+    for stage_name, stage in stages.items():
         commands = stage.get("commands") if isinstance(stage, Mapping) else None
         if not isinstance(commands, list):
             raise GoldenSourceError("queue profile commands missing")
@@ -369,11 +416,30 @@ def validate_queue_delegate_profile_rebind(
             source_size = source.stat().st_size
             _pin({"path": str(source), "size_bytes": source_size, "sha256": digest},
                  "original queue delegate")
-            _pin({"path": str(target_script), "size_bytes": source_size, "sha256": digest},
-                 "relocated identical queue delegate")
-            # Only this operand may differ. Seeds, bounds, roles, receipt paths,
-            # all simulator commands and the entire stage set must stay exact.
+            if bounded:
+                target_bytes = target_script.read_bytes()
+                target_digest = hashlib.sha256(target_bytes).hexdigest()
+                if (digest, target_digest) not in GOLDEN_COMPATIBLE_QUEUE_BATCH_REBINDS:
+                    raise GoldenSourceError("unrecognized bounded queue delegate bytes")
+                _pin({"path": str(target_script), "size_bytes": len(target_bytes), "sha256": target_digest},
+                     "bounded queue delegate")
+                argv[sha_index] = target_digest
+                if stage_name == "PILOT_1000":
+                    if ("max_candidates_per_attempt" in stage
+                            or "--attempt-candidate-limit" in argv
+                            or "--reuse-campaign-frozen-cohort" in argv):
+                        raise GoldenSourceError("bounded queue source already altered")
+                    argv.extend(["--attempt-candidate-limit", "32", "--reuse-campaign-frozen-cohort"])
+                    stage["max_candidates_per_attempt"] = 32
+                    bounded_commands += 1
+            else:
+                _pin({"path": str(target_script), "size_bytes": source_size, "sha256": digest},
+                     "relocated identical queue delegate")
+            # Unlisted seeds, bounds, roles, receipt paths, simulator commands
+            # and the entire stage set must remain exact.
             changed += argv[path_index] != str(target_script)
             argv[path_index] = str(target_script)
+    if bounded and bounded_commands != 1:
+        raise GoldenSourceError("bounded profile must change exactly one pilot queue command")
     if changed == 0 or expected != replacement:
-        raise GoldenSourceError("queue profile changed more than identical delegate paths")
+        raise GoldenSourceError("queue profile changed outside the exact permitted transformation")
