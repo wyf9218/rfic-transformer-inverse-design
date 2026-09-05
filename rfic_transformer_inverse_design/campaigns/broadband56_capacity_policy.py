@@ -292,6 +292,9 @@ def stage_for_progress(
     return "COMPLETE" if len(receipts) == len(STAGES) else STAGES[len(receipts)].name
 
 
+HEALTHY_STREAK_REQUIREMENT = 5
+
+
 def adaptive_concurrency(
     *,
     stage: str,
@@ -378,12 +381,12 @@ def adaptive_concurrency(
             "reasons": reduce_reasons,
         }
 
-    if streak >= 10 and current < hard_cap:
+    if streak >= HEALTHY_STREAK_REQUIREMENT and current < hard_cap:
         return {
             "concurrency": current + 1,
             "hard_cap": hard_cap,
             "action": "INCREASE_BY_ONE",
-            "reasons": ["ten_consecutive_healthy_checks"],
+            "reasons": ["five_consecutive_healthy_checks"],
         }
     return {
         "concurrency": current,

@@ -126,6 +126,7 @@ def _materialize(
         schema=swap_policy.SNAPSHOT_SCHEMA,
         swap_policy=swap_policy.SWAP_POLICY,
         source_snapshot=_record(legacy_path),
+        supervisor_lease=_record(_write_json(tmp_path / "lease.json", {"generation": 28})),
         preserved_unknown_field={"must_remain": [1, 2, 3]},
     )
     source["resources"].update(

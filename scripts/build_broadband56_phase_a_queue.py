@@ -64,6 +64,7 @@ def main(argv: list[str] | None = None) -> int:
                 current_accepted=args.current_accepted,
                 requested_count=int(args.count),
                 checks=checks,
+                attempt_candidate_limit=args.attempt_candidate_limit,
             )
         )
     excluded_hashes = _read_excluded_hashes(exclusion_paths, checks)
@@ -185,6 +186,7 @@ def _parse_args(argv: list[str] | None) -> argparse.Namespace:
     parser.add_argument("--config", required=True)
     parser.add_argument("--out-dir", required=True)
     parser.add_argument("--count", type=int, required=True)
+    parser.add_argument("--attempt-candidate-limit", type=int, choices=range(1, 33))
     parser.add_argument("--sampler", choices=("lhs_optimized", "sobol"), default="sobol")
     parser.add_argument("--seed", type=int, default=20260828)
     parser.add_argument("--phase", default="PHASE_A")
@@ -196,7 +198,10 @@ def _parse_args(argv: list[str] | None) -> argparse.Namespace:
     parser.add_argument("--oversample-factor", type=float, default=1.25)
     parser.add_argument("--max-sampling-rounds", type=int, default=20)
     parser.add_argument("--no-fail-exit", action="store_true")
-    return parser.parse_args(argv)
+    args = parser.parse_args(argv)
+    if args.attempt_candidate_limit is not None and not args.campaign_root:
+        parser.error("--attempt-candidate-limit requires --campaign-root")
+    return args
 
 
 def _sample_unit(count: int, dimensions: int, sampler: str, seed: int) -> np.ndarray:
@@ -284,6 +289,7 @@ def _campaign_exclusion_paths(
     current_accepted: int | None,
     requested_count: int,
     checks: list[dict[str, Any]],
+    attempt_candidate_limit: int | None = None,
 ) -> list[Path]:
     paths: list[Path] = []
     checks.append(_check("campaign_root_exists", campaign_root.is_dir(), str(campaign_root)))
@@ -302,11 +308,17 @@ def _campaign_exclusion_paths(
         checks.append(_check("current_accepted_below_stage_target", False, current_accepted))
         return paths
     next_boundary = next_frozen_accepted_boundary(current_accepted, cumulative_target=spec.cumulative_target)
+    expected_count = next_boundary - current_accepted
+    if attempt_candidate_limit is not None:
+        if type(attempt_candidate_limit) is not int or not 1 <= attempt_candidate_limit <= 32 or stage == "GOLDEN":
+            checks.append(_check("bounded_attempt_limit_valid", False, attempt_candidate_limit))
+            return paths
+        expected_count = min(expected_count, attempt_candidate_limit)
     checks.append(
         _check(
             "requested_count_matches_next_frozen_checkpoint",
-            requested_count == next_boundary - current_accepted,
-            f"requested={requested_count}, next_boundary={next_boundary}, current={current_accepted}",
+            requested_count == expected_count,
+            f"requested={requested_count}, next_boundary={next_boundary}, current={current_accepted}, attempt_limit={attempt_candidate_limit}",
         )
     )
 

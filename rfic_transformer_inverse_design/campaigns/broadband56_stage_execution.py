@@ -241,6 +241,19 @@ def validate_execution_profile(
             errors.append(f"stages.{stage} must be an object")
             continue
         allowed_fields = {"commands", "result_paths"}
+        if "max_candidates_per_attempt" in stage_profile:
+            allowed_fields.add("max_candidates_per_attempt")
+            limit = stage_profile["max_candidates_per_attempt"]
+            if stage == "GOLDEN" or type(limit) is not int or not 1 <= limit <= 32:
+                errors.append(f"stages.{stage}.max_candidates_per_attempt must be 1..32 outside GOLDEN")
+            raw_commands = stage_profile.get("commands")
+            queues = [item for item in (raw_commands if isinstance(raw_commands, list) else [])
+                      if isinstance(item, Mapping) and item.get("role") == "phase_a_queue_builder"]
+            argv = queues[0].get("argv", []) if len(queues) == 1 else []
+            option = "--attempt-candidate-limit"
+            if (not isinstance(argv, list) or argv.count(option) != 1 or argv.index(option) + 1 >= len(argv)
+                    or argv[argv.index(option) + 1] != str(limit)):
+                errors.append(f"stages.{stage} queue argv does not bind the attempt limit")
         if "golden_terminal_mode" in stage_profile:
             from .broadband56_golden_stage import TERMINAL_MODE
             allowed_fields.add("golden_terminal_mode")

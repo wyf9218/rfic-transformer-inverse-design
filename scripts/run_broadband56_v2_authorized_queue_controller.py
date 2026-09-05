@@ -40,6 +40,7 @@ from rfic_transformer_inverse_design.campaigns.broadband56_capacity_policy impor
     RESOURCE_POLICY,
     SCIENTIFIC_CONTRACT_FINGERPRINT,
     STAGE_BY_NAME,
+    CapacityPolicyError,
     adaptive_concurrency,
     evaluate_capacity_snapshot,
     stage_for_progress,
@@ -66,6 +67,7 @@ from rfic_transformer_inverse_design.campaigns.broadband56_stage_progress import
     validate_stage_progress_chain,
     validate_stage_progress_receipt,
 )
+from rfic_transformer_inverse_design.campaigns.broadband56_scheduling import concurrency_for_snapshot  # noqa: E402
 
 
 QUEUE_SCHEMA = "rfic_transformer.broadband56_v2_mars_queue_entry.v1"
@@ -100,7 +102,7 @@ def main(argv: list[str] | None = None) -> int:
     campaign_root = Path(args.campaign_root).expanduser().resolve()
     try:
         state = run_controller(args, campaign_root=campaign_root)
-    except ControllerError as exc:
+    except (ControllerError, CapacityPolicyError) as exc:
         print(f"overall_status=BLOCKED\nerror={exc}", file=sys.stderr)
         return 2
     print(f"overall_status={state['overall_status']}")
@@ -243,17 +245,11 @@ def run_controller(args: argparse.Namespace, *, campaign_root: Path) -> dict[str
                 )
                 failed_checks = list(policy["failed_checks"])
                 resource_gate = "PASS" if policy["pass"] else "WAIT"
-                concurrency_result = adaptive_concurrency(
-                    stage=stage,
-                    logical_cpu_count=policy["metrics"]["logical_cpu_count"],
-                    simulator_license_capacity=policy["metrics"]["simulator_license_capacity"],
-                    current_concurrency=None,
-                    healthy_check_streak=0,
-                    normalized_load1=policy["metrics"]["normalized_load1"],
-                    iowait_percent=policy["metrics"]["iowait_percent"],
-                    available_memory_fraction=policy["metrics"]["available_memory_fraction"],
-                    active_swap_thrashing=policy["metrics"]["active_swap_thrashing"],
-                    licenses_available=policy["checks"]["license_gate"],
+                concurrency_result = concurrency_for_snapshot(
+                    snapshot_path=snapshot_path, campaign_root=campaign_root,
+                    stage=stage, current_accepted=current_accepted,
+                    policy=policy, legacy_policy=adaptive_concurrency,
+                    measured_pilot_bytes_per_geometry=_pilot_bytes_per_geometry(campaign_root),
                     pilot_1000_safe_concurrency=_pilot_safe_concurrency(campaign_root),
                 )
                 concurrency = int(concurrency_result["concurrency"])

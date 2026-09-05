@@ -188,7 +188,8 @@ def main(argv: list[str] | None = None) -> int:
         print(f"controller_id={state['authoritative_supervisor']}")
         print(f"campaign_status={campaign_root / controller.STATE_NAME}")
         return 0
-    except (SwapOverrideControllerError, OSError, json.JSONDecodeError) as exc:
+    except (SwapOverrideControllerError, OSError, json.JSONDecodeError,
+            swap_policy.CapacityPolicyError, capacity_adapter.CapacitySnapshotAdapterError) as exc:
         print(f"overall_status=BLOCKED\nerror={exc}", file=sys.stderr)
         return 2
 
@@ -597,23 +598,13 @@ def _capacity_adapter_stage_launcher_factory(
                         raise controller.ControllerError(
                             "fresh adapted snapshot lacks a policy decision"
                         )
-                    allowed = swap_policy.adaptive_concurrency(
-                        stage=stage,
-                        logical_cpu_count=policy["metrics"]["logical_cpu_count"],
-                        simulator_license_capacity=policy["metrics"][
-                            "simulator_license_capacity"
-                        ],
-                        current_concurrency=None,
-                        healthy_check_streak=0,
-                        normalized_load1=policy["metrics"]["normalized_load1"],
-                        iowait_percent=policy["metrics"]["iowait_percent"],
-                        available_memory_fraction=policy["metrics"][
-                            "available_memory_fraction"
-                        ],
-                        active_swap_thrashing=policy["metrics"][
-                            "active_swap_thrashing"
-                        ],
-                        licenses_available=policy["checks"]["license_gate"],
+                    from rfic_transformer_inverse_design.campaigns.broadband56_scheduling import concurrency_for_snapshot
+
+                    allowed = concurrency_for_snapshot(
+                        snapshot_path=adapted_path, campaign_root=campaign_root,
+                        stage=stage, current_accepted=int(gate["current_accepted"]),
+                        policy=policy, legacy_policy=swap_policy.adaptive_concurrency,
+                        measured_pilot_bytes_per_geometry=controller._pilot_bytes_per_geometry(campaign_root),
                         pilot_1000_safe_concurrency=(
                             controller._pilot_safe_concurrency(campaign_root)
                         ),

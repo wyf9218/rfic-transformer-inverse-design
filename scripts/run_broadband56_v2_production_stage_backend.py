@@ -243,17 +243,13 @@ def run_stage_backend(
         raise ProductionStageBackendError(
             "resource snapshot is WAIT: " + ",".join(capacity["failed_checks"])
         )
-    allowed = adaptive_concurrency(
-        stage=stage,
-        logical_cpu_count=capacity["metrics"]["logical_cpu_count"],
-        simulator_license_capacity=capacity["metrics"]["simulator_license_capacity"],
-        current_concurrency=None,
-        healthy_check_streak=0,
-        normalized_load1=capacity["metrics"]["normalized_load1"],
-        iowait_percent=capacity["metrics"]["iowait_percent"],
-        available_memory_fraction=capacity["metrics"]["available_memory_fraction"],
-        active_swap_thrashing=capacity["metrics"]["active_swap_thrashing"],
-        licenses_available=capacity["checks"]["license_gate"],
+    from rfic_transformer_inverse_design.campaigns.broadband56_scheduling import concurrency_for_snapshot
+
+    allowed = concurrency_for_snapshot(
+        snapshot_path=snapshot_path, campaign_root=campaign_root,
+        stage=stage, current_accepted=current_accepted,
+        policy=capacity, legacy_policy=adaptive_concurrency,
+        measured_pilot_bytes_per_geometry=_pilot_bytes_per_geometry(campaign_root),
         pilot_1000_safe_concurrency=_pilot_safe_concurrency(campaign_root),
     )
     max_concurrency = int(args.max_concurrency)
@@ -294,6 +290,9 @@ def run_stage_backend(
         current_accepted,
         cumulative_target=spec.cumulative_target,
     )
+    attempt_limit = profile["stages"][stage].get("max_candidates_per_attempt")
+    if attempt_limit is not None:
+        selection_accepted_target = min(selection_accepted_target, current_accepted + attempt_limit)
     selection_count = selection_accepted_target - current_accepted
     context_path = out_dir / "STAGE_CONTEXT.json"
     context = {
@@ -307,8 +306,10 @@ def run_stage_backend(
         "current_accepted": current_accepted,
         "stage_remaining_accepted": spec.cumulative_target - current_accepted,
         "selection_accepted_target": selection_accepted_target,
+        "max_candidates_per_attempt": attempt_limit,
         "remaining_accepted": selection_count,
         "max_concurrency": max_concurrency,
+        "scheduling_decision": allowed,
         "backend_identity_manifest": _file_record(backend_manifest_path),
         "full_campaign_authorization_receipt": _file_record(authorization_path),
         "resource_snapshot": _file_record(snapshot_path),
