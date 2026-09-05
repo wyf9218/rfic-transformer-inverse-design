@@ -6,10 +6,10 @@ or claim of increased production throughput.
 
 ## Protected Production
 
-At 2026-09-05T07:32:46Z, the existing PILOT_1000 attempt was still in its
+At 2026-09-05T08:05:33Z, the existing PILOT_1000 attempt was still in its
 Cadence role. Formal acceptance remained 100 geometries / 5,600 frequency
-rows. Its fixed 900-candidate queue had 567 candidate-bound Cadence-only GDS
-successes, one running candidate, and 332 not started. These GDS successes
+rows. Its fixed 900-candidate queue had 698 candidate-bound Cadence-only GDS
+successes, one running candidate, and 201 not started. These GDS successes
 are PRE_DRC, not physical acceptance. The current attempt had zero validated
 S4P files. The queue SHA remained
 `91d0b2826dc20d46ca3d7cdc2715ae84c90b21996c063dad99a69e5f0aa2fb86`.
@@ -52,18 +52,29 @@ handoff must not be used to interrupt this attempt.
   The stage target and existing partial-progress finalizer remain unchanged.
   The option is absent from the active profile and does not touch its 900 IDs,
   geometry values, seeds, sources, completed artifacts or accepted counts.
+- `validate_frozen_selection` now rechecks the selected CSV against the
+  profile-bound parent receipt, exact source row indexes, all original fields,
+  count ceiling and source identities at the backend's pre-Cadence boundary.
+  Context records the remaining accepted checkpoint count separately from the
+  attempt ceiling. Downstream count substitutions use the actual selected
+  count, including a short tail. The selection is recorded in the execution
+  trace with accepted increment zero; it cannot claim physical acceptance.
+  The checkpoint materializer's existing full-boundary count is unchanged.
 
 ## Verification
 
-Local focused regression: **286 passed**. This includes scheduling, capacity,
+Local focused regression: **310 passed**. This includes scheduling, capacity,
 adapter, profile, stage progress/finalization, queue, backend and batch tests.
 The launch-boundary fixture verifies that a two-worker decision and its same
-five source observations survive adaptation and backend admission.
+five source observations survive adaptation and backend admission. Two new
+backend dispatch-loop fixtures verify a four-row tail under a 32-row ceiling
+and reject modified geometry before reaching the mocked Cadence role. These
+fixtures mock prior progress resolution and never invoke a native simulator.
 
-Approved private Python / numpy 2.5.0: **170 passed** in an isolated source
+Approved private Python / numpy 2.5.0: **183 passed** in an isolated source
 copy, with an irreversible audit hook prohibiting actual subprocess and
 signal actions. Receipt SHA:
-`968dbe36ebd83a23329861cd9e4500571f4c8bb6ce8cfb189836452b8e76426a`.
+`7a342eb8b674238a3b73ff141024d1027c53f4ee7a2b3a128095bd5e2c55f9b2`.
 These are software fixtures, not native solver or physical test results.
 
 The real immutable 900-row queue was replayed read-only into 28 groups of 32
@@ -72,19 +83,33 @@ exactly; source bytes are unchanged. No dispatch claims or solver jobs were
 created. Replay receipt SHA:
 `7b615e82aef9dbf1aa56648a7b9a4ce8393389decfb47f42e15d6d40b2926256`.
 
+The actual queue entry point also passed an isolated replay against the
+current private configuration, current 100-accepted history, prior Golden
+validation and frozen 900-row source. It copied the first 32 unchanged rows
+and passed the new pre-Cadence binding, without running the sampler or any
+subprocess, signaling a process, modifying production, or creating a claim.
+Receipt SHA:
+`ff571e9731ed58e67a3c79d64e38f38f09fbdc318dedb69803080e8f2e9b574f`.
+This verifies the queue input path, not the entire consolidated startup or
+the production executor. The active 900-candidate batch was not partitioned.
+
 A bounded, read-only live observer measured Cadence native children and
 queried licenses without checkout. It is not installed as an admission
 producer. Sampled `/proc` high-water marks do not prove complete-job memory
 peaks. Sampled thread counts missed a higher thread count explicitly logged
 by stream-out, so sampled threads alone are not a safe allocation budget.
-Calibre/EMX footprint evidence remains missing. The old license probe counts
+Complete multi-tool footprint evidence remains missing. One prior accepted
+EMX log was found to contain a terminal peak-memory report, but this is not
+a complete multi-tool admission record or a bound for future geometry. The old license probe counts
 available layout feature types, not seats or the observed Framework checkout;
 its value must not be described as measured per-tool capacity.
 
 Failed development runs were retained: the first new queue integration test
 used bare geometry column names instead of the actual `geom__` prefix; a
 remote test copy omitted its two public configuration fixtures; a private
-replay harness passed a string to a Path-only helper. All were corrected and
+replay harness passed a string to a Path-only helper. A later backend dispatch
+fixture initially called a nonexistent test entry-point name; it was corrected
+to the actual `run_stage_backend` without changing production. All were corrected and
 rerun in new output directories without changing production or physical gates.
 
 ## Remaining Before Any Switch
@@ -98,8 +123,8 @@ rerun in new output directories without changing production or physical gates.
    native two-worker operation nor any complete benchmark level is proven.
 3. Complete the single consolidated private profile/runtime/backend rebind,
    preserve all prior-stage evidence, and run the entire actual startup chain
-   preflight. Complete frozen-cohort exhaustion/replenishment and the
-   checkpoint-materializer versus attempt-count reporting integration.
+   preflight. Complete frozen-cohort exhaustion/replenishment and verify the
+   selected-count binding across the final private profile.
    The development source directory is NOT a deployable bundle.
 4. Switch only after the complete current attempt has committed its checkpoint,
    with verified authority, supported graceful drain, and required binding.

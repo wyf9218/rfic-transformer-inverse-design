@@ -559,6 +559,85 @@ def test_executes_exact_hash_bound_golden_role_chain(tmp_path: Path) -> None:
     assert not list((out / "roles").glob("*/stdout.log"))
 
 
+@pytest.mark.parametrize("corrupt_selected_row", [False, True])
+def test_bounded_backend_binds_short_tail_before_cadence(tmp_path, monkeypatch, corrupt_selected_row):
+    from types import SimpleNamespace
+    from tests.test_broadband56_frozen_queue_batches import selected_fixture
+
+    class BeforeCadence(BaseException):
+        pass
+
+    args = _fixture(tmp_path)
+    source_dir = tmp_path / "frozen"
+    source_dir.mkdir()
+    source, selected = selected_fixture(source_dir, count=4)
+    for path in (source, selected):
+        value = json.loads(path.read_text())
+        value["contract_fingerprint_sha256"] = SCIENTIFIC_CONTRACT_FINGERPRINT
+        _write(path, value)
+    payload = json.loads(selected.read_text())
+    payload["frozen_batch"]["source_receipt"] = _identity(source)
+    if corrupt_selected_row:
+        path = source_dir / "selected.csv"
+        path.write_text(path.read_text().replace("100.000000000001", "100.000000000002"))
+        payload["candidate_queue"] = _identity(path)
+
+    manifest_path = Path(args.backend_identity_manifest)
+    manifest = json.loads(manifest_path.read_text())
+    profile_path = Path(manifest["runtime_identities"]["stage_execution_profile"]["path"])
+    profile = json.loads(profile_path.read_text())
+    pilot = profile[PROFILE_KEY]["stages"]["PILOT_1000"]
+    pilot["max_candidates_per_attempt"] = 32
+    queue = next(c for c in pilot["commands"] if c["role"] == "phase_a_queue_builder")
+    queue["argv"].extend(["--attempt-candidate-limit", "32", "--count", "{remaining_accepted}",
+                          "--frozen-queue-receipt", str(source),
+                          "--frozen-queue-receipt-sha256", _sha(source)])
+    cadence = next(c for c in pilot["commands"] if c["role"] == "cadence_streamout_runner")
+    cadence["argv"].extend(["--expected-count", "{remaining_accepted}"])
+    _write(profile_path, profile)
+    manifest["runtime_identities"]["stage_execution_profile"] = _identity(profile_path)
+    _write(manifest_path, manifest)
+    authorization_path = Path(args.full_campaign_receipt)
+    authorization = json.loads(authorization_path.read_text())
+    authorization["backend_identity_manifest"]["sha256"] = _sha(manifest_path)
+    _write(authorization_path, authorization)
+    args.stage, args.cumulative_target = "PILOT_1000", 1000
+    # Receipt-chain correctness is covered independently; this fixture isolates
+    # the real dispatch loop and its selected-CSV revalidation without a solver.
+    monkeypatch.setattr(MODULE, "stage_for_progress", lambda **kw: "PILOT_1000")
+    monkeypatch.setattr(MODULE, "accepted_after_progress", lambda *a, **kw: 100)
+    calls = []
+
+    def run(command, **kwargs):
+        role = command[command.index("--role") + 1]
+        calls.append(role)
+        if role == "cadence_streamout_runner":
+            assert command[command.index("--expected-count") + 1] == "4"
+            raise BeforeCadence()
+        out = Path(command[command.index("--role-out-dir") + 1])
+        value = payload if role == "phase_a_queue_builder" else {
+            "overall_status": "PASS", "campaign_id": CAMPAIGN_ID,
+            "contract_fingerprint_sha256": SCIENTIFIC_CONTRACT_FINGERPRINT,
+            "stage": "PILOT_1000", "role": role, "simulator_action_taken": False,
+        }
+        _write(out / "ROLE_RECEIPT.json", value)
+        return SimpleNamespace(returncode=0)
+
+    monkeypatch.setattr(MODULE.subprocess, "run", run)
+    roles = []
+    error = MODULE.ProductionStageBackendError if corrupt_selected_row else BeforeCadence
+    with pytest.raises(error):
+        MODULE.run_stage_backend(args, out_dir=Path(args.backend_out_dir), completed_roles=roles)
+    context = json.loads((Path(args.backend_out_dir) / "STAGE_CONTEXT.json").read_text())
+    assert context["remaining_to_frozen_accepted_boundary"] == 900
+    assert context["remaining_accepted"] == 32
+    assert context["current_accepted"] == 100
+    assert ("cadence_streamout_runner" in calls) is not corrupt_selected_row
+    if not corrupt_selected_row:
+        assert roles[-1]["frozen_selection"]["actual_selected_candidates"] == 4
+        assert roles[-1]["frozen_selection"]["accepted_increment"] == 0
+
+
 def test_failed_role_preserves_fail_receipt_and_no_stage_pass(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:

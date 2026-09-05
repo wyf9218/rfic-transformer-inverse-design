@@ -286,10 +286,11 @@ def run_stage_backend(
     start_monotonic = time.monotonic()
     started_utc = _utc_now()
     prior_path = prior_records[-1][0] if prior_records else None
-    selection_accepted_target = next_frozen_accepted_boundary(
+    frozen_accepted_target = next_frozen_accepted_boundary(
         current_accepted,
         cumulative_target=spec.cumulative_target,
     )
+    selection_accepted_target = frozen_accepted_target
     attempt_limit = profile["stages"][stage].get("max_candidates_per_attempt")
     if attempt_limit is not None:
         selection_accepted_target = min(selection_accepted_target, current_accepted + attempt_limit)
@@ -305,6 +306,8 @@ def run_stage_backend(
         "cumulative_target": spec.cumulative_target,
         "current_accepted": current_accepted,
         "stage_remaining_accepted": spec.cumulative_target - current_accepted,
+        "frozen_accepted_target": frozen_accepted_target,
+        "remaining_to_frozen_accepted_boundary": frozen_accepted_target - current_accepted,
         "selection_accepted_target": selection_accepted_target,
         "max_candidates_per_attempt": attempt_limit,
         "selection_count_mode": "FROZEN_QUEUE_CEILING" if attempt_limit else "EXACT_SAMPLER_COUNT",
@@ -332,6 +335,8 @@ def run_stage_backend(
     progress_source_path: Path | None = None
     progress_receipt: dict[str, Any] | None = None
     golden_finalizer_record: dict[str, Any] | None = None
+    frozen_selection: dict[str, Any] | None = None
+    dispatched_selection_count = selection_count
     for index, (role, command_profile) in enumerate(
         zip(expected_roles, commands),
         start=1,
@@ -351,7 +356,7 @@ def run_stage_backend(
             "{max_concurrency}": str(max_concurrency),
             "{prior_stage_receipt}": str(prior_path or ""),
             "{current_accepted}": str(current_accepted),
-            "{remaining_accepted}": str(selection_count),
+            "{remaining_accepted}": str(dispatched_selection_count),
             "{private_configuration}": str(private_config_path),
         }
         role_identity = backend_manifest["script_identities"][role]
@@ -414,6 +419,21 @@ def run_stage_backend(
         role_record["simulator_action_taken"] = bool(
             role_receipt.get("simulator_action_taken", False)
         )
+        if role == "phase_a_queue_builder" and attempt_limit is not None:
+            from rfic_transformer_inverse_design.campaigns.broadband56_frozen_queue_batches import validate_frozen_selection
+
+            try:
+                frozen_selection = validate_frozen_selection(
+                    receipt_path,
+                    source_receipt_path=Path(role_args[role_args.index("--frozen-queue-receipt") + 1]),
+                    source_receipt_sha256=role_args[role_args.index("--frozen-queue-receipt-sha256") + 1],
+                    candidate_ceiling=selection_count,
+                    fingerprint=SCIENTIFIC_CONTRACT_FINGERPRINT,
+                )
+            except (OSError, ValueError, KeyError, IndexError, TypeError) as exc:
+                raise ProductionStageBackendError(f"frozen selection before Cadence: {exc}") from exc
+            dispatched_selection_count = frozen_selection["actual_selected_candidates"]
+            role_record["frozen_selection"] = frozen_selection
         if role == "stage_attempt_finalizer":
             decision, candidate_progress_path, candidate_progress = (
                 _validate_stage_attempt_finalizer_receipt(
@@ -458,6 +478,7 @@ def run_stage_backend(
             if golden_finalizer_record else list(expected_roles)
         ),
         "roles": completed_roles,
+        "frozen_selection": frozen_selection,
         "all_role_return_codes_zero": all(
             item["return_code"] == 0 for item in completed_roles
         ),

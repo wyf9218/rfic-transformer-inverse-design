@@ -124,6 +124,11 @@ def test_real_queue_entrypoint_preserves_rows_and_never_calls_sampler(tmp_path, 
     summary = json.loads((output / "broadband56_candidate_queue_summary.json").read_text())
     assert summary["sampling_attempts"] == 0
     assert summary["frozen_batch"]["sampler_executed"] is False
+    bound = frozen.validate_frozen_selection(output / "broadband56_candidate_queue_summary.json",
+        source_receipt_path=source_receipt, source_receipt_sha256=frozen.file_identity(source_receipt)["sha256"],
+        candidate_ceiling=32, fingerprint=summary["contract_fingerprint_sha256"])
+    assert bound["actual_selected_candidates"] == 32
+    assert bound["accepted_increment"] == 0
 
 
 def test_bounded_cli_rejects_a_smaller_sampler_invocation(tmp_path):
@@ -134,3 +139,68 @@ def test_bounded_cli_rejects_a_smaller_sampler_invocation(tmp_path):
         module._parse_args(["--contract", str(fixtures.CONTRACT), "--config", str(fixtures.TEMPLATE),
             "--out-dir", str(tmp_path), "--count", "32", "--attempt-candidate-limit", "32",
             "--campaign-root", str(tmp_path)])
+
+
+def selected_fixture(tmp_path, *, count=4):
+    rows, source = fixture(tmp_path, 40)
+    batch, proof = select(source, count=32,
+        excluded_hashes={r["geometry_sha256"] for r in rows[:-count]})
+    output = tmp_path / "selected.csv"
+    with output.open("w", newline="") as stream:
+        writer = csv.DictWriter(stream, fieldnames=list(rows[0]))
+        writer.writeheader()
+        writer.writerows(batch)
+    payload = json.loads(source.read_text())
+    payload.update(candidate_queue=frozen.file_identity(output), queue_count=count,
+        requested_count=count, requested_candidate_ceiling=32, sampling_attempts=0, frozen_batch=proof)
+    receipt = tmp_path / "selected_summary.json"
+    receipt.write_text(json.dumps(payload))
+    return source, receipt
+
+
+def validate(source, receipt):
+    return frozen.validate_frozen_selection(receipt, source_receipt_path=source,
+        source_receipt_sha256=frozen.file_identity(source)["sha256"],
+        candidate_ceiling=32, fingerprint="f" * 64)
+
+
+@pytest.mark.parametrize("count", [1, 4, 32])
+def test_dispatch_binds_actual_short_tail_and_never_counts_it_as_accepted(tmp_path, count):
+    source, receipt = selected_fixture(tmp_path, count=count)
+    result = validate(source, receipt)
+    assert result["candidate_ceiling"] == 32
+    assert result["actual_selected_candidates"] == count
+    assert result["source_row_indexes"] == list(range(40-count, 40))
+    assert result["accepted_increment"] == 0
+
+
+@pytest.mark.parametrize("mutation", ["count", "ceiling", "index", "reordered", "seed",
+                                      "source", "sampled", "failed", "csv", "geometry"])
+def test_dispatch_rejects_wrong_count_source_or_modified_rows(tmp_path, mutation):
+    source, receipt = selected_fixture(tmp_path)
+    d = json.loads(receipt.read_text())
+    if mutation == "count":
+        d["queue_count"] = 32
+    elif mutation == "ceiling":
+        d["requested_candidate_ceiling"] = 4
+    elif mutation == "index":
+        d["frozen_batch"]["source_row_indexes"][0] = -1
+    elif mutation == "reordered":
+        d["frozen_batch"]["source_row_indexes"].reverse()
+    elif mutation == "seed":
+        d["seed"] += 1
+    elif mutation == "source":
+        d["frozen_batch"]["source_receipt"]["sha256"] = "0" * 64
+    elif mutation == "sampled":
+        d["sampling_attempts"] = 4
+    elif mutation == "failed":
+        d["checks"][0]["pass"] = False
+    else:
+        path = tmp_path / "selected.csv"
+        path.write_text(path.read_text().replace("100.000000000001", "100.000000000002"))
+        if mutation == "geometry":
+            # Updating the new CSV's hash cannot conceal modified source rows.
+            d["candidate_queue"] = frozen.file_identity(path)
+    receipt.write_text(json.dumps(d))
+    with pytest.raises(ValueError):
+        validate(source, receipt)

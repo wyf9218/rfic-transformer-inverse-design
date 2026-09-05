@@ -16,6 +16,84 @@ def file_identity(path: Path) -> dict[str, Any]:
     return {"path": str(path), "size_bytes": len(data), "sha256": hashlib.sha256(data).hexdigest()}
 
 
+def validate_frozen_selection(
+    receipt_path: Path, *, source_receipt_path: Path, source_receipt_sha256: str,
+    candidate_ceiling: int, fingerprint: str,
+) -> dict[str, Any]:
+    """Recheck the actual selected CSV before the first simulator role.
+
+    A short final slice is allowed, but it is never reported as a full slice
+    or as progress toward the accepted checkpoint before physical validation.
+    """
+    if type(candidate_ceiling) is not int or not 1 <= candidate_ceiling <= 32:
+        raise ValueError("frozen selection ceiling must be 1..32")
+    receipt_pin = file_identity(receipt_path)
+    receipt = json.loads(receipt_path.read_text())
+    source_pin = file_identity(source_receipt_path)
+    if source_pin["sha256"] != source_receipt_sha256:
+        raise ValueError("frozen source receipt SHA mismatch at dispatch")
+    source = json.loads(source_receipt_path.read_text())
+    proof = receipt.get("frozen_batch", {})
+    expected = {
+        "overall_status": "PASS", "campaign_id": CAMPAIGN_ID,
+        "contract_fingerprint_sha256": fingerprint,
+        "canonical_geometry_fields": list(GEOMETRY_FIELDS),
+    }
+    for value in (source, receipt):
+        if any(value.get(key) != item for key, item in expected.items()):
+            raise ValueError("frozen selection contract mismatch at dispatch")
+        checks = value.get("checks")
+        if not isinstance(checks, list) or not checks or any(c.get("pass") is not True for c in checks):
+            raise ValueError("frozen selection lacks passing source checks")
+    for key in ("seed", "sampler", "acquisition_source", "campaign_phase"):
+        if key not in source or source[key] != receipt.get(key):
+            raise ValueError("frozen selection sampling provenance changed")
+    if (proof.get("source_receipt") != source_pin
+            or proof.get("source_queue") != source.get("candidate_queue")
+            or proof.get("requested_candidate_ceiling") != candidate_ceiling
+            or receipt.get("requested_candidate_ceiling") != candidate_ceiling
+            or proof.get("sampler_executed") is not False
+            or proof.get("source_rows_changed") is not False
+            or proof.get("dispatch_claim_created") is not False
+            or receipt.get("sampling_attempts") != 0):
+        raise ValueError("frozen selection source or ceiling binding mismatch")
+    groups = []
+    for value in (source, receipt):
+        pin = value["candidate_queue"]
+        path = Path(pin["path"])
+        if not path.is_absolute() or file_identity(path) != pin:
+            raise ValueError("frozen selection CSV identity mismatch at dispatch")
+        with path.open(newline="") as stream:
+            rows = list(csv.DictReader(stream))
+        if (not rows or value.get("queue_count") != len(rows)
+                or any(not row.get(key) for row in rows for key in ("candidate_id_sha256", "geometry_sha256"))
+                or any(len({row[key] for row in rows}) != len(rows)
+                       for key in ("candidate_id_sha256", "geometry_sha256"))):
+            raise ValueError("frozen selection count or uniqueness mismatch")
+        groups.append(rows)
+    original, selected = groups
+    indexes = proof.get("source_row_indexes")
+    if (not isinstance(indexes, list) or len(indexes) != len(selected)
+            or any(type(i) is not int or not 0 <= i < len(original) for i in indexes)
+            or indexes != sorted(set(indexes))
+            or selected != [original[i] for i in indexes]):
+        raise ValueError("selected rows differ from frozen source rows")
+    count = len(selected)
+    if (not 1 <= count <= candidate_ceiling
+            or proof.get("selected_count") != count
+            or proof.get("source_candidate_count") != len(original)
+            or receipt.get("requested_count") != count):
+        raise ValueError("frozen selected count differs from actual CSV")
+    if file_identity(receipt_path) != receipt_pin or file_identity(source_receipt_path) != source_pin:
+        raise ValueError("frozen selection receipt changed during validation")
+    return {"queue_receipt": receipt_pin, "source_receipt": source_pin,
+            "source_queue": source["candidate_queue"], "selected_queue": receipt["candidate_queue"],
+            "source_row_indexes": indexes, "candidate_ceiling": candidate_ceiling,
+            "actual_selected_candidates": count, "source_candidate_count": len(original),
+            "evidence_class": "GEOMETRY_SELECTION_NOT_PHYSICAL_ACCEPTANCE",
+            "accepted_increment": 0, "source_rows_changed": False}
+
+
 def select_frozen_queue(
     receipt_path: Path, expected_sha256: str, *, count: int,
     excluded_hashes: set[str], fingerprint: str, seed: int,
