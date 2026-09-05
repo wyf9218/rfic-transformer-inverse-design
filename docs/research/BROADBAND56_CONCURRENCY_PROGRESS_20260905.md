@@ -1,6 +1,44 @@
 # Concurrency Work: Partial, Not a Performance Result
 
-## Latest State (05:11 UTC)
+## Latest State (05:33 UTC)
+
+**Production is stopped at 100 accepted unique geometries / 5,600 frequency
+rows.** Live process checks at 05:32:51 UTC found zero supervisors, runners,
+Cadence, Calibre or EMX children. The previous `PILOT_1000_RUNNING` status
+file is stale; it is not evidence of a running process.
+
+The approved 1.10 single-worker policy passed both the startup check and the
+actual PILOT_1000 admission check. The latter recorded normalized load1/load5
+of **1.007133 / 1.053856** at 05:24:40 UTC. Resource admission is no longer
+the identified blocker. The 100-geometry checkpoint materializer passed,
+but the following queue-builder role exited with code 2 before any simulator
+ran. Its 900 geometry-only candidates are in a FAIL output and are not new
+accepted data.
+
+The sole failed check is `prior_golden_validation_evidence`: Golden backend
+identity mismatch. The stage profile still invokes a queue delegate from an
+older installation. That script prepends its own installation to the Python
+import path and loads the older Golden validator. Two isolated read-only
+checks using the approved private interpreter reproduced the failure from
+the old installation and passed from the current installation. Both queue
+scripts have identical bytes; the imported validator differs. Neither check
+generated a queue or launched a simulator.
+
+This identifies a deployment-path defect, not an EMX accuracy failure or
+proof of insufficient capacity. A hash-bound profile correction and complete
+consumer preflight are still required before recovery of one supervisor.
+No correction has been deployed at this observation, no fastest concurrency
+is established, and no NN training has started. Preserve the failed outputs
+and all existing accepted results.
+
+Queue failure summary SHA-256:
+`8be56376564ecf618b7df401cbf282cc1e86629b91fe4f02ef4ab48df28fe00b`.
+Backend failure receipt SHA-256:
+`6d883cb576c4690f7661a6e52e31be7e0bc023b758905c656a8306d74ad8a3bb`.
+Live process observation SHA-256:
+`21fcf3380bec276d62d03f9e50e4a24625c3168db0dbf6933059f377c21eaabd`.
+
+## Historical State (05:11 UTC)
 
 The approved **1.10/1.10 single-worker PILOT_1000 startup policy is now
 deployed**, replacing the previously documented deployment mismatch. The
