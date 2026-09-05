@@ -116,7 +116,7 @@ def test_material_sustained_swap_out_is_active_thrashing() -> None:
 
 def test_swap_activity_and_low_memory_classifies_active_thrashing() -> None:
     snapshot = _snapshot()
-    snapshot["resources"]["memory_available_bytes"] = 399_000
+    snapshot["resources"]["memory_available_bytes"] = 199_000
     snapshot["resources"]["active_swap_thrashing"] = True
 
     result = _evaluate(snapshot)
@@ -129,7 +129,7 @@ def test_swap_activity_and_low_memory_classifies_active_thrashing() -> None:
 def test_memory_floor_is_hard_even_without_swap_activity() -> None:
     snapshot = _snapshot()
     snapshot["resources"].update(
-        memory_available_bytes=399_000,
+        memory_available_bytes=199_000,
         swap_in_pages_delta=0,
     )
 
@@ -150,6 +150,17 @@ def test_iowait_limit_is_strictly_below_five_percent() -> None:
     assert result["pass"] is False
     assert result["checks"]["iowait_gate"] is False
     assert result["checks"]["swap_thrash_gate"] is False
+
+
+@pytest.mark.parametrize("memory", [200_000, 201_000, 399_000])
+def test_owner_twenty_percent_floor_and_advisory_swap_in(memory: int) -> None:
+    snapshot = _snapshot()
+    snapshot["resources"].update(memory_available_bytes=memory)
+    result = _evaluate(snapshot)
+    assert result["checks"]["memory_gate"] is True
+    assert result["checks"]["swap_thrash_gate"] is True
+    assert result["metrics"]["advisory_nonzero_swap_in"] is True
+    assert result["pass"] is True
 
 
 def test_oom_event_is_a_hard_failure() -> None:
@@ -275,7 +286,7 @@ def test_initial_cpu_thresholds_reject_either_value_above_boundary(
 @pytest.mark.parametrize(
     "section,field,value,failed_check",
     [
-        ("resources", "memory_available_bytes", 399_000, "memory_gate"),
+        ("resources", "memory_available_bytes", 199_000, "memory_gate"),
         ("resources", "oom_kill_delta", 1, "no_oom_gate"),
         ("resources", "swap_out_pages_delta", 60, "swap_thrash_gate"),
         ("resources", "iowait_percent", 5.0, "iowait_gate"),
@@ -304,7 +315,7 @@ def test_hard_gates_still_block_at_newly_admitted_cpu_load(
     assert result["checks"][failed_check] is False
 
 
-@pytest.mark.parametrize("stage", ["PILOT_1000", "PHASE_A", "PHASE_B", "PHASE_C"])
+@pytest.mark.parametrize("stage", ["PHASE_A", "PHASE_B", "PHASE_C"])
 def test_later_stage_cpu_thresholds_are_unchanged(stage, no_child_processes) -> None:
     snapshot = _cpu_snapshot()
     snapshot["resources"]["filesystem_free_bytes"] = 10**15
@@ -315,3 +326,26 @@ def test_later_stage_cpu_thresholds_are_unchanged(stage, no_child_processes) -> 
     assert result["pass"] is False
     assert result["checks"]["normalized_load1_gate"] is False
     assert result["checks"]["normalized_load5_gate"] is False
+
+
+@pytest.mark.parametrize('load1,load5,passed', [(1.02,1.04,True),(1.10,1.10,True),(1.101,1.0,False),(1.0,1.101,False)])
+def test_owner_single_worker_window_includes_following_pilot(load1,load5,passed):
+    snapshot = _snapshot()
+    snapshot['resources'].update(load_1m=load1*256,load_5m=load5*256)
+    result = evaluate_capacity_snapshot(snapshot,stage='PILOT_1000',current_accepted=32)
+    assert result['pass'] is passed
+
+
+@pytest.mark.parametrize('load', [0.5,0.98,1.05])
+def test_pilot1000_never_scales_in_expanded_single_worker_window(load):
+    result = adaptive_concurrency(stage='PILOT_1000',logical_cpu_count=192,simulator_license_capacity=48,
+        current_concurrency=8,healthy_check_streak=10,normalized_load1=load,iowait_percent=0.0,
+        available_memory_fraction=0.5,active_swap_thrashing=False,licenses_available=True)
+    assert result['concurrency'] == 1
+
+
+def test_single_worker_override_does_not_restore_failed_license_gate():
+    result = adaptive_concurrency(stage='PILOT_1000',logical_cpu_count=192,simulator_license_capacity=0,
+        current_concurrency=1,healthy_check_streak=0,normalized_load1=1.05,iowait_percent=0.0,
+        available_memory_fraction=0.5,active_swap_thrashing=False,licenses_available=False)
+    assert result['concurrency'] == 0

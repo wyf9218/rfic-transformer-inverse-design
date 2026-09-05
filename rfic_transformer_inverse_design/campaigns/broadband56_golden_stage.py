@@ -162,6 +162,10 @@ def validate_stage_evidence(receipt: Mapping[str, Any]) -> None:
     """Replay the explicit validation terminal and its hash-bound role prefix."""
     from .broadband56_stage_execution import expected_stage_role_order
 
+    if "operational_progress_rebind" in receipt:
+        _validate_operational_reuse(receipt)
+        return
+
     _expect(receipt, {"stage": "GOLDEN", "golden_terminal_mode": TERMINAL_MODE,
                       "accepted_unique_geometries": 0, "validation_geometry_count": 1,
                       "validation_feature_rows": 56, "production_accepted_count_delta": 0}, "Golden stage")
@@ -224,3 +228,74 @@ def validate_stage_evidence(receipt: Mapping[str, Any]) -> None:
     _expect(resource, {"overall_status": "PASS", "stage": "GOLDEN", "max_concurrency": 1,
                        "resource_snapshot": context["resource_snapshot"]}, "Golden resource summary")
     _pin(resource["resource_snapshot"], "Golden resource snapshot")
+
+
+def _validate_operational_reuse(receipt: Mapping[str, Any]) -> None:
+    """Validate original execution, never relabel it as a new Golden run."""
+    binding = receipt["operational_progress_rebind"]
+    if not isinstance(binding, Mapping):
+        raise GoldenSourceError("Golden operational rebind must be an object")
+    _expect(binding, {"kind": "REUSE_COMPLETED_STAGE_UNCHANGED_SCIENTIFIC_CONTRACT",
+                      "new_simulator_execution": False, "accepted_count_increment": 0},
+            "Golden operational rebind")
+    original = _load(binding.get("original_stage_receipt"), "original Golden stage")
+    if "operational_progress_rebind" in original:
+        raise GoldenSourceError("Golden reuse must bind the original execution, not a nested reuse")
+    validate_stage_evidence(original)
+    mutable = {"backend_identity_manifest_sha256", "full_campaign_authorization_receipt_sha256",
+               "artifacts", "operational_progress_rebind"}
+    if ({k: v for k, v in receipt.items() if k not in mutable}
+            != {k: v for k, v in original.items() if k not in mutable}):
+        raise GoldenSourceError("Golden reuse changed scientific results or stage identity")
+    old_attempt = _load(original["artifacts"]["golden_attempt_products_receipt"], "original Golden attempt")
+    old_backend = _load(old_attempt["backend_identity_manifest"], "original Golden backend")
+    target_pin = binding.get("target_backend_manifest")
+    target = _load(target_pin, "Golden reuse target backend")
+    if target_pin["sha256"] != receipt["backend_identity_manifest_sha256"]:
+        raise GoldenSourceError("Golden reuse target backend SHA mismatch")
+    if target.get("scientific_contract") != old_backend.get("scientific_contract"):
+        raise GoldenSourceError("Golden reuse scientific contract changed")
+    # All simulator entrypoints, extraction code, PDK, configuration and rules
+    # must have the original bytes. Only their installation paths may differ.
+    for group in ("script_identities", "runtime_identities"):
+        if set(target.get(group, {})) != set(old_backend.get(group, {})):
+            raise GoldenSourceError("Golden reuse backend role set changed")
+        for name, old_pin in old_backend[group].items():
+            new_pin = target[group][name]
+            _pin(old_pin, "original " + name)
+            _pin(new_pin, "rebound " + name)
+            if any(new_pin.get(key) != old_pin.get(key) for key in ("sha256", "size_bytes")):
+                raise GoldenSourceError("Golden reuse computational identity changed: " + name)
+    if ("emx_python_runtime" in target) != ("emx_python_runtime" in old_backend):
+        raise GoldenSourceError("Golden reuse EMX runtime binding changed")
+    if "emx_python_runtime" in old_backend:
+        old_runtime = _load(old_backend["emx_python_runtime"], "original EMX runtime")
+        new_runtime = _load(target["emx_python_runtime"], "rebound EMX runtime")
+        if set(old_runtime["modules"]) != set(new_runtime["modules"]):
+            raise GoldenSourceError("Golden reuse EMX module set changed")
+        for name, old_pin in old_runtime["modules"].items():
+            new_pin = new_runtime["modules"][name]
+            _pin(old_pin, "original EMX module " + name)
+            _pin(new_pin, "rebound EMX module " + name)
+            if any(new_pin.get(key) != old_pin.get(key) for key in ("sha256", "size_bytes")):
+                raise GoldenSourceError("Golden reuse EMX dependency bytes changed: " + name)
+        for name in ("python_launcher", "python_runtime", "environment", "dependency_roots"):
+            if new_runtime.get(name) != old_runtime.get(name):
+                raise GoldenSourceError("Golden reuse EMX environment changed: " + name)
+    authorization_pin = binding.get("target_authorization")
+    authorization = _load(authorization_pin, "Golden reuse target authorization")
+    if not (authorization_pin["sha256"] == receipt["full_campaign_authorization_receipt_sha256"]
+            and authorization.get("overall_status") == "PASS"
+            and authorization.get("authorization_scope") == "FULL_CAMPAIGN"
+            and authorization.get("backend_identity_manifest") == target_pin
+            and authorization.get("campaign_id") == original["campaign_id"]
+            and authorization.get("contract_fingerprint_sha256") == original["contract_fingerprint_sha256"]
+            and authorization.get("nn_training_authorized") is False):
+        raise GoldenSourceError("Golden reuse authorization mismatch")
+    if set(receipt.get("artifacts", {})) != set(original["artifacts"]):
+        raise GoldenSourceError("Golden reuse artifact set changed")
+    for name, old_pin in original["artifacts"].items():
+        new_pin = receipt["artifacts"][name]
+        _pin(new_pin, "Golden reused artifact " + name)
+        if any(new_pin.get(key) != old_pin.get(key) for key in ("sha256", "size_bytes")):
+            raise GoldenSourceError("Golden reuse artifact bytes changed: " + name)

@@ -15,7 +15,7 @@ from .broadband56_capacity_policy import (
     RESOURCE_POLICY,
     SCIENTIFIC_CONTRACT_FINGERPRINT,
     CapacityPolicyError,
-    adaptive_concurrency,
+    adaptive_concurrency as _base_adaptive_concurrency,
     normalized_resource_metrics,
     required_storage_bytes,
 )
@@ -30,9 +30,23 @@ OVERRIDE_RECEIPT_SCHEMA = (
     "rfic_transformer.broadband56_v2_swap_gate_operational_override.v1"
 )
 OVERRIDE_DECISION = "APPLY_SWAP_GATE_OPERATIONAL_OVERRIDE"
-MIN_AVAILABLE_MEMORY_FRACTION = 0.40
+MIN_AVAILABLE_MEMORY_FRACTION = 0.20
 MAX_IOWAIT_PERCENT_EXCLUSIVE = 5.0
 MATERIAL_SWAP_OUT_PAGES_PER_SECOND = 1.0
+
+
+def adaptive_concurrency(**kwargs: Any) -> dict[str, Any]:
+    """Keep the expanded pilot startup window strictly at one worker.
+
+    The snapshot gate also checks load5. Until paired load1/load5 history is
+    provided to the scheduler, PILOT_1000 cannot use the expanded window at a
+    higher concurrency. Benchmark trials have their own live admission gate.
+    """
+    result = _base_adaptive_concurrency(**kwargs)
+    if str(kwargs["stage"]).strip().upper() == "PILOT_1000" and result["concurrency"] > 0:
+        return {"concurrency": 1, "hard_cap": min(1, result["hard_cap"]),
+                "action": "HOLD_SINGLE_WORKER_PILOT", "reasons": ["owner_1p10_pilot_window_requires_concurrency_one"]}
+    return result
 
 
 def combined_swap_thrashing(resources: Mapping[str, Any]) -> dict[str, Any]:
@@ -65,7 +79,7 @@ def combined_swap_thrashing(resources: Mapping[str, Any]) -> dict[str, Any]:
             swap_out_pages_per_second
             >= MATERIAL_SWAP_OUT_PAGES_PER_SECOND
         ),
-        "available_memory_below_40pct": (
+        "available_memory_below_20pct": (
             metrics["available_memory_fraction"]
             < MIN_AVAILABLE_MEMORY_FRACTION
         ),
@@ -214,7 +228,7 @@ def evaluate_capacity_snapshot(
         and collision is False
     )
 
-    initial_launch = str(stage).strip().upper() in {"GOLDEN", "PILOT_32"}
+    initial_launch = str(stage).strip().upper() in {"GOLDEN", "PILOT_32", "PILOT_1000"}
     checks = {
         "normalized_load1_gate": metrics["normalized_load1"] <= (1.10 if initial_launch else 0.90),
         "normalized_load5_gate": metrics["normalized_load5"] <= (1.10 if initial_launch else 0.95),

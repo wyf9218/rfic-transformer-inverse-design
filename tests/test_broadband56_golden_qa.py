@@ -498,6 +498,48 @@ def test_golden_stage_chain_then_pilot_zero_base_and_anchor_exclusion(tmp_path):
         authorization_receipt_sha256=receipt["full_campaign_authorization_receipt_sha256"])[0] == finalizer["decision"]
 
 
+@pytest.mark.parametrize("mutation", [None, "data", "simulation", "code", "contract", "authorization", "artifact", "source"])
+def test_operational_golden_reuse_keeps_original_execution(tmp_path, mutation):
+    import copy
+    from rfic_transformer_inverse_design.campaigns import broadband56_golden_stage as golden
+    path, original, args, _ = _completed_golden_fixture(tmp_path)
+    backend = json.loads(Path(args.backend_identity_manifest).read_text())
+    target = copy.deepcopy(backend)
+    target['operational_policy_version'] = 'test_only_pilot110'
+    if mutation == 'code':
+        role = next(iter(target['script_identities']))
+        target['script_identities'][role] = record(_json(tmp_path/'changed_code.json', {'changed': True}))
+    if mutation == 'contract':
+        target['scientific_contract'] = {'frequency_points': 111}
+    target_pin = record(_json(tmp_path/'target_backend.json', target))
+    authorization = dict(overall_status='PASS', authorization_scope='FULL_CAMPAIGN',
+        backend_identity_manifest=target_pin, campaign_id=original['campaign_id'],
+        contract_fingerprint_sha256=original['contract_fingerprint_sha256'], nn_training_authorized=False)
+    if mutation == 'authorization':
+        authorization['nn_training_authorized'] = True
+    auth_pin = record(_json(tmp_path/'target_authorization.json', authorization))
+    reused = copy.deepcopy(original)
+    reused.update(backend_identity_manifest_sha256=target_pin['sha256'],
+        full_campaign_authorization_receipt_sha256=auth_pin['sha256'],
+        operational_progress_rebind=dict(kind='REUSE_COMPLETED_STAGE_UNCHANGED_SCIENTIFIC_CONTRACT',
+            original_stage_receipt=record(path), target_backend_manifest=target_pin,
+            target_authorization=auth_pin, new_simulator_execution=False, accepted_count_increment=0))
+    if mutation == 'data':
+        reused['validation_feature_rows'] = 111
+    elif mutation == 'simulation':
+        reused['operational_progress_rebind']['new_simulator_execution'] = True
+    elif mutation == 'artifact':
+        reused['artifacts']['resource_summary'] = record(_json(tmp_path/'new_resource.json', {'overall_status': 'PASS'}))
+    elif mutation == 'source':
+        path.write_text('{}')
+    if mutation is None:
+        golden.validate_stage_evidence(reused)
+        assert original == json.loads(path.read_text())
+    else:
+        with pytest.raises(golden.GoldenSourceError):
+            golden.validate_stage_evidence(reused)
+
+
 @pytest.mark.parametrize("mutation", ["count", "missing_trace_role", "profile_mode", "calibre_bytes", "stage"])
 def test_golden_stage_rejects_count_scope_trace_or_artifact_drift(tmp_path, mutation):
     path, receipt, args, _ = _completed_golden_fixture(tmp_path)
