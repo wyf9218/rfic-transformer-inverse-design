@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import copy
 import csv
 import json
 from collections.abc import Mapping
@@ -280,7 +281,15 @@ def _validate_operational_reuse(receipt: Mapping[str, Any]) -> None:
                         "golden_execution_repeated": False,
                     }
                 )
-                if not compatible_finalizer:
+                compatible_profile = (
+                    group == "runtime_identities" and name == "stage_execution_profile"
+                    and "queue_delegate_profile_rebind" in binding
+                )
+                if compatible_profile:
+                    validate_queue_delegate_profile_rebind(
+                        old_pin, new_pin, target, binding["queue_delegate_profile_rebind"]
+                    )
+                elif not compatible_finalizer:
                     raise GoldenSourceError("Golden reuse computational identity changed: " + name)
     if ("emx_python_runtime" in target) != ("emx_python_runtime" in old_backend):
         raise GoldenSourceError("Golden reuse EMX runtime binding changed")
@@ -315,3 +324,56 @@ def _validate_operational_reuse(receipt: Mapping[str, Any]) -> None:
         _pin(new_pin, "Golden reused artifact " + name)
         if any(new_pin.get(key) != old_pin.get(key) for key in ("sha256", "size_bytes")):
             raise GoldenSourceError("Golden reuse artifact bytes changed: " + name)
+
+
+def validate_queue_delegate_profile_rebind(
+    original_pin: Mapping[str, Any], replacement_pin: Mapping[str, Any],
+    target_backend: Mapping[str, Any], binding: Mapping[str, Any],
+) -> None:
+    """Allow only relocation of an identical queue delegate into its bound runtime."""
+    if binding != {
+        "original": original_pin, "replacement": replacement_pin,
+        "kind": "IDENTICAL_QUEUE_DELEGATE_CURRENT_RUNTIME_PATH_ONLY",
+        "golden_execution_repeated": False,
+    }:
+        raise GoldenSourceError("Golden queue profile rebind identity mismatch")
+    original = _load(original_pin, "original queue execution profile")
+    replacement = _load(replacement_pin, "replacement queue execution profile")
+    expected = copy.deepcopy(original)
+    wrapper = _pin(target_backend["script_identities"]["phase_a_queue_builder"],
+                   "target queue wrapper")
+    target_script = wrapper.parent / "build_broadband56_phase_a_queue.py"
+    stages = expected.get("stages")
+    if not isinstance(stages, Mapping) or not stages:
+        raise GoldenSourceError("queue profile stages missing")
+    changed = 0
+    for stage in stages.values():
+        commands = stage.get("commands") if isinstance(stage, Mapping) else None
+        if not isinstance(commands, list):
+            raise GoldenSourceError("queue profile commands missing")
+        for command in commands:
+            if not isinstance(command, Mapping) or command.get("role") != "phase_a_queue_builder":
+                continue
+            argv = command.get("argv")
+            if (not isinstance(argv, list) or argv.count("--delegate-script") != 1
+                    or argv.count("--delegate-sha256") != 1):
+                raise GoldenSourceError("queue delegate arguments missing or duplicated")
+            path_index = argv.index("--delegate-script") + 1
+            sha_index = argv.index("--delegate-sha256") + 1
+            if max(path_index, sha_index) >= len(argv):
+                raise GoldenSourceError("queue delegate argument value missing")
+            source = Path(argv[path_index])
+            digest = argv[sha_index]
+            if not source.is_absolute() or source.name != target_script.name:
+                raise GoldenSourceError("queue delegate source path mismatch")
+            source_size = source.stat().st_size
+            _pin({"path": str(source), "size_bytes": source_size, "sha256": digest},
+                 "original queue delegate")
+            _pin({"path": str(target_script), "size_bytes": source_size, "sha256": digest},
+                 "relocated identical queue delegate")
+            # Only this operand may differ. Seeds, bounds, roles, receipt paths,
+            # all simulator commands and the entire stage set must stay exact.
+            changed += argv[path_index] != str(target_script)
+            argv[path_index] = str(target_script)
+    if changed == 0 or expected != replacement:
+        raise GoldenSourceError("queue profile changed more than identical delegate paths")

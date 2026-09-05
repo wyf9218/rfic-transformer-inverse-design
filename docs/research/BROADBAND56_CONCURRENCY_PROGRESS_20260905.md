@@ -1,6 +1,61 @@
 # Concurrency Work: Partial, Not a Performance Result
 
-## Latest State (05:33 UTC)
+## Latest State (05:52 UTC)
+
+**Real layout generation has resumed.** Generation 28 is the sole live
+supervisor for the existing campaign, queue and logical supervisor. Its
+PILOT_1000 queue passed and the live observation at 05:50:30 UTC found one
+Cadence child. At 05:51:48 UTC the stage contained 47 GDS files and no backend
+failure. These files are pending DRC/EMX, not 47 new accepted geometries.
+The accepted count remains **100 / 200,000**, with **5,600 feature rows**.
+
+The path-only correction relocates the identical queue delegate into the
+current immutable runtime. Golden evidence reuse now checks an explicit
+profile binding and permits only that path operand to differ. All stage
+roles, seeds, configuration arguments, simulator commands, source hashes,
+frequency and scientific fields must stay exact. Tests reject changed code,
+seeds, roles, stages, outputs, configuration, missing bindings and extra
+arguments. Original Golden execution and all existing 100 samples are reused,
+not simulated or counted again.
+
+An actual bound-wrapper replay produced a PASS 900-candidate geometry queue
+with bytes identical to the failed queue. The same 110 focused tests passed
+locally and on the private interpreter; this is not a full-suite or throughput
+claim. An earlier private harness run retained two failures from a symlink
+versus resolved-path assertion. A fresh harness with regular script copies
+and the same selected test versions passed. A first recovery preflight also
+correctly failed because its live-controller checker required the already
+dead predecessor to be alive. The corrected historical-chain preflight
+verified every transition and the terminal predecessor's death; the live
+controller's isolation checker is unchanged.
+
+Fresh startup and PILOT_1000 admission checks passed. The current stage is
+at **concurrency 1**. The generic zero-child prelaunch isolation probe reports
+runner conflicts during an active stage; process ancestry instead identifies
+the three reported runners as nested stage-launch/backend/batch components
+of the same sole supervisor, not separate campaigns. Do not change a
+prelaunch FAIL into PASS or stop healthy authorized children on that basis.
+
+For a conditional timing reference only, an earlier complete two-worker
+attempt produced 61 accepted geometries in 3,887 seconds: **56.50 accepted
+geometries/hour**. Another 900 at exactly that observed rate would take
+**15.93 hours**, excluding downtime and concurrency testing. The current
+single-worker stage is not the same condition; this is not its ETA, a
+demonstrated concurrency scaling law, or a commitment for large-scale launch.
+The seven-level benchmark and fastest-concurrency determination remain
+incomplete. No NN training has started.
+
+Runtime/backend manifest SHA-256:
+`17ca07415b30e8e2cdea3eb156d2f4847fb6f9b6fd386aad02dc0f9b5f4c43e0` /
+`6a12003238170d9e1c6766e2fe419ef3de0e1ead1cef0ff996ddcda17c34cf63`.
+Actual queue replay / private 110-test receipt SHA-256:
+`c0b00811e65b68d12e1da1820e25be170d63d12477bc695ddcd27fd44a38e923` /
+`f68bc8ff48d18f41625ad1745978ec08c9f1a46cb8fadcde896a121dfcb85ed7`.
+Live observation / historical two-worker trace SHA-256:
+`20b085f219ef52ee5b50a1c7791ad933186143cde895933d5c39f270cabf4182` /
+`8a964b61a2406996fb1f00b69ecf036661f8bd931d597c0ad3ae161bd93355cd`.
+
+## Historical State (05:33 UTC)
 
 **Production is stopped at 100 accepted unique geometries / 5,600 frequency
 rows.** Live process checks at 05:32:51 UTC found zero supervisors, runners,
