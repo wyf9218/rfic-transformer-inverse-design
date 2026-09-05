@@ -94,6 +94,36 @@ def test_delegate_failure_is_counted(tmp_path):
     assert result['validated_outputs_per_wall_hour'] == 0
 
 
+@pytest.mark.parametrize('count', [None, -1, True, 2.5, 5])
+def test_invalid_or_excess_solver_count_never_qualifies(tmp_path, count):
+    args = setup(tmp_path)
+    args['telemetry'] = lambda: dict(active_solver_processes=count)
+    args['execute'] = lambda *_: pytest.fail('invalid process evidence must stop submissions')
+    result = run_trial(**args)
+    assert result['submitted_jobs'] == 0
+    assert not result['resource_safe_complete_trial']
+    assert not result['requested_solver_concurrency_observed']
+    assert screening_summary([result], levels=[4])['screening_leader'] is None
+
+
+def test_excess_solver_count_after_launch_drains_healthy_children(tmp_path):
+    args = setup(tmp_path)
+    calls = 0
+    def observe():
+        nonlocal calls
+        calls += 1
+        return dict(active_solver_processes=0 if calls == 1 else 5)
+    def fixture(*_):
+        time.sleep(0.05)
+        return dict(overall_status='PASS', evidence_class='UNIT_TEST_FIXTURE')
+    args.update(telemetry=observe, execute=fixture)
+    result = run_trial(**args)
+    assert result['completed_jobs'] == 4
+    assert result['pending_jobs_after_return'] == 0
+    assert result['stop_reason'] == 'SOLVER_CONCURRENCY_EXCEEDED_DRAIN_ONLY'
+    assert not result['resource_safe_complete_trial']
+
+
 def test_no_clobber_and_no_execution_before_identity_check(tmp_path):
     args = setup(tmp_path)
     args['workload_identity']['sha256'] = '0'*64

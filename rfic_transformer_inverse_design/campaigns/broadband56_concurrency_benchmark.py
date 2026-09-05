@@ -129,7 +129,12 @@ def run_trial(
                               "inflight_delegates": len(pending), "telemetry": observed}
                     _write_new(out_dir / f"RESOURCE_SAMPLE_{len(samples) + 1:06d}.json", sample)
                     samples.append(sample)
-                    if not admission["pass"]:
+                    solver_count = observed.get("active_solver_processes")
+                    if type(solver_count) is not int or solver_count < 0:
+                        stop_reason = "SOLVER_PROCESS_TELEMETRY_INVALID_DRAIN_ONLY"
+                    elif solver_count > concurrency:
+                        stop_reason = "SOLVER_CONCURRENCY_EXCEEDED_DRAIN_ONLY"
+                    elif not admission["pass"]:
                         stop_reason = "RESOURCE_GATE_CHANGED_DRAIN_ONLY"
                 except Exception as exc:
                     stop_reason = f"GATE_OR_TELEMETRY_ERROR: {type(exc).__name__}: {exc}"
@@ -167,7 +172,7 @@ def run_trial(
         "pass_jobs": passed, "fail_jobs": failed, "not_submitted_jobs": len(jobs) - submitted,
         "pending_jobs_after_return": 0, "peak_inflight_delegates": peak_inflight,
         "observed_peak_solver_processes": observed_peak,
-        "requested_solver_concurrency_observed": observed_peak is not None and observed_peak >= concurrency,
+        "requested_solver_concurrency_observed": observed_peak == concurrency,
         "validated_outputs_per_wall_hour": passed * 3600 / elapsed,
         "failure_fraction_of_submitted": failed / submitted if submitted else None,
         "stop_reason": stop_reason, "resource_safe_complete_trial": complete and stop_reason is None,
