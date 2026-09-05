@@ -16,6 +16,7 @@ import json
 import os
 import subprocess
 import sys
+import tempfile
 from collections.abc import Mapping
 from datetime import datetime, timezone
 from pathlib import Path
@@ -1072,9 +1073,16 @@ def _file_record(path: Path) -> dict[str, Any]:
 
 def _write_json_exclusive(path: Path, payload: Mapping[str, Any]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    with path.open("x", encoding="utf-8") as handle:
+    fd, pending = tempfile.mkstemp(prefix=f".{path.name}.", suffix=".pending", dir=path.parent)
+    with os.fdopen(fd, "w", encoding="utf-8") as handle:
         json.dump(payload, handle, indent=2, sort_keys=True)
         handle.write("\n")
+        handle.flush()
+        os.fsync(handle.fileno())
+    # Publish complete bytes atomically; never replace another observation.
+    # Failed writes/publication retain the pending file as failure evidence.
+    os.link(pending, path)
+    os.unlink(pending)
 
 
 def _sha256(path: Path) -> str:

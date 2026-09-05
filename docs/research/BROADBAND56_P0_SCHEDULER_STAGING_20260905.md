@@ -50,6 +50,14 @@ committed attempt/stage checkpoint nor a backend failure receipt existed;
 the active backend hash was unchanged. These are not 37 newly accepted
 geometries, nor a throughput or parallel benchmark.
 
+Update at 11:24:05 UTC: independent hash/port/grid revalidation passed for
+60 completed fresh S4P files from the same 761 zero-blocking GDS partition.
+Audit SHA:
+`bf38dbf546a7202fed3d93d25c595eabb13361c738f21d7e17636aff6284ac4e`.
+Formal acceptance remained 100 / 5,600; one native EMX was observed. The
+correct committed progress, stage receipt and backend failure paths were
+separately checked and absent. No production process was changed.
+
 The deployed Cadence runner submits all pending futures upfront. Neither it
 nor the synchronous role runner exposes a live dispatch-pause interface.
 The first supported end-to-end checkpoint is the **whole current attempt**,
@@ -68,6 +76,19 @@ handoff must not be used to interrupt this attempt.
 - `healthy_history` verifies source SHA/size/path, UTC, raw resource values,
   lease identity, distinct timestamps, non-overlapping 60-second samples,
   recency and continuity. Unhealthy observations reset the streak.
+- Development resource-snapshot publication now writes and fsyncs hidden
+  pending bytes, then publishes the complete JSON through a no-clobber hard
+  link. A concurrent history reader cannot consume a half-written snapshot.
+  Collisions preserve the existing observation and pending failure evidence;
+  serialization failures never become visible health samples. Output bytes
+  and policy are unchanged. This writer is not installed in production.
+- A new isolated copy of the private benchmark gate and session now reuses
+  the shared source-bound history and measured multi-tool capacity consumer.
+  It no longer counts an anonymous list of caller-supplied healthy flags.
+  Production isolation evidence is preserved, not rewritten as a benchmark
+  PASS. Missing capacity evidence still caps the request at one. This private
+  copy is not loaded by the authoritative supervisor, and its protected
+  container-parent handling still requires real integration verification.
 - The development base rule is five checks, not ten. Missing per-tool seat,
   thread or peak-memory measurements still limits admission to one worker.
   The first supported trial is two, not an unmeasured higher setting.
@@ -152,7 +173,7 @@ handoff must not be used to interrupt this attempt.
 
 ## Verification
 
-Local focused regression: **373 passed**. This includes scheduling, capacity,
+Local focused regression: **387 passed**. This includes scheduling, capacity,
 adapter, profile, stage progress/finalization, queue, backend and batch tests.
 The launch-boundary fixture verifies that a two-worker decision and its same
 five source observations survive adaptation and backend admission. Four
@@ -166,11 +187,21 @@ then selects its eight original remaining rows without sampling. After all
 creates a new two-row source excluding every prior geometry. Count and
 terminal values in this test are fixtures, not campaign measurements.
 
-Approved private Python / numpy 2.5.0: **244 passed** in an isolated source
+Approved private Python / numpy 2.5.0: **247 passed** in an isolated source
 copy, with an irreversible audit hook prohibiting actual subprocess and
 signal actions. Receipt SHA:
-`74c6513166e230b0080f12811397e30ab467e19c08b6bbce74f85ee3065a1912`.
+`7f80a3b0c32217bbc4c4acaac7bde732d56ef8915b0f98806dd8605973eb0b59`.
 These are software fixtures, not native solver or physical test results.
+Three added publication tests cover complete bytes, destination collision
+and serialization failure. The local selection additionally includes the
+11 existing operational-control-script tests; the local and remote totals
+are different selections and must not be added together.
+The isolated private benchmark copy separately passed **67 fixtures** on
+both local Python and the approved private MARS Python. Remote receipt SHA:
+`d3e9d7917de3ad8d81233ac72ec4a55bb175814ed7865096dcc7f623add3a609`.
+Its harness prohibited native subprocess and signal actions. Shared-source
+identity, duplicates, stale history, capacity limits and session-to-gate
+wiring were tested. These are not 67 benchmark trials or physical samples.
 The latest 22 added scheduling cases cover committed trial evidence, native
 versus requested counts, stale/missing execution, partial observation, role
 failure, wrong role order, source/context binding, distinct simultaneous
@@ -270,8 +301,11 @@ corrected before the latest regression above.
    and global budget under the sole supervisor. The development 2 -> 4
    execution-evidence consumer is implemented and tested, but has no real
    two-worker trial evidence yet. Neither native two-worker operation nor any
-   complete benchmark level is proven. The prepared legacy benchmark callback
-   still has its own health-history logic and is not a deployable substitute.
+   complete benchmark level is proven. The new private gate/session copy
+   passes shared-history fixtures, but is not installed. The legacy callback
+   still has separate history and incomplete protected-container ancestry;
+   it must not be used as a deployable substitute. No integration proof or
+   immutable consolidated bundle exists yet.
 3. Complete the single consolidated private profile/runtime/backend rebind,
    preserve all prior-stage evidence, and run the entire actual startup chain
    preflight. Verify the tested cohort lifecycle and selected-count binding

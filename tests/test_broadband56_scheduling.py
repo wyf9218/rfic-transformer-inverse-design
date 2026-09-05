@@ -463,3 +463,42 @@ def test_native_counts_require_distinct_simultaneous_identity_records(tmp_path, 
     mutate_native(trace_path, mutate)
     with pytest.raises(CapacityPolicyError, match="simultaneous distinct"):
         scheduler.completed_pilot_execution(tmp_path, current_accepted=100)
+
+
+def test_observation_publication_exposes_only_complete_json(tmp_path, monkeypatch):
+    from tests.test_broadband56_capacity_snapshot_adapter import SWAP_CONTROLLER
+
+    target = tmp_path / "swap_override_complete.json"
+    link = SWAP_CONTROLLER.os.link
+
+    def publish(source, destination):
+        assert not list(tmp_path.glob("swap_override_*.json"))
+        assert json.loads(Path(source).read_text()) == {"pass": True}
+        link(source, destination)
+
+    monkeypatch.setattr(SWAP_CONTROLLER.os, "link", publish)
+    SWAP_CONTROLLER._write_json_exclusive(target, {"pass": True})
+    assert json.loads(target.read_text()) == {"pass": True}
+    assert not list(tmp_path.glob("*.pending"))
+
+
+def test_observation_publication_collision_preserves_both_evidence_files(tmp_path):
+    from tests.test_broadband56_capacity_snapshot_adapter import SWAP_CONTROLLER
+
+    target = write(tmp_path / "swap_override_existing.json", {"original": True})
+    before = target.read_bytes()
+    with pytest.raises(FileExistsError):
+        SWAP_CONTROLLER._write_json_exclusive(target, {"new": True})
+    assert target.read_bytes() == before
+    pending, = tmp_path.glob("*.pending")
+    assert json.loads(pending.read_text()) == {"new": True}
+
+
+def test_incomplete_observation_write_is_not_visible_as_a_health_sample(tmp_path):
+    from tests.test_broadband56_capacity_snapshot_adapter import SWAP_CONTROLLER
+
+    target = tmp_path / "swap_override_invalid.json"
+    with pytest.raises(TypeError):
+        SWAP_CONTROLLER._write_json_exclusive(target, {"invalid": object()})
+    assert not target.exists()
+    assert len(list(tmp_path.glob("*.pending"))) == 1
