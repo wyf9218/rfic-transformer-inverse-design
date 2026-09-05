@@ -95,8 +95,8 @@ def validate_frozen_selection(
     A short final slice is allowed, but it is never reported as a full slice
     or as progress toward the accepted checkpoint before physical validation.
     """
-    if type(candidate_ceiling) is not int or not 1 <= candidate_ceiling <= 48:
-        raise ValueError("frozen selection ceiling must be 1..48")
+    if type(candidate_ceiling) is not int or not 1 <= candidate_ceiling <= 192:
+        raise ValueError("frozen selection ceiling must be 1..192")
     receipt_pin = file_identity(receipt_path)
     receipt = json.loads(receipt_path.read_text())
     source_pin = file_identity(source_receipt_path)
@@ -175,8 +175,8 @@ def select_frozen_queue(
     dispatch and its validated terminal ledger supplies the exclusion set.
     Exhaustion fails closed; it never silently samples replacement geometry.
     """
-    if type(count) is not int or not 1 <= count <= 48:
-        raise ValueError("frozen queue attempt count must be 1..48")
+    if type(count) is not int or not 1 <= count <= 192:
+        raise ValueError("frozen queue attempt count must be 1..192")
     receipt_pin = file_identity(receipt_path)
     if receipt_pin["sha256"] != expected_sha256:
         raise ValueError("frozen queue receipt SHA mismatch")

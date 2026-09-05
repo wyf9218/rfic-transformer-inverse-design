@@ -34,10 +34,19 @@ GOLDEN_COMPATIBLE_FINALIZER_REBINDS = frozenset({(
 GOLDEN_COMPATIBLE_SCHEDULER_REBINDS = frozenset({
     ("script_identities", "production_stage_backend",
      "073ac6f04e761314b4ed9686792b8ac1891107168af8faf6687e95b5e4788fca",
-     "0261eee73e1d14a36bf840362cd7e2023cc7d1ae2f6b52b8a1a1aed22c4b3d85"),
+     "b84e5c90e215296a19f581584a897bfead0d021d05d0ec2fd507d6b927927a05"),
+    ("script_identities", "exact_audited_gds_emx_runner",
+     "4c6004ab4d53b09b11b6f24ce8b98731c0e474b32c8fbadf059d6e0f69e79ac3",
+     "2a88d4044c8d12c9bb841da811f3a27fb262f3a41e7abc1b9b11516d486e690f"),
+    ("script_identities", "cadence_streamout_delegate",
+     "5b138c3f59ffdb141233a97bfb0a8fa7b4791b59be566f008ac530713d99734d",
+     "c746dbea59e76d77050b5fd404a9b825b792aa3470e537ee3a64736148fe2fa0"),
+    ("script_identities", "calibre_batch_delegate",
+     "7f0c470646c75c5e0d76c6fdea9765433850d6e5569f9074f49238c568f45a37",
+     "682f5a71a9ab798f0d60a28428bb195fe86c6da1286736c23bfc885a69d25218"),
     ("script_identities", "stage_launcher",
      "1cbdc60cd43ed5ebf9555b9a95d2f99f1ef263016aa32f441f1d0d3e799f17de",
-     "97b82183a754ed0a857ffa990d15693b0d00e6e18b153f8a02b6dd3622a18906"),
+     "3b6afb32f3810e5e65d5ce30ca2c2d40ba6e3116d574afe0b811e8e420f2de60"),
     ("runtime_identities", "resource_probe",
      "9a4da25b5cecdaeef075c1bd6dd06798662628057f3f45242a7642df5a25def8",
      "f2e5d532bb9b73c391e1bab950cb02ee2f27bad0d35d0a3d63a5c99426a76f8f"),
@@ -48,6 +57,9 @@ GOLDEN_COMPATIBLE_QUEUE_BATCH_REBINDS = frozenset({(
 ), (
     "1e1fb5f55fa64a99ffb01f41abcb35a08787fd16cf4d300f91f3b89cf02185ba",
     "55d051edacf5099117c999222c12998c37094cbe808a70f55fa3e3670fc150ea",
+), (
+    "1e1fb5f55fa64a99ffb01f41abcb35a08787fd16cf4d300f91f3b89cf02185ba",
+    "c0d25253289493c712c2bcd6c2942431d79904af3b460cfea6d20ebb567985bf",
 )})
 BOUNDED_PILOT_PROFILE_REBIND = "FROZEN_COHORT_BOUNDED_PILOT_SCHEDULING_ONLY"
 
@@ -384,8 +396,8 @@ def validate_queue_delegate_profile_rebind(
         "golden_execution_repeated": False,
     }
     if bounded:
-        if type(limit) is not int or limit not in (32, 48):
-            raise GoldenSourceError("bounded pilot profile requires exact 32 or 48 candidate limit")
+        if type(limit) is not int or limit not in (32, 48, 192):
+            raise GoldenSourceError("bounded pilot profile requires exact 32, 48 or 192 candidate limit")
         expected_binding["max_candidates_per_attempt"] = limit
     if binding != expected_binding or binding.get("golden_execution_repeated") is not False:
         raise GoldenSourceError("Golden queue profile rebind identity mismatch")

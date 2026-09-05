@@ -235,7 +235,7 @@ def _parse_args(argv: list[str] | None) -> argparse.Namespace:
     parser.add_argument("--config", required=True)
     parser.add_argument("--out-dir", required=True)
     parser.add_argument("--count", type=int, required=True)
-    parser.add_argument("--attempt-candidate-limit", type=int, choices=range(1, 33))
+    parser.add_argument("--attempt-candidate-limit", type=int, choices=range(1, 193))
     parser.add_argument("--frozen-queue-receipt")
     parser.add_argument("--frozen-queue-receipt-sha256")
     parser.add_argument("--reuse-campaign-frozen-cohort", action="store_true")
@@ -391,7 +391,7 @@ def _campaign_exclusion_paths(
     next_boundary = next_frozen_accepted_boundary(current_accepted, cumulative_target=spec.cumulative_target)
     expected_count = next_boundary - current_accepted
     if attempt_candidate_limit is not None:
-        if type(attempt_candidate_limit) is not int or not 1 <= attempt_candidate_limit <= 48 or stage == "GOLDEN":
+        if type(attempt_candidate_limit) is not int or not 1 <= attempt_candidate_limit <= 192 or stage == "GOLDEN":
             checks.append(_check("bounded_attempt_limit_valid", False, attempt_candidate_limit))
             return paths
         expected_count = min(expected_count, attempt_candidate_limit)

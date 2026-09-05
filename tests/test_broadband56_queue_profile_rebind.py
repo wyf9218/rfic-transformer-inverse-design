@@ -70,7 +70,7 @@ def test_queue_profile_rebind_is_strictly_path_only(tmp_path, mutation):
     "removed_stage", "extra_stage", "golden_limit", "other_stage_limit", "limit", "missing_cohort",
     "duplicate_option", "source_limit", "source_duplicate", "missing_pilot", "old_kind", "binding_limit",
     "unknown_code", "drift", "source_drift", "external_path", "fake_boolean", "null_binding", "symlink"])
-@pytest.mark.parametrize("candidate_limit", [32, 48])
+@pytest.mark.parametrize("candidate_limit", [32, 48, 192])
 def test_bounded_pilot_profile_only_permits_exact_scheduler_transform(tmp_path, monkeypatch, mutation, candidate_limit):
     old, new = tmp_path / "old", tmp_path / "new"
     old.mkdir(); new.mkdir()
@@ -139,12 +139,18 @@ def test_bounded_pilot_profile_only_permits_exact_scheduler_transform(tmp_path, 
 def test_pinned_scheduler_pairs_match_the_actual_staged_scripts():
     root = Path(__file__).resolve().parents[1]
     roles = dict(production_stage_backend="run_broadband56_v2_production_stage_backend.py",
-                 stage_launcher="run_broadband56_v2_stage_launcher.py")
-    assert len(golden.GOLDEN_COMPATIBLE_SCHEDULER_REBINDS) == 3
+                 stage_launcher="run_broadband56_v2_stage_launcher.py",
+                 exact_audited_gds_emx_runner="run_broadband56_v2_exact_gds_emx_batch.py",
+                 cadence_streamout_delegate="run_candidate_queue_dataset_parallel.py")
+    assert len(golden.GOLDEN_COMPATIBLE_SCHEDULER_REBINDS) == 6
     for group, role, before, after in golden.GOLDEN_COMPATIBLE_SCHEDULER_REBINDS:
         assert len(before) == len(after) == 64
-        if group == "script_identities":
+        if group == "script_identities" and role in roles:
             assert after == pin(root / "scripts" / roles[role])["sha256"]
+        elif role == "calibre_batch_delegate":
+            # Private bytes are checked by manifest verification and the exact
+            # optional private-delegate test, never embedded in this public repo.
+            assert group == "script_identities"
         else:
             assert (group, role) == ("runtime_identities", "resource_probe")
     assert golden.GOLDEN_COMPATIBLE_QUEUE_BATCH_REBINDS == frozenset({(
@@ -153,4 +159,7 @@ def test_pinned_scheduler_pairs_match_the_actual_staged_scripts():
     ), (
         "1e1fb5f55fa64a99ffb01f41abcb35a08787fd16cf4d300f91f3b89cf02185ba",
         "d3c53169370ff9695a9b0b7086f8f76e6ee794063b6d39946538dbb947b09349",
+    ), (
+        "1e1fb5f55fa64a99ffb01f41abcb35a08787fd16cf4d300f91f3b89cf02185ba",
+        "55d051edacf5099117c999222c12998c37094cbe808a70f55fa3e3670fc150ea",
     )})

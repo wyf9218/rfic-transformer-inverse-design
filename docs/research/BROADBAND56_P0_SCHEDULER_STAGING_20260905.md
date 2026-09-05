@@ -4,7 +4,61 @@ Status: **PARTIALLY_IMPLEMENTED_AND_TESTED_NOT_DEPLOYED**.
 This is not a runtime authorization, launch receipt, concurrency benchmark,
 or claim of increased production throughput.
 
-## Latest: Fixed48 Partial-Capacity Policy, 21:48 UTC
+## Latest: Continuous Refill And Checkpoint Consumers, 23:12 UTC
+
+Still **NOT_DEPLOYED**. The original owner and single-worker production are
+protected. At 23:03:43 UTC there were 430 EMX completion receipt files, while
+formal acceptance remained 100 geometries / 5,600 rows. The active attempt had
+not produced its terminal stage/progress receipt. File counts are not full QA.
+
+The isolated package now includes continuous read-only resource sampling
+during blocking stages, bounded refill in the existing Cadence/Calibre/EMX
+batch executors, and separate requested/admitted/pool-capacity contracts.
+The PILOT_1000 profile bounds attempts to 192 candidates with at most 48
+admitted slots; this is not a cross-phase asynchronous redesign. Native
+per-job solver settings and the isolated single-EMX runtime are unchanged.
+
+Package05 passed 537 software tests under the approved private Python and
+numpy 2.5.0, with no real process/signal attempts. Receipt SHA:
+`2e872350ea225d36b7365ebedbba33fadd463d035ef54f401d8a917646d2cab3`.
+Runtime SHA: `b23cb917f65f1577a8bb4108f9c6ee3381d19572a8002f2d10e0b0cdaa3b1ae3`.
+Backend SHA: `38af17592fa8a77fb4366f1c58ed63299d574208fdce1131f378468f60fe8156`.
+Its 24-check startup interface replay remains NOT_DEPLOYABLE; receipt SHA:
+`4825819dddf9935c40195c17e2311f1ecdcc00eb326601a9c2b8084efd9da93c`.
+
+`broadband56_checkpoint_handoff.committed_boundary` validates the completed
+attempt, parent commit, physical/QA role chain and actual accepted count.
+`migrate_boundary` makes a no-clobber receipt view preserving original
+artifact bytes and counts. Neither function transfers ownership or authorizes
+a launch. The original private recovery entry hard-coded accepted=100 and
+must not be reused unchanged after the current attempt.
+
+The checkpoint implementation passed 17 private-Python fixture tests at
+22:59; receipt SHA:
+`1d44896041527b63bb7e482ecf9fc96736735da52f50e684fedea578328e467c`.
+The same receipt explicitly reports live_boundary=NOT_READY and
+lease_transfer_verified=false. Counts 861/999/1000 in tests are synthetic,
+not current production quantities.
+
+Three additional actual-backend/context/admission tests passed under the
+same private Python. They preserve pool capacity 48 while admitting fixture
+budgets 1/12/48, with no native delegates. The new migration function also
+replayed the real already-accepted history and passed the actual queue
+exclusion consumer. Receipt SHA:
+`20f68feece79177b24664366004ae648a715e43a89f301f50a1c20b1b3c6f983`.
+Its control header/target authorization are explicitly fixtures, not a live
+boundary or execution authority. Production was not modified. The generic
+checkpoint helper is now public source; package05 itself is not overwritten.
+
+**Remaining:** consolidate the real outer-launcher exit and sole-lease
+handoff at the committed current-attempt checkpoint, bind the final approved
+runtime/backend and resume actual counts. Do not label graceful exit as a
+historical startup failure to satisfy an old recovery scope. Phase A/B/C
+bounded-checkpoint behavior still needs verification. No early stop, new
+Golden, duplicate owner, benchmark ladder or NN training is authorized here.
+End-to-end accepted/hour and ETA remain NOT_MEASURED.
+
+## Historical: Fixed48 Partial-Capacity Policy, 21:48 UTC
 
 The current owner goal is MIN_TIME_TO_200K_ACCEPTED, not a concurrency
 benchmark. All benchmark-ladder next steps below are historical and superseded.

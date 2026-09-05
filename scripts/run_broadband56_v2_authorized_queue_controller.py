@@ -929,6 +929,8 @@ def _run_stage_launcher(
             stdout=stdout,
             stderr=stderr,
             check=False,
+            env={**os.environ, "BROADBAND56_STAGE_RESOURCE_HISTORY": str(inputs["stage_resource_history"])}
+            if "stage_resource_history" in inputs else None,
         )
     if result.returncode != 0:
         raise ControllerError(f"{stage} launcher exited with return code {result.returncode}")

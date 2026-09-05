@@ -244,7 +244,7 @@ def run_stage_backend(
         raise ProductionStageBackendError(
             "resource snapshot is WAIT: " + ",".join(capacity["failed_checks"])
         )
-    from rfic_transformer_inverse_design.campaigns.broadband56_scheduling import concurrency_for_snapshot
+    from rfic_transformer_inverse_design.campaigns.broadband56_scheduling import concurrency_for_snapshot, _original, validate_executor_capacity
 
     allowed = concurrency_for_snapshot(
         snapshot_path=snapshot_path, campaign_root=campaign_root,
@@ -254,10 +254,11 @@ def run_stage_backend(
         pilot_1000_safe_concurrency=_pilot_safe_concurrency(campaign_root),
     )
     max_concurrency = int(args.max_concurrency)
-    if max_concurrency > int(allowed["concurrency"]):
-        raise ProductionStageBackendError(
-            f"requested concurrency {max_concurrency} exceeds allowed {allowed['concurrency']}"
-        )
+    try:
+        validate_executor_capacity(max_concurrency, allowed,
+            history_ready=bool(os.environ.get("BROADBAND56_STAGE_RESOURCE_HISTORY")))
+    except CapacityPolicyError as exc:
+        raise ProductionStageBackendError(str(exc)) from exc
 
     runtime_identities = backend_manifest.get("runtime_identities", {})
     private_config_record = runtime_identities.get("private_configuration")
@@ -303,6 +304,7 @@ def run_stage_backend(
         "campaign_id": CAMPAIGN_ID,
         "contract_fingerprint_sha256": SCIENTIFIC_CONTRACT_FINGERPRINT,
         "backend_id": PRODUCTION_BACKEND_ID,
+        "campaign_root": str(campaign_root),
         "stage": stage,
         "cumulative_target": spec.cumulative_target,
         "current_accepted": current_accepted,
@@ -314,6 +316,10 @@ def run_stage_backend(
         "selection_count_mode": "FROZEN_QUEUE_CEILING" if attempt_limit else "EXACT_SAMPLER_COUNT",
         "remaining_accepted": selection_count,
         "max_concurrency": max_concurrency,
+        "admitted_concurrency": int(allowed["concurrency"]),
+        "measured_pilot_bytes_per_geometry": _pilot_bytes_per_geometry(campaign_root),
+        "initial_resource_snapshot": _file_record(_original(snapshot_path)[0]),
+        "stage_resource_history": os.environ.get("BROADBAND56_STAGE_RESOURCE_HISTORY"),
         "scheduling_decision": allowed,
         "backend_identity_manifest": _file_record(backend_manifest_path),
         "full_campaign_authorization_receipt": _file_record(authorization_path),
@@ -377,7 +383,7 @@ def run_stage_backend(
         with (role_log_dir / "stdout.log").open("w", encoding="utf-8") as stdout, (
             role_log_dir / "stderr.log"
         ).open("w", encoding="utf-8") as stderr, observe_native_role(
-            role, role_log_dir / "native_observation", admitted_limit=max_concurrency,
+            role, role_log_dir / "native_observation", admitted_limit=int(allowed["concurrency"]),
             command=command,
             bindings={"stage_context": _file_record(context_path),
                       "backend_manifest": _file_record(backend_manifest_path)},

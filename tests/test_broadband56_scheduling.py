@@ -199,8 +199,10 @@ def test_final_launcher_and_backend_read_identical_five_check_decision(tmp_path,
 
     if fixed48:
         from tests.test_broadband56_fixed48_scheduling import fixed_samples
-        paths, now = fixed_samples(tmp_path, seats=seats, each_mutation=lambda s: s["resources"].update(
+        paths, now = fixed_samples(tmp_path, count=6, seats=seats, each_mutation=lambda s: s["resources"].update(
             load_1m=192 * load, load_5m=192 * load))
+        probe_snapshot, paths = paths[-1], paths[:-1]
+        now -= timedelta(seconds=60)
     else:
         paths, now = samples(tmp_path)
     expected_concurrency = min(48, seats) if fixed48 else 2
@@ -222,6 +224,7 @@ def test_final_launcher_and_backend_read_identical_five_check_decision(tmp_path,
         _read_json=lambda path, label: json.loads(path.read_text()),
         _pilot_bytes_per_geometry=lambda root: None,
         _pilot_safe_concurrency=lambda root: None,
+        _run_probe=lambda *_: probe_snapshot,
     )
 
     def backend_admission(**kwargs):
@@ -234,13 +237,14 @@ def test_final_launcher_and_backend_read_identical_five_check_decision(tmp_path,
             legacy_policy=lambda **kw: pytest.fail("legacy reset reached"),
         )
         assert final["healthy_check_streak"] == 5
-        assert final["concurrency"] == kwargs["concurrency"] == expected_concurrency
+        assert final["concurrency"] == expected_concurrency
+        assert kwargs["concurrency"] == (48 if fixed48 else expected_concurrency)
         assert final["latest_snapshot"] == scheduler.file_record(paths[-1])
         return final
 
     launch = SWAP_CONTROLLER._capacity_adapter_stage_launcher_factory(
         controller, original_run_stage_launcher=backend_admission, poll_seconds=60)
-    result = launch(inputs={}, campaign_root=tmp_path, stage="PILOT_1000", concurrency=expected_concurrency,
+    result = launch(inputs={"probe_script": tmp_path/"probe.sh"}, campaign_root=tmp_path, stage="PILOT_1000", concurrency=expected_concurrency,
                     snapshot_path=paths[-1], check_index=1)
     assert result["concurrency"] == expected_concurrency and len(calls) == 1
 

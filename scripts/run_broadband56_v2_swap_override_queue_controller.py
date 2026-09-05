@@ -623,11 +623,14 @@ def _capacity_adapter_stage_launcher_factory(
                         int(allowed["concurrency"]),
                     )
                     if launch_concurrency >= 1:
-                        return original_run_stage_launcher(
+                        from rfic_transformer_inverse_design.campaigns.broadband56_scheduling import run_stage_with_resource_history
+
+                        return run_stage_with_resource_history(
+                            controller=controller, run_stage=original_run_stage_launcher,
                             inputs=inputs,
                             campaign_root=campaign_root,
                             stage=stage,
-                            concurrency=launch_concurrency,
+                            concurrency=int(allowed.get("target_executor_capacity", launch_concurrency)),
                             snapshot_path=adapted_path,
                             check_index=check_index,
                         )

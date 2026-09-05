@@ -32,7 +32,7 @@ def select(path, **kwargs):
         acquisition_source="base_space_filling", phase="PHASE_A", **kwargs)
 
 
-@pytest.mark.parametrize("limit", [32, 48])
+@pytest.mark.parametrize("limit", [32, 48, 192])
 def test_900_rows_partition_without_changing_rows_or_remainder(tmp_path, limit):
     rows, receipt = fixture(tmp_path)
     excluded, restored, indexes = set(), [], []
@@ -94,14 +94,15 @@ def test_source_identity_and_provenance_fail_closed(tmp_path, mutation):
         select(receipt, count=32, excluded_hashes=set())
 
 
-def test_real_queue_entrypoint_preserves_rows_and_never_calls_sampler(tmp_path, monkeypatch):
+@pytest.mark.parametrize("limit", [32, 48, 192])
+def test_real_queue_entrypoint_preserves_rows_and_never_calls_sampler(tmp_path, monkeypatch, limit):
     from tests import test_broadband56_balanced200k_contract as fixtures
 
     module = fixtures._load_queue_module()
     source = tmp_path / "source"
     common = ["--contract", str(fixtures.CONTRACT), "--config", str(fixtures.TEMPLATE),
               "--sampler", "sobol", "--seed", "20260828"]
-    assert module.main(common + ["--out-dir", str(source), "--count", "40"]) == 0
+    assert module.main(common + ["--out-dir", str(source), "--count", "200"]) == 0
     source_receipt = source / "broadband56_candidate_queue_summary.json"
     source_pin = frozen.file_identity(source / "broadband56_candidate_queue.csv")
     def no_sampling(*args, **kwargs):
@@ -111,8 +112,8 @@ def test_real_queue_entrypoint_preserves_rows_and_never_calls_sampler(tmp_path, 
     # integration fixture tests real geometry/CSV selection without a campaign.
     monkeypatch.setattr(module, "_campaign_exclusion_paths", lambda *a, **kw: [])
     output = tmp_path / "batch"
-    assert module.main(common + ["--out-dir", str(output), "--count", "32",
-        "--attempt-candidate-limit", "32", "--campaign-root", str(tmp_path),
+    assert module.main(common + ["--out-dir", str(output), "--count", str(limit),
+        "--attempt-candidate-limit", str(limit), "--campaign-root", str(tmp_path),
         "--stage", "PILOT_1000", "--current-accepted", "100",
         "--frozen-queue-receipt", str(source_receipt),
         "--frozen-queue-receipt-sha256", frozen.file_identity(source_receipt)["sha256"]]) == 0
@@ -120,15 +121,15 @@ def test_real_queue_entrypoint_preserves_rows_and_never_calls_sampler(tmp_path, 
         original = list(csv.DictReader(stream))
     with (output / "broadband56_candidate_queue.csv").open(newline="") as stream:
         selected = list(csv.DictReader(stream))
-    assert selected == original[:32]
+    assert selected == original[:limit]
     assert frozen.file_identity(source / "broadband56_candidate_queue.csv") == source_pin
     summary = json.loads((output / "broadband56_candidate_queue_summary.json").read_text())
     assert summary["sampling_attempts"] == 0
     assert summary["frozen_batch"]["sampler_executed"] is False
     bound = frozen.validate_frozen_selection(output / "broadband56_candidate_queue_summary.json",
         source_receipt_path=source_receipt, source_receipt_sha256=frozen.file_identity(source_receipt)["sha256"],
-        candidate_ceiling=32, fingerprint=summary["contract_fingerprint_sha256"])
-    assert bound["actual_selected_candidates"] == 32
+        candidate_ceiling=limit, fingerprint=summary["contract_fingerprint_sha256"])
+    assert bound["actual_selected_candidates"] == limit
     assert bound["accepted_increment"] == 0
 
 

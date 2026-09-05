@@ -27,9 +27,11 @@ def fixed_samples(root, *, count=5, seats=100, measured=True, mutation=None, eac
         "corrected_backend_manifest": backend,
         "fixed_generation_policy": copy.deepcopy(scheduler.FIXED48_GENERATION_POLICY),
     }))
+    owner_receipt = scheduler.file_record(write(root / "owner_override.json", {"fixture": True}))
     for path in paths:
         item = json.loads(path.read_text())
-        item.update(supervisor_lease=lease, operational_overlay_manifest=overlay)
+        item.update(supervisor_lease=lease, operational_overlay_manifest=overlay,
+                    owner_swap_override_receipt=owner_receipt)
         item["resources"].update(logical_cpu_count=192, physical_cpu_count=96,
                                  memory_total_bytes=100 * 1024**3,
                                  memory_available_bytes=80 * 1024**3)

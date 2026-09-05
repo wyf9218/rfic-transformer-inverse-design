@@ -27,6 +27,7 @@ from rfic_transformer_inverse_design.campaigns.broadband56_balanced200k import (
     TARGET_ACCEPTED_GEOMETRIES,
 )
 from rfic_transformer_inverse_design.campaigns.broadband56_capacity_policy import (  # noqa: E402
+    CapacityPolicyError,
     SCIENTIFIC_CONTRACT_FINGERPRINT,
     STAGE_BY_NAME,
     adaptive_concurrency,
@@ -181,10 +182,13 @@ def launch_stage(args: argparse.Namespace, *, out_dir: Path) -> dict[str, Any]:
         pilot_1000_safe_concurrency=_pilot_safe_concurrency(campaign_root),
     )
     requested_concurrency = int(args.max_concurrency)
-    if requested_concurrency < 1 or requested_concurrency > int(allowed["concurrency"]):
-        raise StageLauncherError(
-            f"requested concurrency {requested_concurrency} exceeds current allowed {allowed['concurrency']}"
-        )
+    from rfic_transformer_inverse_design.campaigns.broadband56_scheduling import validate_executor_capacity
+
+    try:
+        validate_executor_capacity(requested_concurrency, allowed,
+            history_ready=bool(os.environ.get("BROADBAND56_STAGE_RESOURCE_HISTORY")))
+    except CapacityPolicyError as exc:
+        raise StageLauncherError(str(exc)) from exc
 
     template = _stage_command_template(backend, stage)
     backend_out_dir = out_dir / "backend"

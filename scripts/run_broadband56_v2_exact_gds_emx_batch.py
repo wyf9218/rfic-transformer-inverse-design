@@ -18,7 +18,6 @@ import os
 import re
 import subprocess
 import sys
-from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Mapping
@@ -50,6 +49,9 @@ from rfic_transformer_inverse_design.campaigns.broadband56_full_campaign_authori
 from rfic_transformer_inverse_design.sim.touchstone import load_touchstone  # noqa: E402
 from scripts.broadband56_emx_runtime import (  # noqa: E402
     EmxRuntimeIdentityError, launch_spec, load_identity,
+)
+from rfic_transformer_inverse_design.campaigns.broadband56_dispatch import (  # noqa: E402
+    bounded_completed, stage_admission,
 )
 
 
@@ -229,44 +231,37 @@ def run_batch(args: argparse.Namespace, *, out_dir: Path) -> dict[str, Any]:
     rows = _read_input_rows(input_path)
     if int(args.max_concurrency) < 1:
         raise ExactGdsEmxBatchError("max_concurrency must be positive")
-    max_workers = max(1, min(int(args.max_concurrency), len(rows) or 1))
+    max_workers = int(args.max_concurrency)
+    admission = stage_admission(max_workers)
 
     out_dir.mkdir(parents=True, mode=0o700)
     candidates_dir = out_dir / "candidates"
     candidates_dir.mkdir()
     results: list[dict[str, Any] | None] = [None] * len(rows)
-    with ThreadPoolExecutor(max_workers=max_workers) as executor:
-        futures = {
-            executor.submit(
-                _run_one,
-                row=row,
-                submitted_sequence=index + 1,
-                candidates_dir=candidates_dir,
-                python_path=python_path,
-                runner_path=runner_path,
-                module_path=module_path,
-                config_path=config_path,
-                authorization_path=authorization_path,
-                config_sha256=config_sha256,
-                authorization_sha256=authorization_sha256,
-                runner_sha256=runner_sha256,
-                module_sha256=module_sha256,
-                runtime_identity_path=runtime_identity_path,
-                runtime_identity_sha256=runtime_identity_sha256,
-            ): index
-            for index, row in enumerate(rows)
-        }
-        for future in as_completed(futures):
-            index = futures[future]
-            try:
-                results[index] = future.result()
-            except Exception as exc:  # Preserve an internal candidate failure.
-                row = rows[index]
-                results[index] = _exception_result(
-                    row=row,
-                    submitted_sequence=index + 1,
-                    error=f"{type(exc).__name__}: {exc}",
-                )
+
+    def invoke(index):
+        return _run_one(
+            row=rows[index], submitted_sequence=index + 1,
+            candidates_dir=candidates_dir, python_path=python_path,
+            runner_path=runner_path, module_path=module_path,
+            config_path=config_path, authorization_path=authorization_path,
+            config_sha256=config_sha256, authorization_sha256=authorization_sha256,
+            runner_sha256=runner_sha256, module_sha256=module_sha256,
+            runtime_identity_path=runtime_identity_path,
+            runtime_identity_sha256=runtime_identity_sha256,
+        )
+
+    for index, future in bounded_completed(
+        len(rows), invoke, max_workers=max_workers, admission=admission,
+        receipt_dir=out_dir / "dispatch",
+    ):
+        try:
+            results[index] = future.result()
+        except Exception as exc:  # Preserve an internal candidate failure.
+            results[index] = _exception_result(
+                row=rows[index], submitted_sequence=index + 1,
+                error=f"{type(exc).__name__}: {exc}",
+            )
 
     terminal = [item for item in results if item is not None]
     if len(terminal) != len(rows):

@@ -10,6 +10,9 @@ from __future__ import annotations
 import hashlib
 import json
 import math
+import os
+import threading
+import time
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Mapping
@@ -166,6 +169,116 @@ def _positive_int(value: Any, label: str) -> int:
     if type(value) is not int or value < 1:
         raise CapacityPolicyError(f"{label} must be a positive integer")
     return value
+
+
+def validate_executor_capacity(requested: int, decision: Mapping[str, Any], *, history_ready: bool) -> None:
+    """Separate pool capacity from the current admission budget at both launch boundaries."""
+    fixed = bool(decision.get("fixed_generation_policy"))
+    limit = int(decision.get("target_executor_capacity", decision["concurrency"]))
+    if (type(requested) is not int or requested < 1 or int(decision["concurrency"]) < 1
+            or requested > limit or (fixed and (requested != limit or not history_ready))):
+        raise CapacityPolicyError(
+            f"requested concurrency {requested} exceeds allowed admission or lacks its fixed48 history binding")
+
+
+def run_stage_with_resource_history(
+    *, controller: Any, run_stage: Any, inputs: Mapping[str, Path],
+    campaign_root: Path, stage: str, concurrency: int, snapshot_path: Path,
+    check_index: int,
+) -> dict[str, Any]:
+    """Keep the existing read-only probe alive while the stage blocks.
+
+    Only the authoritative controller calls this wrapper. The sampler never
+    dispatches, changes accepted data or stops a healthy simulator. Evidence
+    is append-only; LATEST.json is an atomic discovery index, not a receipt.
+    """
+    arguments = dict(inputs=inputs, campaign_root=campaign_root, stage=stage,
+                     concurrency=concurrency, snapshot_path=snapshot_path, check_index=check_index)
+    original_path, initial = _original(snapshot_path)
+    fixed = fixed_generation_policy(initial)
+    if fixed is None or stage in {"GOLDEN", "PILOT_32"}:
+        return run_stage(**arguments)
+    _positive_int(check_index, "stage resource history index")
+    root = campaign_root / "scheduling_history" / f"stage_{check_index:06d}"
+    root.mkdir(mode=0o700, parents=True, exist_ok=False)
+    identity_fields = ("campaign_id", "contract_fingerprint_sha256", "supervisor_lease",
+                       "operational_overlay_manifest", "owner_swap_override_receipt")
+    bindings = {key: initial[key] for key in identity_fields}
+    initial_pin = file_record(original_path)
+    sequence, errors, sources = 0, [], []
+    stop = threading.Event()
+
+    def publish(source: Mapping[str, Any] | None, error: str | None = None) -> None:
+        nonlocal sequence
+        sequence += 1
+        value = {"schema": "rfic_transformer.broadband56_stage_resource_history.v1",
+                 "generated_utc": datetime.now(timezone.utc).isoformat(),
+                 "bindings": bindings, "stage": stage, "stage_check_index": check_index,
+                 "initial_snapshot": initial_pin, "latest_snapshot": source,
+                 "overall_status": "FAIL" if error else "OBSERVED", "error": error,
+                 "sampler_pid": os.getpid(), "simulator_action_taken": False}
+        path = root / f"STATE_{sequence:06d}.json"
+        with path.open("x", encoding="utf-8") as stream:
+            json.dump(value, stream, indent=2, sort_keys=True, allow_nan=False)
+            stream.write("\n")
+        temporary = root / f"LATEST_{sequence:06d}.tmp"
+        with temporary.open("x", encoding="utf-8") as stream:
+            json.dump(file_record(path), stream, sort_keys=True)
+            stream.write("\n")
+        os.replace(temporary, root / "LATEST.json")
+
+    publish(initial_pin)
+
+    def monitor() -> None:
+        previous = _utc(initial["captured_utc"])
+        try:
+            for counter in range(1, 500_000):
+                if stop.is_set():
+                    return
+                started = time.monotonic()
+                # The lower half is reserved for prelaunch refresh probes.
+                index = check_index * 1_000_000 + 500_000 + counter
+                path = controller._run_probe(inputs["probe_script"], campaign_root / "resource_snapshots", index)
+                path, sample = _original(path)
+                if any(sample.get(key) != value for key, value in bindings.items()):
+                    raise CapacityPolicyError("running-stage resource identity changed")
+                captured = _utc(sample["captured_utc"])
+                age = (datetime.now(timezone.utc) - captured).total_seconds()
+                if not 0 <= age <= MAX_SNAPSHOT_AGE_SECONDS:
+                    raise CapacityPolicyError("running-stage probe is stale or future dated")
+                if (captured - previous).total_seconds() < 60:
+                    raise CapacityPolicyError("running-stage probe repeated or overlapped a sample")
+                # Health and admission remain the shared consumers' decision.
+                record = file_record(path)
+                sources.append(record)
+                publish(record)
+                previous = captured
+                if stop.wait(max(0.0, 60.0 - (time.monotonic() - started))):
+                    return
+            raise CapacityPolicyError("stage resource history index space exhausted")
+        except Exception as exc:
+            error = f"{type(exc).__name__}: {exc}"
+            errors.append(error)
+            publish(None, error)
+
+    arguments["inputs"] = dict(inputs, stage_resource_history=root / "LATEST.json")
+    worker = threading.Thread(target=monitor, name="b56-stage-readonly-resource-history")
+    worker.start()
+    stage_returned = False
+    try:
+        result = run_stage(**arguments)
+        stage_returned = True
+        return result
+    finally:
+        stop.set()
+        worker.join()
+        with (root / "HISTORY_SESSION_RECEIPT.json").open("x", encoding="utf-8") as stream:
+            json.dump({"overall_status": "FAIL" if errors else "PASS_SAMPLING_ONLY",
+                       "initial_snapshot": initial_pin, "sampled_sources": sources,
+                       "stage_returned": stage_returned, "errors": errors,
+                       "simulator_action_taken": False, "accepted_increment": 0,
+                       "does_not_prove_stage_acceptance": True}, stream, indent=2, sort_keys=True)
+            stream.write("\n")
 
 
 def fixed_generation_policy(snapshot: Mapping[str, Any]) -> dict[str, Any] | None:

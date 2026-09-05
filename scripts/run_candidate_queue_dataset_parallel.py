@@ -16,7 +16,6 @@ import os
 import subprocess
 import sys
 import time
-from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
@@ -76,13 +75,17 @@ def main(argv: list[str] | None = None) -> int:
             cadence_streamout_only=cadence_streamout_only,
         )
     if pending_specs:
-        with ThreadPoolExecutor(max_workers=min(jobs, len(pending_specs))) as pool:
-            futures = [
-                pool.submit(_run_shard, index, row_count, csv_path, shard_out, args)
-                for index, row_count, csv_path, shard_out in pending_specs
-            ]
-            for future in as_completed(futures):
-                runs.append(future.result())
+        from rfic_transformer_inverse_design.campaigns.broadband56_dispatch import bounded_completed, stage_admission
+
+        admission = stage_admission(jobs)
+        if admission is not None and (not cadence_streamout_only or chunk_size != 1):
+            raise ValueError("fixed48 Cadence dispatch requires one-candidate streamout-only shards")
+        dispatch_dir = out_dir / ("dispatch_" + datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S%fZ"))
+        for _, future in bounded_completed(
+            len(pending_specs), lambda index: _run_shard(*pending_specs[index], args),
+            max_workers=jobs, admission=admission, receipt_dir=dispatch_dir,
+        ):
+            runs.append(future.result())
     runs.sort(key=lambda item: item.index)
 
     merged_csv = out_dir / "dataset_rows.csv"
