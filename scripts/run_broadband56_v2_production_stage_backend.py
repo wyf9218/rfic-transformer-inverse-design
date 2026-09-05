@@ -307,6 +307,7 @@ def run_stage_backend(
         "stage_remaining_accepted": spec.cumulative_target - current_accepted,
         "selection_accepted_target": selection_accepted_target,
         "max_candidates_per_attempt": attempt_limit,
+        "selection_count_mode": "FROZEN_QUEUE_CEILING" if attempt_limit else "EXACT_SAMPLER_COUNT",
         "remaining_accepted": selection_count,
         "max_concurrency": max_concurrency,
         "scheduling_decision": allowed,

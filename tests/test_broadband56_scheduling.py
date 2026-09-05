@@ -177,8 +177,10 @@ def test_attempt_profile_requires_matching_queue_limit(limit):
     pilot["max_candidates_per_attempt"] = limit
     queue = next(c for c in pilot["commands"] if c["role"] == "phase_a_queue_builder")
     queue["argv"].extend(["--attempt-candidate-limit", str(limit)])
+    queue["argv"].extend(["--frozen-queue-receipt", "/private/source.json",
+                          "--frozen-queue-receipt-sha256", "a" * 64])
     assert not validate_execution_profile(profile, backend_manifest=manifest)
-    queue["argv"][-1] = str(limit + 1)
+    queue["argv"][queue["argv"].index("--attempt-candidate-limit") + 1] = str(limit + 1)
     assert validate_execution_profile(profile, backend_manifest=manifest)
 
 

@@ -254,6 +254,11 @@ def validate_execution_profile(
             if (not isinstance(argv, list) or argv.count(option) != 1 or argv.index(option) + 1 >= len(argv)
                     or argv[argv.index(option) + 1] != str(limit)):
                 errors.append(f"stages.{stage} queue argv does not bind the attempt limit")
+            for frozen_option in ("--frozen-queue-receipt", "--frozen-queue-receipt-sha256"):
+                if (not isinstance(argv, list) or argv.count(frozen_option) != 1
+                        or argv.index(frozen_option) + 1 >= len(argv)
+                        or not argv[argv.index(frozen_option) + 1]):
+                    errors.append(f"stages.{stage} bounded queue must bind {frozen_option}")
         if "golden_terminal_mode" in stage_profile:
             from .broadband56_golden_stage import TERMINAL_MODE
             allowed_fields.add("golden_terminal_mode")

@@ -34,6 +34,7 @@ from rfic_transformer_inverse_design.campaigns.broadband56_capacity_policy impor
     STAGE_BY_NAME,
 )
 from rfic_transformer_inverse_design.layout.drc_rules import audit_tsmc65_top_metal_geometry  # noqa: E402
+from rfic_transformer_inverse_design.campaigns.broadband56_frozen_queue_batches import select_frozen_queue  # noqa: E402
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -74,7 +75,27 @@ def main(argv: list[str] | None = None) -> int:
     duplicates = 0
     rejection_examples: list[str] = []
     bounds: dict[str, tuple[float, float]] = {}
-    if config is not None and int(args.count) > 0:
+    frozen_batch = None
+    if args.frozen_queue_receipt is not None and config is not None:
+        try:
+            rows, frozen_batch = select_frozen_queue(
+                Path(args.frozen_queue_receipt).expanduser().resolve(), args.frozen_queue_receipt_sha256,
+                count=int(args.count), excluded_hashes=excluded_hashes, fingerprint=fingerprint,
+                seed=int(args.seed), sampler=args.sampler, acquisition_source=args.acquisition_source,
+                phase=args.phase,
+            )
+            adapter = TransformerOptimizationAdapter(config.bounds)
+            bounds = canonical_geometry_bounds(adapter)
+            for row in rows:
+                geometry = _geometry_from_campaign_values(adapter, {name: float(row[f"geom__{name}"]) for name in GEOMETRY_FIELDS})
+                errors = [*config.bounds.validate(geometry), *geometry.validate()]
+                drc = audit_tsmc65_top_metal_geometry(geometry, config)
+                if errors or not drc.get("ok") or canonical_geometry_sha256(geometry.flat_dict()) != row["geometry_sha256"]:
+                    raise ValueError("frozen candidate fails unchanged current geometry contract")
+            checks.append(_check("frozen_rows_preserved_and_current_geometry_valid", True, frozen_batch))
+        except (OSError, ValueError, KeyError, TypeError) as exc:
+            checks.append(_check("frozen_rows_preserved_and_current_geometry_valid", False, str(exc)))
+    elif config is not None and int(args.count) > 0:
         adapter = TransformerOptimizationAdapter(config.bounds)
         bounds = canonical_geometry_bounds(adapter)
         seen = set(excluded_hashes)
@@ -139,7 +160,8 @@ def main(argv: list[str] | None = None) -> int:
                 str(args.acquisition_source) == "base_space_filling",
                 args.acquisition_source,
             ),
-            _check("queue_count_exact", len(rows) == int(args.count), f"actual={len(rows)}, expected={args.count}"),
+            _check("queue_count_exact", len(rows) == (frozen_batch["selected_count"] if frozen_batch else int(args.count)),
+                   f"actual={len(rows)}, ceiling={args.count}, frozen_batch={frozen_batch is not None}"),
             _check("canonical_geometry_unique", len({row["geometry_sha256"] for row in rows}) == len(rows), len(rows)),
             _check("queue_contains_no_response_labels", all(not _looks_like_label(key) for row in rows for key in row), "geometry and provenance only"),
         ]
@@ -158,7 +180,7 @@ def main(argv: list[str] | None = None) -> int:
         "acquisition_source": str(args.acquisition_source),
         "sampler": str(args.sampler),
         "seed": int(args.seed),
-        "requested_count": int(args.count),
+        "requested_count": frozen_batch["selected_count"] if frozen_batch else int(args.count),
         "queue_count": len(rows),
         "sampling_attempts": attempts,
         "analytical_or_drc_rejections": rejected,
@@ -171,6 +193,9 @@ def main(argv: list[str] | None = None) -> int:
         "rejection_examples": rejection_examples,
         "scientific_boundary": "This queue is geometry-only. It contains no proxy or physical labels and is not accepted data.",
     }
+    if frozen_batch is not None:
+        summary["frozen_batch"] = frozen_batch
+        summary["requested_candidate_ceiling"] = int(args.count)
     summary_path.write_text(json.dumps(summary, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     _write_sha256s(out_dir)
     print(f"overall_status={status}")
@@ -187,6 +212,8 @@ def _parse_args(argv: list[str] | None) -> argparse.Namespace:
     parser.add_argument("--out-dir", required=True)
     parser.add_argument("--count", type=int, required=True)
     parser.add_argument("--attempt-candidate-limit", type=int, choices=range(1, 33))
+    parser.add_argument("--frozen-queue-receipt")
+    parser.add_argument("--frozen-queue-receipt-sha256")
     parser.add_argument("--sampler", choices=("lhs_optimized", "sobol"), default="sobol")
     parser.add_argument("--seed", type=int, default=20260828)
     parser.add_argument("--phase", default="PHASE_A")
@@ -201,6 +228,11 @@ def _parse_args(argv: list[str] | None) -> argparse.Namespace:
     args = parser.parse_args(argv)
     if args.attempt_candidate_limit is not None and not args.campaign_root:
         parser.error("--attempt-candidate-limit requires --campaign-root")
+    if args.attempt_candidate_limit is not None:
+        if not args.frozen_queue_receipt or not args.frozen_queue_receipt_sha256:
+            parser.error("bounded attempts require an exact frozen source queue, not a smaller sampler run")
+    elif args.frozen_queue_receipt or args.frozen_queue_receipt_sha256:
+        parser.error("frozen source queue requires --attempt-candidate-limit")
     return args
 
 
