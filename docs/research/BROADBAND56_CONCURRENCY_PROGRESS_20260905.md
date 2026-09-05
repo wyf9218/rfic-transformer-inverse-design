@@ -1,6 +1,35 @@
 # Concurrency Work: Partial, Not a Performance Result
 
-## Latest State (06:02 UTC)
+## Latest Control Readiness (06:11 UTC)
+
+The current supervisor's full startup command was reconstructed and its hash
+matched the actual startup receipt. All 26 recorded recovery handoffs, the
+exact operational overlay, current authorization/backend, completed stage
+chain and accepted progress passed a no-child-process preflight. The live
+execution was correctly classified as **not idle**, so no handoff occurred.
+
+An updated same-root idle-only benchmark control has passed verification with
+the approved interpreter. The same 104 targeted fixture tests passed locally
+and remotely, including refusal to signal a supervisor with active children,
+duplicate supervisors, reused process identities, surviving children after
+drain and regressed accepted counts. Immutable production code, backend,
+scientific inputs and data have not changed. The prepared install manifest is
+not a new approval request, a created successor lease or a running benchmark.
+
+At 06:10:36 UTC the same supervisor was live, 218 GDS files had been generated
+in the current batch, and no backend failure was present. Official progress
+was still 100 accepted geometries / 5,600 rows. Fresh idle/progress validation
+is required before activation; the current hook accepts a PILOT_1000 boundary.
+The actual seven-level comparison and production-concurrency recommendation
+remain unfinished.
+
+Startup-chain preflight / private 104-test receipt SHA-256:
+`291fb52d79e35095f0e4456eb5367f6870d7a24fa5bbe6cc49d54f32bd68ac79` /
+`0361a8916e181d21688c94d5045be1fde043f17078682edae84681c75542f198`.
+Prepared, not deployed control manifest SHA-256:
+`0577bcd7a13d351c79924660a24f4f3706ce8d16ed5ac5e5e5d2f8273a81a9fe`.
+
+## Prior Component Readiness (06:02 UTC)
 
 The existing generation-28 supervisor is still alive with the same process
 start identity. Layout production continues at concurrency 1; 150 GDS files
