@@ -58,6 +58,12 @@ Formal acceptance remained 100 / 5,600; one native EMX was observed. The
 correct committed progress, stage receipt and backend failure paths were
 separately checked and absent. No production process was changed.
 
+Update at 12:00:47 UTC: the same read-only validation verified 77 completed
+fresh S4P artifacts; the GDS partition remained 761 and formal acceptance
+remained 100 / 5,600. Audit SHA:
+`8c2bdfdaeaa10177694db1e2d9cd9784277fba3f90c352f6e375a49a1f589be4`.
+The sole protected supervisor and native single-worker EMX continued running.
+
 The deployed Cadence runner submits all pending futures upfront. Neither it
 nor the synchronous role runner exposes a live dispatch-pause interface.
 The first supported end-to-end checkpoint is the **whole current attempt**,
@@ -92,6 +98,19 @@ handoff must not be used to interrupt this attempt.
 - The development base rule is five checks, not ten. Missing per-tool seat,
   thread or peak-memory measurements still limits admission to one worker.
   The first supported trial is two, not an unmeasured higher setting.
+- `broadband56_tool_capacity.py` now derives native thread/RSS envelopes from
+  pinned raw observations, with explicit thread-log counts where available.
+  Simultaneous native children are summed, not replaced by the largest child.
+  It joins those immutable observations with fresh, pinned read-only license
+  queries and a private checkout-feature mapping. Re-derivation rejects
+  altered peaks or changed sources. Missing tools, stale queries, duplicated
+  identities, wrappers and inconsistent seat counts fail closed. Zero free
+  seats produce zero capacity, never permission to start another job.
+  These are empirical trial-budget inputs, not absolute future-job bounds
+  or authorization. Existing resource, isolation and license gates still apply.
+  An optional bound producer hook runs before atomic snapshot publication;
+  the source snapshot and the original resource/license values are preserved.
+  The active supervisor has no such hook installed.
 - `completed_pilot_execution` now reads only committed PILOT_1000 attempt
   progress and its corresponding execution trace. It supplements, rather
   than replaces, callers' existing authorization/handoff/progress validation.
@@ -173,7 +192,7 @@ handoff must not be used to interrupt this attempt.
 
 ## Verification
 
-Local focused regression: **387 passed**. This includes scheduling, capacity,
+Local focused regression: **413 passed**. This includes scheduling, capacity,
 adapter, profile, stage progress/finalization, queue, backend and batch tests.
 The launch-boundary fixture verifies that a two-worker decision and its same
 five source observations survive adaptation and backend admission. Four
@@ -187,11 +206,16 @@ then selects its eight original remaining rows without sampling. After all
 creates a new two-row source excluding every prior geometry. Count and
 terminal values in this test are fixtures, not campaign measurements.
 
-Approved private Python / numpy 2.5.0: **247 passed** in an isolated source
+Approved private Python / numpy 2.5.0: **273 passed** in an isolated source
 copy, with an irreversible audit hook prohibiting actual subprocess and
 signal actions. Receipt SHA:
-`7f80a3b0c32217bbc4c4acaac7bde732d56ef8915b0f98806dd8605973eb0b59`.
+`e11e91ce9f0f755f08e3c2d9320de9415a91fb8489bfb25d19005ca0701eb774`.
 These are software fixtures, not native solver or physical test results.
+Twenty-six added cases cover raw measurement reduction, source integrity,
+fresh license joins, native-tree reservation, no-clobber outputs, parser
+grammar and producer-to-probe wiring. The bound probe fixture verifies that
+capacity metadata is present before publication without allowing its builder
+to mutate the original resources or license observations.
 Three added publication tests cover complete bytes, destination collision
 and serialization failure. The local selection additionally includes the
 11 existing operational-control-script tests; the local and remote totals
@@ -280,6 +304,27 @@ covering 16 child identities. Sampled high-water memory and threads remain
 observation-only, not a complete-job bound or a parallel admission receipt.
 No standalone solver or benchmark supervisor was started.
 
+A subsequent capacity-producer replay on the actual private runtime passed
+using the existing Cadence/Calibre observations, a new bounded observation of
+the already running native EMX, explicit thread-log evidence and fresh license
+queries. It calculated a two-worker measurement limit under the unchanged
+CPU-share and memory-reserve rules. Replay receipt SHA:
+`7a1e9d1e79d9691586c342654ceefc08a62aa28dcf135c70a2090de0755c31d7`.
+The replay did not evaluate the full resource gate, modify production or
+launch a second native job. It proves the measurement interface, not a
+completed two-worker trial. Sampled memory remains explicitly empirical;
+it is not relabeled a complete-job or future-geometry upper bound.
+
+The first replay failed because the legacy license parser recognized only
+plural `licenses in use`, omitting a feature reported with singular `license
+in use`. That failed replay and its query response hashes are retained.
+The staged parser now handles both grammatical forms without changing
+feature mapping or treating missing features as available. A private copy
+of the existing probe has only the same two optional-plural grammar changes,
+verified byte-for-byte against the original and checked with `bash -n`.
+The active probe is unchanged; this corrected copy still needs to enter the
+single consolidated startup binding. No private license inventory is public.
+
 Failed development runs were retained: the first new queue integration test
 used bare geometry column names instead of the actual `geom__` prefix; a
 remote test copy omitted its two public configuration fixtures; a private
@@ -293,10 +338,11 @@ corrected before the latest regression above.
 
 ## Remaining Before Any Switch
 
-1. Complete and verify the real per-tool admission measurement producer. The staged
-   consumer alone cannot turn license availability into parallel capacity.
-   No complete-job peak-memory measurements or usable multi-tool capacity
-   receipt have been produced by this change.
+1. Bind the tested capacity producer and corrected private license parser
+   into the same consolidated startup. The producer has passed a real
+   read-only replay, but neither it nor the optional probe hook is installed.
+   Retain its empirical-footprint scope and all live protections; it does not
+   certify complete-job bounds or any measured parallel throughput.
 2. Integrate the existing benchmark callback with the shared resource history
    and global budget under the sole supervisor. The development 2 -> 4
    execution-evidence consumer is implemented and tested, but has no real

@@ -412,6 +412,7 @@ def _swap_override_probe_factory(
     campaign_root: Path,
     campaign_lock: Path,
     python_bin: Path,
+    tool_capacity_builder: Any = None,
 ) -> Any:
     def run_probe(probe_script: Path, out_dir: Path, check_index: int) -> Path:
         oom_before = _proc_counter(Path("/proc/vmstat"), "oom_kill")
@@ -507,6 +508,13 @@ def _swap_override_probe_factory(
         )
         payload["isolation_identity_audit"] = _file_record(audit_path)
         payload["supervisor_lease"] = _file_record(isolation_lease_path)
+        if tool_capacity_builder is not None:
+            from rfic_transformer_inverse_design.campaigns.broadband56_scheduling import measured_worker_cap
+
+            payload["per_tool_capacity_evidence"] = tool_capacity_builder(
+                snapshot=copy.deepcopy(payload), out_dir=out_dir, check_index=check_index,
+            )
+            measured_worker_cap(payload)
         timestamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S%fZ")
         path = out_dir / f"swap_override_{check_index:06d}_{timestamp}.json"
         _write_json_exclusive(path, payload)
