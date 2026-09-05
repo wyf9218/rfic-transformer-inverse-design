@@ -64,6 +64,14 @@ remained 100 / 5,600. Audit SHA:
 `8c2bdfdaeaa10177694db1e2d9cd9784277fba3f90c352f6e375a49a1f589be4`.
 The sole protected supervisor and native single-worker EMX continued running.
 
+Update at 12:37:33 UTC: independent revalidation passed for 94 completed
+fresh S4P artifacts, still under the same 761-GDS zero-blocking partition.
+Audit SHA:
+`e5b536760a51851ae9f33f541a3fc07d56ddf0cb66d2577b4030f1a3cb442743`.
+Formal acceptance remained 100 / 5,600. One native EMX was observed;
+no production modification, signal, extra solver, or feature acceptance was
+performed by the audit. The correct terminal checkpoint paths were absent.
+
 The deployed Cadence runner submits all pending futures upfront. Neither it
 nor the synchronous role runner exposes a live dispatch-pause interface.
 The first supported end-to-end checkpoint is the **whole current attempt**,
@@ -93,8 +101,9 @@ handoff must not be used to interrupt this attempt.
   It no longer counts an anonymous list of caller-supplied healthy flags.
   Production isolation evidence is preserved, not rewritten as a benchmark
   PASS. Missing capacity evidence still caps the request at one. This private
-  copy is not loaded by the authoritative supervisor, and its protected
-  container-parent handling still requires real integration verification.
+  copy is not loaded by the authoritative supervisor. Its protected-container
+  parent handling subsequently passed a real read-only ancestry check below;
+  this is not benchmark authorization or full startup verification.
 - The development base rule is five checks, not ten. Missing per-tool seat,
   thread or peak-memory measurements still limits admission to one worker.
   The first supported trial is two, not an unmeasured higher setting.
@@ -325,6 +334,34 @@ verified byte-for-byte against the original and checked with `bash -n`.
 The active probe is unchanged; this corrected copy still needs to enter the
 single consolidated startup binding. No private license inventory is public.
 
+At 12:24 UTC, the private development ancestry bridge recognized an existing
+native EMX child through its unreadable protected container parent. It binds
+the native executable, exact output root, wrapper bytes and arguments, runner,
+UID, boot identity and start ticks, and rereads parent links. The protected
+transit process supplies neither executable authority nor a native-job count.
+The original isolation evidence is retained unchanged. The benchmark gate
+correctly remained closed because the production runner was still active.
+Receipt SHA:
+`d1a3014f239d2fa2b9e5c34353987622719f71ee438b2b3c92c70a9e48d58a91`.
+This was an ancestry-only check, not a benchmark run or permission to overlap
+production. Local and private-runtime fixture suites subsequently passed
+92 tests each, including ancestry mutation and capacity-hook rejection cases.
+Private-runtime test receipt SHA:
+`98b977365065a8cac205a797682d0270f3ce69bc3d569ddfd00059fbf4e37724`.
+Fixture counts are not simulator jobs or accepted samples.
+
+At 12:33 UTC, a separate no-clobber development entry exercised the actual
+probe factory with the bound capacity hook, a real 60-second resource probe,
+fresh read-only license queries and the existing isolation auditor. It
+calculated a two-worker budget, while the full gate returned WAIT on active
+production isolation. No controller main, simulator, or signal was invoked.
+The source snapshot and original isolation were preserved; no production
+file or acceptance count changed. Entry receipt SHA:
+`352bf647eba4177dea6c5c3c2d9ec261fd3a96a1f0de3f006c9967c818e94aab`.
+This supersedes the earlier claim that no development factory hook had been
+exercised, but does not prove an installed hook, two-worker execution, or a
+complete immutable startup package.
+
 Failed development runs were retained: the first new queue integration test
 used bare geometry column names instead of the actual `geom__` prefix; a
 remote test copy omitted its two public configuration fixtures; a private
@@ -339,8 +376,8 @@ corrected before the latest regression above.
 ## Remaining Before Any Switch
 
 1. Bind the tested capacity producer and corrected private license parser
-   into the same consolidated startup. The producer has passed a real
-   read-only replay, but neither it nor the optional probe hook is installed.
+   into the same consolidated startup. Both the source replay and a real
+   development probe-factory entry passed; neither is installed in production.
    Retain its empirical-footprint scope and all live protections; it does not
    certify complete-job bounds or any measured parallel throughput.
 2. Integrate the existing benchmark callback with the shared resource history
@@ -348,14 +385,22 @@ corrected before the latest regression above.
    execution-evidence consumer is implemented and tested, but has no real
    two-worker trial evidence yet. Neither native two-worker operation nor any
    complete benchmark level is proven. The new private gate/session copy
-   passes shared-history fixtures, but is not installed. The legacy callback
-   still has separate history and incomplete protected-container ancestry;
-   it must not be used as a deployable substitute. No integration proof or
-   immutable consolidated bundle exists yet.
+   passes shared-history and protected-ancestry fixtures plus a live read-only
+   ancestry check, but is not installed. The legacy callback remains obsolete;
+   it must not be used as a deployable substitute. No complete supervisor
+   startup integration proof or immutable consolidated bundle exists yet.
 3. Complete the single consolidated private profile/runtime/backend rebind,
    preserve all prior-stage evidence, and run the entire actual startup chain
    preflight. Verify the tested cohort lifecycle and selected-count binding
    across that final private profile and real post-attempt checkpoint.
+   Source review found that `broadband56_golden_stage::_validate_operational_reuse`
+   rejects changed backend-role bytes, and its existing queue-profile rebind
+   permits only path relocation of an identical delegate. The bounded-batch
+   scheduler changes cannot be represented as that old path-only operation.
+   The consolidated rebind must explicitly preserve the original Golden and
+   other completed evidence without relabeling or rerunning them. This is a
+   verified validator limitation, not a failed new startup or a request to
+   rerun Golden; no new authorization candidate has been created.
    The development source directory is NOT a deployable bundle.
 4. Switch only after the complete current attempt has committed its checkpoint,
    with verified authority, supported graceful drain, and required binding.
