@@ -308,6 +308,7 @@ def adaptive_concurrency(
     active_swap_thrashing: bool,
     licenses_available: bool,
     pilot_1000_safe_concurrency: int | None = None,
+    pilot_trial_levels: tuple[int, ...] | None = None,
 ) -> dict[str, Any]:
     """Calculate the next worker limit without ever exceeding hard capacity."""
 
@@ -317,6 +318,8 @@ def adaptive_concurrency(
         simulator_license_capacity, "simulator_license_capacity"
     )
     streak = _nonnegative_int(healthy_check_streak, "healthy_check_streak")
+    if pilot_trial_levels is not None and (name != "PILOT_1000" or pilot_trial_levels != (1, 2, 4)):
+        raise CapacityPolicyError("only the bounded PILOT_1000 1/2/4 trial ladder is supported")
     load = _nonnegative_float(normalized_load1, "normalized_load1")
     iowait = _percent(iowait_percent, "iowait_percent")
     memory = _fraction(available_memory_fraction, "available_memory_fraction")
@@ -382,6 +385,14 @@ def adaptive_concurrency(
         }
 
     if streak >= HEALTHY_STREAK_REQUIREMENT and current < hard_cap:
+        if pilot_trial_levels is not None:
+            eligible = [level for level in pilot_trial_levels if current < level <= hard_cap]
+            return {
+                "concurrency": min(eligible) if eligible else current,
+                "hard_cap": hard_cap,
+                "action": "NEXT_PILOT_TRIAL" if eligible else "HOLD",
+                "reasons": ["five_consecutive_healthy_checks"],
+            }
         return {
             "concurrency": current + 1,
             "hard_cap": hard_cap,

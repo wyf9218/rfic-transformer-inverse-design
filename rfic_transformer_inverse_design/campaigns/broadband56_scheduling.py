@@ -186,6 +186,153 @@ def measured_worker_cap(snapshot: Mapping[str, Any]) -> tuple[int, str]:
     return max(0, min(caps)), "MEASURED_PER_TOOL_CAPACITY"
 
 
+def completed_pilot_execution(campaign_root: Path, *, current_accepted: int) -> dict[str, Any]:
+    """Read committed attempts only; a requested level is not an observed level.
+
+    The next 2 -> 4 trial needs accepted outputs and observed native EMX
+    overlap from the same complete pipeline attempt. This is not proof that
+    every tool ran at that level, or that the level is fastest in production.
+    Callers separately validate the authorized campaign progress/handoff chain;
+    this read-only check adds execution evidence, never acceptance authority.
+    """
+    from .broadband56_stage_execution import expected_stage_role_order
+    from .broadband56_stage_progress import validate_stage_progress_receipt
+
+    proven, evidence = 1, []
+    expected = list(expected_stage_role_order("PILOT_1000"))
+    completed_roles = expected[:expected.index("stage_attempt_finalizer") + 1]
+    for path in sorted((campaign_root / "stages").glob("*/STAGE_PROGRESS_RECEIPT.json")):
+        progress = _read(path)
+        if progress.get("stage") != "PILOT_1000":
+            continue
+        trace_path = path.parent / "backend/STAGE_EXECUTION_TRACE.json"
+        if not trace_path.is_file():
+            continue  # Legacy acceptance carries no native-concurrency proof.
+        trace = _read(trace_path)
+        roles = trace.get("roles", [])
+        emx = next((r for r in roles if r.get("role") == "exact_audited_gds_emx_runner"), None)
+        if not emx or not emx.get("native_observation", {}).get("receipt"):
+            continue
+        failures = validate_stage_progress_receipt(
+            progress, stage="PILOT_1000", attempt_index=progress["attempt_index"],
+            accepted_before=progress["accepted_before"],
+            prior_progress_receipt_sha256=progress["prior_progress_receipt_sha256"],
+            backend_manifest_sha256=progress["backend_identity_manifest_sha256"],
+            authorization_receipt_sha256=progress["full_campaign_authorization_receipt_sha256"],
+            verify_artifacts=True, artifact_root=path.parent,
+        )
+        if failures or progress["accepted_after"] > current_accepted:
+            raise CapacityPolicyError("pilot execution lacks committed valid progress")
+        if (trace.get("schema") != "rfic_transformer.broadband56_v2_stage_execution_trace.v1"
+                or trace.get("overall_status") != "INCOMPLETE"
+                or trace.get("campaign_id") != progress["campaign_id"]
+                or trace.get("contract_fingerprint_sha256") != progress["contract_fingerprint_sha256"]
+                or trace.get("stage") != "PILOT_1000"
+                or trace.get("decision") != progress["decision"]
+                or trace.get("all_role_return_codes_zero") is not True
+                or trace.get("all_role_receipts_pass") is not True
+                or trace.get("expected_terminal_role_order") != expected
+                or trace.get("role_order") != completed_roles
+                or trace.get("role_order") != [r.get("role") for r in roles]
+                or any(r.get("return_code") != 0 for r in roles)):
+            raise CapacityPolicyError("pilot execution trace is not a completed role chain")
+        role_by_name = {r["role"]: r for r in roles}
+        required = set(completed_roles)
+        if len(role_by_name) != len(roles) or not required <= role_by_name.keys():
+            raise CapacityPolicyError("pilot execution omits required physical stages")
+        inputs = [file_record(path), file_record(trace_path)]
+        receipts = {}
+        for name in required:
+            record = role_by_name[name]["receipt"]
+            receipt_path, receipts[name] = _bound(record)
+            if not receipt_path.is_relative_to(path.parent):
+                raise CapacityPolicyError("pilot role receipt escapes its committed attempt")
+            receipt = receipts[name]
+            if (receipt.get("overall_status") != "PASS"
+                    or any(key in receipt and receipt[key] != progress[key] for key in
+                           ("campaign_id", "contract_fingerprint_sha256", "stage"))):
+                raise CapacityPolicyError("pilot physical role receipt is not PASS for this contract")
+            inputs.append(record)
+        native_record = emx["native_observation"]["receipt"]
+        native_path, native = _bound(native_record)
+        inputs.append(native_record)
+        context_path, context = _bound(native["bindings"]["stage_context"])
+        _, backend = _bound(native["bindings"]["backend_manifest"])
+        inputs.extend(native["bindings"].values())
+        if (not native_path.is_relative_to(path.parent)
+                or not context_path.is_relative_to(path.parent)
+                or native.get("schema") != "rfic_transformer.broadband56_native_role_observation.v1"
+                or native.get("role") != "exact_audited_gds_emx_runner"
+                or context.get("schema") != "rfic_transformer.broadband56_v2_stage_context.v2"
+                or any(context.get(key) != progress[key] for key in
+                       ("campaign_id", "contract_fingerprint_sha256", "stage"))
+                or native["bindings"]["backend_manifest"]["sha256"] != progress["backend_identity_manifest_sha256"]
+                or context.get("backend_identity_manifest") != native["bindings"]["backend_manifest"]
+                or context.get("full_campaign_authorization_receipt", {}).get("sha256")
+                != progress["full_campaign_authorization_receipt_sha256"]
+                or backend.get("contract_fingerprint_sha256") != progress["contract_fingerprint_sha256"]
+                or context.get("current_accepted") != progress["accepted_before"]
+                or native.get("command_argv_sha256") != emx.get("command_argv_sha256")):
+            raise CapacityPolicyError("native observation is not bound to this pilot execution")
+        configured = context.get("max_concurrency")
+        observed = (native.get("sampled_peak_native_concurrency") or {}).get("emx")
+        emx_result = receipts["exact_audited_gds_emx_runner"]
+        qa_result = receipts["full_band_s4p_qa_builder"]
+        if (native.get("observation_status") != "RECORDED"
+                or native.get("errors")
+                or type(configured) is not int or configured not in (2, 4)
+                or native.get("backend_admitted_max_concurrency") != configured
+                or native.get("executor_argv_max_concurrency") != configured
+                or emx_result.get("max_concurrency") != configured
+                or emx_result.get("emx_fail_count") != 0 or qa_result.get("qa_fail_count") != 0
+                or emx_result.get("emx_pass_count", 0) < progress["accepted_this_attempt"]
+                or qa_result.get("qa_pass_count", 0) < progress["accepted_this_attempt"]
+                or observed != configured or progress["accepted_this_attempt"] < configured):
+            continue
+        sample_path = Path(native["samples"]["path"])
+        if not sample_path.resolve().is_relative_to(path.parent) or file_record(sample_path) != native["samples"]:
+            raise CapacityPolicyError("native pilot sample identity mismatch")
+        samples = [json.loads(line) for line in sample_path.read_text().splitlines()]
+        if not samples or len(samples) != native.get("sample_count"):
+            raise CapacityPolicyError("native pilot sample count mismatch")
+        started, finished = _utc(native["started_utc"]), _utc(native["finished_utc"])
+        previous = None
+        for sample in samples:
+            captured, verified = _utc(sample["captured_utc"]), _utc(sample["verified_utc"])
+            processes = sample["native_processes"]
+            if (not started <= captured <= verified <= finished
+                    or (previous is not None and captured <= previous)
+                    or len({p["pid"] for p in processes}) != len(processes)
+                    or any(p["uid"] != native["root_process"]["uid"]
+                           or p["boot_id"] != native["root_process"]["boot_id"]
+                           or p["start_ticks"] < native["root_process"]["start_ticks"]
+                           for p in processes)
+                    or sample["counts"] != {tool: sum(p["tool"] == tool for p in processes)
+                                            for tool in TOOL_NAMES}):
+                raise CapacityPolicyError("native pilot samples do not prove simultaneous distinct processes")
+            previous = captured
+        if max(s["counts"]["emx"] for s in samples) != configured:
+            raise CapacityPolicyError("native pilot peak differs from sampled counts")
+        finalizer = receipts["stage_attempt_finalizer"]
+        if (finalizer.get("accepted_before") != progress["accepted_before"]
+                or finalizer.get("accepted_after") != progress["accepted_after"]
+                or finalizer.get("decision") != progress["decision"]
+                or finalizer.get("simulator_invoked_by_finalizer") is not False
+                or _bound(finalizer["progress_receipt"])[0].read_bytes() != path.read_bytes()):
+            raise CapacityPolicyError("pilot finalizer and committed progress differ")
+        for record in inputs:
+            if file_record(Path(record["path"])) != record:
+                raise CapacityPolicyError("pilot execution source changed during admission")
+        if configured == 4 and proven < 2:
+            raise CapacityPolicyError("four-worker trial lacks a prior completed two-worker trial")
+        proven = max(proven, configured)
+        evidence.append({"configured_limit": configured, "observed_emx_peak": observed,
+                         "accepted_increment": progress["accepted_this_attempt"],
+                         "sources": inputs, "samples": native["samples"]})
+    return {"proven_pilot_limit": proven, "pilot_execution_evidence": evidence,
+            "benchmark_levels_completed": [], "production_optimum_proven": False}
+
+
 def concurrency_for_snapshot(
     *, snapshot_path: Path, campaign_root: Path, stage: str, current_accepted: int,
     policy: Mapping[str, Any], legacy_policy: Any,
@@ -215,15 +362,25 @@ def concurrency_for_snapshot(
         measured_pilot_bytes_per_geometry=measured_pilot_bytes_per_geometry, now=now,
     )
     cap, reason = measured_worker_cap(snapshot)
-    # Start with 1 -> 2. Higher levels must first have native-solver and
-    # end-to-end pilot evidence; do not infer them from requested worker counts.
+    # Admission limits are not proof that every native tool reached that level.
     pilot_stage = stage in {"GOLDEN", "PILOT_32", "PILOT_1000"}
-    requested = 1 if stage == "GOLDEN" else 2 if pilot_stage else pilot_1000_safe_concurrency
+    execution = completed_pilot_execution(campaign_root, current_accepted=current_accepted) if stage == "PILOT_1000" else {}
+    current = execution.get("proven_pilot_limit", 1)
+    if stage == "GOLDEN":
+        requested = 1
+    elif pilot_stage:
+        requested = 4 if current >= 2 else 2
+    else:
+        requested = pilot_1000_safe_concurrency
     requested = _positive_int(requested, "requested concurrency")
     cap = min(cap, requested)
-    kwargs.update(current_concurrency=1, healthy_check_streak=history["healthy_check_streak"])
+    kwargs.update(current_concurrency=current, healthy_check_streak=history["healthy_check_streak"])
+    if stage == "PILOT_1000":
+        kwargs["pilot_trial_levels"] = (1, 2, 4)
     base = base_concurrency(**kwargs)
     count = min(cap, base["concurrency"])
+    if history["healthy_check_streak"] == 0:
+        count = min(count, 1)
     if cap > 1 and 0 < history["healthy_check_streak"] < HEALTHY_STREAK_REQUIREMENT:
         # Let the sole controller's normal timed probe loop collect the rest.
         # Otherwise each long single-worker attempt expires the entire history.
@@ -231,6 +388,8 @@ def concurrency_for_snapshot(
         reason = "COLLECTING_FIVE_FRESH_HEALTHY_CHECKS"
     if not policy["pass"]:
         count = 0
+    if stage == "PILOT_1000":
+        count = max(level for level in (0, 1, 2, 4) if level <= count)
     return {"concurrency": count, "hard_cap": cap,
             "requested_concurrency": requested, "action": "HOLD" if count else "PAUSE_NEW_LAUNCHES",
-            "reasons": [reason], **history}
+            "reasons": [reason], **history, **execution}

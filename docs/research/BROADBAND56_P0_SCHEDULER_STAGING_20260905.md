@@ -40,6 +40,16 @@ Formal acceptance remained 100 / 5,600; later QA and finalization were pending.
 The live sample identified one native EMX process. No production change or
 additional simulator was made by the audit.
 
+Update at 10:45:52 UTC: an independent repeat read-only check verified 37
+completed fresh S4P artifacts under the same exact source bindings and
+four-port/56-point contract. Audit SHA:
+`821531964738d9d7d956da4ecf449bbc3e1e35311da99d44edf8351e4aea3ffe`.
+Formal acceptance remained 100 / 5,600. The same supervisor, backend and
+single-worker EMX executor remained active. At 10:48:42 UTC neither a
+committed attempt/stage checkpoint nor a backend failure receipt existed;
+the active backend hash was unchanged. These are not 37 newly accepted
+geometries, nor a throughput or parallel benchmark.
+
 The deployed Cadence runner submits all pending futures upfront. Neither it
 nor the synchronous role runner exposes a live dispatch-pause interface.
 The first supported end-to-end checkpoint is the **whole current attempt**,
@@ -60,7 +70,25 @@ handoff must not be used to interrupt this attempt.
   recency and continuity. Unhealthy observations reset the streak.
 - The development base rule is five checks, not ten. Missing per-tool seat,
   thread or peak-memory measurements still limits admission to one worker.
-  The next supported trial is two, not an unmeasured higher setting.
+  The first supported trial is two, not an unmeasured higher setting.
+- `completed_pilot_execution` now reads only committed PILOT_1000 attempt
+  progress and its corresponding execution trace. It supplements, rather
+  than replaces, callers' existing authorization/handoff/progress validation.
+  It checks canonical completed role order, passing role receipts and source
+  hashes, native observation/context/backend/command binding, executor limit,
+  distinct sampled native identities at a shared instant, accepted increment,
+  and byte-identical committed/finalizer progress. Partial telemetry, observed
+  concurrency below the request, or EMX/QA candidate failures cannot prove a
+  completed trial. Two proven native EMX workers plus completed end-to-end
+  acceptance allow a subsequent four-worker trial only with the same five
+  fresh health checks and independent measured capacity. Missing evidence
+  retains the first two-worker trial; missing capacity still limits to one.
+  A three-worker capacity cap rounds down to two, never inventing a requested
+  three-worker trial. Four does not authorize eight or prove any optimum.
+  These are software paths and fixtures, not completed live trials.
+  The existing Calibre delegate is serial and has no concurrency argument;
+  an admitted limit of two or four must not be reported as that many native
+  Calibre processes. Per-tool observations remain separate.
 - With measured capacity and fewer than five fresh healthy observations,
   the existing timed controller loop collects the remaining observations;
   launching a long single-worker attempt must not continually expire history.
@@ -124,7 +152,7 @@ handoff must not be used to interrupt this attempt.
 
 ## Verification
 
-Local focused regression: **351 passed**. This includes scheduling, capacity,
+Local focused regression: **373 passed**. This includes scheduling, capacity,
 adapter, profile, stage progress/finalization, queue, backend and batch tests.
 The launch-boundary fixture verifies that a two-worker decision and its same
 five source observations survive adaptation and backend admission. Four
@@ -138,11 +166,18 @@ then selects its eight original remaining rows without sampling. After all
 creates a new two-row source excluding every prior geometry. Count and
 terminal values in this test are fixtures, not campaign measurements.
 
-Approved private Python / numpy 2.5.0: **222 passed** in an isolated source
+Approved private Python / numpy 2.5.0: **244 passed** in an isolated source
 copy, with an irreversible audit hook prohibiting actual subprocess and
 signal actions. Receipt SHA:
-`386eda69294ec8a08f4965e49d4a4a3d0fce94d7a1d3a6febb031c8048e45b50`.
+`74c6513166e230b0080f12811397e30ab467e19c08b6bbce74f85ee3065a1912`.
 These are software fixtures, not native solver or physical test results.
+The latest 22 added scheduling cases cover committed trial evidence, native
+versus requested counts, stale/missing execution, partial observation, role
+failure, wrong role order, source/context binding, distinct simultaneous
+identities, hard-gate retention, and discrete 1/2/4 limits. The initial fixture
+incorrectly omitted cumulative artifacts at the existing 100-accepted
+checkpoint; its 18 failures were retained and the fixture was corrected to
+the unchanged progress contract before the passing runs above.
 Twenty-five synthetic `/proc` tests cover root/PID changes, wrappers, unrelated
 jobs, missing metrics, shared-instant concurrency, observer errors and thread
 cleanup. Backend fixtures also check telemetry binding in failures and partial
@@ -231,9 +266,12 @@ corrected before the latest regression above.
    consumer alone cannot turn license availability into parallel capacity.
    No complete-job peak-memory measurements or usable multi-tool capacity
    receipt have been produced by this change.
-2. Integrate measured 2 -> 4 evidence and the existing benchmark callback
-   under the sole supervisor and unchanged global resource budget. Neither
-   native two-worker operation nor any complete benchmark level is proven.
+2. Integrate the existing benchmark callback with the shared resource history
+   and global budget under the sole supervisor. The development 2 -> 4
+   execution-evidence consumer is implemented and tested, but has no real
+   two-worker trial evidence yet. Neither native two-worker operation nor any
+   complete benchmark level is proven. The prepared legacy benchmark callback
+   still has its own health-history logic and is not a deployable substitute.
 3. Complete the single consolidated private profile/runtime/backend rebind,
    preserve all prior-stage evidence, and run the entire actual startup chain
    preflight. Verify the tested cohort lifecycle and selected-count binding
