@@ -1,6 +1,55 @@
 # Concurrency Work: Partial, Not a Performance Result
 
-## Latest State (04:52 UTC)
+## Latest State (05:11 UTC)
+
+The approved **1.10/1.10 single-worker PILOT_1000 startup policy is now
+deployed**, replacing the previously documented deployment mismatch. The
+20% memory floor and all other hard resource, license, isolation, scientific,
+layout, DRC, frequency and physical-label contracts remain unchanged.
+Exactly one source module changed from the preceding immutable package:
+the operational swap/startup policy. All simulator/extraction role bytes
+and EMX computational dependencies were verified unchanged.
+
+The real resource-snapshot replay demonstrates that the old policy's CPU-only
+WAIT becomes PASS when both loads are at most 1.10 and other hard gates pass.
+The same 96 policy/adapter/controller tests passed locally and on the private
+execution interpreter. Completed-stage and 100-geometry progress consumers,
+the existing ordered handoff chain, interpreter identity and resume cursor
+were also checked before the idle-only handoff. Two earlier no-simulator
+preparation failures are retained: a nested Golden reuse reference and an
+unrelocated finalizer replacement pin. Neither required a scientific change,
+weaker validation or a new Golden simulation.
+
+Generation 26 was stopped only after verifying its exact idle identity and
+zero simulator/runner children. Generation 27 now holds the sole authoritative
+lease for the same campaign, queue and logical supervisor. **100 accepted
+geometries / 5,600 rows** were preserved and rebound without resimulation.
+
+At 05:11:09 UTC the live process/lease/lock checks verified one supervisor,
+zero duplicate supervisors, zero runners, and zero Cadence/Calibre/EMX jobs.
+The latest startup resource gate was **WAIT**: normalized load1/load5 were
+**1.132484/1.117864**, genuinely above 1.10. The process remains alive and
+automatically samples again; this is now a capacity wait, not the obsolete
+0.90/0.95 policy. The prelaunch auditor labels this compatibility check GOLDEN;
+it does not mean the completed Golden is being simulated again or that the
+validated production count is zero. New production has not yet started.
+
+Policy source SHA-256:
+`489c1abcf8ac183459ee39de24f61f1a75d7182888ef25684d5302845430c886`.
+Runtime/backend manifest SHA-256:
+`cec82a514ebbce093aa37f1acfe465b561a9b0902ff2de81554ce1edc0d61dca` /
+`38083ebf3fa4b1a3d3d5d48757fd6ceb9c18c042f84b4ac45de72e60a9cd6764`.
+Control preflight / private test receipt SHA-256:
+`6be96adb4612b6ad563b3e5d881e4b14ca59b36cae540817e0320565f1652e0e` /
+`2bf9e96351f944e5c39c10bd8cf123bc8089068153a34aa6f75cff10a17bfb52`.
+Live process and policy status receipt SHA-256:
+`0690603d566a75408f168be9f049eea673cc057e6d97709fdd3c4463b5e8e214`.
+
+No fastest concurrency is established and no NN training has started.
+The approved controlled concurrency comparison and full 200K campaign
+remain incomplete; preserve the live supervisor while capacity is unavailable.
+
+## Historical State (04:52 UTC)
 
 The result-only recovery is now published: **100 accepted unique geometries,
 100 original S4P artifacts and 5,600 frequency rows** are bound into the
