@@ -76,6 +76,7 @@ from rfic_transformer_inverse_design.campaigns.broadband56_stage_progress import
     validate_stage_progress_receipt,
 )
 from rfic_transformer_inverse_design.campaigns import broadband56_golden_stage as golden_stage
+from rfic_transformer_inverse_design.campaigns.broadband56_native_telemetry import observe_native_role
 
 
 TRACE_SCHEMA = "rfic_transformer.broadband56_v2_stage_execution_trace.v1"
@@ -375,7 +376,12 @@ def run_stage_backend(
         role_start = time.monotonic()
         with (role_log_dir / "stdout.log").open("w", encoding="utf-8") as stdout, (
             role_log_dir / "stderr.log"
-        ).open("w", encoding="utf-8") as stderr:
+        ).open("w", encoding="utf-8") as stderr, observe_native_role(
+            role, role_log_dir / "native_observation", admitted_limit=max_concurrency,
+            command=command,
+            bindings={"stage_context": _file_record(context_path),
+                      "backend_manifest": _file_record(backend_manifest_path)},
+        ) as native_observation:
             result = subprocess.run(
                 command,
                 stdin=subprocess.DEVNULL,
@@ -407,6 +413,7 @@ def run_stage_backend(
             "return_code": int(result.returncode),
             "stdout": _file_record(role_log_dir / "stdout.log"),
             "stderr": _file_record(role_log_dir / "stderr.log"),
+            "native_observation": native_observation,
         }
         completed_roles.append(role_record)
         if result.returncode != 0:

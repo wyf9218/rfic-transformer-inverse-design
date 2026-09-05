@@ -652,6 +652,12 @@ def test_failed_role_preserves_fail_receipt_and_no_stage_pass(
     assert failure["overall_status"] == "FAIL"
     assert failure["stage_receipt_created"] is False
     assert not (out / "STAGE_RECEIPT.json").exists()
+    failed_role = failure["completed_roles"][-1]
+    assert failed_role["role"] == "calibre_runner"
+    observation = failed_role["native_observation"]
+    source = Path(observation["receipt"]["path"])
+    assert _sha(source) == observation["receipt"]["sha256"]
+    assert json.loads(source.read_text())["accepted_increment"] == 0
 
 
 def test_checkpoint_count_mismatch_fails_after_mock_chain(
@@ -685,6 +691,16 @@ def test_shortfall_stops_before_terminal_roles_and_preserves_progress(
     assert not list((out / "roles").glob("*raw_products_finalizer"))
     assert not list((out / "roles").glob("*checkpoint_auditor"))
     assert not (out / "STAGE_RECEIPT.json").exists()
+    trace = json.loads((out / "STAGE_EXECUTION_TRACE.json").read_text())
+    for role in trace["roles"]:
+        observation = role["native_observation"]
+        if not observation:
+            continue
+        record = json.loads(Path(observation["receipt"]["path"]).read_text())
+        assert record["bindings"]["stage_context"]["sha256"] == _sha(out / "STAGE_CONTEXT.json")
+        assert record["bindings"]["backend_manifest"]["sha256"] == _sha(Path(args.backend_identity_manifest))
+        assert record["command_argv_sha256"] == role["command_argv_sha256"]
+        assert record["benchmark_level_completed"] is False
 
 
 def test_role_script_hash_drift_is_rejected_before_execution(tmp_path: Path) -> None:

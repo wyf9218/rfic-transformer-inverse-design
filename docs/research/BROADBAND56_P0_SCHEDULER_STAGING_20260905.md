@@ -19,6 +19,14 @@ physical-identity terminal receipt SHA:
 `9c64f85bf3fb13ce89340252be2cf3b258627152da44bf2b40b201bf58e72a51`.
 No production process, queue, runtime, backend, or artifact was changed.
 
+Update at 09:25:18 UTC: Calibre completed 761/761 with zero blocking
+violations, zero failed candidates and 761 documented warnings, under the
+unchanged macro/IP back-end scope. The next role was creating per-candidate
+zero-blocking evidence. Calibre receipt SHA:
+`6fed81edc252ab0026f766915090d971e7b73673a2ac34c0fd1894a9aa9eb37f`.
+This is not full-chip DRC or fresh EMX acceptance. The sole supervisor and
+the same backend remained running; formal acceptance had not advanced.
+
 The deployed Cadence runner submits all pending futures upfront. Neither it
 nor the synchronous role runner exposes a live dispatch-pause interface.
 The first supported end-to-end checkpoint is the **whole current attempt**,
@@ -78,10 +86,25 @@ handoff must not be used to interrupt this attempt.
   This is not a 32-row replacement DOE. It neither claims jobs independently
   nor increments acceptance. The existing sole backend and finalizer retain
   dispatch ownership, terminal accounting and cumulative-stage decisions.
+- `broadband56_native_telemetry.py::NativeRoleObserver` is wired into the
+  development backend's three native-tool roles. It runs one observation
+  thread inside the existing backend, not another runner or supervisor.
+  It separates the backend-admitted limit, executor command-line limit
+  (null when absent), and sampled native process counts. Exact root ancestry,
+  PID/start ticks/boot identity, ELF executable identity, source manifest and
+  stage-context hashes are recorded. Shell wrappers and unrelated same-user
+  jobs are not counted. Retained processes span a common verification instant,
+  avoiding false overlap between sequential short-lived solvers.
+  Role failure or an exception closes the observer and preserves its receipt;
+  unavailable observation is PARTIAL/NOT_MEASURED rather than measured zero.
+  Samples include RSS/high-water/thread observations, not certified complete
+  job bounds. These receipts authorize no capacity, acceptance, or benchmark
+  level. A missing Calibre concurrency argument is not silently equated to
+  the backend's limit. This telemetry integration is not deployed.
 
 ## Verification
 
-Local focused regression: **326 passed**. This includes scheduling, capacity,
+Local focused regression: **342 passed**. This includes scheduling, capacity,
 adapter, profile, stage progress/finalization, queue, backend and batch tests.
 The launch-boundary fixture verifies that a two-worker decision and its same
 five source observations survive adaptation and backend admission. Four
@@ -95,11 +118,18 @@ then selects its eight original remaining rows without sampling. After all
 creates a new two-row source excluding every prior geometry. Count and
 terminal values in this test are fixtures, not campaign measurements.
 
-Approved private Python / numpy 2.5.0: **197 passed** in an isolated source
+Approved private Python / numpy 2.5.0: **213 passed** in an isolated source
 copy, with an irreversible audit hook prohibiting actual subprocess and
 signal actions. Receipt SHA:
-`15eae95aaae013edf9a57f5e76f120fc5cf5b3c6eef6f64cadb875187bb42e47`.
+`e4c4807f02fb1583ec71ee0ce00951d5d2499b92a4dcba3cdecc0c2ac16916f8`.
 These are software fixtures, not native solver or physical test results.
+Sixteen synthetic `/proc` tests cover root/PID changes, wrappers, unrelated
+jobs, missing metrics, shared-instant concurrency, observer errors and thread
+cleanup. Backend fixtures also check telemetry binding in failures and partial
+progress. An earlier 15-second read-only run of the development observer
+against the existing backend recorded zero native jobs while production had
+moved to zero-blocking receipt construction. It verifies live-root observation,
+not a measured Calibre or EMX parallel trial; no new solver was launched.
 
 The real immutable 900-row queue was replayed read-only into 28 groups of 32
 plus one group of four. Concatenated rows match the original fields and order
@@ -152,6 +182,9 @@ replay harness passed a string to a Path-only helper. A later backend dispatch
 fixture initially called a nonexistent test entry-point name; it was corrected
 to the actual `run_stage_backend` without changing production. All were corrected and
 rerun in new output directories without changing production or physical gates.
+The later telemetry binding assertions initially used `_sha256` rather than
+the fixture's `_sha` helper (two NameErrors); this fixture-only failure was
+corrected before the latest regression above.
 
 ## Remaining Before Any Switch
 
