@@ -498,8 +498,9 @@ def test_golden_stage_chain_then_pilot_zero_base_and_anchor_exclusion(tmp_path):
         authorization_receipt_sha256=receipt["full_campaign_authorization_receipt_sha256"])[0] == finalizer["decision"]
 
 
-@pytest.mark.parametrize("mutation", [None, "data", "simulation", "code", "contract", "authorization", "artifact", "source"])
-def test_operational_golden_reuse_keeps_original_execution(tmp_path, mutation):
+@pytest.mark.parametrize("mutation", [None, "data", "simulation", "code", "contract", "authorization", "artifact", "source",
+    "finalizer_unknown", "finalizer_known", "finalizer_no_binding", "finalizer_other_role"])
+def test_operational_golden_reuse_keeps_original_execution(tmp_path, monkeypatch, mutation):
     import copy
     from rfic_transformer_inverse_design.campaigns import broadband56_golden_stage as golden
     path, original, args, _ = _completed_golden_fixture(tmp_path)
@@ -511,6 +512,17 @@ def test_operational_golden_reuse_keeps_original_execution(tmp_path, mutation):
         target['script_identities'][role] = record(_json(tmp_path/'changed_code.json', {'changed': True}))
     if mutation == 'contract':
         target['scientific_contract'] = {'frequency_points': 111}
+    finalizer_rebind = None
+    if mutation and mutation.startswith('finalizer_'):
+        role = ('exact_audited_gds_emx_runner' if mutation == 'finalizer_other_role'
+                else 'stage_attempt_finalizer')
+        before = target['script_identities'][role]
+        after = record(_json(tmp_path/'changed_finalizer.json', {'postprocess_fixture': True}))
+        target['script_identities'][role] = after
+        finalizer_rebind = dict(original=before, replacement=after, golden_execution_repeated=False)
+        if mutation != 'finalizer_unknown':
+            monkeypatch.setattr(golden, 'GOLDEN_COMPATIBLE_FINALIZER_REBINDS',
+                                frozenset({(before['sha256'], after['sha256'])}))
     target_pin = record(_json(tmp_path/'target_backend.json', target))
     authorization = dict(overall_status='PASS', authorization_scope='FULL_CAMPAIGN',
         backend_identity_manifest=target_pin, campaign_id=original['campaign_id'],
@@ -524,6 +536,8 @@ def test_operational_golden_reuse_keeps_original_execution(tmp_path, mutation):
         operational_progress_rebind=dict(kind='REUSE_COMPLETED_STAGE_UNCHANGED_SCIENTIFIC_CONTRACT',
             original_stage_receipt=record(path), target_backend_manifest=target_pin,
             target_authorization=auth_pin, new_simulator_execution=False, accepted_count_increment=0))
+    if finalizer_rebind and mutation != 'finalizer_no_binding':
+        reused['operational_progress_rebind']['postprocessing_only_finalizer_rebind'] = finalizer_rebind
     if mutation == 'data':
         reused['validation_feature_rows'] = 111
     elif mutation == 'simulation':
@@ -532,12 +546,19 @@ def test_operational_golden_reuse_keeps_original_execution(tmp_path, mutation):
         reused['artifacts']['resource_summary'] = record(_json(tmp_path/'new_resource.json', {'overall_status': 'PASS'}))
     elif mutation == 'source':
         path.write_text('{}')
-    if mutation is None:
+    if mutation in (None, 'finalizer_known'):
         golden.validate_stage_evidence(reused)
         assert original == json.loads(path.read_text())
     else:
         with pytest.raises(golden.GoldenSourceError):
             golden.validate_stage_evidence(reused)
+
+
+def test_golden_compatible_finalizer_binds_the_current_exact_fix():
+    from rfic_transformer_inverse_design.campaigns import broadband56_golden_stage as golden
+    current = record(Path(FINALIZER.__file__))
+    assert golden.GOLDEN_COMPATIBLE_FINALIZER_REBINDS == frozenset({(
+        '33bc608c24f85ec6024ddaa64b85a05492f774a9824592d6215d0cd1837b72d8', current['sha256'])})
 
 
 @pytest.mark.parametrize("mutation", ["count", "missing_trace_role", "profile_mode", "calibre_bytes", "stage"])

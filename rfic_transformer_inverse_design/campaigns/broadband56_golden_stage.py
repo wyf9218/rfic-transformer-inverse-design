@@ -20,6 +20,12 @@ ARTIFACT_FIELDS = (
     "stage_execution_trace", "resource_summary", "stage_context",
     "accepted_geometry_index", "rejected_geometry_index", "validation_geometry",
 )
+# This exact change only resolves non-Golden cumulative CSV inputs. The
+# Golden finalization branch and every simulator/extraction entrypoint match.
+GOLDEN_COMPATIBLE_FINALIZER_REBINDS = frozenset({(
+    "33bc608c24f85ec6024ddaa64b85a05492f774a9824592d6215d0cd1837b72d8",
+    "f51bb3c94424e9e0b60c1c1d8ad3e585e7fc5d8d3729f4aac99d109f93ca8eea",
+)})
 
 
 def _load(record: Mapping[str, Any], label: str) -> dict[str, Any]:
@@ -265,7 +271,17 @@ def _validate_operational_reuse(receipt: Mapping[str, Any]) -> None:
             _pin(old_pin, "original " + name)
             _pin(new_pin, "rebound " + name)
             if any(new_pin.get(key) != old_pin.get(key) for key in ("sha256", "size_bytes")):
-                raise GoldenSourceError("Golden reuse computational identity changed: " + name)
+                compatible_finalizer = (
+                    group == "script_identities" and name == "stage_attempt_finalizer"
+                    and (old_pin.get("sha256"), new_pin.get("sha256"))
+                    in GOLDEN_COMPATIBLE_FINALIZER_REBINDS
+                    and binding.get("postprocessing_only_finalizer_rebind") == {
+                        "original": old_pin, "replacement": new_pin,
+                        "golden_execution_repeated": False,
+                    }
+                )
+                if not compatible_finalizer:
+                    raise GoldenSourceError("Golden reuse computational identity changed: " + name)
     if ("emx_python_runtime" in target) != ("emx_python_runtime" in old_backend):
         raise GoldenSourceError("Golden reuse EMX runtime binding changed")
     if "emx_python_runtime" in old_backend:

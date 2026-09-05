@@ -1,6 +1,58 @@
 # Concurrency Work: Partial, Not a Performance Result
 
-## Latest State (04:25 UTC)
+## Latest State (04:52 UTC)
+
+The result-only recovery is now published: **100 accepted unique geometries,
+100 original S4P artifacts and 5,600 frequency rows** are bound into the
+resumable progress chain. The same campaign, queue and logical supervisor
+remain in use. No recovered geometry was simulated again or counted twice.
+The old root, failed attempts and original receipts remain unchanged.
+
+The deployed postprocessing repair required an explicit compatibility binding
+for the exact old/new finalizer SHA pair when reusing the completed Golden.
+The Golden-reachable finalizer AST, simulator/extraction entrypoints and
+scientific contract are unchanged. Unknown finalizer changes, absent bindings
+and changes to another role still fail closed. This is reuse of original
+execution evidence, not a new Golden or relaxed physical validation.
+
+Generation 25 passed startup resource gates but exited because the restored
+status omitted `check_index`. No new simulator ran. Its generic startup
+failure report says zero accepted, conflicting with the actual validated
+100-row progress chain; that generic field is not the dataset authority.
+The previous physical process was proven dead, the missing control cursor
+was derived from retained stage directories, and generation 26 resumed the
+same root with unchanged runtime/backend bytes. Live process identity and
+lease checks verified one supervisor and zero simulator jobs.
+
+**Production has not yet restarted.** At 04:52:18 UTC the next resource check
+reported normalized load1/load5 of 1.094345/1.058716, available-memory fraction
+0.439401, and WAIT. The earlier 04:50 check passed memory, swap, I/O, storage,
+license and isolation gates; only CPU gates failed. Inspection of the deployed
+policy shows that PILOT_1000 still uses 0.90/0.95, despite the owner's approved
+single-worker 1.10/1.10 window. The public source contains the correction,
+but it is not in this immutable runtime. This deployment mismatch must not
+be described as genuine failure of the approved 1.10 threshold. Preserve the
+live supervisor until a checked, idle-only operational transition is ready.
+
+The local adjacent regression set passed 100 tests in 4.25 seconds. The exact
+private-interpreter Golden/finalizer subset passed 67 tests with no simulator
+launch. These are software tests, not full-suite or concurrency measurements.
+
+Published-progress receipt SHA-256:
+`394417c6e935ebfd0c4dbe194964974a3c0913e4cf2d33f6091c5c31ad8d66ae`.
+Stage/progress consumer preflight receipt SHA-256:
+`a54582d37acf3e4c4db765d7528c49e5aaabe8bea9d212613d94e7bdf5e7d706`.
+Private software-test receipt SHA-256:
+`a1677b54e6a8ef166435b66973bd307e9bec69595c00867027997185ee1081ba`.
+Generation-26 handoff / lease SHA-256:
+`cdafd6350847048f75114c0218a26ddaee0dd9ca56455f5026df0a2d5fe9595b` /
+`a7e8013785d62d854bebd3a350fe7d02adb19b1695857076bd98a094055d1d5a`.
+
+The native-solver benchmark correction is still preparation-only, and no
+complete concurrency level or fastest level is established. No NN training
+has started. The 200,000-geometry goal is not complete.
+
+## Historical State (04:25 UTC)
 
 Production reached **97 published accepted geometries / 5,432 rows**. Three
 more geometries completed fresh EMX and exact 56-point QA. At the resulting
