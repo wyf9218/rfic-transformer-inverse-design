@@ -313,6 +313,48 @@ def test_authorized_but_unsafe_capacity_waits_without_launch(
     assert not launch_marker.exists()
 
 
+def test_same_root_resume_advances_artifact_index_but_keeps_per_run_budget(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    args, campaign_root = _install_common(tmp_path, monkeypatch, wait=False, authorized=False)
+    first = MODULE.run_controller(args, campaign_root=campaign_root)
+    assert first['check_index'] == 1
+    old_probe = _write(campaign_root/'resource_snapshots/probe_000001.log', 'original evidence')
+    (campaign_root/'stages/000017_pilot_1000_interrupted').mkdir(parents=True)
+    args.resume = True
+    args.max_checks = 2
+    seen = []
+    def probe(_script, out, index):
+        seen.append(index)
+        _write(out/f'probe_{index:06d}.log', 'fixture read-only probe')
+        return tmp_path/'snapshot.json'
+    monkeypatch.setattr(MODULE, '_run_probe', probe)
+    monkeypatch.setattr(MODULE, '_interruptible_sleep', lambda *_:None)
+    last = MODULE.run_controller(args, campaign_root=campaign_root)
+    assert seen == [18,19]
+    assert last['check_index'] == 19
+    assert old_probe.read_text() == 'original evidence'
+
+
+@pytest.mark.parametrize('value', [-1, True, '17', None])
+def test_resume_rejects_invalid_state_counter(tmp_path: Path, value) -> None:
+    _write(tmp_path/MODULE.STATE_NAME, {'check_index':value})
+    with pytest.raises(MODULE.ControllerError, match='check_index'):
+        MODULE._resume_check_index(tmp_path)
+
+
+def test_resume_does_not_use_large_resource_refresh_subindexes(tmp_path: Path) -> None:
+    _write(tmp_path/MODULE.STATE_NAME, {'check_index':17})
+    _write(tmp_path/'resource_snapshots/probe_17000001.log', 'original refresh')
+    assert MODULE._resume_check_index(tmp_path) == 17
+
+
+def test_resume_rejects_unordered_stage_receipt(tmp_path: Path) -> None:
+    _write(tmp_path/'stages/unknown/STAGE_PROGRESS_RECEIPT.json', {})
+    with pytest.raises(MODULE.ControllerError, match='unordered'):
+        MODULE._resume_check_index(tmp_path)
+
+
 def test_exact_authorization_and_safe_capacity_invoke_one_stage(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
@@ -381,6 +423,21 @@ def test_no_clobber_existing_campaign_root(
 
     with pytest.raises(MODULE.ControllerError, match="no-clobber"):
         MODULE.run_controller(args, campaign_root=campaign_root)
+
+
+def test_resume_preserves_probe_from_failed_iteration(tmp_path):
+    _write(tmp_path / "CAMPAIGN_STATUS.json", {"check_index": 17})
+    _write(tmp_path / "resource_snapshots/probe_000018.log", "failed probe evidence")
+    assert MODULE._resume_check_index(tmp_path) == 18
+
+
+def test_probe_collision_is_rejected_before_process_execution(tmp_path, monkeypatch):
+    out = tmp_path / "snapshots"
+    log = _write(out / "probe_000018.log", "retained failure evidence")
+    monkeypatch.setattr(MODULE.subprocess, "run", lambda *a, **k: pytest.fail("must not run"))
+    with pytest.raises(MODULE.ControllerError, match="no-clobber"):
+        MODULE._run_probe(Path("/fixture/probe.sh"), out, 18)
+    assert log.read_text() == "retained failure evidence"
 
 
 def test_control_evidence_binds_queue_gate_probe_and_python_identities(

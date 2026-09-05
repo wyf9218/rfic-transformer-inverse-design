@@ -1,6 +1,49 @@
 # Concurrency Work: Partial, Not a Performance Result
 
-## Observed Production State
+## Latest State (04:04 UTC)
+
+The production batch completed its full acceptance path: **93 canonical
+unique geometries / 5,208 frequency rows** are now accepted. Its 61 new
+EMX results are no longer merely pending receipts. The target remains
+200,000 geometries / 11,200,000 rows. No neural-network training has started.
+
+A controlled idle-boundary handoff installed the exclusive benchmark hook
+in one physical successor of the same logical supervisor. The existing
+campaign root, queue, backend, simulator code, full authorization and accepted
+artifacts remain unchanged. The old physical process was proven dead before
+the successor started; no running simulator was killed. At 04:04 UTC the
+successor was live and had entered its benchmark resource sampling phase.
+No controlled throughput trial had completed yet.
+
+The control-only changes preserve the next iteration index across same-root
+resumes and reject pre-existing probe logs before executing a probe. Failed
+iteration evidence cannot be overwritten. An exclusive callback validates
+the completed stage/progress chain and lease, runs only at an idle pilot
+boundary, and obtains a fresh resource sample before returning to production.
+
+Larger test waves require measured solver memory headroom while retaining
+the 20% available-memory floor. Sampled process high-water memory is not a
+proven absolute memory bound. The five-distinct-healthy-check ramp requirement
+remains separate from the owner's single-worker 1.10 startup window.
+
+Verification: 181 local targeted regression tests passed. The private
+benchmark/control fixture set passed all 88 tests on the approved execution
+interpreter with child-process execution disabled. These are software tests,
+not throughput measurements; they do not establish a production optimum.
+
+Real same-root component preflight receipt SHA-256:
+`8ce3b71660d62770f7cd290d977f114dd021cc01e2ae6924eab4567f19bbc5dd`.
+Private fixture receipt SHA-256:
+`744b7041e5762d9157989b8a4c6ee6ebed7a60e97e9805ae536cc1d26be99880`.
+Control integration manifest SHA-256:
+`57b7c86582ffa7c57f5b16d44b3d0af5d65b2bdfdb04a858a128369a68ae4b3d`.
+
+All seven screening levels, paired confirmation and end-to-end production
+confirmation remain incomplete. No fastest concurrency or 200K completion
+date is established. The earlier observations below are preserved history,
+not current runtime status. This is not a claim that the full test suite passes.
+
+## Historical Observation (02:42 UTC)
 
 At 2026-09-05T02:42:53Z, the existing sole supervisor was running PILOT_1000
 at configured concurrency 2. Two actual EMX solver executables were observed.

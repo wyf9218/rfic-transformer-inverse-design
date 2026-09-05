@@ -177,10 +177,12 @@ def run_controller(args: argparse.Namespace, *, campaign_root: Path) -> dict[str
         os.fsync(lock_fd)
         _install_signal_handlers()
 
-        check_index = 0
+        check_index = _resume_check_index(campaign_root)
+        checks_performed = 0
         latest: dict[str, Any] = {}
         while not STOP_REQUESTED:
             check_index += 1
+            checks_performed += 1
             snapshot_path = _run_probe(
                 inputs["probe_script"],
                 campaign_root / "resource_snapshots",
@@ -331,13 +333,38 @@ def run_controller(args: argparse.Namespace, *, campaign_root: Path) -> dict[str
             _write_json_atomic(campaign_root / STATE_NAME, latest)
             if lifecycle == "COMPLETE_200K":
                 break
-            if args.max_checks and check_index >= args.max_checks:
+            if args.max_checks and checks_performed >= args.max_checks:
                 break
             _interruptible_sleep(int(args.poll_seconds))
         return latest
     finally:
         fcntl.flock(lock_fd, fcntl.LOCK_UN)
         os.close(lock_fd)
+
+
+def _resume_check_index(campaign_root: Path) -> int:
+    """Keep artifact order and probe filenames monotonic across restarts."""
+    indexes = [0]
+    state_path = campaign_root / STATE_NAME
+    if state_path.exists():
+        value = _read_json(state_path, "resume state").get("check_index")
+        if type(value) is not int or value < 0:
+            raise ControllerError("resume state has invalid check_index")
+        indexes.append(value)
+    for path in (campaign_root / "stages").glob("*"):
+        if not path.is_dir():
+            continue
+        prefix, separator, _ = path.name.partition("_")
+        if separator and prefix.isascii() and prefix.isdigit():
+            indexes.append(int(prefix))
+        elif any((path / name).exists() for name in ("STAGE_RECEIPT.json", "STAGE_PROGRESS_RECEIPT.json")):
+            raise ControllerError("resume stage receipt has an unordered directory name")
+    # Source-refresh probes use their own large sub-index; they are not stages.
+    for path in (campaign_root / "resource_snapshots").glob("probe_??????.log"):
+        value = path.stem.removeprefix("probe_")
+        if value.isascii() and value.isdigit():
+            indexes.append(int(value))
+    return max(indexes)
 
 
 def _resolve_inputs(args: argparse.Namespace) -> dict[str, Path]:
@@ -747,15 +774,20 @@ def _validate_resume_root(
 def _run_probe(probe_script: Path, out_dir: Path, check_index: int) -> Path:
     out_dir.mkdir(parents=True, exist_ok=True)
     log_path = out_dir / f"probe_{check_index:06d}.log"
-    result = subprocess.run(
-        ["nice", "-n", "19", "bash", str(probe_script)],
-        stdin=subprocess.DEVNULL,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.STDOUT,
-        text=True,
-        check=False,
-    )
-    log_path.write_text(result.stdout, encoding="utf-8")
+    try:
+        log = log_path.open("x", encoding="utf-8")
+    except FileExistsError as exc:
+        raise ControllerError(f"no-clobber probe log already exists: {log_path}") from exc
+    with log:
+        result = subprocess.run(
+            ["nice", "-n", "19", "bash", str(probe_script)],
+            stdin=subprocess.DEVNULL,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            text=True,
+            check=False,
+        )
+        log.write(result.stdout)
     if result.returncode != 0:
         raise ControllerError(f"read-only probe failed with return code {result.returncode}")
     match = SNAPSHOT_LINE.search(result.stdout)
