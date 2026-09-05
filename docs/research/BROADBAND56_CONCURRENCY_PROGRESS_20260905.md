@@ -43,6 +43,32 @@ confirmation remain incomplete. No fastest concurrency or 200K completion
 date is established. The earlier observations below are preserved history,
 not current runtime status. This is not a claim that the full test suite passes.
 
+### First Real Trial: Incomplete (04:05 UTC)
+
+One of 96 planned single-worker jobs completed fresh EMX and exact 56-point
+S4P/feature QA. Replenishment stopped because the monitoring binding pointed
+to the vendor's shell launcher instead of the native solver ELF. The live
+isolation check therefore rejected the native solver, and the trial recorded
+zero observed solvers. It correctly drained the running job without killing
+it. The remaining 95 jobs were not submitted. This is an instrumentation
+failure and **not a valid throughput result or fastest-concurrency result**.
+
+The same supervisor returned to production with acceptance unchanged at
+93 / 5,208. Two actual native EMX solver processes were subsequently observed
+in the next production attempt; no duplicate supervisor existed. The one
+benchmark result does not count toward the 200K production total.
+
+The native binary identity has been found and verified against live processes.
+A prepared local correction rejects non-ELF solver bindings before callback
+installation; 90 benchmark/control fixture tests pass locally. This correction
+is **not yet installed in the running supervisor**. Do not overwrite the
+incomplete screen or interrupt the healthy production attempt to apply it.
+
+Benchmark QA receipt SHA-256:
+`8d802976182b50d75cf359f089f87073abdd5ad5ecb9b6f3f414efee3d97f433`.
+Live handoff/result evidence SHA-256:
+`3998505ba8bce5a9d13c94d92641237646a2ced9e19f352dbe27d8a4d2c1992d`.
+
 ## Historical Observation (02:42 UTC)
 
 At 2026-09-05T02:42:53Z, the existing sole supervisor was running PILOT_1000
