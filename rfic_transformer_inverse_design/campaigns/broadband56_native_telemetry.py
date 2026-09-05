@@ -45,6 +45,13 @@ def _stat(path: Path) -> dict[str, Any]:
             "state": fields[0]}
 
 
+def _exited(path: Path) -> bool:
+    try:
+        return _stat(path)["state"] in {"Z", "X"}
+    except (FileNotFoundError, ProcessLookupError):
+        return True
+
+
 def descendant_pids(records: dict[int, dict], root: dict) -> set[int]:
     """Reject a stale parent edge instead of attaching a child to a reused PID."""
     seen = {root["pid"]}
@@ -56,10 +63,9 @@ def descendant_pids(records: dict[int, dict], root: dict) -> set[int]:
                 continue
             if record["start_ticks"] < records[parent]["start_ticks"]:
                 raise ValueError("native telemetry encountered a reused parent PID")
-            if record["uid"] == root["uid"]:
-                added.add(pid)
+            added.add(pid)
         if not added:
-            return seen - {root["pid"]}
+            return {pid for pid in seen - {root["pid"]} if records[pid]["uid"] == root["uid"]}
         seen.update(added)
 
 
@@ -87,19 +93,35 @@ class NativeProcessSampler:
             if not path.name.isdecimal():
                 continue
             try:
-                if path.stat().st_uid == self.root["uid"]:
-                    records[int(path.name)] = _stat(path)
-            except FileNotFoundError:
+                # A container launcher can be nondumpable/root-owned in /proc
+                # while its solver returns to the project UID. Keep transit
+                # ancestry metadata, but measure only project-owned endpoints.
+                records[int(path.name)] = _stat(path)
+            except (FileNotFoundError, ProcessLookupError):
                 continue
         if records.get(self.root["pid"], {}).get("start_ticks") != self.root["start_ticks"]:
             raise ValueError("native telemetry root disappeared during scan")
         native = []
+        protected_transit = []
         for pid in sorted(descendant_pids(records, self.root)):
             path = self.proc_root / str(pid)
             if records[pid]["state"] in {"Z", "X"}:
                 continue
             try:
-                exe = (path / "exe").resolve(strict=True)
+                try:
+                    exe = (path / "exe").resolve(strict=True)
+                except PermissionError:
+                    comm = (path / "comm").read_text().strip()
+                    command = (path / "cmdline").read_bytes()
+                    after = _stat(path)
+                    if (comm != "starter-suid" or command.replace(b"\0", b" ").strip() != b"Singularity runtime parent"
+                            or any(after[k] != records[pid][k] for k in ("uid", "parent_pid", "start_ticks"))):
+                        raise
+                    protected_transit.append({**after, "comm": comm,
+                        "command_line_sha256": hashlib.sha256(command).hexdigest(),
+                        "executable_identity": "UNREADABLE_NOT_AN_AUTHORITY_CHECK",
+                        "counted_as_native_solver": False})
+                    continue
                 tool = NATIVE_NAMES.get(exe.name)
                 if tool is None:
                     continue
@@ -110,7 +132,7 @@ class NativeProcessSampler:
                     pid, proc_root=self.proc_root, executable_hash_cache=self.cache,
                 )
                 if identity is None:
-                    if not path.exists() or _stat(path)["state"] in {"Z", "X"}:
+                    if _exited(path):
                         continue
                     raise ValueError("live native process identity is unreadable")
                 status = dict(line.split(":", 1) for line in (path / "status").read_text().splitlines()
@@ -132,10 +154,10 @@ class NativeProcessSampler:
                     raise ValueError("native process identity changed during observation")
                 native.append({**{k: v for k, v in identity.items() if k != "command_text"},
                                "tool": tool, **metrics})
-            except FileNotFoundError:
+            except (FileNotFoundError, ProcessLookupError):
                 continue
             except (KeyError, ValueError):
-                if not path.exists() or _stat(path)["state"] in {"Z", "X"}:
+                if _exited(path):
                     continue
                 raise
         # Every retained process spans this common instant. A sequential scan
@@ -148,13 +170,14 @@ class NativeProcessSampler:
             )
             if current is None:
                 path = self.proc_root / str(record["pid"])
-                if path.exists() and _stat(path)["state"] not in {"Z", "X"}:
+                if not _exited(path):
                     raise ValueError("live native verification identity is unreadable")
                 continue
             if all(current[k] == record[k] for k in IDENTITY_FIELDS):
                 survivors.append(record)
         self._check_root()
         return {"captured_utc": captured, "verified_utc": _utc(), "native_processes": survivors,
+                "protected_transit_processes": protected_transit,
                 "counts": {tool: sum(p["tool"] == tool for p in survivors)
                            for tool in ("cadence", "calibre", "emx")}}
 

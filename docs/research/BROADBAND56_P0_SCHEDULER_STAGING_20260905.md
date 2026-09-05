@@ -27,6 +27,19 @@ zero-blocking evidence. Calibre receipt SHA:
 This is not full-chip DRC or fresh EMX acceptance. The sole supervisor and
 the same backend remained running; formal acceptance had not advanced.
 
+Update at 10:06:32 UTC: the same protected attempt was running fresh EMX
+at executor concurrency one. The zero-blocking receipt builder completed
+761/761, receipt SHA
+`942447f1a71323295c032b5c0f0d1368503b74bd4a5ebc8f331e89c30d5d47ff`.
+A read-only audit independently rechecked 21 completed candidate S4P files:
+source-queue membership, candidate/geometry/GDS/Calibre bindings, current file
+hashes and sizes, exact four ports, 56 frequencies and finite S matrices.
+Audit SHA: `4b3214c3398fa78f4b13f6e986ff72603c3ae807027603932d46641946a29e89`.
+These are completed EMX artifacts, not newly accepted feature-complete rows.
+Formal acceptance remained 100 / 5,600; later QA and finalization were pending.
+The live sample identified one native EMX process. No production change or
+additional simulator was made by the audit.
+
 The deployed Cadence runner submits all pending futures upfront. Neither it
 nor the synchronous role runner exposes a live dispatch-pause interface.
 The first supported end-to-end checkpoint is the **whole current attempt**,
@@ -101,10 +114,17 @@ handoff must not be used to interrupt this attempt.
   job bounds. These receipts authorize no capacity, acceptance, or benchmark
   level. A missing Calibre concurrency argument is not silently equated to
   the backend's limit. This telemetry integration is not deployed.
+  Container ancestry is retained across different-UID transit processes,
+  while only project-owned native endpoints are measured. An exact protected
+  container-parent signature may supply ancestry metadata even when its
+  executable link is unreadable; that helper is explicitly not ELF-verified,
+  not counted as a solver, and never supplies authority or isolation evidence.
+  Unreadable native processes still invalidate observation. Process-exit
+  races are excluded, not mistaken for additional concurrent jobs.
 
 ## Verification
 
-Local focused regression: **342 passed**. This includes scheduling, capacity,
+Local focused regression: **351 passed**. This includes scheduling, capacity,
 adapter, profile, stage progress/finalization, queue, backend and batch tests.
 The launch-boundary fixture verifies that a two-worker decision and its same
 five source observations survive adaptation and backend admission. Four
@@ -118,18 +138,33 @@ then selects its eight original remaining rows without sampling. After all
 creates a new two-row source excluding every prior geometry. Count and
 terminal values in this test are fixtures, not campaign measurements.
 
-Approved private Python / numpy 2.5.0: **213 passed** in an isolated source
+Approved private Python / numpy 2.5.0: **222 passed** in an isolated source
 copy, with an irreversible audit hook prohibiting actual subprocess and
 signal actions. Receipt SHA:
-`e4c4807f02fb1583ec71ee0ce00951d5d2499b92a4dcba3cdecc0c2ac16916f8`.
+`386eda69294ec8a08f4965e49d4a4a3d0fce94d7a1d3a6febb031c8048e45b50`.
 These are software fixtures, not native solver or physical test results.
-Sixteen synthetic `/proc` tests cover root/PID changes, wrappers, unrelated
+Twenty-five synthetic `/proc` tests cover root/PID changes, wrappers, unrelated
 jobs, missing metrics, shared-instant concurrency, observer errors and thread
 cleanup. Backend fixtures also check telemetry binding in failures and partial
 progress. An earlier 15-second read-only run of the development observer
 against the existing backend recorded zero native jobs while production had
 moved to zero-blocking receipt construction. It verifies live-root observation,
 not a measured Calibre or EMX parallel trial; no new solver was launched.
+
+A later real EMX window exposed an observation bug: the older private helper
+omitted a protected container parent and therefore hid its native descendants.
+Its zero-EMX result is not valid evidence of zero active solvers. The staged
+fix first failed on the protected helper, then recorded partial samples due
+to a normal process-exit race. Both failed observations are retained.
+Protected-helper failure SHA:
+`51ad499be39026295d78baa5a7d08c29a34d6f8402fe86df1d538cf2cb734cba`.
+Process-exit partial-observation SHA:
+`6650d16c264c6c747999de41c5c189e3052d2f43fda537ff28b2b994482afb01`.
+After targeted fixes, a new 15-second read-only observation recorded 14
+samples with peak native EMX concurrency one and unchanged production bindings.
+Receipt SHA: `5eb1deab0e626933f47ee7a64fd9a0f4120638010e0f8be19b051b5f55552404`.
+No subprocess or signal action was attempted by that observer. This is a
+live observation check, not a completed benchmark level or capacity approval.
 
 The real immutable 900-row queue was replayed read-only into 28 groups of 32
 plus one group of four. Concatenated rows match the original fields and order
@@ -170,6 +205,10 @@ EMX log was found to contain a terminal peak-memory report, but this is not
 a complete multi-tool admission record or a bound for future geometry. The old license probe counts
 available layout feature types, not seats or the observed Framework checkout;
 its value must not be described as measured per-tool capacity.
+The actual Framework checkout feature is present under its literal feature
+identity in the saved license inventory; a different generic feature name
+must not be substituted. This corrects the earlier mapping uncertainty, but
+does not replace fresh license checks or establish an installed capacity producer.
 The subsequent 60-second observer saw a maximum of one native Calibre child,
 covering 16 child identities. Sampled high-water memory and threads remain
 observation-only, not a complete-job bound or a parallel admission receipt.

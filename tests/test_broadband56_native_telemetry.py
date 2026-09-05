@@ -122,10 +122,112 @@ def test_unreadable_live_verification_is_not_reported_as_zero(proc, monkeypatch)
         telemetry.NativeProcessSampler(100, proc_root=proc).sample()
 
 
+@pytest.mark.parametrize("phase", ["scan", "resolve", "status", "verification"])
+def test_process_lookup_race_excludes_exited_native_without_stopping_observer(proc, monkeypatch, phase):
+    native = _process(proc, 110, 100, 1010, "emx")
+    sampler = telemetry.NativeProcessSampler(100, proc_root=proc)
+    original_stat, original_resolve = telemetry._stat, Path.resolve
+    original_read, original_identity = Path.read_text, telemetry.read_process_identity
+    identity_reads = 0
+
+    def stat(path):
+        if path == native and (phase == "scan" or (phase == "verification" and identity_reads == 2)):
+            raise ProcessLookupError("fixture exited process")
+        return original_stat(path)
+
+    def resolve(path, *args, **kwargs):
+        if path == native / "exe" and phase == "resolve":
+            raise ProcessLookupError("fixture exited process")
+        return original_resolve(path, *args, **kwargs)
+
+    def read(path, *args, **kwargs):
+        if path == native / "status" and phase == "status":
+            raise ProcessLookupError("fixture exited process")
+        return original_read(path, *args, **kwargs)
+
+    def identity(pid, **kwargs):
+        nonlocal identity_reads
+        if pid == 110:
+            identity_reads += 1
+            if phase == "verification" and identity_reads == 2:
+                return None
+        return original_identity(pid, **kwargs)
+
+    monkeypatch.setattr(telemetry, "_stat", stat)
+    monkeypatch.setattr(Path, "resolve", resolve)
+    monkeypatch.setattr(Path, "read_text", read)
+    monkeypatch.setattr(telemetry, "read_process_identity", identity)
+    assert sampler.sample()["counts"]["emx"] == 0
+
+
 def test_different_uid_is_not_a_root_descendant():
     root = {"pid": 10, "uid": 1, "parent_pid": 1, "start_ticks": 100}
     records = {10: root, 11: {"pid": 11, "uid": 2, "parent_pid": 10, "start_ticks": 110}}
     assert telemetry.descendant_pids(records, root) == set()
+
+
+def test_container_transit_uid_does_not_hide_owned_native_child(proc, monkeypatch):
+    _process(proc, 110, 100, 1010, "container-helper")
+    _process(proc, 120, 110, 1020, "emx")
+    _process(proc, 130, 100, 1030, "calibre")
+    _process(proc, 140, 1, 1040, "emx")
+    original = telemetry._stat
+
+    def stat(path):
+        record = original(path)
+        if record["pid"] in {110, 130}:
+            record["uid"] += 1
+        return record
+
+    monkeypatch.setattr(telemetry, "_stat", stat)
+    sample = telemetry.NativeProcessSampler(100, proc_root=proc).sample()
+    assert [item["pid"] for item in sample["native_processes"]] == [120]
+    assert sample["counts"] == {"cadence": 0, "calibre": 0, "emx": 1}
+
+
+def test_reused_container_transit_pid_still_fails_closed(proc, monkeypatch):
+    _process(proc, 110, 100, 1030, "container-helper")
+    _process(proc, 120, 110, 1020, "emx")
+    original = telemetry._stat
+
+    def stat(path):
+        record = original(path)
+        if record["pid"] == 110:
+            record["uid"] += 1
+        return record
+
+    monkeypatch.setattr(telemetry, "_stat", stat)
+    with pytest.raises(ValueError, match="reused parent PID"):
+        telemetry.NativeProcessSampler(100, proc_root=proc).sample()
+
+
+@pytest.mark.parametrize("comm,command,permitted", [
+    ("starter-suid", b"Singularity runtime parent\0", True),
+    ("emx", b"Singularity runtime parent\0", False),
+    ("starter-suid", b"unexpected command\0", False),
+])
+def test_protected_container_transit_is_not_an_unverified_solver(proc, monkeypatch, comm, command, permitted):
+    helper = _process(proc, 110, 100, 1010, "container-helper")
+    (helper / "comm").write_text(comm + "\n")
+    (helper / "cmdline").write_bytes(command)
+    _process(proc, 120, 110, 1020, "emx")
+    original = Path.resolve
+
+    def resolve(path, *args, **kwargs):
+        if path == helper / "exe":
+            raise PermissionError("fixture nondumpable container helper")
+        return original(path, *args, **kwargs)
+
+    monkeypatch.setattr(Path, "resolve", resolve)
+    sampler = telemetry.NativeProcessSampler(100, proc_root=proc)
+    if not permitted:
+        with pytest.raises(PermissionError):
+            sampler.sample()
+        return
+    sample = sampler.sample()
+    assert sample["counts"]["emx"] == 1
+    assert sample["protected_transit_processes"][0]["counted_as_native_solver"] is False
+    assert sample["protected_transit_processes"][0]["executable_identity"] == "UNREADABLE_NOT_AN_AUTHORITY_CHECK"
 
 
 def test_context_receipt_separates_admitted_argv_and_native_counts(proc, tmp_path):
