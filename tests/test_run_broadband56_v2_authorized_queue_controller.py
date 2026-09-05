@@ -425,6 +425,36 @@ def test_no_clobber_existing_campaign_root(
         MODULE.run_controller(args, campaign_root=campaign_root)
 
 
+def test_stop_request_during_stage_commits_progress_before_releasing_lock(tmp_path, monkeypatch):
+    import fcntl
+    import signal
+
+    args, root = _install_common(tmp_path, monkeypatch, wait=False, authorized=True)
+    args.max_checks = 0
+    handlers, events = {}, []
+    monkeypatch.setattr(MODULE.signal, "signal", lambda signum, handler: handlers.setdefault(signum, handler))
+    monkeypatch.setattr(MODULE, "_write_resource_gate", lambda **kw: _write(tmp_path / "gate.json", {}))
+    monkeypatch.setattr(MODULE, "_materialize_authorization_receipt", lambda **kw: None)
+    monkeypatch.setattr(MODULE, "_interruptible_sleep", lambda *_: events.append("sleep_observes_stop"))
+    def drain(**kwargs):
+        events.append("stage_entered")
+        handlers[signal.SIGTERM](signal.SIGTERM, None)
+        assert MODULE.STOP_REQUESTED
+        with Path(args.lock_path).open() as lock:
+            with pytest.raises(BlockingIOError):
+                fcntl.flock(lock.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
+        events.append("stage_drained_checkpoint_returned")
+        return {"decision": MODULE.STAGE_PROGRESS_DECISION, "accepted_after": 861}
+    monkeypatch.setattr(MODULE, "_run_stage_launcher", drain)
+    state = MODULE.run_controller(args, campaign_root=root)
+    assert events == ["stage_entered", "stage_drained_checkpoint_returned", "sleep_observes_stop"]
+    assert state["current_accepted"] == 861
+    assert json.loads((root / MODULE.STATE_NAME).read_text())["current_accepted"] == 861
+    with Path(args.lock_path).open() as lock:
+        fcntl.flock(lock.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
+        fcntl.flock(lock.fileno(), fcntl.LOCK_UN)
+
+
 def test_resume_preserves_probe_from_failed_iteration(tmp_path):
     _write(tmp_path / "CAMPAIGN_STATUS.json", {"check_index": 17})
     _write(tmp_path / "resource_snapshots/probe_000018.log", "failed probe evidence")

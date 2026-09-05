@@ -32,12 +32,13 @@ def select(path, **kwargs):
         acquisition_source="base_space_filling", phase="PHASE_A", **kwargs)
 
 
-def test_900_rows_partition_exactly_into_28_full_batches_and_one_remainder(tmp_path):
+@pytest.mark.parametrize("limit", [32, 48])
+def test_900_rows_partition_without_changing_rows_or_remainder(tmp_path, limit):
     rows, receipt = fixture(tmp_path)
     excluded, restored, indexes = set(), [], []
     before = frozen.file_identity(receipt)
-    for offset in range(0, 900, 32):
-        batch, proof = select(receipt, count=32, excluded_hashes=excluded)
+    for offset in range(0, 900, limit):
+        batch, proof = select(receipt, count=limit, excluded_hashes=excluded)
         restored.extend(batch)
         excluded.update(r["geometry_sha256"] for r in batch)
         indexes.extend(proof["source_row_indexes"])

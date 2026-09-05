@@ -70,7 +70,8 @@ def test_queue_profile_rebind_is_strictly_path_only(tmp_path, mutation):
     "removed_stage", "extra_stage", "golden_limit", "other_stage_limit", "limit", "missing_cohort",
     "duplicate_option", "source_limit", "source_duplicate", "missing_pilot", "old_kind", "binding_limit",
     "unknown_code", "drift", "source_drift", "external_path", "fake_boolean", "null_binding", "symlink"])
-def test_bounded_pilot_profile_only_permits_exact_scheduler_transform(tmp_path, monkeypatch, mutation):
+@pytest.mark.parametrize("candidate_limit", [32, 48])
+def test_bounded_pilot_profile_only_permits_exact_scheduler_transform(tmp_path, monkeypatch, mutation, candidate_limit):
     old, new = tmp_path / "old", tmp_path / "new"
     old.mkdir(); new.mkdir()
     source = old / "build_broadband56_phase_a_queue.py"
@@ -92,9 +93,9 @@ def test_bounded_pilot_profile_only_permits_exact_scheduler_transform(tmp_path, 
         spec["commands"][0]["argv"][1] = str(target)
         spec["commands"][0]["argv"][3] = target_pin["sha256"]
     pilot = after["stages"]["PILOT_1000"]
-    pilot["max_candidates_per_attempt"] = 32
+    pilot["max_candidates_per_attempt"] = candidate_limit
     c = pilot["commands"][0]
-    c["argv"] += ["--attempt-candidate-limit", "32", "--reuse-campaign-frozen-cohort"]
+    c["argv"] += ["--attempt-candidate-limit", str(candidate_limit), "--reuse-campaign-frozen-cohort"]
     if mutation == "seed": c["argv"][5] = "7"
     if mutation == "count": c["argv"][9] = "900"
     if mutation == "config": c["argv"][7] = "other.yaml"
@@ -121,7 +122,7 @@ def test_bounded_pilot_profile_only_permits_exact_scheduler_transform(tmp_path, 
         target.symlink_to(alternate)
     a, b = save(tmp_path / "original.json", before), save(tmp_path / "replacement.json", after)
     binding = dict(original=a, replacement=b, kind=golden.BOUNDED_PILOT_PROFILE_REBIND,
-                   golden_execution_repeated=False, max_candidates_per_attempt=32)
+                   golden_execution_repeated=False, max_candidates_per_attempt=candidate_limit)
     if mutation == "old_kind": binding["kind"] = "IDENTICAL_QUEUE_DELEGATE_CURRENT_RUNTIME_PATH_ONLY"
     if mutation == "binding_limit": binding["max_candidates_per_attempt"] = 31
     if mutation == "fake_boolean": binding["golden_execution_repeated"] = 0
@@ -149,4 +150,7 @@ def test_pinned_scheduler_pairs_match_the_actual_staged_scripts():
     assert golden.GOLDEN_COMPATIBLE_QUEUE_BATCH_REBINDS == frozenset({(
         "1e1fb5f55fa64a99ffb01f41abcb35a08787fd16cf4d300f91f3b89cf02185ba",
         pin(root / "scripts/build_broadband56_phase_a_queue.py")["sha256"],
+    ), (
+        "1e1fb5f55fa64a99ffb01f41abcb35a08787fd16cf4d300f91f3b89cf02185ba",
+        "d3c53169370ff9695a9b0b7086f8f76e6ee794063b6d39946538dbb947b09349",
     )})

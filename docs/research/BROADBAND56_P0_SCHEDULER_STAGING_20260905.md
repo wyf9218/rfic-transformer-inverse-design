@@ -4,6 +4,65 @@ Status: **PARTIALLY_IMPLEMENTED_AND_TESTED_NOT_DEPLOYED**.
 This is not a runtime authorization, launch receipt, concurrency benchmark,
 or claim of increased production throughput.
 
+## Latest: Fixed48 Partial-Capacity Policy, 21:48 UTC
+
+The current owner goal is MIN_TIME_TO_200K_ACCEPTED, not a concurrency
+benchmark. All benchmark-ladder next steps below are historical and superseded.
+The current generation continues unchanged. At 21:47:59 UTC, the sole owner,
+backend and EMX executor were live; executor/native EMX concurrency remained
+one. The current batch had 388 EMX completion receipt files, not 388 new
+accepted samples. Formal status was still 100 geometries / 5,600 rows, with
+no current-attempt terminal checkpoint. File counts are not revalidation.
+
+Implemented and tested in the isolated package:
+
+- The exact opt-in fixed48 policy binds load1/load5 limits 1.10/1.10, five
+  distinct fresh healthy observations, and partial-capacity admission.
+- The gate and health-history consumers use the same limits for PILOT_1000
+  and subsequent phases. Legacy mode and Golden concurrency remain unchanged.
+- Valid per-tool seats and measured memory can admit fewer than 48 workers
+  immediately after health qualification. Missing measurements admit zero,
+  never an unexplained fallback to one. Requested/admitted limits are separate.
+- Same-lease, isolation-verified healthy children do not erase health history.
+  Re-reading history does not increment the count. The controller's existing
+  no-active-child check before a new stage launch remains intact.
+- Final adapter and backend fixtures agree at 1.10/48 and 1.05/12 workers.
+  Memory/swap/OOM/I/O/license/storage/ownership failures still prevent launch.
+
+The actual prepared package passed **468 software tests** under the approved
+private Python with numpy 2.5.0. Test receipt SHA:
+`60579d3a9cbb09205489883d1cb61873de24b355d5c68871f1e3ba66d5da9494`.
+Runtime SHA: `27d55a88a68976adc6b52beef560d74d663705a50e21cdd282449bc23d7dff6d`.
+Backend SHA: `c7026ee6964c22b8cd8977617513f53e064a7c680722efc457b164c58fa63daf`.
+Profile SHA: `0572ec4d1a7cabfae684c4f2aa171eecc6cfd27496340d23f8f7080d1d2d0a06`.
+Preparation receipt SHA:
+`86548c66c37a9e0e78febcfd22d49f3295acecca4c213b6692d2969c574157b2`.
+The original isolated single-EMX runtime was retained byte-for-byte.
+
+Startup interface replay passed 22 checks without a simulator, queue write
+or target lease; SHA
+`1f5f4d3a750048231c8db3e6de0d702421c3cbe2a5c2455dc89a6a9bcd588a28`.
+Its derived authority remains fixture-only, not permission to launch.
+
+The deployed controller's existing stop handler was replayed in isolation:
+it sets STOP_REQUESTED, retains the flock while the stage callback drains,
+writes returned progress, then unlocks without claiming another stage.
+Replay SHA: `615306687450fe1b3985c155028772e5d3ffac50c387b7a0c178b7aa6c0c9ee9`.
+This uses actual controller code with prepared dependencies and a synthetic
+stage return. It does not prove a live checkpoint, outer-launcher exit or
+successor authority. No signal was sent to production. The first replay's
+import-order failure is preserved separately, not reported as a production
+failure or silently overwritten.
+
+**Remaining before deployment:** continuous resource-history maintenance
+through blocking stages, bounded refill without a fixed 48-job wave barrier,
+and complete same-queue authorization/lease/resume binding at the real current
+attempt checkpoint. The 48-candidate profile and startup fixture do not prove
+these requirements. No production handoff or new approval candidate was made.
+Do not stop the old producer while these integration requirements remain.
+
+End-to-end accepted/hour and 200K ETA: **NOT_MEASURED**. No NN training.
+
 ## Protected Production
 
 At 2026-09-05T08:51:41Z, the existing PILOT_1000 attempt was executing
@@ -423,6 +482,63 @@ authority. This verifies history compatibility, not a full startup, production
 switch, completed current attempt, or measured parallel execution.
 
 ## Remaining Before Any Switch
+
+### Latest Request And Interface Evidence
+
+The owner now requests **48 workers directly**. This supersedes the earlier
+requested intermediate target, but **48 has not been deployed or benchmarked**.
+The running EMX batch constructs its thread pool once from
+`--max-concurrency 1` and has no supported live resize or dispatch-drain API.
+Batch source SHA:
+`4c6004ab4d53b09b11b6f24ce8b98731c0e474b32c8fbadf059d6e0f69e79ac3`.
+The protected complete-attempt checkpoint remains the earliest supported
+switch boundary; no process was stopped or restarted.
+
+At 14:07:18 UTC, a fresh 60-second read-only probe measured 10.992% CPU
+utilization, 53.402% available memory, normalized load1/load5 of
+0.12245/0.32550, zero swap-out and no OOM event. Resource receipt SHA:
+`4cc6ed7fbb868d95ba872a39c55034b877472bbe2c4c29d133d63b8b278a0be1`.
+The existing development calculation still caps workers at two using its
+10% CPU budget and historical sampled thread envelope. **This is a policy
+calculation, not evidence that the machine can run only two jobs.**
+The legacy aggregate license probe also counts available layout-feature
+categories rather than free seats. Its value four is not a measured four-seat
+capacity. Correct per-tool mapping, requested resource allocation, the current
+32-candidate batch ceiling, and pilot ladder must be reconciled for a genuine
+48-worker configuration. None of those restrictions was silently bypassed.
+The probe rejects additional dispatch because the original producer is active;
+this is not a failure of the original production process.
+
+At 14:08:32 UTC, independent exact-hash/four-port/56-point checks passed for
+143 completed fresh S4P artifacts from the existing 761 zero-blocking GDS
+partition. The same supervisor and one native EMX remained live. Formal
+acceptance remained 100 geometries / 5,600 rows. Audit SHA:
+`4700a9554e8bd34d80b145ac67b0fa2ca3bce8ed02d289d8c9d35041b9375366`.
+These are not 143 newly accepted geometries or a throughput measurement.
+
+The consolidated development startup interface replay passed 22 checks with
+the original private interpreter and unchanged single-EMX module. Capacity
+and benchmark hooks install into the prepared wrapper without dispatch.
+Replay SHA: `9a593a948aa2d4d4a45b5195515fad9c27ed30ee493a4968e6ceeee12693f4a2`.
+The callback now imports the backend-pinned original EMX module by its exact
+path/size/SHA, rather than an incompatible scheduler-copy module. Local and
+private-interpreter fixture suites each passed 113 tests; remote receipt SHA:
+`1f408d77a9f537d15d08dc053f1b1da9142b219a50dd2bfc5c2efe2abfa921cc`.
+These are software tests, not simulator runs. Derived startup authority is
+explicitly fixture-only. The unchanged real queue correctly rejects the new
+backend identity without a genuine rebind; no deployable lease or full startup
+proof exists yet.
+
+A read-only full-attempt boundary check returned
+`WAIT_CURRENT_FULL_ATTEMPT_CHECKPOINT`, SHA
+`85c0e20adecb76a172049282f68ddfffc05f2fbe90a92ec4f1f9b1b6988dc6f6`.
+It does not treat a quiet role transition or zero-native instant as a safe
+handoff. No new campaign, queue, owner, benchmark or NN training was started.
+
+### Superseded Planning Record
+
+The following earlier next-step list is retained for provenance, not execution.
+The fixed48/no-benchmark goal and remaining integration work above take priority.
 
 1. Bind the tested capacity producer and corrected private license parser
    into the same consolidated startup. Both the source replay and a real

@@ -45,6 +45,9 @@ GOLDEN_COMPATIBLE_SCHEDULER_REBINDS = frozenset({
 GOLDEN_COMPATIBLE_QUEUE_BATCH_REBINDS = frozenset({(
     "1e1fb5f55fa64a99ffb01f41abcb35a08787fd16cf4d300f91f3b89cf02185ba",
     "d3c53169370ff9695a9b0b7086f8f76e6ee794063b6d39946538dbb947b09349",
+), (
+    "1e1fb5f55fa64a99ffb01f41abcb35a08787fd16cf4d300f91f3b89cf02185ba",
+    "55d051edacf5099117c999222c12998c37094cbe808a70f55fa3e3670fc150ea",
 )})
 BOUNDED_PILOT_PROFILE_REBIND = "FROZEN_COHORT_BOUNDED_PILOT_SCHEDULING_ONLY"
 
@@ -374,13 +377,16 @@ def validate_queue_delegate_profile_rebind(
     if not isinstance(binding, Mapping):
         raise GoldenSourceError("Golden queue profile rebind must be an object")
     bounded = binding.get("kind") == BOUNDED_PILOT_PROFILE_REBIND
+    limit = binding.get("max_candidates_per_attempt", 32)
     expected_binding = {
         "original": original_pin, "replacement": replacement_pin,
         "kind": BOUNDED_PILOT_PROFILE_REBIND if bounded else "IDENTICAL_QUEUE_DELEGATE_CURRENT_RUNTIME_PATH_ONLY",
         "golden_execution_repeated": False,
     }
     if bounded:
-        expected_binding["max_candidates_per_attempt"] = 32
+        if type(limit) is not int or limit not in (32, 48):
+            raise GoldenSourceError("bounded pilot profile requires exact 32 or 48 candidate limit")
+        expected_binding["max_candidates_per_attempt"] = limit
     if binding != expected_binding or binding.get("golden_execution_repeated") is not False:
         raise GoldenSourceError("Golden queue profile rebind identity mismatch")
     original = _load(original_pin, "original queue execution profile")
@@ -429,8 +435,8 @@ def validate_queue_delegate_profile_rebind(
                             or "--attempt-candidate-limit" in argv
                             or "--reuse-campaign-frozen-cohort" in argv):
                         raise GoldenSourceError("bounded queue source already altered")
-                    argv.extend(["--attempt-candidate-limit", "32", "--reuse-campaign-frozen-cohort"])
-                    stage["max_candidates_per_attempt"] = 32
+                    argv.extend(["--attempt-candidate-limit", str(limit), "--reuse-campaign-frozen-cohort"])
+                    stage["max_candidates_per_attempt"] = limit
                     bounded_commands += 1
             else:
                 _pin({"path": str(target_script), "size_bytes": source_size, "sha256": digest},

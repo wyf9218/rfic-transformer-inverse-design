@@ -244,8 +244,8 @@ def validate_execution_profile(
         if "max_candidates_per_attempt" in stage_profile:
             allowed_fields.add("max_candidates_per_attempt")
             limit = stage_profile["max_candidates_per_attempt"]
-            if stage == "GOLDEN" or type(limit) is not int or not 1 <= limit <= 32:
-                errors.append(f"stages.{stage}.max_candidates_per_attempt must be 1..32 outside GOLDEN")
+            if stage == "GOLDEN" or type(limit) is not int or not 1 <= limit <= 48:
+                errors.append(f"stages.{stage}.max_candidates_per_attempt must be 1..48 outside GOLDEN")
             raw_commands = stage_profile.get("commands")
             queues = [item for item in (raw_commands if isinstance(raw_commands, list) else [])
                       if isinstance(item, Mapping) and item.get("role") == "phase_a_queue_builder"]

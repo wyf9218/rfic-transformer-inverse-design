@@ -24,6 +24,17 @@ MAX_SNAPSHOT_AGE_SECONDS = 300
 MAX_HISTORY_GAP_SECONDS = 180
 HISTORY_WINDOW_SECONDS = 900
 TOOL_NAMES = ("cadence", "calibre", "emx")
+FIXED48_GENERATION_POLICY = {
+    "mode": "FIXED_48_GENERATION_NO_CONCURRENCY_BENCHMARK",
+    "requested_concurrency": 48,
+    "normalized_load1_max": 1.10,
+    "normalized_load5_max": 1.10,
+    "healthy_streak_requirement": HEALTHY_STREAK_REQUIREMENT,
+    "admit_partial_capacity": True,
+    "run_concurrency_benchmarks": False,
+    "cpu_admission": "NORMALIZED_RESOURCE_GATES_WITH_48_WORKER_LIMIT",
+    "license_admission": "EXACT_PER_TOOL_FREE_SEATS",
+}
 
 
 def _utc(value: Any) -> datetime:
@@ -86,6 +97,9 @@ def healthy_history(
         raise CapacityPolicyError("latest scheduling observation is stale or in the future")
     lease = current.get("supervisor_lease")
     _bound(lease)
+    fixed = fixed_generation_policy(current) if stage not in {"GOLDEN", "PILOT_32"} else None
+    load1_max = fixed["normalized_load1_max"] if fixed else 0.90
+    load5_max = fixed["normalized_load5_max"] if fixed else 0.95
     identity_fields = ("campaign_id", "contract_fingerprint_sha256", "supervisor_lease",
                        "operational_overlay_manifest", "owner_swap_override_receipt")
     paths = set((campaign_root / "resource_snapshots").glob("swap_override_*.json"))
@@ -116,9 +130,11 @@ def healthy_history(
             item, stage=stage, current_accepted=current_accepted,
             measured_pilot_bytes_per_geometry=measured_pilot_bytes_per_geometry,
         )
-        healthy = (policy["pass"] and policy["metrics"]["normalized_load1"] <= 0.90
-                   and policy["metrics"]["normalized_load5"] <= 0.95
-                   and policy["metrics"]["active_simulator_jobs"] == 0)
+        # Healthy children of the verified sole owner do not erase resource
+        # history. Admission of a new stage still requires an idle executor.
+        healthy = (policy["pass"] and policy["metrics"]["normalized_load1"] <= load1_max
+                   and policy["metrics"]["normalized_load5"] <= load5_max
+                   and (fixed is not None or policy["metrics"]["active_simulator_jobs"] == 0))
         observations.append((stamp, item["source_snapshot"]["sha256"], healthy,
                              file_record(candidate_path)))
     observations.sort(key=lambda item: (item[0], item[1], item[3]["path"]))
@@ -142,6 +158,7 @@ def healthy_history(
         streak = [*streak, record] if healthy else []
     return {"healthy_check_streak": len(streak), "evidence": streak,
             "latest_snapshot": file_record(path), "captured_utc": captured.isoformat(),
+            "healthy_load1_max": load1_max, "healthy_load5_max": load5_max,
             "effective_healthy_streak_requirement": HEALTHY_STREAK_REQUIREMENT}
 
 
@@ -151,14 +168,44 @@ def _positive_int(value: Any, label: str) -> int:
     return value
 
 
+def fixed_generation_policy(snapshot: Mapping[str, Any]) -> dict[str, Any] | None:
+    """Read the opt-in mode from the existing hash-bound operational overlay."""
+    record = snapshot.get("operational_overlay_manifest")
+    if record is None:
+        return None
+    _, overlay = _bound(record)
+    value = overlay.get("fixed_generation_policy")
+    if value is None:
+        return None
+    if json.dumps(value, sort_keys=True) != json.dumps(FIXED48_GENERATION_POLICY, sort_keys=True):
+        raise CapacityPolicyError("unsupported fixed-generation policy")
+    _, lease = _bound(snapshot.get("supervisor_lease"))
+    if (overlay.get("schema") != "rfic_transformer.broadband56_v2_operational_policy_overlay.v1"
+            or overlay.get("overall_status") != "PASS"
+            or overlay.get("scientific_contract_changed") is not False
+            or overlay.get("nn_training_authorized") is not False
+            or any(overlay.get(k) != snapshot.get(k) or lease.get(k) != snapshot.get(k)
+                   for k in ("campaign_id", "contract_fingerprint_sha256"))
+            or overlay.get("queue_id") != lease.get("queue_id")
+            or overlay.get("supervisor_id") != lease.get("logical_supervisor_id")
+            or not overlay.get("queue_id") or not overlay.get("supervisor_id")
+            or overlay.get("corrected_backend_manifest") != lease.get("backend_identity_manifest")):
+        raise CapacityPolicyError("fixed-generation overlay is not bound to this owner and backend")
+    _bound(overlay.get("corrected_backend_manifest"))
+    return dict(value)
+
+
 def measured_worker_cap(snapshot: Mapping[str, Any]) -> tuple[int, str]:
     """Require actual per-tool observations; a license boolean is not a seat count.
 
     A private probe can attach this source-bound measurement once available.
     No measurement producer or live installation is implied by this consumer.
     """
+    fixed = fixed_generation_policy(snapshot)
     record = snapshot.get("per_tool_capacity_evidence")
     if record is None:
+        if fixed:
+            return 0, "FIXED_48_REQUIRES_PER_TOOL_CAPACITY_EVIDENCE"
         return 1, "PER_TOOL_SEATS_THREADS_PEAK_RSS_NOT_MEASURED"
     _, evidence = _bound(record)
     if (evidence.get("schema") != "rfic_transformer.broadband56_tool_capacity.v1"
@@ -170,7 +217,10 @@ def measured_worker_cap(snapshot: Mapping[str, Any]) -> tuple[int, str]:
     resources = snapshot["resources"]
     spare = resources["memory_available_bytes"] - math.ceil(resources["memory_total_bytes"] * 0.20)
     cpu_budget = math.floor(resources["logical_cpu_count"] * 0.10)
-    caps = [snapshot["licenses"]["simulator_license_capacity"]]
+    # Fixed-48 explicitly replaces the project-local 10% worker allocation.
+    # Native thread counts are not dedicated-core allocations. Keep the
+    # normalized-load gates and use actual per-tool seats, not feature kinds.
+    caps = [fixed["requested_concurrency"]] if fixed else [snapshot["licenses"]["simulator_license_capacity"]]
     for tool in TOOL_NAMES:
         item = evidence["tools"][tool]
         _, source = _bound(item["measurement_source"])
@@ -182,7 +232,9 @@ def measured_worker_cap(snapshot: Mapping[str, Any]) -> tuple[int, str]:
             raise CapacityPolicyError("free_seats must be a nonnegative integer")
         threads = _positive_int(observed["threads_per_job"], "threads_per_job")
         rss = _positive_int(observed["peak_rss_bytes_per_job"], "peak_rss_bytes_per_job")
-        caps.extend((seats, cpu_budget // threads, max(0, spare) // rss))
+        caps.extend((seats, max(0, spare) // rss))
+        if not fixed:
+            caps.append(cpu_budget // threads)
     return max(0, min(caps)), "MEASURED_PER_TOOL_CAPACITY"
 
 
@@ -362,6 +414,27 @@ def concurrency_for_snapshot(
         measured_pilot_bytes_per_geometry=measured_pilot_bytes_per_geometry, now=now,
     )
     cap, reason = measured_worker_cap(snapshot)
+    fixed = fixed_generation_policy(snapshot)
+    if fixed and stage not in {"GOLDEN", "PILOT_32"}:
+        requested = fixed["requested_concurrency"]
+        if not policy["pass"]:
+            count, reason = 0, "HARD_RESOURCE_GATE_WAIT"
+        elif history["healthy_check_streak"] < HEALTHY_STREAK_REQUIREMENT:
+            count, reason = 0, "COLLECTING_FIVE_FRESH_HEALTHY_CHECKS"
+        elif cap == 0:
+            count = 0
+            reason = "FIXED_48_WAITING_FOR_PER_TOOL_CAPACITY" if reason == "MEASURED_PER_TOOL_CAPACITY" else reason
+        else:
+            count = min(requested, cap)
+            reason = ("OWNER_FIXED_48_GENERATION_NO_BENCHMARK" if count == requested
+                      else "FIXED_48_ADMITTING_AVAILABLE_PER_TOOL_CAPACITY")
+        return {"concurrency": count, "hard_cap": cap,
+                "requested_concurrency": requested, "admitted_concurrency": count,
+                "target_executor_capacity": requested,
+                "action": "HOLD" if count else "PAUSE_NEW_LAUNCHES",
+                "reasons": [reason], **history, "fixed_generation_policy": fixed,
+                "benchmark_levels_completed": [], "benchmark_required": False,
+                "production_optimum_proven": False}
     # Admission limits are not proof that every native tool reached that level.
     pilot_stage = stage in {"GOLDEN", "PILOT_32", "PILOT_1000"}
     execution = completed_pilot_execution(campaign_root, current_accepted=current_accepted) if stage == "PILOT_1000" else {}

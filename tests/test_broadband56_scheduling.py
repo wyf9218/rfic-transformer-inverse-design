@@ -170,7 +170,7 @@ def test_cpu_threads_and_memory_reservation_bound_slots(tmp_path):
     assert decision(tmp_path, paths[-1], now)["concurrency"] == 1
 
 
-@pytest.mark.parametrize("limit", [1, 16, 32])
+@pytest.mark.parametrize("limit", [1, 16, 32, 48])
 def test_attempt_profile_requires_matching_queue_limit(limit):
     profile, manifest = _profile()
     pilot = profile["stages"]["PILOT_1000"]
@@ -184,7 +184,7 @@ def test_attempt_profile_requires_matching_queue_limit(limit):
     assert validate_execution_profile(profile, backend_manifest=manifest)
 
 
-@pytest.mark.parametrize("limit", [0, -1, 33, True, 32.0, "32"])
+@pytest.mark.parametrize("limit", [0, -1, 49, True, 32.0, "32"])
 def test_invalid_attempt_limits_rejected(limit):
     profile, manifest = _profile()
     pilot = profile["stages"]["PILOT_1000"]
@@ -192,11 +192,18 @@ def test_invalid_attempt_limits_rejected(limit):
     assert validate_execution_profile(profile, backend_manifest=manifest)
 
 
-def test_final_launcher_and_backend_read_identical_five_check_decision(tmp_path):
+@pytest.mark.parametrize("fixed48,seats,load", [(False, 4, 0.5), (True, 100, 1.10), (True, 12, 1.05)])
+def test_final_launcher_and_backend_read_identical_five_check_decision(tmp_path, fixed48, seats, load):
     from tests.test_broadband56_capacity_snapshot_adapter import SWAP_CONTROLLER
     from rfic_transformer_inverse_design.campaigns import broadband56_capacity_snapshot_adapter as adapter
 
-    paths, now = samples(tmp_path)
+    if fixed48:
+        from tests.test_broadband56_fixed48_scheduling import fixed_samples
+        paths, now = fixed_samples(tmp_path, seats=seats, each_mutation=lambda s: s["resources"].update(
+            load_1m=192 * load, load_5m=192 * load))
+    else:
+        paths, now = samples(tmp_path)
+    expected_concurrency = min(48, seats) if fixed48 else 2
     source = json.loads(paths[-1].read_text())
     policy = swap.evaluate_capacity_snapshot(source, stage="PILOT_1000", current_accepted=100)
     gate = {
@@ -227,15 +234,15 @@ def test_final_launcher_and_backend_read_identical_five_check_decision(tmp_path)
             legacy_policy=lambda **kw: pytest.fail("legacy reset reached"),
         )
         assert final["healthy_check_streak"] == 5
-        assert final["concurrency"] == kwargs["concurrency"] == 2
+        assert final["concurrency"] == kwargs["concurrency"] == expected_concurrency
         assert final["latest_snapshot"] == scheduler.file_record(paths[-1])
         return final
 
     launch = SWAP_CONTROLLER._capacity_adapter_stage_launcher_factory(
         controller, original_run_stage_launcher=backend_admission, poll_seconds=60)
-    result = launch(inputs={}, campaign_root=tmp_path, stage="PILOT_1000", concurrency=2,
+    result = launch(inputs={}, campaign_root=tmp_path, stage="PILOT_1000", concurrency=expected_concurrency,
                     snapshot_path=paths[-1], check_index=1)
-    assert result["concurrency"] == 2 and len(calls) == 1
+    assert result["concurrency"] == expected_concurrency and len(calls) == 1
 
 
 @pytest.mark.parametrize("accepted,limit,requested,expected", [

@@ -229,9 +229,14 @@ def evaluate_capacity_snapshot(
     )
 
     initial_launch = str(stage).strip().upper() in {"GOLDEN", "PILOT_32", "PILOT_1000"}
+    from .broadband56_scheduling import fixed_generation_policy
+
+    fixed = fixed_generation_policy(snapshot)
+    load1_max = fixed["normalized_load1_max"] if fixed else (1.10 if initial_launch else 0.90)
+    load5_max = fixed["normalized_load5_max"] if fixed else (1.10 if initial_launch else 0.95)
     checks = {
-        "normalized_load1_gate": metrics["normalized_load1"] <= (1.10 if initial_launch else 0.90),
-        "normalized_load5_gate": metrics["normalized_load5"] <= (1.10 if initial_launch else 0.95),
+        "normalized_load1_gate": metrics["normalized_load1"] <= load1_max,
+        "normalized_load5_gate": metrics["normalized_load5"] <= load5_max,
         "memory_gate": (
             metrics["available_memory_fraction"]
             >= MIN_AVAILABLE_MEMORY_FRACTION
