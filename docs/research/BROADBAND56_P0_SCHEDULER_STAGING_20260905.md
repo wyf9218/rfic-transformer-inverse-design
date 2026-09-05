@@ -27,7 +27,9 @@ handoff must not be used to interrupt this attempt.
 
 - `broadband56_scheduling.py::concurrency_for_snapshot` provides one admission
   path to the authorized controller, final adapted-snapshot recheck, and
-  production backend. The source snapshot is shared across schema adaptation.
+  stage launcher and production backend. The source snapshot is shared across
+  schema adaptation. A follow-up check included the stage launcher's own
+  independent admission call in the same development upgrade.
 - `healthy_history` verifies source SHA/size/path, UTC, raw resource values,
   lease identity, distinct timestamps, non-overlapping 60-second samples,
   recency and continuity. Unhealthy observations reset the streak.
@@ -45,7 +47,7 @@ handoff must not be used to interrupt this attempt.
 
 ## Verification
 
-Local focused regression: **272 passed**. This includes scheduling, capacity,
+Local focused regression: **276 passed**. This includes scheduling, capacity,
 adapter, profile, stage progress/finalization, queue, backend and batch tests.
 The launch-boundary fixture verifies that a two-worker decision and its same
 five source observations survive adaptation and backend admission.
@@ -53,7 +55,7 @@ five source observations survive adaptation and backend admission.
 Approved private Python / numpy 2.5.0: **160 passed** in an isolated source
 copy, with an irreversible audit hook prohibiting actual subprocess and
 signal actions. Receipt SHA:
-`d124aa81bf641e5e49cf8ca4af8e0af40aa15d3b9d7ee0bdc5c9fe9b2d4e4933`.
+`9fe538a2508525201639bec9d4d452857a07f5bc00c4b2264c6d2be67c4a48ae`.
 These are software fixtures, not native solver or physical test results.
 
 ## Remaining Before Any Switch

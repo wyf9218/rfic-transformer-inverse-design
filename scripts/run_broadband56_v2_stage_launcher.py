@@ -52,6 +52,7 @@ from rfic_transformer_inverse_design.campaigns.broadband56_stage_progress import
     validate_stage_progress_chain,
     validate_stage_progress_receipt,
 )
+from rfic_transformer_inverse_design.campaigns.broadband56_scheduling import concurrency_for_snapshot  # noqa: E402
 
 
 LAUNCH_AUDIT_SCHEMA = "rfic_transformer.broadband56_v2_stage_launch_audit.v1"
@@ -172,17 +173,11 @@ def launch_stage(args: argparse.Namespace, *, out_dir: Path) -> dict[str, Any]:
         raise StageLauncherError(
             "resource snapshot is WAIT: " + ",".join(policy["failed_checks"])
         )
-    allowed = adaptive_concurrency(
-        stage=stage,
-        logical_cpu_count=policy["metrics"]["logical_cpu_count"],
-        simulator_license_capacity=policy["metrics"]["simulator_license_capacity"],
-        current_concurrency=None,
-        healthy_check_streak=0,
-        normalized_load1=policy["metrics"]["normalized_load1"],
-        iowait_percent=policy["metrics"]["iowait_percent"],
-        available_memory_fraction=policy["metrics"]["available_memory_fraction"],
-        active_swap_thrashing=policy["metrics"]["active_swap_thrashing"],
-        licenses_available=policy["checks"]["license_gate"],
+    allowed = concurrency_for_snapshot(
+        snapshot_path=snapshot_path, campaign_root=campaign_root,
+        stage=stage, current_accepted=current_accepted,
+        policy=policy, legacy_policy=adaptive_concurrency,
+        measured_pilot_bytes_per_geometry=_pilot_bytes_per_geometry(campaign_root),
         pilot_1000_safe_concurrency=_pilot_safe_concurrency(campaign_root),
     )
     requested_concurrency = int(args.max_concurrency)
@@ -217,6 +212,7 @@ def launch_stage(args: argparse.Namespace, *, out_dir: Path) -> dict[str, Any]:
         "cumulative_target": spec.cumulative_target,
         "current_accepted": current_accepted,
         "max_concurrency": requested_concurrency,
+        "scheduling_decision": allowed,
         "authorization_receipt": _file_record(receipt_path),
         "backend_identity_manifest": _file_record(backend_path),
         "resource_snapshot": _file_record(snapshot_path),
