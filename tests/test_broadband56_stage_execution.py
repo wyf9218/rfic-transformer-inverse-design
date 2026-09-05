@@ -80,6 +80,18 @@ def test_exact_execution_profile_passes() -> None:
     assert validate_execution_profile(profile, backend_manifest=manifest) == []
 
 
+@pytest.mark.parametrize("stage", ["PILOT_1000", "PHASE_A"])
+def test_bounded_base_doe_profile_can_reuse_a_committed_cohort(stage):
+    profile, manifest = _profile()
+    spec = profile["stages"][stage]
+    spec["max_candidates_per_attempt"] = 32
+    command = next(c for c in spec["commands"] if c["role"] == "phase_a_queue_builder")
+    command["argv"].extend(["--attempt-candidate-limit", "32", "--reuse-campaign-frozen-cohort"])
+    assert validate_execution_profile(profile, backend_manifest=manifest) == []
+    command["argv"].extend(["--frozen-queue-receipt", "another_source"])
+    assert any("ambiguous" in error for error in validate_execution_profile(profile, backend_manifest=manifest))
+
+
 def test_explicit_historical_golden_terminal_keeps_full_physical_role_order():
     from rfic_transformer_inverse_design.campaigns.broadband56_golden_stage import TERMINAL_MODE
     profile, manifest = _profile()

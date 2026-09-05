@@ -204,3 +204,172 @@ def test_dispatch_rejects_wrong_count_source_or_modified_rows(tmp_path, mutation
     receipt.write_text(json.dumps(d))
     with pytest.raises(ValueError):
         validate(source, receipt)
+
+
+def write_terminal_ledger(path, queue, rows, *, accepted_count=0):
+    payload = [{"attempt_id": "fixture_" + row["geometry_sha256"],
+                "geometry_sha256": row["geometry_sha256"],
+                "candidate_source_path": str(queue),
+                "candidate_source_sha256": frozen.file_identity(queue)["sha256"],
+                "terminal_stage": "ACCEPTED" if i < accepted_count else "CALIBRE_FAILURE"}
+               for i, row in enumerate(rows)]
+    with path.open("w", newline="") as stream:
+        writer = csv.DictWriter(stream, fieldnames=list(payload[0]))
+        writer.writeheader()
+        writer.writerows(payload)
+
+
+def read_queue(folder):
+    with (folder / "broadband56_candidate_queue.csv").open(newline="") as stream:
+        return list(csv.DictReader(stream))
+
+
+def test_campaign_cohort_full_doe_then_32_tail_and_replenishment(tmp_path, monkeypatch):
+    from tests import test_broadband56_balanced200k_contract as fixtures
+
+    module = fixtures._load_queue_module()
+    common = ["--contract", str(fixtures.CONTRACT), "--config", str(fixtures.TEMPLATE),
+              "--sampler", "sobol", "--seed", "20260828"]
+    historical = tmp_path / "original_unbounded"
+    assert module.main(common + ["--out-dir", str(historical), "--count", "40"]) == 0
+    history = []
+    def committed(*args, cohort_ledger_paths=None, **kwargs):
+        if cohort_ledger_paths is not None:
+            cohort_ledger_paths.extend(history)
+        return list(history)
+    monkeypatch.setattr(module, "_campaign_exclusion_paths", committed)
+    raw_sampler = module._sample_unit
+    calls = []
+    def sample(*args, **kwargs):
+        calls.append(args)
+        return raw_sampler(*args, **kwargs)
+    monkeypatch.setattr(module, "_sample_unit", sample)
+    def run(folder, current, count):
+        return module.main(common + ["--out-dir", str(folder), "--count", str(count),
+            "--campaign-root", str(tmp_path), "--stage", "PILOT_1000",
+            "--current-accepted", str(current), "--attempt-candidate-limit", "32",
+            "--reuse-campaign-frozen-cohort"])
+    first = tmp_path / "first"
+    assert run(first, 960, 32) == 0
+    assert read_queue(first / "frozen_source") == read_queue(historical)
+    assert read_queue(first) == read_queue(historical)[:32]
+    assert calls
+    history.append(tmp_path / "terminal_32.csv")
+    write_terminal_ledger(history[-1], first / "broadband56_candidate_queue.csv", read_queue(first), accepted_count=30)
+    before = list(calls)
+    tail = tmp_path / "tail"
+    assert run(tail, 990, 10) == 0  # Thirty accepted, two rejected.
+    assert read_queue(tail) == read_queue(historical)[32:]
+    assert calls == before
+    assert not (tail / "frozen_source").exists()
+    history.append(tmp_path / "terminal_8.csv")
+    write_terminal_ledger(history[-1], tail / "broadband56_candidate_queue.csv", read_queue(tail), accepted_count=8)
+    final = tmp_path / "replenished"
+    assert run(final, 998, 2) == 0
+    assert len(read_queue(final)) == len(read_queue(final / "frozen_source")) == 2
+    assert {r["geometry_sha256"] for r in read_queue(final)}.isdisjoint(
+        {r["geometry_sha256"] for r in read_queue(historical)})
+    summary = json.loads((final / "broadband56_candidate_queue_summary.json").read_text())
+    assert summary["frozen_cohort_history"]["all_prior_cohorts_terminal"] is True
+    assert summary["frozen_cohort_history"]["original_sampler_executed"] is True
+    assert summary["sampling_attempts"] == 0  # Sampler evidence is in the full source receipt.
+    assert all(item["remaining_count"] == 0 for item in summary["frozen_cohort_history"]["cohorts"])
+
+
+@pytest.mark.parametrize("mutation", ["source_hash", "missing_summary", "changed_source", "source_seed"])
+def test_cohort_history_corruption_never_permits_replenishment(tmp_path, mutation):
+    rows, receipt = fixture(tmp_path, 40)
+    standard = tmp_path / "broadband56_candidate_queue_summary.json"
+    standard.write_bytes(receipt.read_bytes())
+    ledger = tmp_path / "terminal.csv"
+    write_terminal_ledger(ledger, tmp_path / "queue.csv", rows[:32])
+    if mutation == "source_hash":
+        ledger.write_text(ledger.read_text().replace(frozen.file_identity(tmp_path / "queue.csv")["sha256"], "0"*64))
+    elif mutation == "missing_summary":
+        standard.unlink()
+    elif mutation == "changed_source":
+        (tmp_path / "queue.csv").write_text((tmp_path / "queue.csv").read_text() + "\n")
+    else:
+        data = json.loads(standard.read_text())
+        data["seed"] += 1
+        standard.write_text(json.dumps(data))
+    with pytest.raises((ValueError, OSError)):
+        frozen.pending_frozen_cohort([ledger], excluded_hashes={r["geometry_sha256"] for r in rows[:32]},
+            fingerprint="f"*64, seed=20260828, sampler="lhs_optimized",
+            acquisition_source="base_space_filling", phase="PHASE_A")
+
+
+@pytest.mark.parametrize("extra", [[], ["--stage", "PHASE_B"], ["--stage", "GOLDEN"],
+    ["--stage", "PILOT_1000", "--frozen-queue-receipt", "source", "--frozen-queue-receipt-sha256", "f"*64]])
+def test_campaign_cohort_cli_rejects_unsupported_or_ambiguous_modes(tmp_path, extra):
+    from tests import test_broadband56_balanced200k_contract as fixtures
+    module = fixtures._load_queue_module()
+    with pytest.raises(SystemExit):
+        module._parse_args(["--contract", str(fixtures.CONTRACT), "--config", str(fixtures.TEMPLATE),
+            "--out-dir", str(tmp_path), "--count", "32", "--attempt-candidate-limit", "32",
+            "--campaign-root", str(tmp_path), "--reuse-campaign-frozen-cohort", *extra])
+
+
+def test_two_pending_cohorts_fail_without_choosing_or_discarding_either(tmp_path):
+    ledgers, excluded = [], set()
+    for i in range(2):
+        folder = tmp_path / str(i)
+        folder.mkdir()
+        rows, receipt = fixture(folder, 40)
+        (folder / "broadband56_candidate_queue_summary.json").write_bytes(receipt.read_bytes())
+        ledger = folder / "terminal.csv"
+        write_terminal_ledger(ledger, folder / "queue.csv", rows[:5])
+        ledgers.append(ledger)
+        excluded.update(r["geometry_sha256"] for r in rows[:5])
+    with pytest.raises(ValueError, match="multiple unfinished"):
+        frozen.pending_frozen_cohort(ledgers, excluded_hashes=excluded,
+            fingerprint="f"*64, seed=20260828, sampler="lhs_optimized",
+            acquisition_source="base_space_filling", phase="PHASE_A")
+
+
+def test_invalid_progress_checks_cannot_trigger_a_replenishment_sampler(tmp_path, monkeypatch):
+    from tests import test_broadband56_balanced200k_contract as fixtures
+    module = fixtures._load_queue_module()
+    def invalid(*args, checks, **kwargs):
+        checks.append({"name": "fixture_invalid_progress", "pass": False})
+        return []
+    def forbidden(*args, **kwargs):
+        raise AssertionError("no sampler after invalid campaign history")
+    monkeypatch.setattr(module, "_campaign_exclusion_paths", invalid)
+    monkeypatch.setattr(module, "_sample_unit", forbidden)
+    output = tmp_path / "failed"
+    assert module.main(["--contract", str(fixtures.CONTRACT), "--config", str(fixtures.TEMPLATE),
+        "--out-dir", str(output), "--count", "32", "--attempt-candidate-limit", "32",
+        "--campaign-root", str(tmp_path), "--current-accepted", "960", "--stage", "PILOT_1000",
+        "--reuse-campaign-frozen-cohort"]) == 2
+    assert not (output / "frozen_source").exists()
+    assert json.loads((output / "broadband56_candidate_queue_summary.json").read_text())["overall_status"] == "FAIL"
+
+
+def test_all_stages_remain_excluded_but_only_current_stage_supplies_cohorts(tmp_path):
+    from tests import test_broadband56_balanced200k_contract as fixtures
+    module = fixtures._load_queue_module()
+    expected_cohort = []
+    all_paths = []
+    for name, stage, count, offset in [("001", "PILOT_32", 32, 0), ("002", "PILOT_1000", 1, 32)]:
+        folder = tmp_path / "stages" / name
+        folder.mkdir(parents=True)
+        accepted, rejected = folder / "accepted.csv", folder / "rejected.csv"
+        accepted.write_text("geometry_sha256\n"+"".join(f"{i:064x}\n" for i in range(offset, offset+count)))
+        rejected.write_text("geometry_sha256\n")
+        progress = stage == "PILOT_1000"
+        suffix = "increment" if progress else "index"
+        receipt = {"stage": stage, "overall_status": "INCOMPLETE" if progress else "PASS",
+                   "artifacts": {f"accepted_geometry_{suffix}": frozen.file_identity(accepted),
+                                 f"rejected_geometry_{suffix}": frozen.file_identity(rejected)}}
+        (folder / ("STAGE_PROGRESS_RECEIPT.json" if progress else "STAGE_RECEIPT.json")).write_text(json.dumps(receipt))
+        all_paths.extend([accepted, rejected])
+        if progress:
+            expected_cohort.extend([accepted, rejected])
+    checks, cohort_paths = [], []
+    excluded_paths = module._campaign_exclusion_paths(tmp_path, stage="PILOT_1000", current_accepted=33,
+        requested_count=32, attempt_candidate_limit=32, checks=checks, cohort_ledger_paths=cohort_paths)
+    assert all(c["pass"] for c in checks)
+    assert set(excluded_paths) == set(all_paths)
+    assert cohort_paths == expected_cohort
+    assert len(module._read_excluded_hashes(excluded_paths, checks)) == 33

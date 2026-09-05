@@ -423,10 +423,16 @@ def run_stage_backend(
             from rfic_transformer_inverse_design.campaigns.broadband56_frozen_queue_batches import validate_frozen_selection
 
             try:
+                if "--reuse-campaign-frozen-cohort" in role_args:
+                    source = role_receipt["frozen_batch"]["source_receipt"]
+                    source_path, source_sha = Path(source["path"]), source["sha256"]
+                else:
+                    source_path = Path(role_args[role_args.index("--frozen-queue-receipt") + 1])
+                    source_sha = role_args[role_args.index("--frozen-queue-receipt-sha256") + 1]
                 frozen_selection = validate_frozen_selection(
                     receipt_path,
-                    source_receipt_path=Path(role_args[role_args.index("--frozen-queue-receipt") + 1]),
-                    source_receipt_sha256=role_args[role_args.index("--frozen-queue-receipt-sha256") + 1],
+                    source_receipt_path=source_path,
+                    source_receipt_sha256=source_sha,
                     candidate_ceiling=selection_count,
                     fingerprint=SCIENTIFIC_CONTRACT_FINGERPRINT,
                 )

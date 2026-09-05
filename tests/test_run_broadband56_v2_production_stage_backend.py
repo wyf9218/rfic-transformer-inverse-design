@@ -560,7 +560,8 @@ def test_executes_exact_hash_bound_golden_role_chain(tmp_path: Path) -> None:
 
 
 @pytest.mark.parametrize("corrupt_selected_row", [False, True])
-def test_bounded_backend_binds_short_tail_before_cadence(tmp_path, monkeypatch, corrupt_selected_row):
+@pytest.mark.parametrize("reuse_cohort", [False, True])
+def test_bounded_backend_binds_short_tail_before_cadence(tmp_path, monkeypatch, corrupt_selected_row, reuse_cohort):
     from types import SimpleNamespace
     from tests.test_broadband56_frozen_queue_batches import selected_fixture
 
@@ -589,9 +590,9 @@ def test_bounded_backend_binds_short_tail_before_cadence(tmp_path, monkeypatch, 
     pilot = profile[PROFILE_KEY]["stages"]["PILOT_1000"]
     pilot["max_candidates_per_attempt"] = 32
     queue = next(c for c in pilot["commands"] if c["role"] == "phase_a_queue_builder")
-    queue["argv"].extend(["--attempt-candidate-limit", "32", "--count", "{remaining_accepted}",
-                          "--frozen-queue-receipt", str(source),
-                          "--frozen-queue-receipt-sha256", _sha(source)])
+    queue["argv"].extend(["--attempt-candidate-limit", "32", "--count", "{remaining_accepted}"])
+    queue["argv"].extend(["--reuse-campaign-frozen-cohort"] if reuse_cohort else [
+        "--frozen-queue-receipt", str(source), "--frozen-queue-receipt-sha256", _sha(source)])
     cadence = next(c for c in pilot["commands"] if c["role"] == "cadence_streamout_runner")
     cadence["argv"].extend(["--expected-count", "{remaining_accepted}"])
     _write(profile_path, profile)

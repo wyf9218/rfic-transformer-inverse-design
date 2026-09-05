@@ -16,6 +16,76 @@ def file_identity(path: Path) -> dict[str, Any]:
     return {"path": str(path), "size_bytes": len(data), "sha256": hashlib.sha256(data).hexdigest()}
 
 
+def pending_frozen_cohort(
+    terminal_ledgers: list[Path], *, excluded_hashes: set[str], fingerprint: str,
+    seed: int, sampler: str, acquisition_source: str, phase: str,
+) -> tuple[dict[str, Any] | None, dict[str, Any]]:
+    """Find unfinished source rows using only already validated terminal ledgers.
+
+    No active attempt directory is discovered or claimed here. The caller must
+    validate the campaign progress chain before supplying these ledger paths.
+    """
+    sources: dict[str, str] = {}
+    ledger_pins = []
+    for ledger in dict.fromkeys(terminal_ledgers):
+        ledger_pins.append(file_identity(ledger))
+        with ledger.open(newline="", encoding="utf-8-sig") as stream:
+            for row in csv.DictReader(stream):
+                if row.get("terminal_stage") == "GOLDEN_VALIDATION_PASS":
+                    continue
+                path, sha = row.get("candidate_source_path"), row.get("candidate_source_sha256")
+                if not path and not sha:
+                    if row.get("attempt_id"):
+                        raise ValueError("terminal attempt lacks candidate source identity")
+                    continue  # Validated Golden anchor exclusions have no attempt.
+                if not path or not sha or (path in sources and sources[path] != sha):
+                    raise ValueError("terminal ledger candidate source identities disagree")
+                sources[path] = sha
+    cohorts: dict[str, dict[str, Any]] = {}
+    for path, sha in sources.items():
+        queue = Path(path)
+        pin = file_identity(queue)
+        if not queue.is_absolute() or pin["sha256"] != sha:
+            raise ValueError("terminal candidate source CSV identity mismatch")
+        receipt_path = queue.with_name("broadband56_candidate_queue_summary.json")
+        receipt = json.loads(receipt_path.read_text())
+        if receipt.get("candidate_queue") != pin:
+            raise ValueError("terminal candidate source summary/CSV mismatch")
+        if "frozen_batch" in receipt:
+            source = receipt["frozen_batch"]["source_receipt"]
+            source_path = Path(source["path"])
+            validate_frozen_selection(receipt_path, source_receipt_path=source_path,
+                source_receipt_sha256=source["sha256"],
+                candidate_ceiling=receipt["requested_candidate_ceiling"], fingerprint=fingerprint)
+            receipt_path = source_path
+            receipt = json.loads(receipt_path.read_text())
+        source_pin = file_identity(receipt_path)
+        # Validate even exhausted sources; corruption is not permission to resample.
+        _, proof = select_frozen_queue(receipt_path, source_pin["sha256"], count=1,
+            excluded_hashes=set(), fingerprint=fingerprint, seed=receipt["seed"],
+            sampler=receipt["sampler"], acquisition_source=receipt["acquisition_source"],
+            phase=receipt["campaign_phase"])
+        with Path(proof["source_queue"]["path"]).open(newline="") as stream:
+            remaining = sum(row["geometry_sha256"] not in excluded_hashes for row in csv.DictReader(stream))
+        if remaining:
+            expected = {"seed": seed, "sampler": sampler,
+                        "acquisition_source": acquisition_source, "campaign_phase": phase}
+            if any(receipt.get(key) != value for key, value in expected.items()):
+                raise ValueError("unfinished cohort sampling contract differs; cannot discard it")
+        cohorts[source_pin["path"]] = {"source_receipt": source_pin,
+            "source_candidate_count": proof["source_candidate_count"], "remaining_count": remaining}
+    pending = [row["source_receipt"] for row in cohorts.values() if row["remaining_count"]]
+    if len(pending) > 1:
+        raise ValueError("multiple unfinished frozen cohorts; no unique dispatch source")
+    if any(file_identity(Path(pin["path"])) != pin for pin in ledger_pins):
+        raise ValueError("terminal ledger changed during cohort discovery")
+    return (pending[0] if pending else None), {
+        "terminal_ledgers": ledger_pins, "cohorts": list(cohorts.values()),
+        "all_prior_cohorts_terminal": not pending, "active_attempts_discovered": False,
+        "dispatch_claim_created": False,
+    }
+
+
 def validate_frozen_selection(
     receipt_path: Path, *, source_receipt_path: Path, source_receipt_sha256: str,
     candidate_ceiling: int, fingerprint: str,

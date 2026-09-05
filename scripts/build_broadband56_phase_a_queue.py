@@ -34,7 +34,9 @@ from rfic_transformer_inverse_design.campaigns.broadband56_capacity_policy impor
     STAGE_BY_NAME,
 )
 from rfic_transformer_inverse_design.layout.drc_rules import audit_tsmc65_top_metal_geometry  # noqa: E402
-from rfic_transformer_inverse_design.campaigns.broadband56_frozen_queue_batches import select_frozen_queue  # noqa: E402
+from rfic_transformer_inverse_design.campaigns.broadband56_frozen_queue_batches import (  # noqa: E402
+    file_identity, pending_frozen_cohort, select_frozen_queue,
+)
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -57,17 +59,19 @@ def main(argv: list[str] | None = None) -> int:
     exclusion_paths = [
         Path(value).expanduser().resolve() for value in args.exclude_geometry_csv
     ]
+    campaign_paths: list[Path] = []
+    cohort_paths: list[Path] = []
     if args.campaign_root:
-        exclusion_paths.extend(
-            _campaign_exclusion_paths(
-                Path(args.campaign_root).expanduser().resolve(),
-                stage=str(args.stage or "").upper(),
-                current_accepted=args.current_accepted,
-                requested_count=int(args.count),
-                checks=checks,
-                attempt_candidate_limit=args.attempt_candidate_limit,
-            )
+        campaign_paths = _campaign_exclusion_paths(
+            Path(args.campaign_root).expanduser().resolve(),
+            stage=str(args.stage or "").upper(),
+            current_accepted=args.current_accepted,
+            requested_count=int(args.count),
+            checks=checks,
+            attempt_candidate_limit=args.attempt_candidate_limit,
+            cohort_ledger_paths=cohort_paths,
         )
+        exclusion_paths.extend(campaign_paths)
     excluded_hashes = _read_excluded_hashes(exclusion_paths, checks)
     rows: list[dict[str, Any]] = []
     attempts = 0
@@ -76,10 +80,28 @@ def main(argv: list[str] | None = None) -> int:
     rejection_examples: list[str] = []
     bounds: dict[str, tuple[float, float]] = {}
     frozen_batch = None
-    if args.frozen_queue_receipt is not None and config is not None:
+    cohort_history = None
+    if (args.frozen_queue_receipt is not None or args.reuse_campaign_frozen_cohort) and config is not None:
         try:
+            source_path = Path(args.frozen_queue_receipt).expanduser().resolve() if args.frozen_queue_receipt else None
+            source_sha = args.frozen_queue_receipt_sha256
+            if args.reuse_campaign_frozen_cohort:
+                if any(item["pass"] is not True for item in checks):
+                    raise ValueError("cohort discovery requires passing campaign/config checks")
+                source, cohort_history = pending_frozen_cohort(cohort_paths,
+                    excluded_hashes=excluded_hashes, fingerprint=fingerprint,
+                    seed=int(args.seed), sampler=args.sampler,
+                    acquisition_source=args.acquisition_source, phase=args.phase)
+                cohort_history["stage"] = args.stage
+                if source is None:
+                    source = _freeze_replenishment_cohort(args, out_dir / "frozen_source")
+                    cohort_history["replenishment_source"] = source
+                    cohort_history["original_sampler_executed"] = True
+                else:
+                    cohort_history["original_sampler_executed"] = False
+                source_path, source_sha = Path(source["path"]), source["sha256"]
             rows, frozen_batch = select_frozen_queue(
-                Path(args.frozen_queue_receipt).expanduser().resolve(), args.frozen_queue_receipt_sha256,
+                source_path, source_sha,
                 count=int(args.count), excluded_hashes=excluded_hashes, fingerprint=fingerprint,
                 seed=int(args.seed), sampler=args.sampler, acquisition_source=args.acquisition_source,
                 phase=args.phase,
@@ -196,6 +218,8 @@ def main(argv: list[str] | None = None) -> int:
     if frozen_batch is not None:
         summary["frozen_batch"] = frozen_batch
         summary["requested_candidate_ceiling"] = int(args.count)
+    if cohort_history is not None:
+        summary["frozen_cohort_history"] = cohort_history
     summary_path.write_text(json.dumps(summary, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     _write_sha256s(out_dir)
     print(f"overall_status={status}")
@@ -214,6 +238,7 @@ def _parse_args(argv: list[str] | None) -> argparse.Namespace:
     parser.add_argument("--attempt-candidate-limit", type=int, choices=range(1, 33))
     parser.add_argument("--frozen-queue-receipt")
     parser.add_argument("--frozen-queue-receipt-sha256")
+    parser.add_argument("--reuse-campaign-frozen-cohort", action="store_true")
     parser.add_argument("--sampler", choices=("lhs_optimized", "sobol"), default="sobol")
     parser.add_argument("--seed", type=int, default=20260828)
     parser.add_argument("--phase", default="PHASE_A")
@@ -229,11 +254,34 @@ def _parse_args(argv: list[str] | None) -> argparse.Namespace:
     if args.attempt_candidate_limit is not None and not args.campaign_root:
         parser.error("--attempt-candidate-limit requires --campaign-root")
     if args.attempt_candidate_limit is not None:
-        if not args.frozen_queue_receipt or not args.frozen_queue_receipt_sha256:
+        if args.reuse_campaign_frozen_cohort:
+            if args.frozen_queue_receipt or args.frozen_queue_receipt_sha256:
+                parser.error("campaign cohort reuse and explicit source pins are mutually exclusive")
+            if args.stage not in {"PILOT_1000", "PHASE_A"}:
+                parser.error("campaign cohort reuse is only supported for the existing base DOE stages")
+        elif not args.frozen_queue_receipt or not args.frozen_queue_receipt_sha256:
             parser.error("bounded attempts require an exact frozen source queue, not a smaller sampler run")
-    elif args.frozen_queue_receipt or args.frozen_queue_receipt_sha256:
+    elif args.frozen_queue_receipt or args.frozen_queue_receipt_sha256 or args.reuse_campaign_frozen_cohort:
         parser.error("frozen source queue requires --attempt-candidate-limit")
     return args
+
+
+def _freeze_replenishment_cohort(args: argparse.Namespace, out_dir: Path) -> dict[str, Any]:
+    """Use the unchanged full-checkpoint DOE before slicing; never sample 32 instead."""
+    target = STAGE_BY_NAME[args.stage].cumulative_target
+    count = next_frozen_accepted_boundary(args.current_accepted, cumulative_target=target) - args.current_accepted
+    argv = ["--contract", args.contract, "--config", args.config, "--out-dir", str(out_dir),
+            "--count", str(count), "--sampler", args.sampler, "--seed", str(args.seed),
+            "--phase", args.phase, "--acquisition-source", args.acquisition_source,
+            "--campaign-root", args.campaign_root, "--stage", args.stage,
+            "--current-accepted", str(args.current_accepted),
+            "--oversample-factor", str(args.oversample_factor),
+            "--max-sampling-rounds", str(args.max_sampling_rounds)]
+    for path in args.exclude_geometry_csv:
+        argv.extend(["--exclude-geometry-csv", path])
+    if main(argv) != 0:
+        raise ValueError("original full-cohort sampler failed; no bounded dispatch")
+    return file_identity(out_dir / "broadband56_candidate_queue_summary.json")
 
 
 def _sample_unit(count: int, dimensions: int, sampler: str, seed: int) -> np.ndarray:
@@ -322,6 +370,7 @@ def _campaign_exclusion_paths(
     requested_count: int,
     checks: list[dict[str, Any]],
     attempt_candidate_limit: int | None = None,
+    cohort_ledger_paths: list[Path] | None = None,
 ) -> list[Path]:
     paths: list[Path] = []
     checks.append(_check("campaign_root_exists", campaign_root.is_dir(), str(campaign_root)))
@@ -391,6 +440,8 @@ def _campaign_exclusion_paths(
             if path is not None:
                 paths.append(path)
                 target.update(_geometry_hashes(path))
+                if cohort_ledger_paths is not None and receipt.get("stage") == stage:
+                    cohort_ledger_paths.append(path)
 
     for receipt_path in sorted(
         (campaign_root / "stages").glob("*/STAGE_PROGRESS_RECEIPT.json")
@@ -416,6 +467,8 @@ def _campaign_exclusion_paths(
             if path is not None:
                 paths.append(path)
                 target.update(_geometry_hashes(path))
+                if cohort_ledger_paths is not None and receipt.get("stage") == stage:
+                    cohort_ledger_paths.append(path)
 
     checks.append(
         _check(
