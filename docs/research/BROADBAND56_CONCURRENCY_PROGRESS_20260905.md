@@ -1,6 +1,36 @@
 # Concurrency Work: Partial, Not a Performance Result
 
-## Latest State (05:52 UTC)
+## Latest State (06:02 UTC)
+
+The existing generation-28 supervisor is still alive with the same process
+start identity. Layout production continues at concurrency 1; 150 GDS files
+were observed at 06:01:57 UTC, pending downstream validation. Official progress
+remains 100 accepted geometries / 5,600 frequency rows. No production process
+was stopped or restarted during benchmark preparation.
+
+A no-child-process preflight has rebound the previously frozen benchmark
+workload to the current backend in a separate preparation directory. Only
+the workload's backend identity changed: the 32 source geometries, 96-job
+sequence, seven requested concurrency levels and all other workload fields
+are unchanged. The preflight rechecked the real source GDS/Calibre evidence,
+configuration, EMX entrypoints and 701 dependency-module byte identities.
+The telemetry binding uses the actual native EMX ELF executable, not its
+shell launcher. The read-only helper was rejected as an execution owner.
+
+The same 94 targeted software tests passed locally and on the private
+interpreter. Callback installation passed **inside the helper only**, not
+inside the live supervisor. There were no simulator launches, no new physical
+labels and no complete concurrency trials. The next activation must reverify
+an idle execution boundary, the current lease and all admission gates; this
+preparation is not a second supervisor or an installed benchmark job.
+
+Private preflight / software-test receipt SHA-256:
+`5377a1fe46782d792bc3507fc68587713b84a71012ea6e8f071b3bd82a11296f` /
+`56831ea7b67416e5e78414c136adebe92630538de153534bc987df0ae035f0c2`.
+Rebound workload SHA-256:
+`8e47e4c85ebae472ffdeb7d74b74114401b75a029c19caaaeb1c79094996587e`.
+
+## Prior Recovery (05:52 UTC)
 
 **Real layout generation has resumed.** Generation 28 is the sole live
 supervisor for the existing campaign, queue and logical supervisor. Its
