@@ -20,6 +20,11 @@ from collections.abc import Mapping
 from pathlib import Path
 from typing import Any
 
+if __package__ in {None, ""}:
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+from rfic_transformer_inverse_design.campaigns import broadband56_checkpoint_handoff  # noqa: E402
+
 
 CAMPAIGN_ID = "broadband56_real_emx_balanced200k_tsmc65_v2"
 QUEUE_ID = "b56-v2-queue-20260901T184307Z"
@@ -316,7 +321,9 @@ def _validate_control_evidence(
     if not (
         post_gate.get("schema") == POST_REBIND_GATE_SCHEMA
         and post_gate.get("overall_status") == "PASS"
-        and post_gate.get("decision") == "START_CORRECTED_RESCUE_GOLDEN"
+        and broadband56_checkpoint_handoff.post_gate_progress_exact(
+            post_gate, backend_record=_file_record(inputs["backend_identity_manifest"]),
+            authorization_record=_file_record(inputs["full_campaign_receipt"]))
         and post_gate.get("campaign_id") == CAMPAIGN_ID
         and post_gate.get("queue_id") == QUEUE_ID
         and post_gate.get("supervisor_id") == SUPERVISOR_ID
@@ -324,7 +331,6 @@ def _validate_control_evidence(
         and post_gate.get("queue_rebind") == "PASS"
         and post_gate.get("supervisor_rebind") == "PASS"
         and post_gate.get("supervisor_count") == 1
-        and post_gate.get("current_accepted") == 0
         and post_gate.get("active_simulator_jobs") == 0
         and post_gate.get("resource_and_license_gate") == "PASS"
         and post_gate.get("simulator_action_taken") is False

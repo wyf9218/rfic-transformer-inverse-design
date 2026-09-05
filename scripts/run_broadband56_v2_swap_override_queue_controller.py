@@ -28,6 +28,7 @@ if __package__ in {None, ""}:
 from rfic_transformer_inverse_design.campaigns import (  # noqa: E402
     broadband56_capacity_policy as capacity_policy,
     broadband56_capacity_snapshot_adapter as capacity_adapter,
+    broadband56_checkpoint_handoff as checkpoint_handoff,
     broadband56_isolation_identity as isolation_identity,
     broadband56_swap_override_policy as swap_policy,
 )
@@ -310,6 +311,13 @@ def _validate_control_evidence(
         expected_hotfix_old_pid=args.swap_override_expected_handoff_old_pid,
         current_pid=os.getpid(),
     )
+    if recovery_handoffs and recovery_handoffs[-1].get("recovery_scope") == checkpoint_handoff.CHECKPOINT_HANDOFF_SCOPE:
+        post_path = rebound._bound_private_file(args, "post_rebind_execution_gate",
+            "post_rebind_execution_gate_sha256", "checkpoint resume gate")
+        _validate_checkpoint_resume_binding(
+            recovery_handoffs[-1], handoff_record=_file_record(recovery_handoff_paths[-1]),
+            post_gate=_read_json(post_path, "checkpoint resume gate"),
+            lease=_read_json(Path(args.swap_override_isolation_lease), "checkpoint successor lease"))
 
     base_inputs = dict(inputs)
     base_inputs["resource_gate_auditor"] = base_auditor
@@ -874,6 +882,12 @@ def _operational_handoff_exact(
         return base_valid
     old_identity = payload.get("old_process_identity")
     new_identity = payload.get("new_process_identity")
+    normal_checkpoint = payload.get("handoff_scope") == checkpoint_handoff.CHECKPOINT_HANDOFF_SCOPE
+    if normal_checkpoint:
+        try:
+            checkpoint_handoff.validate_checkpoint_handoff(payload)
+        except (KeyError, OSError, TypeError, ValueError):
+            return False
     identities_valid = (
         isinstance(old_identity, Mapping)
         and old_identity.get("pid") == expected_old_process_pid
@@ -881,11 +895,13 @@ def _operational_handoff_exact(
         and isinstance(new_identity, Mapping)
         and new_identity.get("pid") == expected_new_process_pid
         and _complete_process_identity(new_identity)
-        and payload.get("handoff_scope")
-        == "ISOLATION_GATE_AUTHORIZED_SUPERVISOR_ANCESTOR_IDENTITY_FIX"
+        and (normal_checkpoint or payload.get("handoff_scope")
+             == "ISOLATION_GATE_AUTHORIZED_SUPERVISOR_ANCESTOR_IDENTITY_FIX")
     )
     if not identities_valid or not require_new_process_live:
         return identities_valid
+    if normal_checkpoint and isolation_identity.read_process_identity(expected_old_process_pid) is not None:
+        return False
     observed_new = isolation_identity.read_process_identity(
         expected_new_process_pid
     )
@@ -939,7 +955,11 @@ def _validate_handoff_chain(
             else current_pid
         )
         if not (
-            recovery_handoff.get("recovery_scope") == RECOVERY_SCOPE
+            ((recovery_handoff.get("recovery_scope") == RECOVERY_SCOPE
+              and recovery_handoff.get("handoff_scope")
+              == "ISOLATION_GATE_AUTHORIZED_SUPERVISOR_ANCESTOR_IDENTITY_FIX")
+             or (recovery_handoff.get("recovery_scope") == checkpoint_handoff.CHECKPOINT_HANDOFF_SCOPE
+                 and recovery_handoff.get("handoff_scope") == checkpoint_handoff.CHECKPOINT_HANDOFF_SCOPE))
             and _operational_handoff_exact(
                 recovery_handoff,
                 expected_old_process_pid=expected_old_pid,
@@ -968,6 +988,22 @@ def _recovery_handoffs_exact(
     return len(recovery_paths) == 1 and _identity_exact(
         recovery_paths[0], payload.get("supervisor_recovery_handoff")
     )
+
+
+def _validate_checkpoint_resume_binding(handoff, *, handoff_record, post_gate, lease):
+    """A normal handoff cannot be paired with an old Golden gate or other lease."""
+    if not (
+        post_gate.get("decision") == checkpoint_handoff.RESUME_DECISION
+        and post_gate.get("checkpoint_boundary") == handoff.get("checkpoint_boundary")
+        and post_gate.get("checkpoint_migration") == handoff.get("checkpoint_migration")
+        and lease.get("operational_handoff_receipt") == handoff_record
+        and lease.get("physical_process") == handoff.get("new_process_identity")
+        and lease.get("prior_supervisor_lease") == handoff.get("prior_supervisor_lease")
+        and lease.get("lease_generation") == handoff.get("next_lease_generation")
+        and lease.get("campaign_lock") == handoff.get("campaign_lock")
+        and "restart_failure_receipt" not in lease
+    ):
+        raise SwapOverrideControllerError("checkpoint gate/lease does not bind the normal handoff")
 
 
 def _complete_process_identity(value: Mapping[str, Any]) -> bool:

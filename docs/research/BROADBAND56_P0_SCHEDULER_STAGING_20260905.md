@@ -4,7 +4,54 @@ Status: **PARTIALLY_IMPLEMENTED_AND_TESTED_NOT_DEPLOYED**.
 This is not a runtime authorization, launch receipt, concurrency benchmark,
 or claim of increased production throughput.
 
-## Latest: Continuous Refill And Checkpoint Consumers, 23:12 UTC
+## Latest: Normal Checkpoint Control Interfaces, 23:43 UTC
+
+Still **NOT_DEPLOYED**. The original sole owner remains PID160303 and the
+backend/native executor remains single-worker. At 23:43:05 UTC there were
+446 EMX completion receipt files, not 446 additional accepted geometries.
+Formal acceptance remained 100 geometries / 5,600 rows; the complete current
+attempt checkpoint was still absent.
+
+The software now distinguishes a normal committed-checkpoint handoff from
+historical failure recovery. `broadband56_checkpoint_handoff` revalidates
+both original and migrated receipts/artifacts, derives the next legal stage
+from completed-stage receipts, and preserves partial accepted progress.
+The new branch rejects missing checkpoints, altered counts, mismatched
+leases/generations, changed Python identity, a live/reused predecessor PID,
+and a fabricated failure receipt. Existing failure-recovery checks remain.
+The rebound wrapper now permits a pinned same-stage checkpoint-resume gate
+without falsely declaring a Golden start at accepted=0. This does not bypass
+the full authorization, fresh resource/isolation, or scientific validators.
+
+The actual wrapper also binds the new handoff to the supplied resume gate
+and successor lease, rejecting an old Golden decision, different boundary,
+different physical process/generation or a fabricated failure lease.
+
+Targeted MARS private-Python/numpy2.5.0 replay: **73 passed**, no skipped tests.
+Receipt SHA:
+`5403044b84443cca6b1ebdae186eb4578a91d43a37b1d143f4e5be886179980e`.
+It is software/interface evidence, not a lease-transfer or native-concurrency
+test. One strictly pinned Python identity subprocess was allowed; no solver,
+runner, supervisor or signal was launched. The first replay is retained FAIL:
+65 passed / 2 blocked because its no-child harness also prohibited the two
+existing Python-identity tests. The revised harness permits only the exact
+identity expression with the approved executable and rejects any other child.
+No tests were removed or production protections changed to obtain PASS.
+The intermediate 67-test receipt is retained; the final 73 include six new
+gate/lease binding cases and use the corresponding final control source bytes.
+
+These control edits are newer than frozen Package06 (557 tests / 24 startup
+interface checks). Package06 evidence does not cover these new bytes.
+Next integration is the existing outer launcher's normal handoff producer:
+it must create the same-queue control envelope, migrate the actual checkpoint,
+preserve the completed/partial stage counts, bind exactly one successor lease,
+and pass the new resume gate to the actual wrapper. It must not reuse the old
+failure-only launcher or its hard-coded Golden/zero-count prelaunch status.
+No final deployment candidate or new approval has been created for this work.
+Production must continue until that integration and its final bound-byte
+preflight are ready; candidate/role/native-job gaps remain invalid boundaries.
+
+## Previous: Continuous Refill And Checkpoint Consumers, 23:12 UTC
 
 Still **NOT_DEPLOYED**. The original owner and single-worker production are
 protected. At 23:03:43 UTC there were 430 EMX completion receipt files, while

@@ -9,11 +9,15 @@ from pathlib import Path
 from rfic_transformer_inverse_design.campaigns import broadband56_production_backend as production
 from rfic_transformer_inverse_design.campaigns import broadband56_stage_progress as progress
 from rfic_transformer_inverse_design.campaigns.broadband56_balanced200k import CAMPAIGN_ID
-from rfic_transformer_inverse_design.campaigns.broadband56_capacity_policy import SCIENTIFIC_CONTRACT_FINGERPRINT
+from rfic_transformer_inverse_design.campaigns.broadband56_capacity_policy import (
+    SCIENTIFIC_CONTRACT_FINGERPRINT, stage_for_progress,
+)
 from rfic_transformer_inverse_design.campaigns.broadband56_stage_execution import expected_stage_role_order
 
 QUEUE_ID = 'b56-v2-queue-20260901T184307Z'
 SUPERVISOR_ID = 'b56-v2-controller-3184781-20260901T184307Z'
+CHECKPOINT_HANDOFF_SCOPE = 'SAME_LOGICAL_SUPERVISOR_AFTER_COMMITTED_ATTEMPT'
+RESUME_DECISION = 'RESUME_FROM_COMMITTED_CHECKPOINT_WITHOUT_GOLDEN'
 
 
 class CheckpointNotReady(ValueError):
@@ -282,3 +286,136 @@ def migrate_boundary(proof, *, target_root, target_backend, target_authorization
         write_new(target/'CHECKPOINT_REBIND_FAILURE.json',dict(overall_status='FAIL',error=repr(error),
             source_evidence_modified=False,simulator_action_taken=False))
         raise
+
+
+def verified_resume_state(boundary_record, migration_record):
+    """Validate the actual source and migrated chains before deriving resume state.
+
+    This is a startup-only check. It does not transfer the lease, assert process
+    death, authorize a runtime, or substitute for fresh capacity admission.
+    """
+    proof = read(bound(boundary_record))
+    terminal_path = bound(proof['terminal_receipt'])
+    source_root = terminal_path.parent.parent.parent
+    observed = committed_boundary(source_root, terminal_path.parent,
+        backend=proof['source_backend'], authorization=proof['source_authorization'])
+    if proof != observed:
+        raise ValueError('saved boundary differs from the complete committed checkpoint')
+    migration_path = bound(migration_record)
+    migration = read(migration_path)
+    if (migration.get('overall_status') != 'PASS_MIGRATION_ONLY_NOT_LAUNCH_AUTHORITY'
+            or migration.get('source_terminal_receipt') != proof['terminal_receipt']
+            or migration.get('source_stages') != proof['source_stages']
+            or migration.get('source_progress') != proof['source_progress']
+            or migration.get('accepted_preserved') != proof['accepted']
+            or migration.get('feature_rows_preserved') != proof['feature_rows']
+            or migration.get('accepted_increment') != 0
+            or any(migration.get(k) is not False for k in (
+                'source_evidence_modified', 'simulator_action_taken', 'queue_created',
+                'supervisor_started', 'nn_training_started'))):
+        raise ValueError('migration does not preserve the committed checkpoint')
+    target_root = migration_path.parent
+    target_backend = read(bound(migration['target_backend']))
+    target_auth = read(bound(migration['target_authorization']))
+    source_backend = read(bound(proof['source_backend']))
+    if (target_backend.get('scientific_contract') != source_backend['scientific_contract']
+            or target_backend.get('contract_fingerprint_sha256') != SCIENTIFIC_CONTRACT_FINGERPRINT
+            or target_auth.get('overall_status') != 'PASS'
+            or target_auth.get('authorization_scope') != 'FULL_CAMPAIGN'
+            or target_auth.get('backend_identity_manifest') != migration['target_backend']):
+        raise ValueError('resume scientific or authorization binding differs')
+    chains = []
+    for key, name in (('stage_receipts', 'STAGE_RECEIPT.json'),
+                      ('progress_receipts', 'STAGE_PROGRESS_RECEIPT.json')):
+        chain = [(bound(item), read(bound(item))) for item in migration[key]]
+        if ({p for p, _ in chain} != set((target_root/'stages').glob('*/'+name))
+                or len(chain) != len({p for p, _ in chain})):
+            raise ValueError('resume view contains missing, duplicate or unbound receipts')
+        chains.append(chain)
+    stages, records = chains
+    target_args = dict(backend_manifest_sha256=migration['target_backend']['sha256'],
+        authorization_receipt_sha256=migration['target_authorization']['sha256'], verify_artifacts=True)
+    errors = production.validate_stage_receipt_chain(stages, **target_args)
+    preceding = [v for _, v in stages if v['stage'] != proof['current_stage']]
+    base = int(preceding[-1]['accepted_unique_geometries']) if preceding else 0
+    errors += progress.validate_stage_progress_chain(records, stage=proof['current_stage'],
+        base_accepted=base, **target_args)
+    if errors:
+        raise ValueError('resume chains failed: '+repr(errors[:12]))
+    for pair in migration['copied_artifacts']:
+        source, replacement = bound(pair['original']), bound(pair['replacement'])
+        if (not source.is_relative_to(source_root) or not replacement.is_relative_to(target_root)
+                or pair['original']['sha256'] != pair['replacement']['sha256']
+                or pair['original']['size_bytes'] != pair['replacement']['size_bytes']):
+            raise ValueError('migrated artifact identity or location differs')
+    accepted = (progress.accepted_after_progress(records, base_accepted=base)
+                if terminal_path.name == 'STAGE_PROGRESS_RECEIPT.json'
+                else stages[-1][1]['accepted_unique_geometries'])
+    if accepted != proof['accepted']:
+        raise ValueError('resume receipts changed the actual accepted count')
+    # The stage selector consumes completed-stage totals, not partial progress.
+    next_stage = stage_for_progress(
+        current_accepted=stages[-1][1]['accepted_unique_geometries'] if stages else 0,
+        stage_receipts=[v for _, v in stages])
+    if next_stage == 'GOLDEN':
+        raise ValueError('checkpoint resume must not rerun Golden')
+    state = read(source_root/'CAMPAIGN_STATUS.json')
+    state.update(overall_status='COMPLETE_200K' if next_stage == 'COMPLETE' else 'QUEUED_WAITING_FOR_CAPACITY',
+        current_stage=next_stage, current_accepted=accepted, feature_rows=accepted*56,
+        active_simulator_jobs=0, current_concurrency=0, resource_gate='NOT_RUN',
+        simulator_action_taken_on_this_iteration=False)
+    for key in ('latest_resource_gate', 'latest_resource_snapshot', 'failed_resource_checks'):
+        state.pop(key, None)
+    return state
+
+
+def validate_checkpoint_handoff(payload):
+    """Check a pinned normal handoff without inventing a failure or an approval."""
+    if (payload.get('handoff_scope') != CHECKPOINT_HANDOFF_SCOPE
+            or payload.get('recovery_scope') != CHECKPOINT_HANDOFF_SCOPE
+            or 'restart_failure_receipt' in payload
+            or payload.get('active_simulator_jobs') != 0
+            or payload.get('simulator_action_taken') is not False):
+        raise ValueError('normal handoff is not a committed-checkpoint transition')
+    state = verified_resume_state(payload['checkpoint_boundary'], payload['checkpoint_migration'])
+    proof = read(bound(payload['checkpoint_boundary']))
+    old_lease = read(bound(payload['prior_supervisor_lease']))
+    old_process, new_process = payload.get('old_process_identity', {}), payload.get('new_process_identity', {})
+    if (old_lease.get('campaign_id') != CAMPAIGN_ID or old_lease.get('queue_id') != QUEUE_ID
+            or old_lease.get('logical_supervisor_id') != SUPERVISOR_ID
+            or old_lease.get('physical_process') != payload.get('old_process_identity')
+            or old_lease.get('backend_identity_manifest') != proof['source_backend']
+            or any(old_process.get(k) != new_process.get(k) for k in (
+                'uid', 'executable_path', 'executable_sha256'))
+            or type(old_lease.get('lease_generation')) is not int
+            or payload.get('next_lease_generation') != old_lease['lease_generation']+1
+            or payload.get('campaign_lock') != old_lease.get('campaign_lock')
+            or payload.get('accepted_preserved') != state['current_accepted']
+            or payload.get('feature_rows_preserved') != state['feature_rows']
+            or payload.get('resume_stage') != state['current_stage']):
+        raise ValueError('normal handoff changed lease or checkpoint identity')
+    return state
+
+
+def post_gate_progress_exact(payload, *, backend_record, authorization_record):
+    """Distinguish legacy Golden start from a fully bound checkpoint resume."""
+    if payload.get('decision') == 'START_CORRECTED_RESCUE_GOLDEN':
+        return payload.get('current_accepted') == 0
+    if payload.get('decision') != RESUME_DECISION:
+        return False
+    try:
+        state = verified_resume_state(payload['checkpoint_boundary'], payload['checkpoint_migration'])
+        migration = read(bound(payload['checkpoint_migration']))
+        gate = read(bound(payload['resource_gate_receipt']))
+        return (migration['target_backend'] == backend_record
+            and migration['target_authorization'] == authorization_record
+            and payload.get('current_accepted') == state['current_accepted']
+            and payload.get('feature_rows') == state['feature_rows']
+            and payload.get('current_stage') == state['current_stage']
+            and state['current_stage'] not in ('GOLDEN', 'COMPLETE')
+            and gate.get('overall_status') == 'PASS'
+            and gate.get('current_accepted') == state['current_accepted']
+            and gate.get('current_stage') == state['current_stage']
+            and gate.get('active_simulator_jobs') == 0)
+    except (KeyError, OSError, TypeError, ValueError):
+        return False
