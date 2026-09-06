@@ -1,10 +1,77 @@
 # P0 Scheduling Upgrade: Development Only
 
-Status: **PARTIALLY_IMPLEMENTED_AND_TESTED_NOT_DEPLOYED**.
+Status: **AWAITING_EXACT_SHA_DEPLOYMENT_APPROVAL_NOT_DEPLOYED**.
 This is not a runtime authorization, launch receipt, concurrency benchmark,
 or claim of increased production throughput.
 
-## Latest: Normal Startup Producers And Entry, September 6, 00:25 UTC
+## Latest: Consolidated Candidate, September 6, 01:08 UTC
+
+One consolidated normal-checkpoint deployment candidate is now frozen:
+`BROADBAND56_FIXED48_CHECKPOINT_DEPLOYMENT_CANDIDATE.json`, SHA
+`0a4c476c279a28d4c5d6fe56c4260f846db82a29fc0d3c1cd3083afb659e60bc`.
+Preparation receipt SHA:
+`f434de00489dfe42302d7dbae176c7f34a1f6b9c9c54f0b75e1f32176dee068d`.
+It is **not owner approval and is not installed**. All 29 bound-file pins
+and 14 runtime-file pins were rechecked against the real files. The candidate
+removes obsolete descriptor fields requiring a Golden rerun, a fixed single
+worker or historical accepted counts; it preserves the original scientific
+contract, campaign, queue, logical supervisor and existing global flock.
+
+The final package10 runtime/backend SHAs are respectively
+`7d8b984c2ff54a008eb87a4752d94e22aefa0cd0f28dfc9b490610551c78edde` and
+`74c84bc30877a70eb7afb40ba12f06d2e55e088c24486afcb2b6f4ed3129f5aa`.
+The native single-EMX runtime/settings are unchanged. This one code-upgrade
+approval is required before deployment; normal later stage transitions do
+not require another owner approval for the same authorized bytes.
+
+Final packaged bytes under the approved MARS private Python/numpy2.5.0:
+**638 tests, 0 failures/errors/skips**. Receipt SHA:
+`29d6036800c330e6c7ccc639bc68056c6111b3e609083c3c9a4ccd4351704c38`.
+JUnit SHA: `19e20ef15a7aa8e8170f7f8b5267d87982cc03b877a8fdd79664d1f2352247f5`.
+The added real-policy regression exposed a prelaunch schema mismatch hidden
+by the earlier mocked evaluator: the overlay probe was sent to the base
+capacity evaluator before wrapper initialization. The startup now installs
+the same overlay evaluator/adaptive function before the first probe, without
+changing policy thresholds. The pre-fix failing fixture is retained; no test
+was removed. The new base-DOE profile binding also covers Phase A, while
+rejecting changes to seeds, Golden, adaptive stages or the legacy scope.
+
+The cleaned candidate was replayed through the real control producers,
+ordered historical handoffs, controller control validators and resume-root
+validator. This is **fixture-checkpoint evidence only**, with no actual
+controller loop, real lease transfer, new owner approval or simulator action.
+Candidate-specific full-control receipt SHA:
+`0f9fab4960fa3e855625ed1f1db78c2652fa4c7dc449225925d647be2101d1b6`.
+The original owner remained alive with its original identity throughout.
+
+PILOT_1000 and Phase A use the existing bounded 192-candidate attempt profile
+with a requested/pool capacity of 48 and continuous admitted-slot refill.
+Phase B/C retain their existing frozen adaptive-round checkpoints, not new
+192-candidate slices. No cross-stage asynchronous redesign is claimed.
+Fixed-mode CPU limits are 1.10/1.10 with five independent fresh healthy
+checks, exact per-tool free seats and partial-capacity admission. The 20%
+memory floor and all remaining resource/isolation safeguards are preserved.
+These are prepared configuration/code properties, not measured native
+concurrency or throughput.
+
+At 01:03:49 UTC the sole production owner was still PID160303; the current
+backend and EMX batch both remained concurrency=1, with one native EMX.
+There were 488 completion receipt files, not 488 additional accepted samples.
+Formal acceptance was still 100 / 5,600 rows. The current attempt's terminal
+receipt and committed checkpoint were absent. The prior resource gate had
+expired; no new fixed48 capacity PASS is asserted.
+
+Next legal operation: obtain the one exact-SHA approval, use the supported
+parent drain only with the package ready, let all healthy children and current
+attempt postprocessing finish, verify its real parent-committed checkpoint,
+and transfer the same flock to exactly one successor after the prior owner
+has exited. Resume the actual accepted count even if it is below 1,000.
+Do not rerun Golden or use a role/native-process gap as a handoff boundary.
+Real lease transfer, live resource admission, native parallel execution,
+incremental new acceptance and end-to-end throughput remain **UNVERIFIED**.
+End-to-end accepted/hour and ETA: **NOT_MEASURED**. NN training: not started.
+
+## Previous: Normal Startup Producers And Entry, September 6, 00:25 UTC
 
 Still **NOT_DEPLOYED**. The healthy original owner remains PID160303, with
 one native EMX job. The current attempt has 474 completion receipt files,

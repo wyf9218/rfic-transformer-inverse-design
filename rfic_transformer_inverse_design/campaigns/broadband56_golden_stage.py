@@ -62,6 +62,7 @@ GOLDEN_COMPATIBLE_QUEUE_BATCH_REBINDS = frozenset({(
     "c0d25253289493c712c2bcd6c2942431d79904af3b460cfea6d20ebb567985bf",
 )})
 BOUNDED_PILOT_PROFILE_REBIND = "FROZEN_COHORT_BOUNDED_PILOT_SCHEDULING_ONLY"
+BOUNDED_BASE_DOE_PROFILE_REBIND = "FROZEN_COHORT_BOUNDED_PILOT_AND_PHASE_A_SCHEDULING_ONLY"
 
 
 def _load(record: Mapping[str, Any], label: str) -> dict[str, Any]:
@@ -385,14 +386,16 @@ def validate_queue_delegate_profile_rebind(
     original_pin: Mapping[str, Any], replacement_pin: Mapping[str, Any],
     target_backend: Mapping[str, Any], binding: Mapping[str, Any],
 ) -> None:
-    """Validate exact path-only reuse or the pinned bounded-pilot scheduler change."""
+    """Validate exact path-only reuse or the pinned bounded base-DOE scheduling change."""
     if not isinstance(binding, Mapping):
         raise GoldenSourceError("Golden queue profile rebind must be an object")
-    bounded = binding.get("kind") == BOUNDED_PILOT_PROFILE_REBIND
+    bounded = binding.get("kind") in (BOUNDED_PILOT_PROFILE_REBIND, BOUNDED_BASE_DOE_PROFILE_REBIND)
+    bounded_stages = ({"PILOT_1000", "PHASE_A"}
+        if binding.get("kind") == BOUNDED_BASE_DOE_PROFILE_REBIND else {"PILOT_1000"})
     limit = binding.get("max_candidates_per_attempt", 32)
     expected_binding = {
         "original": original_pin, "replacement": replacement_pin,
-        "kind": BOUNDED_PILOT_PROFILE_REBIND if bounded else "IDENTICAL_QUEUE_DELEGATE_CURRENT_RUNTIME_PATH_ONLY",
+        "kind": binding.get("kind") if bounded else "IDENTICAL_QUEUE_DELEGATE_CURRENT_RUNTIME_PATH_ONLY",
         "golden_execution_repeated": False,
     }
     if bounded:
@@ -442,7 +445,7 @@ def validate_queue_delegate_profile_rebind(
                 _pin({"path": str(target_script), "size_bytes": len(target_bytes), "sha256": target_digest},
                      "bounded queue delegate")
                 argv[sha_index] = target_digest
-                if stage_name == "PILOT_1000":
+                if stage_name in bounded_stages:
                     if ("max_candidates_per_attempt" in stage
                             or "--attempt-candidate-limit" in argv
                             or "--reuse-campaign-frozen-cohort" in argv):
@@ -457,7 +460,7 @@ def validate_queue_delegate_profile_rebind(
             # and the entire stage set must remain exact.
             changed += argv[path_index] != str(target_script)
             argv[path_index] = str(target_script)
-    if bounded and bounded_commands != 1:
-        raise GoldenSourceError("bounded profile must change exactly one pilot queue command")
+    if bounded and bounded_commands != len(bounded_stages):
+        raise GoldenSourceError("bounded profile must change exactly the bound base-DOE queue commands")
     if changed == 0 or expected != replacement:
         raise GoldenSourceError("queue profile changed outside the exact permitted transformation")

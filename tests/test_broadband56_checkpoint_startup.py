@@ -251,7 +251,11 @@ def test_source_control_checksum_drift_cannot_be_reindexed_as_valid(context):
     assert not context['kwargs']['successor_root'].exists()
 
 
-def test_prelaunch_five_probes_keep_indexes_and_same_live_hook(context, monkeypatch):
+@pytest.mark.parametrize('real_policy', [False, True])
+def test_prelaunch_five_probes_keep_indexes_and_same_live_hook(context, monkeypatch, real_policy):
+    from rfic_transformer_inverse_design.campaigns import broadband56_capacity_policy as base_policy
+    from rfic_transformer_inverse_design.campaigns import broadband56_swap_override_policy as swap_policy
+    from tests.test_broadband56_swap_override_policy import _snapshot
     prepared = prepare(context)
     calls, decisions = [], []
     root = Path(prepared['root'])
@@ -260,7 +264,7 @@ def test_prelaunch_five_probes_keep_indexes_and_same_live_hook(context, monkeypa
         assert kwargs['isolation_lease_generation'] == 29
         def probe(script, directory, index):
             calls.append(index)
-            return write(directory/f'fixture_{index}.json', dict(fixture_only=True))
+            return write(directory/f'fixture_{index}.json', _snapshot() if real_policy else dict(fixture_only=True))
         return probe
     def resource_gate(**kw):
         assert kw['current_accepted'] == 861 and kw['stage'] == 'PILOT_1000'
@@ -271,19 +275,27 @@ def test_prelaunch_five_probes_keep_indexes_and_same_live_hook(context, monkeypa
         inspect.signature(original_decision).bind(**kw)
         decisions.append(kw['snapshot_path'])
         assert kw['current_accepted'] == 861 and kw['stage'] == 'PILOT_1000'
+        if real_policy:
+            assert kw['policy']['pass'] is True
+            assert kw['legacy_policy'] is swap_policy.adaptive_concurrency
         return dict(concurrency=12 if len(decisions) == 5 else 0, requested_concurrency=48)
     def main(argv):
         assert wrapper._measured_capacity_hook_installed
         assert cp.read(root/'CAMPAIGN_STATUS.json')['check_index'] == 45
         assert len(decisions) == 5
         assert '--resume' in argv
+        if real_policy:
+            assert controller.evaluate_capacity_snapshot is swap_policy.evaluate_capacity_snapshot
         return 0
     wrapper = SimpleNamespace(_swap_override_probe_factory=factory, main=main,
         OVERRIDE_PATH_ENV='B56_TEST_OVERRIDE', OVERRIDE_SHA_ENV='B56_TEST_OVERRIDE_SHA',
-        OVERLAY_PATH_ENV='B56_TEST_OVERLAY', OVERLAY_SHA_ENV='B56_TEST_OVERLAY_SHA')
+        OVERLAY_PATH_ENV='B56_TEST_OVERLAY', OVERLAY_SHA_ENV='B56_TEST_OVERLAY_SHA',
+        swap_policy=swap_policy if real_policy else SimpleNamespace(
+            evaluate_capacity_snapshot=lambda *a, **k: {}, adaptive_concurrency=None))
     controller = SimpleNamespace(_run_probe=None, _write_resource_gate=resource_gate,
         _pilot_bytes_per_geometry=lambda root: None, _pilot_safe_concurrency=lambda root: None,
-        evaluate_capacity_snapshot=lambda *a, **k: {}, adaptive_concurrency=None)
+        evaluate_capacity_snapshot=base_policy.evaluate_capacity_snapshot if real_policy else lambda *a, **k: {},
+        adaptive_concurrency=base_policy.adaptive_concurrency if real_policy else None)
     hook = SimpleNamespace(install=lambda wrapper, binding: setattr(wrapper, '_measured_capacity_hook_installed', True))
     original_decision = startup.concurrency_for_snapshot
     monkeypatch.setattr(startup, 'concurrency_for_snapshot', decision)

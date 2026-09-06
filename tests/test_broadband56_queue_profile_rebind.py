@@ -136,6 +136,46 @@ def test_bounded_pilot_profile_only_permits_exact_scheduler_transform(tmp_path, 
             golden.validate_queue_delegate_profile_rebind(a, b, backend, binding)
 
 
+@pytest.mark.parametrize("mutation", [None, "missing_phase_a", "seed", "golden", "legacy_kind", "adaptive_stage"])
+def test_pilot_and_phase_a_binding_preserves_other_stage_and_science_fields(tmp_path, monkeypatch, mutation):
+    old, new = tmp_path / "old", tmp_path / "new"
+    old.mkdir(); new.mkdir()
+    source = old / "build_broadband56_phase_a_queue.py"
+    target = new / source.name
+    source.write_text("# source fixture\n"); target.write_text("# bounded fixture\n")
+    wrapper = new / "run_broadband56_v2_bound_queue_builder.py"
+    wrapper.write_text("# wrapper fixture\n")
+    monkeypatch.setattr(golden, "GOLDEN_COMPATIBLE_QUEUE_BATCH_REBINDS",
+        frozenset({(pin(source)["sha256"], pin(target)["sha256"])}))
+    command = dict(role="phase_a_queue_builder", argv=["--delegate-script", str(source),
+        "--delegate-sha256", pin(source)["sha256"], "--seed", "20260828"])
+    before = dict(stages={s: dict(commands=[copy.deepcopy(command)])
+        for s in ("GOLDEN", "PILOT_32", "PILOT_1000", "PHASE_A")})
+    before["stages"]["PHASE_B"] = dict(commands=[dict(role="adaptive_candidate_selector", argv=["--strict"])])
+    after = copy.deepcopy(before)
+    for name, spec in after["stages"].items():
+        if name == "PHASE_B": continue
+        spec["commands"][0]["argv"][1] = str(target)
+        spec["commands"][0]["argv"][3] = pin(target)["sha256"]
+        if name in {"PILOT_1000", "PHASE_A"}:
+            spec["max_candidates_per_attempt"] = 192
+            spec["commands"][0]["argv"] += ["--attempt-candidate-limit", "192", "--reuse-campaign-frozen-cohort"]
+    if mutation == "missing_phase_a": after["stages"]["PHASE_A"].pop("max_candidates_per_attempt")
+    elif mutation == "seed": after["stages"]["PHASE_A"]["commands"][0]["argv"][5] = "1"
+    elif mutation == "golden": after["stages"]["GOLDEN"]["max_candidates_per_attempt"] = 192
+    elif mutation == "adaptive_stage": after["stages"]["PHASE_B"]["max_candidates_per_attempt"] = 192
+    a, b = save(tmp_path / "before.json", before), save(tmp_path / "after.json", after)
+    binding = dict(original=a, replacement=b, kind=golden.BOUNDED_BASE_DOE_PROFILE_REBIND,
+        max_candidates_per_attempt=192, golden_execution_repeated=False)
+    if mutation == "legacy_kind": binding["kind"] = golden.BOUNDED_PILOT_PROFILE_REBIND
+    backend = dict(script_identities=dict(phase_a_queue_builder=pin(wrapper)))
+    if mutation is None:
+        golden.validate_queue_delegate_profile_rebind(a, b, backend, binding)
+    else:
+        with pytest.raises(golden.GoldenSourceError):
+            golden.validate_queue_delegate_profile_rebind(a, b, backend, binding)
+
+
 def test_pinned_scheduler_pairs_match_the_actual_staged_scripts():
     root = Path(__file__).resolve().parents[1]
     roles = dict(production_stage_backend="run_broadband56_v2_production_stage_backend.py",

@@ -316,6 +316,9 @@ def run_controller(executor, prepared, *, wrapper, controller, capacity_hook, ca
     candidate, state = prepared['candidate'], prepared['state']
     files, runtime = candidate['bound_files'], candidate['runtime_files']
     root = Path(prepared['root'])
+    # The probe emits the overlay schema before wrapper.main installs its policy.
+    controller.evaluate_capacity_snapshot = wrapper.swap_policy.evaluate_capacity_snapshot
+    controller.adaptive_concurrency = wrapper.swap_policy.adaptive_concurrency
     capacity_hook.install(wrapper, binding=capacity_binding)
     factory = wrapper._swap_override_probe_factory(controller, original_run_probe=controller._run_probe,
         override_receipt_path=checkpoint.bound(files['swap_override_receipt']),
