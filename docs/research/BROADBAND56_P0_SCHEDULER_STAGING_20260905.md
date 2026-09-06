@@ -4,7 +4,52 @@ Status: **PARTIALLY_IMPLEMENTED_AND_TESTED_NOT_DEPLOYED**.
 This is not a runtime authorization, launch receipt, concurrency benchmark,
 or claim of increased production throughput.
 
-## Latest: Normal Checkpoint Control Interfaces, 23:43 UTC
+## Latest: Normal Startup Producers And Entry, September 6, 00:25 UTC
+
+Still **NOT_DEPLOYED**. The healthy original owner remains PID160303, with
+one native EMX job. The current attempt has 474 completion receipt files,
+not 474 accepted geometries. Formal acceptance remains 100 / 5,600 rows;
+the complete attempt checkpoint has not been committed.
+
+`broadband56_checkpoint_startup` now constructs the existing queue's new
+control envelope, reuses the original executor's rebind/composite-authority
+producer, migrates the actual checkpoint, and writes a normal handoff and
+successor lease without fabricating a predecessor failure. Source control
+checksums, prior process death, sole ownership, the same flock, and exact
+owner approval are checked before use. The migration accepts an already
+created control directory only if its exact file set is bound and every
+execution directory is empty; it acquires an exclusive migration claim.
+
+`launch_broadband56_v2_supervisor_recovery_checkpoint.py` is the new outer
+entry, not an installed production process. Its recovery filename prefix
+retains recognition by the unchanged isolation auditor. Prelaunch and live
+execution share the measured-capacity hook and resource-history directory;
+the controller resumes after the last prelaunch probe index without resetting
+accepted or the history. No Golden start or benchmark callback is introduced.
+
+On the final package bytes, MARS private Python/numpy2.5.0 passed **91 tests**
+(0 failed/error/skipped), including the deployed legacy executor's actual
+queue/composite/argv functions with fixture checkpoints. Test receipt SHA:
+`4d110589c215a349aff9d8148d3bc3e8d2e454af5fe534b3526c81457b73fb26`.
+A separate neutral no-child replay imported the actual outer entry, verified
+the historical FULL validator, backend and original control checksums, and
+validated all 26 existing ordered handoffs. Replay receipt SHA:
+`7935ad6b8d0fbd934851c16761549d9c40088a8131adc59aa5ed4c6090a48669`.
+The original owner remained alive with unchanged identity throughout.
+
+Prepared package 08 runtime/backend SHAs are respectively
+`326fa852491699e647072f830171099ca5263a9008ecc2a811077fbfc69faa4a` and
+`1930920fdb2a1828197493da9776c7eaea2035b505f93612cfa792e174ee3fe1`.
+Its preparation descriptor is **not owner approval or launch authority**.
+Actual controller execution, real successor lease transfer, fresh fixed48
+admission and the final consolidated approval binding remain unverified.
+Do not stop the old owner before those controls are ready. The true switch
+boundary remains the fully committed current attempt, not a role/job gap.
+Later-phase small-batch wiring remains REVERIFY; no physical throughput or
+200K completion claim is supported. The 91 tests do not re-certify unrelated
+parts of the earlier 557-test package.
+
+## Previous: Normal Checkpoint Control Interfaces, 23:43 UTC
 
 Still **NOT_DEPLOYED**. The original sole owner remains PID160303 and the
 backend/native executor remains single-worker. At 23:43:05 UTC there were

@@ -151,7 +151,54 @@ def committed_boundary(campaign_root, attempt_root, *, backend, authorization):
         simulator_action_taken=False, source_modified=False)
 
 
-def migrate_boundary(proof, *, target_root, target_backend, target_authorization, golden_template):
+CONTROL_ROOT_FILES = (
+    'CAMPAIGN_CONTRACT.json', 'SCIENTIFIC_CONTRACT_IDENTITY.json',
+    'OPERATIONAL_POLICY_IDENTITY.json', 'FREQUENCY_CONTRACT.json',
+    'PORT_AND_GROUNDING_CONTRACT.json', 'DRC_AND_LAYOUT_CONTRACT.json',
+    'MARS_QUEUE_ENTRY.json', 'MARS_QUEUE_RECEIPT.json', 'SUPERVISOR_IDENTITY.json',
+    'CAMPAIGN_LOCK.json', 'SHA256SUMS.txt', 'CAMPAIGN_STATUS.json',
+    'FULL_CAMPAIGN_AUTHORIZATION_RECEIPT.json',
+)
+CONTROL_ROOT_DIRS = ('resource_snapshots', 'resource_gates', 'resource_snapshot_adapters', 'stages')
+
+
+def validate_empty_control_envelope(record, *, proof, target_root, backend, authorization):
+    """Permit only a bound, newly constructed empty control envelope, never a resume overwrite."""
+    value = read(bound(record))
+    target = Path(target_root)
+    if (value.get('overall_status') != 'CONTROL_ENVELOPE_ONLY_NOT_LAUNCH_AUTHORITY'
+            or value.get('target_root') != str(target)
+            or value.get('source_terminal_receipt') != proof['terminal_receipt']
+            or value.get('target_backend') != backend
+            or value.get('target_authorization') != authorization
+            or set(value.get('control_files', {})) != set(CONTROL_ROOT_FILES)):
+        raise ValueError('control envelope identity mismatch')
+    if set(p.name for p in target.iterdir()) != set(CONTROL_ROOT_FILES+CONTROL_ROOT_DIRS):
+        raise ValueError('control envelope contains unexpected or existing execution outputs')
+    for name in CONTROL_ROOT_FILES:
+        if bound(value['control_files'][name]) != target/name:
+            raise ValueError('control envelope file escaped target root')
+    for name in CONTROL_ROOT_DIRS:
+        path = target/name
+        if path.is_symlink() or not path.is_dir() or any(path.iterdir()):
+            raise ValueError('control envelope execution directories must be empty')
+    source_root = Path(proof['terminal_receipt']['path']).parent.parent.parent
+    for name in CONTROL_ROOT_FILES[:6]:
+        if (target/name).read_bytes() != (source_root/name).read_bytes():
+            raise ValueError('control envelope changed an immutable campaign contract')
+    entry = read(target/'MARS_QUEUE_ENTRY.json')
+    state = read(target/'CAMPAIGN_STATUS.json')
+    if (entry.get('queue_id') != QUEUE_ID or entry.get('campaign_id') != CAMPAIGN_ID
+            or entry.get('backend_identity_manifest') != backend
+            or state.get('current_accepted') != proof['accepted']
+            or state.get('feature_rows') != proof['feature_rows']
+            or (target/'FULL_CAMPAIGN_AUTHORIZATION_RECEIPT.json').read_bytes()
+                != bound(authorization).read_bytes()):
+        raise ValueError('control envelope queue, progress or authorization mismatch')
+
+
+def migrate_boundary(proof, *, target_root, target_backend, target_authorization, golden_template,
+                     control_envelope=None):
     """Copy only verified receipt artifacts into a no-clobber resume view.
 
     Original GDS/S4P and source receipts remain untouched. Creating this view
@@ -177,7 +224,14 @@ def migrate_boundary(proof, *, target_root, target_backend, target_authorization
     template = read(bound(golden_template))
     if template.get('stage') != 'GOLDEN':
         raise ValueError('exact prepared Golden reuse template required')
-    target.mkdir(mode=0o700, parents=False, exist_ok=False)
+    if control_envelope is None:
+        target.mkdir(mode=0o700, parents=False, exist_ok=False)
+    else:
+        validate_empty_control_envelope(control_envelope, proof=proof, target_root=target,
+            backend=target_backend, authorization=target_authorization)
+        # An exclusive claim prevents a second migration into the same new envelope.
+        with (target/'CHECKPOINT_MIGRATION_CLAIM.json').open('x') as handle:
+            json.dump(dict(control_envelope=control_envelope), handle, sort_keys=True)
     copied, stages, records = [], [], []
 
     def write_new(path, value):
@@ -281,6 +335,8 @@ def migrate_boundary(proof, *, target_root, target_backend, target_authorization
             progress_receipts=[pin(p) for p,_ in records], copied_artifacts=copied,
             source_evidence_modified=False, simulator_action_taken=False, queue_created=False,
             supervisor_started=False, nn_training_started=False)
+        if control_envelope is not None:
+            result['control_envelope'] = control_envelope
         return write_new(target/'CHECKPOINT_REBIND_RECEIPT.json',result)
     except BaseException as error:
         write_new(target/'CHECKPOINT_REBIND_FAILURE.json',dict(overall_status='FAIL',error=repr(error),
