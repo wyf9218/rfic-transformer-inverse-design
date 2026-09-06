@@ -425,6 +425,40 @@ def verified_resume_state(boundary_record, migration_record):
     return state
 
 
+def validate_failed_control_predecessor(failure_record, *, prior_record, boundary_record, state):
+    """Bind a dead control-only successor to its unchanged production checkpoint."""
+    failure = read(bound(failure_record))
+    prior = read(bound(prior_record))
+    handoff_record = prior['operational_handoff_receipt']
+    handoff = read(bound(handoff_record))
+    if (failure.get('overall_status') != 'FAIL'
+            or failure.get('successor_lease') != prior_record
+            or failure.get('boundary') != boundary_record
+            or failure.get('failed_physical_pid') != prior['physical_process']['pid']
+            or failure.get('physical_process_confirmed_absent') is not True
+            or failure.get('fixed48_solver_execution_started') is not False
+            or failure.get('source_raw_artifacts_untouched') is not True
+            or failure.get('nn_training_started') is not False
+            or failure.get('current_accepted') != state['current_accepted']
+            or failure.get('current_feature_rows') != state['feature_rows']
+            or handoff.get('new_process_identity') != prior['physical_process']
+            or handoff.get('next_lease_generation') != prior['lease_generation']
+            or handoff.get('checkpoint_boundary') != boundary_record
+            or validate_checkpoint_handoff(handoff) != state):
+        raise ValueError('failed successor is not bound to the preserved checkpoint')
+    migration = read(bound(handoff['checkpoint_migration']))
+    if migration.get('target_backend') != prior['backend_identity_manifest']:
+        raise ValueError('failed successor migration backend differs')
+    source_status = read(bound(failure['source_campaign_status']))
+    successor_status = read(bound(failure['successor_campaign_status']))
+    if (any(s.get('current_accepted') != state['current_accepted']
+            or s.get('feature_rows') != state['feature_rows']
+            for s in (source_status, successor_status))
+            or successor_status.get('simulator_action_taken_on_this_iteration') is not False):
+        raise ValueError('failed successor changed accepted progress or executed simulators')
+    return handoff_record
+
+
 def validate_checkpoint_handoff(payload):
     """Check a pinned normal handoff without inventing a failure or an approval."""
     if (payload.get('handoff_scope') != CHECKPOINT_HANDOFF_SCOPE
@@ -436,11 +470,17 @@ def validate_checkpoint_handoff(payload):
     state = verified_resume_state(payload['checkpoint_boundary'], payload['checkpoint_migration'])
     proof = read(bound(payload['checkpoint_boundary']))
     old_lease = read(bound(payload['prior_supervisor_lease']))
+    failure_record = payload.get('prior_startup_terminal_failure')
+    if failure_record is not None:
+        validate_failed_control_predecessor(failure_record,
+            prior_record=payload['prior_supervisor_lease'],
+            boundary_record=payload['checkpoint_boundary'], state=state)
+    elif old_lease.get('backend_identity_manifest') != proof['source_backend']:
+        raise ValueError('normal handoff lease backend differs from committed source')
     old_process, new_process = payload.get('old_process_identity', {}), payload.get('new_process_identity', {})
     if (old_lease.get('campaign_id') != CAMPAIGN_ID or old_lease.get('queue_id') != QUEUE_ID
             or old_lease.get('logical_supervisor_id') != SUPERVISOR_ID
             or old_lease.get('physical_process') != payload.get('old_process_identity')
-            or old_lease.get('backend_identity_manifest') != proof['source_backend']
             or any(old_process.get(k) != new_process.get(k) for k in (
                 'uid', 'executable_path', 'executable_sha256'))
             or type(old_lease.get('lease_generation')) is not int

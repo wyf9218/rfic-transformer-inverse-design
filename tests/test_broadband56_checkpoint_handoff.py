@@ -22,6 +22,7 @@ def checkpoint_fixture(tmp_path, module, accepted):
         "scientific_contract": {"fixture_only": True}}))
     authorization = module.pin(write(tmp_path/"authorization.json", {
         "overall_status": "PASS", "authorization_scope": "FULL_CAMPAIGN",
+        "contract_fingerprint_sha256": module.SCIENTIFIC_CONTRACT_FINGERPRINT,
         "backend_identity_manifest": backend, "fixture_only_not_execution": True}))
     previous = None
     for index, (stage, target) in enumerate((("GOLDEN", 1), ("PILOT_32", 32)), 1):

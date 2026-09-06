@@ -16,7 +16,7 @@ import uuid
 
 from rfic_transformer_inverse_design.campaigns import broadband56_checkpoint_handoff as checkpoint
 from rfic_transformer_inverse_design.campaigns.broadband56_scheduling import (
-    FIXED48_GENERATION_POLICY, concurrency_for_snapshot,
+    FIXED48_GENERATION_POLICY, concurrency_for_snapshot, fixed_generation_policy,
 )
 
 SCOPE = 'APPLY_FIXED48_AT_COMMITTED_CHECKPOINT_THEN_CONTINUE_EXISTING_200K'
@@ -174,6 +174,40 @@ def prepare_root(executor, *, candidate, root, backend, verification, stage_laun
     return Path(queue['path']), Path(identity['path'])
 
 
+def validated_lease_fingerprint(candidate, prior, boundary_record, state):
+    """Complete a legacy lease only from its verified authority, never by default."""
+    files = candidate['bound_files']
+    fingerprint = candidate['contract_fingerprint_sha256']
+    for key, expected in (('campaign_id', checkpoint.CAMPAIGN_ID),
+                          ('queue_id', checkpoint.QUEUE_ID),
+                          ('logical_supervisor_id', checkpoint.SUPERVISOR_ID)):
+        if prior.get(key) != expected:
+            raise ValueError('normal startup prior lease identity mismatch: '+key)
+    if ('contract_fingerprint_sha256' in prior
+            and prior['contract_fingerprint_sha256'] != fingerprint):
+        raise ValueError('prior lease contract fingerprint is invalid or conflicting')
+    for key in ('source_authorization', 'source_backend', 'new_backend_manifest'):
+        value = checkpoint.read(checkpoint.bound(files[key]))
+        if value.get('contract_fingerprint_sha256') != fingerprint:
+            raise ValueError('lease fingerprint authority differs: '+key)
+    overlay = checkpoint.read(checkpoint.bound(files['current_operational_overlay']))
+    if (overlay.get('contract_fingerprint_sha256') != fingerprint
+            or overlay.get('campaign_id') != checkpoint.CAMPAIGN_ID
+            or overlay.get('queue_id') != checkpoint.QUEUE_ID
+            or overlay.get('supervisor_id') != checkpoint.SUPERVISOR_ID
+            or overlay.get('corrected_backend_manifest') != prior['backend_identity_manifest']):
+        raise ValueError('prior lease and operational overlay binding differs')
+    failure_record = files.get('prior_startup_terminal_failure')
+    if failure_record is not None:
+        handoff_record = checkpoint.validate_failed_control_predecessor(failure_record,
+            prior_record=files['prior_supervisor_lease'], boundary_record=boundary_record, state=state)
+        if handoff_record != candidate['prior_recovery_handoffs'][-1]:
+            raise ValueError('failed successor is not last in the ordered recovery chain')
+    elif prior['backend_identity_manifest'] != files['source_backend']:
+        raise ValueError('normal startup lease backend differs from committed source')
+    return fingerprint
+
+
 def prepare_controls(executor, *, candidate_record, approval_record, boundary_record,
                      operation_root, successor_root, isolation, lock_fd):
     """Produce the real queue/normal-handoff/lease chain only after exclusive ownership.
@@ -190,8 +224,7 @@ def prepare_controls(executor, *, candidate_record, approval_record, boundary_re
             or files['source_authorization'] != proof['source_authorization']):
         raise ValueError('normal startup binds a different source checkpoint')
     prior, current = require_exclusive_owner(executor, candidate, isolation, lock_fd)
-    if prior['backend_identity_manifest'] != proof['source_backend']:
-        raise ValueError('normal startup lease backend differs from committed source')
+    fingerprint = validated_lease_fingerprint(candidate, prior, boundary_record, state)
     operation, root = Path(operation_root), Path(successor_root)
     if (not operation.is_absolute() or any(p.is_symlink() for p in (operation, *operation.parents))
             or operation == root or operation.is_relative_to(root) or root.is_relative_to(operation)
@@ -216,7 +249,7 @@ def prepare_controls(executor, *, candidate_record, approval_record, boundary_re
             golden_template=files['golden_reuse_template'], control_envelope=envelope)
         if checkpoint.verified_resume_state(boundary_record, migration) != state:
             raise ValueError('prepared queue state differs from verified migrated state')
-        handoff = write(operation/'SUPERVISOR_RECOVERY_HANDOFF_RECEIPT.json', dict(
+        handoff_value = dict(
             schema=executor.HANDOFF_SCHEMA, generated_utc=executor.utc_now(), overall_status='PASS',
             decision=executor.HANDOFF_DECISION, campaign_id=checkpoint.CAMPAIGN_ID,
             queue_id=checkpoint.QUEUE_ID, supervisor_id=checkpoint.SUPERVISOR_ID,
@@ -232,7 +265,10 @@ def prepare_controls(executor, *, candidate_record, approval_record, boundary_re
             checkpoint_boundary=boundary_record, checkpoint_migration=migration,
             accepted_preserved=state['current_accepted'], feature_rows_preserved=state['feature_rows'],
             resume_stage=state['current_stage'], active_simulator_jobs=0,
-            simulator_action_taken=False, campaign_data_modified=False))
+            simulator_action_taken=False, campaign_data_modified=False)
+        if 'prior_startup_terminal_failure' in files:
+            handoff_value['prior_startup_terminal_failure'] = files['prior_startup_terminal_failure']
+        handoff = write(operation/'SUPERVISOR_RECOVERY_HANDOFF_RECEIPT.json', handoff_value)
         checkpoint.validate_checkpoint_handoff(checkpoint.read(checkpoint.bound(handoff)))
         overlay = checkpoint.read(checkpoint.bound(files['current_operational_overlay']))
         overlay.update(generated_utc=executor.utc_now(), corrected_backend_manifest=checkpoint.pin(backend),
@@ -251,6 +287,7 @@ def prepare_controls(executor, *, candidate_record, approval_record, boundary_re
         overlay_pin = write(operation/'OPERATIONAL_POLICY_OVERLAY_RECOVERY.json', overlay)
         lease = copy.deepcopy(prior)
         lease.update(generated_utc=executor.utc_now(), lease_generation=candidate['next_lease_generation'],
+            contract_fingerprint_sha256=fingerprint,
             lease_nonce=uuid.uuid4().hex, validity_state='CURRENT', expires_utc=None,
             physical_process=current, backend_identity_manifest=checkpoint.pin(backend),
             queue_entry=checkpoint.pin(queue), supervisor_identity=checkpoint.pin(identity),
@@ -263,6 +300,13 @@ def prepare_controls(executor, *, candidate_record, approval_record, boundary_re
         leases = operation/'supervisor_leases'
         leases.mkdir(mode=0o700)
         lease_pin = write(leases/f"SUPERVISOR_LEASE_GENERATION_{candidate['next_lease_generation']:04d}.json", lease)
+        persisted = checkpoint.read(checkpoint.bound(lease_pin))
+        if (persisted != lease or persisted['physical_process'] != current
+                or persisted['lease_generation'] != candidate['next_lease_generation']):
+            raise ValueError('serialized successor lease differs from verified controls')
+        fixed_generation_policy(dict(campaign_id=candidate['campaign_id'],
+            contract_fingerprint_sha256=fingerprint,
+            operational_overlay_manifest=overlay_pin, supervisor_lease=lease_pin))
         # Recheck the old PID and all child roles before returning a usable lease.
         require_exclusive_owner(executor, candidate, isolation, lock_fd)
         return dict(candidate=candidate, state=state, boundary=boundary_record, migration=migration,

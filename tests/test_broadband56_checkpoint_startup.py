@@ -131,7 +131,12 @@ def context(tmp_path, fixture_executor):
     template['operational_progress_rebind'] = dict(previous_rebound_receipt=proof['source_stages'][0])
     golden = cp.pin(write(tmp_path/'golden_template.json', template))
     overlay = cp.pin(write(tmp_path/'old_overlay.json', dict(script_identities={},
-        supervisor_recovery_handoffs=[dummy], failure_receipt=dummy, fixture_only=True)))
+        supervisor_recovery_handoffs=[dummy], failure_receipt=dummy, fixture_only=True,
+        schema='rfic_transformer.broadband56_v2_operational_policy_overlay.v1',
+        overall_status='PASS', scientific_contract_changed=False, nn_training_authorized=False,
+        campaign_id=cp.CAMPAIGN_ID, queue_id=cp.QUEUE_ID, supervisor_id=cp.SUPERVISOR_ID,
+        contract_fingerprint_sha256=cp.SCIENTIFIC_CONTRACT_FINGERPRINT,
+        corrected_backend_manifest=backend)))
     bound_names = ('original_full_campaign_backend', 'corrected_layout_approval',
         'corrected_private_configuration', 'capacity_compat_rebind_plan', 'new_backend_verification',
         'rebound_helper', 'base_rebound_controller', 'base_resource_gate_auditor', 'swap_override_receipt',
@@ -174,6 +179,113 @@ def context(tmp_path, fixture_executor):
 
 def prepare(context):
     return startup.prepare_controls(context['executor'], **context['kwargs'])
+
+
+def rebind_fixture(context):
+    """Rebind only explicit test authority after a negative-input mutation."""
+    kw = context['kwargs']
+    cpath = cp.bound(kw['candidate_record'])
+    write(cpath, context['candidate'])
+    kw['candidate_record'] = cp.pin(cpath)
+    apath = cp.bound(kw['approval_record'])
+    approval = cp.read(apath)
+    approval.update(approved_candidate=kw['candidate_record'],
+        approval_reference='fixture only '+kw['candidate_record']['sha256'])
+    write(apath, approval)
+    kw['approval_record'] = cp.pin(apath)
+
+
+def test_missing_legacy_fingerprint_is_persisted_before_real_policy_consumption(context):
+    old = context['candidate']['bound_files']['prior_supervisor_lease']
+    before = cp.bound(old).read_bytes()
+    assert 'contract_fingerprint_sha256' not in cp.read(cp.bound(old))
+    prepared = prepare(context)
+    lease = cp.read(cp.bound(prepared['lease']))
+    assert lease['contract_fingerprint_sha256'] == cp.SCIENTIFIC_CONTRACT_FINGERPRINT
+    snapshot = dict(campaign_id=cp.CAMPAIGN_ID,
+        contract_fingerprint_sha256=cp.SCIENTIFIC_CONTRACT_FINGERPRINT,
+        operational_overlay_manifest=prepared['overlay'], supervisor_lease=prepared['lease'])
+    assert startup.fixed_generation_policy(snapshot) == startup.FIXED48_GENERATION_POLICY
+    assert cp.bound(old).read_bytes() == before
+
+
+@pytest.mark.parametrize('value', [None, '', 'not-a-hash', 'a'*64])
+def test_present_invalid_legacy_fingerprint_is_not_silently_replaced(context, value):
+    files = context['candidate']['bound_files']
+    path = cp.bound(files['prior_supervisor_lease'])
+    lease = cp.read(path); lease['contract_fingerprint_sha256'] = value
+    write(path, lease); files['prior_supervisor_lease'] = cp.pin(path)
+    rebind_fixture(context)
+    with pytest.raises(ValueError, match='fingerprint is invalid or conflicting'):
+        prepare(context)
+    assert not context['kwargs']['operation_root'].exists()
+
+
+@pytest.mark.parametrize('field', ['contract_fingerprint_sha256', 'backend_identity_manifest', 'logical_supervisor_id', 'missing'])
+def test_strict_consumer_still_rejects_unbound_lease(context, field):
+    prepared = prepare(context)
+    lease = cp.read(cp.bound(prepared['lease']))
+    if field == 'missing': lease.pop('contract_fingerprint_sha256')
+    elif field == 'backend_identity_manifest': lease[field] = context['candidate']['bound_files']['source_backend']
+    else: lease[field] = 'a'*64
+    bad = cp.pin(write(Path(prepared['operation_root'])/('bad_'+field+'.json'), lease))
+    with pytest.raises(ValueError, match='not bound to this owner and backend'):
+        startup.fixed_generation_policy(dict(campaign_id=cp.CAMPAIGN_ID,
+            contract_fingerprint_sha256=cp.SCIENTIFIC_CONTRACT_FINGERPRINT,
+            operational_overlay_manifest=prepared['overlay'], supervisor_lease=bad))
+
+
+@pytest.mark.parametrize('bad', [None, 'failure_count', 'migration_backend', 'missing_failure'])
+def test_failed_control_successor_keeps_checkpoint_and_monotonic_generation(context, monkeypatch, bad):
+    prepared = prepare(context)
+    prior = cp.read(cp.bound(prepared['lease']))
+    old_bytes = cp.bound(prepared['lease']).read_bytes()
+    failure = dict(overall_status='FAIL', successor_lease=prepared['lease'],
+        boundary=prepared['boundary'], failed_physical_pid=prior['physical_process']['pid'],
+        physical_process_confirmed_absent=True, fixed48_solver_execution_started=False,
+        source_raw_artifacts_untouched=True, nn_training_started=False,
+        current_accepted=861, current_feature_rows=48216,
+        source_campaign_status=cp.pin(context['source']/'CAMPAIGN_STATUS.json'),
+        successor_campaign_status=cp.pin(Path(prepared['root'])/'CAMPAIGN_STATUS.json'))
+    if bad == 'failure_count': failure['current_accepted'] = 100
+    failure_pin = cp.pin(write(Path(prepared['operation_root'])/'FAILURE_FIXTURE.json', failure))
+    state = prepared['state']
+    if bad == 'migration_backend':
+        forged = copy.deepcopy(prior)
+        forged['backend_identity_manifest'] = context['candidate']['bound_files']['source_backend']
+        forged_pin = cp.pin(write(Path(prepared['operation_root'])/'FORGED_LEASE_FIXTURE.json', forged))
+        failure['successor_lease'] = forged_pin
+        failure_pin = cp.pin(write(Path(prepared['operation_root'])/'FORGED_FAILURE_FIXTURE.json', failure))
+        with pytest.raises(ValueError, match='migration backend differs'):
+            cp.validate_failed_control_predecessor(failure_pin, prior_record=forged_pin,
+                boundary_record=prepared['boundary'], state=state)
+        return
+    files = context['candidate']['bound_files']
+    files.update(prior_supervisor_lease=prepared['lease'], current_operational_overlay=prepared['overlay'])
+    if bad != 'missing_failure': files['prior_startup_terminal_failure'] = failure_pin
+    context['candidate'].update(predecessor_physical_pid=prior['physical_process']['pid'],
+        predecessor_lease_generation=prior['lease_generation'], next_lease_generation=prior['lease_generation']+1,
+        prior_recovery_handoffs=[*context['candidate']['prior_recovery_handoffs'], prepared['handoff']])
+    # Only process identity is synthetic; the producer, serialization and consumer run unchanged.
+    current = process_fixture(os.getpid()+1000000)
+    # Validate the actual failed predecessor separately; use distinct fixture identities on the next run.
+    if bad is None:
+        assert cp.validate_failed_control_predecessor(failure_pin, prior_record=prepared['lease'],
+            boundary_record=prepared['boundary'], state=state) == prepared['handoff']
+    rebind_fixture(context)
+    context['kwargs'].update(operation_root=Path(prepared['operation_root']).with_name('next_operation'),
+        successor_root=Path(prepared['root']).with_name('successor_next'))
+    context['kwargs']['isolation'] = FixtureIsolation(current, prior['physical_process'])
+    with monkeypatch.context() as patch:
+        patch.setattr(os, 'getpid', lambda: current['pid'])
+        if bad:
+            with pytest.raises(ValueError): prepare(context)
+        else:
+            next_prepared = prepare(context)
+            assert cp.read(cp.bound(next_prepared['lease']))['lease_generation'] == prior['lease_generation']+1
+            assert next_prepared['state']['current_accepted'] == 861
+            assert cp.validate_checkpoint_handoff(cp.read(cp.bound(next_prepared['handoff']))) == state
+    assert cp.bound(prepared['lease']).read_bytes() == old_bytes
 
 
 def test_real_producer_order_migrates_into_new_control_envelope(context):
