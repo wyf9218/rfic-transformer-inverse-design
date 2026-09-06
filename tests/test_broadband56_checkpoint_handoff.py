@@ -53,6 +53,22 @@ def checkpoint_fixture(tmp_path, module, accepted):
     records = []
     for role in roles:
         receipt = {"overall_status": "PASS", "fixture_only": True}
+        if role == 'adaptive_checkpoint_materializer' and 100 < accepted < 1000:
+            from tests.test_materialize_broadband56_v2_adaptive_checkpoint import _write_checkpoint, MODULE
+            checkpoint = _write_checkpoint(attempt/'backend/roles'/role/'checkpoint', accepted=100)
+            checkpoint_value = module.read(checkpoint/'CHECKPOINT_RECEIPT.json')
+            for output in checkpoint_value['outputs'].values():
+                output['exists'] = True
+            write(checkpoint/'CHECKPOINT_RECEIPT.json', checkpoint_value)
+            receipt.update(schema=MODULE.RECEIPT_SCHEMA, stage='PILOT_1000',
+                campaign_id=module.CAMPAIGN_ID,
+                contract_fingerprint_sha256=module.SCIENTIFIC_CONTRACT_FINGERPRINT,
+                checkpoint_accepted=100, current_accepted=100, round_accepted_target=1000,
+                raw_selection_count=900, backend_identity_manifest=backend,
+                full_campaign_authorization_receipt=authorization, simulator_action_taken=False,
+                checkpoint_dir=str(checkpoint),
+                checkpoint_receipt=module.pin(checkpoint/'CHECKPOINT_RECEIPT.json'),
+                checkpoint_status=module.pin(checkpoint/'CHECKPOINT_STATUS.json'))
         if role == 'stage_attempt_finalizer' and accepted < 1000:
             receipt['progress_receipt'] = module.pin(path)
         role_path = write(attempt/'backend/roles'/role/'ROLE_RECEIPT.json', receipt)
@@ -152,7 +168,9 @@ def resume_fixture(tmp_path, accepted):
     root, attempt, backend, auth = checkpoint_fixture(tmp_path, module, accepted)
     proof = module.committed_boundary(root, attempt, backend=backend, authorization=auth)
     boundary = module.pin(write(tmp_path/'COMMITTED_CHECKPOINT_FIXTURE.json', proof))
-    new_backend = module.pin(write(tmp_path/'target_backend.json', module.read(Path(backend['path']))))
+    backend_value = module.read(Path(backend['path']))
+    backend_value['frozen_materializer_migration_binding'] = {'fixture_only': True}
+    new_backend = module.pin(write(tmp_path/'target_backend.json', backend_value))
     new_auth = module.pin(write(tmp_path/'target_auth.json', dict(overall_status='PASS',
         authorization_scope='FULL_CAMPAIGN', backend_identity_manifest=new_backend, fixture_only=True)))
     original = proof['source_stages'][0]

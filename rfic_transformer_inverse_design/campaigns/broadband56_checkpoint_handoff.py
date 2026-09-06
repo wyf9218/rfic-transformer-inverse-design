@@ -208,6 +208,7 @@ def migrate_boundary(proof, *, target_root, target_backend, target_authorization
         raise ValueError('verified committed boundary required')
     for source in proof['sources']:
         bound(source)
+    dependency = frozen_materializer_source(proof)
     target = Path(target_root)
     source_root = Path(proof['terminal_receipt']['path']).parent.parent.parent
     if target == source_root or target.is_relative_to(source_root) or source_root.is_relative_to(target):
@@ -321,6 +322,35 @@ def migrate_boundary(proof, *, target_root, target_backend, target_authorization
             accepted = stages[-1][1]['accepted_unique_geometries']
         if accepted != proof['accepted']:
             raise ValueError('resume changed the accepted count')
+        migrated_dependency = None
+        if dependency is not None:
+            materializer_record, checkpoint_record = dependency
+            original = read(bound(materializer_record))
+            checkpoint_path = bound(checkpoint_record)
+            checkpoint_value = read(checkpoint_path)
+            checkpoint_destination = target/checkpoint_path.relative_to(source_root)
+            checkpoint_value['outputs'] = {
+                key: dict(value, **copy_artifact(checkpoint_output_pin(value), source_root, target))
+                for key, value in checkpoint_value['outputs'].items()}
+            checkpoint_pin = write_new(checkpoint_destination, checkpoint_value)
+            marker = dict(kind='REUSE_FROZEN_MATERIALIZER_UNCHANGED_SCIENTIFIC_CONTRACT',
+                source_terminal_receipt=proof['terminal_receipt'],
+                source_backend=proof['source_backend'], source_authorization=proof['source_authorization'],
+                source_materializer=materializer_record, source_checkpoint=checkpoint_record,
+                target_backend=target_backend, target_authorization=target_authorization,
+                accepted_increment=0, simulator_action_taken=False)
+            value = copy.deepcopy(original)
+            value.update(backend_identity_manifest=target_backend,
+                full_campaign_authorization_receipt=target_authorization,
+                checkpoint_dir=str(checkpoint_destination.parent), checkpoint_receipt=checkpoint_pin,
+                checkpoint_status=checkpoint_output_pin(checkpoint_value['outputs']['checkpoint_status']),
+                operational_checkpoint_rebind=marker)
+            destination = target/bound(materializer_record).relative_to(source_root).parent
+            materializer_pin = write_new(destination/'ADAPTIVE_CHECKPOINT_MATERIALIZER_RECEIPT.json', value)
+            migrated_dependency = dict(marker, rebound_materializer=materializer_pin,
+                rebound_checkpoint=checkpoint_pin)
+            validate_frozen_materializer_dependency(proof, migrated_dependency, target_root=target,
+                target_backend=target_backend, target_authorization=target_authorization)
         for source in proof['sources']:
             bound(source)
         for source in (target_backend,target_authorization,golden_template):
@@ -335,6 +365,8 @@ def migrate_boundary(proof, *, target_root, target_backend, target_authorization
             progress_receipts=[pin(p) for p,_ in records], copied_artifacts=copied,
             source_evidence_modified=False, simulator_action_taken=False, queue_created=False,
             supervisor_started=False, nn_training_started=False)
+        if migrated_dependency is not None:
+            result['frozen_materializer_dependency'] = migrated_dependency
         if control_envelope is not None:
             result['control_envelope'] = control_envelope
         return write_new(target/'CHECKPOINT_REBIND_RECEIPT.json',result)
@@ -342,6 +374,113 @@ def migrate_boundary(proof, *, target_root, target_backend, target_authorization
         write_new(target/'CHECKPOINT_REBIND_FAILURE.json',dict(overall_status='FAIL',error=repr(error),
             source_evidence_modified=False,simulator_action_taken=False))
         raise
+
+
+def checkpoint_output_pin(record):
+    """Validate the auditor's extended file record without dropping its metadata."""
+    if set(record) not in ({'path','size_bytes','sha256'}, {'path','size_bytes','sha256','exists'}):
+        raise ValueError('unexpected checkpoint output identity fields')
+    if 'exists' in record and record['exists'] is not True:
+        raise ValueError('checkpoint output was recorded as absent')
+    identity = {key:record[key] for key in ('path','size_bytes','sha256')}
+    bound(identity)
+    return identity
+
+
+def frozen_materializer_source(proof):
+    """Select the frozen sampling dependency from the committed attempt's trace."""
+    from scripts import materialize_broadband56_v2_adaptive_checkpoint as materializer
+    from .broadband56_balanced200k import frozen_checkpoint_start
+    from .broadband56_capacity_policy import STAGE_BY_NAME
+
+    stage = proof['current_stage']
+    stages = [read(bound(record)) for record in proof['source_stages']]
+    preceding = [v for v in stages if v['stage'] != stage]
+    base = int(preceding[-1]['accepted_unique_geometries']) if preceding else 0
+    if proof['accepted'] == STAGE_BY_NAME[stage].cumulative_target:
+        return None
+    count = frozen_checkpoint_start(proof['accepted'], stage_base_accepted=base,
+        cumulative_target=STAGE_BY_NAME[stage].cumulative_target)
+    if count == proof['accepted']:
+        return None
+    attempt = bound(proof['terminal_receipt']).parent
+    root = attempt.parent.parent
+    trace_pin = pin(attempt/'backend/STAGE_EXECUTION_TRACE.json')
+    if trace_pin not in proof['sources']:
+        raise ValueError('frozen materializer trace is not bound to the checkpoint')
+    matches = [v for v in read(bound(trace_pin))['roles']
+               if v.get('role') == 'adaptive_checkpoint_materializer']
+    if len(matches) != 1 or matches[0].get('return_code') != 0:
+        raise ValueError('checkpoint requires one completed frozen materializer')
+    record = matches[0]['receipt']
+    path = bound(record)
+    value = read(path)
+    if (not path.is_relative_to(attempt) or record not in proof['sources']
+            or value.get('schema') != materializer.RECEIPT_SCHEMA
+            or value.get('overall_status') != 'PASS' or value.get('stage') != stage
+            or value.get('campaign_id') != CAMPAIGN_ID
+            or value.get('contract_fingerprint_sha256') != SCIENTIFIC_CONTRACT_FINGERPRINT
+            or value.get('checkpoint_accepted') != count
+            or value.get('backend_identity_manifest') != proof['source_backend']
+            or value.get('full_campaign_authorization_receipt') != proof['source_authorization']
+            or value.get('simulator_action_taken') is not False):
+        raise ValueError('frozen materializer identity differs from committed source')
+    checkpoint_path = bound(value['checkpoint_receipt'])
+    if (not checkpoint_path.is_relative_to(root)
+            or checkpoint_path.name != 'CHECKPOINT_RECEIPT.json'
+            or value.get('checkpoint_dir') != str(checkpoint_path.parent)
+            or bound(value['checkpoint_status']) != checkpoint_path.parent/'CHECKPOINT_STATUS.json'):
+        raise ValueError('frozen materializer checkpoint escaped its source campaign')
+    materializer._validate_checkpoint(checkpoint_dir=checkpoint_path.parent, expected_accepted=count)
+    return record, value['checkpoint_receipt']
+
+
+def validate_frozen_materializer_dependency(proof, dependency, *, target_root,
+                                          target_backend, target_authorization):
+    """Allow only provenance-bound path rebinding, never new scientific results."""
+    from scripts import materialize_broadband56_v2_adaptive_checkpoint as materializer
+
+    selected = frozen_materializer_source(proof)
+    if selected is None:
+        raise ValueError('unexpected frozen materializer dependency at an exact boundary')
+    original_pin, checkpoint_pin = selected
+    original = read(bound(original_pin))
+    checkpoint = read(bound(checkpoint_pin))
+    source_root = bound(proof['terminal_receipt']).parent.parent.parent
+    target = Path(target_root)
+    if target == source_root or target.is_relative_to(source_root) or source_root.is_relative_to(target):
+        raise ValueError('frozen materializer source and target overlap')
+    marker = dict(kind='REUSE_FROZEN_MATERIALIZER_UNCHANGED_SCIENTIFIC_CONTRACT',
+        source_terminal_receipt=proof['terminal_receipt'], source_backend=proof['source_backend'],
+        source_authorization=proof['source_authorization'], source_materializer=original_pin,
+        source_checkpoint=checkpoint_pin, target_backend=target_backend,
+        target_authorization=target_authorization, accepted_increment=0, simulator_action_taken=False)
+    if {k:v for k,v in dependency.items() if k not in ('rebound_materializer','rebound_checkpoint')} != marker:
+        raise ValueError('frozen materializer rebind authority differs')
+    expected_path = target/bound(checkpoint_pin).relative_to(source_root)
+    if bound(dependency['rebound_checkpoint']) != expected_path:
+        raise ValueError('frozen checkpoint replacement escaped its expected location')
+    for key, record in checkpoint['outputs'].items():
+        source = bound(checkpoint_output_pin(record))
+        if not source.is_relative_to(bound(checkpoint_pin).parent):
+            raise ValueError('frozen checkpoint output escaped its source directory')
+        replacement = pin(target/source.relative_to(source_root))
+        if any(replacement[k] != record[k] for k in ('sha256','size_bytes')):
+            raise ValueError('frozen checkpoint output bytes changed')
+        checkpoint['outputs'][key] = dict(record, **replacement)
+    if read(expected_path) != checkpoint:
+        raise ValueError('rebound checkpoint changed more than output locations')
+    expected = copy.deepcopy(original)
+    expected.update(backend_identity_manifest=target_backend,
+        full_campaign_authorization_receipt=target_authorization,
+        checkpoint_dir=str(expected_path.parent), checkpoint_receipt=dependency['rebound_checkpoint'],
+        checkpoint_status=checkpoint_output_pin(checkpoint['outputs']['checkpoint_status']),
+        operational_checkpoint_rebind=marker)
+    materializer_path = target/bound(original_pin).relative_to(source_root).parent/'ADAPTIVE_CHECKPOINT_MATERIALIZER_RECEIPT.json'
+    if bound(dependency['rebound_materializer']) != materializer_path or read(materializer_path) != expected:
+        raise ValueError('rebound materializer changed identity or frozen sampling state')
+    materializer._validate_checkpoint(checkpoint_dir=expected_path.parent,
+        expected_accepted=original['checkpoint_accepted'])
 
 
 def verified_resume_state(boundary_record, migration_record):
@@ -398,6 +537,12 @@ def verified_resume_state(boundary_record, migration_record):
         base_accepted=base, **target_args)
     if errors:
         raise ValueError('resume chains failed: '+repr(errors[:12]))
+    if ('frozen_materializer_dependency' in migration
+            or target_backend.get('frozen_materializer_migration_binding')
+            and frozen_materializer_source(proof) is not None):
+        validate_frozen_materializer_dependency(proof, migration['frozen_materializer_dependency'],
+            target_root=target_root, target_backend=migration['target_backend'],
+            target_authorization=migration['target_authorization'])
     for pair in migration['copied_artifacts']:
         source, replacement = bound(pair['original']), bound(pair['replacement'])
         if (not source.is_relative_to(source_root) or not replacement.is_relative_to(target_root)
