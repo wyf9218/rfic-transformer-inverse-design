@@ -245,3 +245,34 @@ zero production processes, and 731,528,798,208 free bytes against the unchanged
 prove a supervisor restart or any new accepted sample. Recovery may restore
 the unique capacity-checking controller, but no simulator may launch while
 storage or any other hard gate fails.
+
+## Live Recovery: Capacity Checking, No New Simulators
+
+At 05:14:28 UTC the final package was actually dispatched through the existing
+checkpoint launcher under standing delegated authority. The new physical
+generation is 33, PID 2745934 / start ticks 356199713, with the same campaign,
+queue, logical owner and authoritative lock. At 05:16:03 the process was live,
+matched its immutable lease and was the only project supervisor. No previous
+healthy solver was stopped. The committed 1,000 / 56,000 checkpoint and exact
+pilot-storage input bytes were preserved; accepted increment is zero.
+
+The first fresh independent resource audit completed normally at 05:15:38.
+All control identities, CPU, memory, swap, I/O, licenses and isolation passed.
+Only storage failed: 730,899,976,192 bytes available versus the unchanged
+1,499,472,810,253 required. Requested/admitted/executor/native concurrency is
+**48 / 0 / 48 / 0**. The controller is alive and checking capacity; Phase A
+simulation and new sample generation have **not** resumed. Do not restart it
+merely because a gate says WAIT. No benchmark or NN training was started.
+
+Evidence SHA256 identities:
+- Actual delegated candidate: `a7abe4d8cd22d9a4f89ef1627f0577ec53b6647e490f4689b8c7acce892de6a7`.
+- Delegated release: `3fd4097e71a58bdd6d6dd80253b296002d78e1a176bc5b80abf6249cce191ac2`.
+- Single-use dispatch: `1f61b697ff042e33832abbb7dba8199df2ab82ad54a020fc9d433debf2c603d4`.
+- Lease33: `79efdfbd859eacc8cd238570e6ff9815d3a913d0de4eaae0c2f55803c5176011`.
+- Checkpoint migration: `f56e28418b0766172c2af94b7245980a7d922dd19761bea6e9a99612423dbbba`.
+- Fresh resource audit: `7065b6313ca38a26d593a48d1a761872704408ba33016a82d641aef5087108b2`.
+- Live process/lease observation: `73983b8eb3f7558093cd9390ccaee6e96e38c9de67512473e95d22411e2c78f0`.
+
+Private original receipts remain on MARS and in the local engineering evidence
+mirror. None is published here. The old unlaunched release and all failed
+preflights remain preserved, not relabeled as successful production.
