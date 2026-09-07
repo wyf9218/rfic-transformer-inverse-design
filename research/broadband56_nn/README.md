@@ -4,6 +4,10 @@ An isolated research implementation of full four-port S-parameter prediction and
 masked-spectrum inverse design. This directory does not launch or control data
 generation, Cadence, Calibre, EMX, a production supervisor, or the GUI.
 
+The incremental **seven-model 10K v3** entry is documented in
+[SEVEN_MODEL_V3.md](SEVEN_MODEL_V3.md). It adds BB00's separate historical-reference
+and new-training branches without replacing the six systems below.
+
 The initial research budget is **256 optimizer updates per forward model and 128
 per inverse**, with effective batch 32 geometries, AdamW at `3e-4`, weight decay
 `1e-4`, and gradient clipping at 1.0. These are short, recorded training budgets,

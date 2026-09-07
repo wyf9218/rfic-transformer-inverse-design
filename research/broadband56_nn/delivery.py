@@ -190,13 +190,14 @@ def _fresh_worker(data: str, best: str, last: str, out: str, device: str,
               "test_evaluated": False, "device": device, "artifacts": pins})
 
 
-def _command(command: list[str], log: Path, software_root: Path | None = None) -> dict:
+def _command(command: list[str], log: Path, software_root: Path | None = None, *, lock_fds=()) -> dict:
     started = time.monotonic()
     env = os.environ.copy()
     root = str((software_root or Path(__file__).resolve().parents[2]).resolve())
     env["PYTHONPATH"] = root + (os.pathsep + env["PYTHONPATH"] if env.get("PYTHONPATH") else "")
     with log.open("x", encoding="utf-8") as stream:
-        process = subprocess.Popen(command, stdout=stream, stderr=subprocess.STDOUT, env=env, cwd=root)
+        process = subprocess.Popen(command, stdout=stream, stderr=subprocess.STDOUT, env=env, cwd=root,
+                                   pass_fds=tuple(lock_fds))
         result = {"pid": process.pid, "command": command, "started_utc": utc_now()}
         result["returncode"] = process.wait()
     result.update(elapsed_seconds=time.monotonic() - started, log_sha256=sha256(log), log_path=str(log))
@@ -238,7 +239,7 @@ def _expected_sampler_state(state: dict, bundle: Bundle, micro_batch: int) -> di
 
 
 def verify_load_resume(data: str | Path, runs_root: str | Path, out: str | Path,
-                       device: str = "mps") -> dict:
+                       device: str = "mps", *, lock_fds=()) -> dict:
     """Run only after the main training campaign is terminal, never alongside it."""
     data, root, output = Path(data).resolve(), Path(runs_root).resolve(), Path(out).resolve()
     terminal = _campaign_terminal(root)
@@ -264,7 +265,7 @@ def verify_load_resume(data: str | Path, runs_root: str | Path, out: str | Path,
                       "--device", device]
             if forward:
                 worker += ["--forward-checkpoint", forward]
-            worker_process = _command(worker, destination / "fresh_load.log")
+            worker_process = _command(worker, destination / "fresh_load.log", lock_fds=lock_fds)
             worker_receipt = read_json(destination / "fresh_load" / "FRESH_PROCESS_RECEIPT.json")
             worker_identity = (worker_receipt.get("status") == "PASS" and
                                worker_receipt.get("pid") == worker_process["pid"] and
@@ -302,7 +303,7 @@ def verify_load_resume(data: str | Path, runs_root: str | Path, out: str | Path,
                 resume += ["--forward-checkpoint", forward]
             if parity:
                 resume += ["--physical-parity-receipt", str(parity)]
-            resume_process = _command(resume, destination / "resume.log")
+            resume_process = _command(resume, destination / "resume.log", lock_fds=lock_fds)
             proof = read_json(destination / "resume_branch" / "TRAINING_RECEIPT.json")
             if sha256(proof["last_checkpoint"]) != proof["last_sha256"]:
                 raise ValueError("resume receipt checkpoint SHA mismatch")
