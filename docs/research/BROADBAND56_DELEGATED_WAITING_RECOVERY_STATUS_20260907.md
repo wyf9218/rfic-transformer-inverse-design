@@ -59,3 +59,38 @@ These results prove software recovery preparation, not live resource admission,
 deployment, fresh EMX execution, additional acceptance, or 48 native solvers.
 Deployment and production require separate live receipts and process evidence.
 Private manifests, PDK, process files, GDS, and credentials are not published.
+
+## Live Deployment and First Acceptance
+
+Verified on 2026-09-07 UTC, separately from the software tests above:
+
+- Patch commit `970aec3c43aacd340c8d8f661d2f470ded54e05e` was deployed under
+  the standing grant, with a truthful delegated release receipt. Generation
+  32 retained the same campaign, queue, logical supervisor and original lock.
+  The four fenced blocked Python controls exited; no healthy native solver
+  was stopped. Old receipts and physical artifacts remained intact.
+- Five distinct fresh resource checks passed. Requested/admitted/executor
+  capacity was 48/48/48. At 04:03:14 UTC, process-identity verification
+  observed **48 native EMX solvers**, not just futures or Python workers.
+  Later tail concurrency decreased as the finite 119-candidate cohort drained.
+  Live observation SHA256:
+  `2d9c6e2d5f9ff7fe8c7245e6c340cf592d569689102036c4c77af826ca496a05`.
+- Seven completed prefix roles were explicitly reused, including 119 exact
+  GDS/zero-blocking Calibre artifacts. Reuse itself added zero accepted rows.
+  Reuse receipt SHA256:
+  `52617e750bbf31ee1ad97aa02e19824cc84e53ad287a392be8f2aa6e835f9563`.
+- Fresh EMX completed 119/119 with zero EMX failures. Full-band S4P QA passed
+  119/119, producing 6,664 new frequency rows. EMX and QA receipt SHAs:
+  `4c67468e90a2031da52f4c0d22fb9e8385f13b126d0398c77d3099638adb40ea`
+  and `e71665a91357aa0e58ec34685d512561ef2c8993c3a590d8725f7e6fcafe809c`.
+- At 04:08:24 UTC the formal progress receipt committed **861 -> 980**
+  accepted unique geometries, totaling **54,880** frequency rows. The 20
+  original Cadence failures remain failures. `PILOT_1000` is INCOMPLETE,
+  decision `CONTINUE_SAMPLING`, remaining 20 accepted, not 20 guaranteed
+  successful candidates. Progress receipt SHA256:
+  `b9f1ac80b7a48c9a28c00ae19ac86f050e0296e9e31cd0547affe59ae4892f24`.
+
+This is actual restored production, not completion of the 200K target.
+No NN training, concurrency benchmark, or scientific-contract change occurred.
+Stable end-to-end production throughput and completion ETA remain
+`NOT_MEASURED`; this recovery cohort reused previously completed upstream work.
