@@ -890,7 +890,8 @@ def _operational_handoff_exact(
     normal_checkpoint = payload.get("handoff_scope") == checkpoint_handoff.CHECKPOINT_HANDOFF_SCOPE
     if normal_checkpoint:
         try:
-            checkpoint_handoff.validate_checkpoint_handoff(payload)
+            checkpoint_handoff.validate_checkpoint_handoff(payload,
+                allow_committed_extension=not require_new_process_live)
         except (KeyError, OSError, TypeError, ValueError):
             return False
     identities_valid = (

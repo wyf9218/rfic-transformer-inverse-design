@@ -150,3 +150,57 @@ before first resource consumption, retain the terminal 1,000 checkpoint, and
 perform its full no-simulator recovery preflight. That new recovery/preflight
 has **not** been performed; old startup intents must not be replayed. Standing
 delegated authorization still applies, with no new owner-per-SHA approval.
+
+## Post-Pilot Recovery Prepared, Not Launched
+
+The preparation gap above is now addressed in a new isolated package. No
+generation-32 runtime, receipt, lease, checkpoint, or physical artifact was
+modified. Production remains stopped at 1,000 accepted / 56,000 rows.
+
+- `broadband56_checkpoint_startup.validated_pilot_storage` binds the source
+  summary to the exact completed pilot, including previous receipt migrations,
+  its ledger/backend/authorization/producer identities, denominator, measured
+  totals, and unchanged storage formula. Missing, changed, or conflicting
+  inputs fail before new control directories are created.
+- `restore_pilot_storage` copies the exact original bytes after the strict
+  empty-envelope checkpoint migration and before any policy read. The new
+  handoff records both source and restored identities. An old measured storage
+  FAIL is not transformed into a live resource PASS.
+- Real-file preflight also exposed a historical-handoff defect: the previous
+  validator treated subsequent accepted receipts as unbound files in the old
+  migration view. Historical links now permit only append-only extensions
+  proven by the full committed-boundary validator. The original preserved
+  count stays 861, while later receipts prove 1,000. The current startup link
+  remains strict. Missing/changed originals, invalid QA/counts, and pending
+  extensions remain rejected; previous failed-start evidence is preserved.
+- The preparation descriptor was aligned to the existing backend's unchanged
+  stage-launcher path. This correction did not change launcher bytes, the
+  private configuration, stage profile, or any physical role implementation.
+
+Final frozen runtime SHA256:
+`6236517881bdee5b7eebdd0758ff635db3cd6310d07e66f6c5a9f4aed033f64a`.
+Final backend SHA256:
+`a188fa3ce67bb725d0d88499433dfa801fc6aca248865eebc8d557e669675d4d`.
+Focused final-package regressions under the approved private Python / NumPy
+2.5.0: **270 passed**, 16.69 seconds, 10 named modules; process/signal attempts
+zero. Test receipt SHA256:
+`d7e6a0d9290080a6c95783145fb8ee401962d7d820e5a44080590cdc8f38b795`.
+
+Final no-simulator preflight SHA256:
+`36c9475c3555c6f19b8d170a864c9dd65228da3a24512b2105f87d4a5098fc62`.
+It exercises actual source files and package imports, full `prepare_controls`,
+serialized storage/lease, first fixed48 and storage-policy consumption,
+ordered handoff validation, resume identity, controller argv, and Phase-A
+backend argument construction/parsing. All three actual storage readers return
+6,028,031.398 bytes per geometry. Explicit test process/lock/gate inputs are
+isolated: no production lease/lock, consumed intent, child process, signal,
+Cadence, Calibre, EMX, queue generation, or controller main invocation.
+The real old resource values evaluated with test bindings retain storage FAIL;
+this is not a fresh capacity approval or a production deployment.
+
+Earlier failed test/preflight outputs remain retained, including the dedicated
+legacy exception-type assertion, executable-metadata pin adapter, historical
+append-only validation, and stage-launcher path mismatch. They are not relabeled
+as successful executions. Actual restart still requires a fresh storage and
+remaining hard-gate check, the same queue/logical owner, and a new unconsumed
+controlled startup record under the standing authorization.

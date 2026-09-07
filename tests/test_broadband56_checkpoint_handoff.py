@@ -226,6 +226,76 @@ def test_resume_state_is_dynamic_and_does_not_restart_golden(tmp_path, accepted)
     assert state['resource_gate'] == 'NOT_RUN' and 'latest_resource_gate' not in state
 
 
+def append_completed_pilot_fixture(handoff, backend, authorization):
+    module = broadband56_checkpoint_handoff
+    root = Path(handoff['checkpoint_migration']['path']).parent
+    attempt = root/'stages/000041_pilot_1000_fixture'
+    value = _stage_receipt(attempt/'backend', stage='PILOT_1000', target=1000)
+    migration = module.read(module.bound(handoff['checkpoint_migration']))
+    value.update(backend_identity_manifest_sha256=backend['sha256'],
+        full_campaign_authorization_receipt_sha256=authorization['sha256'],
+        prior_stage_receipt_sha256=migration['stage_receipts'][-1]['sha256'])
+    write(attempt/'STAGE_RECEIPT.json', value)
+    order = list(module.expected_stage_role_order('PILOT_1000'))
+    roles = [dict(role=role, return_code=0, receipt=module.pin(write(
+        attempt/'backend/roles'/role/'ROLE_RECEIPT.json', dict(overall_status='PASS', fixture_only=True)))) for role in order]
+    write(attempt/'backend/STAGE_EXECUTION_TRACE.json', dict(overall_status='PASS', stage='PILOT_1000',
+        campaign_id=module.CAMPAIGN_ID, contract_fingerprint_sha256=module.SCIENTIFIC_CONTRACT_FINGERPRINT,
+        all_role_return_codes_zero=True, all_role_receipts_pass=True, role_order=order, roles=roles))
+    proof = module.read(module.bound(handoff['checkpoint_boundary']))
+    source_root = Path(proof['terminal_receipt']['path']).parent.parent.parent
+    state = module.read(source_root/'CAMPAIGN_STATUS.json')
+    state.update(current_accepted=1000, feature_rows=56000, check_index=41)
+    write(root/'CAMPAIGN_STATUS.json', state)
+    return root, attempt
+
+
+def test_only_historical_handoff_accepts_verified_append_only_progress(tmp_path):
+    module = broadband56_checkpoint_handoff
+    controller, _, handoff, backend, auth = normal_handoff_fixture(tmp_path)
+    root, _ = append_completed_pilot_fixture(handoff, backend, auth)
+    before = {str(p):p.read_bytes() for p in root.rglob('*') if p.is_file()}
+    with pytest.raises(ValueError, match='unbound receipts'):
+        module.validate_checkpoint_handoff(handoff)
+    original_state = module.validate_checkpoint_handoff(handoff, allow_committed_extension=True)
+    assert original_state['current_accepted'] == 861
+    assert controller._operational_handoff_exact(handoff, expected_old_process_pid=103,
+        expected_new_process_pid=104, require_process_identities=True, require_new_process_live=False)
+    assert not controller._operational_handoff_exact(handoff, expected_old_process_pid=103,
+        expected_new_process_pid=104, require_process_identities=True, require_new_process_live=True)
+    assert before == {str(p):p.read_bytes() for p in root.rglob('*') if p.is_file()}
+
+
+def test_original_receipt_validation_does_not_reclassify_a_later_failed_attempt(tmp_path):
+    module = broadband56_checkpoint_handoff
+    _, _, handoff, _, _ = normal_handoff_fixture(tmp_path)
+    target = Path(handoff['checkpoint_migration']['path']).parent
+    (target/'stages/000041_failed_start_without_acceptance').mkdir()
+    # Failed-start and waiting-prefix validators separately bind their terminal evidence.
+    assert module.validate_checkpoint_handoff(handoff)['current_accepted'] == 861
+    assert module.validate_checkpoint_handoff(handoff, allow_committed_extension=True)['current_accepted'] == 861
+
+
+@pytest.mark.parametrize('failure', ['running', 'missing_original', 'changed_original',
+    'missing_qa', 'wrong_count', 'pending_attempt', 'earlier_extra'])
+def test_historical_extension_still_rejects_incomplete_or_changed_evidence(tmp_path, failure):
+    module = broadband56_checkpoint_handoff
+    _, _, handoff, backend, auth = normal_handoff_fixture(tmp_path)
+    root, attempt = append_completed_pilot_fixture(handoff, backend, auth)
+    migration = module.read(module.bound(handoff['checkpoint_migration']))
+    state = module.read(root/'CAMPAIGN_STATUS.json')
+    if failure == 'running': state['overall_status'] = 'PHASE_A_RUNNING'
+    elif failure == 'missing_original': Path(migration['progress_receipts'][0]['path']).unlink()
+    elif failure == 'changed_original': Path(migration['progress_receipts'][0]['path']).write_text('{}')
+    elif failure == 'missing_qa': (attempt/'backend/STAGE_EXECUTION_TRACE.json').unlink()
+    elif failure == 'wrong_count': state['current_accepted'] = 999
+    elif failure == 'pending_attempt': (root/'stages/000042_pending').mkdir()
+    elif failure == 'earlier_extra': write(root/'stages/000039_extra/STAGE_RECEIPT.json', {})
+    write(root/'CAMPAIGN_STATUS.json', state)
+    with pytest.raises((ValueError, OSError)):
+        module.validate_checkpoint_handoff(handoff, allow_committed_extension=True)
+
+
 def test_normal_handoff_extends_ordered_chain_without_failure_receipt(tmp_path, monkeypatch):
     controller, _, normal, _, _ = normal_handoff_fixture(tmp_path)
     def legacy(old, new, recovery):

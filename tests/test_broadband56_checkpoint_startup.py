@@ -102,8 +102,8 @@ def fixture_executor():
 
 
 @pytest.fixture
-def context(tmp_path, fixture_executor):
-    root, attempt, backend, auth = checkpoint_fixture(tmp_path, cp, 861)
+def context(tmp_path, fixture_executor, request):
+    root, attempt, backend, auth = checkpoint_fixture(tmp_path, cp, getattr(request, 'param', 861))
     for name in cp.CONTROL_ROOT_FILES[:6]:
         write(root/name, dict(fixture_only=True, contract_name=name))
     dummy = cp.pin(write(tmp_path/'bound-fixture.json', dict(fixture_only=True, old_process_pid=17)))
@@ -193,6 +193,115 @@ def rebind_fixture(context):
         approval_reference='fixture only '+kw['candidate_record']['sha256'])
     write(apath, approval)
     kw['approval_record'] = cp.pin(apath)
+
+
+def bind_storage_fixture(context):
+    """Explicit synthetic disk measurement, never a live capacity PASS."""
+    from rfic_transformer_inverse_design.campaigns.broadband56_capacity_policy import required_storage_bytes
+    candidate = context['candidate']
+    proof = cp.read(cp.bound(context['kwargs']['boundary_record']))
+    source = proof['source_stages'][-1]
+    value = dict(schema='rfic_transformer.broadband56_measured_pilot_storage.v1',
+        overall_status='PASS_MEASUREMENT_NOT_RESOURCE_ADMISSION',
+        campaign_id=cp.CAMPAIGN_ID, contract_fingerprint_sha256=cp.SCIENTIFIC_CONTRACT_FINGERPRINT,
+        campaign_root=str(context['source']), source_stage_receipt=source,
+        attempt_ledger=cp.read(cp.bound(source))['artifacts']['attempt_ledger'],
+        backend_identity_manifest=proof['source_backend'],
+        full_campaign_authorization_receipt=proof['source_authorization'],
+        producer=cp.pin(Path(__file__).resolve()), accepted_unique_geometries=1000,
+        geometry_frequency_rows=56000, bytes_per_geometry=6000000.0,
+        measurement=dict(total_charged_bytes=6000000000,
+            roots=[dict(path='SYNTHETIC_TEST_ONLY', charged_bytes=6000000000)]),
+        measurement_method='SUM_MAX_LOGICAL_ALLOCATED_BYTES_PER_UNIQUE_INODE_IN_LEDGER_BOUND_STAGE_DIRS',
+        includes_failed_attempts_and_retained_intermediates=True,
+        unchanged_storage_safety_factor=1.25, remaining_geometries=199000,
+        required_storage_bytes=required_storage_bytes(stage='PHASE_A', current_accepted=1000,
+            measured_pilot_bytes_per_geometry=6000000.0), storage_gate='FAIL',
+        production_resource_admission='NOT_RUN', simulator_action_taken=False, source_evidence_modified=False)
+    path = write(context['source']/'PILOT_1000_RESOURCE_SUMMARY.json', value)
+    candidate['bound_files']['pilot_storage_summary'] = cp.pin(path)
+    rebind_fixture(context)
+    return path
+
+
+@pytest.mark.parametrize('context', [1000], indirect=True)
+def test_post_pilot_storage_survives_full_prepare_and_actual_consumers(context):
+    path = bind_storage_fixture(context)
+    before = path.read_bytes()
+    prepared = prepare(context)
+    root = Path(prepared['root'])
+    assert (root/path.name).read_bytes() == before == path.read_bytes()
+    assert prepared['state']['current_stage'] == 'PHASE_A'
+    assert prepared['state']['current_accepted'] == 1000
+    assert prepared['state']['feature_rows'] == 56000
+    for script in ('authorized_queue_controller', 'stage_launcher', 'production_stage_backend'):
+        consumer = load_script(Path(__file__).resolve().parents[1]/'scripts'/('run_broadband56_v2_'+script+'.py'))
+        assert consumer._pilot_bytes_per_geometry(root) == 6000000.0
+    handoff = cp.read(cp.bound(prepared['handoff']))
+    assert handoff['pilot_storage_input'] == dict(source=cp.pin(path), restored=cp.pin(root/path.name))
+    assert cp.read(root/path.name)['storage_gate'] == 'FAIL'
+    with pytest.raises(FileExistsError):
+        startup.restore_pilot_storage(cp.pin(path), root)
+
+
+@pytest.mark.parametrize('context', [1000], indirect=True)
+def test_post_pilot_missing_summary_fails_before_control_creation(context):
+    with pytest.raises(ValueError, match='bound pilot storage summary'):
+        prepare(context)
+    assert not context['kwargs']['operation_root'].exists()
+    assert not context['kwargs']['successor_root'].exists()
+
+
+@pytest.mark.parametrize('context', [1000], indirect=True)
+@pytest.mark.parametrize('failure', ['drift', 'wrong_root', 'wrong_source', 'contract',
+    'denominator', 'bytes', 'total', 'required', 'ledger', 'producer'])
+def test_bad_pilot_storage_remains_fail_closed(context, failure):
+    path = bind_storage_fixture(context)
+    value = cp.read(path)
+    if failure == 'drift':
+        path.write_text('{}')
+    elif failure == 'wrong_root':
+        other = write(context['source'].parent/'other-summary.json', value)
+        context['candidate']['bound_files']['pilot_storage_summary'] = cp.pin(other)
+        rebind_fixture(context)
+    else:
+        if failure == 'wrong_source':
+            value['source_stage_receipt'] = cp.read(cp.bound(context['kwargs']['boundary_record']))['source_stages'][0]
+        elif failure == 'contract': value['contract_fingerprint_sha256'] = 'a'*64
+        elif failure == 'denominator': value['accepted_unique_geometries'] = 861
+        elif failure == 'bytes': value['bytes_per_geometry'] = 1
+        elif failure == 'total': value['measurement']['total_charged_bytes'] = 1
+        elif failure == 'required': value['required_storage_bytes'] = 1
+        elif failure == 'ledger': value['attempt_ledger'] = value['source_stage_receipt']
+        elif failure == 'producer': value['producer']['sha256'] = 'a'*64
+        write(path, value)
+        context['candidate']['bound_files']['pilot_storage_summary'] = cp.pin(path)
+        rebind_fixture(context)
+    errors = (ValueError, getattr(context['executor'], 'LaunchError', ValueError))
+    with pytest.raises(errors):
+        prepare(context)
+    assert not context['kwargs']['operation_root'].exists()
+    assert not context['kwargs']['successor_root'].exists()
+
+
+@pytest.mark.parametrize('context', [1000], indirect=True)
+def test_storage_origin_survives_an_existing_pilot_receipt_rebind(context):
+    path = bind_storage_fixture(context)
+    proof = cp.read(cp.bound(context['kwargs']['boundary_record']))
+    original = proof['source_stages'][-1]
+    migrated = cp.read(cp.bound(original))
+    migrated['operational_progress_rebind'] = dict(original_stage_receipt=original,
+        kind='REUSE_COMPLETED_STAGE_UNCHANGED_SCIENTIFIC_CONTRACT',
+        new_simulator_execution=False, accepted_count_increment=0)
+    replacement = write(context['source'].parent/'migrated_pilot.json', migrated)
+    proof['source_stages'][-1] = cp.pin(replacement)
+    state = dict(current_accepted=1000)
+    assert startup.validated_pilot_storage(context['candidate'], proof, state) == cp.pin(path)
+    migrated['operational_progress_rebind']['new_simulator_execution'] = True
+    write(replacement, migrated)
+    proof['source_stages'][-1] = cp.pin(replacement)
+    with pytest.raises(ValueError, match='provenance chain'):
+        startup.validated_pilot_storage(context['candidate'], proof, state)
 
 
 def test_missing_legacy_fingerprint_is_persisted_before_real_policy_consumption(context):

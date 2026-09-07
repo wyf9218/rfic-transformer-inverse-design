@@ -483,7 +483,7 @@ def validate_frozen_materializer_dependency(proof, dependency, *, target_root,
         expected_accepted=original['checkpoint_accepted'])
 
 
-def verified_resume_state(boundary_record, migration_record):
+def verified_resume_state(boundary_record, migration_record, *, allow_committed_extension=False):
     """Validate the actual source and migrated chains before deriving resume state.
 
     This is a startup-only check. It does not transfer the lease, assert process
@@ -519,11 +519,28 @@ def verified_resume_state(boundary_record, migration_record):
             or target_auth.get('authorization_scope') != 'FULL_CAMPAIGN'
             or target_auth.get('backend_identity_manifest') != migration['target_backend']):
         raise ValueError('resume scientific or authorization binding differs')
+    expected_paths = {bound(r) for key in ('stage_receipts', 'progress_receipts') for r in migration[key]}
+    observed_paths = {p for name in ('STAGE_RECEIPT.json', 'STAGE_PROGRESS_RECEIPT.json')
+                      for p in (target_root/'stages').glob('*/'+name)}
+    newer = [p for p in (target_root/'stages').iterdir()
+             if p.is_dir() and p.name[:6].isdigit() and int(p.name[:6]) > proof['check_index']]
+    if observed_paths != expected_paths:
+        # A historical owner may have legitimately committed more work after startup.
+        # Revalidate the full extension; never reinterpret it as part of the old count.
+        if (not allow_committed_extension or not expected_paths.issubset(observed_paths) or not newer
+                or any(not p.parent.name[:6].isdigit() or int(p.parent.name[:6]) <= proof['check_index']
+                       for p in observed_paths-expected_paths)):
+            raise ValueError('resume view contains missing, duplicate or unbound receipts')
+        latest = max(newer, key=lambda p: int(p.name[:6]))
+        extension = committed_boundary(target_root, latest,
+            backend=migration['target_backend'], authorization=migration['target_authorization'])
+        if extension['accepted'] < proof['accepted']:
+            raise ValueError('historical resume extension regressed accepted progress')
     chains = []
     for key, name in (('stage_receipts', 'STAGE_RECEIPT.json'),
                       ('progress_receipts', 'STAGE_PROGRESS_RECEIPT.json')):
         chain = [(bound(item), read(bound(item))) for item in migration[key]]
-        if ({p for p, _ in chain} != set((target_root/'stages').glob('*/'+name))
+        if (not {p for p, _ in chain}.issubset(observed_paths)
                 or len(chain) != len({p for p, _ in chain})):
             raise ValueError('resume view contains missing, duplicate or unbound receipts')
         chains.append(chain)
@@ -604,7 +621,7 @@ def validate_failed_control_predecessor(failure_record, *, prior_record, boundar
     return handoff_record
 
 
-def validate_checkpoint_handoff(payload):
+def validate_checkpoint_handoff(payload, *, allow_committed_extension=False):
     """Check a pinned normal handoff without inventing a failure or an approval."""
     if (payload.get('handoff_scope') != CHECKPOINT_HANDOFF_SCOPE
             or payload.get('recovery_scope') != CHECKPOINT_HANDOFF_SCOPE
@@ -612,7 +629,8 @@ def validate_checkpoint_handoff(payload):
             or payload.get('active_simulator_jobs') != 0
             or payload.get('simulator_action_taken') is not False):
         raise ValueError('normal handoff is not a committed-checkpoint transition')
-    state = verified_resume_state(payload['checkpoint_boundary'], payload['checkpoint_migration'])
+    state = verified_resume_state(payload['checkpoint_boundary'], payload['checkpoint_migration'],
+        allow_committed_extension=allow_committed_extension)
     proof = read(bound(payload['checkpoint_boundary']))
     old_lease = read(bound(payload['prior_supervisor_lease']))
     failure_record = payload.get('prior_startup_terminal_failure')

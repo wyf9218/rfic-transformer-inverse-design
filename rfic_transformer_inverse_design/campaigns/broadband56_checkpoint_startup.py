@@ -219,6 +219,98 @@ def validated_lease_fingerprint(candidate, prior, boundary_record, state):
     return fingerprint
 
 
+def validated_pilot_storage(candidate, proof, state):
+    """Bind the measured pilot input to this checkpoint, including prior migrations."""
+    record = candidate['bound_files'].get('pilot_storage_summary')
+    if state['current_accepted'] < 1000:
+        if record is not None:
+            raise ValueError('pilot storage summary precedes a completed pilot')
+        return None
+    if record is None:
+        raise ValueError('post-pilot recovery requires a bound pilot storage summary')
+    path = checkpoint.bound(record)
+    if path != Path(candidate['current_campaign_root'])/'PILOT_1000_RESOURCE_SUMMARY.json':
+        raise ValueError('pilot storage input is not from the current source root')
+    value = checkpoint.read(path)
+    expected = dict(schema='rfic_transformer.broadband56_measured_pilot_storage.v1',
+        overall_status='PASS_MEASUREMENT_NOT_RESOURCE_ADMISSION',
+        campaign_id=checkpoint.CAMPAIGN_ID,
+        contract_fingerprint_sha256=checkpoint.SCIENTIFIC_CONTRACT_FINGERPRINT,
+        accepted_unique_geometries=1000, geometry_frequency_rows=56000,
+        measurement_method='SUM_MAX_LOGICAL_ALLOCATED_BYTES_PER_UNIQUE_INODE_IN_LEDGER_BOUND_STAGE_DIRS',
+        includes_failed_attempts_and_retained_intermediates=True,
+        unchanged_storage_safety_factor=1.25, remaining_geometries=199000,
+        production_resource_admission='NOT_RUN', simulator_action_taken=False,
+        source_evidence_modified=False)
+    if any(value.get(key) != item for key, item in expected.items()):
+        raise ValueError('pilot storage measurement scope or contract differs')
+    pilots = [r for r in proof['source_stages']
+              if checkpoint.read(checkpoint.bound(r)).get('stage') == 'PILOT_1000']
+    if len(pilots) != 1:
+        raise ValueError('pilot storage needs one completed pilot in the source chain')
+    current, seen = pilots[0], set()
+    while current != value['source_stage_receipt']:
+        marker = (current['path'], current['sha256'])
+        if marker in seen:
+            raise ValueError('pilot storage provenance cycle')
+        seen.add(marker)
+        stage = checkpoint.read(checkpoint.bound(current))
+        binding = stage.get('operational_progress_rebind', {})
+        if (stage.get('stage') != 'PILOT_1000'
+                or stage.get('campaign_id') != checkpoint.CAMPAIGN_ID
+                or stage.get('contract_fingerprint_sha256') != checkpoint.SCIENTIFIC_CONTRACT_FINGERPRINT
+                or stage.get('accepted_unique_geometries') != 1000
+                or binding.get('kind') != 'REUSE_COMPLETED_STAGE_UNCHANGED_SCIENTIFIC_CONTRACT'
+                or binding.get('new_simulator_execution') is not False
+                or binding.get('accepted_count_increment') != 0
+                or not binding.get('original_stage_receipt')):
+            raise ValueError('pilot storage source is not in the checkpoint provenance chain')
+        current = binding['original_stage_receipt']
+    source_path = checkpoint.bound(current)
+    source = checkpoint.read(source_path)
+    backend = value['backend_identity_manifest']
+    authorization = value['full_campaign_authorization_receipt']
+    checkpoint.bound(backend)
+    checkpoint.bound(authorization)
+    checkpoint.bound(value['producer'])
+    errors = checkpoint.production.validate_stage_receipt(source, stage='PILOT_1000',
+        cumulative_target=1000, backend_manifest_sha256=backend['sha256'],
+        authorization_receipt_sha256=authorization['sha256'],
+        prior_stage_receipt_sha256=source.get('prior_stage_receipt_sha256'), verify_artifacts=True)
+    if (errors or value['campaign_root'] != str(source_path.parent.parent.parent)
+            or value['attempt_ledger'] != source['artifacts']['attempt_ledger']):
+        raise ValueError('pilot storage source receipt or ledger differs')
+    checkpoint.bound(value['attempt_ledger'])
+    measured = value['measurement']
+    total = measured.get('total_charged_bytes')
+    roots = measured.get('roots', [])
+    if (type(total) is not int or total <= 0 or not roots
+            or any(type(r.get('charged_bytes')) is not int or r['charged_bytes'] < 0 for r in roots)
+            or sum(r['charged_bytes'] for r in roots) != total
+            or value.get('bytes_per_geometry') != total/1000):
+        raise ValueError('pilot storage measurement arithmetic differs')
+    from .broadband56_capacity_policy import required_storage_bytes
+    required = required_storage_bytes(stage='PHASE_A', current_accepted=1000,
+        measured_pilot_bytes_per_geometry=value['bytes_per_geometry'])
+    if value.get('required_storage_bytes') != required:
+        raise ValueError('pilot storage requirement differs from the unchanged policy')
+    checkpoint.bound(record)
+    return record
+
+
+def restore_pilot_storage(record, root):
+    if record is None:
+        return None
+    path = Path(root)/'PILOT_1000_RESOURCE_SUMMARY.json'
+    with path.open('xb') as handle:
+        handle.write(checkpoint.bound(record).read_bytes())
+    checkpoint.bound(record)
+    copied = checkpoint.pin(path)
+    if any(copied[k] != record[k] for k in ('size_bytes', 'sha256')):
+        raise ValueError('restored pilot storage bytes differ')
+    return copied
+
+
 def prepare_controls(executor, *, candidate_record, approval_record, boundary_record,
                      operation_root, successor_root, isolation, lock_fd):
     """Produce the real queue/normal-handoff/lease chain only after exclusive ownership.
@@ -234,6 +326,7 @@ def prepare_controls(executor, *, candidate_record, approval_record, boundary_re
             or files['source_backend'] != proof['source_backend']
             or files['source_authorization'] != proof['source_authorization']):
         raise ValueError('normal startup binds a different source checkpoint')
+    pilot_storage = validated_pilot_storage(candidate, proof, state)
     prior, current = require_exclusive_owner(executor, candidate, isolation, lock_fd)
     fingerprint = validated_lease_fingerprint(candidate, prior, boundary_record, state)
     operation, root = Path(operation_root), Path(successor_root)
@@ -260,6 +353,8 @@ def prepare_controls(executor, *, candidate_record, approval_record, boundary_re
             golden_template=files['golden_reuse_template'], control_envelope=envelope)
         if checkpoint.verified_resume_state(boundary_record, migration) != state:
             raise ValueError('prepared queue state differs from verified migrated state')
+        # Restore after the strict empty-envelope migration, before any policy read.
+        restored_storage = restore_pilot_storage(pilot_storage, root)
         handoff_value = dict(
             schema=executor.HANDOFF_SCHEMA, generated_utc=executor.utc_now(), overall_status='PASS',
             decision=executor.HANDOFF_DECISION, campaign_id=checkpoint.CAMPAIGN_ID,
@@ -277,6 +372,8 @@ def prepare_controls(executor, *, candidate_record, approval_record, boundary_re
             accepted_preserved=state['current_accepted'], feature_rows_preserved=state['feature_rows'],
             resume_stage=state['current_stage'], active_simulator_jobs=0,
             simulator_action_taken=False, campaign_data_modified=False)
+        if restored_storage is not None:
+            handoff_value['pilot_storage_input'] = dict(source=pilot_storage, restored=restored_storage)
         if 'prior_startup_terminal_failure' in files:
             handoff_value['prior_startup_terminal_failure'] = files['prior_startup_terminal_failure']
         if 'prior_waiting_batch_interruption' in files:
