@@ -1,0 +1,226 @@
+{
+  "schema": "bb_seven_public_source_verification.v1",
+  "observed_utc": "2026-09-07 23:11:28 UTC",
+  "base_commit": "bf26491541aec58132a11b93d72b84af87d7f020",
+  "implementation_commit": "fac4b4dac357eb4b8493969d0563607b193d8b47",
+  "private_research_implementation_commit": "be42e1ec3449767fc11d79ad7573581ff079a01b",
+  "implementation_and_tests_byte_identical": true,
+  "production_commits_included": false,
+  "private_data_or_weights_included": false,
+  "public_base_synthetic_tests": {
+    "passed": 210,
+    "failures": 0,
+    "elapsed_seconds": 17.79,
+    "xml_sha256": "551d67cffb6666436c3cc27f6adacab49c2ccb7e8ec63bf916d8ee966cbf2a8e",
+    "raw_xml": "PRIVATE_NOT_PUBLISHED"
+  },
+  "formal_new10k_training": "NOT_STARTED",
+  "automatic_trigger": "NOT_INSTALLED",
+  "real_emx_validation": "NOT_RUN",
+  "files": [
+    {
+      "path": "research/broadband56_nn/README.md",
+      "sha256": "da63cc1b188e3609212c3be36ca8fe6a9cc5ac2bedc5035c4b0c3dd3a0890cbf"
+    },
+    {
+      "path": "research/broadband56_nn/SEVEN_MODEL_V3.md",
+      "sha256": "ef1b3e1f1a1426ff6d838265103ab7beecf8a08c9a8e9bd2ba4ee6946f55a784"
+    },
+    {
+      "path": "research/broadband56_nn/__init__.py",
+      "sha256": "5a92c9c5e8d4b52be5a906699c504341cc62f0e9634f41b9857ce2256e9f9c99"
+    },
+    {
+      "path": "research/broadband56_nn/__main__.py",
+      "sha256": "be40585ea35a429cf4912bff09733d598beca5752c6bb98636fde0a6687ed0c8"
+    },
+    {
+      "path": "research/broadband56_nn/baseline.py",
+      "sha256": "ab6b2d3444aae5499a4707d907f0f62b378637c8134a64241ba03656607b4b52"
+    },
+    {
+      "path": "research/broadband56_nn/baseline_package.py",
+      "sha256": "fd6a11ec962185b03c49d0709b1adb12d8fcd425bc7e3cd5e4a1eeac9b3a31c9"
+    },
+    {
+      "path": "research/broadband56_nn/bb00.py",
+      "sha256": "c9adaa8d1e0e44ad7978f287946a9d069076099c44b4c72ad7ef73e15923542a"
+    },
+    {
+      "path": "research/broadband56_nn/bb00_delivery.py",
+      "sha256": "6aab58cd847fbab73c3c6851fda8cc9302e576b8a29fc7dcde6b0b7f08835406"
+    },
+    {
+      "path": "research/broadband56_nn/campaign.py",
+      "sha256": "de935e76eaf85ba6fbe2d05f7cbd029c2e1eb6753b724bc7daabff4f10ec27c9"
+    },
+    {
+      "path": "research/broadband56_nn/data.py",
+      "sha256": "55bd9580b61512da8d2e550b556717842b227acaf15319ecd8ec762e78383295"
+    },
+    {
+      "path": "research/broadband56_nn/delivery.py",
+      "sha256": "5cce67b096a0a621b6e43caa343110daee309f6ecc130984ccccae784d2574c5"
+    },
+    {
+      "path": "research/broadband56_nn/evaluation.py",
+      "sha256": "50c36b0ca636fe992b1e7d1eebc76341129ec395c571e1a3c9226685130e456e"
+    },
+    {
+      "path": "research/broadband56_nn/io.py",
+      "sha256": "0b92e0bfcf0d3f5ec6882a07e3578e004fa44bf3c32c5999050ade7530b00abb"
+    },
+    {
+      "path": "research/broadband56_nn/metrics.py",
+      "sha256": "2188586a0701bd53bee630d5eda44b28ba4159a7c47e92d24dd67d5d3037dc9a"
+    },
+    {
+      "path": "research/broadband56_nn/models.py",
+      "sha256": "09c15a20fb2c5cba6a859bd84b0f9643827190b5070fb92ba23eb4d38a2b8de2"
+    },
+    {
+      "path": "research/broadband56_nn/package_evaluation.py",
+      "sha256": "4761237a332c78ccb077c250300f61d4816cc18cb1faee3db42dec598881c113"
+    },
+    {
+      "path": "research/broadband56_nn/parity.py",
+      "sha256": "156c656c1eae28506e6f34201bf990fa68db5feb070d4fb95a332aac08aec5a0"
+    },
+    {
+      "path": "research/broadband56_nn/physics.py",
+      "sha256": "0e58daf60c20b8b079289efed67e564320c4837d8cc3cc5ad3ed7a5e62fa3e9c"
+    },
+    {
+      "path": "research/broadband56_nn/requirements.txt",
+      "sha256": "b11a91b69781f83769f733623bd10b9a8555db60c4234cd1946104511241231a"
+    },
+    {
+      "path": "research/broadband56_nn/research_data_access.py",
+      "sha256": "e1e14359107e3bd634e4ca7ff067919072af8de8af36f0014ce3e845b8dcb69f"
+    },
+    {
+      "path": "research/broadband56_nn/reuse_evaluation.py",
+      "sha256": "62ac35ce7a0d855215b56973554cd2f5c95a1c20baf70f93bb28fb0d8fb5525d"
+    },
+    {
+      "path": "research/broadband56_nn/seven_evaluation.py",
+      "sha256": "a599a0687f1d2f77d62a926f9f85d34bfffa9975ed4de02fe3814f8412f3c3cf"
+    },
+    {
+      "path": "research/broadband56_nn/seven_suite.py",
+      "sha256": "b1fb1d8f1fa943df67ed67809972a5d4add3d82ff3176302842dc52da7378f70"
+    },
+    {
+      "path": "research/broadband56_nn/snapshot_10k.py",
+      "sha256": "1e6b33d3524bbf25e0f0423c99dc92024825d81ca3aab99e0aa00a64ad56250a"
+    },
+    {
+      "path": "research/broadband56_nn/snapshot_parity.py",
+      "sha256": "d37d5057434ecb5afa301ac3120d72afb51098d70b195f06f13502cd2d2254f0"
+    },
+    {
+      "path": "research/broadband56_nn/specs.py",
+      "sha256": "c4350cfa2f851b04dd98956680177e41f2200a3e23d6796e4d1cc8f69015aa07"
+    },
+    {
+      "path": "research/broadband56_nn/study_once.py",
+      "sha256": "ae2e4c0a684ac766752474fed6b85fb21019609a40f8d61754aeef7b84c44032"
+    },
+    {
+      "path": "research/broadband56_nn/training.py",
+      "sha256": "00d14c3b56ab8989d10af9418ecec15b630b2b68882b2b7729734ee685634c21"
+    },
+    {
+      "path": "tests/test_bb00.py",
+      "sha256": "7e308334ba971099059e2ad44b77703bebd1d9109158c516400b619c54d2685b"
+    },
+    {
+      "path": "tests/test_bb_baseline.py",
+      "sha256": "bf8fb0be1725201f7d24820337c70c36362419057879ce8781f41e5910e7603c"
+    },
+    {
+      "path": "tests/test_bb_baseline_package.py",
+      "sha256": "031fba63d4bf17e46f5dce88075d5383fa9869e8d7d7b82496241f7c4f4b32bf"
+    },
+    {
+      "path": "tests/test_bb_data.py",
+      "sha256": "552e213043ba178f3fbd9d72f6a0c3ea9ca782efc861eace9f6f51ee282c72c3"
+    },
+    {
+      "path": "tests/test_bb_delivery.py",
+      "sha256": "a6297fb1b4fb912f9fd0548d4fc8972be58df6add0d8bba347088d46c2a66b9e"
+    },
+    {
+      "path": "tests/test_bb_evaluation.py",
+      "sha256": "0c7b5d1a95925292260d19fa567b03ad3ab65a12d9b396c5d8a18899a472f065"
+    },
+    {
+      "path": "tests/test_bb_finetune.py",
+      "sha256": "409ae40389bd9561f3fed015ec324b4778f4a932e74ad7e2f4a7b7da616c3bf2"
+    },
+    {
+      "path": "tests/test_bb_metrics.py",
+      "sha256": "0ecbf3ffe8b8a969743a891f1a3e3d33b89ba427696915c1796fc2dc2419c79e"
+    },
+    {
+      "path": "tests/test_bb_models.py",
+      "sha256": "4cd31fc333bc21f157d02d289fdfdc707200e52e7b7238f19d6e4aa6c3b7bc64"
+    },
+    {
+      "path": "tests/test_bb_package_evaluation.py",
+      "sha256": "a918cbe3edefd266c1c300f45890ceb145eb1434d03c1af6d7389497336208bc"
+    },
+    {
+      "path": "tests/test_bb_physics.py",
+      "sha256": "ec7976196e87c140dff4b0ca9a74cb5cf012f0dcbec309ef76719cabb2470634"
+    },
+    {
+      "path": "tests/test_bb_research_data_access.py",
+      "sha256": "92204dfb36eb1315f5273fbc134c022cbf7cf34b6add972db5a68e9ea47d5416"
+    },
+    {
+      "path": "tests/test_bb_resume_relocation.py",
+      "sha256": "1b78f826fd97fc2de0c24eac1120c6800b1db580aab615161c6ce0e9bfa66334"
+    },
+    {
+      "path": "tests/test_bb_reuse_evaluation.py",
+      "sha256": "6d6485d822b0ac9e8228c710a293cc2fbdb9dfd1ec5344526664d9c9999abd54"
+    },
+    {
+      "path": "tests/test_bb_seven_bb00_integration.py",
+      "sha256": "30272c9fc7e2353e9f70259f04c85d9c3bf2d7d073b0c727d511227de5bedb01"
+    },
+    {
+      "path": "tests/test_bb_seven_evaluation.py",
+      "sha256": "b1be1ff6a38c0c9b589c60a3d260c0032209fb9c315d6a1b7ba88e724430f7aa"
+    },
+    {
+      "path": "tests/test_bb_snapshot_10k.py",
+      "sha256": "f70c032975e2af75879b1ea38f12c809d945d667c41ec1eacdc7abedc8ec1e09"
+    },
+    {
+      "path": "tests/test_bb_snapshot_parity.py",
+      "sha256": "ab63dedb00bcd195a217e529b266b3b173dbe4b40db68e2d3c42f9bd84ff5227"
+    },
+    {
+      "path": "tests/test_bb_specs.py",
+      "sha256": "7c4d6a33a63a4db1b56b3bb691a1fb2b9c2b7172aca5e32901b00b1cb5013558"
+    },
+    {
+      "path": "tests/test_bb_study_once.py",
+      "sha256": "a8394bc2001efdf1d65090dba9022f79c979db52b94e02ab18af9f791b3c2e35"
+    },
+    {
+      "path": "tests/test_bb_training.py",
+      "sha256": "733df89d5fe633ffdcb86f78afd1f090a892fef31310762fcb272ea651c17838"
+    },
+    {
+      "path": "tests/test_bb_training_qa.py",
+      "sha256": "37cd80ac311a6e44f0c47d07d189f60506a61d16e59633815d7116d0736b89ed"
+    },
+    {
+      "path": "research/broadband56_nn/STATUS_V3_CN.md",
+      "sha256": "a0f22dae9ddc50d9817e5dfde7e967f895bde18e3662eb5348041ab4d513c49f"
+    }
+  ]
+}
