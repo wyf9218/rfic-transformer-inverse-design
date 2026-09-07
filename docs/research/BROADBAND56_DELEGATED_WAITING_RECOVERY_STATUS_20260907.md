@@ -94,3 +94,59 @@ This is actual restored production, not completion of the 200K target.
 No NN training, concurrency benchmark, or scientific-contract change occurred.
 Stable end-to-end production throughput and completion ETA remain
 `NOT_MEASURED`; this recovery cohort reused previously completed upstream work.
+
+## Latest: Pilot Complete, Storage Blocked
+
+At 04:19:17 UTC the same supervisor completed `PILOT_1000` with **1,000
+accepted unique geometries / 56,000 frequency rows**, a net **139** new
+accepted geometries since recovery. Stage receipt SHA256:
+`b77ec0e462c23a28b3dc249710d3f5edc4dfe23fc90cc96a8d241ea74e060aa7`.
+Checkpoint receipt SHA256:
+`3f41102607d2df3b9e6e85d307bdce49d1df78162bf95d4e8f3febbeed72e2f8`.
+Coverage remains partial at pilot scale. Complete frequency extraction does
+not mean every row is strict-lumped-valid: the receipt reports 30,925
+broadband-descriptor-valid rows and 10,796 strict-lumped-valid rows.
+
+The controller then exited before Phase A: the existing consumers expected
+`PILOT_1000_RESOURCE_SUMMARY.json`, but no producer had created it. The actual
+error was `measured_pilot_bytes_per_geometry must be numeric`. The last root
+status JSON still says queued; it is stale and must not be interpreted as a
+live supervisor. A fresh process check at 04:36:38 UTC found **zero** project
+supervisors/runners/native solvers.
+
+`scripts/materialize_broadband56_pilot_storage.py` now produces that existing
+input from the hash-bound terminal pilot, unique accepted denominator, full
+attempt ledger, and actual retained physical artifact directories. It counts
+failed attempts and intermediate files, counts unique inodes once, uses the
+larger of logical/allocated bytes, and counts library links without following
+them into external PDK directories. Two consecutive inventory passes must
+match. Physical source paths themselves must remain non-symlink and hash-bound.
+The first real replay rejected environment directory links; that failure is
+preserved. The corrected final producer and affected regressions passed **44
+tests** under the private Python. Commit:
+`d9c9cbad015f0ef8910e2ffe56013cb705455e68`.
+
+The resulting sidecar was published no-clobber into the current campaign root;
+all three existing controller/launcher/backend readers consumed the exact
+value successfully. No simulator-runtime/backend or scientific bytes changed.
+Measurement SHA256:
+`757a0da2e98350083f3a667d80808e87f9ef39271923642fa67f39f101b7f913`.
+Publication/readback receipt SHA256:
+`79b6f51150f817c2b2eb85ec0470490ee2646dfe524cb3ac29b95d2ec649e04c`.
+
+The unchanged storage gate now has genuine numeric evidence:
+
+- Retained pilot charge: 6,028,031,398 bytes / 1,000 accepted geometries.
+- Required remaining capacity: **1,499,472,810,253 bytes**, using the existing
+  `ceil(bytes_per_geometry * 199000 * 1.25)` formula.
+- Available data-volume capacity at 04:36:38: **732,776,697,856 bytes**.
+- Deficit: **766,696,112,397 bytes**. Storage gate: **FAIL**.
+
+No replacement supervisor was launched into this failed hard gate. Increasing
+usable storage is an external requirement; no historical data were deleted,
+no gate was weakened, and no system/application volume was repurposed. Future
+controlled recovery must bind this measured sidecar to the new recovery root
+before first resource consumption, retain the terminal 1,000 checkpoint, and
+perform its full no-simulator recovery preflight. That new recovery/preflight
+has **not** been performed; old startup intents must not be replayed. Standing
+delegated authorization still applies, with no new owner-per-SHA approval.
