@@ -48,6 +48,10 @@ def validate_candidate(executor, candidate_record):
 def validate_authority(executor, candidate_record, approval_record):
     candidate = validate_candidate(executor, candidate_record)
     approval = checkpoint.read(checkpoint.bound(approval_record))
+    from . import broadband56_delegated_release as delegated
+    if approval.get('decision') == delegated.DECISION:
+        delegated.validate_release(approval, candidate, candidate_record, SCOPE)
+        return candidate
     if (approval.get('overall_status') != 'PASS'
             or approval.get('authorization_scope') != SCOPE
             or approval.get('decision') != 'APPROVE_'+SCOPE
@@ -197,8 +201,15 @@ def validated_lease_fingerprint(candidate, prior, boundary_record, state):
             or overlay.get('supervisor_id') != checkpoint.SUPERVISOR_ID
             or overlay.get('corrected_backend_manifest') != prior['backend_identity_manifest']):
         raise ValueError('prior lease and operational overlay binding differs')
+    interruption = files.get('prior_waiting_batch_interruption')
     failure_record = files.get('prior_startup_terminal_failure')
-    if failure_record is not None:
+    if interruption is not None:
+        from .broadband56_waiting_recovery import validate_interrupted_predecessor
+        handoff_record = validate_interrupted_predecessor(interruption,
+            prior_record=files['prior_supervisor_lease'], boundary_record=boundary_record, state=state)
+        if handoff_record != candidate['prior_recovery_handoffs'][-1]:
+            raise ValueError('interrupted predecessor is not last in the handoff chain')
+    elif failure_record is not None:
         handoff_record = checkpoint.validate_failed_control_predecessor(failure_record,
             prior_record=files['prior_supervisor_lease'], boundary_record=boundary_record, state=state)
         if handoff_record != candidate['prior_recovery_handoffs'][-1]:
@@ -268,6 +279,8 @@ def prepare_controls(executor, *, candidate_record, approval_record, boundary_re
             simulator_action_taken=False, campaign_data_modified=False)
         if 'prior_startup_terminal_failure' in files:
             handoff_value['prior_startup_terminal_failure'] = files['prior_startup_terminal_failure']
+        if 'prior_waiting_batch_interruption' in files:
+            handoff_value['prior_waiting_batch_interruption'] = files['prior_waiting_batch_interruption']
         handoff = write(operation/'SUPERVISOR_RECOVERY_HANDOFF_RECEIPT.json', handoff_value)
         checkpoint.validate_checkpoint_handoff(checkpoint.read(checkpoint.bound(handoff)))
         overlay = checkpoint.read(checkpoint.bound(files['current_operational_overlay']))

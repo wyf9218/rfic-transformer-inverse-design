@@ -616,7 +616,13 @@ def validate_checkpoint_handoff(payload):
     proof = read(bound(payload['checkpoint_boundary']))
     old_lease = read(bound(payload['prior_supervisor_lease']))
     failure_record = payload.get('prior_startup_terminal_failure')
-    if failure_record is not None:
+    interruption = payload.get('prior_waiting_batch_interruption')
+    if interruption is not None:
+        from .broadband56_waiting_recovery import validate_interrupted_predecessor
+        validate_interrupted_predecessor(interruption,
+            prior_record=payload['prior_supervisor_lease'],
+            boundary_record=payload['checkpoint_boundary'], state=state)
+    elif failure_record is not None:
         validate_failed_control_predecessor(failure_record,
             prior_record=payload['prior_supervisor_lease'],
             boundary_record=payload['checkpoint_boundary'], state=state)

@@ -339,6 +339,11 @@ def run_stage_backend(
         raise ProductionStageBackendError(
             "stage command count differs from the exact role order"
         )
+    from rfic_transformer_inverse_design.campaigns.broadband56_waiting_recovery import prepare_reused_prefix
+    try:
+        reused_roles = prepare_reused_prefix(backend=backend_manifest, context=context, out_dir=out_dir)
+    except (OSError, ValueError, KeyError) as exc:
+        raise ProductionStageBackendError('waiting physical prefix recovery: '+str(exc)) from exc
     progress_source_path: Path | None = None
     progress_receipt: dict[str, Any] | None = None
     golden_finalizer_record: dict[str, Any] | None = None
@@ -380,27 +385,35 @@ def run_stage_backend(
         ).hexdigest()
         role_started = _utc_now()
         role_start = time.monotonic()
-        with (role_log_dir / "stdout.log").open("w", encoding="utf-8") as stdout, (
-            role_log_dir / "stderr.log"
-        ).open("w", encoding="utf-8") as stderr, observe_native_role(
-            role, role_log_dir / "native_observation", admitted_limit=int(allowed["concurrency"]),
-            command=command,
-            bindings={"stage_context": _file_record(context_path),
-                      "backend_manifest": _file_record(backend_manifest_path)},
-        ) as native_observation:
-            result = subprocess.run(
-                command,
-                stdin=subprocess.DEVNULL,
-                stdout=stdout,
-                stderr=stderr,
-                check=False,
-                shell=False,
-                env={
-                    **os.environ,
-                    "BROADBAND56_STAGE_CONTEXT": str(context_path),
-                    "BROADBAND56_MAX_CONCURRENCY": str(max_concurrency),
-                },
-            )
+        if role in reused_roles:
+            for name in ('stdout.log', 'stderr.log'):
+                with (role_log_dir/name).open('x') as handle:
+                    handle.write('Verified artifact reuse; no role subprocess executed.\n')
+            result = subprocess.CompletedProcess(command, 0)
+            native_observation = dict(overall_status='NOT_RUN_ARTIFACT_REUSE',
+                original_receipt=reused_roles[role]['original_receipt'], native_processes_started=0)
+        else:
+            with (role_log_dir / "stdout.log").open("w", encoding="utf-8") as stdout, (
+                role_log_dir / "stderr.log"
+            ).open("w", encoding="utf-8") as stderr, observe_native_role(
+                role, role_log_dir / "native_observation", admitted_limit=int(allowed["concurrency"]),
+                command=command,
+                bindings={"stage_context": _file_record(context_path),
+                          "backend_manifest": _file_record(backend_manifest_path)},
+            ) as native_observation:
+                result = subprocess.run(
+                    command,
+                    stdin=subprocess.DEVNULL,
+                    stdout=stdout,
+                    stderr=stderr,
+                    check=False,
+                    shell=False,
+                    env={
+                        **os.environ,
+                        "BROADBAND56_STAGE_CONTEXT": str(context_path),
+                        "BROADBAND56_MAX_CONCURRENCY": str(max_concurrency),
+                    },
+                )
         if _sha256(role_path) != role_identity["sha256"]:
             raise ProductionStageBackendError(f"{role} identity drifted during execution")
         receipt_path = resolve_under(
@@ -420,6 +433,7 @@ def run_stage_backend(
             "stdout": _file_record(role_log_dir / "stdout.log"),
             "stderr": _file_record(role_log_dir / "stderr.log"),
             "native_observation": native_observation,
+            "execution_kind": "VERIFIED_ARTIFACT_REUSE" if role in reused_roles else "FRESH_ROLE_EXECUTION",
         }
         completed_roles.append(role_record)
         if result.returncode != 0:

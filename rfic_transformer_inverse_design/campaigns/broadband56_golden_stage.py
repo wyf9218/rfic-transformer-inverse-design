@@ -32,6 +32,11 @@ GOLDEN_COMPATIBLE_FINALIZER_REBINDS = frozenset({(
 # observation, plus the license parser's singular/plural correction. They do
 # not certify deployment: target authorization and original physics still bind.
 GOLDEN_COMPATIBLE_SCHEDULER_REBINDS = frozenset({
+    # Waiting-prefix reuse changes control flow only for the bound non-Golden
+    # attempt. Original Golden raw evidence and all physical roles still bind.
+    ("script_identities", "production_stage_backend",
+     "073ac6f04e761314b4ed9686792b8ac1891107168af8faf6687e95b5e4788fca",
+     "253f0052a80be0b1d7edc3f6be8da8701bbde91910fc53a6d4653d4d1836d95a"),
     ("script_identities", "production_stage_backend",
      "073ac6f04e761314b4ed9686792b8ac1891107168af8faf6687e95b5e4788fca",
      "b84e5c90e215296a19f581584a897bfead0d021d05d0ec2fd507d6b927927a05"),
