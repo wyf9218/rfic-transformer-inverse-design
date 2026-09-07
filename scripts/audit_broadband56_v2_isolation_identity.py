@@ -24,6 +24,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--campaign-lock", required=True)
     parser.add_argument("--lease-registry-dir", required=True)
     parser.add_argument("--out-dir", required=True)
+    parser.add_argument("--running-stage-history")
     parser.add_argument(
         "--transient-helper-pid", action="append", type=int, default=[]
     )
@@ -91,6 +92,7 @@ def run(args: argparse.Namespace) -> dict[str, object]:
         expected_uid,
         probe_pid=os.getpid(),
         transient_helper_pids=args.transient_helper_pid,
+        include_arguments=bool(getattr(args, "running_stage_history", None)),
     )
     lock_held, lock_contents = isolation_identity.campaign_lock_state(lock_path)
     conflicting_lease_count = isolation_identity.count_conflicting_current_leases(
@@ -104,6 +106,8 @@ def run(args: argparse.Namespace) -> dict[str, object]:
         lock_held=lock_held,
         lock_contents=lock_contents,
         conflicting_lease_count=conflicting_lease_count,
+        running_stage_history=(Path(args.running_stage_history)
+                               if getattr(args, "running_stage_history", None) else None),
     )
     payload = {
         "schema": isolation_identity.AUDIT_SCHEMA,

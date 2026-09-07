@@ -113,6 +113,7 @@ def read_process_identity(
     *,
     proc_root: Path = Path("/proc"),
     executable_hash_cache: dict[Path, str] | None = None,
+    include_arguments: bool = False,
 ) -> dict[str, Any] | None:
     proc = proc_root / str(pid)
     try:
@@ -138,7 +139,7 @@ def read_process_identity(
         executable_sha = sha256(executable)
         if executable_hash_cache is not None:
             executable_hash_cache[executable] = executable_sha
-    return {
+    result = {
         "pid": pid,
         "parent_pid": parent_pid,
         "uid": uid,
@@ -150,6 +151,10 @@ def read_process_identity(
         "executable_path": str(executable),
         "executable_sha256": executable_sha,
     }
+    if include_arguments:
+        result["command_argv"] = [part.decode("utf-8", "strict")
+                                  for part in command_bytes.rstrip(b"\0").split(b"\0")]
+    return result
 
 
 def enumerate_owner_processes(
@@ -158,6 +163,7 @@ def enumerate_owner_processes(
     probe_pid: int,
     transient_helper_pids: Iterable[int] = (),
     proc_root: Path = Path("/proc"),
+    include_arguments: bool = False,
 ) -> list[dict[str, Any]]:
     records: list[dict[str, Any]] = []
     executable_hash_cache: dict[Path, str] = {}
@@ -169,7 +175,13 @@ def enumerate_owner_processes(
             pid,
             proc_root=proc_root,
             executable_hash_cache=executable_hash_cache,
+            include_arguments=include_arguments,
         )
+        if record is None and include_arguments:
+            record = read_container_transit_identity(pid, proc_root=proc_root)
+            if record is not None and record["uid"] in {0, uid}:
+                records.append(record)
+            continue
         if record is not None and record["uid"] == uid:
             records.append(record)
     return filter_probe_helpers(
@@ -177,6 +189,25 @@ def enumerate_owner_processes(
         probe_pid=probe_pid,
         transient_helper_pids=transient_helper_pids,
     )
+
+
+def read_container_transit_identity(pid: int, *, proc_root: Path) -> dict[str, Any] | None:
+    """Retain a protected Singularity parent edge, never solver authority."""
+    proc = proc_root / str(pid)
+    try:
+        fields = (proc / "stat").read_text().rsplit(")", 1)[1].split()
+        command = (proc / "cmdline").read_bytes()
+        if ((proc / "comm").read_text().strip() != "starter-suid"
+                or command.replace(b"\0", b" ").strip() != b"Singularity runtime parent"
+                or fields[0] in {"Z", "X"}):
+            return None
+        return {"pid": pid, "parent_pid": int(fields[1]), "uid": proc.stat().st_uid,
+                "start_ticks": int(fields[19]), "state": fields[0], "boot_id": _boot_id(proc_root),
+                "command_line_sha256": hashlib.sha256(command).hexdigest(),
+                "command_text": "Singularity runtime parent", "protected_container_transit": True,
+                "counted_as_native_solver": False}
+    except (OSError, ValueError, IndexError):
+        return None
 
 
 def filter_probe_helpers(
@@ -483,6 +514,7 @@ def evaluate_process_isolation(
     lock_contents: str,
     conflicting_lease_count: int = 0,
     now: datetime | None = None,
+    running_stage_history: Path | None = None,
 ) -> dict[str, Any]:
     current_time = now or datetime.now(timezone.utc)
     process_records = [dict(item) for item in processes]
@@ -531,6 +563,24 @@ def evaluate_process_isolation(
         and lock_contents.strip() == SUPERVISOR_ID
     )
 
+    owned_pids: set[int] = set()
+    native_counts = dict.fromkeys(("cadence", "calibre", "emx"), 0)
+    running_evidence = []
+    running_error = None
+    if running_stage_history is not None:
+        try:
+            if not expected_process_valid:
+                raise IsolationIdentityError("running-stage supervisor identity is invalid")
+            from .broadband56_running_isolation import running_stage_children
+
+            running = running_stage_children(
+                history_path=running_stage_history, lease=lease, processes=process_records)
+            owned_pids = set(running["owned_pids"])
+            native_counts.update(running["native_counts"])
+            running_evidence = running["evidence"]
+        except (OSError, ValueError, KeyError, TypeError, IsolationIdentityError) as exc:
+            running_error = f"{type(exc).__name__}: {exc}"
+
     extra_supervisors = [
         item
         for item in process_records
@@ -543,6 +593,7 @@ def evaluate_process_isolation(
     supervisor_candidate_pids = {
         expected_pid,
         *(item.get("pid") for item in extra_supervisors),
+        *owned_pids,
     }
     runners = [
         item
@@ -574,6 +625,7 @@ def evaluate_process_isolation(
     ]
     known_pids = {
         expected_pid,
+        *owned_pids,
         *(item.get("pid") for item in extra_supervisors),
         *(item.get("pid") for item in runners),
         *(item.get("pid") for item in cadence),
@@ -586,13 +638,15 @@ def evaluate_process_isolation(
         if item.get("pid") not in known_pids
         and _project_execution_process(str(item.get("command_text", "")))
     ]
-    active_simulator_jobs = len(cadence) + len(calibre) + len(emx)
+    foreign_simulator_jobs = len(cadence) + len(calibre) + len(emx)
+    active_simulator_jobs = foreign_simulator_jobs + sum(native_counts.values())
     isolation_gate_pass = (
         expected_process_valid
         and not extra_supervisors
         and not runners
-        and active_simulator_jobs == 0
+        and foreign_simulator_jobs == 0
         and not unexpected
+        and running_error is None
     )
     authoritative_supervisor_count = (
         (1 if expected_process_valid else 0) + len(extra_supervisors)
@@ -603,10 +657,10 @@ def evaluate_process_isolation(
         "duplicate_authoritative_supervisor_count": len(extra_supervisors),
         "duplicate_runner_count": len(runners),
         "runner_count": len(runners),
-        "unexpected_project_child_count": len(unexpected),
-        "project_owned_cadence_children": len(cadence),
-        "project_owned_calibre_children": len(calibre),
-        "project_owned_emx_children": len(emx),
+        "unexpected_project_child_count": len(unexpected) + (1 if running_error else 0),
+        "project_owned_cadence_children": len(cadence) + native_counts["cadence"],
+        "project_owned_calibre_children": len(calibre) + native_counts["calibre"],
+        "project_owned_emx_children": len(emx) + native_counts["emx"],
         "active_simulator_jobs": active_simulator_jobs,
         "output_path_collision": False,
         "process_command_lines_persisted": False,
@@ -637,6 +691,11 @@ def evaluate_process_isolation(
             int(item["pid"]) for item in unexpected
         ],
         "isolation_gate_pass": isolation_gate_pass,
+        "isolation_scope": "RUNNING_BOUND_STAGE" if running_stage_history is not None else "IDLE_STARTUP",
+        "bound_stage_process_pids": sorted(owned_pids),
+        "bound_stage_native_counts": native_counts,
+        "running_stage_evidence": running_evidence,
+        "running_stage_error": running_error,
     }
 
 

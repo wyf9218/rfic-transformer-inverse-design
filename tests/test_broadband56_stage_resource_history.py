@@ -21,7 +21,8 @@ def test_collects_during_blocking_stage_without_changing_its_result(tmp_path):
     paths, now = fixed_samples(tmp_path, count=6)
     stage_entered, sample_ready = threading.Event(), threading.Event()
     calls = []
-    def probe(script, out, index):
+    def probe(script, out, index, *, running_stage_history):
+        assert running_stage_history == tmp_path/"scheduling_history/stage_000040/LATEST.json"
         assert stage_entered.wait(3)
         calls.append((script, out, index))
         sample_ready.set()
@@ -57,7 +58,8 @@ def test_collects_during_blocking_stage_without_changing_its_result(tmp_path):
 def test_sampler_errors_are_retained_without_discarding_completed_stage(tmp_path, failure):
     paths, _ = fixed_samples(tmp_path, count=6)
     entered, observed = threading.Event(), threading.Event()
-    def probe(*_):
+    def probe(*_, running_stage_history):
+        assert running_stage_history.is_file()
         assert entered.wait(3)
         observed.set()
         if failure == "exception":
@@ -87,7 +89,8 @@ def test_sampler_errors_are_retained_without_discarding_completed_stage(tmp_path
 def test_stage_exception_is_preserved_and_sampler_is_joined(tmp_path):
     paths, _ = fixed_samples(tmp_path, count=6)
     called = threading.Event()
-    def probe(*_):
+    def probe(*_, running_stage_history):
+        assert running_stage_history.is_file()
         called.set()
         return paths[-1]
     def run(**_):

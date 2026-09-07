@@ -422,7 +422,8 @@ def _swap_override_probe_factory(
     python_bin: Path,
     tool_capacity_builder: Any = None,
 ) -> Any:
-    def run_probe(probe_script: Path, out_dir: Path, check_index: int) -> Path:
+    def run_probe(probe_script: Path, out_dir: Path, check_index: int,
+                  *, running_stage_history: Path | None = None) -> Path:
         oom_before = _proc_counter(Path("/proc/vmstat"), "oom_kill")
         blocked_before = _proc_counter(Path("/proc/stat"), "procs_blocked")
         source_path = original_run_probe(probe_script, out_dir, check_index)
@@ -482,6 +483,7 @@ def _swap_override_probe_factory(
             campaign_lock=campaign_lock,
             out_dir=out_dir,
             check_index=check_index,
+            running_stage_history=running_stage_history,
         )
         audit = controller._read_json(audit_path, "isolation identity audit")
         if not (
@@ -709,6 +711,7 @@ def _run_isolation_identity_audit(
     campaign_lock: Path,
     out_dir: Path,
     check_index: int,
+    running_stage_history: Path | None = None,
 ) -> Path:
     timestamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S%fZ")
     audit_dir = (
@@ -730,6 +733,8 @@ def _run_isolation_identity_audit(
         "--out-dir",
         str(audit_dir),
     ]
+    if running_stage_history is not None:
+        command.extend(["--running-stage-history", str(running_stage_history)])
     with log_path.open("x", encoding="utf-8") as log_handle:
         result = subprocess.run(
             command,

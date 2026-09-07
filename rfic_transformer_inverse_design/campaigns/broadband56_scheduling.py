@@ -238,7 +238,9 @@ def run_stage_with_resource_history(
                 started = time.monotonic()
                 # The lower half is reserved for prelaunch refresh probes.
                 index = check_index * 1_000_000 + 500_000 + counter
-                path = controller._run_probe(inputs["probe_script"], campaign_root / "resource_snapshots", index)
+                path = controller._run_probe(
+                    inputs["probe_script"], campaign_root / "resource_snapshots", index,
+                    running_stage_history=root / "LATEST.json")
                 path, sample = _original(path)
                 if any(sample.get(key) != value for key, value in bindings.items()):
                     raise CapacityPolicyError("running-stage resource identity changed")
