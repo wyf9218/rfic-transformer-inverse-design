@@ -24,6 +24,8 @@ def parser():
         train.add_argument("--contract", required=True)
         train.add_argument("--kind", choices=("F1", "F2", "F3", "I1", "I2", "I3", "I4"))
         train.add_argument("--checkpoint")
+        train.add_argument("--best-checkpoint")
+        train.add_argument("--best-checkpoint-sha256")
         train.add_argument("--forward-checkpoint")
         train.add_argument("--package-id")
         train.add_argument("--steps", type=int, default=256)
@@ -72,7 +74,9 @@ def main(argv=None):
         return train(args.data, args.out, TrainConfig(**cfg), args.contract,
                      resume_checkpoint=args.checkpoint if args.command == "resume" else None,
                      finetune_checkpoint=args.checkpoint if args.command == "finetune" else None,
-                     preserve_normalizer=args.preserve_normalizer)
+                     preserve_normalizer=args.preserve_normalizer,
+                     resume_best_checkpoint=args.best_checkpoint,
+                     resume_best_checkpoint_sha256=args.best_checkpoint_sha256)
     except Exception as exc:
         if output_preexisted:
             raise

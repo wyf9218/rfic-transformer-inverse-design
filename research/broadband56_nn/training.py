@@ -188,8 +188,28 @@ def _restore_rng(state, generator):
         torch.mps.set_rng_state(state["mps"])
 
 
+def resume_best_reference(initial, override=None, expected_sha256=None):
+    """Relocate an existing best without changing its immutable identity."""
+    if bool(override) != bool(expected_sha256):
+        raise ValueError("best checkpoint relocation requires path and original SHA-256")
+    path = Path(override or initial["best_checkpoint"]).resolve()
+    if expected_sha256 and sha256(path) != expected_sha256:
+        raise ValueError("relocated best checkpoint SHA differs")
+    best_state = load_checkpoint(path)
+    for key in ("role", "kind", "data_sha", "normalizer_sha", "contract_sha",
+                "architecture", "forward_model_sha", "best_validation"):
+        if best_state.get(key) != initial.get(key):
+            raise ValueError(f"resume best checkpoint identity differs: {key}")
+    if best_state["best_checkpoint"] != initial.get("best_reference_original", initial["best_checkpoint"]):
+        raise ValueError("resume best checkpoint original reference differs")
+    if best_state["step"] > initial["step"]:
+        raise ValueError("resume best checkpoint is newer than resumable state")
+    return path
+
+
 def train(data_root, out_dir, config, contract_path, *, resume_checkpoint=None,
-          finetune_checkpoint=None, preserve_normalizer=False):
+          finetune_checkpoint=None, preserve_normalizer=False,
+          resume_best_checkpoint=None, resume_best_checkpoint_sha256=None):
     """Create one new run. Resume never appends into a historical run directory."""
     out = Path(out_dir).resolve()
     out.mkdir(parents=True, exist_ok=False)
@@ -197,6 +217,8 @@ def train(data_root, out_dir, config, contract_path, *, resume_checkpoint=None,
     config_dict = asdict(config)
     save_json(out / "TRAIN_REQUEST.json", {**config_dict, "created_utc": utc_now()})
     initial = load_checkpoint(resume_checkpoint or finetune_checkpoint) if (resume_checkpoint or finetune_checkpoint) else None
+    if not resume_checkpoint and (resume_best_checkpoint or resume_best_checkpoint_sha256):
+        raise ValueError("best checkpoint relocation is only valid for resume")
     if finetune_checkpoint and not preserve_normalizer:
         raise ValueError("finetune requires explicit preserve_normalizer; migration is not implicit")
     bundle = Bundle(data_root, initial["normalizer"] if finetune_checkpoint else None)
@@ -293,9 +315,10 @@ def train(data_root, out_dir, config, contract_path, *, resume_checkpoint=None,
     deadline = datetime.fromisoformat(config.deadline_utc.replace("Z", "+00:00")) if config.deadline_utc else None
     last_step = begin
     last_checkpoint = None
-    best_checkpoint = Path(initial["best_checkpoint"]) if resume_checkpoint else None
-    if best_checkpoint is not None:
-        load_checkpoint(best_checkpoint)
+    best_checkpoint = resume_best_reference(initial, resume_best_checkpoint,
+                        resume_best_checkpoint_sha256) if resume_checkpoint else None
+    best_reference_original = (initial.get("best_reference_original", initial["best_checkpoint"])
+                               if resume_checkpoint else None)
     reason = "UPDATE_BUDGET_COMPLETE"
     first_grad_norm = None
     for step in range(begin + 1, total_steps + 1):
@@ -339,6 +362,7 @@ def train(data_root, out_dir, config, contract_path, *, resume_checkpoint=None,
             last_checkpoint = out / f"checkpoint_step_{step:06d}.pt"
             if improved:
                 best_checkpoint = last_checkpoint
+                best_reference_original = str(last_checkpoint)
             state = {"schema": "bb_training_state.v1", "role": config.role, "kind": config.kind,
                      "step": step, "model_state": {k: v.detach().cpu() for k, v in model.state_dict().items()},
                      "optimizer_state": optimizer.state_dict(), "scheduler_state": scheduler.state_dict(),
@@ -350,6 +374,7 @@ def train(data_root, out_dir, config, contract_path, *, resume_checkpoint=None,
                      "data_contract_fingerprint": data_contract_fingerprint,
                      "split_by_geometry_sha256": split_map, "parent_checkpoint": parent,
                      "best_checkpoint": str(best_checkpoint),
+                     "best_reference_original": best_reference_original,
                      "contract_sha": canonical_sha(contract), "forward_checkpoint": config.forward_checkpoint,
                      "forward_model_sha": forward_sha, "train_config": config_dict,
                      "geometry_dim": bundle.dim, "architecture": architecture_config(model),
@@ -375,6 +400,7 @@ def train(data_root, out_dir, config, contract_path, *, resume_checkpoint=None,
         last_checkpoint = out / f"checkpoint_step_{last_step:06d}.pt"
         if val < best or best_checkpoint is None:
             best, best_checkpoint = val, last_checkpoint
+            best_reference_original = str(last_checkpoint)
         state = {"schema": "bb_training_state.v1", "role": config.role, "kind": config.kind,
                  "step": last_step, "model_state": {k: v.detach().cpu() for k, v in model.state_dict().items()},
                  "optimizer_state": optimizer.state_dict(), "scheduler_state": scheduler.state_dict(),
@@ -385,6 +411,7 @@ def train(data_root, out_dir, config, contract_path, *, resume_checkpoint=None,
                  "data_contract_fingerprint": data_contract_fingerprint,
                  "split_by_geometry_sha256": split_map, "parent_checkpoint": parent,
                  "best_checkpoint": str(best_checkpoint),
+                 "best_reference_original": best_reference_original,
                  "contract": contract, "contract_sha": canonical_sha(contract),
                  "forward_checkpoint": config.forward_checkpoint, "forward_model_sha": forward_sha,
                  "train_config": config_dict, "geometry_dim": bundle.dim,
