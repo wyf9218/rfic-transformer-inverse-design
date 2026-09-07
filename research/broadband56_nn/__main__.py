@@ -39,6 +39,7 @@ def parser():
 
 def main(argv=None):
     args = parser().parse_args(argv)
+    output_preexisted = Path(args.out).exists()
     try:
         if args.command == "prepare-data":
             from .data import prepare_data
@@ -73,6 +74,8 @@ def main(argv=None):
                      finetune_checkpoint=args.checkpoint if args.command == "finetune" else None,
                      preserve_normalizer=args.preserve_normalizer)
     except Exception as exc:
+        if output_preexisted:
+            raise
         out = Path(args.out)
         out.mkdir(parents=True, exist_ok=True)
         # A failed attempt is permanent evidence; never reuse its output path.

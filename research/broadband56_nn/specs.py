@@ -48,7 +48,9 @@ def make_spec(s, y, y_valid, frequency_hz, rng, *, task=None, mode=None,
         else:
             ym[row, ix] = y_valid[row, ix]
         names.append({"task": row_task, "mode": row_mode,
-                      "frequency_indices": chosen.tolist()})
+                      "frequency_indices": chosen.tolist(), "actual_frequency_count": len(chosen),
+                      "physical_full_means": "all source-strict-valid frequencies, not necessarily 56",
+                      "band_reduced_to_single": bool(row_mode == "band" and len(chosen) == 1)})
     return {"s_target": s, "s_mask": sm, "y_target": y, "y_mask": ym,
             "frequency_hz": frequency_hz,
             "s_tolerance": torch.full_like(s, tolerance_fraction),

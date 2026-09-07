@@ -46,6 +46,10 @@ class Bundle:
     def __init__(self, root, normalizer=None):
         self.root = Path(root).resolve()
         self.manifest = read_json(self.root / "data_manifest.json")
+        if self.manifest.get("schema") != "bb_data_manifest.v1" or self.manifest.get("status") != "PASS":
+            raise ValueError("prepared data requires a PASS Broadband56 manifest")
+        if not {"dataset.npz", "normalizer.json", "splits.json"}.issubset(self.manifest.get("artifacts", {})):
+            raise ValueError("data manifest lacks dataset/normalizer/split pins")
         self.manifest_sha = sha256(self.root / "data_manifest.json")
         self.data_sha = sha256(self.root / "dataset.npz")
         for name, artifact in self.manifest.get("artifacts", {}).items():
@@ -200,6 +204,24 @@ def train(data_root, out_dir, config, contract_path, *, resume_checkpoint=None,
     source_pins = {p.name: sha256(p) for p in Path(__file__).parent.glob("*.py")}
     if contract["field_names"] != bundle.norm["field_names"]:
         raise ValueError("geometry field order mismatch")
+    if "contract_bounds_um" in bundle.norm:
+        for key in ("lower", "upper"):
+            if not np.array_equal(contract[key], bundle.norm["contract_bounds_um"][key]):
+                raise ValueError("runtime geometry bounds differ from frozen data contract")
+    if "port_contract" in bundle.manifest:
+        for key in ("port_order", "reference_impedance_ohm", "mode", "internal_permutation"):
+            if contract["port_contract"].get(key) != bundle.manifest["port_contract"].get(key):
+                raise ValueError(f"runtime port contract mismatch: {key}")
+    data_contract_fingerprint = bundle.manifest.get("contract_fingerprint_sha256")
+    if initial and initial.get("data_contract_fingerprint") != data_contract_fingerprint:
+        raise ValueError("resume/finetune scientific contract fingerprint differs")
+    split_map = dict(zip(bundle.arrays["geometry_sha256"].tolist(), bundle.arrays["split"].tolist()))
+    if initial:
+        old_splits = initial["split_by_geometry_sha256"]
+        if any(digest in old_splits and old_splits[digest] != part for digest, part in split_map.items()):
+            raise ValueError("old geometry train/validation/test assignment changed")
+    parent = ({"path": str(Path(resume_checkpoint or finetune_checkpoint).resolve()),
+               "sha256": sha256(resume_checkpoint or finetune_checkpoint)} if initial else None)
     if config.effective_batch != 32 or 32 % config.micro_batch:
         raise ValueError("v2 first-run effective batch is exactly 32")
     if config.physical_ready:
@@ -208,6 +230,13 @@ def train(data_root, out_dir, config, contract_path, *, resume_checkpoint=None,
         parity = read_json(config.physical_parity_receipt)
         if parity.get("status") != "PASS" or parity.get("data_sha") != bundle.data_sha:
             raise ValueError("physical parity receipt does not qualify this snapshot")
+        if parity.get("contract_sha") != sha256(contract_path):
+            raise ValueError("physical parity contract SHA differs")
+        for source in parity.get("implementation_sources", []):
+            if sha256(source["path"]) != source["sha256"]:
+                raise ValueError("physical parity implementation source changed")
+        if not parity.get("implementation_sources"):
+            raise ValueError("physical parity has no implementation source binding")
     random.seed(config.seed)
     np.random.seed(config.seed)
     torch.manual_seed(config.seed)
@@ -256,13 +285,17 @@ def train(data_root, out_dir, config, contract_path, *, resume_checkpoint=None,
               "loss_inverse": "requested EQ normalized MSE + 0.1 analytical feasibility; anchor=0",
               "surrogate_qualification": "SURROGATE_NOT_QUALIFIED_FOR_PHYSICAL_CLAIMS",
               "runtime_source_sha256": source_pins,
+              "parent_checkpoint": parent,
               "real_emx_validation": "NOT_RUN"})
     history = []
     initial_digest = model_digest(model)
     total_steps = min(begin + config.steps, math.ceil(200 * len(bundle.train) / 32))
     deadline = datetime.fromisoformat(config.deadline_utc.replace("Z", "+00:00")) if config.deadline_utc else None
     last_step = begin
-    last_checkpoint = best_checkpoint = None
+    last_checkpoint = None
+    best_checkpoint = Path(initial["best_checkpoint"]) if resume_checkpoint else None
+    if best_checkpoint is not None:
+        load_checkpoint(best_checkpoint)
     reason = "UPDATE_BUDGET_COMPLETE"
     first_grad_norm = None
     for step in range(begin + 1, total_steps + 1):
@@ -303,6 +336,9 @@ def train(data_root, out_dir, config, contract_path, *, resume_checkpoint=None,
             else:
                 stale += 1
             history.append(record)
+            last_checkpoint = out / f"checkpoint_step_{step:06d}.pt"
+            if improved:
+                best_checkpoint = last_checkpoint
             state = {"schema": "bb_training_state.v1", "role": config.role, "kind": config.kind,
                      "step": step, "model_state": {k: v.detach().cpu() for k, v in model.state_dict().items()},
                      "optimizer_state": optimizer.state_dict(), "scheduler_state": scheduler.state_dict(),
@@ -311,16 +347,16 @@ def train(data_root, out_dir, config, contract_path, *, resume_checkpoint=None,
                      "normalizer": bundle.norm, "normalizer_sha": bundle.norm_sha,
                      "data_root": str(bundle.root), "data_sha": bundle.data_sha,
                      "data_manifest_sha": bundle.manifest_sha, "contract": contract,
+                     "data_contract_fingerprint": data_contract_fingerprint,
+                     "split_by_geometry_sha256": split_map, "parent_checkpoint": parent,
+                     "best_checkpoint": str(best_checkpoint),
                      "contract_sha": canonical_sha(contract), "forward_checkpoint": config.forward_checkpoint,
                      "forward_model_sha": forward_sha, "train_config": config_dict,
                      "geometry_dim": bundle.dim, "architecture": architecture_config(model),
                      "runtime_source_sha256": source_pins,
                      "model_sha": model_digest(model), "created_utc": utc_now(),
                      "sampler_state": "included in rng_state.sampler"}
-            last_checkpoint = out / f"checkpoint_step_{step:06d}.pt"
             save_checkpoint(last_checkpoint, state)
-            if improved:
-                best_checkpoint = last_checkpoint
             print(json.dumps({"event": "validation_checkpoint", "kind": config.kind,
                               "package": config.package_id, **record}), flush=True)
             if stale >= config.patience:
@@ -336,6 +372,9 @@ def train(data_root, out_dir, config, contract_path, *, resume_checkpoint=None,
     # A deadline may fall between validation checkpoints: save the real final state.
     if last_checkpoint is None or not str(last_checkpoint).endswith(f"{last_step:06d}.pt"):
         val = validation_loss(model, bundle, config, decoder, contract, forward, device)
+        last_checkpoint = out / f"checkpoint_step_{last_step:06d}.pt"
+        if val < best or best_checkpoint is None:
+            best, best_checkpoint = val, last_checkpoint
         state = {"schema": "bb_training_state.v1", "role": config.role, "kind": config.kind,
                  "step": last_step, "model_state": {k: v.detach().cpu() for k, v in model.state_dict().items()},
                  "optimizer_state": optimizer.state_dict(), "scheduler_state": scheduler.state_dict(),
@@ -343,16 +382,16 @@ def train(data_root, out_dir, config, contract_path, *, resume_checkpoint=None,
                  "stale_validations": stale, "history": history, "normalizer": bundle.norm,
                  "normalizer_sha": bundle.norm_sha, "data_root": str(bundle.root),
                  "data_sha": bundle.data_sha, "data_manifest_sha": bundle.manifest_sha,
+                 "data_contract_fingerprint": data_contract_fingerprint,
+                 "split_by_geometry_sha256": split_map, "parent_checkpoint": parent,
+                 "best_checkpoint": str(best_checkpoint),
                  "contract": contract, "contract_sha": canonical_sha(contract),
                  "forward_checkpoint": config.forward_checkpoint, "forward_model_sha": forward_sha,
                  "train_config": config_dict, "geometry_dim": bundle.dim,
                  "architecture": architecture_config(model), "model_sha": model_digest(model),
                  "runtime_source_sha256": source_pins,
                  "created_utc": utc_now()}
-        last_checkpoint = out / f"checkpoint_step_{last_step:06d}.pt"
         save_checkpoint(last_checkpoint, state)
-        if val < best or best_checkpoint is None:
-            best, best_checkpoint = val, last_checkpoint
     if forward is not None and model_digest(forward) != forward_sha:
         raise RuntimeError("frozen forward changed")
     final_digest = model_digest(model)
@@ -360,7 +399,8 @@ def train(data_root, out_dir, config, contract_path, *, resume_checkpoint=None,
         raise RuntimeError("model weights did not change")
     if best_checkpoint is None:
         best_checkpoint = Path(resume_checkpoint) if resume_checkpoint else last_checkpoint
-    status = "PRETRAINED_PARTIAL" if reason == "TIME_BUDGET_PARTIAL" else "PRETRAINED"
+    # PRETRAINED promotion belongs to packaging AFTER separate-process resume proof.
+    status = "PRETRAINED_PARTIAL"
     receipt = {"status": status, "stop_reason": reason, "started_step": begin,
                "completed_step": last_step, "updates_this_run": last_step - begin,
                "gradient_geometry_exposures": (last_step - begin) * 32,
