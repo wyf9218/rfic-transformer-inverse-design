@@ -22,6 +22,7 @@ from scripts import audit_broadband56_v2_capacity_resource_gate as legacy  # noq
 
 from rfic_transformer_inverse_design.campaigns import (  # noqa: E402
     broadband56_swap_override_policy as swap_policy_module,
+    broadband56_scheduling as scheduling,
 )
 from rfic_transformer_inverse_design.campaigns.broadband56_balanced200k import (  # noqa: E402
     CAMPAIGN_ID,
@@ -227,17 +228,16 @@ def audit_swap_override_gate(
             measured_pilot_bytes_per_geometry=measured_pilot_bytes_per_geometry,
         )
         metrics = decision["metrics"]
-        concurrency = adaptive_concurrency(
+        concurrency = _concurrency_for_gate(
+            snapshot_path=snapshot_path,
+            snapshot=snapshot,
+            policy=decision,
+            current_accepted=current_accepted,
+            measured_pilot_bytes_per_geometry=measured_pilot_bytes_per_geometry,
+            now=now,
             stage=stage,
-            logical_cpu_count=metrics["logical_cpu_count"],
-            simulator_license_capacity=metrics["simulator_license_capacity"],
             current_concurrency=current_concurrency,
             healthy_check_streak=healthy_check_streak,
-            normalized_load1=metrics["normalized_load1"],
-            iowait_percent=metrics["iowait_percent"],
-            available_memory_fraction=metrics["available_memory_fraction"],
-            active_swap_thrashing=metrics["active_swap_thrashing"],
-            licenses_available=decision["checks"]["license_gate"],
             pilot_1000_safe_concurrency=pilot_1000_safe_concurrency,
         )
     except (TypeError, ValueError) as exc:
@@ -304,6 +304,7 @@ def audit_swap_override_gate(
         "concurrency_hard_cap": concurrency["hard_cap"],
         "concurrency_action": concurrency["action"],
         "concurrency_reasons": concurrency["reasons"],
+        "concurrency_decision": concurrency,
         **permissions,
         "accepted_geometry_target": TARGET_ACCEPTED_GEOMETRIES,
         "stage_remaining_accepted": stage_target - int(current_accepted),
@@ -359,6 +360,35 @@ def _override_exact(payload: Mapping[str, Any]) -> bool:
         and payload.get("nn_training_authorized") is False
         and payload.get("execution_effect") == "NONE_RECORD_ONLY"
         and _all_checks_pass(payload)
+    )
+
+
+def _concurrency_for_gate(
+    *, snapshot_path: Path, snapshot: Mapping[str, Any], policy: Mapping[str, Any],
+    stage: str, current_accepted: int, measured_pilot_bytes_per_geometry: float | None,
+    now: datetime, current_concurrency: int | None, healthy_check_streak: int,
+    pilot_1000_safe_concurrency: int | None,
+) -> dict[str, Any]:
+    if scheduling.fixed_generation_policy(snapshot) and stage.upper() not in {"GOLDEN", "PILOT_32"}:
+        if snapshot_path.parent.name != "resource_snapshots":
+            raise SwapOverrideGateError("fixed-generation snapshot is outside the campaign history directory")
+        return scheduling.concurrency_for_snapshot(
+            snapshot_path=snapshot_path, campaign_root=snapshot_path.parent.parent,
+            stage=stage.upper(), current_accepted=current_accepted, policy=policy,
+            legacy_policy=adaptive_concurrency,
+            measured_pilot_bytes_per_geometry=measured_pilot_bytes_per_geometry,
+            pilot_1000_safe_concurrency=pilot_1000_safe_concurrency, now=now,
+        )
+    metrics = policy["metrics"]
+    return adaptive_concurrency(
+        stage=stage, logical_cpu_count=metrics["logical_cpu_count"],
+        simulator_license_capacity=metrics["simulator_license_capacity"],
+        current_concurrency=current_concurrency, healthy_check_streak=healthy_check_streak,
+        normalized_load1=metrics["normalized_load1"], iowait_percent=metrics["iowait_percent"],
+        available_memory_fraction=metrics["available_memory_fraction"],
+        active_swap_thrashing=metrics["active_swap_thrashing"],
+        licenses_available=policy["checks"]["license_gate"],
+        pilot_1000_safe_concurrency=pilot_1000_safe_concurrency,
     )
 
 

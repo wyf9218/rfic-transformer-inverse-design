@@ -204,3 +204,44 @@ append-only validation, and stage-launcher path mismatch. They are not relabeled
 as successful executions. Actual restart still requires a fresh storage and
 remaining hard-gate check, the same queue/logical owner, and a new unconsumed
 controlled startup record under the standing authorization.
+
+## Final Independent Resource-Auditor Integration
+
+The package above was not deployed. The expanded preflight identified two
+remaining independent-process boundaries before any new supervisor launch:
+
+- The controller omitted the measured pilot bytes from the resource auditor's
+  CLI. `_write_resource_gate` now forwards the persisted value when present.
+- The auditor still called the legacy concurrency policy, which requires a
+  benchmark-derived pilot limit for Phase A. A hash-bound fixed48 overlay now
+  uses the existing `broadband56_scheduling.concurrency_for_snapshot`, just as
+  the controller and executor do. Legacy non-fixed behavior is unchanged.
+  No benchmark result or health counter is invented. Full concurrency evidence
+  is included in the resource receipt; storage and all other hard gates remain.
+
+The new final immutable runtime SHA256 is
+`6748f85de892b098f8c158ae8dc3cb9c14bea65885f4db39d4118df45a3604a8`;
+backend SHA256 is
+`7a19dacd412717fbe8d00eb8ab07b4ec103bddb3d77864859772b22e72ec95b1`.
+Final-package tests under the approved private Python: **283 passed**, 15.87s,
+10 affected modules. Receipt SHA256:
+`2784660dcbb616f9c653d7b93445186a868883459a67b3837623a819691a9a07`.
+Local two-module incremental tests: **42 passed**. `git diff --check` passed.
+
+Full no-simulator preflight SHA256:
+`0437ace22429c34f67a0b30428a8b8b48a25828c4472e67819f8105956691d6a`.
+It adds actual CLI parsing, exact environment identity validation, the actual
+resource auditor and shared fixed48 policy, then the full recovery/control and
+backend argument chain. Explicit historical-resource/test-owner inputs produce
+**WAIT**, storage FAIL, admitted 0, requested/executor 48, health streak 0,
+required streak 5. These are isolated test results, not current live admission.
+No process, signal, production lease/lock, consumed launch record or simulator
+was created. Source evidence stayed unchanged. Earlier missing test-environment
+and legacy-concurrency failures remain in their no-clobber directories.
+
+At 05:06:57 UTC, the last live read was still 1,000 accepted / 56,000 rows,
+zero production processes, and 731,528,798,208 free bytes against the unchanged
+1,499,472,810,253-byte storage requirement. This package verification does not
+prove a supervisor restart or any new accepted sample. Recovery may restore
+the unique capacity-checking controller, but no simulator may launch while
+storage or any other hard gate fails.

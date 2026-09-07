@@ -32,6 +32,70 @@ CONTROLLER = _load(
 )
 
 
+def _fixed_auditor_decision(path, now, *, stage="PHASE_A"):
+    snapshot = json.loads(path.read_text())
+    policy = AUDITOR.evaluate_capacity_snapshot(snapshot, stage=stage,
+        current_accepted=1000, measured_pilot_bytes_per_geometry=1000)
+    return AUDITOR._concurrency_for_gate(snapshot_path=path, snapshot=snapshot, policy=policy,
+        stage=stage, current_accepted=1000, measured_pilot_bytes_per_geometry=1000,
+        now=now, current_concurrency=48, healthy_check_streak=999,
+        pilot_1000_safe_concurrency=None)
+
+
+@pytest.mark.parametrize("stage,count,seats,expected", [
+    ("PHASE_A", 1, 48, 0), ("PHASE_A", 4, 48, 0),
+    ("PHASE_A", 5, 48, 48), ("PHASE_B", 5, 48, 48),
+    ("PHASE_C", 5, 48, 48), ("PHASE_A", 5, 19, 19),
+])
+def test_resource_auditor_uses_same_fixed48_history(tmp_path, monkeypatch, stage, count, seats, expected):
+    from tests.test_broadband56_fixed48_scheduling import fixed_samples
+
+    paths, now = fixed_samples(tmp_path, count=count, seats=seats)
+    monkeypatch.setattr(AUDITOR, "adaptive_concurrency",
+        lambda **kwargs: pytest.fail("fixed48 must not require a legacy pilot benchmark"))
+    result = _fixed_auditor_decision(paths[-1], now, stage=stage)
+    assert result["concurrency"] == expected
+    assert result["healthy_check_streak"] == count
+    assert result["effective_healthy_streak_requirement"] == 5
+    assert result["benchmark_required"] is False
+
+
+def test_fixed_resource_auditor_keeps_storage_wait(tmp_path):
+    from tests.test_broadband56_fixed48_scheduling import fixed_samples
+
+    paths, now = fixed_samples(tmp_path, mutation=lambda s: s["resources"].update(filesystem_free_bytes=0))
+    result = _fixed_auditor_decision(paths[-1], now)
+    assert result["concurrency"] == 0
+    assert result["reasons"] == ["HARD_RESOURCE_GATE_WAIT"]
+
+
+@pytest.mark.parametrize("invalid", ["stale", "duplicate", "wrong_directory"])
+def test_fixed_resource_auditor_rejects_invalid_history(tmp_path, invalid):
+    from datetime import timedelta
+    from tests.test_broadband56_fixed48_scheduling import fixed_samples
+
+    paths, now = fixed_samples(tmp_path)
+    path = paths[-1]
+    if invalid == "stale":
+        now += timedelta(seconds=301)
+    elif invalid == "duplicate":
+        path.with_name("swap_override_duplicate.json").write_bytes(path.read_bytes())
+    else:
+        outside = tmp_path / "snapshot.json"
+        outside.write_bytes(path.read_bytes())
+        path = outside
+    with pytest.raises((ValueError, AUDITOR.SwapOverrideGateError)):
+        _fixed_auditor_decision(path, now)
+
+
+def test_resource_auditor_without_fixed_overlay_keeps_legacy_contract(tmp_path):
+    from tests.test_broadband56_scheduling import samples
+
+    paths, now = samples(tmp_path)
+    with pytest.raises(ValueError, match="production stages require pilot_1000_safe_concurrency"):
+        _fixed_auditor_decision(paths[-1], now)
+
+
 def test_owner_instruction_requires_exact_operational_boundaries() -> None:
     text = "\n".join(
         (

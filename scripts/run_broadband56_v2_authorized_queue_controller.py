@@ -863,6 +863,9 @@ def _write_resource_gate(
         "--out-dir",
         str(out_dir),
     ]
+    measured_bytes = _pilot_bytes_per_geometry(campaign_root)
+    if measured_bytes is not None:
+        command.extend(["--measured-pilot-bytes-per-geometry", str(measured_bytes)])
     result = subprocess.run(command, stdin=subprocess.DEVNULL, capture_output=True, text=True, check=False)
     if result.returncode != 0:
         raise ControllerError("resource-gate audit failed")

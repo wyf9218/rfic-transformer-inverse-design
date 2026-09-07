@@ -31,6 +31,31 @@ def _write(path: Path, value: dict | str) -> Path:
     return path
 
 
+@pytest.mark.parametrize('measured', [None, 6028031.398])
+def test_resource_gate_command_forwards_persisted_pilot_measurement(tmp_path, monkeypatch, measured):
+    spec = importlib.util.spec_from_file_location('resource_gate_parser_fixture',
+        ROOT/'scripts/audit_broadband56_v2_swap_override_resource_gate.py')
+    auditor = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(auditor)
+    if measured is not None:
+        _write(tmp_path/'PILOT_1000_RESOURCE_SUMMARY.json', dict(bytes_per_geometry=measured, fixture_only=True))
+    calls = []
+    def test_process_boundary(command, **kwargs):
+        parsed = auditor._parse_args(command[2:])
+        calls.append(parsed.measured_pilot_bytes_per_geometry)
+        _write(Path(parsed.out_dir)/'CAPACITY_RESOURCE_GATE.json',
+            dict(overall_status='WAIT', fixture_only=True, simulator_action_taken=False))
+        return argparse.Namespace(returncode=0)
+    monkeypatch.setattr(MODULE.subprocess, 'run', test_process_boundary)
+    inputs = {key: tmp_path/key for key in ('python_bin', 'resource_gate_auditor',
+        'frozen_contract', 'preparation_receipt', 'policy_approval_receipt')}
+    result = MODULE._write_resource_gate(inputs=inputs, snapshot_path=tmp_path/'fixture_snapshot.json',
+        campaign_root=tmp_path, check_index=1, stage='PILOT_1000' if measured is None else 'PHASE_A',
+        current_accepted=861 if measured is None else 1000)
+    assert calls == [measured]
+    assert json.loads(result.read_text())['overall_status'] == 'WAIT'
+
+
 def _snapshot(*, wait: bool) -> dict:
     return {
         "schema": SNAPSHOT_SCHEMA,
