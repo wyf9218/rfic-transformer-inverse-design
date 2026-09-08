@@ -1,0 +1,52 @@
+{
+  "schema": "frequency5to20_reporting_handoff_public_status.v1",
+  "created_utc": "2026-09-08T17:01:03.539Z",
+  "goal_status": "ACTIVE",
+  "status": "INSTALLED_WAITING_READ_ONLY_DEPENDENCIES",
+  "process": {
+    "pid": 86088,
+    "uid": 501,
+    "lstart": "Tue Sep 8 11:58:51 2026",
+    "args_sha256": "42e00ca4c80421d667abcf2cdf9d13ca12c8230fa5a87eca4c639f0753227c0c"
+  },
+  "verified_utc": "2026-09-08T16:59:09.091123+00:00",
+  "launch_sha256": "cf885a64e19209802332344efabe41bca1d6eb58befe87983984b52e713d7afa",
+  "config_sha256": "1888d12e5014563f140841319491a1477b174148d0bd0e98b0d0bf0f1054156a",
+  "implementation_sha256": "c72e1c889ec2903a96b5dc69407563e63b0cd62edce969f7c76baed8c761bf7c",
+  "implementation_bytes": 19295,
+  "test_sha256": "6caf8f55da5d68fea78e659b3e2ff5ade12b01b50c2dc68fb92a1059c9d354a3",
+  "final_synthetic_tests": 23,
+  "initial22_tests_and_sources_retained": true,
+  "independent_source_review_sha256": "610b16c43fa4fbb27e8159932ca000d0ed3c6e2d33dd8e58810df998ce15ef13",
+  "implemented_fix": "Complete JSON without publisher terminal newline stays UNPUBLISHED, preventing transient receipt-byte mirrors",
+  "native_wait": {
+    "job_id": 1,
+    "pid": 2094607,
+    "verified_utc": "2026-09-08T16:44:29.018342+00:00",
+    "config_sha256": "10b9f6d4c844fa2c16fa8895bc25ec9510450f475b63e2e9bcf17fe05ac0aea6"
+  },
+  "dependency_flow": [
+    "Exact local consumer50120 and exportonce80544 exit",
+    "Read genuine old FINAL and export terminal",
+    "Read only exact nativewait config plus its child/failure/terminal receipts",
+    "Mirror actual native child bytes; freeze resolved reporting request",
+    "One existing reporting successor call using same lock and old capture/figure seed",
+    "Only newly closed original requests cause statistics/figure increments"
+  ],
+  "native_operations_in_this_handoff": 0,
+  "remote_write_operations": 0,
+  "reporter_calls_at_verification": 0,
+  "new_statistics": 0,
+  "new_figures": 0,
+  "wait_deadline_utc": "2026-09-10T19:00:00Z",
+  "report_deadline_utc": "2026-09-10T20:00:00Z",
+  "old_source_pins_unchanged": true,
+  "original320_science_unchanged": true,
+  "duplicate_submission_forbidden": true,
+  "boot_or_crash_restart": "NOT_INSTALLED",
+  "idle_sleep_inhibitor_pid": 86090,
+  "does_not_guarantee_lid_close_or_network_persistence": true,
+  "scientific_status": "16 first-budget PARTIAL/PROVISIONAL models and1,760,000 SELF_PROXY reused. Latest independent numerical/visual approval remains cumulative40; formal10K15 fresh EMX NOT_RUN; development5K15 separate.",
+  "private_evidence_directory": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/frequency5to20_20260908T063800Z/reporting_handoff_install_20260908T165505Z",
+  "next_safe_action": "Leave native at1/PID2094607 and local PID86088 plus existing50120/80544 alone. They perform ordinary bounded dependency checks. Validate genuinely new terminal report output; do not restart them or repeat approved results."
+}

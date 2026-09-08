@@ -1,5 +1,15 @@
 # Current Evidence Status
 
+Latest [reporting handoff installation](frequency5to20_reporting_handoff_20260908_v1/README_CN.md):
+local PID86088 was verified alive at16:59:09 UTC, waiting for exact old producer
+exits and the real native-child receipt.23 final synthetic tests/source review
+and actual readonly local/SSH checks passed. This is INSTALLED_WAITING, not a
+new report or physics completion. Native at job1 is already installed; do not
+resubmit either entry. Reboot/crash restart is NOT_INSTALLED.
+
+The following native milestone is historical as of16:44; its then-pending
+reporting automation is now installed as described above.
+
 Latest [native-resume installation](frequency5to20_native_resume_20260908_v1/README_CN.md):
 MARS at job1 / PID2094607 was alive at16:44:29 UTC, waiting for the original
 PID2146776 identity to exit. No successor physical child was started then.
