@@ -21,6 +21,21 @@ are historical workflows, not its current execution contract.
 
 ## Start Here: Current Goals And Status
 
+**Latest approved scientific release: cumulative 83 requests.**
+[New 7 / cumulative 83 package](docs/research/frequency5to20_new7_cumulative83_20260908_v1/README_CN.md) freezes the 20:58:59 UTC statistics:
+83/320 settled requests, 913 closed slots, 747 independent solves = 712 strict-valid + 35 invalid.
+The 59 analytical, 75 GDS and 32 DRC failures remain visible; only 11 requests have all original 11 candidates strict-valid.
+The 21 approved PNGs comprise 14 new-request plots and 7 cumulative/distribution plots. Seven CSVs and a saved, actually executed 5-cell notebook are included; native Jupyter is NOT_RUN.
+[Exact package approval](docs/research/frequency5to20_new7_cumulative83_20260908_v1/PACKAGE_QA.json) binds the independent numerical, status, visual and public-copy scope.
+All 16 first-budget models remain PARTIAL/PROVISIONAL, with prior held-out and 1,760,000 SELF_PROXY results reused unchanged.
+Physical 15 GHz remains development5K; formal10K15 fresh EMX is NOT_RUN. The advisor PPT remains cumulative63, not83.
+The original 320-request queue is not complete. No data, training, proxy or completed EMX work was repeated.
+At 2026-09-08 21:25:28 UTC, one read-only check verified native1050236 and reporter1978 alive; 7 GHz request6 was solving Q12–15 with four EMX processes, two threads each. Closed metadata counted85/320; those later2 requests are not part of the83 scientific release. This is a timestamped observation, not a future-liveness guarantee.
+
+The observations and releases below are timestamped history, not current counters.
+
+### Historical cumulative76 release
+
 **Latest approved scientific release: cumulative76 requests.**
 [The new13 / cumulative76 package](docs/research/frequency5to20_new13_cumulative76_20260908_v2/README_CN.md)
 freezes the20:07 UTC snapshot:76/320 settled requests,685 actual solves,

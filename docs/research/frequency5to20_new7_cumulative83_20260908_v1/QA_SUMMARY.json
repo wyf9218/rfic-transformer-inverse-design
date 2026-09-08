@@ -1,0 +1,72 @@
+{
+  "schema": "frequency_incremental_public_qa.v1",
+  "status": "GO_SOURCE_NUMBERS_AND_LISTED_FIGURES_ONLY",
+  "numeric": {
+    "path": "reports/frequency5to20_20260908T063800Z/milestone_new7_cumulative83_20260908T210500Z/numeric_qa_v1/attempt_v1/INDEPENDENT_NUMERICAL_QA_RECEIPT.json",
+    "sha256": "f94808f6bc3490c7baf1cf0ab329621e073130be799484d64dc5de8388108b50",
+    "bytes": 140655,
+    "availability": "PRIVATE_NOT_INCLUDED"
+  },
+  "status16": {
+    "path": "reports/frequency5to20_20260908T063800Z/milestone_new7_cumulative83_20260908T210500Z/independent_status_notebook_qa_v1/INDEPENDENT_STATUS_NOTEBOOK_QA_RECEIPT.json",
+    "sha256": "254f2bac3f24f435d090bc1e7626421dcbf5ec7bd5704baa0de22e0fd000366c",
+    "bytes": 18317,
+    "availability": "PRIVATE_NOT_INCLUDED"
+  },
+  "notebook": {
+    "path": "reports/frequency5to20_20260908T063800Z/milestone_new7_cumulative83_20260908T210500Z/independent_status_notebook_qa_v1/INDEPENDENT_STATUS_NOTEBOOK_QA_RECEIPT.json",
+    "sha256": "254f2bac3f24f435d090bc1e7626421dcbf5ec7bd5704baa0de22e0fd000366c",
+    "bytes": 18317,
+    "availability": "PRIVATE_NOT_INCLUDED"
+  },
+  "visual": {
+    "path": "reports/frequency5to20_20260908T063800Z/milestone_new7_cumulative83_20260908T210500Z/final_visual_qa_v1/FINAL_VISUAL_RECEIPT.json",
+    "sha256": "5429a70152a1b084ff8e1c167b0382aa913795f96631e25ac925196257daa23e",
+    "bytes": 2527,
+    "availability": "PRIVATE_NOT_INCLUDED"
+  },
+  "figures_index": {
+    "path": "reports/frequency5to20_20260908T063800Z/milestone_new7_cumulative83_20260908T210500Z/final_visual_qa_v1/APPROVED_FIGURES.json",
+    "sha256": "188514398def76e9e2f49884576351b5bf5a3013d27b7c33133bda1fb0e720e3",
+    "bytes": 51576,
+    "availability": "PRIVATE_NOT_INCLUDED"
+  },
+  "new7_counts": {
+    "N_accounted_candidates": 77,
+    "N_analytic_fail": 13,
+    "N_drc_fail": 0,
+    "N_emx_not_solved": 0,
+    "N_gds_fail": 2,
+    "N_independent_solves": 62,
+    "N_invalid": 2,
+    "N_joint_hit": 34,
+    "N_original": 77,
+    "N_pending": 0,
+    "N_solved": 62,
+    "N_strict_valid": 60,
+    "N_unique_s4p_sha": 62
+  },
+  "all83_accounted_counts": {
+    "N_accounted_candidates": 913,
+    "N_analytic_fail": 59,
+    "N_drc_fail": 32,
+    "N_emx_not_solved": 0,
+    "N_gds_fail": 75,
+    "N_independent_solves": 747,
+    "N_invalid": 35,
+    "N_joint_hit": 398,
+    "N_original": 913,
+    "N_pending": 0,
+    "N_solved": 747,
+    "N_strict_valid": 712,
+    "N_unique_s4p_sha": 747
+  },
+  "full11_requests": 11,
+  "limitations": [
+    "Future/live snapshots",
+    "visual figures handled separately",
+    "population accuracy or causal frequency ranking",
+    "formal10K15 physical borrowing from development5K15"
+  ],
+  "qa_not_equal_goal_completion": true
+}

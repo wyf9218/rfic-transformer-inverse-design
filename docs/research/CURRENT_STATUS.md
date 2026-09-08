@@ -1,5 +1,19 @@
 # Current Evidence Status
 
+## Latest approved scientific release: 83 / 320
+
+[New7 / cumulative83 results and 16-frequency table](frequency5to20_new7_cumulative83_20260908_v1/README_CN.md) and [exact release receipt](frequency5to20_new7_cumulative83_20260908_v1/PACKAGE_QA.json).
+Statistics are frozen at 2026-09-08 20:58:59 UTC: 913 closed slots, 747 solves = 712 strict-valid + 35 invalid; 59 analytical + 75 GDS + 32 DRC failures.
+The original 3520-slot plan retains 2445 pending slots. Eleven complete strict11 requests permit full-set q_emx. This is not 83 all-success requests.
+New7 adds 77 slots, 62 solves (60 strict + 2 invalid), 13 analytical and 2 GDS failures; original order and failure evidence are retained.
+21 PNGs = 14 new-request plots + 7 aggregates/distributions; 7 CSVs and a 5-cell saved executed notebook. Native Jupyter NOT_RUN. No repeat of old76 figures.
+All16 first-budget models remain PARTIAL/PROVISIONAL; physical15 is development5K and formal10K15 fresh EMX NOT_RUN. The 63-request PPT remains unchanged.
+The full320 goal remains active; original finite programs continue independently. Later operational observations do not grant numerical or visual GO.
+Single read-only runtime observation at21:25:28 UTC: original native1050236/reporter1978 identities alive; one7GHz request6, Q12–15, four EMX solvers×2threads. Closed metadata21:24:57 counted85/320,235pending. This is not approval of85 scientific results or a guarantee of later liveness.
+
+All sections below are timestamped history; their latest/current wording does not override the 83-request scientific freeze.
+
+
 ## Current scientific release:76; separately observed runtime:80
 
 [New13 / cumulative76 statistics and figures](frequency5to20_new13_cumulative76_20260908_v2/README_CN.md)

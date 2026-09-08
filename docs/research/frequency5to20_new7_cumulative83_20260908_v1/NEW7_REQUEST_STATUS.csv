@@ -1,0 +1,8 @@
+request_id,frequency_ghz,model_id,dataset_scope,q_proxy,q_emx,selection_loss,N_original,N_solved,N_strict_valid,N_invalid,N_joint_hit,N_independent_solves,N_unique_s4p_sha,N_accounted_candidates,N_analytic_fail,N_gds_fail,N_drc_fail,N_emx_not_solved,N_pending
+f16_qscan-HELDOUT_TRIPLE_AUDIT-000004,16,f16-d1f0e127f1c7,FORMAL_10K,12,,,11,7,7,0,3,7,7,11,4,0,0,0,0
+f17_qscan-HELDOUT_TRIPLE_AUDIT-000004,17,f17-7b878ff5d5dc,FORMAL_10K,14,,,11,7,7,0,5,7,7,11,3,1,0,0,0
+f18_qscan-HELDOUT_TRIPLE_AUDIT-000004,18,f18-1a136fda6a2a,FORMAL_10K,14,,,11,8,6,2,4,8,8,11,3,0,0,0,0
+f19_qscan-HELDOUT_TRIPLE_AUDIT-000004,19,f19-e02801471b97,FORMAL_10K,15,,,11,8,8,0,7,8,8,11,3,0,0,0,0
+qscan15_development5k_20260908_v1-HELDOUT_TRIPLE_AUDIT-000005,15,f15-5a9547401a37,DEVELOPMENT_5K_NOT_FORMAL_10K,11,12.0,0.0028121991144071145,11,11,11,0,5,11,11,11,0,0,0,0,0
+f05_qscan-HELDOUT_TRIPLE_AUDIT-000005,5,f5-fac1f3ff42e4,FORMAL_10K,10,,,11,10,10,0,3,10,10,11,0,1,0,0,0
+f10_qscan-HELDOUT_TRIPLE_AUDIT-000005,10,f10-d26d41688df1,FORMAL_10K,12,12.0,0.0,11,11,11,0,7,11,11,11,0,0,0,0,0

@@ -1,0 +1,1372 @@
+{
+  "schema": "frequency_new7_cumulative83_public_receipt.v1",
+  "status": "AUTHOR_CANDIDATE_REQUIRES_INDEPENDENT_PACKAGE_REVIEW",
+  "created_utc": "2026-09-08T21:26:57.578Z",
+  "snapshot_receipt": {
+    "path": "reports/frequency5to20_20260908T063800Z/native_failure_diagnosis_20260908T184000Z/reporting_recovery_install_v1/run_v1/snapshots/snapshot_0011/SNAPSHOT_RECEIPT.json",
+    "sha256": "27290e969105582000ba89271a4ea60f8d4d72b155853f0db573395f0eabda3a",
+    "bytes": 1323,
+    "availability": "PRIVATE_NOT_INCLUDED"
+  },
+  "source_selection": {
+    "path": "reports/frequency5to20_20260908T063800Z/milestone_new7_cumulative83_20260908T210500Z/SOURCE_SELECTION.json",
+    "sha256": "ab8cc4932c6bb61732d0454f138044bde844d1424916b21f8224e61d2f86c637",
+    "bytes": 40013,
+    "availability": "PRIVATE_NOT_INCLUDED"
+  },
+  "qa": {
+    "schema": "frequency_incremental_public_qa.v1",
+    "status": "GO_SOURCE_NUMBERS_AND_LISTED_FIGURES_ONLY",
+    "numeric": {
+      "path": "reports/frequency5to20_20260908T063800Z/milestone_new7_cumulative83_20260908T210500Z/numeric_qa_v1/attempt_v1/INDEPENDENT_NUMERICAL_QA_RECEIPT.json",
+      "sha256": "f94808f6bc3490c7baf1cf0ab329621e073130be799484d64dc5de8388108b50",
+      "bytes": 140655,
+      "availability": "PRIVATE_NOT_INCLUDED"
+    },
+    "status16": {
+      "path": "reports/frequency5to20_20260908T063800Z/milestone_new7_cumulative83_20260908T210500Z/independent_status_notebook_qa_v1/INDEPENDENT_STATUS_NOTEBOOK_QA_RECEIPT.json",
+      "sha256": "254f2bac3f24f435d090bc1e7626421dcbf5ec7bd5704baa0de22e0fd000366c",
+      "bytes": 18317,
+      "availability": "PRIVATE_NOT_INCLUDED"
+    },
+    "notebook": {
+      "path": "reports/frequency5to20_20260908T063800Z/milestone_new7_cumulative83_20260908T210500Z/independent_status_notebook_qa_v1/INDEPENDENT_STATUS_NOTEBOOK_QA_RECEIPT.json",
+      "sha256": "254f2bac3f24f435d090bc1e7626421dcbf5ec7bd5704baa0de22e0fd000366c",
+      "bytes": 18317,
+      "availability": "PRIVATE_NOT_INCLUDED"
+    },
+    "visual": {
+      "path": "reports/frequency5to20_20260908T063800Z/milestone_new7_cumulative83_20260908T210500Z/final_visual_qa_v1/FINAL_VISUAL_RECEIPT.json",
+      "sha256": "5429a70152a1b084ff8e1c167b0382aa913795f96631e25ac925196257daa23e",
+      "bytes": 2527,
+      "availability": "PRIVATE_NOT_INCLUDED"
+    },
+    "figures_index": {
+      "path": "reports/frequency5to20_20260908T063800Z/milestone_new7_cumulative83_20260908T210500Z/final_visual_qa_v1/APPROVED_FIGURES.json",
+      "sha256": "188514398def76e9e2f49884576351b5bf5a3013d27b7c33133bda1fb0e720e3",
+      "bytes": 51576,
+      "availability": "PRIVATE_NOT_INCLUDED"
+    },
+    "new7_counts": {
+      "N_accounted_candidates": 77,
+      "N_analytic_fail": 13,
+      "N_drc_fail": 0,
+      "N_emx_not_solved": 0,
+      "N_gds_fail": 2,
+      "N_independent_solves": 62,
+      "N_invalid": 2,
+      "N_joint_hit": 34,
+      "N_original": 77,
+      "N_pending": 0,
+      "N_solved": 62,
+      "N_strict_valid": 60,
+      "N_unique_s4p_sha": 62
+    },
+    "all83_accounted_counts": {
+      "N_accounted_candidates": 913,
+      "N_analytic_fail": 59,
+      "N_drc_fail": 32,
+      "N_emx_not_solved": 0,
+      "N_gds_fail": 75,
+      "N_independent_solves": 747,
+      "N_invalid": 35,
+      "N_joint_hit": 398,
+      "N_original": 913,
+      "N_pending": 0,
+      "N_solved": 747,
+      "N_strict_valid": 712,
+      "N_unique_s4p_sha": 747
+    },
+    "full11_requests": 11,
+    "limitations": [
+      "Future/live snapshots",
+      "visual figures handled separately",
+      "population accuracy or causal frequency ranking",
+      "formal10K15 physical borrowing from development5K15"
+    ],
+    "qa_not_equal_goal_completion": true
+  },
+  "source_pins": {
+    "builder": {
+      "path": "reports/frequency5to20_20260908T063800Z/milestone_new7_cumulative83_20260908T210500Z/status_delivery_v1/build_public.mjs",
+      "sha256": "20c00942416d38ef5c39cab489cfd32b5f65c81e4d4b81c9aa5f10c64633b4a2",
+      "bytes": 15037,
+      "availability": "PRIVATE_NOT_INCLUDED"
+    },
+    "previous_builder": {
+      "path": "reports/frequency5to20_20260908T063800Z/milestone_new13_cumulative76_20260908T201100Z/status_delivery_v1/build_public.mjs",
+      "sha256": "55ef58d38c8b35eb76100642915c5d0b08cde59432d018964bed520a3d790f1e",
+      "bytes": 13105,
+      "availability": "PRIVATE_NOT_INCLUDED"
+    },
+    "status_source": {
+      "path": "reports/frequency5to20_20260908T063800Z/milestone_new7_cumulative83_20260908T210500Z/status_delivery_v1/STATUS16.json",
+      "sha256": "d826e5ea08f7e89cc5cb69a87893cd7705eae51fc3e92b7464cc411fc0b54ab9",
+      "bytes": 70079,
+      "availability": "PRIVATE_NOT_INCLUDED"
+    },
+    "numeric": {
+      "path": "reports/frequency5to20_20260908T063800Z/milestone_new7_cumulative83_20260908T210500Z/numeric_qa_v1/attempt_v1/INDEPENDENT_NUMERICAL_QA_RECEIPT.json",
+      "sha256": "f94808f6bc3490c7baf1cf0ab329621e073130be799484d64dc5de8388108b50",
+      "bytes": 140655,
+      "availability": "PRIVATE_NOT_INCLUDED"
+    },
+    "original_failure_flags": {
+      "path": "reports/frequency5to20_20260908T063800Z/milestone_new7_cumulative83_20260908T210500Z/numeric_qa_v1/attempt_v1/NEW7_FAILURE_ORIGINAL_FLAGS.json",
+      "sha256": "1b29b4c6da8211728ec187b4aabdac0f8b50320dc87e29d4e06d7678f251c9cc",
+      "bytes": 27960,
+      "availability": "PRIVATE_NOT_INCLUDED"
+    },
+    "notebook": {
+      "path": "reports/frequency5to20_20260908T063800Z/milestone_new7_cumulative83_20260908T210500Z/public_companion_v1/attempt_v1/PUBLIC_CSV_CHECKS.executed.ipynb",
+      "sha256": "9a49b93789981b9ff4c96df9e346a9ccba239f51bc6951c4ed2e82477777cc89",
+      "bytes": 19223,
+      "availability": "PRIVATE_NOT_INCLUDED"
+    }
+  },
+  "csv_provenance": [
+    {
+      "path": "STATUS16.csv",
+      "source": {
+        "path": "reports/frequency5to20_20260908T063800Z/milestone_new7_cumulative83_20260908T210500Z/status_delivery_v1/STATUS16.csv",
+        "sha256": "f88b7092256c93b19433be78c76fd5e236c69b33c81397547f5f2c00f0d53352",
+        "bytes": 27466,
+        "availability": "PRIVATE_NOT_INCLUDED"
+      },
+      "public": {
+        "path": "STATUS16.csv",
+        "sha256": "f88b7092256c93b19433be78c76fd5e236c69b33c81397547f5f2c00f0d53352",
+        "bytes": 27466
+      },
+      "transformation": "CRLF_TO_LF_AND_EXACT_WORKSPACE_PREFIX_TO_RELATIVE_ONLY"
+    },
+    {
+      "path": "NEW7_REQUEST_STATUS.csv",
+      "source": {
+        "path": "reports/frequency5to20_20260908T063800Z/milestone_new7_cumulative83_20260908T210500Z/status_delivery_v1/NEW7_REQUEST_STATUS.csv",
+        "sha256": "e754966e74cf0863f9493c8f56a5c9787d41b968dccee59d785c4aa94893aa12",
+        "bytes": 1059,
+        "availability": "PRIVATE_NOT_INCLUDED"
+      },
+      "public": {
+        "path": "NEW7_REQUEST_STATUS.csv",
+        "sha256": "e754966e74cf0863f9493c8f56a5c9787d41b968dccee59d785c4aa94893aa12",
+        "bytes": 1059
+      },
+      "transformation": "CRLF_TO_LF_AND_EXACT_WORKSPACE_PREFIX_TO_RELATIVE_ONLY"
+    },
+    {
+      "path": "NEW7_SELECTED_PHYSICS.csv",
+      "source": {
+        "path": "reports/frequency5to20_20260908T063800Z/milestone_new7_cumulative83_20260908T210500Z/status_delivery_v1/NEW7_SELECTED_PHYSICS.csv",
+        "sha256": "e52eaa95a37cbca3b3e5d055c6e297e1f6304c070acd46bf5ff71f22daa86bf3",
+        "bytes": 9471,
+        "availability": "PRIVATE_NOT_INCLUDED"
+      },
+      "public": {
+        "path": "NEW7_SELECTED_PHYSICS.csv",
+        "sha256": "e52eaa95a37cbca3b3e5d055c6e297e1f6304c070acd46bf5ff71f22daa86bf3",
+        "bytes": 9471
+      },
+      "transformation": "CRLF_TO_LF_AND_EXACT_WORKSPACE_PREFIX_TO_RELATIVE_ONLY"
+    },
+    {
+      "path": "FREQUENCY_STATUS.csv",
+      "source": {
+        "path": "reports/frequency5to20_20260908T063800Z/native_failure_diagnosis_20260908T184000Z/reporting_recovery_install_v1/run_v1/snapshots/snapshot_0011/statistics/FREQUENCY_STATUS.csv",
+        "sha256": "758d59da273c5037f280879de25bb4534867ba1d3adc60ed46ad3e0cfd391aaf",
+        "bytes": 6685,
+        "availability": "PRIVATE_NOT_INCLUDED"
+      },
+      "public": {
+        "path": "FREQUENCY_STATUS.csv",
+        "sha256": "624209bbae500070a6ce8d726339b64f7d303b24f893fc1501cd1d8ce04ed867",
+        "bytes": 6668
+      },
+      "transformation": "CRLF_TO_LF_AND_EXACT_WORKSPACE_PREFIX_TO_RELATIVE_ONLY"
+    },
+    {
+      "path": "REQUEST_STATUS.csv",
+      "source": {
+        "path": "reports/frequency5to20_20260908T063800Z/native_failure_diagnosis_20260908T184000Z/reporting_recovery_install_v1/run_v1/snapshots/snapshot_0011/statistics/REQUEST_STATUS.csv",
+        "sha256": "77d8f3458428bff159da248658a03ec5e876872f44c518e5a32d8d0fc225ceb8",
+        "bytes": 105170,
+        "availability": "PRIVATE_NOT_INCLUDED"
+      },
+      "public": {
+        "path": "REQUEST_STATUS.csv",
+        "sha256": "160ebe9aa9310d64f840e9df7bce200482a37cd0a9958b1ce380b1ec5d5cbcf4",
+        "bytes": 104849
+      },
+      "transformation": "CRLF_TO_LF_AND_EXACT_WORKSPACE_PREFIX_TO_RELATIVE_ONLY"
+    },
+    {
+      "path": "METRICS.csv",
+      "source": {
+        "path": "reports/frequency5to20_20260908T063800Z/native_failure_diagnosis_20260908T184000Z/reporting_recovery_install_v1/run_v1/snapshots/snapshot_0011/statistics/METRICS.csv",
+        "sha256": "a3d7a1f9302bf3e057d8d5fcaaadf63d1708aec2259d33019c14e5094fdf1534",
+        "bytes": 427876,
+        "availability": "PRIVATE_NOT_INCLUDED"
+      },
+      "public": {
+        "path": "METRICS.csv",
+        "sha256": "5287ae476ced6686c7f7badaf1085b9859e2045a193ce9312d3f4a8cb7118291",
+        "bytes": 427363
+      },
+      "transformation": "CRLF_TO_LF_AND_EXACT_WORKSPACE_PREFIX_TO_RELATIVE_ONLY"
+    },
+    {
+      "path": "SELECTION_COMPARISON.csv",
+      "source": {
+        "path": "reports/frequency5to20_20260908T063800Z/native_failure_diagnosis_20260908T184000Z/reporting_recovery_install_v1/run_v1/snapshots/snapshot_0011/statistics/SELECTION_COMPARISON.csv",
+        "sha256": "c57754b8875b307996a9867396ddbe926895777665aed4e4c4c14ed1273fc4df",
+        "bytes": 65167,
+        "availability": "PRIVATE_NOT_INCLUDED"
+      },
+      "public": {
+        "path": "SELECTION_COMPARISON.csv",
+        "sha256": "a861b16b2c4a125bda6621a0720c58be384079be6c4001fb8320f4ee6750ef6f",
+        "bytes": 64974
+      },
+      "transformation": "CRLF_TO_LF_AND_EXACT_WORKSPACE_PREFIX_TO_RELATIVE_ONLY"
+    }
+  ],
+  "png_provenance": [
+    {
+      "path": "f16_qscan-HELDOUT_TRIPLE_AUDIT-000004_score.png",
+      "request_id": "f16_qscan-HELDOUT_TRIPLE_AUDIT-000004",
+      "kind": "score",
+      "status": "GO",
+      "public": {
+        "path": "f16_qscan-HELDOUT_TRIPLE_AUDIT-000004_score.png",
+        "sha256": "31247615bd2e0906252abdf66ad2f0a88c2b7fb867b1749ba0f93f3250bd5ecc",
+        "bytes": 435806
+      },
+      "exports": {
+        "png": {
+          "path": "reports/frequency5to20_20260908T063800Z/native_failure_diagnosis_20260908T184000Z/reporting_recovery_install_v1/run_v1/snapshots/snapshot_0005/figures/requests/f16_qscan-HELDOUT_TRIPLE_AUDIT-000004/proxy_emx_score_by_q.png",
+          "sha256": "31247615bd2e0906252abdf66ad2f0a88c2b7fb867b1749ba0f93f3250bd5ecc",
+          "bytes": 435806,
+          "availability": "PRIVATE_NOT_INCLUDED"
+        },
+        "pdf": {
+          "path": "reports/frequency5to20_20260908T063800Z/native_failure_diagnosis_20260908T184000Z/reporting_recovery_install_v1/run_v1/snapshots/snapshot_0005/figures/requests/f16_qscan-HELDOUT_TRIPLE_AUDIT-000004/proxy_emx_score_by_q.pdf",
+          "sha256": "a6ab111654a7bf454b9af35616424bc6662c4ab75e73bce4f5b8843900568ef4",
+          "bytes": 28737,
+          "availability": "PRIVATE_NOT_INCLUDED"
+        },
+        "svg": {
+          "path": "reports/frequency5to20_20260908T063800Z/native_failure_diagnosis_20260908T184000Z/reporting_recovery_install_v1/run_v1/snapshots/snapshot_0005/figures/requests/f16_qscan-HELDOUT_TRIPLE_AUDIT-000004/proxy_emx_score_by_q.svg",
+          "sha256": "7df6aa92d2ef0ff1b9df88e383c860996201201a44f42d22f017f5280cbf637e",
+          "bytes": 110472,
+          "availability": "PRIVATE_NOT_INCLUDED"
+        }
+      },
+      "qa_receipt": {
+        "path": "reports/frequency5to20_20260908T063800Z/milestone_new7_cumulative83_20260908T210500Z/visual_qa_v1/VISUAL_QA.json",
+        "sha256": "395e8c29b17f99408561b94b48683d1af131e46a5caa22e5d174a6c62456608f",
+        "bytes": 71696,
+        "availability": "PRIVATE_NOT_INCLUDED"
+      },
+      "source": {
+        "path": "reports/frequency5to20_20260908T063800Z/native_failure_diagnosis_20260908T184000Z/reporting_recovery_install_v1/run_v1/snapshots/snapshot_0005/figures/requests/f16_qscan-HELDOUT_TRIPLE_AUDIT-000004/SOURCE_ROWS.json",
+        "sha256": "fe77f355aaefbff0beaa0e81b74182a203a390d35a383578e6ba54e7b6280afc",
+        "bytes": 56958,
+        "availability": "PRIVATE_NOT_INCLUDED"
+      },
+      "signature": "17f0c075eb79e41f6a5636a198750f9bfa92ab0f6ca202ceb1663844f5927b7d",
+      "visual_scope": "PNG_AND_PDF_VIEWED_SVG_SOURCE_PIN_ONLY"
+    },
+    {
+      "path": "f16_qscan-HELDOUT_TRIPLE_AUDIT-000004_percent.png",
+      "request_id": "f16_qscan-HELDOUT_TRIPLE_AUDIT-000004",
+      "kind": "percent",
+      "status": "GO",
+      "public": {
+        "path": "f16_qscan-HELDOUT_TRIPLE_AUDIT-000004_percent.png",
+        "sha256": "022b6b4678fffe6845cad80a33c03d80a57e00b0b88642b8295e36c0a6fe930a",
+        "bytes": 497877
+      },
+      "exports": {
+        "png": {
+          "path": "reports/frequency5to20_20260908T063800Z/native_failure_diagnosis_20260908T184000Z/reporting_recovery_install_v1/run_v1/snapshots/snapshot_0005/figures/requests/f16_qscan-HELDOUT_TRIPLE_AUDIT-000004/target_percent_by_q.png",
+          "sha256": "022b6b4678fffe6845cad80a33c03d80a57e00b0b88642b8295e36c0a6fe930a",
+          "bytes": 497877,
+          "availability": "PRIVATE_NOT_INCLUDED"
+        },
+        "pdf": {
+          "path": "reports/frequency5to20_20260908T063800Z/native_failure_diagnosis_20260908T184000Z/reporting_recovery_install_v1/run_v1/snapshots/snapshot_0005/figures/requests/f16_qscan-HELDOUT_TRIPLE_AUDIT-000004/target_percent_by_q.pdf",
+          "sha256": "4e53c9bf0eeeecfbff19e01a8cc8a516a4872b0c4ed6b9ddd679f92c48e6823e",
+          "bytes": 31273,
+          "availability": "PRIVATE_NOT_INCLUDED"
+        },
+        "svg": {
+          "path": "reports/frequency5to20_20260908T063800Z/native_failure_diagnosis_20260908T184000Z/reporting_recovery_install_v1/run_v1/snapshots/snapshot_0005/figures/requests/f16_qscan-HELDOUT_TRIPLE_AUDIT-000004/target_percent_by_q.svg",
+          "sha256": "ad255ec9d05bea1676a4b40d3d164ed1a87b7fa4c7e5b035dce9515e61d096c0",
+          "bytes": 182428,
+          "availability": "PRIVATE_NOT_INCLUDED"
+        }
+      },
+      "qa_receipt": {
+        "path": "reports/frequency5to20_20260908T063800Z/milestone_new7_cumulative83_20260908T210500Z/visual_qa_v1/VISUAL_QA.json",
+        "sha256": "395e8c29b17f99408561b94b48683d1af131e46a5caa22e5d174a6c62456608f",
+        "bytes": 71696,
+        "availability": "PRIVATE_NOT_INCLUDED"
+      },
+      "source": {
+        "path": "reports/frequency5to20_20260908T063800Z/native_failure_diagnosis_20260908T184000Z/reporting_recovery_install_v1/run_v1/snapshots/snapshot_0005/figures/requests/f16_qscan-HELDOUT_TRIPLE_AUDIT-000004/SOURCE_ROWS.json",
+        "sha256": "fe77f355aaefbff0beaa0e81b74182a203a390d35a383578e6ba54e7b6280afc",
+        "bytes": 56958,
+        "availability": "PRIVATE_NOT_INCLUDED"
+      },
+      "signature": "17f0c075eb79e41f6a5636a198750f9bfa92ab0f6ca202ceb1663844f5927b7d",
+      "visual_scope": "PNG_AND_PDF_VIEWED_SVG_SOURCE_PIN_ONLY"
+    },
+    {
+      "path": "f17_qscan-HELDOUT_TRIPLE_AUDIT-000004_percent.png",
+      "request_id": "f17_qscan-HELDOUT_TRIPLE_AUDIT-000004",
+      "kind": "percent",
+      "status": "GO",
+      "public": {
+        "path": "f17_qscan-HELDOUT_TRIPLE_AUDIT-000004_percent.png",
+        "sha256": "2d2c7a72de0b4760b8dfa4567620a673cb3bee9d786d9f8e6d188ecc2f40836d",
+        "bytes": 517788
+      },
+      "exports": {
+        "png": {
+          "path": "reports/frequency5to20_20260908T063800Z/native_failure_diagnosis_20260908T184000Z/reporting_recovery_install_v1/run_v1/snapshots/snapshot_0006/figures/requests/f17_qscan-HELDOUT_TRIPLE_AUDIT-000004/target_percent_by_q.png",
+          "sha256": "2d2c7a72de0b4760b8dfa4567620a673cb3bee9d786d9f8e6d188ecc2f40836d",
+          "bytes": 517788,
+          "availability": "PRIVATE_NOT_INCLUDED"
+        },
+        "pdf": {
+          "path": "reports/frequency5to20_20260908T063800Z/native_failure_diagnosis_20260908T184000Z/reporting_recovery_install_v1/run_v1/snapshots/snapshot_0006/figures/requests/f17_qscan-HELDOUT_TRIPLE_AUDIT-000004/target_percent_by_q.pdf",
+          "sha256": "c1b46ef3d7190e2b85b468a94fe6622a18394d8bfdb07d43419595d5c744dea8",
+          "bytes": 31322,
+          "availability": "PRIVATE_NOT_INCLUDED"
+        },
+        "svg": {
+          "path": "reports/frequency5to20_20260908T063800Z/native_failure_diagnosis_20260908T184000Z/reporting_recovery_install_v1/run_v1/snapshots/snapshot_0006/figures/requests/f17_qscan-HELDOUT_TRIPLE_AUDIT-000004/target_percent_by_q.svg",
+          "sha256": "4ec9c06f8713386fbfd59a0ac6cab193fc123b903860e0afb9e0f853f2412fe7",
+          "bytes": 190195,
+          "availability": "PRIVATE_NOT_INCLUDED"
+        }
+      },
+      "qa_receipt": {
+        "path": "reports/frequency5to20_20260908T063800Z/milestone_new7_cumulative83_20260908T210500Z/visual_qa_v1/VISUAL_QA.json",
+        "sha256": "395e8c29b17f99408561b94b48683d1af131e46a5caa22e5d174a6c62456608f",
+        "bytes": 71696,
+        "availability": "PRIVATE_NOT_INCLUDED"
+      },
+      "source": {
+        "path": "reports/frequency5to20_20260908T063800Z/native_failure_diagnosis_20260908T184000Z/reporting_recovery_install_v1/run_v1/snapshots/snapshot_0006/figures/requests/f17_qscan-HELDOUT_TRIPLE_AUDIT-000004/SOURCE_ROWS.json",
+        "sha256": "7183f7e51467294f7e017c5c7ae7f8832fdb9ed55e9f5eff3e899ef2f16b46c1",
+        "bytes": 56967,
+        "availability": "PRIVATE_NOT_INCLUDED"
+      },
+      "signature": "79caa2e87d73be21f8a396dfbd57c574d2b0f1ce5679446122816b302b86e2fb",
+      "visual_scope": "PNG_AND_PDF_VIEWED_SVG_SOURCE_PIN_ONLY"
+    },
+    {
+      "path": "f18_qscan-HELDOUT_TRIPLE_AUDIT-000004_score.png",
+      "request_id": "f18_qscan-HELDOUT_TRIPLE_AUDIT-000004",
+      "kind": "score",
+      "status": "GO",
+      "public": {
+        "path": "f18_qscan-HELDOUT_TRIPLE_AUDIT-000004_score.png",
+        "sha256": "2b45904cb84cf17ef06d06ca4cdac982f1af20f157e62379458f8cad2f332792",
+        "bytes": 433721
+      },
+      "exports": {
+        "png": {
+          "path": "reports/frequency5to20_20260908T063800Z/native_failure_diagnosis_20260908T184000Z/reporting_recovery_install_v1/run_v1/snapshots/snapshot_0007/figures/requests/f18_qscan-HELDOUT_TRIPLE_AUDIT-000004/proxy_emx_score_by_q.png",
+          "sha256": "2b45904cb84cf17ef06d06ca4cdac982f1af20f157e62379458f8cad2f332792",
+          "bytes": 433721,
+          "availability": "PRIVATE_NOT_INCLUDED"
+        },
+        "pdf": {
+          "path": "reports/frequency5to20_20260908T063800Z/native_failure_diagnosis_20260908T184000Z/reporting_recovery_install_v1/run_v1/snapshots/snapshot_0007/figures/requests/f18_qscan-HELDOUT_TRIPLE_AUDIT-000004/proxy_emx_score_by_q.pdf",
+          "sha256": "852d3b18842d00627d561fac4e42817b25c6d33f8af7747978b7daa701acbfdc",
+          "bytes": 29078,
+          "availability": "PRIVATE_NOT_INCLUDED"
+        },
+        "svg": {
+          "path": "reports/frequency5to20_20260908T063800Z/native_failure_diagnosis_20260908T184000Z/reporting_recovery_install_v1/run_v1/snapshots/snapshot_0007/figures/requests/f18_qscan-HELDOUT_TRIPLE_AUDIT-000004/proxy_emx_score_by_q.svg",
+          "sha256": "fc0c484b6648ece84fd2cc1a752575af4a8a150a6ad2d1521c34e27168319e3f",
+          "bytes": 112013,
+          "availability": "PRIVATE_NOT_INCLUDED"
+        }
+      },
+      "qa_receipt": {
+        "path": "reports/frequency5to20_20260908T063800Z/milestone_new7_cumulative83_20260908T210500Z/visual_qa_v1/VISUAL_QA.json",
+        "sha256": "395e8c29b17f99408561b94b48683d1af131e46a5caa22e5d174a6c62456608f",
+        "bytes": 71696,
+        "availability": "PRIVATE_NOT_INCLUDED"
+      },
+      "source": {
+        "path": "reports/frequency5to20_20260908T063800Z/native_failure_diagnosis_20260908T184000Z/reporting_recovery_install_v1/run_v1/snapshots/snapshot_0007/figures/requests/f18_qscan-HELDOUT_TRIPLE_AUDIT-000004/SOURCE_ROWS.json",
+        "sha256": "8b30f072497a64406b3ff6bed539543284a620b171569043581abb4339fdb456",
+        "bytes": 59814,
+        "availability": "PRIVATE_NOT_INCLUDED"
+      },
+      "signature": "f27e7ac0d71d87b88209a7aaddded0fad428a0304902b7af8f028096f66b34e3",
+      "visual_scope": "PNG_AND_PDF_VIEWED_SVG_SOURCE_PIN_ONLY"
+    },
+    {
+      "path": "f18_qscan-HELDOUT_TRIPLE_AUDIT-000004_percent.png",
+      "request_id": "f18_qscan-HELDOUT_TRIPLE_AUDIT-000004",
+      "kind": "percent",
+      "status": "GO",
+      "public": {
+        "path": "f18_qscan-HELDOUT_TRIPLE_AUDIT-000004_percent.png",
+        "sha256": "01e153feca02124712c44b824ab1e131eb409b3c1b8765615b1a8b9be7092fe6",
+        "bytes": 504581
+      },
+      "exports": {
+        "png": {
+          "path": "reports/frequency5to20_20260908T063800Z/native_failure_diagnosis_20260908T184000Z/reporting_recovery_install_v1/run_v1/snapshots/snapshot_0007/figures/requests/f18_qscan-HELDOUT_TRIPLE_AUDIT-000004/target_percent_by_q.png",
+          "sha256": "01e153feca02124712c44b824ab1e131eb409b3c1b8765615b1a8b9be7092fe6",
+          "bytes": 504581,
+          "availability": "PRIVATE_NOT_INCLUDED"
+        },
+        "pdf": {
+          "path": "reports/frequency5to20_20260908T063800Z/native_failure_diagnosis_20260908T184000Z/reporting_recovery_install_v1/run_v1/snapshots/snapshot_0007/figures/requests/f18_qscan-HELDOUT_TRIPLE_AUDIT-000004/target_percent_by_q.pdf",
+          "sha256": "20d9eb4f7e86db530b289a46efb696b9aa0cf5958314ec5577747f27eb230af2",
+          "bytes": 31863,
+          "availability": "PRIVATE_NOT_INCLUDED"
+        },
+        "svg": {
+          "path": "reports/frequency5to20_20260908T063800Z/native_failure_diagnosis_20260908T184000Z/reporting_recovery_install_v1/run_v1/snapshots/snapshot_0007/figures/requests/f18_qscan-HELDOUT_TRIPLE_AUDIT-000004/target_percent_by_q.svg",
+          "sha256": "a788e2c297930e6163a87200337a31759cdb0861780b4728e49a293303d55ea4",
+          "bytes": 185834,
+          "availability": "PRIVATE_NOT_INCLUDED"
+        }
+      },
+      "qa_receipt": {
+        "path": "reports/frequency5to20_20260908T063800Z/milestone_new7_cumulative83_20260908T210500Z/visual_qa_v1/VISUAL_QA.json",
+        "sha256": "395e8c29b17f99408561b94b48683d1af131e46a5caa22e5d174a6c62456608f",
+        "bytes": 71696,
+        "availability": "PRIVATE_NOT_INCLUDED"
+      },
+      "source": {
+        "path": "reports/frequency5to20_20260908T063800Z/native_failure_diagnosis_20260908T184000Z/reporting_recovery_install_v1/run_v1/snapshots/snapshot_0007/figures/requests/f18_qscan-HELDOUT_TRIPLE_AUDIT-000004/SOURCE_ROWS.json",
+        "sha256": "8b30f072497a64406b3ff6bed539543284a620b171569043581abb4339fdb456",
+        "bytes": 59814,
+        "availability": "PRIVATE_NOT_INCLUDED"
+      },
+      "signature": "f27e7ac0d71d87b88209a7aaddded0fad428a0304902b7af8f028096f66b34e3",
+      "visual_scope": "PNG_AND_PDF_VIEWED_SVG_SOURCE_PIN_ONLY"
+    },
+    {
+      "path": "f19_qscan-HELDOUT_TRIPLE_AUDIT-000004_score.png",
+      "request_id": "f19_qscan-HELDOUT_TRIPLE_AUDIT-000004",
+      "kind": "score",
+      "status": "GO",
+      "public": {
+        "path": "f19_qscan-HELDOUT_TRIPLE_AUDIT-000004_score.png",
+        "sha256": "034f038abfa1e00e2ac148f3d854a48588210b81de62ba4478acf3222d0aceed",
+        "bytes": 441695
+      },
+      "exports": {
+        "png": {
+          "path": "reports/frequency5to20_20260908T063800Z/native_failure_diagnosis_20260908T184000Z/reporting_recovery_install_v1/run_v1/snapshots/snapshot_0008/figures/requests/f19_qscan-HELDOUT_TRIPLE_AUDIT-000004/proxy_emx_score_by_q.png",
+          "sha256": "034f038abfa1e00e2ac148f3d854a48588210b81de62ba4478acf3222d0aceed",
+          "bytes": 441695,
+          "availability": "PRIVATE_NOT_INCLUDED"
+        },
+        "pdf": {
+          "path": "reports/frequency5to20_20260908T063800Z/native_failure_diagnosis_20260908T184000Z/reporting_recovery_install_v1/run_v1/snapshots/snapshot_0008/figures/requests/f19_qscan-HELDOUT_TRIPLE_AUDIT-000004/proxy_emx_score_by_q.pdf",
+          "sha256": "c4658971b23e09d1eaa72f80d6cfdaa700512c724f63cbd7be559a4dcdda3104",
+          "bytes": 29010,
+          "availability": "PRIVATE_NOT_INCLUDED"
+        },
+        "svg": {
+          "path": "reports/frequency5to20_20260908T063800Z/native_failure_diagnosis_20260908T184000Z/reporting_recovery_install_v1/run_v1/snapshots/snapshot_0008/figures/requests/f19_qscan-HELDOUT_TRIPLE_AUDIT-000004/proxy_emx_score_by_q.svg",
+          "sha256": "4de359dc444a3b8ea9cb470aacc3bebd22fba5d47647a1b6b0726c1a728033e8",
+          "bytes": 107711,
+          "availability": "PRIVATE_NOT_INCLUDED"
+        }
+      },
+      "qa_receipt": {
+        "path": "reports/frequency5to20_20260908T063800Z/milestone_new7_cumulative83_20260908T210500Z/visual_qa_v1/VISUAL_QA.json",
+        "sha256": "395e8c29b17f99408561b94b48683d1af131e46a5caa22e5d174a6c62456608f",
+        "bytes": 71696,
+        "availability": "PRIVATE_NOT_INCLUDED"
+      },
+      "source": {
+        "path": "reports/frequency5to20_20260908T063800Z/native_failure_diagnosis_20260908T184000Z/reporting_recovery_install_v1/run_v1/snapshots/snapshot_0008/figures/requests/f19_qscan-HELDOUT_TRIPLE_AUDIT-000004/SOURCE_ROWS.json",
+        "sha256": "148cfe27e9db24dd6a1c8ba7861a4dd2e9bb7b98fff72f672c27f34f4cfea646",
+        "bytes": 59811,
+        "availability": "PRIVATE_NOT_INCLUDED"
+      },
+      "signature": "16cb48040fdd9e969094634a70d6951f357fa8883ab8131a22370a92b002abd2",
+      "visual_scope": "PNG_AND_PDF_VIEWED_SVG_SOURCE_PIN_ONLY"
+    },
+    {
+      "path": "f19_qscan-HELDOUT_TRIPLE_AUDIT-000004_percent.png",
+      "request_id": "f19_qscan-HELDOUT_TRIPLE_AUDIT-000004",
+      "kind": "percent",
+      "status": "GO",
+      "public": {
+        "path": "f19_qscan-HELDOUT_TRIPLE_AUDIT-000004_percent.png",
+        "sha256": "0e4fa01fdbb047232db0b4983bed4184dcd6c29331d95ff6a7a456d4c3cc0c2f",
+        "bytes": 539589
+      },
+      "exports": {
+        "png": {
+          "path": "reports/frequency5to20_20260908T063800Z/native_failure_diagnosis_20260908T184000Z/reporting_recovery_install_v1/run_v1/snapshots/snapshot_0008/figures/requests/f19_qscan-HELDOUT_TRIPLE_AUDIT-000004/target_percent_by_q.png",
+          "sha256": "0e4fa01fdbb047232db0b4983bed4184dcd6c29331d95ff6a7a456d4c3cc0c2f",
+          "bytes": 539589,
+          "availability": "PRIVATE_NOT_INCLUDED"
+        },
+        "pdf": {
+          "path": "reports/frequency5to20_20260908T063800Z/native_failure_diagnosis_20260908T184000Z/reporting_recovery_install_v1/run_v1/snapshots/snapshot_0008/figures/requests/f19_qscan-HELDOUT_TRIPLE_AUDIT-000004/target_percent_by_q.pdf",
+          "sha256": "10b604915f3911854e041c83dc10522ffddc9bd2a508937cca89ed387369ad8e",
+          "bytes": 31922,
+          "availability": "PRIVATE_NOT_INCLUDED"
+        },
+        "svg": {
+          "path": "reports/frequency5to20_20260908T063800Z/native_failure_diagnosis_20260908T184000Z/reporting_recovery_install_v1/run_v1/snapshots/snapshot_0008/figures/requests/f19_qscan-HELDOUT_TRIPLE_AUDIT-000004/target_percent_by_q.svg",
+          "sha256": "aa2f9da3725410e95aa85bb1159093e3632ce664152b58824f8bc6d92a70558b",
+          "bytes": 187260,
+          "availability": "PRIVATE_NOT_INCLUDED"
+        }
+      },
+      "qa_receipt": {
+        "path": "reports/frequency5to20_20260908T063800Z/milestone_new7_cumulative83_20260908T210500Z/visual_qa_v1/VISUAL_QA.json",
+        "sha256": "395e8c29b17f99408561b94b48683d1af131e46a5caa22e5d174a6c62456608f",
+        "bytes": 71696,
+        "availability": "PRIVATE_NOT_INCLUDED"
+      },
+      "source": {
+        "path": "reports/frequency5to20_20260908T063800Z/native_failure_diagnosis_20260908T184000Z/reporting_recovery_install_v1/run_v1/snapshots/snapshot_0008/figures/requests/f19_qscan-HELDOUT_TRIPLE_AUDIT-000004/SOURCE_ROWS.json",
+        "sha256": "148cfe27e9db24dd6a1c8ba7861a4dd2e9bb7b98fff72f672c27f34f4cfea646",
+        "bytes": 59811,
+        "availability": "PRIVATE_NOT_INCLUDED"
+      },
+      "signature": "16cb48040fdd9e969094634a70d6951f357fa8883ab8131a22370a92b002abd2",
+      "visual_scope": "PNG_AND_PDF_VIEWED_SVG_SOURCE_PIN_ONLY"
+    },
+    {
+      "path": "qscan15_development5k_20260908_v1-HELDOUT_TRIPLE_AUDIT-000005_percent.png",
+      "request_id": "qscan15_development5k_20260908_v1-HELDOUT_TRIPLE_AUDIT-000005",
+      "kind": "percent",
+      "status": "GO",
+      "public": {
+        "path": "qscan15_development5k_20260908_v1-HELDOUT_TRIPLE_AUDIT-000005_percent.png",
+        "sha256": "7c9721d565ecdb761c89196cd7a73af4872c04b8ebde38c1a57d3fdc0360ad3a",
+        "bytes": 577496
+      },
+      "exports": {
+        "png": {
+          "path": "reports/frequency5to20_20260908T063800Z/native_failure_diagnosis_20260908T184000Z/reporting_recovery_install_v1/run_v1/snapshots/snapshot_0009/figures/requests/qscan15_development5k_20260908_v1-HELDOUT_TRIPLE_AUDIT-000005/target_percent_by_q.png",
+          "sha256": "7c9721d565ecdb761c89196cd7a73af4872c04b8ebde38c1a57d3fdc0360ad3a",
+          "bytes": 577496,
+          "availability": "PRIVATE_NOT_INCLUDED"
+        },
+        "pdf": {
+          "path": "reports/frequency5to20_20260908T063800Z/native_failure_diagnosis_20260908T184000Z/reporting_recovery_install_v1/run_v1/snapshots/snapshot_0009/figures/requests/qscan15_development5k_20260908_v1-HELDOUT_TRIPLE_AUDIT-000005/target_percent_by_q.pdf",
+          "sha256": "8dde57e28665e5743d664eb190df4c4033254a30e259d6b0603fd2249b68c800",
+          "bytes": 32490,
+          "availability": "PRIVATE_NOT_INCLUDED"
+        },
+        "svg": {
+          "path": "reports/frequency5to20_20260908T063800Z/native_failure_diagnosis_20260908T184000Z/reporting_recovery_install_v1/run_v1/snapshots/snapshot_0009/figures/requests/qscan15_development5k_20260908_v1-HELDOUT_TRIPLE_AUDIT-000005/target_percent_by_q.svg",
+          "sha256": "980454caa3ee84f9e48d34af44c54d73f9bb2d4ccd3adf115b34197235efc359",
+          "bytes": 187891,
+          "availability": "PRIVATE_NOT_INCLUDED"
+        }
+      },
+      "qa_receipt": {
+        "path": "reports/frequency5to20_20260908T063800Z/milestone_new7_cumulative83_20260908T210500Z/visual_qa_v1/VISUAL_QA.json",
+        "sha256": "395e8c29b17f99408561b94b48683d1af131e46a5caa22e5d174a6c62456608f",
+        "bytes": 71696,
+        "availability": "PRIVATE_NOT_INCLUDED"
+      },
+      "source": {
+        "path": "reports/frequency5to20_20260908T063800Z/native_failure_diagnosis_20260908T184000Z/reporting_recovery_install_v1/run_v1/snapshots/snapshot_0009/figures/requests/qscan15_development5k_20260908_v1-HELDOUT_TRIPLE_AUDIT-000005/SOURCE_ROWS.json",
+        "sha256": "a1989ce2182e69610c780ab1e3b2808465dd873f172eb4fc691b26e941723ad2",
+        "bytes": 70850,
+        "availability": "PRIVATE_NOT_INCLUDED"
+      },
+      "signature": "79545b7bff5cb117a2772b285709864ea95242964c231ae6126eb9726826f1dd",
+      "visual_scope": "PNG_AND_PDF_VIEWED_SVG_SOURCE_PIN_ONLY"
+    },
+    {
+      "path": "f05_qscan-HELDOUT_TRIPLE_AUDIT-000005_percent.png",
+      "request_id": "f05_qscan-HELDOUT_TRIPLE_AUDIT-000005",
+      "kind": "percent",
+      "status": "GO",
+      "public": {
+        "path": "f05_qscan-HELDOUT_TRIPLE_AUDIT-000005_percent.png",
+        "sha256": "4cd353a422936434762705300feb1fb7997f8f2df40e504624e12dd88a24fa1d",
+        "bytes": 542952
+      },
+      "exports": {
+        "png": {
+          "path": "reports/frequency5to20_20260908T063800Z/native_failure_diagnosis_20260908T184000Z/reporting_recovery_install_v1/run_v1/snapshots/snapshot_0010/figures/requests/f05_qscan-HELDOUT_TRIPLE_AUDIT-000005/target_percent_by_q.png",
+          "sha256": "4cd353a422936434762705300feb1fb7997f8f2df40e504624e12dd88a24fa1d",
+          "bytes": 542952,
+          "availability": "PRIVATE_NOT_INCLUDED"
+        },
+        "pdf": {
+          "path": "reports/frequency5to20_20260908T063800Z/native_failure_diagnosis_20260908T184000Z/reporting_recovery_install_v1/run_v1/snapshots/snapshot_0010/figures/requests/f05_qscan-HELDOUT_TRIPLE_AUDIT-000005/target_percent_by_q.pdf",
+          "sha256": "28bc32d3722272541e20f9d0911707aa23d20a714ab463218baffe003872343b",
+          "bytes": 31807,
+          "availability": "PRIVATE_NOT_INCLUDED"
+        },
+        "svg": {
+          "path": "reports/frequency5to20_20260908T063800Z/native_failure_diagnosis_20260908T184000Z/reporting_recovery_install_v1/run_v1/snapshots/snapshot_0010/figures/requests/f05_qscan-HELDOUT_TRIPLE_AUDIT-000005/target_percent_by_q.svg",
+          "sha256": "45bbf1161084399ca6b0c92ecb7ab414c57337c11848da00f1566958a8b07ee1",
+          "bytes": 177900,
+          "availability": "PRIVATE_NOT_INCLUDED"
+        }
+      },
+      "qa_receipt": {
+        "path": "reports/frequency5to20_20260908T063800Z/milestone_new7_cumulative83_20260908T210500Z/visual_qa_v1/VISUAL_QA.json",
+        "sha256": "395e8c29b17f99408561b94b48683d1af131e46a5caa22e5d174a6c62456608f",
+        "bytes": 71696,
+        "availability": "PRIVATE_NOT_INCLUDED"
+      },
+      "source": {
+        "path": "reports/frequency5to20_20260908T063800Z/native_failure_diagnosis_20260908T184000Z/reporting_recovery_install_v1/run_v1/snapshots/snapshot_0010/figures/requests/f05_qscan-HELDOUT_TRIPLE_AUDIT-000005/SOURCE_ROWS.json",
+        "sha256": "4b7391fd053e8563e3ae7c20b231450a18ce3ec12f0a1cb6f43dd25b6a0cde27",
+        "bytes": 65255,
+        "availability": "PRIVATE_NOT_INCLUDED"
+      },
+      "signature": "9a6f9c09b0eadd1eb6c9ba0d910f5be4e49bc2f339f1b965fcd2758451611325",
+      "visual_scope": "PNG_AND_PDF_VIEWED_SVG_SOURCE_PIN_ONLY"
+    },
+    {
+      "path": "f10_qscan-HELDOUT_TRIPLE_AUDIT-000005_percent.png",
+      "request_id": "f10_qscan-HELDOUT_TRIPLE_AUDIT-000005",
+      "kind": "percent",
+      "status": "GO",
+      "public": {
+        "path": "f10_qscan-HELDOUT_TRIPLE_AUDIT-000005_percent.png",
+        "sha256": "dc39656c60f233ce6da4710c8f136aaf8cf1871f4385055fba614f3c809372bd",
+        "bytes": 532666
+      },
+      "exports": {
+        "png": {
+          "path": "reports/frequency5to20_20260908T063800Z/native_failure_diagnosis_20260908T184000Z/reporting_recovery_install_v1/run_v1/snapshots/snapshot_0011/figures/requests/f10_qscan-HELDOUT_TRIPLE_AUDIT-000005/target_percent_by_q.png",
+          "sha256": "dc39656c60f233ce6da4710c8f136aaf8cf1871f4385055fba614f3c809372bd",
+          "bytes": 532666,
+          "availability": "PRIVATE_NOT_INCLUDED"
+        },
+        "pdf": {
+          "path": "reports/frequency5to20_20260908T063800Z/native_failure_diagnosis_20260908T184000Z/reporting_recovery_install_v1/run_v1/snapshots/snapshot_0011/figures/requests/f10_qscan-HELDOUT_TRIPLE_AUDIT-000005/target_percent_by_q.pdf",
+          "sha256": "f006e2765446821c20c88d375bf6f42f9230e21e9e1aa3ef9be3e1bd17dd72ce",
+          "bytes": 31119,
+          "availability": "PRIVATE_NOT_INCLUDED"
+        },
+        "svg": {
+          "path": "reports/frequency5to20_20260908T063800Z/native_failure_diagnosis_20260908T184000Z/reporting_recovery_install_v1/run_v1/snapshots/snapshot_0011/figures/requests/f10_qscan-HELDOUT_TRIPLE_AUDIT-000005/target_percent_by_q.svg",
+          "sha256": "de33c23dd07edfa83409366461bf7850481f81e98bc2125c3764f555732260b3",
+          "bytes": 171906,
+          "availability": "PRIVATE_NOT_INCLUDED"
+        }
+      },
+      "qa_receipt": {
+        "path": "reports/frequency5to20_20260908T063800Z/milestone_new7_cumulative83_20260908T210500Z/visual_qa_v1/VISUAL_QA.json",
+        "sha256": "395e8c29b17f99408561b94b48683d1af131e46a5caa22e5d174a6c62456608f",
+        "bytes": 71696,
+        "availability": "PRIVATE_NOT_INCLUDED"
+      },
+      "source": {
+        "path": "reports/frequency5to20_20260908T063800Z/native_failure_diagnosis_20260908T184000Z/reporting_recovery_install_v1/run_v1/snapshots/snapshot_0011/figures/requests/f10_qscan-HELDOUT_TRIPLE_AUDIT-000005/SOURCE_ROWS.json",
+        "sha256": "0cab95002c01ba50110b02c5314b8f40f4ef7f0e2a0b263755dcd3a5717ea05b",
+        "bytes": 68259,
+        "availability": "PRIVATE_NOT_INCLUDED"
+      },
+      "signature": "0a137e6f595a2ec19599e87672e88e1116582301aaa90ca3449f4c86923f69ea",
+      "visual_scope": "PNG_AND_PDF_VIEWED_SVG_SOURCE_PIN_ONLY"
+    },
+    {
+      "path": "f17_qscan-HELDOUT_TRIPLE_AUDIT-000004_score.png",
+      "request_id": "f17_qscan-HELDOUT_TRIPLE_AUDIT-000004",
+      "kind": "score",
+      "status": "GO",
+      "public": {
+        "path": "f17_qscan-HELDOUT_TRIPLE_AUDIT-000004_score.png",
+        "sha256": "a158b8493c119cbb611f874501ca9a3761c3179903fabde50761f07d7b846570",
+        "bytes": 481377
+      },
+      "exports": {
+        "png": {
+          "path": "reports/frequency5to20_20260908T063800Z/milestone_new7_cumulative83_20260908T210500Z/visual_qa_v1/repair_candidates_v3/f17_qscan-HELDOUT_TRIPLE_AUDIT-000004/score/proxy_emx_score_by_q_v3.png",
+          "sha256": "a158b8493c119cbb611f874501ca9a3761c3179903fabde50761f07d7b846570",
+          "bytes": 481377,
+          "availability": "PRIVATE_NOT_INCLUDED"
+        },
+        "svg": {
+          "path": "reports/frequency5to20_20260908T063800Z/milestone_new7_cumulative83_20260908T210500Z/visual_qa_v1/repair_candidates_v3/f17_qscan-HELDOUT_TRIPLE_AUDIT-000004/score/proxy_emx_score_by_q_v3.svg",
+          "sha256": "11d0cc7826c0cbdeed51105f5050763bba0f29ec9c2a855e6d944987b806cd96",
+          "bytes": 130461,
+          "availability": "PRIVATE_NOT_INCLUDED"
+        },
+        "pdf": {
+          "path": "reports/frequency5to20_20260908T063800Z/milestone_new7_cumulative83_20260908T210500Z/visual_qa_v1/repair_candidates_v3/f17_qscan-HELDOUT_TRIPLE_AUDIT-000004/score/proxy_emx_score_by_q_v3.pdf",
+          "sha256": "1030248c0d91eda886ce0f3b57d9dcd60d747293bed6739f27e757d9aaf13be7",
+          "bytes": 29740,
+          "availability": "PRIVATE_NOT_INCLUDED"
+        }
+      },
+      "qa_receipt": {
+        "path": "reports/frequency5to20_20260908T063800Z/milestone_new7_cumulative83_20260908T210500Z/final_visual_qa_v1/INDEPENDENT_REQUEST_REPAIR_QA.json",
+        "sha256": "e187314bef2dae2fc7eda72adc3fe9d5f1b73a2e6226c1ce0a48a1bb1bb9cd2e",
+        "bytes": 15057,
+        "availability": "PRIVATE_NOT_INCLUDED"
+      },
+      "source": {
+        "path": "reports/frequency5to20_20260908T063800Z/native_failure_diagnosis_20260908T184000Z/reporting_recovery_install_v1/run_v1/snapshots/snapshot_0006/figures/requests/f17_qscan-HELDOUT_TRIPLE_AUDIT-000004/SOURCE_ROWS.json",
+        "sha256": "7183f7e51467294f7e017c5c7ae7f8832fdb9ed55e9f5eff3e899ef2f16b46c1",
+        "bytes": 56967,
+        "availability": "PRIVATE_NOT_INCLUDED"
+      },
+      "signature": "79caa2e87d73be21f8a396dfbd57c574d2b0f1ce5679446122816b302b86e2fb",
+      "visual_scope": "PNG_AND_PDF_VIEWED_SVG_SOURCE_PIN_ONLY"
+    },
+    {
+      "path": "qscan15_development5k_20260908_v1-HELDOUT_TRIPLE_AUDIT-000005_score.png",
+      "request_id": "qscan15_development5k_20260908_v1-HELDOUT_TRIPLE_AUDIT-000005",
+      "kind": "score",
+      "status": "GO",
+      "public": {
+        "path": "qscan15_development5k_20260908_v1-HELDOUT_TRIPLE_AUDIT-000005_score.png",
+        "sha256": "d39e756509688161f49557e4e27c612190891b92102626b59071db6a36fc033b",
+        "bytes": 515449
+      },
+      "exports": {
+        "png": {
+          "path": "reports/frequency5to20_20260908T063800Z/milestone_new7_cumulative83_20260908T210500Z/visual_qa_v1/repair_candidates_v3/qscan15_development5k_20260908_v1-HELDOUT_TRIPLE_AUDIT-000005/score/proxy_emx_score_by_q_v3.png",
+          "sha256": "d39e756509688161f49557e4e27c612190891b92102626b59071db6a36fc033b",
+          "bytes": 515449,
+          "availability": "PRIVATE_NOT_INCLUDED"
+        },
+        "svg": {
+          "path": "reports/frequency5to20_20260908T063800Z/milestone_new7_cumulative83_20260908T210500Z/visual_qa_v1/repair_candidates_v3/qscan15_development5k_20260908_v1-HELDOUT_TRIPLE_AUDIT-000005/score/proxy_emx_score_by_q_v3.svg",
+          "sha256": "b5b2d1dfa571b03d4a884aa48d55c08353d2660792fbf3675f38c190b3b5cdb3",
+          "bytes": 134129,
+          "availability": "PRIVATE_NOT_INCLUDED"
+        },
+        "pdf": {
+          "path": "reports/frequency5to20_20260908T063800Z/milestone_new7_cumulative83_20260908T210500Z/visual_qa_v1/repair_candidates_v3/qscan15_development5k_20260908_v1-HELDOUT_TRIPLE_AUDIT-000005/score/proxy_emx_score_by_q_v3.pdf",
+          "sha256": "1d84916b81d51c9e57085988ef170e6f2f3568eb65e9f39fab04b2d0f5e75a55",
+          "bytes": 29823,
+          "availability": "PRIVATE_NOT_INCLUDED"
+        }
+      },
+      "qa_receipt": {
+        "path": "reports/frequency5to20_20260908T063800Z/milestone_new7_cumulative83_20260908T210500Z/final_visual_qa_v1/INDEPENDENT_REQUEST_REPAIR_QA.json",
+        "sha256": "e187314bef2dae2fc7eda72adc3fe9d5f1b73a2e6226c1ce0a48a1bb1bb9cd2e",
+        "bytes": 15057,
+        "availability": "PRIVATE_NOT_INCLUDED"
+      },
+      "source": {
+        "path": "reports/frequency5to20_20260908T063800Z/native_failure_diagnosis_20260908T184000Z/reporting_recovery_install_v1/run_v1/snapshots/snapshot_0009/figures/requests/qscan15_development5k_20260908_v1-HELDOUT_TRIPLE_AUDIT-000005/SOURCE_ROWS.json",
+        "sha256": "a1989ce2182e69610c780ab1e3b2808465dd873f172eb4fc691b26e941723ad2",
+        "bytes": 70850,
+        "availability": "PRIVATE_NOT_INCLUDED"
+      },
+      "signature": "79545b7bff5cb117a2772b285709864ea95242964c231ae6126eb9726826f1dd",
+      "visual_scope": "PNG_AND_PDF_VIEWED_SVG_SOURCE_PIN_ONLY"
+    },
+    {
+      "path": "f05_qscan-HELDOUT_TRIPLE_AUDIT-000005_score.png",
+      "request_id": "f05_qscan-HELDOUT_TRIPLE_AUDIT-000005",
+      "kind": "score",
+      "status": "GO",
+      "public": {
+        "path": "f05_qscan-HELDOUT_TRIPLE_AUDIT-000005_score.png",
+        "sha256": "e19941e5715e55020366e8bb93539ac9de570d13a5065e10735fad8aa53f9f3a",
+        "bytes": 463646
+      },
+      "exports": {
+        "png": {
+          "path": "reports/frequency5to20_20260908T063800Z/milestone_new7_cumulative83_20260908T210500Z/visual_qa_v1/repair_candidates_v3/f05_qscan-HELDOUT_TRIPLE_AUDIT-000005/score/proxy_emx_score_by_q_v3.png",
+          "sha256": "e19941e5715e55020366e8bb93539ac9de570d13a5065e10735fad8aa53f9f3a",
+          "bytes": 463646,
+          "availability": "PRIVATE_NOT_INCLUDED"
+        },
+        "svg": {
+          "path": "reports/frequency5to20_20260908T063800Z/milestone_new7_cumulative83_20260908T210500Z/visual_qa_v1/repair_candidates_v3/f05_qscan-HELDOUT_TRIPLE_AUDIT-000005/score/proxy_emx_score_by_q_v3.svg",
+          "sha256": "a84b9bdd2bdfc9356ddbc3867daecda7485c09e247b5bb1c3b3d6de21e7ec153",
+          "bytes": 123462,
+          "availability": "PRIVATE_NOT_INCLUDED"
+        },
+        "pdf": {
+          "path": "reports/frequency5to20_20260908T063800Z/milestone_new7_cumulative83_20260908T210500Z/visual_qa_v1/repair_candidates_v3/f05_qscan-HELDOUT_TRIPLE_AUDIT-000005/score/proxy_emx_score_by_q_v3.pdf",
+          "sha256": "2b07329af5a45ba7ac3ec0694a21202754dc3b499c8d4c0b6f817c32146010a5",
+          "bytes": 29502,
+          "availability": "PRIVATE_NOT_INCLUDED"
+        }
+      },
+      "qa_receipt": {
+        "path": "reports/frequency5to20_20260908T063800Z/milestone_new7_cumulative83_20260908T210500Z/final_visual_qa_v1/INDEPENDENT_REQUEST_REPAIR_QA.json",
+        "sha256": "e187314bef2dae2fc7eda72adc3fe9d5f1b73a2e6226c1ce0a48a1bb1bb9cd2e",
+        "bytes": 15057,
+        "availability": "PRIVATE_NOT_INCLUDED"
+      },
+      "source": {
+        "path": "reports/frequency5to20_20260908T063800Z/native_failure_diagnosis_20260908T184000Z/reporting_recovery_install_v1/run_v1/snapshots/snapshot_0010/figures/requests/f05_qscan-HELDOUT_TRIPLE_AUDIT-000005/SOURCE_ROWS.json",
+        "sha256": "4b7391fd053e8563e3ae7c20b231450a18ce3ec12f0a1cb6f43dd25b6a0cde27",
+        "bytes": 65255,
+        "availability": "PRIVATE_NOT_INCLUDED"
+      },
+      "signature": "9a6f9c09b0eadd1eb6c9ba0d910f5be4e49bc2f339f1b965fcd2758451611325",
+      "visual_scope": "PNG_AND_PDF_VIEWED_SVG_SOURCE_PIN_ONLY"
+    },
+    {
+      "path": "f10_qscan-HELDOUT_TRIPLE_AUDIT-000005_score.png",
+      "request_id": "f10_qscan-HELDOUT_TRIPLE_AUDIT-000005",
+      "kind": "score",
+      "status": "GO",
+      "public": {
+        "path": "f10_qscan-HELDOUT_TRIPLE_AUDIT-000005_score.png",
+        "sha256": "db0bc85e3bd3a2d854b606152402641d3284f3411634e431818c9f5001fb954b",
+        "bytes": 462748
+      },
+      "exports": {
+        "png": {
+          "path": "reports/frequency5to20_20260908T063800Z/milestone_new7_cumulative83_20260908T210500Z/visual_qa_v1/repair_candidates_v3/f10_qscan-HELDOUT_TRIPLE_AUDIT-000005/score/proxy_emx_score_by_q_v3.png",
+          "sha256": "db0bc85e3bd3a2d854b606152402641d3284f3411634e431818c9f5001fb954b",
+          "bytes": 462748,
+          "availability": "PRIVATE_NOT_INCLUDED"
+        },
+        "svg": {
+          "path": "reports/frequency5to20_20260908T063800Z/milestone_new7_cumulative83_20260908T210500Z/visual_qa_v1/repair_candidates_v3/f10_qscan-HELDOUT_TRIPLE_AUDIT-000005/score/proxy_emx_score_by_q_v3.svg",
+          "sha256": "afbfe857058ce7df59e17ffc55fd88fd30ce3c4fc592626c27260a2b8e979d89",
+          "bytes": 124899,
+          "availability": "PRIVATE_NOT_INCLUDED"
+        },
+        "pdf": {
+          "path": "reports/frequency5to20_20260908T063800Z/milestone_new7_cumulative83_20260908T210500Z/visual_qa_v1/repair_candidates_v3/f10_qscan-HELDOUT_TRIPLE_AUDIT-000005/score/proxy_emx_score_by_q_v3.pdf",
+          "sha256": "66d54107e06e25bfbd23e1ed146aa6740e805cb355ce6a4e9f3f1968387db4fd",
+          "bytes": 29486,
+          "availability": "PRIVATE_NOT_INCLUDED"
+        }
+      },
+      "qa_receipt": {
+        "path": "reports/frequency5to20_20260908T063800Z/milestone_new7_cumulative83_20260908T210500Z/final_visual_qa_v1/INDEPENDENT_REQUEST_REPAIR_QA.json",
+        "sha256": "e187314bef2dae2fc7eda72adc3fe9d5f1b73a2e6226c1ce0a48a1bb1bb9cd2e",
+        "bytes": 15057,
+        "availability": "PRIVATE_NOT_INCLUDED"
+      },
+      "source": {
+        "path": "reports/frequency5to20_20260908T063800Z/native_failure_diagnosis_20260908T184000Z/reporting_recovery_install_v1/run_v1/snapshots/snapshot_0011/figures/requests/f10_qscan-HELDOUT_TRIPLE_AUDIT-000005/SOURCE_ROWS.json",
+        "sha256": "0cab95002c01ba50110b02c5314b8f40f4ef7f0e2a0b263755dcd3a5717ea05b",
+        "bytes": 68259,
+        "availability": "PRIVATE_NOT_INCLUDED"
+      },
+      "signature": "0a137e6f595a2ec19599e87672e88e1116582301aaa90ca3449f4c86923f69ea",
+      "visual_scope": "PNG_AND_PDF_VIEWED_SVG_SOURCE_PIN_ONLY"
+    },
+    {
+      "path": "aggregate_route_status.png",
+      "request_id": null,
+      "kind": "route_status",
+      "status": "GO",
+      "public": {
+        "path": "aggregate_route_status.png",
+        "sha256": "9561a34ea95009f182adf7bcf27da54a1f79f5c206cb458fd6c8a3c44f6364a6",
+        "bytes": 575287
+      },
+      "exports": {
+        "png": {
+          "path": "reports/frequency5to20_20260908T063800Z/native_failure_diagnosis_20260908T184000Z/reporting_recovery_install_v1/run_v1/snapshots/snapshot_0011/figures/route_status.png",
+          "sha256": "9561a34ea95009f182adf7bcf27da54a1f79f5c206cb458fd6c8a3c44f6364a6",
+          "bytes": 575287,
+          "availability": "PRIVATE_NOT_INCLUDED"
+        },
+        "pdf": {
+          "path": "reports/frequency5to20_20260908T063800Z/native_failure_diagnosis_20260908T184000Z/reporting_recovery_install_v1/run_v1/snapshots/snapshot_0011/figures/route_status.pdf",
+          "sha256": "30f6edc33fe298089b6baf980b54b5dce265e4f8ac5f430a0881dbbdd8e5939b",
+          "bytes": 40420,
+          "availability": "PRIVATE_NOT_INCLUDED"
+        },
+        "svg": {
+          "path": "reports/frequency5to20_20260908T063800Z/native_failure_diagnosis_20260908T184000Z/reporting_recovery_install_v1/run_v1/snapshots/snapshot_0011/figures/route_status.svg",
+          "sha256": "8fc4658ce5d89296e58d3b3a309de4f210ed696d584f17320a204ba7f17f9b6b",
+          "bytes": 237267,
+          "availability": "PRIVATE_NOT_INCLUDED"
+        },
+        "pdf_preview": {
+          "path": "reports/frequency5to20_20260908T063800Z/milestone_new7_cumulative83_20260908T210500Z/aggregate_original_qa_v1/route_status_pdf_page1.png",
+          "sha256": "0c8c3adf986bc7e791e1bf78b37b43e6a806c14e73b819076ce88017cdf1bd46",
+          "bytes": 218149,
+          "availability": "PRIVATE_NOT_INCLUDED"
+        }
+      },
+      "qa_receipt": {
+        "path": "reports/frequency5to20_20260908T063800Z/milestone_new7_cumulative83_20260908T210500Z/final_visual_qa_v1/INDEPENDENT_AGGREGATE_VISUAL_QA.json",
+        "sha256": "d303e1b378cee08bed1af745f08f5c90bf41fbddf0738e5c0183811c9e21f76e",
+        "bytes": 14962,
+        "availability": "PRIVATE_NOT_INCLUDED"
+      },
+      "source": null,
+      "signature": null,
+      "visual_scope": "PNG_AND_PDF_VIEWED_SVG_SOURCE_PIN_ONLY"
+    },
+    {
+      "path": "aggregate_all_candidates.png",
+      "request_id": null,
+      "kind": "all_candidates",
+      "status": "GO",
+      "public": {
+        "path": "aggregate_all_candidates.png",
+        "sha256": "e827edb4fcd5de3805cd295771f5c695a678f6fa29a90d56cf2b6bbb5b93582f",
+        "bytes": 729990
+      },
+      "exports": {
+        "png": {
+          "path": "reports/frequency5to20_20260908T063800Z/native_failure_diagnosis_20260908T184000Z/reporting_recovery_install_v1/run_v1/snapshots/snapshot_0011/figures/formal_all_candidates_mae_p95.png",
+          "sha256": "e827edb4fcd5de3805cd295771f5c695a678f6fa29a90d56cf2b6bbb5b93582f",
+          "bytes": 729990,
+          "availability": "PRIVATE_NOT_INCLUDED"
+        },
+        "pdf": {
+          "path": "reports/frequency5to20_20260908T063800Z/native_failure_diagnosis_20260908T184000Z/reporting_recovery_install_v1/run_v1/snapshots/snapshot_0011/figures/formal_all_candidates_mae_p95.pdf",
+          "sha256": "6b47e1e7ce6b67b86f63f6fcc4ebf144ca640d1a9eab24eaac1b3679901eaa2f",
+          "bytes": 42023,
+          "availability": "PRIVATE_NOT_INCLUDED"
+        },
+        "svg": {
+          "path": "reports/frequency5to20_20260908T063800Z/native_failure_diagnosis_20260908T184000Z/reporting_recovery_install_v1/run_v1/snapshots/snapshot_0011/figures/formal_all_candidates_mae_p95.svg",
+          "sha256": "2f12db61c349229badfc37def40d081cb5d82f7254c81c8d393a58cf95ae24ee",
+          "bytes": 348565,
+          "availability": "PRIVATE_NOT_INCLUDED"
+        },
+        "pdf_preview": {
+          "path": "reports/frequency5to20_20260908T063800Z/milestone_new7_cumulative83_20260908T210500Z/aggregate_original_qa_v1/all_candidates_pdf_page1.png",
+          "sha256": "e5ed9655f52f31c739226013ee5a9ff331e4dfc015d6806085e201b46a5f8678",
+          "bytes": 224528,
+          "availability": "PRIVATE_NOT_INCLUDED"
+        }
+      },
+      "qa_receipt": {
+        "path": "reports/frequency5to20_20260908T063800Z/milestone_new7_cumulative83_20260908T210500Z/final_visual_qa_v1/INDEPENDENT_AGGREGATE_VISUAL_QA.json",
+        "sha256": "d303e1b378cee08bed1af745f08f5c90bf41fbddf0738e5c0183811c9e21f76e",
+        "bytes": 14962,
+        "availability": "PRIVATE_NOT_INCLUDED"
+      },
+      "source": null,
+      "signature": null,
+      "visual_scope": "PNG_AND_PDF_VIEWED_SVG_SOURCE_PIN_ONLY"
+    },
+    {
+      "path": "aggregate_heatmap.png",
+      "request_id": null,
+      "kind": "heatmap",
+      "status": "GO",
+      "public": {
+        "path": "aggregate_heatmap.png",
+        "sha256": "24396159fb0476a845790b36be1bd1b6d60d198a54e42f4e16087de5a77abb53",
+        "bytes": 688696
+      },
+      "exports": {
+        "png": {
+          "path": "reports/frequency5to20_20260908T063800Z/native_failure_diagnosis_20260908T184000Z/reporting_recovery_install_v1/run_v1/snapshots/snapshot_0011/figures/formal_normalized_mae_heatmap.png",
+          "sha256": "24396159fb0476a845790b36be1bd1b6d60d198a54e42f4e16087de5a77abb53",
+          "bytes": 688696,
+          "availability": "PRIVATE_NOT_INCLUDED"
+        },
+        "pdf": {
+          "path": "reports/frequency5to20_20260908T063800Z/native_failure_diagnosis_20260908T184000Z/reporting_recovery_install_v1/run_v1/snapshots/snapshot_0011/figures/formal_normalized_mae_heatmap.pdf",
+          "sha256": "756b87f3c65ccadf10fcac51aef3fe9032b45afdacb501591546a2c13296c4b3",
+          "bytes": 105477,
+          "availability": "PRIVATE_NOT_INCLUDED"
+        },
+        "svg": {
+          "path": "reports/frequency5to20_20260908T063800Z/native_failure_diagnosis_20260908T184000Z/reporting_recovery_install_v1/run_v1/snapshots/snapshot_0011/figures/formal_normalized_mae_heatmap.svg",
+          "sha256": "9c36be0152caea5a5dca074ac9e2dc3075ab890e55ad7dbbdbfb7a8c4eae2506",
+          "bytes": 348126,
+          "availability": "PRIVATE_NOT_INCLUDED"
+        },
+        "pdf_preview": {
+          "path": "reports/frequency5to20_20260908T063800Z/milestone_new7_cumulative83_20260908T210500Z/aggregate_original_qa_v1/heatmap_pdf_page1.png",
+          "sha256": "092c83a7c758db0e8c298a11710a71cd01d09a91d94de1d661589237f27c7d6c",
+          "bytes": 227323,
+          "availability": "PRIVATE_NOT_INCLUDED"
+        }
+      },
+      "qa_receipt": {
+        "path": "reports/frequency5to20_20260908T063800Z/milestone_new7_cumulative83_20260908T210500Z/final_visual_qa_v1/INDEPENDENT_AGGREGATE_VISUAL_QA.json",
+        "sha256": "d303e1b378cee08bed1af745f08f5c90bf41fbddf0738e5c0183811c9e21f76e",
+        "bytes": 14962,
+        "availability": "PRIVATE_NOT_INCLUDED"
+      },
+      "source": null,
+      "signature": null,
+      "visual_scope": "PNG_AND_PDF_VIEWED_SVG_SOURCE_PIN_ONLY"
+    },
+    {
+      "path": "aggregate_selected.png",
+      "request_id": null,
+      "kind": "selected",
+      "status": "GO",
+      "public": {
+        "path": "aggregate_selected.png",
+        "sha256": "1efff49c99cbdf7cfc5e2cbaeab5a277daeac8ffa5540b9e595e221dd7adf11e",
+        "bytes": 760389
+      },
+      "exports": {
+        "png": {
+          "path": "reports/frequency5to20_20260908T063800Z/native_failure_diagnosis_20260908T184000Z/reporting_recovery_install_v1/run_v1/snapshots/snapshot_0011/figures/formal_selected_q_proxy_mae_p95.png",
+          "sha256": "1efff49c99cbdf7cfc5e2cbaeab5a277daeac8ffa5540b9e595e221dd7adf11e",
+          "bytes": 760389,
+          "availability": "PRIVATE_NOT_INCLUDED"
+        },
+        "pdf": {
+          "path": "reports/frequency5to20_20260908T063800Z/native_failure_diagnosis_20260908T184000Z/reporting_recovery_install_v1/run_v1/snapshots/snapshot_0011/figures/formal_selected_q_proxy_mae_p95.pdf",
+          "sha256": "1fd627e70adc80d5fe732bd4289a71b3545b15bdfcebcf6a65415e5d5dff84d2",
+          "bytes": 42734,
+          "availability": "PRIVATE_NOT_INCLUDED"
+        },
+        "svg": {
+          "path": "reports/frequency5to20_20260908T063800Z/native_failure_diagnosis_20260908T184000Z/reporting_recovery_install_v1/run_v1/snapshots/snapshot_0011/figures/formal_selected_q_proxy_mae_p95.svg",
+          "sha256": "9a14c29997cc1ff6d23208fa4bb84d7290fba9ce3b825096a312af8601b6c274",
+          "bytes": 346419,
+          "availability": "PRIVATE_NOT_INCLUDED"
+        },
+        "pdf_preview": {
+          "path": "reports/frequency5to20_20260908T063800Z/milestone_new7_cumulative83_20260908T210500Z/aggregate_original_qa_v1/selected_pdf_page1.png",
+          "sha256": "988c722a45bccd9a4057d612094ec11066b62de6cd381fd870786306751e0c3a",
+          "bytes": 228949,
+          "availability": "PRIVATE_NOT_INCLUDED"
+        }
+      },
+      "qa_receipt": {
+        "path": "reports/frequency5to20_20260908T063800Z/milestone_new7_cumulative83_20260908T210500Z/final_visual_qa_v1/INDEPENDENT_AGGREGATE_VISUAL_QA.json",
+        "sha256": "d303e1b378cee08bed1af745f08f5c90bf41fbddf0738e5c0183811c9e21f76e",
+        "bytes": 14962,
+        "availability": "PRIVATE_NOT_INCLUDED"
+      },
+      "source": null,
+      "signature": null,
+      "visual_scope": "PNG_AND_PDF_VIEWED_SVG_SOURCE_PIN_ONLY"
+    },
+    {
+      "path": "aggregate_selection.png",
+      "request_id": null,
+      "kind": "selection",
+      "status": "GO",
+      "public": {
+        "path": "aggregate_selection.png",
+        "sha256": "8749254e1c975920b1ad1c0b5462d97221f77a9b495c73c4b12852d028e386c4",
+        "bytes": 470973
+      },
+      "exports": {
+        "png": {
+          "path": "reports/frequency5to20_20260908T063800Z/milestone_new7_cumulative83_20260908T210500Z/aggregate_selection_v3/formal_complete11_selection_v3.png",
+          "sha256": "8749254e1c975920b1ad1c0b5462d97221f77a9b495c73c4b12852d028e386c4",
+          "bytes": 470973,
+          "availability": "PRIVATE_NOT_INCLUDED"
+        },
+        "svg": {
+          "path": "reports/frequency5to20_20260908T063800Z/milestone_new7_cumulative83_20260908T210500Z/aggregate_selection_v3/formal_complete11_selection_v3.svg",
+          "sha256": "967541cfaedea7a874f981a64910d6562d938f3720f424fb658f645a42951a42",
+          "bytes": 176233,
+          "availability": "PRIVATE_NOT_INCLUDED"
+        },
+        "pdf": {
+          "path": "reports/frequency5to20_20260908T063800Z/milestone_new7_cumulative83_20260908T210500Z/aggregate_selection_v3/formal_complete11_selection_v3.pdf",
+          "sha256": "49350aa9abcebe09f62195e833a5c73d183b4a19a45433c353c518c02677affb",
+          "bytes": 37833,
+          "availability": "PRIVATE_NOT_INCLUDED"
+        },
+        "pdf_preview": {
+          "path": "reports/frequency5to20_20260908T063800Z/milestone_new7_cumulative83_20260908T210500Z/aggregate_selection_v3/formal_pdf_page1.png",
+          "sha256": "41d72aa31d20e5bfb11752fdfa2a6b2bf3f105f12b4709df0d821aa42edba5e2",
+          "bytes": 157661,
+          "availability": "PRIVATE_NOT_INCLUDED"
+        }
+      },
+      "qa_receipt": {
+        "path": "reports/frequency5to20_20260908T063800Z/milestone_new7_cumulative83_20260908T210500Z/final_visual_qa_v1/INDEPENDENT_AGGREGATE_VISUAL_QA.json",
+        "sha256": "d303e1b378cee08bed1af745f08f5c90bf41fbddf0738e5c0183811c9e21f76e",
+        "bytes": 14962,
+        "availability": "PRIVATE_NOT_INCLUDED"
+      },
+      "source": null,
+      "signature": null,
+      "visual_scope": "PNG_AND_PDF_VIEWED_SVG_SOURCE_PIN_ONLY"
+    },
+    {
+      "path": "aggregate_f15_ecdf.png",
+      "request_id": null,
+      "kind": "f15_ecdf",
+      "status": "GO",
+      "public": {
+        "path": "aggregate_f15_ecdf.png",
+        "sha256": "2f1bc8f3a3f1fcf18613209207164c5d33f7c228be1aee33a796eb6a2cb19768",
+        "bytes": 454578
+      },
+      "exports": {
+        "png": {
+          "path": "reports/frequency5to20_20260908T063800Z/native_failure_diagnosis_20260908T184000Z/reporting_recovery_install_v1/run_v1/snapshots/snapshot_0011/figures/f15_conditional_strict_valid_ecdf.png",
+          "sha256": "2f1bc8f3a3f1fcf18613209207164c5d33f7c228be1aee33a796eb6a2cb19768",
+          "bytes": 454578,
+          "availability": "PRIVATE_NOT_INCLUDED"
+        },
+        "pdf": {
+          "path": "reports/frequency5to20_20260908T063800Z/native_failure_diagnosis_20260908T184000Z/reporting_recovery_install_v1/run_v1/snapshots/snapshot_0011/figures/f15_conditional_strict_valid_ecdf.pdf",
+          "sha256": "a36e88ccfb4358d82cbd52d3be8301576b2604ecc3b56cc00cdeee6716bc9daf",
+          "bytes": 29888,
+          "availability": "PRIVATE_NOT_INCLUDED"
+        },
+        "svg": {
+          "path": "reports/frequency5to20_20260908T063800Z/native_failure_diagnosis_20260908T184000Z/reporting_recovery_install_v1/run_v1/snapshots/snapshot_0011/figures/f15_conditional_strict_valid_ecdf.svg",
+          "sha256": "44e9bcf3ce03bdaf0b164da6ded1c1ec075ca5e4b329732e95821485edd45558",
+          "bytes": 172221,
+          "availability": "PRIVATE_NOT_INCLUDED"
+        },
+        "pdf_preview": {
+          "path": "reports/frequency5to20_20260908T063800Z/milestone_new7_cumulative83_20260908T210500Z/aggregate_original_qa_v1/f15_ecdf_pdf_page1.png",
+          "sha256": "4cac19900507c1b3d90a14dc8e9ab522f21d71e30fa727d7227b891595f59cb4",
+          "bytes": 161659,
+          "availability": "PRIVATE_NOT_INCLUDED"
+        }
+      },
+      "qa_receipt": {
+        "path": "reports/frequency5to20_20260908T063800Z/milestone_new7_cumulative83_20260908T210500Z/final_visual_qa_v1/INDEPENDENT_AGGREGATE_VISUAL_QA.json",
+        "sha256": "d303e1b378cee08bed1af745f08f5c90bf41fbddf0738e5c0183811c9e21f76e",
+        "bytes": 14962,
+        "availability": "PRIVATE_NOT_INCLUDED"
+      },
+      "source": null,
+      "signature": null,
+      "visual_scope": "PNG_AND_PDF_VIEWED_SVG_SOURCE_PIN_ONLY"
+    },
+    {
+      "path": "aggregate_f15_attainment.png",
+      "request_id": null,
+      "kind": "f15_attainment",
+      "status": "GO",
+      "public": {
+        "path": "aggregate_f15_attainment.png",
+        "sha256": "07a0691d6bbf7becd355965ba46253bee0ebdccce64420afaabefdeeefc467bf",
+        "bytes": 388730
+      },
+      "exports": {
+        "png": {
+          "path": "reports/frequency5to20_20260908T063800Z/native_failure_diagnosis_20260908T184000Z/reporting_recovery_install_v1/run_v1/snapshots/snapshot_0011/figures/f15_residual_attainment.png",
+          "sha256": "07a0691d6bbf7becd355965ba46253bee0ebdccce64420afaabefdeeefc467bf",
+          "bytes": 388730,
+          "availability": "PRIVATE_NOT_INCLUDED"
+        },
+        "pdf": {
+          "path": "reports/frequency5to20_20260908T063800Z/native_failure_diagnosis_20260908T184000Z/reporting_recovery_install_v1/run_v1/snapshots/snapshot_0011/figures/f15_residual_attainment.pdf",
+          "sha256": "551767962d4000b5776862aa960e07a0776dba979a97adabd2b32aa9dd523fc2",
+          "bytes": 28559,
+          "availability": "PRIVATE_NOT_INCLUDED"
+        },
+        "svg": {
+          "path": "reports/frequency5to20_20260908T063800Z/native_failure_diagnosis_20260908T184000Z/reporting_recovery_install_v1/run_v1/snapshots/snapshot_0011/figures/f15_residual_attainment.svg",
+          "sha256": "969d8a3b3440b90dd8cc8b3839ae28914d5d8a5782d54a088e2fe78d22dc40e9",
+          "bytes": 151133,
+          "availability": "PRIVATE_NOT_INCLUDED"
+        },
+        "pdf_preview": {
+          "path": "reports/frequency5to20_20260908T063800Z/milestone_new7_cumulative83_20260908T210500Z/aggregate_original_qa_v1/f15_attainment_pdf_page1.png",
+          "sha256": "1b73e9d0b04b4d1316caebb92fa9d1f73d919a6e9d469574d97270514b7145a1",
+          "bytes": 137373,
+          "availability": "PRIVATE_NOT_INCLUDED"
+        }
+      },
+      "qa_receipt": {
+        "path": "reports/frequency5to20_20260908T063800Z/milestone_new7_cumulative83_20260908T210500Z/final_visual_qa_v1/INDEPENDENT_AGGREGATE_VISUAL_QA.json",
+        "sha256": "d303e1b378cee08bed1af745f08f5c90bf41fbddf0738e5c0183811c9e21f76e",
+        "bytes": 14962,
+        "availability": "PRIVATE_NOT_INCLUDED"
+      },
+      "source": null,
+      "signature": null,
+      "visual_scope": "PNG_AND_PDF_VIEWED_SVG_SOURCE_PIN_ONLY"
+    }
+  ],
+  "status_json_transformation": "RECURSIVE_EXACT_RESEARCH_ROOT_PREFIX_TO_RELATIVE_ONLY",
+  "notebook_provenance": {
+    "source": {
+      "path": "reports/frequency5to20_20260908T063800Z/milestone_new7_cumulative83_20260908T210500Z/public_companion_v1/attempt_v1/PUBLIC_CSV_CHECKS.executed.ipynb",
+      "sha256": "9a49b93789981b9ff4c96df9e346a9ccba239f51bc6951c4ed2e82477777cc89",
+      "bytes": 19223,
+      "availability": "PRIVATE_NOT_INCLUDED"
+    },
+    "public": {
+      "path": "PUBLIC_CSV_CHECKS.ipynb",
+      "sha256": "9a49b93789981b9ff4c96df9e346a9ccba239f51bc6951c4ed2e82477777cc89",
+      "bytes": 19223
+    },
+    "transformation": "BYTE_EXACT"
+  },
+  "artifacts": [
+    {
+      "path": "FIGURE_RELEASE_STATUS.json",
+      "sha256": "58f1f59db8ac3e6fb52879183d96cfd23f4b16c06f3cdd8ec08c9042da787664",
+      "bytes": 7183
+    },
+    {
+      "path": "FREQUENCY_STATUS.csv",
+      "sha256": "624209bbae500070a6ce8d726339b64f7d303b24f893fc1501cd1d8ce04ed867",
+      "bytes": 6668
+    },
+    {
+      "path": "METRICS.csv",
+      "sha256": "5287ae476ced6686c7f7badaf1085b9859e2045a193ce9312d3f4a8cb7118291",
+      "bytes": 427363
+    },
+    {
+      "path": "NEW7_REQUEST_STATUS.csv",
+      "sha256": "e754966e74cf0863f9493c8f56a5c9787d41b968dccee59d785c4aa94893aa12",
+      "bytes": 1059
+    },
+    {
+      "path": "NEW7_SELECTED_PHYSICS.csv",
+      "sha256": "e52eaa95a37cbca3b3e5d055c6e297e1f6304c070acd46bf5ff71f22daa86bf3",
+      "bytes": 9471
+    },
+    {
+      "path": "PUBLIC_CSV_CHECKS.ipynb",
+      "sha256": "9a49b93789981b9ff4c96df9e346a9ccba239f51bc6951c4ed2e82477777cc89",
+      "bytes": 19223
+    },
+    {
+      "path": "QA_SUMMARY.json",
+      "sha256": "ac8cec865e38ddc22f69e8c89a46a56a91e71f7df59c0e1ab9e6fcda7a82ba0b",
+      "bytes": 2728
+    },
+    {
+      "path": "README_CN.md",
+      "sha256": "8ecb0c918b723d691b530d5babdd41b4caafde00f66dd24904dd8ac57f2da4dd",
+      "bytes": 12490
+    },
+    {
+      "path": "REQUEST_STATUS.csv",
+      "sha256": "160ebe9aa9310d64f840e9df7bce200482a37cd0a9958b1ce380b1ec5d5cbcf4",
+      "bytes": 104849
+    },
+    {
+      "path": "SELECTION_COMPARISON.csv",
+      "sha256": "a861b16b2c4a125bda6621a0720c58be384079be6c4001fb8320f4ee6750ef6f",
+      "bytes": 64974
+    },
+    {
+      "path": "STATUS16.csv",
+      "sha256": "f88b7092256c93b19433be78c76fd5e236c69b33c81397547f5f2c00f0d53352",
+      "bytes": 27466
+    },
+    {
+      "path": "STATUS16.json",
+      "sha256": "04b8bac812b8b79657411d561b42ea24f47399fd4d9377cbcd76d6c809c207c1",
+      "bytes": 69314
+    },
+    {
+      "path": "aggregate_all_candidates.png",
+      "sha256": "e827edb4fcd5de3805cd295771f5c695a678f6fa29a90d56cf2b6bbb5b93582f",
+      "bytes": 729990
+    },
+    {
+      "path": "aggregate_f15_attainment.png",
+      "sha256": "07a0691d6bbf7becd355965ba46253bee0ebdccce64420afaabefdeeefc467bf",
+      "bytes": 388730
+    },
+    {
+      "path": "aggregate_f15_ecdf.png",
+      "sha256": "2f1bc8f3a3f1fcf18613209207164c5d33f7c228be1aee33a796eb6a2cb19768",
+      "bytes": 454578
+    },
+    {
+      "path": "aggregate_heatmap.png",
+      "sha256": "24396159fb0476a845790b36be1bd1b6d60d198a54e42f4e16087de5a77abb53",
+      "bytes": 688696
+    },
+    {
+      "path": "aggregate_route_status.png",
+      "sha256": "9561a34ea95009f182adf7bcf27da54a1f79f5c206cb458fd6c8a3c44f6364a6",
+      "bytes": 575287
+    },
+    {
+      "path": "aggregate_selected.png",
+      "sha256": "1efff49c99cbdf7cfc5e2cbaeab5a277daeac8ffa5540b9e595e221dd7adf11e",
+      "bytes": 760389
+    },
+    {
+      "path": "aggregate_selection.png",
+      "sha256": "8749254e1c975920b1ad1c0b5462d97221f77a9b495c73c4b12852d028e386c4",
+      "bytes": 470973
+    },
+    {
+      "path": "f05_qscan-HELDOUT_TRIPLE_AUDIT-000005_percent.png",
+      "sha256": "4cd353a422936434762705300feb1fb7997f8f2df40e504624e12dd88a24fa1d",
+      "bytes": 542952
+    },
+    {
+      "path": "f05_qscan-HELDOUT_TRIPLE_AUDIT-000005_score.png",
+      "sha256": "e19941e5715e55020366e8bb93539ac9de570d13a5065e10735fad8aa53f9f3a",
+      "bytes": 463646
+    },
+    {
+      "path": "f10_qscan-HELDOUT_TRIPLE_AUDIT-000005_percent.png",
+      "sha256": "dc39656c60f233ce6da4710c8f136aaf8cf1871f4385055fba614f3c809372bd",
+      "bytes": 532666
+    },
+    {
+      "path": "f10_qscan-HELDOUT_TRIPLE_AUDIT-000005_score.png",
+      "sha256": "db0bc85e3bd3a2d854b606152402641d3284f3411634e431818c9f5001fb954b",
+      "bytes": 462748
+    },
+    {
+      "path": "f16_qscan-HELDOUT_TRIPLE_AUDIT-000004_percent.png",
+      "sha256": "022b6b4678fffe6845cad80a33c03d80a57e00b0b88642b8295e36c0a6fe930a",
+      "bytes": 497877
+    },
+    {
+      "path": "f16_qscan-HELDOUT_TRIPLE_AUDIT-000004_score.png",
+      "sha256": "31247615bd2e0906252abdf66ad2f0a88c2b7fb867b1749ba0f93f3250bd5ecc",
+      "bytes": 435806
+    },
+    {
+      "path": "f17_qscan-HELDOUT_TRIPLE_AUDIT-000004_percent.png",
+      "sha256": "2d2c7a72de0b4760b8dfa4567620a673cb3bee9d786d9f8e6d188ecc2f40836d",
+      "bytes": 517788
+    },
+    {
+      "path": "f17_qscan-HELDOUT_TRIPLE_AUDIT-000004_score.png",
+      "sha256": "a158b8493c119cbb611f874501ca9a3761c3179903fabde50761f07d7b846570",
+      "bytes": 481377
+    },
+    {
+      "path": "f18_qscan-HELDOUT_TRIPLE_AUDIT-000004_percent.png",
+      "sha256": "01e153feca02124712c44b824ab1e131eb409b3c1b8765615b1a8b9be7092fe6",
+      "bytes": 504581
+    },
+    {
+      "path": "f18_qscan-HELDOUT_TRIPLE_AUDIT-000004_score.png",
+      "sha256": "2b45904cb84cf17ef06d06ca4cdac982f1af20f157e62379458f8cad2f332792",
+      "bytes": 433721
+    },
+    {
+      "path": "f19_qscan-HELDOUT_TRIPLE_AUDIT-000004_percent.png",
+      "sha256": "0e4fa01fdbb047232db0b4983bed4184dcd6c29331d95ff6a7a456d4c3cc0c2f",
+      "bytes": 539589
+    },
+    {
+      "path": "f19_qscan-HELDOUT_TRIPLE_AUDIT-000004_score.png",
+      "sha256": "034f038abfa1e00e2ac148f3d854a48588210b81de62ba4478acf3222d0aceed",
+      "bytes": 441695
+    },
+    {
+      "path": "qscan15_development5k_20260908_v1-HELDOUT_TRIPLE_AUDIT-000005_percent.png",
+      "sha256": "7c9721d565ecdb761c89196cd7a73af4872c04b8ebde38c1a57d3fdc0360ad3a",
+      "bytes": 577496
+    },
+    {
+      "path": "qscan15_development5k_20260908_v1-HELDOUT_TRIPLE_AUDIT-000005_score.png",
+      "sha256": "d39e756509688161f49557e4e27c612190891b92102626b59071db6a36fc033b",
+      "bytes": 515449
+    }
+  ],
+  "private_data_or_weights_included": false,
+  "full_goal_complete": false
+}

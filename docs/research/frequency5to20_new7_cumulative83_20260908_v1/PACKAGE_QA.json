@@ -1,0 +1,54 @@
+{
+  "schema": "frequency83_post_candidate_package_qa.v1",
+  "status": "GO_SCOPED_RELEASE",
+  "created_utc": "2026-09-08T21:32:41.338Z",
+  "source_candidate": {
+    "path": "PUBLIC_RECEIPT.json",
+    "sha256": "4a6aa4feee1da86210a6eef4a2187f480e294b3bb2c80889542f755950542734",
+    "bytes": 69640
+  },
+  "independent_public_copy_qa": {
+    "path": "reports/frequency5to20_20260908T063800Z/milestone_new7_cumulative83_20260908T210500Z/public_package_independent_qa_v1/INDEPENDENT_PUBLIC_QA_RECEIPT.json",
+    "sha256": "b19d0fb11e3d56f378b65d81764556858d6d054ab9daacb9177e86ffe6657202",
+    "bytes": 49585,
+    "availability": "PRIVATE_SOURCE_NOT_INCLUDED"
+  },
+  "approved_candidate_files": 35,
+  "figure_count": 21,
+  "request_figures": 14,
+  "aggregate_figures": 7,
+  "csv_count": 7,
+  "notebook_code_cells_actually_executed": 5,
+  "native_jupyter_kernel": "NOT_RUN",
+  "candidate_status_policy": "Earlier author-candidate/PENDING fields remain historical; exact final figure GO is separately recorded. This receipt closes only the exact reviewed public copy.",
+  "scientific_freeze": {
+    "requests": 83,
+    "planned_requests": 320,
+    "slots": 913,
+    "solves": 747,
+    "strict_valid": 712,
+    "strict_invalid": 35,
+    "analytic_fail": 59,
+    "gds_fail": 75,
+    "drc_fail": 32,
+    "complete_strict11": 11,
+    "full_plan_pending_slots": 2445
+  },
+  "new7": {
+    "requests": 7,
+    "slots": 77,
+    "solves": 62,
+    "strict_valid": 60,
+    "strict_invalid": 2,
+    "analytic_fail": 13,
+    "gds_fail": 2,
+    "drc_fail": 0
+  },
+  "full_goal_complete": false,
+  "formal10k15_fresh_emx": "NOT_RUN",
+  "physical15": "DEVELOPMENT_5K_NOT_FORMAL_10K",
+  "ppt_scope": "UNCHANGED_CUMULATIVE63",
+  "svg_status": "SOURCE_SHA_PINNED_NOT_SEPARATELY_RENDERED",
+  "no_new_model_proxy_emx_calls": true,
+  "no_production_or_gui_changes": true
+}

@@ -1,0 +1,182 @@
+{
+  "schema": "cumulative83_exact_figure_release.v1",
+  "status": "GO_LISTED_EXPORTS_ONLY",
+  "snapshot": {
+    "path": "reports/frequency5to20_20260908T063800Z/native_failure_diagnosis_20260908T184000Z/reporting_recovery_install_v1/run_v1/snapshots/snapshot_0011/SNAPSHOT_RECEIPT.json",
+    "sha256": "27290e969105582000ba89271a4ea60f8d4d72b155853f0db573395f0eabda3a",
+    "bytes": 1323,
+    "availability": "PRIVATE_NOT_INCLUDED"
+  },
+  "source": {
+    "path": "reports/frequency5to20_20260908T063800Z/milestone_new7_cumulative83_20260908T210500Z/final_visual_qa_v1/APPROVED_FIGURES.json",
+    "sha256": "188514398def76e9e2f49884576351b5bf5a3013d27b7c33133bda1fb0e720e3",
+    "bytes": 51576,
+    "availability": "PRIVATE_NOT_INCLUDED"
+  },
+  "note": "STATUS16 preserves the independently reviewed pre-release PENDING fields and older history. Later exact figure GO is recorded here, without editing that evidence.",
+  "rows": [
+    {
+      "frequency_ghz": 5,
+      "physical_dataset_scope": "FORMAL_10K",
+      "physical_model_id": "f5-fac1f3ff42e4",
+      "approved_new_requests": [
+        "f05_qscan-HELDOUT_TRIPLE_AUDIT-000005"
+      ],
+      "request_figures_status": "GO_EXACT_NEW7_EXPORTS",
+      "aggregate_figures_status": "GO_EXACT_SEVEN_EXPORTS",
+      "formal_model_fresh_emx": "PARTIAL_FIXED_REQUEST_EVIDENCE"
+    },
+    {
+      "frequency_ghz": 6,
+      "physical_dataset_scope": "FORMAL_10K",
+      "physical_model_id": "f6-ba844c981dd6",
+      "approved_new_requests": [],
+      "request_figures_status": "NO_NEW_REQUEST_THIS_INCREMENT",
+      "aggregate_figures_status": "GO_EXACT_SEVEN_EXPORTS",
+      "formal_model_fresh_emx": "PARTIAL_FIXED_REQUEST_EVIDENCE"
+    },
+    {
+      "frequency_ghz": 7,
+      "physical_dataset_scope": "FORMAL_10K",
+      "physical_model_id": "f7-d0ffa9b31525",
+      "approved_new_requests": [],
+      "request_figures_status": "NO_NEW_REQUEST_THIS_INCREMENT",
+      "aggregate_figures_status": "GO_EXACT_SEVEN_EXPORTS",
+      "formal_model_fresh_emx": "PARTIAL_FIXED_REQUEST_EVIDENCE"
+    },
+    {
+      "frequency_ghz": 8,
+      "physical_dataset_scope": "FORMAL_10K",
+      "physical_model_id": "f8-dc2e68a2a478",
+      "approved_new_requests": [],
+      "request_figures_status": "NO_NEW_REQUEST_THIS_INCREMENT",
+      "aggregate_figures_status": "GO_EXACT_SEVEN_EXPORTS",
+      "formal_model_fresh_emx": "PARTIAL_FIXED_REQUEST_EVIDENCE"
+    },
+    {
+      "frequency_ghz": 9,
+      "physical_dataset_scope": "FORMAL_10K",
+      "physical_model_id": "f9-0cd8cd2dd857",
+      "approved_new_requests": [],
+      "request_figures_status": "NO_NEW_REQUEST_THIS_INCREMENT",
+      "aggregate_figures_status": "GO_EXACT_SEVEN_EXPORTS",
+      "formal_model_fresh_emx": "PARTIAL_FIXED_REQUEST_EVIDENCE"
+    },
+    {
+      "frequency_ghz": 10,
+      "physical_dataset_scope": "FORMAL_10K",
+      "physical_model_id": "f10-d26d41688df1",
+      "approved_new_requests": [
+        "f10_qscan-HELDOUT_TRIPLE_AUDIT-000005"
+      ],
+      "request_figures_status": "GO_EXACT_NEW7_EXPORTS",
+      "aggregate_figures_status": "GO_EXACT_SEVEN_EXPORTS",
+      "formal_model_fresh_emx": "PARTIAL_FIXED_REQUEST_EVIDENCE"
+    },
+    {
+      "frequency_ghz": 11,
+      "physical_dataset_scope": "FORMAL_10K",
+      "physical_model_id": "f11-07165966aa39",
+      "approved_new_requests": [],
+      "request_figures_status": "NO_NEW_REQUEST_THIS_INCREMENT",
+      "aggregate_figures_status": "GO_EXACT_SEVEN_EXPORTS",
+      "formal_model_fresh_emx": "PARTIAL_FIXED_REQUEST_EVIDENCE"
+    },
+    {
+      "frequency_ghz": 12,
+      "physical_dataset_scope": "FORMAL_10K",
+      "physical_model_id": "f12-bbbcad303b3e",
+      "approved_new_requests": [],
+      "request_figures_status": "NO_NEW_REQUEST_THIS_INCREMENT",
+      "aggregate_figures_status": "GO_EXACT_SEVEN_EXPORTS",
+      "formal_model_fresh_emx": "PARTIAL_FIXED_REQUEST_EVIDENCE"
+    },
+    {
+      "frequency_ghz": 13,
+      "physical_dataset_scope": "FORMAL_10K",
+      "physical_model_id": "f13-940260e5c34c",
+      "approved_new_requests": [],
+      "request_figures_status": "NO_NEW_REQUEST_THIS_INCREMENT",
+      "aggregate_figures_status": "GO_EXACT_SEVEN_EXPORTS",
+      "formal_model_fresh_emx": "PARTIAL_FIXED_REQUEST_EVIDENCE"
+    },
+    {
+      "frequency_ghz": 14,
+      "physical_dataset_scope": "FORMAL_10K",
+      "physical_model_id": "f14-734ef171b954",
+      "approved_new_requests": [],
+      "request_figures_status": "NO_NEW_REQUEST_THIS_INCREMENT",
+      "aggregate_figures_status": "GO_EXACT_SEVEN_EXPORTS",
+      "formal_model_fresh_emx": "PARTIAL_FIXED_REQUEST_EVIDENCE"
+    },
+    {
+      "frequency_ghz": 15,
+      "physical_dataset_scope": "DEVELOPMENT_5K_NOT_FORMAL_10K",
+      "physical_model_id": "f15-5a9547401a37",
+      "approved_new_requests": [
+        "qscan15_development5k_20260908_v1-HELDOUT_TRIPLE_AUDIT-000005"
+      ],
+      "request_figures_status": "GO_EXACT_NEW7_EXPORTS",
+      "aggregate_figures_status": "GO_EXACT_SEVEN_EXPORTS",
+      "formal_model_fresh_emx": "NOT_RUN"
+    },
+    {
+      "frequency_ghz": 16,
+      "physical_dataset_scope": "FORMAL_10K",
+      "physical_model_id": "f16-d1f0e127f1c7",
+      "approved_new_requests": [
+        "f16_qscan-HELDOUT_TRIPLE_AUDIT-000004"
+      ],
+      "request_figures_status": "GO_EXACT_NEW7_EXPORTS",
+      "aggregate_figures_status": "GO_EXACT_SEVEN_EXPORTS",
+      "formal_model_fresh_emx": "PARTIAL_FIXED_REQUEST_EVIDENCE"
+    },
+    {
+      "frequency_ghz": 17,
+      "physical_dataset_scope": "FORMAL_10K",
+      "physical_model_id": "f17-7b878ff5d5dc",
+      "approved_new_requests": [
+        "f17_qscan-HELDOUT_TRIPLE_AUDIT-000004"
+      ],
+      "request_figures_status": "GO_EXACT_NEW7_EXPORTS",
+      "aggregate_figures_status": "GO_EXACT_SEVEN_EXPORTS",
+      "formal_model_fresh_emx": "PARTIAL_FIXED_REQUEST_EVIDENCE"
+    },
+    {
+      "frequency_ghz": 18,
+      "physical_dataset_scope": "FORMAL_10K",
+      "physical_model_id": "f18-1a136fda6a2a",
+      "approved_new_requests": [
+        "f18_qscan-HELDOUT_TRIPLE_AUDIT-000004"
+      ],
+      "request_figures_status": "GO_EXACT_NEW7_EXPORTS",
+      "aggregate_figures_status": "GO_EXACT_SEVEN_EXPORTS",
+      "formal_model_fresh_emx": "PARTIAL_FIXED_REQUEST_EVIDENCE"
+    },
+    {
+      "frequency_ghz": 19,
+      "physical_dataset_scope": "FORMAL_10K",
+      "physical_model_id": "f19-e02801471b97",
+      "approved_new_requests": [
+        "f19_qscan-HELDOUT_TRIPLE_AUDIT-000004"
+      ],
+      "request_figures_status": "GO_EXACT_NEW7_EXPORTS",
+      "aggregate_figures_status": "GO_EXACT_SEVEN_EXPORTS",
+      "formal_model_fresh_emx": "PARTIAL_FIXED_REQUEST_EVIDENCE"
+    },
+    {
+      "frequency_ghz": 20,
+      "physical_dataset_scope": "FORMAL_10K",
+      "physical_model_id": "f20-4d6b0c6066ee",
+      "approved_new_requests": [],
+      "request_figures_status": "NO_NEW_REQUEST_THIS_INCREMENT",
+      "aggregate_figures_status": "GO_EXACT_SEVEN_EXPORTS",
+      "formal_model_fresh_emx": "PARTIAL_FIXED_REQUEST_EVIDENCE"
+    }
+  ],
+  "approved_request_figures": 14,
+  "approved_aggregate_figures": 7,
+  "old76_request_figures_rerendered": false,
+  "future_figures_approved": false,
+  "full_goal_complete": false
+}
