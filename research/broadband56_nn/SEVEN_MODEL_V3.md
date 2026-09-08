@@ -8,6 +8,9 @@ For the source-only pre-training revision candidate, see
 [runtime revision gates](RUNTIME_REVISION_CANDIDATE_CN.md). It preserves the
 existing study identity and original plan; it does not install an automatic
 trigger. The historical request cannot be used with changed source implicitly.
+The newer [activation status](RUNTIME_ACTIVATION_STATUS_20260908.json) records
+exact metadata activation and an executed foreground resource wait. It is not
+formal 10K training completion or an installed scheduler.
 
 ## Two BB00 branches, one group
 
