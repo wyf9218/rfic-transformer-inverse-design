@@ -206,8 +206,22 @@ def test_same_request_cannot_silently_move_control_roots(tmp_path, monkeypatch):
 def test_package_completion_requires_exact_nested_files_and_active_study(tmp_path):
     root = tmp_path / "study"
     root.mkdir()
-    for name in ("experiment_plan.json", "STUDY_MODELS.json"):
-        once.atomic_json(root / name, {"synthetic": name})
+    once.atomic_json(root / "experiment_plan.json", {"synthetic": True, "wall_budget_seconds": 1800})
+    once.atomic_json(root / "STUDY_MODELS.json", {"synthetic": True})
+    # Hash-only package validation remains valid after the immutable deadline.
+    deadline = "2000-01-01T00:30:00+00:00"
+    once.atomic_json(root / "TRAINING_BUDGET.json", {
+        "started_utc": "2000-01-01T00:00:00+00:00", "deadline_utc": deadline, "seconds": 1800})
+    budget = once.pin(root / "TRAINING_BUDGET.json")
+    binding = {"effective_deadline_utc": deadline, "training_budget_sha256": budget["sha256"]}
+    proofs = {}
+    for name, labels in (("six_resume_proof", ("F1", "F2", "F3", "FREF", *suite.MAPPING)),
+                         ("bb00_resume_proof", ("forward", "inverse"))):
+        path = root / (name + ".json")
+        once.atomic_json(path, {"status": "PASS", **binding, "results": {
+            label: {"status": "PASS", **binding, "checks": {"effective_deadline_bound": True}}
+            for label in labels}})
+        proofs[name] = once.pin(path)
     output = root / "packages"
     output.mkdir()
     nested = output / "model"
@@ -215,7 +229,8 @@ def test_package_completion_requires_exact_nested_files_and_active_study(tmp_pat
     (nested / "SHA256SUMS.txt").write_text("SYNTHETIC_NESTED_INDEX")
     once.atomic_json(output / "SEVEN_PACKAGE.json", {"status": "TRAINED_AND_EVALUATED",
         "study": str(root), "study_plan": once.pin(root / "experiment_plan.json"),
-        "models": once.pin(root / "STUDY_MODELS.json")})
+        "models": once.pin(root / "STUDY_MODELS.json"), "training_budget": budget,
+        "effective_resume_deadline_utc": deadline, **proofs})
     once.atomic_json(output / "SEVEN_MANIFEST.json", {"files": suite._package_files(output)})
     index = "".join(p["sha256"] + "  " + p["path"] + "\n"
                     for p in suite._package_files(output, exclude_root=("SHA256SUMS.txt",)))

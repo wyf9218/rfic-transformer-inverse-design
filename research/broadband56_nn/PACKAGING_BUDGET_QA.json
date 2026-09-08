@@ -1,0 +1,26 @@
+{
+  "schema": "bb_public_candidate_code_qa.v1",
+  "candidate_version": 2,
+  "status": "GO_FOR_CANDIDATE_CODE_ONLY",
+  "source_sha256": {
+    "research/broadband56_nn/delivery.py": "5a78908d9246cbf2136d7f27a649bb17e9c8dc414a338449883d179dc0958ea9",
+    "research/broadband56_nn/bb00_delivery.py": "ba54303d3ee0ca9a1b89ebb524dceb3375c6ce793b1f083ad46ddf5750280783",
+    "research/broadband56_nn/seven_suite.py": "1a40c7c2db1dfcbe33786e4624d1cfa3d386ac96aa81c484b24bfcc78636eb00",
+    "tests/test_bb_packaging_budget.py": "36b0a25e167d68356166975dd1cf4b0d9952d900e6fee9339cab1f7f3e9d7875",
+    "tests/test_bb_study_once.py": "0522b8298ae3df46739cd91183b73cacadb2081ad24f26d6dc5c4612f4568af9"
+  },
+  "synthetic_tests": {
+    "passed": 64,
+    "failed": 0,
+    "junit_sha256": "f73a4ad7c920d7f1e53fc8dfca921e6e9baf47405d79d4a098ce0974d6b91879"
+  },
+  "prior_candidate": "NO_GO; fresh-load failure continuation reproduced and fixed",
+  "production_changed": false,
+  "scientific_core_changed": false,
+  "formal_runtime_updated": false,
+  "automatic_trigger": "NOT_INSTALLED",
+  "real_training_this_milestone": false,
+  "real_emx_validation": "NOT_RUN",
+  "runtime_promotion": "NOT_IMPLEMENTED_NOT_AUTHORIZED_BY_THIS_RECEIPT",
+  "scope": "Independent static code review plus observed synthetic tests only; no actual formal10K execution proof."
+}

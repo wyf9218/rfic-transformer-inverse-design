@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import argparse
 import copy
+from datetime import datetime, timezone
 import gc
 import json
 import os
@@ -34,6 +35,40 @@ REQUIRED_RESUME_CHECKS = (
     "original_best_unchanged", "original_last_unchanged", "fresh_worker_identity",
     "finite_outputs", "same_contract", "same_architecture",
 )
+
+
+class ResumeDeadlineError(ValueError):
+    """A supplied research deadline is not a timezone-aware timestamp."""
+
+
+def validate_resume_deadline(deadline_utc, *, allow_expired=False):
+    """Validate without normalizing/renewing the exact caller-supplied deadline.
+
+    None preserves the standalone API, not an authorization or budget exemption.
+    Trainers check before updates; an in-flight update is not forcibly killed.
+    """
+    if deadline_utc is None:
+        return None
+    try:
+        if not isinstance(deadline_utc, str) or not deadline_utc:
+            raise ValueError("timestamp string required")
+        parsed = datetime.fromisoformat(deadline_utc.replace("Z", "+00:00"))
+        if parsed.tzinfo is None or parsed.utcoffset() is None:
+            raise ValueError("timezone required")
+    except (ValueError, TypeError) as error:
+        raise ResumeDeadlineError("invalid timezone-aware resume deadline") from error
+    if not allow_expired and datetime.now(timezone.utc) >= parsed:
+        raise TimeoutError("original research resume deadline exhausted")
+    return parsed
+
+
+def _resume_command(argv, log_path, *, deadline_utc=None, lock_fds=()):
+    """Last parent-side gate; existing trainer also checks before each update."""
+    validate_resume_deadline(deadline_utc)
+    command = list(argv)
+    if deadline_utc is not None:
+        command += ["--deadline-utc", deadline_utc]
+    return _command(command, log_path, lock_fds=lock_fds)
 
 
 def _run_directory(root: Path, label: str) -> Path:
@@ -239,18 +274,33 @@ def _expected_sampler_state(state: dict, bundle: Bundle, micro_batch: int) -> di
 
 
 def verify_load_resume(data: str | Path, runs_root: str | Path, out: str | Path,
-                       device: str = "mps", *, lock_fds=()) -> dict:
+                       device: str = "mps", *, lock_fds=(), deadline_utc=None,
+                       training_budget_sha256=None) -> dict:
     """Run only after the main training campaign is terminal, never alongside it."""
     data, root, output = Path(data).resolve(), Path(runs_root).resolve(), Path(out).resolve()
     terminal = _campaign_terminal(root)
     output.mkdir(parents=True, exist_ok=False)
+    binding = {"effective_deadline_utc": deadline_utc,
+               "training_budget_sha256": training_budget_sha256,
+               "deadline_semantics": "admission and update-start checks; no hard in-flight interruption"}
+    try:
+        validate_resume_deadline(deadline_utc)
+    except (ResumeDeadlineError, TimeoutError) as error:
+        receipt = {"schema": "bb_load_resume_receipt.v1", "status": "FAIL", **binding,
+                   "created_utc": utc_now(), "error": f"{type(error).__name__}: {error}",
+                   "results": {}, "remaining_probes": "NOT_RUN", "test_evaluated": False,
+                   "production_modified": False}
+        save_json(output / "LOAD_RESUME_RECEIPT.json", receipt)
+        return receipt
     bundle = Bundle(data)
     results = {}
     for label in RUN_LABELS:
         destination = output / label
         destination.mkdir()
         directory = _run_directory(root, label)
+        stop_remaining = False
         try:
+            validate_resume_deadline(deadline_utc)
             original, states = _checkpoint_pair(directory, bundle.data_sha, label)
             _require_forward_reference(states, label, root)
             if canonical_sha(original) != canonical_sha(terminal["results"][label]):
@@ -303,7 +353,11 @@ def verify_load_resume(data: str | Path, runs_root: str | Path, out: str | Path,
                 resume += ["--forward-checkpoint", forward]
             if parity:
                 resume += ["--physical-parity-receipt", str(parity)]
-            resume_process = _command(resume, destination / "resume.log", lock_fds=lock_fds)
+            # Any failed resume child is terminal for this verification attempt;
+            # do not retry the next role after a timeout/zero-update failure.
+            stop_remaining = True
+            resume_process = _resume_command(resume, destination / "resume.log",
+                                              deadline_utc=deadline_utc, lock_fds=lock_fds)
             proof = read_json(destination / "resume_branch" / "TRAINING_RECEIPT.json")
             if sha256(proof["last_checkpoint"]) != proof["last_sha256"]:
                 raise ValueError("resume receipt checkpoint SHA mismatch")
@@ -327,6 +381,7 @@ def verify_load_resume(data: str | Path, runs_root: str | Path, out: str | Path,
                 "same_architecture": after["architecture"] == before["architecture"],
                 "original_best_unchanged": sha256(original["best_checkpoint"]) == original["best_sha256"],
                 "original_last_unchanged": sha256(original["last_checkpoint"]) == original["last_sha256"],
+                "effective_deadline_bound": after["train_config"].get("deadline_utc") == deadline_utc,
             }
             if not all(checks.values()):
                 raise ValueError(f"resume checks failed: {[name for name, passed in checks.items() if not passed]}")
@@ -340,15 +395,23 @@ def verify_load_resume(data: str | Path, runs_root: str | Path, out: str | Path,
                       "resume_receipt_sha256": sha256(destination / "resume_branch" / "TRAINING_RECEIPT.json"),
                       "resume_weights_are_verification_only": True, "reported_best_is_original": True,
                       "elapsed_seconds": time.monotonic() - started, "created_utc": utc_now()}
+            stop_remaining = False
         except Exception as error:
             result = {"status": "FAIL", "label": label, "error": f"{type(error).__name__}: {error}", "created_utc": utc_now()}
+            # Every proof gate is terminal, including fresh-load/identity checks
+            # before resume. A failed role must not trigger other optimizers.
+            stop_remaining = True
+        result.update(binding)
         save_json(destination / "LOAD_RESUME_CHECK.json", result)
         results[label] = result
         print(json.dumps({"event": "load_resume_check", "label": label, "status": result["status"]}), flush=True)
+        if stop_remaining:
+            break
     receipt = {"schema": "bb_load_resume_receipt.v1", "status": "PASS" if all(r["status"] == "PASS" for r in results.values()) else "FAIL",
                "created_utc": utc_now(), "data_sha": bundle.data_sha, "normalizer_sha": bundle.norm_sha,
                "runs_root": str(root), "campaign_receipt_sha256": sha256(root / "CAMPAIGN_RECEIPT.json"),
-               "results": results, "test_evaluated": False, "production_modified": False}
+               "results": results, "not_run_labels": [label for label in RUN_LABELS if label not in results],
+               **binding, "test_evaluated": False, "production_modified": False}
     save_json(output / "LOAD_RESUME_RECEIPT.json", receipt)
     return receipt
 

@@ -398,29 +398,67 @@ def evaluate_completed(root, request):
             "broadband": pin(broadband_test / "EVALUATION_SUMMARY.json")}
 
 
+def _packaging_budget(root, request):
+    """Read the original clock; packaging must never create or renew it."""
+    from .delivery import validate_resume_deadline
+    path = Path(root) / "TRAINING_BUDGET.json"
+    budget = read_json(path)
+    seconds = budget.get("seconds")
+    if type(seconds) is not int or seconds != request.get("wall_budget_seconds") or seconds <= 0:
+        raise ValueError("packaging budget seconds differ from the frozen request")
+    start = validate_resume_deadline(budget.get("started_utc"), allow_expired=True)
+    deadline = validate_resume_deadline(budget.get("deadline_utc"), allow_expired=True)
+    if start is None or deadline is None or (deadline - start).total_seconds() != seconds:
+        raise ValueError("packaging deadline/start interval differs from original budget")
+    return budget["deadline_utc"], pin(path)
+
+
+def _require_packaging_proof(path, deadline, budget_pin, labels):
+    """Old/unbound or differently budgeted proofs do not authorize this study."""
+    proof = read_json(path)
+    if (proof.get("status") != "PASS" or proof.get("effective_deadline_utc") != deadline or
+            proof.get("training_budget_sha256") != budget_pin["sha256"] or
+            set(proof.get("results", {})) != set(labels)):
+        raise ValueError("packaging resume proof lacks the exact original deadline/budget binding")
+    for row in proof["results"].values():
+        if (row.get("status") != "PASS" or row.get("effective_deadline_utc") != deadline or
+                row.get("training_budget_sha256") != budget_pin["sha256"] or
+                row.get("checks", {}).get("effective_deadline_bound") is not True):
+            raise ValueError("component resume proof is not bound to the original deadline")
+
+
 def package_completed(root, request, lock_fds=()):
     """Existing six-package machinery plus separately proved BB00 new states."""
     from . import delivery
     from .baseline_package import build_package
     from .bb00_delivery import verify_bb00_load_resume
     root = Path(root)
+    deadline, budget_pin = _packaging_budget(root, request)
+    proof = root / "load_resume_six" / "LOAD_RESUME_RECEIPT.json"
+    bb00_proof = root / "load_resume_bb00" / "BB00_LOAD_RESUME_RECEIPT.json"
+    # Reject incompatible saved evidence before starting any new probe. Expiry
+    # does not prevent reuse of exact, already completed proofs or hash copying.
+    for path, labels in ((proof, delivery.RUN_LABELS), (bb00_proof, ("forward", "inverse"))):
+        if path.exists():
+            _require_packaging_proof(path, deadline, budget_pin, labels)
+    if not proof.exists() or not bb00_proof.exists():
+        delivery.validate_resume_deadline(deadline)
     data, records = root / "data", read_json(root / "STUDY_MODELS.json")["records"]
     for subdir in ("common15_test", "broadband_test"):
         if not _finished_evaluation(root / subdir):
             raise ValueError("completed comparisons required before final package")
-    proof = root / "load_resume_six" / "LOAD_RESUME_RECEIPT.json"
     if not proof.exists():
-        delivery.verify_load_resume(data, root / "six_registry", proof.parent, request["device"], lock_fds=lock_fds)
-    if read_json(proof).get("status") != "PASS":
-        raise ValueError("six-model load/resume proof failed")
-    bb00_proof = root / "load_resume_bb00" / "BB00_LOAD_RESUME_RECEIPT.json"
+        delivery.verify_load_resume(data, root / "six_registry", proof.parent, request["device"], lock_fds=lock_fds,
+                                    deadline_utc=deadline, training_budget_sha256=budget_pin["sha256"])
+    _require_packaging_proof(proof, deadline, budget_pin, delivery.RUN_LABELS)
     if not bb00_proof.exists():
+        delivery.validate_resume_deadline(deadline)
         verify_bb00_load_resume(data, records["BB00_FORWARD"]["receipt"]["path"],
             records["BB00"]["receipt"]["path"], bb00_proof.parent,
             request["runtime_contract"]["path"], request["legacy_replay"]["path"],
-            request["legacy_replay"]["sha256"], request["device"], lock_fds=lock_fds)
-    if read_json(bb00_proof).get("status") != "PASS":
-        raise ValueError("BB00 load/resume proof failed")
+            request["legacy_replay"]["sha256"], request["device"], lock_fds=lock_fds,
+            deadline_utc=deadline, training_budget_sha256=budget_pin["sha256"])
+    _require_packaging_proof(bb00_proof, deadline, budget_pin, ("forward", "inverse"))
     output = root / "packages"
     six_output = output / "broadband_six"
     if not six_output.exists():
@@ -449,6 +487,7 @@ def package_completed(root, request, lock_fds=()):
             "status": "TRAINED_AND_EVALUATED", "created_utc": utc_now(), "study": str(root),
             "study_plan": pin(root / "experiment_plan.json"), "models": pin(root / "STUDY_MODELS.json"),
             "six_resume_proof": pin(proof), "bb00_resume_proof": pin(bb00_proof),
+            "training_budget": budget_pin, "effective_resume_deadline_utc": deadline,
             "shared_data": "broadband_six/shared_data", "BB00_broadband": "NOT_SUPPORTED",
             "normalizers": "BB00 uses valid15GHz train only; six broadband share the frozen train-only normalizer",
             "resume_entry": "seven_suite resume-seven with original exact study request/root; package references original immutable study evidence",
@@ -492,6 +531,12 @@ def _verify_seven_package(output):
             summary["study_plan"] != pin(root / "experiment_plan.json") or
             summary["models"] != pin(root / "STUDY_MODELS.json")):
         raise ValueError("package belongs to another study identity")
+    deadline, budget_pin = _packaging_budget(root, read_json(root / "experiment_plan.json"))
+    if summary.get("training_budget") != budget_pin or summary.get("effective_resume_deadline_utc") != deadline:
+        raise ValueError("seven-package original training budget binding differs")
+    for name, labels in (("six_resume_proof", ("F1", "F2", "F3", "FREF", *MAPPING)),
+                         ("bb00_resume_proof", ("forward", "inverse"))):
+        _require_packaging_proof(verify_pin(summary[name]), deadline, budget_pin, labels)
 
 
 def check_once(request_path, control_root, source_manifest=None, *, phase="all", access=None):

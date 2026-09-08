@@ -16,6 +16,7 @@ import numpy as np
 import torch
 
 from .bb00 import BB00Config, load_bb00, train_bb00
+from .delivery import validate_resume_deadline
 from .io import read_json, save_json, sha256, load_checkpoint, utc_now
 from .training import Bundle
 
@@ -59,6 +60,16 @@ def _inputs(bundle):
 
 def _worker(request_path):
     request=read_json(request_path)
+    if request["action"] != "load":
+        try:
+            validate_resume_deadline(request.get("effective_deadline_utc"))
+        except Exception as exc:
+            save_json(request["out_receipt"], {"status":"FAIL", "pid":os.getpid(),
+                "action":request["action"], "error":str(exc),
+                "effective_deadline_utc":request.get("effective_deadline_utc"),
+                "training_budget_sha256":request.get("training_budget_sha256"),
+                "optimizer_called":False, "created_utc":utc_now()})
+            raise
     torch.set_num_threads(2)
     if request["action"]=="load":
         bundle=Bundle(request["data_root"])
@@ -84,11 +95,12 @@ def _worker(request_path):
         initial=load_checkpoint(request["last_checkpoint"])
         config=BB00Config(**initial["train_config"])
         config.steps=1
-        config.deadline_utc=None
+        config.deadline_utc=request.get("effective_deadline_utc")
         config.forward_checkpoint=request.get("forward_checkpoint")
         # Device is part of the exact-resume contract: no silent change.
         if config.device!=request["device"]:
             raise ValueError("resume device differs from original training")
+        validate_resume_deadline(config.deadline_utc)
         receipt=train_bb00(request["data_root"],request["resume_out"],config,request["contract_path"],
             request["legacy_replay_receipt"],request["expected_legacy_sha"],resume_checkpoint=request["last_checkpoint"],
             resume_best_checkpoint=request["best_checkpoint"],resume_best_checkpoint_sha256=request["best_sha256"],resume_probe=True)
@@ -100,11 +112,16 @@ def _worker(request_path):
             output=resumed_model(torch.as_tensor(raw,dtype=torch.float32,device=request["device"])).cpu().numpy()
         if not np.isfinite(output).all():
             raise ValueError("resumed model native output nonfinite")
-        result={"status":"PASS","pid":os.getpid(),"action":"resume_one","receipt":receipt,"resumed_native_output_finite":True}
+        result={"status":"PASS","pid":os.getpid(),"action":"resume_one","receipt":receipt,"resumed_native_output_finite":True,
+                "effective_deadline_utc":config.deadline_utc,
+                "training_budget_sha256":request.get("training_budget_sha256")}
     save_json(request["out_receipt"],result)
 
 
 def _launch(request_path,out_receipt,lock_fds=()):
+    request=read_json(request_path)
+    if request["action"] != "load":
+        validate_resume_deadline(request.get("effective_deadline_utc"))
     env=dict(os.environ,PYTHONPATH=str(Path(__file__).resolve().parents[2]),OMP_NUM_THREADS="2",PYTHONDONTWRITEBYTECODE="1")
     command=[sys.executable,"-B","-m","research.broadband56_nn.bb00_delivery","worker","--request",str(request_path)]
     process=subprocess.run(command,env=env,capture_output=True,text=True,pass_fds=tuple(lock_fds))
@@ -119,17 +136,22 @@ def _launch(request_path,out_receipt,lock_fds=()):
 
 
 def verify_bb00_load_resume(data_root,forward_receipt,inverse_receipt,out,contract_path,
-                            legacy_replay_receipt,expected_legacy_sha,device="cpu",*,lock_fds=()):
+                            legacy_replay_receipt,expected_legacy_sha,device="cpu",*,lock_fds=(),
+                            deadline_utc=None,training_budget_sha256=None):
     """Isolated proof for both new roles. Never promotes diagnostic descendants."""
     out=Path(out).resolve()
     out.mkdir(parents=True,exist_ok=False)
     original_pins={}
+    all_results={}
+    binding={"effective_deadline_utc":deadline_utc,"training_budget_sha256":training_budget_sha256,
+             "deadline_semantics":"admission and update-start checks; no hard in-flight interruption"}
     try:
+        validate_resume_deadline(deadline_utc)
         bundle=Bundle(data_root)
         indices,f=_inputs(bundle)
         receipts={"forward":_record(forward_receipt),"inverse":_record(inverse_receipt)}
-        all_results={}
         for role,receipt in receipts.items():
+            validate_resume_deadline(deadline_utc)
             if receipt.get("role")!=role or receipt.get("kind")!="BB00" or receipt.get("test_access") is not False or receipt.get("updates_this_run",0)<1:
                 raise ValueError("qualified original new-data BB00 receipt required")
             states={}
@@ -168,7 +190,8 @@ def verify_bb00_load_resume(data_root,forward_receipt,inverse_receipt,out,contra
             request.update(action="resume_one",contract_path=str(Path(contract_path).resolve()),
                 legacy_replay_receipt=str(Path(legacy_replay_receipt).resolve()),expected_legacy_sha=expected_legacy_sha,
                 forward_checkpoint=receipts["forward"]["best_checkpoint"] if role=="inverse" else None,
-                resume_out=str(role_out/"one_update_only"),out_receipt=str(role_out/"FRESH_RESUME_RECEIPT.json"))
+                resume_out=str(role_out/"one_update_only"),out_receipt=str(role_out/"FRESH_RESUME_RECEIPT.json"),
+                effective_deadline_utc=deadline_utc,training_budget_sha256=training_budget_sha256)
             save_json(role_out/"RESUME_REQUEST.json",request)
             resumed=_launch(role_out/"RESUME_REQUEST.json",request["out_receipt"],lock_fds)
             resumed_receipt=resumed["receipt"]
@@ -188,13 +211,16 @@ def verify_bb00_load_resume(data_root,forward_receipt,inverse_receipt,out,contra
                 "immutable_data_normalizer_contract":all(updated[k]==last[k] for k in ("data_sha","normalizer_sha","contract_sha","recipe_sha256","fixed_train_config_sha","runtime_source_sha256")),
                 "frozen_forward_unchanged":updated["forward_model_sha"]==last["forward_model_sha"] and updated["forward_checkpoint_sha256"]==last["forward_checkpoint_sha256"],
                 "model_updated":updated["model_sha"]!=last["model_sha"],
+                "effective_deadline_bound":updated["train_config"].get("deadline_utc")==deadline_utc and
+                    resumed.get("effective_deadline_utc")==deadline_utc and
+                    resumed.get("training_budget_sha256")==training_budget_sha256,
                 "resumed_native_output_finite":resumed.get("resumed_native_output_finite") is True,
                 "diagnostic_not_ranking_checkpoint":updated["resume_probe"] and not updated["research_comparison_eligible"],
                 "original_parent_bound":updated["parent_checkpoint"]["sha256"]==receipt["last_sha256"]}
             all_results[role]={"status":"PASS" if all(checks.values()) else "FAIL","checks":checks,
                 "load_pid":fresh["pid"],"resume_pid":resumed["pid"],"original_best_sha256":receipt["best_sha256"],
                 "original_last_sha256":receipt["last_sha256"],"resumed_checkpoint_sha256":resumed_receipt["last_sha256"],
-                "last_step":last["step"],"resumed_step":updated["step"],"fixed_input_source_indices":indices.tolist()}
+                "last_step":last["step"],"resumed_step":updated["step"],"fixed_input_source_indices":indices.tolist(),**binding}
             if not all(checks.values()):
                 raise ValueError("BB00 new-process resume check failed: "+str(checks))
         unchanged=all(sha256(path)==digest for path,digest in original_pins.items())
@@ -203,9 +229,10 @@ def verify_bb00_load_resume(data_root,forward_receipt,inverse_receipt,out,contra
         result={"schema":"bb00_load_resume_proof.v1","status":"PASS","results":all_results,
                 "data_sha":bundle.data_sha,"original_checkpoint_bytes_unchanged":unchanged,"original_pins":original_pins,
                 "implementation_sha256":sha256(__file__),"exact_scope":"new-adapter state continuation, not legacy optimizer resume",
-                "created_utc":utc_now(),"real_emx_validation":"NOT_RUN"}
+                "created_utc":utc_now(),"real_emx_validation":"NOT_RUN",**binding}
     except Exception as exc:
         result={"schema":"bb00_load_resume_proof.v1","status":"FAIL","error":str(exc),"original_pins":original_pins,
+                "results":all_results,"remaining_probes":"NOT_RUN",**binding,
                 "original_checkpoint_bytes_unchanged":all(sha256(path)==digest for path,digest in original_pins.items()),"created_utc":utc_now()}
         save_json(out/"BB00_LOAD_RESUME_RECEIPT.json",result)
         raise
