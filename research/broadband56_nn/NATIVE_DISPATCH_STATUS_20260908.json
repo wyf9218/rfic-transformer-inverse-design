@@ -1,0 +1,47 @@
+{
+  "schema": "bb_public_native_dispatch_status.v1",
+  "status": "PASS_NATIVE_FIRST_TICK_RESOURCE_WAIT",
+  "automatic_trigger": "INSTALLED_NATIVE_FIRST_TICK_VERIFIED",
+  "observed_resource_utc": "2026-09-08T03:25:53.135988+00:00",
+  "deployment_host": "authorized local research Mac, not the MARS production host",
+  "native_interval_seconds": 300,
+  "repeated_timer_tick_observed": false,
+  "first_tick_memory_available_bytes": 8555790336,
+  "required_memory_bytes": 8589934592,
+  "first_tick_mars_or_data_transport": false,
+  "native_acceptance_receipt_sha256": "188521ca71c513d28ccd6013b6fb8c8a39719efd39d9483274bf7e005a464a17",
+  "formal_new10k_training": "NOT_STARTED",
+  "formal_new10k_evaluation": "NOT_RUN",
+  "real_emx_validation": "NOT_RUN",
+  "dispatcher": {
+    "path": "tools/seven_model_native_dispatch.py",
+    "sha256": "90172ab6913fe8104bd4094cb0191ba82ae0aa9c0ad2718c52e7a621d430a11d"
+  },
+  "tests": {
+    "path": "tests/test_seven_model_native_dispatch.py",
+    "sha256": "6045dfbb275da2b75ca891edc1303ebdb1830f13285cec2da75a30051b7c1fe6",
+    "passed": 36,
+    "failed": 0,
+    "junit_sha256": "fbbfa63b2a6a6a2bfe95d87a7002ca0ea648908949aa9931d03c9ac782c9ff1a",
+    "scope": "Synthetic metadata/mock tests, isolated synthetic-shell CLI and ordinary child lock inheritance only; not native scheduler or model training acceptance."
+  },
+  "independent_dispatch_qa_sha256": "e2f4cdaebb73ec3650d61fed996d7f8a8469d7c08a5bc89764f60d83236fae6c",
+  "independent_dispatch_qa_scope": "FOREGROUND_DISPATCH_ADAPTER_CONTRACT_ONLY",
+  "native_candidate_manifest_sha256": "ba68cacc3fe42dbf025b6bd096d4365cc798f781c46e8471d9ad8b978013426a",
+  "native_candidate_plist_sha256": "92ca216794f580a19d2713b327251c18dd3301aa0871264378ed6d6937c56803",
+  "native_installation_gate": "GO_FOR_NATIVE_SCHEDULER_INSTALL",
+  "independent_native_install_qa_sha256": "2a482e1752c7bcfae144c34e18f51ab9604a7dbc4a1974b4c518bba7290829f6",
+  "additional_private_installer_tests": {
+    "passed": 8,
+    "failed": 0,
+    "junit_sha256": "491290303af42fadccfdbea33db01bd856153143391954d955aab1d1fe3768e8",
+    "scope": "Mocked launchctl/ps control flow only; these tests did not install a native job."
+  },
+  "runtime_boundary": "One registered user LaunchAgent and its first successful native resource-wait tick are proven. Sleep/logout can prevent timer execution. Training/data readiness and subsequent timer firings are not inferred from installation.",
+  "scientific_contract_changed": false,
+  "frozen_research_python_modules_changed": false,
+  "same_study_reused": true,
+  "production_or_gui_modified": false,
+  "private_paths_data_and_weights_in_public_payload": false,
+  "predecessor_candidate": "Native candidate v1 retained NO_GO after a review receipt changed during finalization; no installation or dispatch occurred from v1."
+}

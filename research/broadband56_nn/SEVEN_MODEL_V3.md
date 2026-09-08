@@ -11,6 +11,9 @@ trigger. The historical request cannot be used with changed source implicitly.
 The newer [activation status](RUNTIME_ACTIVATION_STATUS_20260908.json) records
 exact metadata activation and an executed foreground resource wait. It is not
 formal 10K training completion or an installed scheduler.
+The separate [native dispatch adapter](../../docs/research/SEVEN_MODEL_NATIVE_DISPATCH_CN.md)
+adds fail-closed ordinary scheduling around the same frozen foreground entry;
+its deployment status requires a distinct installation receipt.
 
 ## Two BB00 branches, one group
 
@@ -123,10 +126,13 @@ resuming; exhaustion remains `PARTIAL` and requires an explicit budget decision.
 
 ## Deployment and evidence
 
-**Automatic trigger: `NOT_INSTALLED`.** This is a foreground one-shot program,
-not a daemon and not a claim it survives terminal/app exit. No AI heartbeat is
-installed or resumed. An operator can use the same verified entry from an
-approved ordinary scheduler later without changing production.
+The suite itself remains a foreground one-shot program. The private research Mac
+now has a separately approved ordinary native scheduler: see
+[native first-tick status](NATIVE_DISPATCH_STATUS_20260908.json). Installation and
+one real resource-wait tick are proven; formal new 10K training is not. A fresh
+repository clone is still `NOT_INSTALLED` without its own installation receipt.
+No AI heartbeat is installed or resumed. Sleep/logout can prevent native timer
+execution, and interrupted/partial/failed training is not automatically retried.
 
 Preparation tests use synthetic data and bounded real optimizer updates. They
 prove software behavior, not scientific model accuracy or completed new 10K
