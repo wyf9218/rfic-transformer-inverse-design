@@ -67,11 +67,18 @@ def create_request(path, campaign_id, contract, legacy_replay, spec,
     return request
 
 
-def validate_request(request):
+def _validate_request_identity(request):
+    """Validate directory identity before any mkdir/lease, independent of sources."""
     if request.get("schema") != "bb_seven_study_request.v1" or request.get("suite_version") != SUITE:
         raise ValueError("unknown seven-model study contract")
     if request.get("study_key") != study_key(request["campaign_id"], SUITE):
         raise ValueError("study identity is not stable campaign + 10K + suite version")
+    if request.get("milestone_geometries") != 10000:
+        raise ValueError("wrong formal milestone")
+
+
+def validate_request(request):
+    _validate_request_identity(request)
     if request["milestone_geometries"] != 10000 or request["seed"] != 17:
         raise ValueError("wrong formal milestone or main seed")
     if request["initialization"] != "FROM_SCRATCH_ALL_TRAINED_FORWARDS_AND_INVERSES":
@@ -129,6 +136,56 @@ def _copy_once(source, destination):
         raise ValueError("copy identity mismatch")
 
 
+def _guard_runtime_binding(root, binding, request=None):
+    """Verify the active lineage, without re-freezing a mutable study journal."""
+    root = Path(root)
+    if binding is None:
+        marker = root / "ACTIVE_RUNTIME_REVISION.json"
+        if marker.exists() or marker.is_symlink():
+            raise ValueError("active runtime revision requires an exact runtime binding")
+        return
+    from .runtime_revision import resolve_active_request
+    path, current = resolve_active_request(root, verify_pin(binding["active_request"]))
+    if current != binding:
+        raise ValueError("active runtime identity differs from this stage or package")
+    if request is not None and canonical_sha(read_json(path)) != canonical_sha(request):
+        raise ValueError("in-memory request differs from the active runtime request")
+
+
+def _require_worker_runtime(attempt, binding):
+    if binding is None:
+        return
+    value = read_json(Path(attempt) / "WORKER_RUNTIME_IDENTITY.json")
+    if (value.get("runtime_binding") != binding or
+            value.get("training_receipt") != pin(Path(attempt) / "TRAINING_RECEIPT.json")):
+        raise ValueError("completed worker lacks the exact active runtime identity")
+
+
+def _require_attempt_runtime(attempt, binding, spec=None):
+    """Partial checkpoints need the original parent request, not a terminal receipt."""
+    if binding is None:
+        return
+    attempt = Path(attempt)
+    stage, root = attempt.parent, attempt.parent.parent.parent
+    request_path = stage / (attempt.name + "_REQUEST.json")
+    if (attempt.is_symlink() or re.fullmatch(r"attempt_[0-9]{4}", attempt.name) is None or
+            stage.parent.name != "stages" or request_path.is_symlink() or not request_path.is_file()):
+        raise ValueError("attempt lacks an original stage-bound runtime request")
+    saved = read_json(request_path)
+    if saved.get("runtime_binding") != binding or (spec is not None and saved.get("spec") != spec):
+        raise ValueError("attempt runtime or scientific stage identity differs")
+    argv = saved.get("argv", [])
+    if argv[:4] != [sys.executable, "-m", "research.broadband56_nn.seven_suite", "_train-worker"]:
+        raise ValueError("attempt worker executable or entry differs")
+    for flag, expected in {"--request": binding["active_request"]["path"],
+                           "--request-sha256": binding["active_request"]["sha256"],
+                           "--study-root": str(root), "--out": str(attempt),
+                           "--label": stage.name}.items():
+        if argv.count(flag) != 1 or argv.index(flag) + 1 >= len(argv) or argv[argv.index(flag) + 1] != expected:
+            raise ValueError("attempt argv lacks exact parent-bound runtime identity")
+    return saved
+
+
 def _stage_spec(label, request, forward=None):
     forward_role = label in ("BB00_FORWARD", "F1", "F2", "F3", "FREF")
     return {"label": label, "role": "forward" if forward_role else "inverse",
@@ -177,12 +234,16 @@ def label_matches(spec, state):
     return (spec["kind"] == "BB00" and state.get("kind") in ("BB00", "BB00_TANDEM_MLP")) or state.get("kind") == spec["kind"]
 
 
-def _resume_candidate(stage_root, spec, data_sha):
+def _resume_candidate(stage_root, spec, data_sha, *, runtime_binding=None):
     """Only complete sidecar-verified checkpoints from this exact stage."""
     candidates = []
     for file in sorted(stage_root.glob("attempt_*/checkpoint_step_*.pt")):
         if not Path(str(file) + ".identity.json").is_file():
             continue  # incomplete publication is preserved, never loaded
+        if runtime_binding is not None:
+            if file.is_symlink() or Path(str(file) + ".identity.json").is_symlink():
+                raise ValueError("resume checkpoint must remain inside its original attempt")
+            _require_attempt_runtime(file.parent, runtime_binding, spec)
         state = load_checkpoint(file)
         if state.get("data_sha") != data_sha or state.get("role") != spec["role"] or not label_matches(spec, state):
             raise ValueError("foreign checkpoint within study stage")
@@ -190,6 +251,10 @@ def _resume_candidate(stage_root, spec, data_sha):
         if config.get("seed") != spec["seed"] or config.get("micro_batch") != 8 or config.get("effective_batch") != 32:
             raise ValueError("resume configuration drift")
         best = Path(state["best_checkpoint"])
+        if runtime_binding is not None:
+            if best.is_symlink() or best.resolve().parent.parent != stage_root.resolve():
+                raise ValueError("best resume checkpoint belongs to another study stage")
+            _require_attempt_runtime(best.parent, runtime_binding, spec)
         load_checkpoint(best)
         if state["step"] > spec["budget"]:
             raise ValueError("resume step exceeds frozen budget")
@@ -204,7 +269,8 @@ def _resume_candidate(stage_root, spec, data_sha):
     return candidates[-1]
 
 
-def _train_stage(root, label, request, data, parity, deadline, forward, lock_fds):
+def _train_stage(root, label, request, data, parity, deadline, forward, lock_fds, *, runtime_binding=None):
+    _guard_runtime_binding(root, runtime_binding, request)
     stage_root = root / "stages" / label
     stage_root.mkdir(parents=True, exist_ok=True)
     data_sha = read_json(data / "data_manifest.json")["artifacts"]["dataset.npz"]["sha256"]
@@ -214,7 +280,13 @@ def _train_stage(root, label, request, data, parity, deadline, forward, lock_fds
         completion = read_json(done)
         if completion["stage_spec_sha256"] != canonical_sha(spec):
             raise ValueError("completed stage contract changed")
+        if runtime_binding is not None and completion.get("runtime_binding") != runtime_binding:
+            raise ValueError("completed stage runtime identity differs")
         receipt_path = verify_pin(completion["receipt"])
+        if runtime_binding is not None and receipt_path.parent.parent.resolve() != stage_root.resolve():
+            raise ValueError("completed receipt belongs to another stage")
+        _require_attempt_runtime(receipt_path.parent, runtime_binding, spec)
+        _require_worker_runtime(receipt_path.parent, runtime_binding)
         receipt, complete = _qualified_receipt(receipt_path, spec, data_sha)
         if not complete:
             raise ValueError("completed marker lacks qualified terminal training")
@@ -224,14 +296,18 @@ def _train_stage(root, label, request, data, parity, deadline, forward, lock_fds
     resume = None
     remaining = spec["budget"]
     if attempts:
+        for prior in attempts:
+            _require_attempt_runtime(prior, runtime_binding, spec)
         # Crash after terminal receipt but before journal commit: adopt exact evidence.
         prior_receipt = attempts[-1] / "TRAINING_RECEIPT.json"
         if prior_receipt.is_file():
             receipt, complete = _qualified_receipt(prior_receipt, spec, data_sha)
             if complete:
-                atomic_json(done, {"stage_spec_sha256": canonical_sha(spec), "receipt": pin(prior_receipt)}, immutable=True)
+                _require_worker_runtime(attempts[-1], runtime_binding)
+                atomic_json(done, {"stage_spec_sha256": canonical_sha(spec), "receipt": pin(prior_receipt),
+                                   "runtime_binding": runtime_binding}, immutable=True)
                 return prior_receipt, receipt
-        step, resume, _ = _resume_candidate(stage_root, spec, data_sha)
+        step, resume, _ = _resume_candidate(stage_root, spec, data_sha, runtime_binding=runtime_binding)
         remaining -= step
         if remaining <= 0:
             raise ValueError("budget checkpoint exists without terminal receipt; reconcile, do not retrain")
@@ -239,32 +315,79 @@ def _train_stage(root, label, request, data, parity, deadline, forward, lock_fds
         raise TimeoutError("frozen study wall budget exhausted")
     attempt = stage_root / f"attempt_{len(attempts) + 1:04d}"
     # Trainer owns create-once attempt directory. Request/log stay outside it.
+    active_request = verify_pin(runtime_binding["active_request"]) if runtime_binding else root / "experiment_plan.json"
     command = [sys.executable, "-m", "research.broadband56_nn.seven_suite", "_train-worker",
-               "--request", str(root / "experiment_plan.json"), "--label", label,
+               "--request", str(active_request), "--label", label,
                "--data", str(data), "--out", str(attempt), "--parity", str(parity),
                "--deadline", deadline, "--steps", str(remaining)]
+    if runtime_binding is not None:
+        command += ["--study-root", str(root), "--request-sha256", runtime_binding["active_request"]["sha256"]]
     if resume:
         command += ["--checkpoint", str(resume)]
     if forward:
         command += ["--forward", forward["path"]]
     atomic_json(stage_root / f"attempt_{len(attempts) + 1:04d}_REQUEST.json",
                 {"spec": spec, "argv": command, "resume": pin(resume) if resume else None,
-                 "initialization": "EXACT_NEW_STUDY_RESUME" if resume else "FROM_SCRATCH"}, immutable=True)
+                 "initialization": "EXACT_NEW_STUDY_RESUME" if resume else "FROM_SCRATCH",
+                 "runtime_binding": runtime_binding}, immutable=True)
     execution = run_child(command, Path(__file__).resolve().parents[2],
                           stage_root / f"attempt_{len(attempts) + 1:04d}.log", lock_fds)
     atomic_json(stage_root / f"attempt_{len(attempts) + 1:04d}_PROCESS.json", execution, immutable=True)
     if execution["returncode"] != 0:
         raise RuntimeError(f"{label} training child failed; evidence preserved, no automatic retry")
     receipt_path = attempt / "TRAINING_RECEIPT.json"
+    _require_worker_runtime(attempt, runtime_binding)
     receipt, complete = _qualified_receipt(receipt_path, spec, data_sha)
     if not complete:
         raise TimeoutError(f"{label} is partial; do not advance dependent stages")
-    atomic_json(done, {"stage_spec_sha256": canonical_sha(spec), "receipt": pin(receipt_path)}, immutable=True)
+    atomic_json(done, {"stage_spec_sha256": canonical_sha(spec), "receipt": pin(receipt_path),
+                       "runtime_binding": runtime_binding}, immutable=True)
     return receipt_path, receipt
 
 
 def train_worker(args):
     request = read_json(args.request)
+    _validate_request_identity(request)
+    inferred_root = Path(request["control_root"]) / request["study_key"]
+    explicit_root = getattr(args, "study_root", None)
+    runtime_binding = None
+    if explicit_root is not None and Path(explicit_root).resolve() != inferred_root.resolve():
+        raise ValueError("worker study root differs from its frozen request")
+    formal = explicit_root is not None or any(
+        (inferred_root / name).exists() or (inferred_root / name).is_symlink()
+        for name in ("experiment_plan.json", "ACTIVE_RUNTIME_REVISION.json"))
+    if formal:
+        from .runtime_revision import resolve_active_request
+        active, runtime_binding = resolve_active_request(inferred_root, args.request)
+        expected_sha = getattr(args, "request_sha256", None)
+        if expected_sha is None:
+            raise ValueError("formal worker requires the parent-bound request SHA")
+        if expected_sha is not None and pin(active)["sha256"] != expected_sha:
+            raise ValueError("worker active request SHA differs from parent")
+        request = read_json(active)
+        if (Path(args.out).is_symlink() or
+                Path(args.out).resolve().parent != inferred_root.resolve() / "stages" / args.label or
+                re.fullmatch(r"attempt_[0-9]{4}", Path(args.out).name) is None):
+            raise ValueError("formal worker output must be its existing study stage attempt")
+        saved = _require_attempt_runtime(Path(args.out), runtime_binding)
+        saved_spec = saved.get("spec", {})
+        if saved_spec != _stage_spec(args.label, request, saved_spec.get("forward")):
+            raise ValueError("formal worker stage spec differs from frozen request")
+        expected_forward = saved_spec.get("forward")
+        if ((args.forward is None) != (expected_forward is None) or
+                (expected_forward is not None and str(verify_pin(expected_forward)) != args.forward)):
+            raise ValueError("formal worker forward differs from immutable parent stage")
+        # A valid runtime identity alone must not authorize different live data,
+        # budget, forward weights or resume state from the parent submission.
+        argv = saved["argv"]
+        for name in ("data", "parity", "deadline", "steps", "checkpoint", "forward"):
+            flag, expected = "--" + name, getattr(args, name)
+            if expected is None:
+                if flag in argv:
+                    raise ValueError("formal worker arguments differ from immutable parent request")
+            elif (argv.count(flag) != 1 or argv.index(flag) + 1 >= len(argv) or
+                  argv[argv.index(flag) + 1] != str(expected)):
+                raise ValueError("formal worker arguments differ from immutable parent request")
     validate_request(request)
     spec = _stage_spec(args.label, request)
     if args.label.startswith("BB00"):
@@ -273,22 +396,31 @@ def train_worker(args):
                            schedule_total_steps=spec["budget"], seed=spec["seed"],
                            device=request["device"], micro_batch=8, effective_batch=32,
                            forward_checkpoint=args.forward, deadline_utc=args.deadline)
-        return train_bb00(args.data, args.out, config, request["runtime_contract"]["path"],
+        result = train_bb00(args.data, args.out, config, request["runtime_contract"]["path"],
                           request["legacy_replay"]["path"], request["legacy_replay"]["sha256"],
                           resume_checkpoint=args.checkpoint)
-    from .training import TrainConfig, train
-    config = TrainConfig(role=spec["role"], kind=spec["kind"], steps=args.steps,
+    else:
+        from .training import TrainConfig, train
+        config = TrainConfig(role=spec["role"], kind=spec["kind"], steps=args.steps,
                          seed=spec["seed"], device=request["device"], micro_batch=8,
                          effective_batch=32, threads=2, validation_interval=32,
                          deadline_utc=args.deadline, package_id=args.label,
                          physical_ready=spec["role"] == "inverse",
                          physical_parity_receipt=args.parity if spec["role"] == "inverse" else None,
                          forward_checkpoint=args.forward)
-    return train(args.data, args.out, config, request["runtime_contract"]["path"],
+        result = train(args.data, args.out, config, request["runtime_contract"]["path"],
                  resume_checkpoint=args.checkpoint)
+    if runtime_binding is not None:
+        _guard_runtime_binding(inferred_root, runtime_binding, request)
+        atomic_json(Path(args.out) / "WORKER_RUNTIME_IDENTITY.json", {
+            "schema": "bb_seven_worker_runtime.v1", "runtime_binding": runtime_binding,
+            "training_receipt": pin(Path(args.out) / "TRAINING_RECEIPT.json"),
+            "worker_pid": os.getpid(), "created_utc": utc_now()}, immutable=True)
+    return result
 
 
-def build_registries(root, data, stages):
+def build_registries(root, data, stages, *, runtime_binding=None):
+    _guard_runtime_binding(root, runtime_binding)
     from .training import Bundle
     bundle = Bundle(data)
     records = {}
@@ -312,7 +444,10 @@ def build_registries(root, data, stages):
     if not registry.exists():
         atomic_json(registry, {"schema": "bb_seven_registry.v1", "data_sha": bundle.data_sha,
                               "normalizer_sha": bundle.norm_sha, "records": records,
-                              "study_plan": pin(root / "experiment_plan.json")}, immutable=True)
+                              "study_plan": pin(root / "experiment_plan.json"),
+                              "runtime_binding": runtime_binding}, immutable=True)
+    if runtime_binding is not None and read_json(registry).get("runtime_binding") != runtime_binding:
+        raise ValueError("model registry is bound to another runtime")
     return registry
 
 
@@ -334,12 +469,15 @@ def _finished_evaluation(out):
     return True
 
 
-def evaluate_completed(root, request):
+def evaluate_completed(root, request, *, runtime_binding=None):
     """Both validation panels, then exact freezes, then each sealed test once."""
     from . import seven_evaluation as seven
     from . import evaluation as six
     root = Path(root)
+    _guard_runtime_binding(root, runtime_binding, request)
     data, registry = root / "data", root / "STUDY_MODELS.json"
+    if runtime_binding is not None and read_json(registry).get("runtime_binding") != runtime_binding:
+        raise ValueError("evaluation registry runtime identity differs")
     records = read_json(registry)["records"]
     targets = root / "target_plans"
     targets.mkdir(exist_ok=True)
@@ -427,12 +565,13 @@ def _require_packaging_proof(path, deadline, budget_pin, labels):
             raise ValueError("component resume proof is not bound to the original deadline")
 
 
-def package_completed(root, request, lock_fds=()):
+def package_completed(root, request, lock_fds=(), *, runtime_binding=None):
     """Existing six-package machinery plus separately proved BB00 new states."""
     from . import delivery
     from .baseline_package import build_package
     from .bb00_delivery import verify_bb00_load_resume
     root = Path(root)
+    _guard_runtime_binding(root, runtime_binding, request)
     deadline, budget_pin = _packaging_budget(root, request)
     proof = root / "load_resume_six" / "LOAD_RESUME_RECEIPT.json"
     bb00_proof = root / "load_resume_bb00" / "BB00_LOAD_RESUME_RECEIPT.json"
@@ -444,6 +583,8 @@ def package_completed(root, request, lock_fds=()):
     if not proof.exists() or not bb00_proof.exists():
         delivery.validate_resume_deadline(deadline)
     data, records = root / "data", read_json(root / "STUDY_MODELS.json")["records"]
+    if runtime_binding is not None and read_json(root / "STUDY_MODELS.json").get("runtime_binding") != runtime_binding:
+        raise ValueError("package registry runtime identity differs")
     for subdir in ("common15_test", "broadband_test"):
         if not _finished_evaluation(root / subdir):
             raise ValueError("completed comparisons required before final package")
@@ -488,9 +629,10 @@ def package_completed(root, request, lock_fds=()):
             "study_plan": pin(root / "experiment_plan.json"), "models": pin(root / "STUDY_MODELS.json"),
             "six_resume_proof": pin(proof), "bb00_resume_proof": pin(bb00_proof),
             "training_budget": budget_pin, "effective_resume_deadline_utc": deadline,
+            "runtime_binding": runtime_binding,
             "shared_data": "broadband_six/shared_data", "BB00_broadband": "NOT_SUPPORTED",
             "normalizers": "BB00 uses valid15GHz train only; six broadband share the frozen train-only normalizer",
-            "resume_entry": "seven_suite resume-seven with original exact study request/root; package references original immutable study evidence",
+            "resume_entry": "seven_suite resume-seven with exact active request and original study root; original plan remains immutable provenance",
             "real_emx_validation": "NOT_RUN", "production_modified": False}, immutable=True)
     for name in ("comparison_15ghz.csv", "comparison_forward_15ghz.csv", "comparison_broadband.csv", "report.md", "experiment_plan.json", "STUDY_MODELS.json"):
         _copy_once(root / name, output / name)
@@ -502,7 +644,7 @@ def package_completed(root, request, lock_fds=()):
         with (output / "SHA256SUMS.txt").open("x") as handle:
             for item in _package_files(output, exclude_root=("SHA256SUMS.txt",)):
                 handle.write(item["sha256"] + "  " + item["path"] + "\n")
-    _verify_seven_package(output)
+    _verify_seven_package(output, runtime_binding=runtime_binding)
     return pin(output / "SEVEN_PACKAGE.json")
 
 
@@ -511,7 +653,7 @@ def _package_files(output, exclude_root=()):
     return [item for item in manifest_tree(output) if item["path"] not in exclude_root]
 
 
-def _verify_seven_package(output):
+def _verify_seven_package(output, *, runtime_binding=None):
     output = Path(output)
     recorded = read_json(output / "SEVEN_MANIFEST.json")["files"]
     actual = _package_files(output, exclude_root=("SEVEN_MANIFEST.json", "SHA256SUMS.txt"))
@@ -527,6 +669,10 @@ def _verify_seven_package(output):
     if summary.get("status") != "TRAINED_AND_EVALUATED":
         raise ValueError("no complete seven-group package")
     root = output.parent
+    recorded_runtime = summary.get("runtime_binding")
+    if runtime_binding is not None and recorded_runtime != runtime_binding:
+        raise ValueError("completed package runtime identity differs")
+    _guard_runtime_binding(root, recorded_runtime)
     if (Path(summary["study"]).resolve() != root.resolve() or
             summary["study_plan"] != pin(root / "experiment_plan.json") or
             summary["models"] != pin(root / "STUDY_MODELS.json")):
@@ -541,18 +687,28 @@ def _verify_seven_package(output):
 
 def check_once(request_path, control_root, source_manifest=None, *, phase="all", access=None):
     request = read_json(request_path)
-    validate_request(request)
+    _validate_request_identity(request)
     if str(Path(control_root).resolve()) != request.get("control_root"):
         raise ValueError("control root differs from frozen request; do not create a duplicate study directory")
     root = Path(control_root).resolve() / request["study_key"]
+    if Path(control_root).is_symlink() or root.is_symlink():
+        raise ValueError("study/control root must not be a symlink")
+    marker = root / "ACTIVE_RUNTIME_REVISION.json"
+    if not (marker.exists() or marker.is_symlink()):
+        validate_request(request)
     root.mkdir(parents=True, exist_ok=True)
     try:
         with lease(root / "study.lock") as study_fd:
-            _copy_once(request_path, root / "experiment_plan.json")
+            if not (marker.exists() or marker.is_symlink()):
+                _copy_once(request_path, root / "experiment_plan.json")
+            from .runtime_revision import resolve_active_request
+            active_request, runtime_binding = resolve_active_request(root, request_path)
+            request = read_json(active_request)
+            validate_request(request)
             journal = Journal(root)
             if all((root / "packages" / name).is_file()
                    for name in ("SEVEN_PACKAGE.json", "SEVEN_MANIFEST.json", "SHA256SUMS.txt")):
-                _verify_seven_package(root / "packages")
+                _verify_seven_package(root / "packages", runtime_binding=runtime_binding)
                 return {"status": "ALREADY_COMPLETE", "package": pin(root / "packages" / "SEVEN_PACKAGE.json")}
             frozen = root / "selection" / "SELECTION_MANIFEST.json"
             if phase in ("evaluate", "package") and not (root / "STUDY_MODELS.json").is_file():
@@ -616,17 +772,18 @@ def check_once(request_path, control_root, source_manifest=None, *, phase="all",
                             raise ValueError("incomplete training stage; evaluation/packaging does not start training")
                         owner = "BB00_FORWARD" if label == "BB00" else MAPPING[label][0] if label in MAPPING else None
                         forward = None if owner is None else {"path": stages[owner][1]["best_checkpoint"], "sha256": stages[owner][1]["best_sha256"]}
-                        stages[label] = _train_stage(root, label, request, data, parity, deadline, forward, (study_fd, device_fd))
-                    registry = build_registries(root, data, stages)
+                        stages[label] = _train_stage(root, label, request, data, parity, deadline, forward,
+                                                     (study_fd, device_fd), runtime_binding=runtime_binding)
+                    registry = build_registries(root, data, stages, runtime_binding=runtime_binding)
                     journal.append("TRAINED_PENDING_EVALUATION", {"registry": pin(registry),
                         "group_count": 7, "stage_count": 12, "real_emx_validation": "NOT_RUN"})
                     if phase == "train":
                         return journal.load()
-                    evaluation = evaluate_completed(root, request)
+                    evaluation = evaluate_completed(root, request, runtime_binding=runtime_binding)
                     journal.append("EVALUATED_PENDING_PACKAGE", evaluation)
                     if phase == "evaluate":
                         return journal.load()
-                    package = package_completed(root, request, (study_fd, device_fd))
+                    package = package_completed(root, request, (study_fd, device_fd), runtime_binding=runtime_binding)
                     return journal.append("TRAINED_AND_EVALUATED", {"package": package})
             except BusyStudy:
                 return journal.append("WAITING_RESOURCE", {"reason": "Another local research worker holds the device lock"})
@@ -650,6 +807,12 @@ def main(argv=None):
     create.add_argument("--inverse-steps", type=int, default=128)
     create.add_argument("--wall-budget-seconds", type=int, default=1800)
     create.add_argument("--control-root", help="Fixed study-control root; default is a studies sibling of the request")
+    prepare_revision_cli = sub.add_parser("prepare-runtime-revision", help="Prepare an immutable pre-training source-only revision; never trains")
+    for name in ("base-request", "base-sha256", "predecessor-index", "index-sha256", "out"):
+        prepare_revision_cli.add_argument("--" + name, required=True)
+    activate_revision_cli = sub.add_parser("activate-runtime-revision", help="Activate only an exact independently approved pre-training revision; never trains")
+    for name in ("proposal", "proposal-sha256", "qa-receipt", "qa-sha256", "out"):
+        activate_revision_cli.add_argument("--" + name, required=True)
     for command in ("check-and-run-once", "prepare-10k", "train-seven", "resume-seven", "evaluate-seven", "package-seven"):
         cli = sub.add_parser(command)
         cli.add_argument("--request", required=True)
@@ -662,12 +825,20 @@ def main(argv=None):
     worker.add_argument("--steps", type=int, required=True)
     worker.add_argument("--checkpoint")
     worker.add_argument("--forward")
+    worker.add_argument("--study-root")
+    worker.add_argument("--request-sha256")
     args = parser.parse_args(argv)
     if args.command == "create-request":
         result = create_request(args.out, args.campaign_id, args.contract, args.legacy_replay, args.spec,
                                 forward_steps=args.forward_steps, inverse_steps=args.inverse_steps,
                                 device=args.device, wall_budget_seconds=args.wall_budget_seconds,
                                 control_root=args.control_root)
+    elif args.command == "prepare-runtime-revision":
+        from .runtime_revision import prepare_revision
+        result = prepare_revision(args.base_request, args.base_sha256, args.predecessor_index, args.index_sha256, args.out)
+    elif args.command == "activate-runtime-revision":
+        from .runtime_revision import activate_revision
+        result = activate_revision(args.proposal, args.proposal_sha256, args.qa_receipt, args.qa_sha256, out=args.out)
     elif args.command == "_train-worker":
         result = train_worker(args)
     else:

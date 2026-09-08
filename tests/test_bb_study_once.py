@@ -66,6 +66,8 @@ def test_child_inherits_lock_after_parent_closes_fd(tmp_path):
 
 def _waiting_fixture(tmp_path, monkeypatch, count=9999):
     request = {"study_key": once.study_key("synthetic"), "device": "cpu", "campaign_id": "synthetic",
+               "schema": "bb_seven_study_request.v1", "suite_version": suite.SUITE,
+               "milestone_geometries": 10000,
                "control_root": str(tmp_path / "control")}
     path = tmp_path / "request.json"
     path.write_text(json.dumps(request))
@@ -142,8 +144,7 @@ def test_failed_stage_or_changed_request_does_not_get_overwritten(tmp_path, monk
     request, source, control = _waiting_fixture(tmp_path, monkeypatch)
     suite.check_once(request, control, source)
     initial = (control / once.study_key("synthetic") / "experiment_plan.json").read_bytes()
-    request.write_text(json.dumps({"study_key": once.study_key("synthetic"), "device": "cpu", "changed": True,
-                                  "control_root": str(control)}))
+    request.write_text(json.dumps({**json.loads(request.read_text()), "changed": True}))
     with pytest.raises(ValueError, match="immutable registry copy differs"):
         suite.check_once(request, control, source)
     assert (control / once.study_key("synthetic") / "experiment_plan.json").read_bytes() == initial

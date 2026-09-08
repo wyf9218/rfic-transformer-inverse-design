@@ -1,0 +1,39 @@
+{
+  "schema": "bb_public_runtime_candidate_status.v1",
+  "status": "CODE_QA_GO_CANDIDATE_PREPARED_NOT_ACTIVATED",
+  "independent_reviewer_verdict": "CODE_ONLY_GO",
+  "source_sha256": {
+    "runtime_revision.py": "96c526174766a09959592de0491ce03b032a93ed0ad42540efd31539aad37254",
+    "seven_suite.py": "8739937cedc11d9f7ab04f7b45ea2d8db998a47145156733932ba54145f8005c",
+    "tests/test_bb_runtime_revision.py": "df60d9b93798f7a1c4172ac989a2588e890dc352b9e65f5ec825d2b3aac8fd4d",
+    "tests/test_bb_runtime_revision_integration.py": "b01851b5920ce59f6ca0f929b65767a49037d42b6c31f4bfcaec08a67b6c1e57"
+  },
+  "final_synthetic_tests": {
+    "passed": 166, "failed": 0, "elapsed_seconds": 2.54,
+    "junit_sha256": "13465ab6cbeef6ade6cde50717178cf8d8c864f131de87c081f58852ec0abdf0",
+    "scope": "Synthetic metadata, local file/lock races, mocked worker/packaging control flow; not real model training."
+  },
+  "failure_history": [
+    "Initial independent NO_GO: attestation, lock-time GO, unverified root, partial identity and formal-worker checks",
+    "First test batch: 158 PASS/1 FAIL; corrected zero-output expectation when bad proposal SHA rejected before output admission",
+    "159 PASS then independent NO_GO: live worker arguments not compared to parent argv",
+    "165 PASS after six-argument fix; 166 PASS after additional stage-spec check and wording correction",
+    "Read-only collector relative/absolute path mismatch retained; corrected invocation used a new evidence path"
+  ],
+  "actual_candidate": {
+    "proposal_sha256": "e1843c93f9ddf9dba45f3ee4e5ce4739875bd1b14c2097bb591f5700e66d6a41",
+    "request_sha256": "0e7164a2fff47909ae2a8d5e8e4a3ef304bf903479d17c030fcc3542e5f9bf41",
+    "original_request_sha256": "c9bf027fe0a6719e7e89469ba693b7ea9f8f0a43f0d54f3ca56e0852dcd96e81",
+    "private_paths_omitted": true,
+    "same_scientific_contract": true,
+    "environment_metadata_check": "PASS"
+  },
+  "runtime_activation_gate": "INDEPENDENT_QA_REQUIRED",
+  "automatic_trigger": "NOT_INSTALLED",
+  "formal_new_10k_training": "NOT_STARTED",
+  "real_model_or_optimizer_execution_this_milestone": false,
+  "mars_access_this_milestone": false,
+  "production_or_gui_modified": false,
+  "real_emx_validation": "NOT_RUN",
+  "next_safe_action": "Review exact private proposal, then activate metadata only with exact independent GO; data, resource and dedup gates remain separate."
+}

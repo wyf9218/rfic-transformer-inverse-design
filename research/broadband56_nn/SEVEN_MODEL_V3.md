@@ -4,6 +4,11 @@ This is an incremental extension of the existing six broadband systems. It does
 not replace their architecture, old runs, production controller, or GUI.
 Private run receipts, not this source guide, establish actual training status.
 
+For the source-only pre-training revision candidate, see
+[runtime revision gates](RUNTIME_REVISION_CANDIDATE_CN.md). It preserves the
+existing study identity and original plan; it does not install an automatic
+trigger. The historical request cannot be used with changed source implicitly.
+
 ## Two BB00 branches, one group
 
 `baseline_package build` preserves the original historical NumPy weights,
