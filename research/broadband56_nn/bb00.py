@@ -10,6 +10,7 @@ from __future__ import annotations
 from dataclasses import dataclass, asdict
 from datetime import datetime, timezone
 import math
+import json
 from pathlib import Path
 import random
 import time
@@ -43,6 +44,10 @@ class BB00Config:
     deadline_utc: str | None = None
     response_spans: tuple = (2.5, 2.5, 20.0, 0.8)
     allow_io_adaptation: bool = False
+    frequency_ghz: int = 15
+    label_mode: str = "STRICT_LUMPED"
+    checkpoint_interval: int = 1
+    log_progress: bool = False
 
 
 class BB00MLP(nn.Module):
@@ -57,7 +62,7 @@ class BB00MLP(nn.Module):
         for key in ("g_mean", "g_scale", "y_mean", "y_scale", "g_lower", "g_upper"):
             self.register_buffer(key, torch.as_tensor(normalizer[key], dtype=torch.float32))
         self.architecture = {"role": role, "widths": dimensions, "hidden_activation": "tanh_approximation_GELU",
-             "geometry_projection": "independent_sigmoid_to_observed_valid_train_envelope", "frequency_ghz": 15.0,
+             "geometry_projection": "independent_sigmoid_to_observed_valid_train_envelope", "frequency_ghz": float(normalizer.get("frequency_ghz", 15)),
              "input_units": "um" if role == "forward" else ["nH", "nH", "dimensionless_Qmin", "dimensionless_absK"],
              "output_units": ["nH", "nH", "dimensionless_Qmin", "dimensionless_absK"] if role == "forward" else "um"}
 
@@ -112,7 +117,12 @@ def legacy_recipe(receipt_path, expected_sha):
             "historical_optimizer_state": "NOT_LOADED; never legacy exact resume"}
 
 
-def prepare_bb00(bundle, contract, spans, allow_io_adaptation=False):
+def prepare_bb00(bundle, contract, spans, allow_io_adaptation=False, *, frequency_ghz=15,
+                 label_mode="STRICT_LUMPED"):
+    if isinstance(frequency_ghz, bool) or not isinstance(frequency_ghz, int) or not 5 <= frequency_ghz <= 60:
+        raise ValueError("integer frequency_ghz in 5..60 required; no nearest-frequency routing")
+    if label_mode not in ("STRICT_LUMPED", "POINTWISE_DESCRIPTOR_EXPERIMENTAL"):
+        raise ValueError("explicit supported label_mode required")
     if contract["field_names"] != bundle.norm["field_names"]:
         raise ValueError("geometry field order differs")
     fields = [x.removeprefix("geom__") for x in contract["field_names"]]
@@ -120,15 +130,24 @@ def prepare_bb00(bundle, contract, spans, allow_io_adaptation=False):
     io_status = "MATCHED_10D_FIELD_ORDER" if fields == historical else "IO_ADAPTED"
     if io_status == "IO_ADAPTED" and not allow_io_adaptation:
         raise ValueError("geometry IO adaptation requires explicit configuration")
-    frequencies = np.flatnonzero(bundle.arrays["frequency_hz"] == 15e9)
+    frequencies = np.flatnonzero(bundle.arrays["frequency_hz"] == frequency_ghz*1e9)
     if len(frequencies) != 1:
-        raise ValueError("exact single15GHz source frequency required")
+        raise ValueError("exact single requested source frequency required")
     frequency = int(frequencies[0])
-    valid = bundle.arrays["y_valid"][:, frequency].all(-1) & np.isfinite(bundle.arrays["y"][:, frequency]).all(-1)
+    if label_mode == "POINTWISE_DESCRIPTOR_EXPERIMENTAL":
+        if "broadband_descriptor_valid" not in bundle.arrays or "strict_lumped_valid" not in bundle.arrays:
+            raise ValueError("descriptor experiment requires both original descriptor and strict masks")
+        domain = bundle.arrays["broadband_descriptor_valid"][:, frequency]
+    else:
+        domain = bundle.arrays["y_valid"][:, frequency].all(-1)
+        if "strict_lumped_valid" in bundle.arrays:
+            domain = domain & bundle.arrays["strict_lumped_valid"][:, frequency]
+    valid = domain & np.isfinite(bundle.arrays["y"][:, frequency]).all(-1)
     train = bundle.train[valid[bundle.train]]
     val = bundle.val[valid[bundle.val]]
     if len(train) < 2 or not len(val):
-        raise ValueError("insufficient train/validation strict-valid15GHz labels")
+        raise ValueError("NO_STRICT_LABELS" if label_mode == "STRICT_LUMPED" and not valid.any()
+                         else "INSUFFICIENT_DATA: at least two train and one validation labels required")
     g, y = bundle.arrays["geometry"][train], bundle.arrays["y"][train, frequency]
     if not np.isfinite(g).all():
         raise ValueError("nonfinite train geometry")
@@ -143,11 +162,16 @@ def prepare_bb00(bundle, contract, spans, allow_io_adaptation=False):
     norm = {"g_mean": gm.tolist(), "g_scale": gs.tolist(), "y_mean": y.mean(0).tolist(), "y_scale": ys.tolist(),
             "g_lower": normalized_g.min(0).tolist(), "g_upper": normalized_g.max(0).tolist(),
             "response_spans": spans.tolist(), "response_dimension_weights": weights.tolist(),
-            "fit_scope": "new snapshot strict-valid15GHz train only; old support NEVER filters rows",
+            "fit_scope": f"new snapshot {label_mode} {frequency_ghz}GHz train only; old support NEVER filters rows",
             "field_names": contract["field_names"], "physical_features": ["Lp_nH", "Ls_nH", "Qmin", "K_abs"],
-            "io_status": io_status}
+            "io_status": io_status, "frequency_ghz": frequency_ghz, "label_mode": label_mode,
+            "target_semantics": "symmetric four-target matching; Q_scalar=min(Qp,Qs), not a lower bound",
+            "train_support_min": y.min(0).tolist(), "train_support_max": y.max(0).tolist(),
+            "support_caveat": "marginal train envelope only; interior combinations are not proven feasible"}
     exposure = {part: {"split_geometries": int((bundle.arrays["split"] == code).sum()),
-                      "eligible15ghz_geometries": int(((bundle.arrays["split"] == code) & valid).sum())}
+                      "eligible_geometries": int(((bundle.arrays["split"] == code) & valid).sum()),
+                      **({"eligible15ghz_geometries": int(((bundle.arrays["split"] == code) & valid).sum())}
+                         if frequency_ghz == 15 else {})}
                 for part, code in (("train", 0), ("validation", 1), ("test", 2))}
     return norm, train, val, frequency, exposure
 
@@ -310,7 +334,7 @@ def _train(data_root, out, config, contract_path, legacy_path, legacy_sha, resum
         raise ValueError("positive bounded BB00 training configuration required")
     if config.effective_batch != 32 or config.micro_batch < 1 or 32 % config.micro_batch:
         raise ValueError("effective batch32 with divisor microbatch required")
-    if config.validation_interval < 1 or config.patience < 1 or config.max_epochs != 200:
+    if config.validation_interval < 1 or config.checkpoint_interval < 1 or config.patience < 1 or config.max_epochs != 200:
         raise ValueError("invalid common validation/epoch budget")
     initial = load_checkpoint(resume) if resume else None
     if initial:
@@ -332,7 +356,8 @@ def _train(data_root, out, config, contract_path, legacy_path, legacy_sha, resum
         if any(contract.get("port_contract", {}).get(key) != bundle.manifest["port_contract"].get(key)
                for key in ("port_order", "reference_impedance_ohm", "mode", "internal_permutation")):
             raise ValueError("new-data port contract differs from accepted snapshot")
-    norm, train, val, frequency, exposure = prepare_bb00(bundle, contract, config.response_spans, config.allow_io_adaptation)
+    norm, train, val, frequency, exposure = prepare_bb00(bundle, contract, config.response_spans,
+        config.allow_io_adaptation, frequency_ghz=config.frequency_ghz, label_mode=config.label_mode)
     norm_sha, contract_sha = canonical_sha(norm), canonical_sha(contract)
     sources = {name: sha256(Path(__file__).parent/name) for name in ("bb00.py", "training.py", "io.py")}
     fixed_config = {k: v for k, v in asdict(config).items() if k not in ("steps", "deadline_utc", "forward_checkpoint")}
@@ -456,7 +481,7 @@ def _train(data_root, out, config, contract_path, legacy_path, legacy_sha, resum
         record = {"step": step, "train_loss": train_loss, "response_weight": weight, "validation_loss": None,
                   "elapsed_seconds": time.monotonic()-start}
         history.append(record)
-        # Every step is resumable; validation/selection only common frozen intervals.
+        # Retain each selected checkpoint; validation never consumes test labels.
         if step % config.validation_interval == 0 or step == config.schedule_total_steps or best_path is None:
             value, response, geometry = validate()
             record["validation_loss"] = value
@@ -469,7 +494,7 @@ def _train(data_root, out, config, contract_path, legacy_path, legacy_sha, resum
             else:
                 stale += 1
         if best_path is not None:
-            last_path = out/f"checkpoint_step_{step:06d}.pt"
+            checkpoint_path = out/f"checkpoint_step_{step:06d}.pt"
             state = {"schema": "bb00_training_state.v1", "role": config.role, "kind": "BB00", "step": step,
                 "model_state": {k: v.detach().cpu() for k,v in model.state_dict().items()}, "model_sha": model_digest(model),
                 "optimizer_state": optimizer.state_dict(), "scheduler_state": scheduler.state_dict(), "rng_state": _rng_state(rng),
@@ -486,10 +511,21 @@ def _train(data_root, out, config, contract_path, legacy_path, legacy_sha, resum
                 "initialization": "EXACT_NEW_ADAPTER_RESUME" if resume else "RANDOM_FROM_SCRATCH_NO_LEGACY_WEIGHTS",
                 "resume_probe": resume_probe, "research_comparison_eligible": not resume_probe,
                 "historical_weights_loaded": False, "real_emx_validation": "NOT_RUN"}
-            save_checkpoint(last_path, state)
+            if (step % config.checkpoint_interval == 0 or record["validation_loss"] is not None or
+                    step == end or stale >= config.patience):
+                save_checkpoint(checkpoint_path, state)
+                last_path = checkpoint_path
+                if config.log_progress:
+                    print(json.dumps({"role": config.role, "frequency_ghz": config.frequency_ghz,
+                        "label_mode": config.label_mode, "step": step,
+                        "validation_loss": record["validation_loss"], "elapsed_seconds": record["elapsed_seconds"],
+                        "checkpoint": str(last_path)}), flush=True)
         if stale >= config.patience:
             stop = "VALIDATION_EARLY_STOP"
             break
+    if last_step > begin and last_path != out/f"checkpoint_step_{last_step:06d}.pt":
+        last_path = out/f"checkpoint_step_{last_step:06d}.pt"
+        save_checkpoint(last_path, state)
     if last_path is None or last_step == begin:
         raise RuntimeError("no resumable validated update completed; preserve partial files")
     if forward is not None and model_digest(forward) != forward_digest:
@@ -506,6 +542,8 @@ def _train(data_root, out, config, contract_path, legacy_path, legacy_sha, resum
         "test_access": False, "test_access_scope": "validity count only, no test prediction/loss/model selection",
         "elapsed_seconds": time.monotonic()-start, "stop_reason": stop, "load_resume_check": "PENDING_SEPARATE_PROCESS",
         "historical_weights_loaded": False, "real_emx_validation": "NOT_RUN", "created_utc": utc_now()}
+    receipt.update(frequency_ghz=config.frequency_ghz, label_mode=config.label_mode,
+                   validation_selected_checkpoint=True, convergence_claim="NOT_ESTABLISHED")
     receipt.update(resume_probe=resume_probe, research_comparison_eligible=not resume_probe)
     save_json(out/"history.json", history)
     save_json(out/"TRAINING_RECEIPT.json", receipt)

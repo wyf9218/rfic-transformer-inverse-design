@@ -21,6 +21,17 @@ are historical workflows, not its current execution contract.
 
 ## Start Here: Current Goals And Status
 
+The highest-priority **independently authorized NN research** is now
+[frequency-indexed Tandem MLP](docs/FREQUENCY_INDEXED_TANDEM.md): choose one integer
+frequency, then match four physical targets with a separate 256×3 forward/inverse
+pair. The first new-data 15GHz pair has real 5K-development training, load/resume
+proof and held-out statistics; it is not a completed formal10K or all-frequency
+model library. The former seven-model research timer was disabled. Production's
+NN-disabled configuration and the GUI worktree were not changed.
+
+The production observations and earlier project records below are timestamped
+historical evidence, not current live counters.
+
 Start with [Current Evidence Status](docs/research/CURRENT_STATUS.md) and the
 [timestamped Broadband56 production snapshot](docs/research/BROADBAND56_PUBLIC_PROGRESS_20260905T003832Z.json).
 At the published observation, 31 accepted geometries and 1,736 frequency rows
