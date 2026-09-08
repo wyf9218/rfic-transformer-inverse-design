@@ -1,0 +1,86 @@
+{
+  "schema": "frequency5to20_advisor_milestone.v1",
+  "status": "COMPLETE_SCOPED_REPORT_DELIVERY_GOAL_ACTIVE",
+  "goal_status": "ACTIVE",
+  "goal_complete": false,
+  "scientific_scope": "Frozen snapshot_0031; no new scientific computations in this milestone.",
+  "model_pairs": 16,
+  "model_training_status": "PARTIAL_PROVISIONAL",
+  "actual_new_training_updates": 0,
+  "actual_new_inferences": 0,
+  "actual_new_emx_launches": 0,
+  "existing_random_qscan": {
+    "requests_per_frequency": 10000,
+    "candidates_per_request": 11,
+    "total_logical_candidates": 1760000,
+    "evidence": "SELF_PROXY"
+  },
+  "physical_snapshot": {
+    "id": "snapshot_0031",
+    "created_utc": "2026-09-08T14:10:53.000718Z",
+    "closed_requests": 40,
+    "original_closed_slots": 440,
+    "independent_solves": 353,
+    "strict_valid": 339,
+    "strict_invalid": 14,
+    "closed_failures": {
+      "analytic": 26,
+      "gds": 40,
+      "drc": 21
+    },
+    "complete_strict11_requests": 5,
+    "full_plan_requests": 320,
+    "full_plan_original_slots": 3520,
+    "unclosed_requests": 280
+  },
+  "separate15_scopes": {
+    "physical": "DEVELOPMENT5K",
+    "formal10k_fresh_emx": "NOT_RUN"
+  },
+  "training_gap": {
+    "reason": "Original cumulative min(12000,ceil(200*Ntrain/32)) update budget exhausted; not deadline failure.",
+    "f19_updates_per_role": 3357,
+    "f20_updates_per_role": 1744,
+    "inverse_ramp_complete": false,
+    "diagnostic_resume_research_comparison_eligible": false,
+    "formal_budget_extension_started": false
+  },
+  "runtime_observation": {
+    "observed_utc": "2026-09-08T15:01:21Z",
+    "pid": 2146776,
+    "pid_alive": true,
+    "active_frequency_ghz": 18,
+    "stage": "calibre",
+    "request_index": 2,
+    "control_actions_this_turn": 0,
+    "not_continuously_live": true
+  },
+  "automation": {
+    "native_finite_dispatch": "EXISTING_NOT_RESTARTED",
+    "incremental_statistics": "EXISTING_NATIVE_PROGRAM",
+    "ai_periodic_polling": "NOT_USED",
+    "boot_restart": "NOT_INSTALLED",
+    "final_standalone_export_batch": "NOT_INSTALLED_EXISTING_CLI_AVAILABLE"
+  },
+  "engineering_limits": {
+    "dispatch_deadline_utc": "2026-09-08T18:00:00Z",
+    "consumer_deadline_utc": "2026-09-08T18:15:00Z",
+    "changed": false
+  },
+  "next_safe_action": "Reuse this deck and original trained/SELF_PROXY/EMX artifacts. Existing native queue and consumer continue under unchanged gates. Only process genuinely new terminal evidence, not repeat prior milestones.",
+  "base_commit": "c51f9dd139bc4d56b10c8a06cf1ce5ff39a3eef5",
+  "branch": "codex/frequency-indexed-tandem-20260908",
+  "updated_utc": "2026-09-08T15:28:07Z",
+  "presentation": {
+    "path": "advisor_frequency5to20_cumulative40_v3.pptx",
+    "sha256": "73e77015ea891e7c0a6e08f9718f80f3aa36c9afe2a361aedbcad3a2f4997d03",
+    "bytes": 99199,
+    "slides": 10,
+    "native_charts": 10,
+    "native_tables": 6,
+    "embedded_workbooks": 10,
+    "independent_numeric_qa_sha256": "89fe4d83eab9c3d6bbdfd79b8dedb0bce47a7044e9755c0206b6e555e18f52b3",
+    "visual": "GO_ALL10_PAGES_EXACT_TO_REVIEWED_RENDER",
+    "native_powerpoint": "NOT_NATIVE_POWERPOINT_TESTED"
+  }
+}

@@ -24,9 +24,14 @@ are historical workflows, not its current execution contract.
 The highest-priority **independently authorized NN research** is now
 [frequency-indexed Tandem MLP](docs/FREQUENCY_INDEXED_TANDEM.md): choose one integer
 frequency, then match four physical targets with a separate 256×3 forward/inverse
-pair. The first new-data 15GHz pair has real 5K-development training, load/resume
-proof and held-out statistics; it is not a completed formal10K or all-frequency
-model library. The former seven-model research timer was disabled. Production's
+pair. All16 frequency pairs now have formal10K-snapshot first-budget training,
+saved packages, load/diagnostic-resume evidence and held-out tests. All remain
+PARTIAL/PROVISIONAL, not established convergence. The latest
+[10-slide advisor deck](docs/research/frequency5to20_advisor_cumulative40_20260908_v1/README_CN.md)
+uses the independently approved cumulative40-request physical snapshot, with
+353 independent solves and339 strict-valid labels. Physical15GHz remains a
+separate development5K model; formal10K15 fresh EMX is NOT_RUN.
+The former seven-model research timer was disabled. Production's
 NN-disabled configuration and the GUI worktree were not changed.
 
 The production observations and earlier project records below are timestamped

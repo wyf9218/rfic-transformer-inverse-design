@@ -1,0 +1,48 @@
+{
+  "schema": "frequency_advisor_cumulative40_delivery.v1",
+  "status": "COMPLETE_PUBLIC_REVIEWABLE_DRAFT",
+  "goal_status": "ACTIVE",
+  "artifacts": [
+    {
+      "path": "advisor_frequency5to20_cumulative40_v3.pptx",
+      "sha256": "73e77015ea891e7c0a6e08f9718f80f3aa36c9afe2a361aedbcad3a2f4997d03",
+      "bytes": 99199
+    },
+    {
+      "path": "README_CN.md",
+      "sha256": "d9ed8584e10a8c74d3494f90ea5736b07ed8ffadb3ac26497f2539b9fa1c944b",
+      "bytes": 3005
+    },
+    {
+      "path": "RUN_STATE.json",
+      "sha256": "4ed23b9c655abd40710020ed01647f595f837c6b6d8b9d6a93ac16ad44e289bb",
+      "bytes": 3132
+    },
+    {
+      "path": "RUN_STATE.md",
+      "sha256": "0ae2e14ba1222f26d5eb0907f1df3f8c49cdc5f731058bf8e5f085271a0a4045",
+      "bytes": 2065
+    },
+    {
+      "path": "QA_SUMMARY.json",
+      "sha256": "6bb9341fb50e6e2bc787f4f527b3ccc3b6d247bf654c4ec12d3a754712fe90ef",
+      "bytes": 2500
+    }
+  ],
+  "independent_qa": {
+    "path": "reports/frequency5to20_20260908T063800Z/advisor_slides_cumulative40_20260908T150100Z/candidate_v3/qa/INDEPENDENT_NUMERIC_QA.json",
+    "sha256": "89fe4d83eab9c3d6bbdfd79b8dedb0bce47a7044e9755c0206b6e555e18f52b3",
+    "availability": "PRIVATE_EVIDENCE_NOT_INCLUDED",
+    "checks": "Reuses57 passed v2 source/cache/workbook/table checks; exact v3 note correction;10chart XML and all10workbook internal members identical;35relationship semantics preserved;10PNG exact reviewed v2;privacy0hits."
+  },
+  "physical_source": {
+    "path": "../frequency5to20_new6_cumulative40_20260908_v2/PUBLIC_RECEIPT.json",
+    "sha256": "1c5f75ca314b3788b03d29cd66f8778d34b4379d1c312960acfa0f0166f8ce41"
+  },
+  "native_slide_count": 10,
+  "original16_model_training_reused": true,
+  "original320_queue_goal_complete": false,
+  "main_branch_modified": false,
+  "worktree_branch": "codex/frequency-indexed-tandem-20260908",
+  "native_powerpoint_status": "NOT_NATIVE_POWERPOINT_TESTED"
+}

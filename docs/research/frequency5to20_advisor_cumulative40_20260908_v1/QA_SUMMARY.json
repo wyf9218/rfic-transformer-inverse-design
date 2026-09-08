@@ -1,0 +1,53 @@
+{
+  "schema": "advisor_public_qa_summary.v1",
+  "status": "GO",
+  "pptx": {
+    "path": "advisor_frequency5to20_cumulative40_v3.pptx",
+    "sha256": "73e77015ea891e7c0a6e08f9718f80f3aa36c9afe2a361aedbcad3a2f4997d03",
+    "bytes": 99199,
+    "slides": 10,
+    "native_charts": 10,
+    "native_tables": 6,
+    "embedded_workbooks": 10,
+    "independent_numeric_qa_sha256": "89fe4d83eab9c3d6bbdfd79b8dedb0bce47a7044e9755c0206b6e555e18f52b3",
+    "visual": "GO_ALL10_PAGES_EXACT_TO_REVIEWED_RENDER",
+    "native_powerpoint": "NOT_NATIVE_POWERPOINT_TESTED"
+  },
+  "independent_numeric_qa": {
+    "path": "reports/frequency5to20_20260908T063800Z/advisor_slides_cumulative40_20260908T150100Z/candidate_v3/qa/INDEPENDENT_NUMERIC_QA.json",
+    "sha256": "89fe4d83eab9c3d6bbdfd79b8dedb0bce47a7044e9755c0206b6e555e18f52b3",
+    "availability": "PRIVATE_EVIDENCE_NOT_INCLUDED",
+    "checks": "Reuses57 passed v2 source/cache/workbook/table checks; exact v3 note correction;10chart XML and all10workbook internal members identical;35relationship semantics preserved;10PNG exact reviewed v2;privacy0hits."
+  },
+  "finalizer": {
+    "sha256": "8ff4f4170f0f3316df4afb10f53bb3a8a5b617d06777884e332229043f35c313",
+    "integrity": "PASS",
+    "native_layout_font": "PASS",
+    "artifact_tool_import": "PASS"
+  },
+  "visual": {
+    "status": "GO",
+    "reviewed_pages": 10,
+    "source_receipt_sha256": "e822a80c7a7cfee7e6670fa4c534fc3d91dca6dd6f5766fe1d7b03fb82633073",
+    "v3_equal_render_receipt_sha256": "136e2b6f30a009986932e4e60d4ece3f6c7c982c73e475f4b6c4c6c63aaca95f",
+    "native_powerpoint": "NOT_NATIVE_POWERPOINT_TESTED"
+  },
+  "historical_failures_preserved": {
+    "author_initialization": "URL pathname encoding ENOENT before any output",
+    "author_API": "Chart/table object.delete unavailable; observed collection.deleteById used",
+    "finalized_input_import": "Workbook relationship lost by import/export; finalizer NO_GO; exact original literal author source reused",
+    "postcheck": "Info-ZIP bracket wildcard read failed; escaped member scan completed without altering PPT",
+    "notes_v2": {
+      "sha256": "daeb7ca4dd20ef70f50d99c75544342ab6e48d8f0db69b85a4711b3bee08d34a",
+      "status": "NO_GO_NOTE_COUNT_EXPRESSION",
+      "fix": "Only note1 explicit16 multiplier and per-frequency110000 added"
+    }
+  },
+  "research_actions": {
+    "new_training": 0,
+    "new_inferences": 0,
+    "new_solver_launches": 0,
+    "old_data_regenerated": false,
+    "production_or_gui_changed": false
+  }
+}

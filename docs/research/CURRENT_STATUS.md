@@ -1,5 +1,24 @@
 # Current Evidence Status
 
+## 2026-09-08: Updated Advisor Deck, Frozen Cumulative40
+
+The [updated10-slide native-editable advisor deck](frequency5to20_advisor_cumulative40_20260908_v1/README_CN.md)
+combines existing16-pair training/held-out/SELF_PROXY evidence with the
+independently approved snapshot_0031:40 closed requests,440 original slots,
+353 independent solves=339 strict-valid+14 invalid. It is not a live counter.
+The other87 closed slots retain26 analytical,40 GDS and21 DRC failures.
+Only5 complete-strict11 requests permit q_emx. Physical15GHz is development5K;
+formal10K15 fresh EMX remains NOT_RUN. The original320-request goal is active.
+
+19/20GHz stopped at their original200-epoch update caps (3357/1744 per role),
+before the inverse600+3000-update response ramp completed. All16 model pairs
+remain PARTIAL. Loading and one-update diagnostic resume PASS do not establish
+convergence or authorize treating diagnostic weights as ranked models.
+This delivery adds no training, inference or simulation and does not modify
+production/GUI or the running native reporting program. The deck preserves
+the original training/data/held-out plots and adds a real20GHz NOT_HIT example.
+
+
 ## Current Authorized Data Campaign
 
 Latest published observation: `2026-09-05T00:38:32Z`, not a live dashboard.
