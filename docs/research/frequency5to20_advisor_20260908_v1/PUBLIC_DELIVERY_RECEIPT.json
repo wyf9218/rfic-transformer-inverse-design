@@ -1,0 +1,45 @@
+{
+  "schema": "advisor_slides_public_delivery.v1",
+  "status": "COMPLETE_PUBLIC_REVIEWABLE_DRAFT",
+  "created_utc": "2026-09-08T10:16:54.498Z",
+  "artifacts": [
+    {
+      "path": "output/advisor_frequency5to20_public_v2.pptx",
+      "sha256": "f88c5c54d687709c5a00871c8675d1108f998ab2c2d358404db59b6a786cc3b2",
+      "bytes": 96572
+    },
+    {
+      "path": "output/advisor_frequency5to20_public_v2_preview.pdf",
+      "sha256": "2c7d9954dd1357534ed70c60486177a98d4333883bd998bdcac8a1ec506303bb",
+      "bytes": 815794
+    },
+    {
+      "path": "PUBLIC_QA_RECEIPT.json",
+      "sha256": "c42f2961eed1848a641dd63e2fbe16a9e5a0860bdd876d50126711e7bf49d7d6",
+      "bytes": 7503
+    }
+  ],
+  "slides": 10,
+  "native_charts": 10,
+  "native_tables": 6,
+  "embedded_workbooks": 10,
+  "native_architecture_diagram": true,
+  "target_application_status": "NOT_NATIVE_POWERPOINT_TESTED",
+  "pdf_source_sha256": "2c7d9954dd1357534ed70c60486177a98d4333883bd998bdcac8a1ec506303bb",
+  "pdf_kind": "Raster reading preview; editable objects belong to PPTX",
+  "private_v6_unchanged": true,
+  "public_notes_paths": "Relative report/repository source references only; no private weights or data included",
+  "public_upload_scope": [
+    "output/advisor_frequency5to20_public_v2.pptx",
+    "output/advisor_frequency5to20_public_v2_preview.pdf",
+    "PUBLIC_QA_RECEIPT.json",
+    "PUBLIC_DELIVERY_RECEIPT.json"
+  ],
+  "exclude_from_upload": [
+    "build/",
+    "drafts/",
+    "qa/",
+    "preview/",
+    "all private source maps and prior attempts"
+  ]
+}

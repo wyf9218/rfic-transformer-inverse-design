@@ -285,7 +285,7 @@
     "Qscan analytic feasibility is not Calibre or manufacturing signoff.",
     "Private datasets, weights, physical configuration and raw logs remain in the private research handoff."
   ],
-  "updated_utc": "2026-09-08T10:10:08Z",
+  "updated_utc": "2026-09-08T10:20:50Z",
   "readonly_report_observer": {
     "status": "INSTALLED_FINITE_PROCESS",
     "poll_seconds": 120,
@@ -340,16 +340,20 @@
   },
   "stage_status16": "FREQUENCY5TO20_STAGE_STATUS16_20260908.json",
   "advisor_presentation": {
-    "status": "COMPLETE_REVIEWABLE_DRAFT_LOCAL",
+    "status": "COMPLETE_PUBLIC_REVIEWABLE_DRAFT",
     "slides": 10,
     "editable_charts": 10,
     "editable_tables": 6,
     "frozen_physical_requests": 6,
     "frozen_physical_solves": 51,
     "source_snapshot_not_realtime": true,
-    "pptx_sha256": "0ba4b5ce22189d3cc1784ad399e18622a1abfa519564e0e3888a33415f44e2ce",
+    "pptx_sha256": "f88c5c54d687709c5a00871c8675d1108f998ab2c2d358404db59b6a786cc3b2",
     "preview_pdf_sha256": "2c7d9954dd1357534ed70c60486177a98d4333883bd998bdcac8a1ec506303bb",
     "target_application_test": "NOT_RUN_NATIVE_POWERPOINT",
-    "public_export": "SEPARATE_NOTES_SANITIZED_COPY_IN_PREPARATION"
+    "public_export": "SOURCE_VERIFIED_ARTIFACTS_INCLUDED_IN_THIS_COMMIT",
+    "directory": "frequency5to20_advisor_20260908_v1",
+    "public_receipt_sha256": "a57f3389ec5c52aff65fc0af8fe4e5bf788a7720b330158e8860b226ea4ca9d0",
+    "public_qa_sha256": "c42f2961eed1848a641dd63e2fbe16a9e5a0860bdd876d50126711e7bf49d7d6",
+    "visible_slides_and_native_chart_values_unchanged": true
   }
 }

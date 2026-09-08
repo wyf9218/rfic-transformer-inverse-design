@@ -1,0 +1,192 @@
+{
+  "schema": "advisor_slides_public_qa.v1",
+  "status": "PASS_SOURCE_NATIVE_VISIBLE_IDENTITY_PRIVACY",
+  "created_utc": "2026-09-08T10:16:54.493Z",
+  "pptx": {
+    "path": "output/advisor_frequency5to20_public_v2.pptx",
+    "sha256": "f88c5c54d687709c5a00871c8675d1108f998ab2c2d358404db59b6a786cc3b2",
+    "bytes": 96572
+  },
+  "pdf": {
+    "status": "PASS",
+    "pages": 10,
+    "metadata": {
+      "/Producer": "pdf-lib (https://github.com/Hopding/pdf-lib)",
+      "/ModDate": "D:20260908100351Z",
+      "/Creator": "pdf-lib (https://github.com/Hopding/pdf-lib)",
+      "/CreationDate": "D:20260908100351Z",
+      "/Title": "5–20 GHz 单频模型研究进展",
+      "/Subject": "Raster reading preview of native editable PowerPoint deck; frozen results"
+    },
+    "kind": "raster_reading_preview_from_native_PPT_render"
+  },
+  "source_final_pptx_sha256": "0ba4b5ce22189d3cc1784ad399e18622a1abfa519564e0e3888a33415f44e2ce",
+  "source_reviewed_pdf_sha256": "2c7d9954dd1357534ed70c60486177a98d4333883bd998bdcac8a1ec506303bb",
+  "source_private_qa_receipt_sha256": "42460ed3b0da1a4584d281233f91467e78ee8d5d2fdb19bc75486b6556110e1c",
+  "source_fact_map_sha256": "e382ddc4edde9f0496bb1588146a5d822d926dc6884c02a222cbfc59f6d1aeca",
+  "slides": [
+    {
+      "slide": 1,
+      "render": {
+        "path": "preview/01.png",
+        "sha256": "0c770520d4d6d4f6b1f7eb9d6ee28cc743b3ca92d5e86b0a4fda70cdade47c7e",
+        "bytes": 153832
+      },
+      "visible_bytes_identical_to_reviewed_v6": true,
+      "reviewed_png_sha256": "0c770520d4d6d4f6b1f7eb9d6ee28cc743b3ca92d5e86b0a4fda70cdade47c7e"
+    },
+    {
+      "slide": 2,
+      "render": {
+        "path": "preview/02.png",
+        "sha256": "8d9a78d6b37d6c08b203983f439f39352af0a836b2e78364882ec3a3c5df4753",
+        "bytes": 107375
+      },
+      "visible_bytes_identical_to_reviewed_v6": true,
+      "reviewed_png_sha256": "8d9a78d6b37d6c08b203983f439f39352af0a836b2e78364882ec3a3c5df4753"
+    },
+    {
+      "slide": 3,
+      "render": {
+        "path": "preview/03.png",
+        "sha256": "31fac74d20c703cf6a2d12e8887a3f66753c64e6366b0cd537b630f26bb521b8",
+        "bytes": 119268
+      },
+      "visible_bytes_identical_to_reviewed_v6": true,
+      "reviewed_png_sha256": "31fac74d20c703cf6a2d12e8887a3f66753c64e6366b0cd537b630f26bb521b8"
+    },
+    {
+      "slide": 4,
+      "render": {
+        "path": "preview/04.png",
+        "sha256": "9a6b74ff2a106f1db3129ab44b88616ee797836488d272072b683e28b0201d73",
+        "bytes": 91465
+      },
+      "visible_bytes_identical_to_reviewed_v6": true,
+      "reviewed_png_sha256": "9a6b74ff2a106f1db3129ab44b88616ee797836488d272072b683e28b0201d73"
+    },
+    {
+      "slide": 5,
+      "render": {
+        "path": "preview/05.png",
+        "sha256": "69e4dc74a2919d79b60642974bbfcfd2feac125cb92bc2b38fc3316030aaf326",
+        "bytes": 96919
+      },
+      "visible_bytes_identical_to_reviewed_v6": true,
+      "reviewed_png_sha256": "69e4dc74a2919d79b60642974bbfcfd2feac125cb92bc2b38fc3316030aaf326"
+    },
+    {
+      "slide": 6,
+      "render": {
+        "path": "preview/06.png",
+        "sha256": "49319fbbddfafcfdf00341e7a8e144396d71877e5ddf0e80d84a36fa13623768",
+        "bytes": 133435
+      },
+      "visible_bytes_identical_to_reviewed_v6": true,
+      "reviewed_png_sha256": "49319fbbddfafcfdf00341e7a8e144396d71877e5ddf0e80d84a36fa13623768"
+    },
+    {
+      "slide": 7,
+      "render": {
+        "path": "preview/07.png",
+        "sha256": "a6857f0a6a40abeba5fd467d392f1a1e828af818fb5d46c1b10c525da869c3c5",
+        "bytes": 111959
+      },
+      "visible_bytes_identical_to_reviewed_v6": true,
+      "reviewed_png_sha256": "a6857f0a6a40abeba5fd467d392f1a1e828af818fb5d46c1b10c525da869c3c5"
+    },
+    {
+      "slide": 8,
+      "render": {
+        "path": "preview/08.png",
+        "sha256": "9bcfb9af97c4099a26f1e03ee23b4bd4f667c5f275e3317beb9f2462dd5e1331",
+        "bytes": 122211
+      },
+      "visible_bytes_identical_to_reviewed_v6": true,
+      "reviewed_png_sha256": "9bcfb9af97c4099a26f1e03ee23b4bd4f667c5f275e3317beb9f2462dd5e1331"
+    },
+    {
+      "slide": 9,
+      "render": {
+        "path": "preview/09.png",
+        "sha256": "08742dcf26d759c3a3d90f1257057f12e376951c89e01dc32be9b9faf188f3d7",
+        "bytes": 98319
+      },
+      "visible_bytes_identical_to_reviewed_v6": true,
+      "reviewed_png_sha256": "08742dcf26d759c3a3d90f1257057f12e376951c89e01dc32be9b9faf188f3d7"
+    },
+    {
+      "slide": 10,
+      "render": {
+        "path": "preview/10.png",
+        "sha256": "9523de891bf38009ec33d391d1a920cace336c07b206c88badc939fb3181071c",
+        "bytes": 195760
+      },
+      "visible_bytes_identical_to_reviewed_v6": true,
+      "reviewed_png_sha256": "9523de891bf38009ec33d391d1a920cace336c07b206c88badc939fb3181071c"
+    }
+  ],
+  "native_editability": {
+    "status": "PASS",
+    "xml_parts_including_workbooks": 127,
+    "hits": [],
+    "native_charts": 10,
+    "native_tables": 6,
+    "embedded_workbooks": 10,
+    "numeric_checks": [
+      {
+        "part": "ppt/slides/charts/chart1.xml",
+        "status": "IDENTICAL_TO_SOURCE_RECONCILED_PRIVATE_V6"
+      },
+      {
+        "part": "ppt/slides/charts/chart2.xml",
+        "status": "IDENTICAL_TO_SOURCE_RECONCILED_PRIVATE_V6"
+      },
+      {
+        "part": "ppt/slides/charts/chart3.xml",
+        "status": "IDENTICAL_TO_SOURCE_RECONCILED_PRIVATE_V6"
+      },
+      {
+        "part": "ppt/slides/charts/chart4.xml",
+        "status": "IDENTICAL_TO_SOURCE_RECONCILED_PRIVATE_V6"
+      },
+      {
+        "part": "ppt/slides/charts/chart5.xml",
+        "status": "IDENTICAL_TO_SOURCE_RECONCILED_PRIVATE_V6"
+      },
+      {
+        "part": "ppt/slides/charts/chart6.xml",
+        "status": "IDENTICAL_TO_SOURCE_RECONCILED_PRIVATE_V6"
+      },
+      {
+        "part": "ppt/slides/charts/chart7.xml",
+        "status": "IDENTICAL_TO_SOURCE_RECONCILED_PRIVATE_V6"
+      },
+      {
+        "part": "ppt/slides/charts/chart8.xml",
+        "status": "IDENTICAL_TO_SOURCE_RECONCILED_PRIVATE_V6"
+      },
+      {
+        "part": "ppt/slides/charts/chart9.xml",
+        "status": "IDENTICAL_TO_SOURCE_RECONCILED_PRIVATE_V6"
+      },
+      {
+        "part": "ppt/slides/charts/chart10.xml",
+        "status": "IDENTICAL_TO_SOURCE_RECONCILED_PRIVATE_V6"
+      }
+    ]
+  },
+  "privacy_scan": "PASS_ALL_XML_RELS_AND_EMBEDDED_WORKBOOK_XML",
+  "pdf_origin": "Exact bytes of the previously reviewed reading PDF from private v6 native PPT render. Public v2 visible pages are byte-identical to all10 reviewed native renders.",
+  "model_visual_qa": "PASS_ALL10_PAGES_INHERITED_BY_EXACT_PIXEL_BYTES",
+  "human_visual_qa": "NOT_RUN",
+  "target_application_status": "NOT_NATIVE_POWERPOINT_TESTED",
+  "notes_change": "Relative source/report references only. Environment-dependent inference example clearly labelled. Visible values, pages and native chart numeric caches unchanged.",
+  "fallback_scanner_event": "Initial unzip CLI interpreted square brackets in [Content_Types].xml as glob. Native finalization and all10 renders had passed. The final read-only zipfile scanner covered every XML/rels and embedded workbook; no presentation rebuild or rerender.",
+  "scientific_boundaries": [
+    "16 formal frequency pairs remain PARTIAL, not demonstrated converged",
+    "Physical snapshot6requests66originalslots51independentstrictsolves",
+    "Physical15GHz is DEVELOPMENT5K, separate from formal10K15 whose freshEMX is NOT_RUN",
+    "No full11strict request, q_emx not available, per-frequency Nrequest1 CI_NOT_ESTIMABLE"
+  ]
+}
