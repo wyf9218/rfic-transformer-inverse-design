@@ -285,7 +285,7 @@
     "Qscan analytic feasibility is not Calibre or manufacturing signoff.",
     "Private datasets, weights, physical configuration and raw logs remain in the private research handoff."
   ],
-  "updated_utc": "2026-09-08T10:20:50Z",
+  "updated_utc": "2026-09-08T10:39:04Z",
   "readonly_report_observer": {
     "status": "INSTALLED_FINITE_PROCESS",
     "poll_seconds": 120,
@@ -355,5 +355,64 @@
     "public_receipt_sha256": "a57f3389ec5c52aff65fc0af8fe4e5bf788a7720b330158e8860b226ea4ca9d0",
     "public_qa_sha256": "c42f2961eed1848a641dd63e2fbe16a9e5a0860bdd876d50126711e7bf49d7d6",
     "visible_slides_and_native_chart_values_unchanged": true
-  }
+  },
+  "latest_physical_snapshot": {
+    "source_snapshot": "physical_incremental_statistics_v1/run_v1/snapshots/snapshot_0004",
+    "source_snapshot_utc": "2026-09-08T10:20:53.967268+00:00",
+    "snapshot_sha256": "2f0e98853da078f0753f382e300f826b2a9c12a7b9e1221838d3b264286f918a",
+    "statistics_sha256": "b26e2665b3f1c43483235ea37b6e73b3c6275811c84c6da7bc6425c9505c38f3",
+    "summary_sha256": "b36ad7ffa957d966b0941502d09553935f3f4c30e3fcdc02fa9c204bce44680e",
+    "request_status_sha256": "41930e7f31593d47ebd26d02c096539eef7fd88a419d82a6646f38d9f95bdfd8",
+    "original_requests": 320,
+    "original_candidates": 3520,
+    "accounted_requests": 13,
+    "accounted_candidates": 143,
+    "strict_valid_independent_solves": 115,
+    "accounted_failures": {
+      "analytic": 4,
+      "gds": 12,
+      "drc": 12
+    },
+    "planned_analytic_failures": 221,
+    "pending_candidates": 3160,
+    "complete_strict11_requests": 1,
+    "f14_first_complete11": {
+      "dataset_scope": "FORMAL_10K",
+      "model_id": "f14-734ef171b954",
+      "request_id": "f14_qscan-HELDOUT_TRIPLE_AUDIT-000000",
+      "original_candidates": 11,
+      "strict_valid_independent_solves": 11,
+      "q_proxy": 14,
+      "q_emx": 12,
+      "selection_loss": 0.00030446346906584307,
+      "score_units": "fixed-span normalized score, not percentage",
+      "requests": 1,
+      "confidence_interval": "NOT_ESTIMABLE",
+      "identity_and_numeric_qa": "PASS_52_SOURCE_PINS_AND_ORIGINAL11_RECOMPUTATION",
+      "request_score_and_percent_charts": "PASS_SCOPED_ACTUAL_PNG_PDF",
+      "selection_aggregate_chart": "STRICT_VISUAL_NO_GO_EXCLUDED_FROM_ACCEPTED_FORMAL_FIGURES",
+      "selection_aggregate_defect": "Lower-half marker clipped at zero axis; R1 CI not-estimable label not explicit enough.",
+      "substitute": "Exact common-set table and accepted request Q charts; no renderer hot-edit or redraw.",
+      "independent_qa_receipt_sha256": "20d7bc8219ed5227f33a0152a0155a7da466e745988ee84de05e714a63bcafd8",
+      "exact_table_csv_sha256": "5a09bf813cb275dbd26ceacbefcda79fbf6b0e1355fdf9f38f35c4ad0b578455",
+      "public_addendum": "frequency14_first_complete11_20260908_v1/README_CN.md",
+      "conclusion": "Descriptive one-request retrospective score optimum, not population or generalization superiority."
+    },
+    "manual_visual_qa_scope": "First10 snapshot passed; f14 request plots passed; newer f13/f16 plots NOT_RUN manual review; selection aggregate NO_GO.",
+    "formal10k15_fresh_emx": "NOT_RUN_DEVELOPMENT5K_ROUTE_IS_SEPARATE",
+    "progress_is_not_pooled_scientific_accuracy": true,
+    "runtime_last_direct_observation": {
+      "utc": "2026-09-08T10:21:51Z",
+      "physics_alive": true,
+      "active_frequency_ghz": 17,
+      "stage": "EMX",
+      "collector_alive": true,
+      "statistics_consumer_alive": true
+    },
+    "future_state_not_inferred": true,
+    "advisor_ppt_frozen_physical_requests": 6,
+    "advisor_ppt_frozen_solves": 51,
+    "advisor_ppt_commit": "602a83cbd59ad22496272ca97975dcfb7d9015c9"
+  },
+  "snapshot_reading_rule": "Earlier fields are preserved first10/87 snapshot; latest_physical_snapshot and stage_status16.latest_status supersede operational counts only. PPT stays first6/51."
 }

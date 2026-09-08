@@ -1,0 +1,86 @@
+{
+  "schema": "f14_common_complete11_exact_table.v1",
+  "source": {
+    "path": "reports/frequency5to20_20260908T063800Z/physical_incremental_statistics_v1/run_v1/snapshots/snapshot_0004/statistics/SELECTION_COMPARISON.csv",
+    "sha256": "320878968e5f6b51b6958ace9a04bb8f2fd987b58c45c666939c64640288226c",
+    "bytes": 43732
+  },
+  "status": "PASS_EXACT_SINGLETON_TABLE",
+  "R": 1,
+  "ci_status": "NOT_ESTIMABLE",
+  "units": [
+    "nH",
+    "nH",
+    "dimensionless",
+    "dimensionless"
+  ],
+  "rows": [
+    {
+      "strategy": "fixed_q15",
+      "q": 15,
+      "frequency_ghz": 14,
+      "model_id": "f14-734ef171b954",
+      "dataset_scope": "FORMAL_10K",
+      "request_id": "f14_qscan-HELDOUT_TRIPLE_AUDIT-000000",
+      "R_common_complete_requests": 1,
+      "N_original_candidates": 11,
+      "ci_status": "NOT_ESTIMABLE",
+      "score": "0.017568283468822398",
+      "joint_hit": "true",
+      "absolute_error_Lp_nH": "0.02892735553221648",
+      "absolute_error_Ls_nH": "0.0017986488048369331",
+      "absolute_error_Qmin": "0.5528261159937458",
+      "absolute_error_K_abs": "0.014667127307643663"
+    },
+    {
+      "strategy": "q_proxy",
+      "q": 14,
+      "frequency_ghz": 14,
+      "model_id": "f14-734ef171b954",
+      "dataset_scope": "FORMAL_10K",
+      "request_id": "f14_qscan-HELDOUT_TRIPLE_AUDIT-000000",
+      "R_common_complete_requests": 1,
+      "N_original_candidates": 11,
+      "ci_status": "NOT_ESTIMABLE",
+      "score": "0.004275138853386978",
+      "joint_hit": "true",
+      "absolute_error_Lp_nH": "0.001641672510343195",
+      "absolute_error_Ls_nH": "0.012119386775284902",
+      "absolute_error_Qmin": "0.051355719598355165",
+      "absolute_error_K_abs": "0.005220377556544614"
+    },
+    {
+      "strategy": "q_emx",
+      "q": 12,
+      "frequency_ghz": 14,
+      "model_id": "f14-734ef171b954",
+      "dataset_scope": "FORMAL_10K",
+      "request_id": "f14_qscan-HELDOUT_TRIPLE_AUDIT-000000",
+      "R_common_complete_requests": 1,
+      "N_original_candidates": 11,
+      "ci_status": "NOT_ESTIMABLE",
+      "score": "0.003970675384321135",
+      "joint_hit": "true",
+      "absolute_error_Lp_nH": "0.00015192110946715687",
+      "absolute_error_Ls_nH": "0.0011767308643630958",
+      "absolute_error_Qmin": "0.15733937303759937",
+      "absolute_error_K_abs": "0.0007799947375615734"
+    }
+  ],
+  "interpretation": "Same one complete original11 request only. MAE equals the singleton absolute error; not population accuracy or physical champion.",
+  "excluded_visual": "formal_complete11_selection.png/.pdf is strict visual NO-GO and must not be used as an accepted formal figure.",
+  "publication": {
+    "schema": "f14_complete11_public_table.v1",
+    "source_table_json": {
+      "path": "reports/frequency5to20_20260908T063800Z/physical_incremental_statistics_v1/f14_first_complete11_qa_v1/EXACT_COMMON_SELECTION_TABLE.json",
+      "sha256": "b0b94a3dd6828e0df4d220ce54d37898595a6785827d1976e9bbcff3b8cd90c1",
+      "bytes": 2681
+    },
+    "path_policy": "Project-relative source identity plus SHA only; private original receipt chains are not distributed.",
+    "csv_serialization": "Field strings unchanged from approved table; CRLF normalized to LF.",
+    "visual_qa_reused": true,
+    "new_model_calls": 0,
+    "new_simulations": 0,
+    "new_figure_rendering": 0
+  }
+}

@@ -1,0 +1,113 @@
+{
+  "schema": "frequency14_complete11_public_package.v1",
+  "status": "READY_FOR_ROOT_COMMIT",
+  "publication_started_clock_utc": "2026-09-08T10:36:28Z",
+  "snapshot_asof_utc": "2026-09-08T10:20:53.967268+00:00",
+  "publication_only": true,
+  "request": {
+    "request_id": "f14_qscan-HELDOUT_TRIPLE_AUDIT-000000",
+    "frequency_ghz": 14,
+    "model_id": "f14-734ef171b954",
+    "dataset_scope": "FORMAL_10K",
+    "R_common_complete_requests": 1,
+    "N_original_candidates": 11,
+    "N_strict_valid": 11,
+    "q_proxy": 14,
+    "q_emx": 12,
+    "selection_loss": 0.00030446346906584307,
+    "ci_status": "NOT_ESTIMABLE",
+    "score_is_percentage": false
+  },
+  "approved_delivery": [
+    "exact same-request numeric table",
+    "unchanged original11 proxy versus EMX Q-scan PNG",
+    "unchanged original11 target-relative percent PNG"
+  ],
+  "excluded_delivery": {
+    "artifact": "formal_complete11_selection",
+    "status": "STRICT_VISUAL_NO_GO",
+    "included": false,
+    "rule": "Must not be used as an accepted formal figure; original immutable failure evidence is retained privately."
+  },
+  "scope": "One descriptive formal10K 14GHz case only. No population accuracy, physical champion, causal superiority or generalization claim.",
+  "sources": [
+    {
+      "path": "reports/frequency5to20_20260908T063800Z/physical_incremental_statistics_v1/f14_first_complete11_qa_v1/FINAL_DELIVERY_RECEIPT.json",
+      "sha256": "20d7bc8219ed5227f33a0152a0155a7da466e745988ee84de05e714a63bcafd8",
+      "bytes": 2948
+    },
+    {
+      "path": "reports/frequency5to20_20260908T063800Z/physical_incremental_statistics_v1/f14_first_complete11_qa_v1/VISUAL_QA.json",
+      "sha256": "555df6e68d468fc42e87a191450179657e60b408030d667993775b0919346af2",
+      "bytes": 10705
+    },
+    {
+      "path": "reports/frequency5to20_20260908T063800Z/physical_incremental_statistics_v1/f14_first_complete11_qa_v1/EXACT_COMMON_SELECTION_TABLE.csv",
+      "sha256": "5a09bf813cb275dbd26ceacbefcda79fbf6b0e1355fdf9f38f35c4ad0b578455",
+      "bytes": 849
+    },
+    {
+      "path": "reports/frequency5to20_20260908T063800Z/physical_incremental_statistics_v1/f14_first_complete11_qa_v1/EXACT_COMMON_SELECTION_TABLE.json",
+      "sha256": "b0b94a3dd6828e0df4d220ce54d37898595a6785827d1976e9bbcff3b8cd90c1",
+      "bytes": 2681
+    },
+    {
+      "path": "reports/frequency5to20_20260908T063800Z/physical_incremental_statistics_v1/run_v1/snapshots/snapshot_0004/statistics/SELECTION_COMPARISON.csv",
+      "sha256": "320878968e5f6b51b6958ace9a04bb8f2fd987b58c45c666939c64640288226c",
+      "bytes": 43732
+    },
+    {
+      "path": "reports/frequency5to20_20260908T063800Z/physical_incremental_statistics_v1/run_v1/snapshots/snapshot_0003/figures/requests/f14_qscan-HELDOUT_TRIPLE_AUDIT-000000/proxy_emx_score_by_q.png",
+      "sha256": "82cd74c11f4614aefc8449b17f717720e533f8e9d11336a98d60b8bd39c4205d",
+      "bytes": 441637
+    },
+    {
+      "path": "reports/frequency5to20_20260908T063800Z/physical_incremental_statistics_v1/run_v1/snapshots/snapshot_0003/figures/requests/f14_qscan-HELDOUT_TRIPLE_AUDIT-000000/target_percent_by_q.png",
+      "sha256": "e3d69a929305ca32ef57873839d94049eae8adf428f6c26a35b7268babfd7539",
+      "bytes": 523483
+    }
+  ],
+  "source_policy": "Source identities are relative to the project archive, with SHA and byte counts. Private raw solver chains and machine-absolute paths are not distributed.",
+  "publication_checks": {
+    "csv_field_strings_equal_to_approved_source": true,
+    "csv_newlines": "CRLF to LF only",
+    "json_rows_equal_to_approved_source": true,
+    "png_bytes_equal_to_approved_originals": true,
+    "visual_qa": "REUSED_EXACT_SEALED_QA_NOT_RERUN",
+    "no_new_models": true,
+    "no_new_extraction": true,
+    "no_new_simulation": true,
+    "no_new_figure_rendering": true,
+    "no_remote_calls": true,
+    "no_existing_source_edits": true
+  },
+  "artifacts": [
+    {
+      "path": "docs/research/frequency14_first_complete11_20260908_v1/EXACT_COMMON_SELECTION_TABLE.csv",
+      "sha256": "a74f97fdcf5a2b35baae15bd1143a8413f33880ca287e3a1a1884488f52d0009",
+      "bytes": 845
+    },
+    {
+      "path": "docs/research/frequency14_first_complete11_20260908_v1/EXACT_COMMON_SELECTION_TABLE.json",
+      "sha256": "a1bf8139290d40ad2ec87dd3b6a6a07247e95153a659ae10abc4d7a5e8b0186d",
+      "bytes": 3324
+    },
+    {
+      "path": "docs/research/frequency14_first_complete11_20260908_v1/README_CN.md",
+      "sha256": "deba1e9afd8e971053945c9ca4a6b88273cf1ce52c0dd9b78d9b5ba279080c5a",
+      "bytes": 3230
+    },
+    {
+      "path": "docs/research/frequency14_first_complete11_20260908_v1/proxy_emx_score_by_q.png",
+      "sha256": "82cd74c11f4614aefc8449b17f717720e533f8e9d11336a98d60b8bd39c4205d",
+      "bytes": 441637
+    },
+    {
+      "path": "docs/research/frequency14_first_complete11_20260908_v1/target_percent_by_q.png",
+      "sha256": "e3d69a929305ca32ef57873839d94049eae8adf428f6c26a35b7268babfd7539",
+      "bytes": 523483
+    }
+  ],
+  "index": "SHA256SUMS",
+  "commit_push": "NOT_PERFORMED_BY_PUBLICATION_SUBTASK"
+}
