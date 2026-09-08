@@ -1,0 +1,95 @@
+{
+  "schema": "frequency_library_qsupport_public_evidence.v1",
+  "status": "GO_SCOPED_NEW_ENTRY_AND_TRAIN_SUPPORT",
+  "data_scope": "FORMAL_10K_ACCEPTED_1_TO_10000",
+  "training_scope": "16 first-budget F/I packages reused; PROVISIONAL_PARTIAL; zero new training",
+  "architecture": "10->256->256->256->4; 4->256->256->256->10; frequency selects package, not input",
+  "model_entry": {
+    "metadata_routes_verified": 16,
+    "actual_cli_inferences": 1,
+    "frequency_ghz": 15,
+    "model_id": "f15-strict_lumped-f5f2ced054ef",
+    "actual_training_updates": 0,
+    "saved_target_example": "ENTRY_DEMO.json",
+    "not_Qscan": true,
+    "new_generated_geometry_real_emx": "NOT_RUN",
+    "registry_sha256": "0499cc7b9bc54602443391db5871d6442d3bd20e2207b4448d861bb1eec08c00",
+    "acceptance_sha256": "ef4818493dd0b5b4ae76b5159f6d402fc5f76e673f2b62210c9f8bec8d7fcb88",
+    "independent_qa_sha256": "f4e8f29c3c2280979e29a8703601c5b2d8005bfec80cc4caa822c3d63d22b4eb",
+    "synthetic_tests": {
+      "passed": 36,
+      "rerun": false
+    },
+    "MARS_model_library_deployment": "NOT_RUN"
+  },
+  "q_support": {
+    "frequencies_ghz": [
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20
+    ],
+    "integer_Q": [
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20
+    ],
+    "cells": 176,
+    "OUT_cells": 54,
+    "Q_definition": "min(Qp,Qs)",
+    "denominator": "Same-frequency eligible STRICT_LUMPED train geometries, including tails outside[9.5,20.5)",
+    "neighborhood": "[q-0.5,q+0.5); width1 descriptive density, not tolerance",
+    "nominal_in_range": "min(train Q)<=q<=max(train Q), independently from nonempty neighborhood",
+    "masks": "Shared geometry-hash train split AND strict_lumped_valid AND all4y_valid AND all4finite",
+    "cross_frequency_split_changed": false,
+    "normalizer_fit": false,
+    "heldout_distributions_used": false,
+    "count_status": "0 EMPTY; positive COUNT_ONLY, not adequate support",
+    "joint_reachability": "UNKNOWN; no conditioning on Lp/Ls/|k|",
+    "confidence_interval": "NOT_APPLICABLE_TO_COMPLETE_FROZEN_TRAIN_COUNTS; no IID population claim",
+    "dataset_sha256": "a2d35c1e5a4f9d72c4101d2767018bb4de2c6de86fb09e90cc0efba3b0385669",
+    "contract_sha256": "9cd0eb8c3d6f44c48448aa75893f360d7d18a90ae992a1fd394456192a183620",
+    "result_receipt_sha256": "13697e34c9748ae9158fcc05874e134d0516fee12a8c3682d53a9e7ee0f6b024",
+    "numerical_qa_sha256": "586e4c8c7bd1a306ddc98c1c8a96cbd55b0b6e09e8dd52e844d85dbcf5ae8daf",
+    "visual_qa_sha256": "b95e92c65ac6571e4c2ee10276e49bba6ca70ed8d2e66b74b8730de4c913bd24",
+    "synthetic_tests": {
+      "passed": 14,
+      "failed": 0,
+      "dependency_deprecation_warnings": 14
+    },
+    "real_builds": 1,
+    "independent_verification": "Direct frozen-array sorted search counts; exact176CSV/JSONcells+16full denominators/tails/minmax; separate author and root implementations; PNG/PDF original views."
+  },
+  "findings": [
+    "All16formal10K frequencies have integer Q20 outside observed STRICT train Q marginal range; Q20 neighborhoods contain zero eligible train geometries.",
+    "5GHz Q13..20 and20GHz Q10..11 are outside observed train Q range.",
+    "Observed counts/ranges neither establish joint attainability nor physically impossible targets; no model, target frame, support gate or scientific contract changed."
+  ],
+  "physical_evidence": "This new entry/chart adds zero EMX requests; previous published physical snapshot remains20requests/176independent solves. Native observation12:29:09UTC is separate.",
+  "negative_and_missing_evidence": [
+    "Initial bundled Python did not have pytest:0tests executed; existing supported release environment then ran only36new library tests successfully; no dependency installation.",
+    "No formal15 new-geometry physics for this CLI example.",
+    "No whole-library MARS deployment or restart automation installed.",
+    "No training continuation or convergence claim."
+  ]
+}

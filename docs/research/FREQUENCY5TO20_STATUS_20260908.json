@@ -1,4 +1,18 @@
 {
+"model_library_qsupport": {
+  "status": "GO_SCOPED_ENTRY_AND_TRAIN_SUPPORT",
+  "observed_utc": "2026-09-08T12:29:09Z",
+  "delivery": "frequency_library_qsupport_20260908_v1/README_CN.md",
+  "entry": "FREQUENCY_LIBRARY_USAGE_CN.md",
+  "metadata_routes": 16,
+  "actual15_cli_inferences": 1,
+  "new_training_updates": 0,
+  "integer_q_coverage_cells": 176,
+  "OUT_cells": 54,
+  "all16_Q20_outside_observed_train_range": true,
+  "physical_snapshot_unchanged": "snapshot_0011;20requests/176independent solves",
+  "runtime_observation": "OriginalMARS2146776 alive;f13second request emx_q17;local50120/52155 alive; no new numerical harvest."
+},
   "schema": "public_frequency_research_status.v2",
   "observed_utc": "2026-09-08T09:55:27.547311+00:00",
   "priority": "integer-frequency-routed 256x3 Tandem MLP; 5 through 20 GHz",

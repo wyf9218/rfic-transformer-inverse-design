@@ -1,0 +1,99 @@
+{
+  "schema": "frequency_library_qsupport_public_receipt.v1",
+  "status": "GO_SCOPED_LIBRARY_AND_TRAIN_Q_SUPPORT",
+  "created_utc": "2026-09-08 12:32:18 UTC",
+  "scope": "No model retraining, no Qscan repeat, no physics; static scientific figures and a thin package-router API.",
+  "artifacts": [
+    {
+      "path": "ENTRY_DEMO.json",
+      "sha256": "f3f419a5e68fa9a8ccfecce113c4ee05bed9265c8ef32a0fc1dfb9061729aa9b"
+    },
+    {
+      "path": "EVIDENCE_SUMMARY.json",
+      "sha256": "bcffcf79ed2fda21bb01ac656fa92c1f09413d82e27029ece87a9f31c5a0ea6a"
+    },
+    {
+      "path": "README_CN.md",
+      "sha256": "0e2b317606ad500bb853a70fdc009be0c7ae6f5ae08f14317881a8fb2d5955f5"
+    },
+    {
+      "path": "Q_TRAIN_SUPPORT.csv",
+      "sha256": "adb04d3f380d1ed0b68725f39159afd56661a593af9545fb2119f48d59f7d4d6"
+    },
+    {
+      "path": "FREQUENCY_DENOMINATORS.csv",
+      "sha256": "ddefa2af02f078d86c4554e21d6c028e37dbe9ab7bf17194e16d729a7e6c93a3"
+    },
+    {
+      "path": "q_train_support_5to20.png",
+      "sha256": "147f687cc621f7453ace5811510b8042ad8d0c2aa4831be59fca8819e93ac63e"
+    },
+    {
+      "path": "q_train_support_5to20.svg",
+      "sha256": "d4105adce7a6d6b34666c11c9001ec914747e1030731ab9788349ef7e5c54403"
+    },
+    {
+      "path": "q_train_support_5to20.pdf",
+      "sha256": "ccbe19b034e6bff126f036f1407116146656c60862b36aa59d0871cba4f3a080"
+    }
+  ],
+  "software_and_documentation": [
+    {
+      "path": "research/broadband56_nn/frequency_library.py",
+      "sha256": "8c0d0271182d05d5d2d7a078a1438e8d276deafeac8bb5aeda414768e4b00051"
+    },
+    {
+      "path": "research/broadband56_nn/frequency_q_train_support.py",
+      "sha256": "e3a285ed1089723b78430da33fc68311deeee46a2933ab9cdb2e35f7fc3dc30b"
+    },
+    {
+      "path": "tests/test_frequency_library.py",
+      "sha256": "53b561c0427384f9229654b2efeef7aec869d16922a869bf6c3a05f7b8e4b19c"
+    },
+    {
+      "path": "tests/test_frequency_q_train_support.py",
+      "sha256": "7514ccd32c1e4e87663eadda4973829d78fad4a306abda64ac97f356174e27aa"
+    },
+    {
+      "path": "docs/research/FREQUENCY_LIBRARY_USAGE_CN.md",
+      "sha256": "54a54f7f04101eb030fa0dec036f34f6c26c45ba52bc67b5fd14b988c2aab514"
+    },
+    {
+      "path": "docs/research/FREQUENCY5TO20_HANDOFF_CN.md",
+      "sha256": "3ba672a74802a96f0c67da446834b834dfac7f789d72d02cf5d21e569581d16c"
+    },
+    {
+      "path": "docs/research/FREQUENCY5TO20_STATUS_20260908.json",
+      "sha256": "9c76aa20f4d9e29c6267fb607aa758da5602597764c5b1c8051415d7af8bd364"
+    }
+  ],
+  "evidence_receipts": [
+    {
+      "workspace_relative_path": "reports/frequency5to20_20260908T063800Z/model_library_qsupport_v1/library_acceptance_v1/ACCEPTANCE_RECEIPT.json",
+      "sha256": "ef4818493dd0b5b4ae76b5159f6d402fc5f76e673f2b62210c9f8bec8d7fcb88"
+    },
+    {
+      "workspace_relative_path": "reports/frequency5to20_20260908T063800Z/model_library_qsupport_v1/library_acceptance_v1/LIBRARY_INDEPENDENT_QA.json",
+      "sha256": "f4e8f29c3c2280979e29a8703601c5b2d8005bfec80cc4caa822c3d63d22b4eb"
+    },
+    {
+      "workspace_relative_path": "reports/frequency5to20_20260908T063800Z/model_library_qsupport_v1/q_support_numerical_qa_v1/NUMERICAL_QA.json",
+      "sha256": "586e4c8c7bd1a306ddc98c1c8a96cbd55b0b6e09e8dd52e844d85dbcf5ae8daf"
+    },
+    {
+      "workspace_relative_path": "reports/frequency5to20_20260908T063800Z/model_library_qsupport_v1/q_support_visual_qa_v1/VISUAL_QA.json",
+      "sha256": "b95e92c65ac6571e4c2ee10276e49bba6ca70ed8d2e66b74b8730de4c913bd24"
+    }
+  ],
+  "private_inputs_and_weights_in_repository": false,
+  "local_only_receipts_note": "Workspace-relative evidence locators are reproducibility references, not a claim these private files are included in GitHub.",
+  "training_status": "All16first-budget packages reused;PARTIAL/PROVISIONAL",
+  "test_runs": {
+    "library_synthetic": 36,
+    "q_support_synthetic": 14,
+    "actual_metadata_resolves": 16,
+    "actual_inference": 1
+  },
+  "physical_report_changed": false,
+  "qa_scope": "Exact sources and new176train-only cells and displayed artifacts, not future figures or model convergence."
+}

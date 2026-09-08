@@ -1,5 +1,9 @@
 # 5–20 GHz 单频 Tandem 研究交接
 
+## 新补充：按频率调用与训练Q覆盖
+
+[统一模型库命令](FREQUENCY_LIBRARY_USAGE_CN.md)及[真实验收和16×11训练Q覆盖图](frequency_library_qsupport_20260908_v1/README_CN.md)已完成。16个正式10K路由核验、15GHz一次实际CLI调用、176格train-only计数与PNG/PDF独立QA均通过。Q=20在全部16频率的STRICT训练Q范围之外；该边界不能推成物理不可达或用代理外推宣称精度。源码36+14项新合成测试通过，未重训/重复Qscan/仿真。12:29:09UTC原物理队列仍在13GHz第二请求EMX；原物理统计冻结20请求/176求解不混入新现场阶段，详情见上述补充。
+
 最新机器状态见 `FREQUENCY5TO20_STATUS_20260908.json`。此前15 GHz开发5K结果和旧七组结果保留，不混入正式10K主表。
 
 ## 已实际完成

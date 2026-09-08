@@ -1,0 +1,93 @@
+{
+  "schema": "frequency_library_inference.v1",
+  "status": "SELF_PROXY_INFERENCE_COMPLETE",
+  "route": {
+    "frequency_ghz": 15,
+    "label_mode": "STRICT_LUMPED",
+    "model_id": "f15-strict_lumped-f5f2ced054ef",
+    "model_status": "PROVISIONAL_PARTIAL",
+    "formal_10k": true,
+    "source_snapshot_geometries": 10000,
+    "dataset_sha256": "a2d35c1e5a4f9d72c4101d2767018bb4de2c6de86fb09e90cc0efba3b0385669"
+  },
+  "result": {
+    "REAL_EMX_VALIDATION": "NOT_RUN",
+    "analytic_geometry_validation": "NOT_RUN",
+    "convergence_claim": "NOT_ESTABLISHED",
+    "feature_order": [
+      "Lp_nH",
+      "Ls_nH",
+      "Q_scalar",
+      "K_abs"
+    ],
+    "feature_units": [
+      "nH",
+      "nH",
+      "dimensionless",
+      "dimensionless"
+    ],
+    "forward_sha256": "d90af9112584644396c6399633995f0f44f7dc8ba5394686e2e42e46fcb71e24",
+    "forward_step": 11800,
+    "frequency_ghz": 15,
+    "geometry": [
+      [
+        267.46832275390625,
+        269.7537841796875,
+        274.04766845703125,
+        258.5591125488281,
+        5.01159143447876,
+        61.83354568481445,
+        56.29118347167969,
+        49.568870544433594,
+        230.99415588378906,
+        253.59280395507812
+      ]
+    ],
+    "geometry_fields": [
+      "primary_outer_width_um",
+      "primary_outer_height_um",
+      "secondary_outer_width_um",
+      "secondary_outer_height_um",
+      "line_width_um",
+      "primary_terminal_y_span_um",
+      "secondary_terminal_y_span_um",
+      "offset_um",
+      "primary_feed_extension_um",
+      "secondary_feed_extension_um"
+    ],
+    "geometry_units": "um",
+    "inverse_sha256": "e67fd80e8f24d93633a8e443bff8b8c8b997c82ef65e751934e1e66ae35e9ee7",
+    "inverse_step": 11900,
+    "label_mode": "STRICT_LUMPED",
+    "outside_train_marginal_support": [
+      false
+    ],
+    "predicted_response": [
+      [
+        1.1978040933609009,
+        1.1961030960083008,
+        13.96876049041748,
+        0.3017815947532654
+      ]
+    ],
+    "schema": "frequency_tandem_prediction.v1",
+    "support_caveat": "train marginal bounds do not establish joint feasibility",
+    "target_clipping": false,
+    "targets": [
+      [
+        1.2,
+        1.2,
+        14,
+        0.3
+      ]
+    ],
+    "validation_source": "SELF_PROXY"
+  },
+  "allow_extrapolation": false,
+  "validation_source": "SELF_PROXY",
+  "REAL_EMX_VALIDATION": "NOT_RUN",
+  "physical_validation_scope": "THIS_NEW_CALL_ONLY_NO_RESEARCH_EMX_BORROWING",
+  "acceptance_scope": "ONE_NEW_CLI_INTEGRATION_CALL_NOT_REPEATED_QSCAN_OR_ACCURACY_ESTIMATE",
+  "acceptance_receipt_sha256": "ef4818493dd0b5b4ae76b5159f6d402fc5f76e673f2b62210c9f8bec8d7fcb88",
+  "no_generated_geometry_was_submitted_to_physics": true
+}
