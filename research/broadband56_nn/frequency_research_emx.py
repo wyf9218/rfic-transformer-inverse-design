@@ -88,6 +88,99 @@ def verify(record):
     return Path(actual['path'])
 
 
+OPERATIONAL_BUDGET_ENV = 'RFIC_RESEARCH_OPERATIONAL_BUDGET'
+OPERATIONAL_USE_ENV = 'RFIC_RESEARCH_OPERATIONAL_BUDGET_USE'
+
+
+def operational_budget(path, *, base_pin=None, executing_source=None):
+    """Validate a separate admission budget; never merge it into science inputs."""
+    budget_pin = pin(path)
+    value = read_json(path)
+    require(set(value) == {'schema', 'base_config', 'original_dispatch_deadline_utc',
+                          'new_dispatch_deadline_utc', 'release'}, 'Unexpected operational budget fields')
+    require(value['schema'] == 'frequency_physical_operational_budget.v1', 'Wrong operational budget schema')
+    require(set(value['base_config']) == {'path', 'sha256', 'bytes'}, 'Unexpected operational base pin fields')
+    verify(value['base_config'])
+    require(base_pin is None or value['base_config'] == base_pin, 'Operational base config differs')
+    base = read_json(value['base_config']['path'])
+    require(base['schema'] == 'frequency_physical_finite_dispatch.v1', 'Wrong operational base schema')
+    require(value['original_dispatch_deadline_utc'] == base['dispatch_deadline_utc'], 'Original deadline differs')
+    old = datetime.fromisoformat(value['original_dispatch_deadline_utc'].replace('Z', '+00:00'))
+    new = datetime.fromisoformat(value['new_dispatch_deadline_utc'].replace('Z', '+00:00'))
+    require(old.tzinfo is not None and new.tzinfo is not None and new > old, 'New deadline must be strictly later')
+    release = value['release']
+    require(set(release) == {'code_root', 'source_pins'}, 'Unexpected operational release fields')
+    code = Path(release['code_root'])
+    require(code.is_absolute() and code != Path(base['code_root']), 'A separate release path is required')
+    expected = ['research/__init__.py', 'research/broadband56_nn/__init__.py',
+                *['research/broadband56_nn/' + name for name in
+                  ('io.py', 'frequency_physical_dispatch.py', 'frequency_research_emx.py',
+                   'frequency_research_gds_audit.py', 'frequency_research_calibre.py')]]
+    require(all(set(p) == {'path', 'sha256', 'bytes'} for p in release['source_pins']), 'Unexpected operational source pin fields')
+    sources = {str(verify(p)): p for p in release['source_pins']}
+    require(len(sources) == len(release['source_pins']) == len(expected) and
+            set(sources) == {str(code / name) for name in expected}, 'Incomplete or extra operational release sources')
+    previous = {p['path']: p for p in base['source_pins']}
+    for name in expected:
+        if Path(name).name in ('frequency_physical_dispatch.py', 'frequency_research_emx.py'):
+            continue
+        original = previous.get(str(Path(base['code_root']) / name))
+        require(original is not None, 'Original dependency pin missing')
+        verify(original)
+        require(all(sources[str(code / name)][k] == original[k] for k in ('sha256', 'bytes')),
+                'Operational release changed a non-budget dependency')
+    if executing_source is not None:
+        require(pin(executing_source) == sources.get(str(Path(executing_source).absolute())),
+                'Executing operational source is not release-pinned')
+    return dict(pin=budget_pin, value=value, base=base)
+
+
+def operational_deadline(request, output):
+    """Only an admitted parent use may extend a new candidate's admission time."""
+    path = os.environ.get(OPERATIONAL_BUDGET_ENV)
+    use_path = os.environ.get(OPERATIONAL_USE_ENV)
+    require(bool(path) == bool(use_path), 'Operational budget/use must be supplied together')
+    if not path:
+        return request['dispatch_deadline_utc']
+    budget = operational_budget(path, executing_source=__file__)
+    base, value = budget['base'], budget['value']
+    use_file = verify(json.loads(use_path))
+    require(use_file.is_relative_to(Path(base['out']) / 'operational_budget_uses'), 'Foreign operational use receipt')
+    use = read_json(use_file)
+    require(use['status'] == 'ADMITTED_UNDER_ORIGINAL_QUEUE_AND_GLOBAL_LEASES' and
+            use['budget'] == budget['pin'] and use['base_config'] == value['base_config'] and
+            use['original_deadline_utc'] == value['original_dispatch_deadline_utc'] and
+            use['new_deadline_utc'] == value['new_dispatch_deadline_utc'] and use['release'] == value['release'],
+            'Operational parent use binding differs')
+    # The wrapper already holds/inherits the global lease; require the original
+    # queue lease to be held too, so a saved use cannot authorize a free-standing run.
+    queue = os.open(Path(base['out']) / 'queue.lock', os.O_RDWR)
+    try:
+        try:
+            fcntl.flock(queue, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        except BlockingIOError:
+            pass
+        else:
+            fcntl.flock(queue, fcntl.LOCK_UN)
+            raise ResearchEmxError('Operational wrapper requires a held original queue lease')
+    finally:
+        os.close(queue)
+    for key, base_key in [('dispatch_deadline_utc', 'dispatch_deadline_utc'),
+                          ('global_lock_path', 'global_lock_path'), ('resource_budget', 'resource_budget'),
+                          ('private_config', 'configuration'), ('runtime', 'emx_runtime')]:
+        require(request[key] == base[base_key], 'Operational budget cannot change scientific/runtime fields')
+    plan = read_json(verify(base['dispatch_manifest']))
+    jobs = [j for j in plan['jobs'] if j['request_id'] == request['request_id']]
+    require(len(plan['jobs']) == 320 and len(jobs) == 1, 'Candidate outside original320 request plan')
+    job = jobs[0]
+    require(all(request[k] == job[k] for k in ('frequency_ghz', 'model_id', 'dataset_scope', 'q_proxy')) and
+            all(request['records'][k] == job['candidate_records'][k] for k in ('sha256', 'bytes')),
+            'Operational request identity differs')
+    require(Path(output).absolute() == Path(base['out']) / 'requests' / request['request_id'] / f"emx_q{request['q_requested']}",
+            'Operational output must remain in original request directory')
+    return value['new_dispatch_deadline_utc']
+
+
 def load_runtime(repo):
     """Load only the already deployed low-level cores; reject cached foreign code."""
     repo = Path(repo).resolve()
@@ -286,7 +379,7 @@ def global_lease(path, inherited_fd=None):
 def resources(request, output):
     budget = request['resource_budget']
     require(budget['cpu_per_solver'] == 2 and 1 <= budget['max_global_solvers'] <= 4, 'Resource contract must bound native2 and global1..4')
-    deadline = datetime.fromisoformat(request['dispatch_deadline_utc'].replace('Z', '+00:00'))
+    deadline = datetime.fromisoformat(operational_deadline(request, output).replace('Z', '+00:00'))
     require(deadline.tzinfo is not None and datetime.now(timezone.utc) < deadline, 'Dispatch budget expired; do not interrupt any existing solver')
     values = {s.split(':')[0]: int(s.split(':')[1].split()[0]) * 1024 for s in Path('/proc/meminfo').read_text().splitlines() if ':' in s}
     r = dict(cpu_logical=os.cpu_count(), loadavg=list(os.getloadavg()), available_memory_bytes=values['MemAvailable'], free_disk_bytes=shutil.disk_usage(output).free, observed_utc=utc_now())

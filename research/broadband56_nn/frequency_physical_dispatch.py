@@ -22,7 +22,8 @@ import sys
 import time
 
 from .io import read_json, save_json, utc_now
-from .frequency_research_emx import guard, pin, require, verify, global_lease
+from .frequency_research_emx import (guard, pin, require, verify, global_lease,
+    operational_budget, OPERATIONAL_BUDGET_ENV, OPERATIONAL_USE_ENV)
 
 ORDER = [15, 5, 10, 20, 6, 7, 8, 9, 11, 12, 13, 14, 16, 17, 18, 19]
 
@@ -159,16 +160,22 @@ def summarize_request(job, records, features):
 
 
 class Dispatcher:
-    def __init__(self, path):
+    def __init__(self, path, operational_budget_path=None):
         self.config_pin = pin(path)
         self.config = read_json(path)
         self.plan, self.relocation = validate(self.config)
         self.out = Path(self.config['out'])
         self.fd = None
         self.queue_fd = None
+        self.operational = (operational_budget(operational_budget_path, base_pin=self.config_pin,
+                            executing_source=__file__) if operational_budget_path else None)
+        self.operational_use = None
         self.environment = dict(os.environ, PYTHONOPTIMIZE='0', PYTHONDONTWRITEBYTECODE='1',
             PYTHONPATH=self.config['code_root'] + os.pathsep + self.config['repo'],
             OMP_NUM_THREADS='2', OPENBLAS_NUM_THREADS='2', MKL_NUM_THREADS='2')
+        # No ambient environment may silently extend an ordinary invocation.
+        self.environment.pop(OPERATIONAL_BUDGET_ENV, None)
+        self.environment.pop(OPERATIONAL_USE_ENV, None)
 
     def event(self, stage, **fields):
         self.out.mkdir(parents=True, exist_ok=True)
@@ -179,7 +186,11 @@ class Dispatcher:
             os.fsync(stream.fileno())
 
     def budget(self):
-        end = datetime.fromisoformat(self.config['dispatch_deadline_utc'].replace('Z', '+00:00'))
+        overlay = getattr(self, 'operational', None)
+        if overlay:
+            verify(overlay['pin'])
+        deadline = overlay['value']['new_dispatch_deadline_utc'] if overlay else self.config['dispatch_deadline_utc']
+        end = datetime.fromisoformat(deadline.replace('Z', '+00:00'))
         if datetime.now(timezone.utc) >= end:
             raise BudgetEnded('Dispatch cutoff reached; no native child stopped')
 
@@ -199,6 +210,26 @@ class Dispatcher:
 
     def module_command(self, name, *arguments):
         return [self.config['python'], '-B', '-m', 'research.broadband56_nn.' + name, *map(str, arguments)]
+
+    def extraction_environment(self, output):
+        """Keep the exact wrapper __file__ identity of an already solved candidate."""
+        environment = dict(self.environment)
+        environment.pop(OPERATIONAL_BUDGET_ENV, None)
+        environment.pop(OPERATIONAL_USE_ENV, None)
+        overlay = getattr(self, 'operational', None)
+        if not overlay:
+            return environment
+        proof = read_json(Path(output) / 'PREFLIGHT.json')
+        wrappers = [p for p in proof['source_pins'] if Path(p['path']).name == 'frequency_research_emx.py']
+        require(len(wrappers) == 1, 'Existing solver wrapper identity is ambiguous')
+        candidates = [(self.config['code_root'], self.config['source_pins']),
+                      (overlay['value']['release']['code_root'], overlay['value']['release']['source_pins'])]
+        matches = [(root, p) for root, sources in candidates for p in sources if p == wrappers[0]]
+        require(len(matches) == 1, 'Existing solver wrapper is not original or current pinned release')
+        code_root, wrapper = matches[0]
+        verify(wrapper)
+        environment['PYTHONPATH'] = code_root + os.pathsep + self.config['repo']
+        return environment
 
     def process(self, root, name, command, output, completion, allow_codes=(0,)):
         """Never infer success from process absence, or repeat partial output."""
@@ -225,7 +256,7 @@ class Dispatcher:
                 recovery_log = root / (name + '_EXTRACT_RECOVERY.log')
                 require(not recovery_log.exists(), 'An earlier recovery attempt exists; inspect, never repeat')
                 with recovery_log.open('xb') as stream:
-                    recovered = subprocess.run(extract_command, cwd=self.config['repo'], env=self.environment,
+                    recovered = subprocess.run(extract_command, cwd=self.config['repo'], env=self.extraction_environment(output),
                         stdin=subprocess.DEVNULL, stdout=stream, stderr=subprocess.STDOUT,
                         pass_fds=(self.fd, self.queue_fd))
                 require(recovered.returncode == 0 and completion.is_file(), 'Existing solver extraction did not validate')
@@ -250,18 +281,30 @@ class Dispatcher:
         self.admit()
         for value in self.config['source_pins']:
             verify(value)
+        environment = self.environment
+        overlay = getattr(self, 'operational', None)
+        if overlay:
+            require(getattr(self, 'operational_use', None) is not None, 'Operational budget has not acquired original leases')
+            operational_budget(overlay['pin']['path'], base_pin=self.config_pin, executing_source=__file__)
+            if name.startswith('emx_q'):
+                environment = dict(self.environment,
+                    PYTHONPATH=overlay['value']['release']['code_root'] + os.pathsep + self.config['repo'])
+                environment[OPERATIONAL_BUDGET_ENV] = overlay['pin']['path']
+                environment[OPERATIONAL_USE_ENV] = json.dumps(self.operational_use, sort_keys=True)
         frozen_json(root / (name + '_INTENT.json'), intent)
         log = root / (name + '.log')
         require(not log.exists(), 'Previous unreceipted process attempt retained; no retry')
         self.event('NATIVE_STAGE_STARTED', request=root.name, stage_name=name)
         with log.open('xb') as stream:
             child = subprocess.Popen(['nice', '-n', '19', *command], cwd=self.config['repo'],
-                env=self.environment, stdin=subprocess.DEVNULL, stdout=stream, stderr=subprocess.STDOUT,
+                env=environment, stdin=subprocess.DEVNULL, stdout=stream, stderr=subprocess.STDOUT,
                 pass_fds=(self.fd, self.queue_fd))
             self.event('NATIVE_CHILD', request=root.name, stage_name=name, child_pid=child.pid)
             code = child.wait()
         receipt = dict(intent=intent, returncode=code, completed_utc=utc_now(), log=pin(log),
             completion=pin(completion) if completion.is_file() else None)
+        if overlay:
+            receipt['operational_budget_use'] = self.operational_use
         save_json(state, receipt)
         require(code in allow_codes and receipt['completion'] is not None, 'Native stage did not finish with evidence')
         self.event('NATIVE_STAGE_TERMINAL', request=root.name, stage_name=name, returncode=code)
@@ -406,6 +449,10 @@ class Dispatcher:
                 require(read_json(self.out / 'TERMINAL.json')['config'] == self.config_pin, 'Terminal configuration changed')
                 return read_json(self.out / 'TERMINAL.json')
             require(not list(self.out.glob('FAILURE_*.json')), 'Previous failure preserved; not silently retried')
+            if getattr(self, 'operational', None):
+                require(any(read_json(p).get('status') == 'PARTIAL_BUDGET_ENDED_NO_CHILD_STOPPED' and
+                            read_json(p).get('config') == self.config_pin for p in self.out.glob('PARTIAL_*.json')),
+                        'Operational continuation requires original natural budget-exit receipt')
             self.event('WAIT_EXISTING_FIRST15')
             first = self.plan['jobs'][0]
             terminal = Path(first['existing_root']) / 'remaining_q11to18_queue_v1/TERMINAL.json'
@@ -417,6 +464,14 @@ class Dispatcher:
             self.admit()
             with global_lease(self.config['global_lock_path']) as fd:
                 self.fd = fd
+                if getattr(self, 'operational', None):
+                    use_root = self.out / 'operational_budget_uses'
+                    use_root.mkdir(exist_ok=True)
+                    self.operational_use = frozen_json(use_root / f'USE_{time.time_ns()}.json', dict(
+                        status='ADMITTED_UNDER_ORIGINAL_QUEUE_AND_GLOBAL_LEASES', budget=self.operational['pin'],
+                        base_config=self.config_pin, original_deadline_utc=self.config['dispatch_deadline_utc'],
+                        new_deadline_utc=self.operational['value']['new_dispatch_deadline_utc'],
+                        release=self.operational['value']['release'], pid=os.getpid(), created_utc=utc_now()))
                 self.event('GLOBAL_RESEARCH_LEASE_ACQUIRED', max_emx_concurrency=self.config['max_global_solvers'],
                            cadence_concurrency=1, per_request_initial_emx_concurrency=1)
                 results = []
@@ -427,10 +482,14 @@ class Dispatcher:
                     N_logical=len(results)*11, N_solved=sum(x['N_solved'] for x in results),
                     completed_utc=utc_now(), source_receipts=[pin(self.out / 'requests' / j['request_id'] / 'REQUEST_RECEIPT.json') for j in self.plan['jobs']],
                     production_modified=False)
+                if getattr(self, 'operational', None):
+                    result['operational_budget_use'] = self.operational_use
                 save_json(self.out / 'TERMINAL.json', result)
                 return result
         except BudgetEnded as error:
             value = dict(status='PARTIAL_BUDGET_ENDED_NO_CHILD_STOPPED', config=self.config_pin, utc=utc_now(), error=str(error))
+            if getattr(self, 'operational', None):
+                value.update(operational_budget=self.operational['pin'], operational_budget_use=self.operational_use)
             save_json(self.out / f'PARTIAL_{time.time_ns()}.json', value)
             return value
         except BlockingIOError:
@@ -447,8 +506,9 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--config', required=True)
     parser.add_argument('--preflight', action='store_true')
+    parser.add_argument('--operational-budget', help='Separate immutable admission budget; never edits base config')
     args = parser.parse_args()
-    runner = Dispatcher(args.config)
+    runner = Dispatcher(args.config, args.operational_budget)
     result = dict(status='INPUTS_VALIDATED_NO_SIMULATOR_LAUNCHED', N_requests=320) if args.preflight else runner.run()
     print(json.dumps(result, sort_keys=True))
 

@@ -34,6 +34,11 @@ separate development5K model; formal10K15 fresh EMX is NOT_RUN.
 The former seven-model research timer was disabled. Production's
 NN-disabled configuration and the GUI worktree were not changed.
 
+The [terminal-export handoff](docs/research/frequency5to20_terminal_export_20260908_v1/README_CN.md)
+adds a tested finite export CLI and one installed local producer-exit waiter.
+It does not restart physics or grant visual acceptance; actual terminal export
+is still pending, and reboot auto-restart is NOT_INSTALLED.
+
 The production observations and earlier project records below are timestamped
 historical evidence, not current live counters.
 

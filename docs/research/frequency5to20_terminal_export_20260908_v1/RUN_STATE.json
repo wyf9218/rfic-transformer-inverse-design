@@ -1,0 +1,198 @@
+{
+  "schema": "frequency_terminal_export_handoff.v1",
+  "created_utc": "2026-09-08T16:02:29.521Z",
+  "goal_status": "ACTIVE",
+  "milestone_status": "REPORT_WAITER_INSTALLED_OPERATIONAL_BUDGET_CODE_ONLY",
+  "sources": [
+    {
+      "path": "research/broadband56_nn/frequency_physical_export_once.py",
+      "sha256": "eb8224a3f6d3d7482a2af285f920e399bf0da7f953206cd0f866ebf62489a823",
+      "bytes": 8642
+    },
+    {
+      "path": "research/broadband56_nn/frequency_physical_export_batch.py",
+      "sha256": "87619f3a3704a48904d5124738b43afb1ff8a7eb7cbca5ac1f831c660ab748d7",
+      "bytes": 26286
+    },
+    {
+      "path": "research/broadband56_nn/frequency_physical_dispatch.py",
+      "sha256": "72e814ccd18e8c1b0dbd25251c5f68e18a9d462f64e079414626b549cb914559",
+      "bytes": 32353
+    },
+    {
+      "path": "research/broadband56_nn/frequency_research_emx.py",
+      "sha256": "b1e91f675579e312f17daf561d785c3fbad8d2f77338825450685a7939da5818",
+      "bytes": 35328
+    },
+    {
+      "path": "tests/test_frequency_operational_budget.py",
+      "sha256": "1842331dfe2c4195e5a03c41fd0fad01f73a3aeb46142ca6b49a9bc1cefc6104",
+      "bytes": 18841
+    },
+    {
+      "path": "tests/test_frequency_physical_export_once.py",
+      "sha256": "d13dff6ae39b74eed768c9ad388b09e9971bfc68eaf003c7efc99cec73406e27",
+      "bytes": 5904
+    },
+    {
+      "path": "tests/test_frequency_physical_export_batch.py",
+      "sha256": "54e6e9fc48af647487eec6f95e5bb08917e172e51ffef69147c7196394e9a950",
+      "bytes": 16034
+    }
+  ],
+  "report_export": {
+    "status": "INSTALLED_WAITING_FOR_ORIGINAL_PRODUCER_EXIT",
+    "observed_utc": "2026-09-08T15:56:39Z",
+    "waiter_pid": 80544,
+    "consumer_pid": 50120,
+    "power_assertion_pid": 80545,
+    "producer_signals": 0,
+    "configuration_sha256": "cc0935e51d9e97214b91d2f3199dedf238f7089c87129c30b47d129caf8134d7",
+    "installation_receipt_sha256": "f50b524196659f8c0041c1061c42e2ee99cf11144c0d47e174630a403e42d52f",
+    "independent_code_review_sha256": "fcd8499f63b177638018703f4ef7e10f053abc987210c1d860665a1ae281d3d3",
+    "actual_terminal_export": "NOT_STARTED",
+    "visual_acceptance": "NOT_GRANTED",
+    "boot_auto_restart": "NOT_INSTALLED",
+    "finite_jobs": [
+      "formal-selected",
+      "formal-all",
+      "development-selected",
+      "development-all",
+      "selection"
+    ],
+    "AI_polling": false
+  },
+  "operational_budget": {
+    "status": "CODE_READY_NOT_DEPLOYED",
+    "author_receipt_sha256": "6062c79cab67c9684444ec414e7c82cd1c74a38c2a23d396ef9f4af46bd56e75",
+    "independent_code_review_sha256": "e0aae48cfc9229220be04fbf797020b85dfd06d32fa2ee319ab876a83f8306cd",
+    "source_review": "GO_SOURCE_REVIEW_ONLY_NOT_DEPLOYED",
+    "actual_new_deadline_selected": false,
+    "native_linux_validation": "NOT_RUN",
+    "native_continuation": "NOT_STARTED",
+    "original_configuration_changed": false
+  },
+  "tests": {
+    "completed_unique_synthetic_tests": 64,
+    "once": 11,
+    "batch": 22,
+    "operational_budget": 31,
+    "once_junit_sha256": "9882df8c2b3a88cfb3b8d38ddb45a295f2ba4601506d2283962f20bd70e15665",
+    "batch_junit_sha256": "21d3a99b41aab6d3773ed9ef9eac6ce00229e616b6d1d15f78183f9fbbd31e88",
+    "operational_v3_junit_sha256": "01ae996bf4102a1317207a0880223b85b39cb994f52d099d22636170e02dbfa1",
+    "operational_prior_failures": [
+      {
+        "run": "v1",
+        "fixture_errors": 31,
+        "test_bodies": 0,
+        "cause": "basetemp parent missing",
+        "junit_sha256": "cb42e2c9a554b1ec375a9afa4bcbd99ea161429c60d87633d451ecfcfbf58e5a"
+      },
+      {
+        "run": "v2",
+        "fixture_errors": 31,
+        "test_bodies": 0,
+        "cause": "fixture assumed nonexisting namespace-package initializer",
+        "junit_sha256": "d3ed7bb97d4971b85ae78957d5f673f0c4147d66cc9360de8689a8ad00812ccf"
+      }
+    ],
+    "full_suite_rerun": false,
+    "scientific_or_solver_calls": 0
+  },
+  "boundaries": {
+    "protected_consumer_pins_unchanged": 6,
+    "physical_budget_utc": "2026-09-08T18:00:00Z",
+    "consumer_budget_utc": "2026-09-08T18:15:00Z",
+    "report_only_wait_admission_deadline_utc": "2026-09-08T19:00:00Z",
+    "production_or_GUI_changes": 0,
+    "new_model_training": 0,
+    "new_inferences": 0,
+    "new_native_jobs": 0,
+    "source_statistics_changed": false,
+    "new_statistics_or_visual_QA": false
+  },
+  "native_observation": {
+    "utc": "2026-09-08T15:37:11Z",
+    "pid": 2146776,
+    "alive": true,
+    "active_request": "f20_qscan-HELDOUT_TRIPLE_AUDIT-000003",
+    "stage": "cadence",
+    "latest_progress_utc": "2026-09-08T15:36:54.123772Z",
+    "not_a_live_counter": true
+  },
+  "latest_approved_report": {
+    "directory": "docs/research/frequency5to20_advisor_cumulative40_20260908_v1",
+    "snapshot": "snapshot_0031",
+    "closed_requests": 40,
+    "total_requests": 320,
+    "independent_solves": 353,
+    "strict_valid": 339,
+    "all16_training": "PARTIAL_PROVISIONAL",
+    "fresh_formal_10K_15_GHz": "NOT_RUN"
+  },
+  "private_evidence": {
+    "availability": "NOT_INCLUDED",
+    "receipt_sha256": [
+      {
+        "name": "terminal_report_export_20260908T154000Z/wait_once_v1/WAIT_LAUNCH_RECEIPT.json",
+        "sha256": "0d12b788e59cb5d6141be38550ff369b7ee3835da364612e0f70920abe6554c5",
+        "bytes": 644
+      },
+      {
+        "name": "terminal_report_export_20260908T154000Z/ONCE_FOCUSED_TESTS_V1.xml",
+        "sha256": "9882df8c2b3a88cfb3b8d38ddb45a295f2ba4601506d2283962f20bd70e15665",
+        "bytes": 1611
+      },
+      {
+        "name": "terminal_report_export_20260908T154000Z/INDEPENDENT_CODE_REVIEW.json",
+        "sha256": "fcd8499f63b177638018703f4ef7e10f053abc987210c1d860665a1ae281d3d3",
+        "bytes": 4569
+      },
+      {
+        "name": "terminal_report_export_20260908T154000Z/NATIVE_CONTINUATION_AUDIT.json",
+        "sha256": "884d4cb2eb0a293de3534ec5cbe0f2f1280342cb446d6c36fba65be58d414f70",
+        "bytes": 14925
+      },
+      {
+        "name": "physical_export_batch_implementation_v1/IMPLEMENTATION_RECEIPT.json",
+        "sha256": "3dfbeffbddc6228b40b6b320bd3186a5773af267c12eb9ef88ede15d6b5b59c7",
+        "bytes": 5035
+      },
+      {
+        "name": "physical_export_batch_implementation_v1/FOCUSED_TESTS.xml",
+        "sha256": "21d3a99b41aab6d3773ed9ef9eac6ce00229e616b6d1d15f78183f9fbbd31e88",
+        "bytes": 3525
+      },
+      {
+        "name": "terminal_report_export_20260908T154000Z/ONCE_CONFIG_V1.json",
+        "sha256": "cc0935e51d9e97214b91d2f3199dedf238f7089c87129c30b47d129caf8134d7",
+        "bytes": 4283
+      },
+      {
+        "name": "terminal_report_export_20260908T154000Z/INSTALLATION_RECEIPT.json",
+        "sha256": "f50b524196659f8c0041c1061c42e2ee99cf11144c0d47e174630a403e42d52f",
+        "bytes": 3381
+      },
+      {
+        "name": "terminal_report_export_20260908T154000Z/OPERATIONAL_BUDGET_CODE_REVIEW.json",
+        "sha256": "e0aae48cfc9229220be04fbf797020b85dfd06d32fa2ee319ab876a83f8306cd",
+        "bytes": 4483
+      },
+      {
+        "name": "terminal_report_export_20260908T154000Z/operational_budget_candidate_v1/AUTHOR_RECEIPT.json",
+        "sha256": "6062c79cab67c9684444ec414e7c82cd1c74a38c2a23d396ef9f4af46bd56e75",
+        "bytes": 14028
+      },
+      {
+        "name": "terminal_report_export_20260908T154000Z/operational_budget_candidate_v1/SHA256SUMS",
+        "sha256": "b3d9d8e1b000bd5c04ab2b437527811456fe9c731887ef79d935d4bfa33ec799",
+        "bytes": 1300
+      }
+    ]
+  },
+  "next_safe_action": "Do not duplicate original processes. Installed waiter consumes only the genuine terminal; new figures remain unaccepted. Optional native budget source needs a new separately pinned real release and native checks before any future deployment. Original leases and failure evidence stay authoritative.",
+  "publication": {
+    "branch": "codex/frequency-indexed-tandem-20260908",
+    "identity": "Git commit containing this document; no circular self-commit field"
+  }
+}

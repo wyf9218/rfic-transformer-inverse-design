@@ -1,0 +1,15 @@
+{
+  "schema": "terminal_export_static_check_notes.v1",
+  "status": "KNOWN_NONFUNCTIONAL_WHITESPACE_WARNINGS_RETAINED",
+  "created_utc": "2026-09-08T16:04:09.415Z",
+  "command": "git diff --cached --check",
+  "exit_code": 2,
+  "warnings": [
+    "research/broadband56_nn/frequency_physical_export_once.py:179: new blank line at EOF.",
+    "tests/test_frequency_physical_export_once.py:145: new blank line at EOF."
+  ],
+  "interpretation": "Two extra terminal blank lines only; no functional defect established. Source/test bytes remain exactly the tested and code-reviewed pins; installed waiter's pinned source was not hot-edited for formatting.",
+  "source_sha256": "eb8224a3f6d3d7482a2af285f920e399bf0da7f953206cd0f866ebf62489a823",
+  "test_sha256": "d13dff6ae39b74eed768c9ad388b09e9971bfc68eaf003c7efc99cec73406e27",
+  "scientific_reexecution": 0
+}

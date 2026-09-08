@@ -1,5 +1,16 @@
 # Current Evidence Status
 
+## 2026-09-08: One Local Terminal-Export Waiter Installed
+
+The [finite export delivery](frequency5to20_terminal_export_20260908_v1/README_CN.md)
+has 33 focused synthetic tests passing and a bounded independent code-review GO.
+One local waiter was observed alive at 15:56:39 UTC. It waits for the original
+consumer's natural exit and exact terminal receipt, then runs five explicit
+aggregate export jobs once. Real terminal export is NOT_STARTED; new figures
+still require visual acceptance. Reboot/crash auto-restart is NOT_INSTALLED.
+This does not modify or signal MARS, production, GUI or the existing consumer.
+The cumulative40 deck below remains the latest independently approved report.
+
 ## 2026-09-08: Updated Advisor Deck, Frozen Cumulative40
 
 The [updated10-slide native-editable advisor deck](frequency5to20_advisor_cumulative40_20260908_v1/README_CN.md)

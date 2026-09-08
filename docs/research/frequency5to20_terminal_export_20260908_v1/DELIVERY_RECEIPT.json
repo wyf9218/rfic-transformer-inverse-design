@@ -1,0 +1,134 @@
+{
+  "schema": "terminal_export_public_delivery.v1",
+  "status": "CODE_AND_INSTALLED_LOCAL_WAIT_RECORDED",
+  "created_utc": "2026-09-08T16:03:08.397Z",
+  "documents": [
+    {
+      "path": "README_CN.md",
+      "sha256": "526875deabf23bbc1a7b67d407b0ec46ff50d746cacc2c9b2dfbdb12ea36e9fd",
+      "bytes": 4164
+    },
+    {
+      "path": "RUN_STATE.json",
+      "sha256": "cb7231708494fe4bd5049ce12731baeede24ec6128aec793100d5a2479abe2ae",
+      "bytes": 7911
+    },
+    {
+      "path": "RUN_STATE.md",
+      "sha256": "3467df1d425feb5678026145f44f1efa7149cbcf907e73b251071c26839e53fa",
+      "bytes": 2657
+    }
+  ],
+  "global_entry_points": [
+    {
+      "path": "README.md",
+      "sha256": "3f873475e187e64fcc17f559ba615150bce91bffb3de3b3f8b7186e0b9ffc450",
+      "bytes": 12287
+    },
+    {
+      "path": "docs/research/CURRENT_STATUS.md",
+      "sha256": "1f01fa180512d8e41cc15e5e987a4e84fb7b3e1fdaec9d66e3702e2fc531ec1e",
+      "bytes": 7915
+    }
+  ],
+  "source_files": [
+    {
+      "path": "research/broadband56_nn/frequency_physical_export_once.py",
+      "sha256": "eb8224a3f6d3d7482a2af285f920e399bf0da7f953206cd0f866ebf62489a823",
+      "bytes": 8642
+    },
+    {
+      "path": "research/broadband56_nn/frequency_physical_export_batch.py",
+      "sha256": "87619f3a3704a48904d5124738b43afb1ff8a7eb7cbca5ac1f831c660ab748d7",
+      "bytes": 26286
+    },
+    {
+      "path": "research/broadband56_nn/frequency_physical_dispatch.py",
+      "sha256": "72e814ccd18e8c1b0dbd25251c5f68e18a9d462f64e079414626b549cb914559",
+      "bytes": 32353
+    },
+    {
+      "path": "research/broadband56_nn/frequency_research_emx.py",
+      "sha256": "b1e91f675579e312f17daf561d785c3fbad8d2f77338825450685a7939da5818",
+      "bytes": 35328
+    },
+    {
+      "path": "tests/test_frequency_operational_budget.py",
+      "sha256": "1842331dfe2c4195e5a03c41fd0fad01f73a3aeb46142ca6b49a9bc1cefc6104",
+      "bytes": 18841
+    },
+    {
+      "path": "tests/test_frequency_physical_export_once.py",
+      "sha256": "d13dff6ae39b74eed768c9ad388b09e9971bfc68eaf003c7efc99cec73406e27",
+      "bytes": 5904
+    },
+    {
+      "path": "tests/test_frequency_physical_export_batch.py",
+      "sha256": "54e6e9fc48af647487eec6f95e5bb08917e172e51ffef69147c7196394e9a950",
+      "bytes": 16034
+    }
+  ],
+  "tests": "64 unique synthetic tests PASS; two prior setup failures retained; no new scientific tests",
+  "report_waiter": "INSTALLED_WAITING; actual terminal export NOT_STARTED",
+  "native_budget": "CODE_READY_NOT_DEPLOYED; no deadline chosen; native Linux validation NOT_RUN",
+  "private_evidence_receipts": [
+    {
+      "name": "terminal_report_export_20260908T154000Z/wait_once_v1/WAIT_LAUNCH_RECEIPT.json",
+      "sha256": "0d12b788e59cb5d6141be38550ff369b7ee3835da364612e0f70920abe6554c5",
+      "bytes": 644
+    },
+    {
+      "name": "terminal_report_export_20260908T154000Z/ONCE_FOCUSED_TESTS_V1.xml",
+      "sha256": "9882df8c2b3a88cfb3b8d38ddb45a295f2ba4601506d2283962f20bd70e15665",
+      "bytes": 1611
+    },
+    {
+      "name": "terminal_report_export_20260908T154000Z/INDEPENDENT_CODE_REVIEW.json",
+      "sha256": "fcd8499f63b177638018703f4ef7e10f053abc987210c1d860665a1ae281d3d3",
+      "bytes": 4569
+    },
+    {
+      "name": "terminal_report_export_20260908T154000Z/NATIVE_CONTINUATION_AUDIT.json",
+      "sha256": "884d4cb2eb0a293de3534ec5cbe0f2f1280342cb446d6c36fba65be58d414f70",
+      "bytes": 14925
+    },
+    {
+      "name": "physical_export_batch_implementation_v1/IMPLEMENTATION_RECEIPT.json",
+      "sha256": "3dfbeffbddc6228b40b6b320bd3186a5773af267c12eb9ef88ede15d6b5b59c7",
+      "bytes": 5035
+    },
+    {
+      "name": "physical_export_batch_implementation_v1/FOCUSED_TESTS.xml",
+      "sha256": "21d3a99b41aab6d3773ed9ef9eac6ce00229e616b6d1d15f78183f9fbbd31e88",
+      "bytes": 3525
+    },
+    {
+      "name": "terminal_report_export_20260908T154000Z/ONCE_CONFIG_V1.json",
+      "sha256": "cc0935e51d9e97214b91d2f3199dedf238f7089c87129c30b47d129caf8134d7",
+      "bytes": 4283
+    },
+    {
+      "name": "terminal_report_export_20260908T154000Z/INSTALLATION_RECEIPT.json",
+      "sha256": "f50b524196659f8c0041c1061c42e2ee99cf11144c0d47e174630a403e42d52f",
+      "bytes": 3381
+    },
+    {
+      "name": "terminal_report_export_20260908T154000Z/OPERATIONAL_BUDGET_CODE_REVIEW.json",
+      "sha256": "e0aae48cfc9229220be04fbf797020b85dfd06d32fa2ee319ab876a83f8306cd",
+      "bytes": 4483
+    },
+    {
+      "name": "terminal_report_export_20260908T154000Z/operational_budget_candidate_v1/AUTHOR_RECEIPT.json",
+      "sha256": "6062c79cab67c9684444ec414e7c82cd1c74a38c2a23d396ef9f4af46bd56e75",
+      "bytes": 14028
+    },
+    {
+      "name": "terminal_report_export_20260908T154000Z/operational_budget_candidate_v1/SHA256SUMS",
+      "sha256": "b3d9d8e1b000bd5c04ab2b437527811456fe9c731887ef79d935d4bfa33ec799",
+      "bytes": 1300
+    }
+  ],
+  "visual_go_granted": false,
+  "repository_visibility": "Public sanitized research handoff; no private runtime/config/data/weights/PDK included",
+  "goal_complete": false
+}
