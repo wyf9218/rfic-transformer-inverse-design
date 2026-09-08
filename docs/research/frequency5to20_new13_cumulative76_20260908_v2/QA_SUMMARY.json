@@ -1,0 +1,83 @@
+{
+  "schema": "frequency_incremental_public_qa.v1",
+  "status": "GO_SOURCE_NUMBERS_AND_LISTED_FIGURES_ONLY",
+  "snapshot_receipt": {
+    "path": "reports/frequency5to20_20260908T063800Z/native_failure_diagnosis_20260908T184000Z/reporting_recovery_install_v1/run_v1/snapshots/snapshot_0004/SNAPSHOT_RECEIPT.json",
+    "sha256": "0c9b6a219720f44f9ee5982fb3d9c39ba8ede1e012a25e06b63edd7b8c28800a",
+    "bytes": 1323,
+    "availability": "PRIVATE_NOT_INCLUDED"
+  },
+  "numeric": {
+    "path": "reports/frequency5to20_20260908T063800Z/milestone_new13_cumulative76_20260908T201100Z/numeric_qa_v1/attempt_v1/INDEPENDENT_NUMERICAL_QA_RECEIPT.json",
+    "sha256": "f37b9184c587ef5defeabfdd462d1298c651c3a1c862b66f2e354576c270e334",
+    "bytes": 101857,
+    "availability": "PRIVATE_NOT_INCLUDED"
+  },
+  "status16": {
+    "path": "reports/frequency5to20_20260908T063800Z/milestone_new13_cumulative76_20260908T201100Z/status_independent_qa_v1/INDEPENDENT_STATUS_QA_RECEIPT.json",
+    "sha256": "e23286d9ecdf3dfd6432239fce2def5540cc8024429176e0732c0a44eec27f88",
+    "bytes": 7590,
+    "availability": "PRIVATE_NOT_INCLUDED"
+  },
+  "request_figures": {
+    "path": "reports/frequency5to20_20260908T063800Z/milestone_new13_cumulative76_20260908T201100Z/APPROVED_REQUEST_FIGURES.json",
+    "sha256": "b024b90e30f3210cc81a82917c88c4213de3b698927704c9f762054f7633c3b6",
+    "bytes": 70648,
+    "availability": "PRIVATE_NOT_INCLUDED"
+  },
+  "aggregate_figures": {
+    "path": "reports/frequency5to20_20260908T063800Z/milestone_new13_cumulative76_20260908T201100Z/aggregate_visual_qa_v1/INDEPENDENT_VISUAL_QA_RECEIPT.json",
+    "sha256": "0631f6b1b0b9234529e63825707823d66838a2e3ada9d67f44db24ac07274078",
+    "bytes": 10486,
+    "availability": "PRIVATE_NOT_INCLUDED"
+  },
+  "public_notebook": {
+    "path": "reports/frequency5to20_20260908T063800Z/milestone_new13_cumulative76_20260908T201100Z/public_companion_v1/attempt_v2/PUBLIC_CSV_CHECKS.executed.ipynb",
+    "sha256": "ba73c9c8de91fedf4313acc4c249de5a7de20ad7010b8c11437ff124f5463fe0",
+    "bytes": 19434,
+    "availability": "PRIVATE_NOT_INCLUDED"
+  },
+  "public_notebook_qa": {
+    "path": "reports/frequency5to20_20260908T063800Z/milestone_new13_cumulative76_20260908T201100Z/public_companion_independent_qa_v1/INDEPENDENT_NOTEBOOK_QA_RECEIPT.json",
+    "sha256": "2b079511ba82785731d6bf3d77a1f748676f498865f98ed60a4ef7c16ad5293c",
+    "bytes": 2832,
+    "availability": "PRIVATE_NOT_INCLUDED"
+  },
+  "limitations": [
+    "Future/live snapshots",
+    "visual figures handled separately",
+    "population accuracy or causal frequency ranking",
+    "formal10K15 physical borrowing from development5K15"
+  ],
+  "new13_counts": {
+    "N_accounted_candidates": 143,
+    "N_analytic_fail": 0,
+    "N_drc_fail": 5,
+    "N_emx_not_solved": 0,
+    "N_gds_fail": 13,
+    "N_independent_solves": 125,
+    "N_invalid": 6,
+    "N_joint_hit": 55,
+    "N_original": 143,
+    "N_pending": 0,
+    "N_solved": 125,
+    "N_strict_valid": 119,
+    "N_unique_s4p_sha": 125
+  },
+  "accounted76_counts": {
+    "N_accounted_candidates": 836,
+    "N_analytic_fail": 46,
+    "N_drc_fail": 32,
+    "N_emx_not_solved": 0,
+    "N_gds_fail": 73,
+    "N_independent_solves": 685,
+    "N_invalid": 33,
+    "N_joint_hit": 364,
+    "N_original": 836,
+    "N_pending": 0,
+    "N_solved": 685,
+    "N_strict_valid": 652,
+    "N_unique_s4p_sha": 685
+  },
+  "qa_not_equal_goal_completion": true
+}

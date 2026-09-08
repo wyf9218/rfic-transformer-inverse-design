@@ -21,33 +21,40 @@ are historical workflows, not its current execution contract.
 
 ## Start Here: Current Goals And Status
 
-**Latest runtime observation,2026-09-08 19:44 UTC:** the
-[original320-request queue and incremental reporter are actually resumed](docs/research/frequency5to20_resource_recovery_actual_20260908_v1/README_CN.md).
-MARS native PID1050236 progressed through the failed11GHz Q17 stage to12GHz;
-four actual EMX solvers were observed within the unchanged global cap.
-Local reporter PID1978 reused all72 prior captures and produced one new snapshot.
-73/320 is operational progress only; the independently approved report remains63.
-No model,data or completed EMX result was regenerated. These timestamped
-observations supersede the earlier stopped/candidate-only records below.
+**Latest approved scientific release: cumulative76 requests.**
+[The new13 / cumulative76 package](docs/research/frequency5to20_new13_cumulative76_20260908_v2/README_CN.md)
+freezes the20:07 UTC snapshot:76/320 settled requests,685 actual solves,
+652 strict-valid and33 invalid outputs. All46 analytical,73 GDS and32 DRC
+failures in the836 closed slots remain visible. Only9 requests have a
+complete strict-valid original11 set and permit full-set q_emx.
+The31 approved PNGs are26 new-request plots plus5 aggregates; they are not
+76 complete sets of request plots. Historical graphs are linked unchanged.
+Seven CSVs and an actually executed5-cell portable consistency notebook
+are included. Native Jupyter-kernel testing is NOT_RUN. Exact source,
+numerical, visual and independent package scope is recorded in
+[PACKAGE_QA.json](docs/research/frequency5to20_new13_cumulative76_20260908_v2/PACKAGE_QA.json).
 
-The highest-priority **independently authorized NN research** is now
-[frequency-indexed Tandem MLP](docs/FREQUENCY_INDEXED_TANDEM.md): choose one integer
-frequency, then match four physical targets with a separate 256×3 forward/inverse
-pair. All16 frequency pairs now have formal10K-snapshot first-budget training,
-saved packages, load/diagnostic-resume evidence and held-out tests. All remain
-PARTIAL/PROVISIONAL, not established convergence. The latest
-[static physical report](docs/research/frequency5to20_new23_cumulative63_20260908_v1/README_CN.md)
-freezes63/320 settled requests at2026-09-08 17:11:58 UTC, with560 actual
-solves,533 strict-valid outputs and all failures retained. Only7 requests
-have all11 candidates strict-valid. Its51 figures have exact scoped review;
-see PACKAGE_QA.json for the independent publication receipt. The latest
-[10-slide advisor deck and advisor Q&A](docs/research/frequency5to20_advisor_cumulative63_20260908_v1/README_CN.md)
-uses the same independently approved cumulative63-request snapshot. Its exact
-PPT,10 previews and source copies passed separate publication review; see
-PACKAGE_QA.json. It has not been tested in native PowerPoint. Physical15GHz remains a
-separate development5K model; formal10K15 fresh EMX is NOT_RUN.
-The former seven-model research timer was disabled. Production's
-NN-disabled configuration and the GUI worktree were not changed.
+**Separate runtime observation,2026-09-08 20:34:17 UTC:** exact native
+PID1050236 and reporter1978 were alive; development5K15GHz request6,Q10
+was in an actual EMX solve. Closed report metadata at20:31:52 counted80/320
+requests. Those later4 requests are not part of the76 scientific release.
+Ordinary programs continue the original queue; no duplicate model,data,
+proxy or completed EMX work was launched. Observations do not guarantee
+future liveness; boot/crash auto-restart remains NOT_INSTALLED.
+
+The highest-priority independently authorized NN research remains
+[frequency-indexed Tandem MLP](docs/FREQUENCY_INDEXED_TANDEM.md): choose one
+integer frequency and match four physical targets with a separate256×3
+forward/inverse pair. All16 pairs have formal10K-snapshot first-budget
+packages,save/load/diagnostic-resume and held-out evidence. All remain
+PARTIAL/PROVISIONAL,not demonstrated convergence. The1,760,000 SELF_PROXY
+logical candidates are not fresh EMX measurements. Physical15GHz still
+uses its frozen development5K model; formal10K15 fresh EMX is NOT_RUN.
+[The advisor PPT and Q&A](docs/research/frequency5to20_advisor_cumulative63_20260908_v1/README_CN.md)
+remain the approved cumulative63 version,not76; native PowerPoint testing
+is NOT_RUN. Production and GUI were not changed. The full320 goal is active.
+
+The recovery and production notes below are timestamped history.
 
 The [terminal-export handoff](docs/research/frequency5to20_terminal_export_20260908_v1/README_CN.md)
 adds a tested finite export CLI and one installed local producer-exit waiter.

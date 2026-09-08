@@ -1,0 +1,58 @@
+{
+  "schema": "frequency76_post_candidate_package_qa.v1",
+  "status": "GO_SCOPED_RELEASE",
+  "created_utc": "2026-09-08T20:42:52.898Z",
+  "source_candidate": {
+    "path": "PUBLIC_RECEIPT.json",
+    "sha256": "d8514f865d4c2e24c995d047fa4d6539b5146d8ce97975b42ebf95c0379683f9",
+    "bytes": 95266
+  },
+  "independent_public_copy_qa": {
+    "path": "reports/frequency5to20_20260908T063800Z/milestone_new13_cumulative76_20260908T201100Z/public_package_independent_qa_v2/INDEPENDENT_PUBLIC_QA_RECEIPT.json",
+    "sha256": "532870b449eaf5590e366642fb14029a3cc0affda8ef2e3df5d25ae2a4522a77",
+    "bytes": 36899,
+    "availability": "PRIVATE_SOURCE_NOT_INCLUDED"
+  },
+  "approved_candidate_files": 45,
+  "figure_count": 31,
+  "request_figures": 26,
+  "aggregate_figures": 5,
+  "csv_count": 7,
+  "notebook_code_cells_actually_executed": 5,
+  "native_jupyter_kernel": "NOT_RUN",
+  "candidate_status_policy": "Historical author-candidate/PENDING fields and NO_GO v1 are preserved. This post-candidate receipt closes only the exact approvedv2 package.",
+  "svg_status": "SOURCE_SHA_PINNED_NOT_SEPARATELY_RENDERED",
+  "scientific_freeze": {
+    "requests": 76,
+    "planned_requests": 320,
+    "slots": 836,
+    "solves": 685,
+    "strict_valid": 652,
+    "strict_invalid": 33,
+    "complete_strict11": 9
+  },
+  "runtime_observation": {
+    "source": {
+      "path": "reports/frequency5to20_20260908T063800Z/milestone_new13_cumulative76_20260908T201100Z/runtime_observation_v1/OBSERVATION_RECEIPT.json",
+      "sha256": "5fb10c8c186571ac35c4dc45e58c6d21cd014607f960cb23487edf460be8e8fb",
+      "bytes": 5778,
+      "availability": "PRIVATE_SOURCE_NOT_INCLUDED"
+    },
+    "observed_utc": "2026-09-08T20:34:17.154606+00:00",
+    "native_pid": 1050236,
+    "reporter_pid": 1978,
+    "observed_frequency_ghz": 15,
+    "request_ordinal": 6,
+    "observed_q": 10,
+    "dataset_scope": "DEVELOPMENT_5K_NOT_FORMAL_10K",
+    "operational_requests": 80,
+    "metadata_cutoff_utc": "2026-09-08T20:31:52.967664+00:00",
+    "later_scientific_values_approved": false,
+    "not_assurance_of_future_liveness": true
+  },
+  "full_goal_complete": false,
+  "formal10k15_fresh_emx": "NOT_RUN",
+  "ppt_scope": "UNCHANGED_CUMULATIVE63",
+  "no_new_model_proxy_emx_calls": true,
+  "no_production_or_gui_changes": true
+}

@@ -1,5 +1,35 @@
 # Current Evidence Status
 
+## Current scientific release:76; separately observed runtime:80
+
+[New13 / cumulative76 statistics and figures](frequency5to20_new13_cumulative76_20260908_v2/README_CN.md)
+and [exact post-candidate publication approval](frequency5to20_new13_cumulative76_20260908_v2/PACKAGE_QA.json)
+freeze76/320 requests,836 closed slots,685 solves=652 strict-valid+33 invalid.
+Closed failures remain46 analytical+73 GDS+32 DRC; the original3520 plan
+retains2509 pending slots. Nine complete-strict11 requests permit q_emx.
+The31 PNGs are only13 new requests×2 plus5 cumulative aggregates; historical
+graphs and the cumulative63 PPT are preserved. Seven CSVs and a5-cell
+actually executed public CSV notebook are included; native Jupyter NOT_RUN.
+
+At2026-09-08 20:34:17 UTC,one read-only observation verified original native
+1050236 and local reporter1978 alive. Development5K15GHz request6,Q10
+was solving. Latest closed report metadata at20:31:52 contained80 requests
+and240 pending; later numbers and figures have not received scientific GO.
+The frozen76 source and real-time operational state must not be pooled.
+
+All16 first-budget models remain PARTIAL/PROVISIONAL with prior held-out
+and1,760,000 SELF_PROXY evidence. Physical15GHz is development5K;
+formal10K15 fresh EMX remains NOT_RUN. No training,proxy or existingEMX
+was repeated. Original4×CPU2 resource cap,dual leases and deadlines remain.
+
+The exact scoped package fixes a historical40-report link in a newv2.
+Its complete failedv1 package and NO_GO evidence are preserved privately;
+42 files are byte-identical. No scientific values or images were changed.
+
+All sections below are timestamped historical checkpoints; their then-current
+pending/running/latest wording does not override this76-science/80-runtime split.
+
+
 ## Actual resource recovery and reporting successor, 2026-09-08 19:44 UTC
 
 [Actual installation evidence](frequency5to20_resource_recovery_actual_20260908_v1/README_CN.md)
