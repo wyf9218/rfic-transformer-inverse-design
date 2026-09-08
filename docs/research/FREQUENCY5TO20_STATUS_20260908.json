@@ -285,7 +285,7 @@
     "Qscan analytic feasibility is not Calibre or manufacturing signoff.",
     "Private datasets, weights, physical configuration and raw logs remain in the private research handoff."
   ],
-  "updated_utc": "2026-09-08T10:39:04Z",
+  "updated_utc": "2026-09-08T11:03:25Z",
   "readonly_report_observer": {
     "status": "INSTALLED_FINITE_PROCESS",
     "poll_seconds": 120,
@@ -357,62 +357,84 @@
     "visible_slides_and_native_chart_values_unchanged": true
   },
   "latest_physical_snapshot": {
-    "source_snapshot": "physical_incremental_statistics_v1/run_v1/snapshots/snapshot_0004",
-    "source_snapshot_utc": "2026-09-08T10:20:53.967268+00:00",
-    "snapshot_sha256": "2f0e98853da078f0753f382e300f826b2a9c12a7b9e1221838d3b264286f918a",
-    "statistics_sha256": "b26e2665b3f1c43483235ea37b6e73b3c6275811c84c6da7bc6425c9505c38f3",
-    "summary_sha256": "b36ad7ffa957d966b0941502d09553935f3f4c30e3fcdc02fa9c204bce44680e",
-    "request_status_sha256": "41930e7f31593d47ebd26d02c096539eef7fd88a419d82a6646f38d9f95bdfd8",
+    "source_snapshot": "physical_incremental_statistics_v1/run_v1/snapshots/snapshot_0007",
+    "source_snapshot_utc": "2026-09-08T10:49:05.173141+00:00",
+    "snapshot_sha256": "f2b191e61b10794d8f4cc586853e1ade026f072a3ad284c49151188287daf87d",
+    "statistics_sha256": "fac827af59a25384ce4fded2a656933a9e43a5072eea265a84b4f3f0c307ce12",
+    "summary_sha256": "c9929b9d46d2f906c89d37ceb88f5d046de373c3b97619acc53df4921d6cd749",
+    "request_status_sha256": "b4f34f500ad7a486a96eef97e560788f14cda99761c46419716ca8714f844193",
     "original_requests": 320,
     "original_candidates": 3520,
-    "accounted_requests": 13,
-    "accounted_candidates": 143,
-    "strict_valid_independent_solves": 115,
+    "accounted_requests": 16,
+    "accounted_candidates": 176,
+    "independent_solves": 140,
+    "strict_valid": 135,
+    "strict_invalid": 5,
     "accounted_failures": {
-      "analytic": 4,
-      "gds": 12,
+      "analytic": 8,
+      "gds": 16,
       "drc": 12
     },
+    "pending_candidates": 3131,
     "planned_analytic_failures": 221,
-    "pending_candidates": 3160,
     "complete_strict11_requests": 1,
-    "f14_first_complete11": {
-      "dataset_scope": "FORMAL_10K",
-      "model_id": "f14-734ef171b954",
-      "request_id": "f14_qscan-HELDOUT_TRIPLE_AUDIT-000000",
-      "original_candidates": 11,
-      "strict_valid_independent_solves": 11,
-      "q_proxy": 14,
-      "q_emx": 12,
-      "selection_loss": 0.00030446346906584307,
-      "score_units": "fixed-span normalized score, not percentage",
-      "requests": 1,
-      "confidence_interval": "NOT_ESTIMABLE",
-      "identity_and_numeric_qa": "PASS_52_SOURCE_PINS_AND_ORIGINAL11_RECOMPUTATION",
-      "request_score_and_percent_charts": "PASS_SCOPED_ACTUAL_PNG_PDF",
-      "selection_aggregate_chart": "STRICT_VISUAL_NO_GO_EXCLUDED_FROM_ACCEPTED_FORMAL_FIGURES",
-      "selection_aggregate_defect": "Lower-half marker clipped at zero axis; R1 CI not-estimable label not explicit enough.",
-      "substitute": "Exact common-set table and accepted request Q charts; no renderer hot-edit or redraw.",
-      "independent_qa_receipt_sha256": "20d7bc8219ed5227f33a0152a0155a7da466e745988ee84de05e714a63bcafd8",
-      "exact_table_csv_sha256": "5a09bf813cb275dbd26ceacbefcda79fbf6b0e1355fdf9f38f35c4ad0b578455",
-      "public_addendum": "frequency14_first_complete11_20260908_v1/README_CN.md",
-      "conclusion": "Descriptive one-request retrospective score optimum, not population or generalization superiority."
-    },
-    "manual_visual_qa_scope": "First10 snapshot passed; f14 request plots passed; newer f13/f16 plots NOT_RUN manual review; selection aggregate NO_GO.",
+    "complete_strict11_frequency_ghz": 14,
+    "selected_strict_valid_requests": 15,
+    "selected_gds_failed_frequency_ghz": 16,
+    "scientific_interpretation": "Each route has only one frozen heldout request; R1 CI NOT_ESTIMABLE; no population accuracy or cross-frequency causal ranking.",
     "formal10k15_fresh_emx": "NOT_RUN_DEVELOPMENT5K_ROUTE_IS_SEPARATE",
-    "progress_is_not_pooled_scientific_accuracy": true,
-    "runtime_last_direct_observation": {
-      "utc": "2026-09-08T10:21:51Z",
-      "physics_alive": true,
-      "active_frequency_ghz": 17,
-      "stage": "EMX",
-      "collector_alive": true,
-      "statistics_consumer_alive": true
+    "high_frequency_strict_invalid": {
+      "18": {
+        "solved": 10,
+        "strict_valid": 8,
+        "strict_invalid": 2,
+        "known_invalid_q": [
+          10,
+          11
+        ],
+        "source_flag": "below_half_srf=false; descriptor_valid=true; strict_lumped_valid=false"
+      },
+      "19": {
+        "solved": 9,
+        "strict_valid": 6,
+        "strict_invalid": 3
+      }
     },
-    "future_state_not_inferred": true,
-    "advisor_ppt_frozen_physical_requests": 6,
-    "advisor_ppt_frozen_solves": 51,
-    "advisor_ppt_commit": "602a83cbd59ad22496272ca97975dcfb7d9015c9"
+    "first16_collector": {
+      "status": "COMPLETE_NATURAL_EXIT",
+      "ended_utc": "2026-09-08T10:47:43.126478+00:00",
+      "receipt_sha256": "b55dac397fedc9f308378916857ced62a2e0994175337913a8d4a408a3fbc1e5"
+    },
+    "native_consumer_handoff": {
+      "status": "COMPLETED_BY_EXISTING_PROCESS",
+      "utc": "2026-09-08T10:49:03.968826+00:00",
+      "receipt_sha256": "21ef77aa3001fce9981ea5071bac8e6f65e927b50b0a66e5977966581a9df0cd",
+      "upstream_pid_absent": true,
+      "lease_acquired": true,
+      "first16_recollected": false
+    },
+    "last_direct_runtime_observation": {
+      "utc": "2026-09-08T10:58:44Z",
+      "queue_alive": true,
+      "active_frequency_ghz": 5,
+      "request": "f05_qscan-HELDOUT_TRIPLE_AUDIT-000001",
+      "stage": "EMX"
+    },
+    "visual_qa": {
+      "firstwave_selected_percent": "PASS_ACTUAL_PNG",
+      "f19_request_score_and_percent": "PASS_ACTUAL_PNG_AND_PDF",
+      "f13_and_f18_request_score_and_percent": "PASS_ACTUAL_PNG_AND_PDF",
+      "f16_and_f17_percent": "PASS_ACTUAL_PNG_AND_PDF",
+      "f16_and_f17_original_score": "STRICT_VISUAL_NO_GO_RETAINED",
+      "f14_selection_v2": "GO_EXACT_FROZEN_FIGURE_AND_STANDALONE_ENTRY_ONLY",
+      "selection_v2_qa_sha256": "91a028078af82eb5c4007968e5b919803f0d73363d268ca9be8fdf7345a71552",
+      "running_consumer_renderer": "UNCHANGED_V1_NOT_UPGRADED",
+      "f16_and_f17_score_v2": "GO_EXACT_TWO_FROZEN_REQUEST_FIGURES_AND_STANDALONE_ENTRY_ONLY"
+    },
+    "public_addendum": "frequency5to20_firstwave16_20260908_v1/README_CN.md",
+    "remaining": "304 requests after this snapshot remain; original frozen dispatch/report cutoffs unchanged.",
+    "advisor_ppt_frozen_requests": 6,
+    "advisor_ppt_frozen_solves": 51
   },
-  "snapshot_reading_rule": "Earlier fields are preserved first10/87 snapshot; latest_physical_snapshot and stage_status16.latest_status supersede operational counts only. PPT stays first6/51."
+  "snapshot_reading_rule": "Earlier fields retain first10 snapshot. latest_physical_snapshot and stage_status16.latest_status are first16 snapshot0007; PPT stays first6/51."
 }

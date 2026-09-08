@@ -719,62 +719,84 @@
   "private_artifact_root_not_in_repository": true,
   "visual_qa_sha256": "613b4588cd3136835ddbc35aa62a00af9e8c133188ae8ba0ee07136bf78e3eab",
   "latest_source_snapshot": {
-    "source_snapshot": "physical_incremental_statistics_v1/run_v1/snapshots/snapshot_0004",
-    "source_snapshot_utc": "2026-09-08T10:20:53.967268+00:00",
-    "snapshot_sha256": "2f0e98853da078f0753f382e300f826b2a9c12a7b9e1221838d3b264286f918a",
-    "statistics_sha256": "b26e2665b3f1c43483235ea37b6e73b3c6275811c84c6da7bc6425c9505c38f3",
-    "summary_sha256": "b36ad7ffa957d966b0941502d09553935f3f4c30e3fcdc02fa9c204bce44680e",
-    "request_status_sha256": "41930e7f31593d47ebd26d02c096539eef7fd88a419d82a6646f38d9f95bdfd8",
+    "source_snapshot": "physical_incremental_statistics_v1/run_v1/snapshots/snapshot_0007",
+    "source_snapshot_utc": "2026-09-08T10:49:05.173141+00:00",
+    "snapshot_sha256": "f2b191e61b10794d8f4cc586853e1ade026f072a3ad284c49151188287daf87d",
+    "statistics_sha256": "fac827af59a25384ce4fded2a656933a9e43a5072eea265a84b4f3f0c307ce12",
+    "summary_sha256": "c9929b9d46d2f906c89d37ceb88f5d046de373c3b97619acc53df4921d6cd749",
+    "request_status_sha256": "b4f34f500ad7a486a96eef97e560788f14cda99761c46419716ca8714f844193",
     "original_requests": 320,
     "original_candidates": 3520,
-    "accounted_requests": 13,
-    "accounted_candidates": 143,
-    "strict_valid_independent_solves": 115,
+    "accounted_requests": 16,
+    "accounted_candidates": 176,
+    "independent_solves": 140,
+    "strict_valid": 135,
+    "strict_invalid": 5,
     "accounted_failures": {
-      "analytic": 4,
-      "gds": 12,
+      "analytic": 8,
+      "gds": 16,
       "drc": 12
     },
+    "pending_candidates": 3131,
     "planned_analytic_failures": 221,
-    "pending_candidates": 3160,
     "complete_strict11_requests": 1,
-    "f14_first_complete11": {
-      "dataset_scope": "FORMAL_10K",
-      "model_id": "f14-734ef171b954",
-      "request_id": "f14_qscan-HELDOUT_TRIPLE_AUDIT-000000",
-      "original_candidates": 11,
-      "strict_valid_independent_solves": 11,
-      "q_proxy": 14,
-      "q_emx": 12,
-      "selection_loss": 0.00030446346906584307,
-      "score_units": "fixed-span normalized score, not percentage",
-      "requests": 1,
-      "confidence_interval": "NOT_ESTIMABLE",
-      "identity_and_numeric_qa": "PASS_52_SOURCE_PINS_AND_ORIGINAL11_RECOMPUTATION",
-      "request_score_and_percent_charts": "PASS_SCOPED_ACTUAL_PNG_PDF",
-      "selection_aggregate_chart": "STRICT_VISUAL_NO_GO_EXCLUDED_FROM_ACCEPTED_FORMAL_FIGURES",
-      "selection_aggregate_defect": "Lower-half marker clipped at zero axis; R1 CI not-estimable label not explicit enough.",
-      "substitute": "Exact common-set table and accepted request Q charts; no renderer hot-edit or redraw.",
-      "independent_qa_receipt_sha256": "20d7bc8219ed5227f33a0152a0155a7da466e745988ee84de05e714a63bcafd8",
-      "exact_table_csv_sha256": "5a09bf813cb275dbd26ceacbefcda79fbf6b0e1355fdf9f38f35c4ad0b578455",
-      "public_addendum": "frequency14_first_complete11_20260908_v1/README_CN.md",
-      "conclusion": "Descriptive one-request retrospective score optimum, not population or generalization superiority."
-    },
-    "manual_visual_qa_scope": "First10 snapshot passed; f14 request plots passed; newer f13/f16 plots NOT_RUN manual review; selection aggregate NO_GO.",
+    "complete_strict11_frequency_ghz": 14,
+    "selected_strict_valid_requests": 15,
+    "selected_gds_failed_frequency_ghz": 16,
+    "scientific_interpretation": "Each route has only one frozen heldout request; R1 CI NOT_ESTIMABLE; no population accuracy or cross-frequency causal ranking.",
     "formal10k15_fresh_emx": "NOT_RUN_DEVELOPMENT5K_ROUTE_IS_SEPARATE",
-    "progress_is_not_pooled_scientific_accuracy": true,
-    "runtime_last_direct_observation": {
-      "utc": "2026-09-08T10:21:51Z",
-      "physics_alive": true,
-      "active_frequency_ghz": 17,
-      "stage": "EMX",
-      "collector_alive": true,
-      "statistics_consumer_alive": true
+    "high_frequency_strict_invalid": {
+      "18": {
+        "solved": 10,
+        "strict_valid": 8,
+        "strict_invalid": 2,
+        "known_invalid_q": [
+          10,
+          11
+        ],
+        "source_flag": "below_half_srf=false; descriptor_valid=true; strict_lumped_valid=false"
+      },
+      "19": {
+        "solved": 9,
+        "strict_valid": 6,
+        "strict_invalid": 3
+      }
     },
-    "future_state_not_inferred": true,
-    "advisor_ppt_frozen_physical_requests": 6,
-    "advisor_ppt_frozen_solves": 51,
-    "advisor_ppt_commit": "602a83cbd59ad22496272ca97975dcfb7d9015c9"
+    "first16_collector": {
+      "status": "COMPLETE_NATURAL_EXIT",
+      "ended_utc": "2026-09-08T10:47:43.126478+00:00",
+      "receipt_sha256": "b55dac397fedc9f308378916857ced62a2e0994175337913a8d4a408a3fbc1e5"
+    },
+    "native_consumer_handoff": {
+      "status": "COMPLETED_BY_EXISTING_PROCESS",
+      "utc": "2026-09-08T10:49:03.968826+00:00",
+      "receipt_sha256": "21ef77aa3001fce9981ea5071bac8e6f65e927b50b0a66e5977966581a9df0cd",
+      "upstream_pid_absent": true,
+      "lease_acquired": true,
+      "first16_recollected": false
+    },
+    "last_direct_runtime_observation": {
+      "utc": "2026-09-08T10:58:44Z",
+      "queue_alive": true,
+      "active_frequency_ghz": 5,
+      "request": "f05_qscan-HELDOUT_TRIPLE_AUDIT-000001",
+      "stage": "EMX"
+    },
+    "visual_qa": {
+      "firstwave_selected_percent": "PASS_ACTUAL_PNG",
+      "f19_request_score_and_percent": "PASS_ACTUAL_PNG_AND_PDF",
+      "f13_and_f18_request_score_and_percent": "PASS_ACTUAL_PNG_AND_PDF",
+      "f16_and_f17_percent": "PASS_ACTUAL_PNG_AND_PDF",
+      "f16_and_f17_original_score": "STRICT_VISUAL_NO_GO_RETAINED",
+      "f14_selection_v2": "GO_EXACT_FROZEN_FIGURE_AND_STANDALONE_ENTRY_ONLY",
+      "selection_v2_qa_sha256": "91a028078af82eb5c4007968e5b919803f0d73363d268ca9be8fdf7345a71552",
+      "running_consumer_renderer": "UNCHANGED_V1_NOT_UPGRADED",
+      "f16_and_f17_score_v2": "GO_EXACT_TWO_FROZEN_REQUEST_FIGURES_AND_STANDALONE_ENTRY_ONLY"
+    },
+    "public_addendum": "frequency5to20_firstwave16_20260908_v1/README_CN.md",
+    "remaining": "304 requests after this snapshot remain; original frozen dispatch/report cutoffs unchanged.",
+    "advisor_ppt_frozen_requests": 6,
+    "advisor_ppt_frozen_solves": 51
   },
   "latest_status": [
     {
@@ -799,8 +821,12 @@
       "physical_original_requests": 20,
       "physical_strict_valid_independent_solves": 8,
       "physical_complete_strict11_requests": 0,
-      "physical_figures": "PASS_SCOPED_REAL_PNG_PDF",
-      "formal15_fresh_emx": "NOT_APPLICABLE"
+      "physical_figures": "PASS_REQUEST_PNG_AND_PDF",
+      "formal15_fresh_emx": "NOT_APPLICABLE",
+      "physical_independent_solves": 8,
+      "physical_strict_invalid": 0,
+      "physical_planned_analytic_fail": 0,
+      "physical_pending_candidates": 209
     },
     {
       "frequency_ghz": 6,
@@ -824,8 +850,12 @@
       "physical_original_requests": 20,
       "physical_strict_valid_independent_solves": 8,
       "physical_complete_strict11_requests": 0,
-      "physical_figures": "PASS_SCOPED_REAL_PNG_PDF",
-      "formal15_fresh_emx": "NOT_APPLICABLE"
+      "physical_figures": "PASS_REQUEST_PNG_AND_PDF",
+      "formal15_fresh_emx": "NOT_APPLICABLE",
+      "physical_independent_solves": 8,
+      "physical_strict_invalid": 0,
+      "physical_planned_analytic_fail": 0,
+      "physical_pending_candidates": 209
     },
     {
       "frequency_ghz": 7,
@@ -849,8 +879,12 @@
       "physical_original_requests": 20,
       "physical_strict_valid_independent_solves": 7,
       "physical_complete_strict11_requests": 0,
-      "physical_figures": "PASS_SCOPED_REAL_PNG_PDF",
-      "formal15_fresh_emx": "NOT_APPLICABLE"
+      "physical_figures": "PASS_REQUEST_PNG_AND_PDF",
+      "formal15_fresh_emx": "NOT_APPLICABLE",
+      "physical_independent_solves": 7,
+      "physical_strict_invalid": 0,
+      "physical_planned_analytic_fail": 0,
+      "physical_pending_candidates": 209
     },
     {
       "frequency_ghz": 8,
@@ -874,8 +908,12 @@
       "physical_original_requests": 20,
       "physical_strict_valid_independent_solves": 9,
       "physical_complete_strict11_requests": 0,
-      "physical_figures": "PASS_SCOPED_REAL_PNG_PDF",
-      "formal15_fresh_emx": "NOT_APPLICABLE"
+      "physical_figures": "PASS_REQUEST_PNG_AND_PDF",
+      "formal15_fresh_emx": "NOT_APPLICABLE",
+      "physical_independent_solves": 9,
+      "physical_strict_invalid": 0,
+      "physical_planned_analytic_fail": 35,
+      "physical_pending_candidates": 174
     },
     {
       "frequency_ghz": 9,
@@ -899,8 +937,12 @@
       "physical_original_requests": 20,
       "physical_strict_valid_independent_solves": 8,
       "physical_complete_strict11_requests": 0,
-      "physical_figures": "PASS_SCOPED_REAL_PNG_PDF",
-      "formal15_fresh_emx": "NOT_APPLICABLE"
+      "physical_figures": "PASS_REQUEST_PNG_AND_PDF",
+      "formal15_fresh_emx": "NOT_APPLICABLE",
+      "physical_independent_solves": 8,
+      "physical_strict_invalid": 0,
+      "physical_planned_analytic_fail": 0,
+      "physical_pending_candidates": 209
     },
     {
       "frequency_ghz": 10,
@@ -924,8 +966,12 @@
       "physical_original_requests": 20,
       "physical_strict_valid_independent_solves": 9,
       "physical_complete_strict11_requests": 0,
-      "physical_figures": "PASS_SCOPED_REAL_PNG_PDF",
-      "formal15_fresh_emx": "NOT_APPLICABLE"
+      "physical_figures": "PASS_REQUEST_PNG_AND_PDF",
+      "formal15_fresh_emx": "NOT_APPLICABLE",
+      "physical_independent_solves": 9,
+      "physical_strict_invalid": 0,
+      "physical_planned_analytic_fail": 0,
+      "physical_pending_candidates": 209
     },
     {
       "frequency_ghz": 11,
@@ -949,8 +995,12 @@
       "physical_original_requests": 20,
       "physical_strict_valid_independent_solves": 9,
       "physical_complete_strict11_requests": 0,
-      "physical_figures": "PASS_SCOPED_REAL_PNG_PDF",
-      "formal15_fresh_emx": "NOT_APPLICABLE"
+      "physical_figures": "PASS_REQUEST_PNG_AND_PDF",
+      "formal15_fresh_emx": "NOT_APPLICABLE",
+      "physical_independent_solves": 9,
+      "physical_strict_invalid": 0,
+      "physical_planned_analytic_fail": 0,
+      "physical_pending_candidates": 209
     },
     {
       "frequency_ghz": 12,
@@ -974,8 +1024,12 @@
       "physical_original_requests": 20,
       "physical_strict_valid_independent_solves": 10,
       "physical_complete_strict11_requests": 0,
-      "physical_figures": "PASS_SCOPED_REAL_PNG_PDF",
-      "formal15_fresh_emx": "NOT_APPLICABLE"
+      "physical_figures": "PASS_REQUEST_PNG_AND_PDF",
+      "formal15_fresh_emx": "NOT_APPLICABLE",
+      "physical_independent_solves": 10,
+      "physical_strict_invalid": 0,
+      "physical_planned_analytic_fail": 3,
+      "physical_pending_candidates": 206
     },
     {
       "frequency_ghz": 13,
@@ -999,8 +1053,12 @@
       "physical_original_requests": 20,
       "physical_strict_valid_independent_solves": 9,
       "physical_complete_strict11_requests": 0,
-      "physical_figures": "GENERATED_MANUAL_VISUAL_QA_NOT_RUN",
-      "formal15_fresh_emx": "NOT_APPLICABLE"
+      "physical_figures": "PASS_REQUEST_PNG_AND_PDF",
+      "formal15_fresh_emx": "NOT_APPLICABLE",
+      "physical_independent_solves": 9,
+      "physical_strict_invalid": 0,
+      "physical_planned_analytic_fail": 8,
+      "physical_pending_candidates": 201
     },
     {
       "frequency_ghz": 14,
@@ -1024,8 +1082,12 @@
       "physical_original_requests": 20,
       "physical_strict_valid_independent_solves": 11,
       "physical_complete_strict11_requests": 1,
-      "physical_figures": "PASS_TWO_REQUEST_PLOTS_SELECTION_AGGREGATE_NO_GO",
-      "formal15_fresh_emx": "NOT_APPLICABLE"
+      "physical_figures": "PASS_REQUEST_PNG_AND_PDF",
+      "formal15_fresh_emx": "NOT_APPLICABLE",
+      "physical_independent_solves": 11,
+      "physical_strict_invalid": 0,
+      "physical_planned_analytic_fail": 3,
+      "physical_pending_candidates": 206
     },
     {
       "frequency_ghz": 15,
@@ -1049,8 +1111,12 @@
       "physical_original_requests": 20,
       "physical_strict_valid_independent_solves": 9,
       "physical_complete_strict11_requests": 0,
-      "physical_figures": "PASS_SCOPED_REAL_PNG_PDF",
-      "formal15_fresh_emx": "NOT_RUN"
+      "physical_figures": "PASS_REQUEST_PNG_AND_PDF",
+      "formal15_fresh_emx": "NOT_RUN",
+      "physical_independent_solves": 9,
+      "physical_strict_invalid": 0,
+      "physical_planned_analytic_fail": 13,
+      "physical_pending_candidates": 198
     },
     {
       "frequency_ghz": 16,
@@ -1074,8 +1140,12 @@
       "physical_original_requests": 20,
       "physical_strict_valid_independent_solves": 8,
       "physical_complete_strict11_requests": 0,
-      "physical_figures": "GENERATED_MANUAL_VISUAL_QA_NOT_RUN",
-      "formal15_fresh_emx": "NOT_APPLICABLE"
+      "physical_figures": "PASS_ORIGINAL_PERCENT_AND_V2_SCORE_PNG_PDF; ORIGINAL_SCORE_VISUAL_NO_GO_RETAINED",
+      "formal15_fresh_emx": "NOT_APPLICABLE",
+      "physical_independent_solves": 8,
+      "physical_strict_invalid": 0,
+      "physical_planned_analytic_fail": 38,
+      "physical_pending_candidates": 173
     },
     {
       "frequency_ghz": 17,
@@ -1095,12 +1165,16 @@
       "random_proxy_logical_candidates": 110000,
       "physical_model_id": "f17-7b878ff5d5dc",
       "physical_dataset_scope": "FORMAL_10K",
-      "physical_accounted_requests": 0,
+      "physical_accounted_requests": 1,
       "physical_original_requests": 20,
-      "physical_strict_valid_independent_solves": 0,
+      "physical_strict_valid_independent_solves": 6,
       "physical_complete_strict11_requests": 0,
-      "physical_figures": "NO_ACCOUNTED_REQUEST_FIGURES",
-      "formal15_fresh_emx": "NOT_APPLICABLE"
+      "physical_figures": "PASS_ORIGINAL_PERCENT_AND_V2_SCORE_PNG_PDF; ORIGINAL_SCORE_VISUAL_NO_GO_RETAINED",
+      "formal15_fresh_emx": "NOT_APPLICABLE",
+      "physical_independent_solves": 6,
+      "physical_strict_invalid": 0,
+      "physical_planned_analytic_fail": 47,
+      "physical_pending_candidates": 165
     },
     {
       "frequency_ghz": 18,
@@ -1120,12 +1194,16 @@
       "random_proxy_logical_candidates": 110000,
       "physical_model_id": "f18-1a136fda6a2a",
       "physical_dataset_scope": "FORMAL_10K",
-      "physical_accounted_requests": 0,
+      "physical_accounted_requests": 1,
       "physical_original_requests": 20,
-      "physical_strict_valid_independent_solves": 0,
+      "physical_strict_valid_independent_solves": 8,
       "physical_complete_strict11_requests": 0,
-      "physical_figures": "NO_ACCOUNTED_REQUEST_FIGURES",
-      "formal15_fresh_emx": "NOT_APPLICABLE"
+      "physical_figures": "PASS_REQUEST_PNG_AND_PDF",
+      "formal15_fresh_emx": "NOT_APPLICABLE",
+      "physical_independent_solves": 10,
+      "physical_strict_invalid": 2,
+      "physical_planned_analytic_fail": 45,
+      "physical_pending_candidates": 165
     },
     {
       "frequency_ghz": 19,
@@ -1145,12 +1223,16 @@
       "random_proxy_logical_candidates": 110000,
       "physical_model_id": "f19-e02801471b97",
       "physical_dataset_scope": "FORMAL_10K",
-      "physical_accounted_requests": 0,
+      "physical_accounted_requests": 1,
       "physical_original_requests": 20,
-      "physical_strict_valid_independent_solves": 0,
+      "physical_strict_valid_independent_solves": 6,
       "physical_complete_strict11_requests": 0,
-      "physical_figures": "NO_ACCOUNTED_REQUEST_FIGURES",
-      "formal15_fresh_emx": "NOT_APPLICABLE"
+      "physical_figures": "PASS_REQUEST_PNG_AND_PDF",
+      "formal15_fresh_emx": "NOT_APPLICABLE",
+      "physical_independent_solves": 9,
+      "physical_strict_invalid": 3,
+      "physical_planned_analytic_fail": 24,
+      "physical_pending_candidates": 185
     },
     {
       "frequency_ghz": 20,
@@ -1174,9 +1256,13 @@
       "physical_original_requests": 20,
       "physical_strict_valid_independent_solves": 10,
       "physical_complete_strict11_requests": 0,
-      "physical_figures": "PASS_SCOPED_REAL_PNG_PDF",
-      "formal15_fresh_emx": "NOT_APPLICABLE"
+      "physical_figures": "PASS_REQUEST_PNG_AND_PDF",
+      "formal15_fresh_emx": "NOT_APPLICABLE",
+      "physical_independent_solves": 10,
+      "physical_strict_invalid": 0,
+      "physical_planned_analytic_fail": 5,
+      "physical_pending_candidates": 204
     }
   ],
-  "status_reading_rule": "status retains first10/87 frozen rows; latest_status records snapshot0004. Do not treat newer unreviewed physical figures as QA passed."
+  "status_reading_rule": "status retains first10/87 frozen rows; latest_status is first16 snapshot0007 (140 solved,135 strict). New v2 figures are separate accepted corrections; running consumer remains v1."
 }
