@@ -21,6 +21,15 @@ are historical workflows, not its current execution contract.
 
 ## Start Here: Current Goals And Status
 
+**Latest runtime observation,2026-09-08 19:44 UTC:** the
+[original320-request queue and incremental reporter are actually resumed](docs/research/frequency5to20_resource_recovery_actual_20260908_v1/README_CN.md).
+MARS native PID1050236 progressed through the failed11GHz Q17 stage to12GHz;
+four actual EMX solvers were observed within the unchanged global cap.
+Local reporter PID1978 reused all72 prior captures and produced one new snapshot.
+73/320 is operational progress only; the independently approved report remains63.
+No model,data or completed EMX result was regenerated. These timestamped
+observations supersede the earlier stopped/candidate-only records below.
+
 The highest-priority **independently authorized NN research** is now
 [frequency-indexed Tandem MLP](docs/FREQUENCY_INDEXED_TANDEM.md): choose one integer
 frequency, then match four physical targets with a separate 256×3 forward/inverse
@@ -50,7 +59,9 @@ gate before starting EMX. Existing Q10–Q16 results remain preserved. Reporting
 ended PARTIAL at72/320 accounted requests; those72 are operational metadata,
 not an extension of the independently approved63-request results.
 [Recovery code and reporting compatibility](docs/research/FREQUENCY_RESOURCE_RECOVERY_STATUS_20260908.json)
-passed scoped independent review and synthetic tests, but have not been deployed. Terminal exports
+passed scoped independent review and synthetic tests and subsequently passed106
+native-Linux tests plus the original320-input preflight. The actual recovery
+installation is linked above. Terminal exports
 exited0, but that does not grant new scientific or visual acceptance.
 Reboot auto-restart is NOT_INSTALLED.
 

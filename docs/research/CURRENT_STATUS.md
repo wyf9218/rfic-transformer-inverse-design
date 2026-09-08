@@ -1,5 +1,25 @@
 # Current Evidence Status
 
+## Actual resource recovery and reporting successor, 2026-09-08 19:44 UTC
+
+[Actual installation evidence](frequency5to20_resource_recovery_actual_20260908_v1/README_CN.md)
+supersedes the older candidate-only and stopped-process observations below.
+One at job2 exec launched native PID1050236 at19:38:28; independent /proc
+inspection verified its exact10-argument command and immutable inputs.
+At19:43:41 it was running12GHz's fifth request with four actual EMX solvers.
+The original11GHz Q17 failure files remain intact; a distinct recovery success
+record was produced. Completed Q10–Q16 artifacts were not regenerated.
+
+Local reporter PID1978 was observed at19:44:24 with the actual new native
+identity,72 reused captures,unchanged previous_figures and baseline_rerender=false.
+Its first new snapshot brought the operational count to73/320,247 pending.
+This is not a new numerical/visual approval: the released science and PPT
+remain cumulative63,with51 approved physical figures.
+The original4×CPU2 cap,dual leases,320/3520 frame and deadlines remain unchanged.
+Production and GUI were not modified. Ordinary finite programs perform waits;
+boot/crash restart is NOT_INSTALLED. These are timestamped observations,
+not a guarantee that the processes remain alive indefinitely.
+
 ## Recovery code checkpoint, 2026-09-08 19:14 UTC
 
 [Exact code identities and test evidence](FREQUENCY_RESOURCE_RECOVERY_STATUS_20260908.json):
@@ -10,9 +30,10 @@ new/existing regressions and read-only validation of the actual72-request
 predecessor lineage. No baseline was recaptured, recalculated or rerendered.
 The code and tests are committed separately from the advisor deck.
 
-Deployment is not complete: native Linux tests, actual input preflight and
-real launch evidence remain necessary. Neither a live MARS continuation nor
-new scientific results are claimed. The exact original budget,4×2CPU research
+At this historical checkpoint deployment was not complete; native Linux tests,
+actual input preflight and real launch evidence were still pending.
+They have now been completed as recorded in the19:44 installation above;
+new scientific results are still not approved. The exact original budget,4×2CPU research
 cap, two leases, old failure evidence and all completed EMX artifacts remain
 the required continuation contract.
 
