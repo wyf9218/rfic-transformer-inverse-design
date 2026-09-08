@@ -18,7 +18,8 @@ def pin(path):
 
 
 @pytest.fixture
-def inputs(tmp_path, monkeypatch):
+def inputs(tmp_path, monkeypatch, request):
+    frequency = getattr(request, "param", 15)
     study, data = tmp_path / "study", tmp_path / "data"
     study.mkdir(); data.mkdir()
     dataset = data / "dataset.npz"
@@ -40,6 +41,7 @@ def inputs(tmp_path, monkeypatch):
             write(Path(str(weight)+".identity.json"), {"path": weight.name, "sha256": sha256(weight)})
             entry[selection] = pin(weight)
         receipt = {"role": role, "updates_this_run": 3, "started_step": 0, "completed_step": 3,
+            "frequency_ghz": frequency, "label_mode": "STRICT_LUMPED",
             "elapsed_seconds": .1, "eligible_rows": {"train": {"eligible_geometries": 6}},
             "stop_reason": "UPDATE_BUDGET_COMPLETE",
             **{s+"_sha256": entry[s]["sha256"] for s in ("best", "last")}}
@@ -50,10 +52,11 @@ def inputs(tmp_path, monkeypatch):
         (attempt.parent / "attempt_0001.log").write_text("synthetic completed log\n")
         roles[role] = entry
         results[role] = {"status": "PASS", "checks": {name: True for name in package.ACCEPTANCE_CHECKS},
+            "frequency_ghz": frequency, "label_mode": "STRICT_LUMPED",
             **{"original_"+s+"_sha256": entry[s]["sha256"] for s in ("best", "last")}}
     pair = write(study / "PAIR_RECEIPT.json", {"schema": "frequency_pair_receipt.v1",
         "status": "TRAINED_BUDGET_OR_EARLY_STOP", "roles": roles, "request": pin(request),
-        "data_root": str(data), "frequency_ghz": 15, "label_mode": "STRICT_LUMPED",
+        "data_root": str(data), "frequency_ghz": frequency, "label_mode": "STRICT_LUMPED",
         "experiment_class": "SYNTHETIC_DEVELOPMENT"})
     profile = write(tmp_path / "profile" / "frequency_data_profile.json", {
         "schema": "bb_frequency_data_profile.v1", "frequency_slots": 56,
@@ -66,8 +69,9 @@ def inputs(tmp_path, monkeypatch):
             for mode in package.MODES}} for f in range(5, 61)]})
     acceptance = write(tmp_path / "acceptance" / "BB00_LOAD_RESUME_RECEIPT.json", {
         "schema": "bb00_load_resume_proof.v1", "status": "PASS", "data_sha": sha256(dataset),
+        "frequency_ghz": frequency, "label_mode": "STRICT_LUMPED",
         "original_checkpoint_bytes_unchanged": True, "results": results})
-    identity = {"dataset": pin(dataset), "frequency_ghz": 15, "label_mode": "STRICT_LUMPED",
+    identity = {"dataset": pin(dataset), "frequency_ghz": frequency, "label_mode": "STRICT_LUMPED",
         **{role+"_checkpoint": roles[role]["best"] for role in roles}}
     evaluation = tmp_path / "evaluation"
     freeze = write(evaluation / "TEST_FREEZE.json", {"schema": "frequency_evaluation_freeze.v1",
@@ -81,6 +85,27 @@ def inputs(tmp_path, monkeypatch):
     # not compete with an authorized real training process for compute.
     monkeypatch.setattr(package, "_reload_copies", lambda *a: {"status": "PASS", "evidence": "MOCK_NO_MODEL"})
     return pair, profile, evaluation, acceptance
+
+
+@pytest.mark.parametrize("inputs", [5, 10, 20], indirect=True)
+def test_non15_package_preserves_exact_route(inputs, tmp_path):
+    frequency = json.loads(inputs[0].read_text())["frequency_ghz"]
+    package.package_model(*inputs, tmp_path / "package")
+    _, index = package.load_index(tmp_path / "package" / "MODEL_INDEX.json")
+    assert package._route(index, frequency, "STRICT_LUMPED")["frequency_ghz"] == frequency
+    with pytest.raises(ValueError, match="no trained model"):
+        package._route(index, 15, "STRICT_LUMPED")
+
+
+@pytest.mark.parametrize("inputs", [5, 20], indirect=True)
+@pytest.mark.parametrize("location", ["root", "role"])
+def test_non15_requires_explicit_acceptance_route(inputs, tmp_path, location):
+    proof = json.loads(inputs[3].read_text())
+    target = proof if location == "root" else proof["results"]["inverse"]
+    target.pop("frequency_ghz")
+    inputs[3].write_text(json.dumps(proof))
+    with pytest.raises(ValueError, match="frequency/label route differs"):
+        package.package_model(*inputs, tmp_path / "package")
 
 
 def test_portable_copy_index_and_no_duplicate_submission(inputs, tmp_path):

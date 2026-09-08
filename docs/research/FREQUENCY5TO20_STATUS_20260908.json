@@ -1,0 +1,20 @@
+{
+  "schema": "public_frequency_research_status.v2",
+  "observed_utc": "2026-09-08T07:28:12.803283+00:00",
+  "priority": "integer-frequency-routed 256x3 Tandem MLP; 5 through 20 GHz",
+  "frequencies_ghz": [5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20],
+  "source_snapshot_unique_geometries": 10000,
+  "snapshot_policy": "first formal accepted_sequence 1..10000; immutable 56-point geometry records",
+  "shared_geometry_hash_split": {"train":6015,"validation":2002,"test":1983},
+  "exposure_note": "These global split counts are NOT each frequency's gradient-training counts; strict eligible subsets differ.",
+  "training": {"pairs_budget_completed":16,"from_scratch":true,"historical_weights_retrained":false,"convergence":"NOT_ESTABLISHED","status":"PROVISIONAL_PARTIAL"},
+  "finite_queue": {"status":"FINITE_QUEUE_PASS_ENDED","ended_utc":"2026-09-08T07:07:14.587106+00:00","frequency_workers":2,"cpu_threads_per_worker":2,"automatic_model_ready_callback":true,"do_not_submit_again":true},
+  "model_delivery": {"saved_pairs":16,"separate_process_load_resume_pass":16,"copied_package_reload_pass":16,"relocated_optimizer_resume":"NOT_RUN"},
+  "heldout_evaluation": {"frequencies":16,"forward_evidence":"HELDOUT_EM_LABELS","inverse_evidence":"SELF_PROXY","saved_prediction_reconciliation":"PASS"},
+  "qscan": {"frequencies":16,"random_requests_per_frequency":10000,"q_values":[10,11,12,13,14,15,16,17,18,19,20],"random_logical_candidates_total":1760000,"failed_and_extrapolated_candidates_retained":true,"fresh_emx_results":"NOT_RUN"},
+  "physical_lane": {"first_15ghz_scope":"separate existing DEVELOPMENT_5K model, not relabelled FORMAL_10K","cadence_only":"ACTUALLY_STARTED","logical_candidates":11,"analytic_pass_dispatched":9,"analytic_failed_retained":2,"calibre":"NOT_RUN_AS_OF_OBSERVATION","emx":"NOT_RUN_AS_OF_OBSERVATION","complete_emx_requests":0},
+  "metrics_contract": {"score_spans":[2.5,2.5,20.0,0.8],"absolute_tolerances":[0.125,0.125,1.0,0.04],"target_relative_five_percent":false,"q_semantics":"symmetric match to each integer q; exact score tie selects lower q"},
+  "software_tests": {"integrated_synthetic_pass":180,"not_real_training_runs":true,"final_test_sha256":"ff4e22f31ae5585fec76c8249b018cea4ee587702e437ffaf8b9e73ec63fe086"},
+  "evidence_sha256": {"queue_terminal":"2733954fd91d4a041b652d63ebc858b6cc214dd3330713ff73db23ddbdcf8be1","rollup_receipt":"8e0777b0dab4504932ec07d5dd4ac4c8c4a6d2662e8d22d0b7717766433d4fba","source_manifest":"2113ae4d831a2bbeac19553a36cad398672ff5a62a7a12fd1b38c7fa5dd678fa","rollup_sha256sums":"72ff8fd728482544050dc3b8f7efc4313cffbdae64a70683fa7d7651e49a1843","integrated_tests":"227f9f453dd8988ad27dddf2678a0eff1960212101673066a4feebac1ba0262b"},
+  "caveats": ["No claim of physical accuracy champion.","Small high-frequency strict subsets remain exploratory.","Different frequency-specific eligible subsets and update counts preclude causal cross-frequency ranking.","Qscan analytic feasibility is not Calibre or manufacturing signoff.","Private datasets, weights, physical configuration and raw logs remain in the private research handoff."]
+}

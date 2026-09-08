@@ -87,9 +87,13 @@ def _validate_inputs(pair_path, profile_path, evaluation_root, acceptance_path):
     if (acceptance.get("schema") != "bb00_load_resume_proof.v1" or acceptance.get("status") != "PASS" or
             acceptance.get("original_checkpoint_bytes_unchanged") is not True):
         raise ValueError("actual load and resume acceptance required")
-    # The inherited acceptance adapter is genuinely qualified for 15 GHz only.
-    if pair["frequency_ghz"] != 15 or pair["label_mode"] != "STRICT_LUMPED":
-        raise ValueError("current acceptance adapter is qualified only for strict 15 GHz")
+    if (type(pair["frequency_ghz"]) is not int or not 5 <= pair["frequency_ghz"] <= 20 or
+            pair["label_mode"] != "STRICT_LUMPED"):
+        raise ValueError("acceptance adapter requires strict integer frequency 5..20 GHz")
+    # Missing route fields in preserved historical receipts mean 15 GHz only.
+    if (acceptance.get("frequency_ghz", 15) != pair["frequency_ghz"] or
+            acceptance.get("label_mode", "STRICT_LUMPED") != pair["label_mode"]):
+        raise ValueError("acceptance frequency/label route differs from trained pair")
     for role, entry in pair["roles"].items():
         receipt = read_json(_verify(entry["receipt"]))
         result = acceptance["results"][role]
@@ -98,6 +102,11 @@ def _validate_inputs(pair_path, profile_path, evaluation_root, acceptance_path):
             raise ValueError("role load/resume checks are incomplete")
         if receipt.get("role") != role or receipt.get("updates_this_run", 0) < 1:
             raise ValueError("role has no actual updates")
+        if (receipt.get("frequency_ghz", 15) != pair["frequency_ghz"] or
+                receipt.get("label_mode", "STRICT_LUMPED") != pair["label_mode"] or
+                result.get("frequency_ghz", 15) != pair["frequency_ghz"] or
+                result.get("label_mode", "STRICT_LUMPED") != pair["label_mode"]):
+            raise ValueError("role training/acceptance frequency/label route differs")
         for selection in ("best", "last"):
             checkpoint = _verify(entry[selection])
             side = read_json(str(checkpoint) + ".identity.json")

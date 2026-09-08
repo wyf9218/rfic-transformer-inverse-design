@@ -46,12 +46,29 @@ def verify_historical_package_load(package, expected_manifest_sha256, receipt_pa
     return result
 
 
-def _inputs(bundle):
-    frequencies=np.flatnonzero(bundle.arrays["frequency_hz"]==15e9)
+def _route(frequency_ghz, label_mode):
+    if type(frequency_ghz) is not int or not 5 <= frequency_ghz <= 20 or label_mode != "STRICT_LUMPED":
+        raise ValueError("load/resume acceptance requires exact integer frequency 5..20 GHz and STRICT_LUMPED")
+
+
+def _state_route(state, frequency_ghz, label_mode):
+    """Legacy missing route fields mean 15 GHz only, never another frequency."""
+    _route(frequency_ghz, label_mode)
+    for source in (state["normalizer"], state["train_config"]):
+        if (source.get("frequency_ghz", 15) != frequency_ghz or
+                source.get("label_mode", "STRICT_LUMPED") != label_mode):
+            raise ValueError("checkpoint frequency/label route differs from acceptance request")
+
+
+def _inputs(bundle, frequency_ghz=15, label_mode="STRICT_LUMPED"):
+    _route(frequency_ghz, label_mode)
+    frequencies=np.flatnonzero(bundle.arrays["frequency_hz"]==frequency_ghz*1e9)
     if len(frequencies)!=1:
-        raise ValueError("exact15GHz frequency missing")
+        raise ValueError("exact requested frequency missing or duplicated")
     f=int(frequencies[0])
-    valid=bundle.arrays["y_valid"][bundle.train,f].all(-1)
+    valid=bundle.arrays["y_valid"][bundle.train,f].all(-1) & np.isfinite(bundle.arrays["y"][bundle.train,f]).all(-1)
+    if "strict_lumped_valid" in bundle.arrays:
+        valid &= bundle.arrays["strict_lumped_valid"][bundle.train,f]
     indices=bundle.train[valid][:8]
     if not len(indices):
         raise ValueError("no fixed train-valid input rows")
@@ -60,6 +77,9 @@ def _inputs(bundle):
 
 def _worker(request_path):
     request=read_json(request_path)
+    frequency_ghz=request.get("frequency_ghz", 15)
+    label_mode=request.get("label_mode", "STRICT_LUMPED")
+    _route(frequency_ghz, label_mode)
     if request["action"] != "load":
         try:
             validate_resume_deadline(request.get("effective_deadline_utc"))
@@ -73,12 +93,13 @@ def _worker(request_path):
     torch.set_num_threads(2)
     if request["action"]=="load":
         bundle=Bundle(request["data_root"])
-        indices,f=_inputs(bundle)
+        indices,f=_inputs(bundle, frequency_ghz, label_mode)
         outputs={"source_indices":indices}
         checks={}
         for key in ("best","last"):
             path=request[key+"_checkpoint"]
             model,state=load_bb00(path,device=request["device"],expected_sha256=request[key+"_sha256"])
+            _state_route(state, frequency_ghz, label_mode)
             if state["data_sha"]!=bundle.data_sha or state["role"]!=request["role"]:
                 raise ValueError("worker data/role mismatch")
             raw=bundle.arrays["geometry"][indices] if state["role"]=="forward" else bundle.arrays["y"][indices,f]
@@ -93,6 +114,7 @@ def _worker(request_path):
         result={"status":"PASS","pid":os.getpid(),"checks":checks,"arrays_sha256":sha256(request["out_arrays"]),"action":"load"}
     else:
         initial=load_checkpoint(request["last_checkpoint"])
+        _state_route(initial, frequency_ghz, label_mode)
         config=BB00Config(**initial["train_config"])
         config.steps=1
         config.deadline_utc=request.get("effective_deadline_utc")
@@ -104,9 +126,10 @@ def _worker(request_path):
         receipt=train_bb00(request["data_root"],request["resume_out"],config,request["contract_path"],
             request["legacy_replay_receipt"],request["expected_legacy_sha"],resume_checkpoint=request["last_checkpoint"],
             resume_best_checkpoint=request["best_checkpoint"],resume_best_checkpoint_sha256=request["best_sha256"],resume_probe=True)
-        resumed_model,_=load_bb00(receipt["last_checkpoint"],device=request["device"])
+        resumed_model,resumed_state=load_bb00(receipt["last_checkpoint"],device=request["device"])
+        _state_route(resumed_state, frequency_ghz, label_mode)
         bundle=Bundle(request["data_root"])
-        indices,f=_inputs(bundle)
+        indices,f=_inputs(bundle, frequency_ghz, label_mode)
         raw=bundle.arrays["geometry"][indices] if request["role"]=="forward" else bundle.arrays["y"][indices,f]
         with torch.no_grad():
             output=resumed_model(torch.as_tensor(raw,dtype=torch.float32,device=request["device"])).cpu().numpy()
@@ -115,6 +138,7 @@ def _worker(request_path):
         result={"status":"PASS","pid":os.getpid(),"action":"resume_one","receipt":receipt,"resumed_native_output_finite":True,
                 "effective_deadline_utc":config.deadline_utc,
                 "training_budget_sha256":request.get("training_budget_sha256")}
+    result.update(frequency_ghz=frequency_ghz, label_mode=label_mode)
     save_json(request["out_receipt"],result)
 
 
@@ -137,23 +161,29 @@ def _launch(request_path,out_receipt,lock_fds=()):
 
 def verify_bb00_load_resume(data_root,forward_receipt,inverse_receipt,out,contract_path,
                             legacy_replay_receipt,expected_legacy_sha,device="cpu",*,lock_fds=(),
-                            deadline_utc=None,training_budget_sha256=None):
+                            deadline_utc=None,training_budget_sha256=None,
+                            frequency_ghz=15,label_mode="STRICT_LUMPED"):
     """Isolated proof for both new roles. Never promotes diagnostic descendants."""
+    _route(frequency_ghz, label_mode)
     out=Path(out).resolve()
     out.mkdir(parents=True,exist_ok=False)
     original_pins={}
     all_results={}
     binding={"effective_deadline_utc":deadline_utc,"training_budget_sha256":training_budget_sha256,
+             "frequency_ghz":frequency_ghz,"label_mode":label_mode,
              "deadline_semantics":"admission and update-start checks; no hard in-flight interruption"}
     try:
         validate_resume_deadline(deadline_utc)
         bundle=Bundle(data_root)
-        indices,f=_inputs(bundle)
+        indices,f=_inputs(bundle, frequency_ghz, label_mode)
         receipts={"forward":_record(forward_receipt),"inverse":_record(inverse_receipt)}
         for role,receipt in receipts.items():
             validate_resume_deadline(deadline_utc)
             if receipt.get("role")!=role or receipt.get("kind")!="BB00" or receipt.get("test_access") is not False or receipt.get("updates_this_run",0)<1:
                 raise ValueError("qualified original new-data BB00 receipt required")
+            if (receipt.get("frequency_ghz", 15)!=frequency_ghz or
+                    receipt.get("label_mode", "STRICT_LUMPED")!=label_mode):
+                raise ValueError("training receipt frequency/label route differs")
             states={}
             for selection in ("best","last"):
                 path=Path(receipt[selection+"_checkpoint"])
@@ -162,6 +192,7 @@ def verify_bb00_load_resume(data_root,forward_receipt,inverse_receipt,out,contra
                 original_pins[str(path)]=sha256(path)
                 original_pins[str(path)+".identity.json"]=sha256(str(path)+".identity.json")
                 states[selection]=load_checkpoint(path)
+                _state_route(states[selection], frequency_ghz, label_mode)
             best,last=states["best"],states["last"]
             if any(s["schema"]!="bb00_training_state.v1" or s["role"]!=role or s["data_sha"]!=bundle.data_sha for s in states.values()):
                 raise ValueError("original role/snapshot/schema mismatch")
@@ -176,10 +207,13 @@ def verify_bb00_load_resume(data_root,forward_receipt,inverse_receipt,out,contra
                 with torch.no_grad():
                     baseline[selection]=model(torch.as_tensor(raw,dtype=torch.float32,device=device)).cpu().numpy()
             request={"action":"load","data_root":str(Path(data_root).resolve()),"role":role,"device":device,
+                "frequency_ghz":frequency_ghz,"label_mode":label_mode,
                 **{key:receipt[key] for key in ("best_checkpoint","best_sha256","last_checkpoint","last_sha256")},
                 "out_arrays":str(role_out/"fresh_load_outputs.npz"),"out_receipt":str(role_out/"FRESH_LOAD_RECEIPT.json")}
             save_json(role_out/"LOAD_REQUEST.json",request)
             fresh=_launch(role_out/"LOAD_REQUEST.json",request["out_receipt"],lock_fds)
+            if fresh.get("frequency_ghz")!=frequency_ghz or fresh.get("label_mode")!=label_mode:
+                raise ValueError("fresh load receipt frequency/label route differs")
             if sha256(request["out_arrays"])!=fresh["arrays_sha256"]:
                 raise ValueError("fresh output artifact SHA mismatch")
             with np.load(request["out_arrays"],allow_pickle=False) as values:
@@ -194,8 +228,11 @@ def verify_bb00_load_resume(data_root,forward_receipt,inverse_receipt,out,contra
                 effective_deadline_utc=deadline_utc,training_budget_sha256=training_budget_sha256)
             save_json(role_out/"RESUME_REQUEST.json",request)
             resumed=_launch(role_out/"RESUME_REQUEST.json",request["out_receipt"],lock_fds)
+            if resumed.get("frequency_ghz")!=frequency_ghz or resumed.get("label_mode")!=label_mode:
+                raise ValueError("fresh resume receipt frequency/label route differs")
             resumed_receipt=resumed["receipt"]
             updated=load_checkpoint(resumed_receipt["last_checkpoint"])
+            _state_route(updated, frequency_ghz, label_mode)
             if sha256(resumed_receipt["last_checkpoint"])!=resumed_receipt["last_sha256"]:
                 raise ValueError("resumed checkpoint SHA mismatch")
             generator=np.random.default_rng()

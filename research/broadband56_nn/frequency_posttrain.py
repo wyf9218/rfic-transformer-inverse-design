@@ -1,4 +1,4 @@
-"""Ordinary 15 GHz post-training completion using the existing research tools.
+"""Ordinary strict 5..20 GHz post-training completion with existing tools.
 
 Completed stages are hash-checked and reused. Existing incomplete directories
 are never retried, replaced or assigned a new attempt number. The caller holds
@@ -13,6 +13,7 @@ from .frequency_profile import profile_prepared_data
 from .frequency_evaluation import freeze_frequency_evaluation, evaluate_frequency, protocol_identity
 from .frequency_figures import render_frequency_figures, render_frequency_profile
 from .frequency_package import package_model, ACCEPTANCE_CHECKS
+from .frequency_audit_hook import prepare_requested_audit
 
 
 def _files(root):
@@ -46,16 +47,18 @@ def _verify_index(root):
 def finalize_pair(request, root, lock_fds=()):
     """Finish one existing pair; never renew its deadline or claim visual QA."""
     study = Path(root).resolve()
+    frequency = request["train"]["frequency_ghz"]
+    label_mode = request["train"]["label_mode"]
     if (request.get("posttrain") != "LOAD_RESUME_PROFILE_EVALUATE_PLOT_PACKAGE" or
-            request["train"]["frequency_ghz"] != 15 or request["train"]["label_mode"] != "STRICT_LUMPED"):
-        raise ValueError("post-training automation is currently qualified for strict 15 GHz only")
+            type(frequency) is not int or not 5 <= frequency <= 20 or label_mode != "STRICT_LUMPED"):
+        raise ValueError("post-training automation requires strict integer frequency 5..20 GHz")
     if Path(request["out"]).resolve() != study:
         raise ValueError("post-training root differs from the existing study")
     pair_path = study / "PAIR_RECEIPT.json"
     pair = read_json(pair_path)
     if (pair.get("schema") != "frequency_pair_receipt.v1" or
             pair.get("status") != "TRAINED_BUDGET_OR_EARLY_STOP" or
-            pair.get("frequency_ghz") != 15 or pair.get("label_mode") != "STRICT_LUMPED"):
+            pair.get("frequency_ghz") != frequency or pair.get("label_mode") != label_mode):
         raise ValueError("qualified existing trained pair required")
     if read_json(verify_pin(pair["request"])) != request:
         raise ValueError("pair is not bound to the same immutable request")
@@ -68,6 +71,10 @@ def finalize_pair(request, root, lock_fds=()):
     identity = {"pair": pin(pair_path), "request": pair["request"],
         "data_manifest": pin(data / "data_manifest.json"), "dataset_sha256": dataset_sha,
         "posttrain_source_sha256": sha256(__file__), "deadline_utc": request["train"]["deadline_utc"]}
+    audit_request = study / "LARGE_EVALUATION_REQUEST.json"
+    if audit_request.exists():
+        identity["large_evaluation_request"] = pin(audit_request)
+        identity["pretest_audit_hook"] = pin(Path(__file__).with_name("frequency_audit_hook.py"))
     output = study / "posttrain"
     final = output / "POSTTRAIN_RECEIPT.json"
     if final.exists():
@@ -119,6 +126,7 @@ def finalize_pair(request, root, lock_fds=()):
 
     def acceptance_valid(value):
         if (value.get("data_sha") != dataset_sha or value.get("original_checkpoint_bytes_unchanged") is not True or
+                value.get("frequency_ghz", 15) != frequency or value.get("label_mode", "STRICT_LUMPED") != label_mode or
                 value.get("effective_deadline_utc") != identity["deadline_utc"] or
                 value.get("training_budget_sha256") != pair["request"]["sha256"]):
             raise ValueError("load/resume proof data or original deadline differs")
@@ -137,7 +145,7 @@ def finalize_pair(request, root, lock_fds=()):
     def evaluation_valid(value, split):
         observed = value["identity"]
         if (value["split"] != split or observed["dataset"]["sha256"] != dataset_sha or
-                observed["frequency_ghz"] != 15 or observed["label_mode"] != "STRICT_LUMPED" or
+                observed["frequency_ghz"] != frequency or observed["label_mode"] != label_mode or
                 observed["protocol_sha256"] != canonical_sha(protocol_identity()) or
                 any(observed[r+"_checkpoint"]["sha256"] != pair["roles"][r]["best"]["sha256"]
                     for r in ("forward", "inverse"))):
@@ -158,7 +166,8 @@ def finalize_pair(request, root, lock_fds=()):
             lambda: verify_bb00_load_resume(data, pair["roles"]["forward"]["receipt"]["path"],
                 pair["roles"]["inverse"]["receipt"]["path"], acceptance_dir, request["contract_path"],
                 request["legacy_replay_receipt"], request["legacy_replay_sha256"], request["train"]["device"],
-                lock_fds=lock_fds, deadline_utc=identity["deadline_utc"], training_budget_sha256=pair["request"]["sha256"]),
+                lock_fds=lock_fds, deadline_utc=identity["deadline_utc"], training_budget_sha256=pair["request"]["sha256"],
+                frequency_ghz=frequency, label_mode=label_mode),
             acceptance_valid, indexed=False)
         profile_dir = output / "profile"
         def profile_valid(value):
@@ -167,14 +176,19 @@ def finalize_pair(request, root, lock_fds=()):
         stage("profile", profile_dir, "PROFILE_RECEIPT.json", "bb_frequency_profile_receipt.v1", "PASS_DATA_PROFILE_ONLY",
               lambda: profile_prepared_data(data, profile_dir, extractor_source=request.get("extractor_source")), profile_valid)
         profile = profile_dir / "frequency_data_profile.json"
+        # User-authorized supplement: exact IDs/window/model/tolerance first,
+        # then existing scoring. This does not change training or production.
+        prepare_requested_audit(study, pair, profile)
         evaluation = output / "evaluation"
         validation_dir = evaluation / "validation"
         validation = stage("validation", validation_dir, "EVALUATION_SUMMARY.json", "frequency_evaluation_summary.v1", "COMPLETE_DESCRIPTIVE_EVALUATION",
-            lambda: evaluate_frequency(data, forward, inverse, validation_dir, split="validation", device=request["train"]["device"]),
+            lambda: evaluate_frequency(data, forward, inverse, validation_dir, split="validation", device=request["train"]["device"],
+                frequency_ghz=frequency, label_mode=label_mode),
             lambda value: evaluation_valid(value, "validation"))
         freeze_path = evaluation / "TEST_CONFIGURATION_FREEZE.json"
         if not freeze_path.exists():
-            freeze_frequency_evaluation(data, forward, inverse, freeze_path, validation_summary=validation)
+            freeze_frequency_evaluation(data, forward, inverse, freeze_path, validation_summary=validation,
+                frequency_ghz=frequency, label_mode=label_mode)
         freeze = read_json(freeze_path)
         if (freeze.get("status") != "FROZEN" or freeze["identity"] != read_json(validation)["identity"] or
                 freeze["validation_summary"] != pin(validation)):
@@ -182,7 +196,8 @@ def finalize_pair(request, root, lock_fds=()):
         test_dir = evaluation / "test"
         stage("test", test_dir, "EVALUATION_SUMMARY.json", "frequency_evaluation_summary.v1", "COMPLETE_DESCRIPTIVE_EVALUATION",
             lambda: evaluate_frequency(data, forward, inverse, test_dir, split="test", device=request["train"]["device"],
-                                        configuration_freeze=freeze_path), lambda value: evaluation_valid(value, "test"))
+                frequency_ghz=frequency, label_mode=label_mode,
+                configuration_freeze=freeze_path), lambda value: evaluation_valid(value, "test"))
         figures = output / "figures"
         histories = [str(Path(pair["roles"][r]["receipt"]["path"]).parent / "history.json") for r in ("forward", "inverse")]
         stage("model_figures", figures / "model", "FIGURE_MANIFEST.json", "frequency_figures.v1", "EXPORTED_PENDING_VISUAL_QA",

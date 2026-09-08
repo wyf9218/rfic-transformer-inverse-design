@@ -1,4 +1,5 @@
 """Mocked native post-training stages; no model/data/EMX work is performed."""
+import json
 from pathlib import Path
 
 import pytest
@@ -20,7 +21,8 @@ def index(root):
 
 
 @pytest.fixture
-def setup(tmp_path, monkeypatch):
+def setup(tmp_path, monkeypatch, request):
+    frequency = getattr(request, "param", 15)
     root = tmp_path / "study"; root.mkdir()
     data = tmp_path / "data"; data.mkdir()
     manifest = write(data / "data_manifest.json", {"artifacts": {"dataset.npz": {"sha256": "a"*64}}})
@@ -28,7 +30,7 @@ def setup(tmp_path, monkeypatch):
     request = {"schema": "frequency_study_request.v1", "out": str(root),
         "posttrain": "LOAD_RESUME_PROFILE_EVALUATE_PLOT_PACKAGE", "contract_path": str(recipe),
         "legacy_replay_receipt": str(recipe), "legacy_replay_sha256": sha256(recipe),
-        "train": {"frequency_ghz": 15, "label_mode": "STRICT_LUMPED", "device": "cpu",
+        "train": {"frequency_ghz": frequency, "label_mode": "STRICT_LUMPED", "device": "cpu",
                   "deadline_utc": "2099-01-01T00:00:00Z"}}
     request_path = write(root / "request.json", request)
     roles = {}
@@ -38,13 +40,13 @@ def setup(tmp_path, monkeypatch):
         write(path.parent / "history.json", {"synthetic": True})
         roles[role] = {"receipt": post.pin(path), "best": post.pin(checkpoint), "last": post.pin(checkpoint)}
     pair = {"schema": "frequency_pair_receipt.v1", "status": "TRAINED_BUDGET_OR_EARLY_STOP",
-        "frequency_ghz": 15, "label_mode": "STRICT_LUMPED", "request": post.pin(request_path),
+        "frequency_ghz": frequency, "label_mode": "STRICT_LUMPED", "request": post.pin(request_path),
         "roles": roles, "data_root": str(data)}
     write(root / "PAIR_RECEIPT.json", pair)
     calls = []
     protocol = {"schema": "synthetic_protocol"}
     monkeypatch.setattr(post, "protocol_identity", lambda: protocol)
-    identity = {"dataset": {"sha256": "a"*64}, "frequency_ghz": 15, "label_mode": "STRICT_LUMPED",
+    identity = {"dataset": {"sha256": "a"*64}, "frequency_ghz": frequency, "label_mode": "STRICT_LUMPED",
         "protocol_sha256": canonical_sha(protocol), **{r+"_checkpoint": roles[r]["best"] for r in roles}}
 
     def acceptance(data, f, i, out, *args, **kw):
@@ -52,10 +54,12 @@ def setup(tmp_path, monkeypatch):
         assert kw["deadline_utc"] == request["train"]["deadline_utc"]
         assert kw["training_budget_sha256"] == sha256(request_path)
         assert kw["lock_fds"] == (123, 456)
+        assert kw["frequency_ghz"] == frequency and kw["label_mode"] == "STRICT_LUMPED"
         results = {r: {"status": "PASS", "checks": {k: True for k in post.ACCEPTANCE_CHECKS},
             **{"original_"+s+"_sha256": roles[r][s]["sha256"] for s in ("best", "last")}} for r in roles}
         write(out / "BB00_LOAD_RESUME_RECEIPT.json", {"schema": "bb00_load_resume_proof.v1", "status": "PASS",
             "results": results, "original_pins": {}, "data_sha": "a"*64,
+            "frequency_ghz": frequency, "label_mode": "STRICT_LUMPED",
             "original_checkpoint_bytes_unchanged": True, "effective_deadline_utc": kw["deadline_utc"],
             "training_budget_sha256": kw["training_budget_sha256"]})
 
@@ -69,6 +73,7 @@ def setup(tmp_path, monkeypatch):
 
     def evaluate(data, f, i, out, **kw):
         calls.append(kw["split"])
+        assert kw["frequency_ghz"] == frequency and kw["label_mode"] == "STRICT_LUMPED"
         write(out / "EVALUATION_SUMMARY.json", {"schema": "frequency_evaluation_summary.v1",
             "status": "COMPLETE_DESCRIPTIVE_EVALUATION", "identity": identity,
             "split": kw["split"], "artifacts": {},
@@ -77,6 +82,7 @@ def setup(tmp_path, monkeypatch):
 
     def freeze(data, f, i, out, **kw):
         calls.append("freeze")
+        assert kw["frequency_ghz"] == frequency and kw["label_mode"] == "STRICT_LUMPED"
         write(out, {"status": "FROZEN", "identity": identity,
                     "validation_summary": post.pin(kw["validation_summary"])})
 
@@ -104,6 +110,7 @@ def setup(tmp_path, monkeypatch):
     return request, root, calls
 
 
+@pytest.mark.parametrize("setup", [5, 10, 15, 20], indirect=True)
 def test_complete_once_and_hash_checked_reuse(setup):
     request, root, calls = setup
     result = post.finalize_pair(request, root, (123, 456))
@@ -114,6 +121,19 @@ def test_complete_once_and_hash_checked_reuse(setup):
     before = list(calls)
     assert post.finalize_pair(request, root, (123, 456)) == result
     assert calls == before
+
+
+def test_prospective_target_hook_precedes_all_scoring(setup, monkeypatch):
+    request, root, calls = setup
+    def audit(study, pair, profile):
+        assert study == root
+        assert pair['frequency_ghz'] == 15
+        assert Path(profile).is_file()
+        assert 'validation' not in calls and 'test' not in calls
+        calls.append('prospective_targets')
+    monkeypatch.setattr(post, 'prepare_requested_audit', audit)
+    post.finalize_pair(request, root, (123, 456))
+    assert calls.index('profile') < calls.index('prospective_targets') < calls.index('validation')
 
 
 def test_incomplete_existing_stage_never_retries(setup):
@@ -163,9 +183,34 @@ def test_changed_completed_artifact_is_not_recomputed(setup):
 def test_other_frequency_cannot_use_15ghz_acceptance(setup):
     request, root, calls = setup
     request["train"]["frequency_ghz"] = 10
-    with pytest.raises(ValueError, match="strict 15 GHz"):
+    with pytest.raises(ValueError, match="qualified existing trained pair"):
         post.finalize_pair(request, root)
     assert calls == [] and not (root / "posttrain").exists()
+
+
+@pytest.mark.parametrize("frequency", [True, 4, 5.5, 21])
+def test_unsupported_or_noninteger_frequency_rejected_before_writes(setup, frequency):
+    request, root, calls = setup
+    request["train"]["frequency_ghz"] = frequency
+    with pytest.raises(ValueError, match="strict integer frequency"):
+        post.finalize_pair(request, root)
+    assert calls == [] and not (root / "posttrain").exists()
+
+
+@pytest.mark.parametrize("setup", [5, 20], indirect=True)
+def test_missing_acceptance_route_cannot_be_relabelled_non15(setup, monkeypatch):
+    request, root, calls = setup
+    original = post.verify_bb00_load_resume
+    def missing(*args, **kwargs):
+        original(*args, **kwargs)
+        path = args[3] / "BB00_LOAD_RESUME_RECEIPT.json"
+        value = post.read_json(path)
+        value.pop("frequency_ghz")
+        path.write_text(json.dumps(value))
+    monkeypatch.setattr(post, "verify_bb00_load_resume", missing)
+    with pytest.raises(ValueError, match="load/resume proof"):
+        post.finalize_pair(request, root, (123, 456))
+    assert calls == ["acceptance"]
 
 
 def test_incomplete_stage_hash_index_is_not_accepted(setup, monkeypatch):
