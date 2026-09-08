@@ -32,9 +32,10 @@ freezes63/320 settled requests at2026-09-08 17:11:58 UTC, with560 actual
 solves,533 strict-valid outputs and all failures retained. Only7 requests
 have all11 candidates strict-valid. Its51 figures have exact scoped review;
 see PACKAGE_QA.json for the independent publication receipt. The latest
-[10-slide advisor deck](docs/research/frequency5to20_advisor_cumulative40_20260908_v1/README_CN.md)
-uses the independently approved cumulative40-request physical snapshot, with
-353 independent solves and339 strict-valid labels. Physical15GHz remains a
+[10-slide advisor deck and advisor Q&A](docs/research/frequency5to20_advisor_cumulative63_20260908_v1/README_CN.md)
+uses the same independently approved cumulative63-request snapshot. Its exact
+PPT,10 previews and source copies passed separate publication review; see
+PACKAGE_QA.json. It has not been tested in native PowerPoint. Physical15GHz remains a
 separate development5K model; formal10K15 fresh EMX is NOT_RUN.
 The former seven-model research timer was disabled. Production's
 NN-disabled configuration and the GUI worktree were not changed.
@@ -42,9 +43,15 @@ NN-disabled configuration and the GUI worktree were not changed.
 The [terminal-export handoff](docs/research/frequency5to20_terminal_export_20260908_v1/README_CN.md)
 adds a tested finite export CLI and one installed local producer-exit waiter.
 The [actual18:02 handoff observation](docs/research/frequency5to20_actual_handoff_20260908_v1/README_CN.md)
-confirms natural old-process exits, native successor998085 and reporting
-successor86088. Terminal exports exited0, but that does not grant new scientific
-or visual acceptance. Reboot auto-restart is NOT_INSTALLED.
+records natural old-process exits and successors998085/86088 at18:02.
+The later18:52 read-only check confirms those processes are absent. The native
+queue exited at18:33 after11GHz's fifth request,Q17,failed its resource-admission
+gate before starting EMX. Existing Q10–Q16 results remain preserved. Reporting
+ended PARTIAL at72/320 accounted requests; those72 are operational metadata,
+not an extension of the independently approved63-request results.
+Recovery code is under development and has not been deployed. Terminal exports
+exited0, but that does not grant new scientific or visual acceptance.
+Reboot auto-restart is NOT_INSTALLED.
 
 The production observations and earlier project records below are timestamped
 historical evidence, not current live counters.

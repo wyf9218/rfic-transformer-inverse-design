@@ -1,5 +1,33 @@
 # Current Evidence Status
 
+## Advisor63 publication and diagnosed native exit, 2026-09-08 18:52 UTC
+
+The [10-slide cumulative63 advisor deck and10 Q&A](frequency5to20_advisor_cumulative63_20260908_v1/README_CN.md)
+now have exact numerical, visual and independent public-copy review. The22-file
+release preserves the20-file author candidate and adds PACKAGE_QA.json plus
+RELEASE_SHA256SUMS. PPT SHA-256:
+`cd49400f0ff518143ec5365476819d9c39a6d2293910c9d2a94eb4a68b8c3af2`.
+No native PowerPoint test is claimed. The physical snapshot is still63 requests,
+560 solves and533 strict-valid labels, with all failures and5K/10K boundaries retained.
+
+MARS was reachable at18:52:26 UTC;998085/2094607 and local86088 were absent.
+The native dispatcher ended18:33:18 with DISPATCH_FAILED_NO_RETRY. The exact
+cause was a pre-solver resource-admission rejection at11GHz's fifth request,Q17.
+Only PREFLIGHT existed forQ17; no solve directory or native EMX launch existed.
+The failed compound guard did not persist which CPU/load,memory or disk
+subcondition triggered. No resource-specific cause is inferred. Q10–Q16
+completion receipts match and must be reused; Q18–Q20 were not dispatched.
+The read-only diagnosis receipt SHA-256 is
+`b7fb800b99adc0440baa2399fd37e1b1eaf74bbe3bca8ca2eb1e85c809fd7cb7`
+(private source: reports/frequency5to20_20260908T063800Z/native_failure_diagnosis_20260908T184000Z/remote_readonly_v1/DIAGNOSIS_RECEIPT.json).
+
+Reporting ended PARTIAL with72 accounted/248 unsettled requests. These counts
+are operational metadata, not new scientific approval. Recovery code and
+reporter compatibility are being prepared in the independent research worktree;
+recovery is not deployed and no new native launch is claimed. Production and GUI
+are unchanged. The full320-request objective remains active. Earlier running
+observations below are timestamped history, not present process status.
+
 ## Actual automatic native and reporting handoff, 18:02 UTC
 
 [The actual handoff observation](frequency5to20_actual_handoff_20260908_v1/README_CN.md)

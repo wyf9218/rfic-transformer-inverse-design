@@ -1,0 +1,83 @@
+{
+  "schema": "advisor63_delivery_state.v1",
+  "status": "SCOPED_REPORT_COMPLETE_FULL_GOAL_ACTIVE",
+  "created_utc": "2026-09-08T18:45:06.692Z",
+  "scientific_snapshot": "snapshot_0054",
+  "scientific_cutoff_utc": "2026-09-08T17:11:58.789071Z",
+  "physical": {
+    "requests_settled": 63,
+    "requests_planned": 320,
+    "settled_slots": 693,
+    "planned_slots": 3520,
+    "actual_solves": 560,
+    "strict_valid": 533,
+    "invalid": 27,
+    "closed_analytic_fail": 46,
+    "closed_gds_fail": 60,
+    "closed_drc_fail": 27,
+    "complete_strict11_requests": 7,
+    "pending_slots_full_plan": 2652,
+    "unsettled_requests": 257,
+    "formal10k15_fresh_emx": "NOT_RUN",
+    "physical15": "DEVELOPMENT_5K_NOT_FORMAL_10K"
+  },
+  "training": {
+    "pairs": 16,
+    "scope": "5..20 GHz inclusive integer frequencies",
+    "first_budget_saved_loaded_diagnostic_resume_test": "COMPLETE",
+    "convergence": "NOT_ESTABLISHED",
+    "weight_status": "PARTIAL_PROVISIONAL",
+    "random_self_proxy_candidates": 1760000,
+    "retrain_or_proxy_rerun_this_milestone": false
+  },
+  "ppt": {
+    "path": "advisor_frequency5to20_cumulative63_v1.pptx",
+    "sha256": "cd49400f0ff518143ec5365476819d9c39a6d2293910c9d2a94eb4a68b8c3af2",
+    "bytes": 100215,
+    "source": {
+      "path": "reports/frequency5to20_20260908T063800Z/advisor_slides_cumulative63_20260908T182629Z/candidate_v2/output/advisor_frequency5to20_cumulative63_v1.pptx",
+      "sha256": "cd49400f0ff518143ec5365476819d9c39a6d2293910c9d2a94eb4a68b8c3af2",
+      "availability": "SOURCE_MAY_BE_PRIVATE_NOT_INCLUDED"
+    },
+    "slides": 10,
+    "native_charts": 10,
+    "native_tables": 6,
+    "embedded_literal_workbooks": 10,
+    "native_powerpoint": "NOT_NATIVE_POWERPOINT_TESTED"
+  },
+  "coverage_notes": "Coverage and Q&A were frozen before PPT approval. Their pending-PPT wording is historical. This delivery and its exact QA receipt provide the later final PPT acceptance.",
+  "runtime": {
+    "observed_utc": "2026-09-08T18:36:20Z",
+    "status": "CONFIRMED_TERMINAL_FAILURE_NO_RESTART",
+    "native": {
+      "pid": 998085,
+      "pid_present": false,
+      "waiter_pid": 2094607,
+      "waiter_present": false,
+      "status": "DISPATCH_FAILED_NO_RETRY",
+      "exit_code": 1,
+      "completed_utc": "2026-09-08T18:33:18.577333+00:00",
+      "error": "ResearchEmxError: Native stage did not finish with evidence",
+      "root_cause_at_observation": "UNDERLYING_FAILED_STAGE_NOT_YET_IDENTIFIED_FROM_MINIMAL_STATUS_READ"
+    },
+    "reporter": {
+      "pid": 86088,
+      "pid_present": false,
+      "status": "PARTIAL",
+      "end_reason": "PHYSICAL_QUEUE_ENDED_PARTIAL",
+      "completed_utc": "2026-09-08T18:33:48.734959+00:00",
+      "accounted_requests": 72,
+      "pending_requests": 248,
+      "counts_role": "OPERATING_METADATA_ONLY_NOT_SCIENTIFIC_RELEASE"
+    },
+    "latest_approved_scientific_requests": 63,
+    "source": {
+      "path": "reports/frequency5to20_20260908T063800Z/advisor_slides_cumulative63_20260908T182629Z/RUNTIME_FAILURE_OBSERVATION.json",
+      "sha256": "97f01a77b99d7814d8f44be2f93498ece03b1d8b58b67c76ad8e4923f8e9f4fd",
+      "bytes": 3167,
+      "availability": "PRIVATE_OBSERVATION_NOT_INCLUDED"
+    },
+    "scope": "One recorded observation, not a live process scan. Publication performs no process or remote actions."
+  },
+  "goal_complete": false
+}

@@ -1,0 +1,32 @@
+{
+  "schema": "advisor63_publication_qa.v1",
+  "status": "GO_SCOPED_RELEASE",
+  "created_utc": "2026-09-08T18:57:08.413Z",
+  "independent_public_copy_qa": {
+    "path": "reports/frequency5to20_20260908T063800Z/advisor_slides_cumulative63_20260908T182629Z/public_copy_qa_v1/INDEPENDENT_PUBLIC_COPY_QA.json",
+    "sha256": "e30f80a50433e76a4e03d74e991c716a62a2e5842473e0ee9617159c7ac4a12e",
+    "bytes": 13575,
+    "availability": "PRIVATE_NOT_INCLUDED"
+  },
+  "author_delivery": {
+    "path": "DELIVERY_RECEIPT.json",
+    "sha256": "d66c026a48dad79ae90ef357e307a1ddb8884fffb08896a542aff3f57898b3a9",
+    "bytes": 11363
+  },
+  "author_checksum_index": {
+    "path": "SHA256SUMS",
+    "sha256": "52d02412cf591c09fbcd75c5d3f00e84b821247a4c00ed85255166a582c7e6f5",
+    "bytes": 1563
+  },
+  "pptx_sha256": "cd49400f0ff518143ec5365476819d9c39a6d2293910c9d2a94eb4a68b8c3af2",
+  "author_files_verified": 20,
+  "copied_sources_verified": 14,
+  "scope_limits": [
+    "No new numerical evaluation or native solver",
+    "Exact approved deck/previews reused, not rerendered",
+    "No native PowerPoint test",
+    "No approval of later72 numerical results or full320 completion",
+    "Runtime is a timestamped stopped observation, not a live counter"
+  ],
+  "full_goal_complete": false
+}

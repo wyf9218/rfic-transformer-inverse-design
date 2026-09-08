@@ -1,0 +1,916 @@
+{
+  "schema": "advisor63_requirement_coverage.v1",
+  "status": "COMPLETE_CONTENT_AUDIT_WITH_EXPLICIT_GAPS",
+  "created_utc": "2026-09-08T18:26:56.848Z",
+  "scope": {
+    "scientific_snapshot": "snapshot_0054",
+    "accounted_requests": 63,
+    "physical_cutoff_utc": "2026-09-08T17:11:58Z",
+    "newer_snapshot_values_read": false,
+    "models_or_simulations_run": 0,
+    "statistics_recomputed": 0,
+    "plots_rendered": 0,
+    "visual_qa_repeated": false,
+    "remote_calls": 0,
+    "public_or_live_files_modified": false
+  },
+  "delivery_shape": "Requested JSON coverage and concise Markdown Q&A only; report-surface creation explicitly outside this bounded assignment.",
+  "requirements": [
+    {
+      "id": "C01",
+      "requirement": "56个标签频点与5–20GHz16路覆盖",
+      "status": "REUSABLE_ACCEPTED_WITH_SCOPE",
+      "evidence_ids": [
+        "S11_PROFILE",
+        "S12_PROFILE_RECEIPT",
+        "S16_NATIVE_FIGURE_QA",
+        "S17_NATIVE_FIGURE_INDEX"
+      ],
+      "available": "正式10000几何×56点的total/descriptor/strict、固定train/val/test与四指标train分布已保存；56点counts/ranges两图可复用。",
+      "missing": "无须新增统计；汇报只把5–20称已训练模型支持。",
+      "caveat": "同一几何56行相关；数据profile中的梯度行不是训练完成证据，实际训练行用S13。30–60在当前快照NO_STRICT_LABELS；21–60新训练不在本轮范围。"
+    },
+    {
+      "id": "C02",
+      "requirement": "同几何hash划分、数据行与实际训练行",
+      "status": "REUSABLE_ACCEPTED",
+      "evidence_ids": [
+        "S11_PROFILE",
+        "S13_TRAIN_STATUS",
+        "S32_DATA_MANIFEST",
+        "S08_STATUS_QA"
+      ],
+      "available": "共同10000源几何；全局6015/2002/1983；每频strict有效子集与train-only normalizer政策有证据。",
+      "missing": "无。",
+      "caveat": "15GHz实际3175/1006/1046，不是10000行全部训练；源560000频率行不是560000独立几何。"
+    },
+    {
+      "id": "C03",
+      "requirement": "一对256×3网络、频率路由、可调用包",
+      "status": "REUSABLE_ACCEPTED_WITH_SCOPE",
+      "evidence_ids": [
+        "S10_MODEL_SPEC",
+        "S16_NATIVE_FIGURE_QA",
+        "S17_NATIVE_FIGURE_INDEX",
+        "S27_LIBRARY_USAGE",
+        "S09_STATUS"
+      ],
+      "available": "10→256→256→256→4与4→256→256→256→10；GELU(tanh近似)、independent-sigmoid几何映射；16路包可加载。",
+      "missing": "整库MARS迁移和每次新调用fresh EMX并无本任务验收。",
+      "caveat": "频率是路由不是输入；训练从头开始，复用BB00实现不等于历史优化器逐字节相同。"
+    },
+    {
+      "id": "C04",
+      "requirement": "每频Forward/Inverse真实学习曲线",
+      "status": "REUSABLE_ACCEPTED_WITH_SCOPED_VISUAL_QA",
+      "evidence_ids": [
+        "S13_TRAIN_STATUS",
+        "S16_NATIVE_FIGURE_QA",
+        "S17_NATIVE_FIGURE_INDEX",
+        "S33_NATIVE_QA_SCOPE"
+      ],
+      "available": "16路learning_curves PNG/PDF已保存；正式15图经过逐图旧QA，其余按现存contact/抽检范围验收。",
+      "missing": "未证明充分收敛；不能把保存重载/单步诊断续训说成训练收敛。",
+      "caveat": "全部PARTIAL/PROVISIONAL；5–16各12000更新，17–20分别8875/5538/3357/1744；19/20反向ramp未完成。"
+    },
+    {
+      "id": "C05",
+      "requirement": "HELDOUT_FORWARD_EM_LABELS四项误差、散点与原目标反向诊断",
+      "status": "REUSABLE_ACCEPTED",
+      "evidence_ids": [
+        "S14_HELDOUT_METRICS",
+        "S15_ROLLUP_QA",
+        "S16_NATIVE_FIGURE_QA",
+        "S17_NATIVE_FIGURE_INDEX"
+      ],
+      "available": "全部合格test行A正向和B连续/网格反向分表；192指标行及MAE/RMSE/Bias/P50/P90/P95已审，16路散点、反向残差/可行性图可复用。",
+      "missing": "不把holdout原几何S4P用作新反向几何物理真值。",
+      "caveat": "A为已有EM标签，B为SELF_PROXY；native R²限真实留出回归图；单seed无总体CI。"
+    },
+    {
+      "id": "C06",
+      "requirement": "5–20四目标物理单位MAE/P95与统一尺度热图",
+      "status": "TABLE_AVAILABLE_SEPARATE_HELDOUT_FIGURE_NOT_CONFIRMED",
+      "evidence_ids": [
+        "S14_HELDOUT_METRICS",
+        "S15_ROLLUP_QA",
+        "S23_PHYSICAL_METRICS",
+        "S26_PHYSICAL_FIGURE_INDEX",
+        "S28_PPT40_QA"
+      ],
+      "available": "物理S54五汇总含原单位MAE/P95、4×16固定跨度热图、selected；holdout全16 MAE/P95真实CSV已可供原生图表。",
+      "missing": "本次有界覆盖检查未定位到独立holdout四目标MAE+P95随频率全套图的精确GO，不能据此断言不存在。旧PPT可复用已审内容；新PPT新增或重排须其自身终态QA。",
+      "caveat": "不同频率有效样本不同，仅描述；正式10K15物理列缺值，不以5K填充。"
+    },
+    {
+      "id": "C07",
+      "requirement": "每频10000组三指标×11Q的SELF_PROXY",
+      "status": "REUSABLE_ACCEPTED_WITH_SCOPE",
+      "evidence_ids": [
+        "S13_TRAIN_STATUS",
+        "S18_QSCAN_QA",
+        "S19_QSCAN_INDEX"
+      ],
+      "available": "16×10000×11=1760000随机逻辑候选已完成；H审计另列；64张正式图含Q分布、首请求分数、残差CDF和目标空间覆盖。",
+      "missing": "无同等规模fresh EMX；独立代理评价器结果未获本轮证据。",
+      "caveat": "随机LHS是单次冻结有限框架，不是已证可达集合；H与C分开，16路源几何不当成16倍独立数据。"
+    },
+    {
+      "id": "C08",
+      "requirement": "Q10–20训练支持图与域外标识",
+      "status": "REUSABLE_ACCEPTED",
+      "evidence_ids": [
+        "S20_QSUPPORT",
+        "S21_QSUPPORT_NUMERIC_QA",
+        "S22_QSUPPORT_VISUAL_QA"
+      ],
+      "available": "176格train-only边际计数与16分母已数值/PNG/PDF验收；54格OUT，全部16路Q20超观察train范围。",
+      "missing": "条件于Lp/Ls/|k|的联合可达性仍UNKNOWN；不能设置新稀疏阈值伪称验证。",
+      "caveat": "描述窗[q−0.5,q+0.5)不是成功容差；OUT不是物理不可达。"
+    },
+    {
+      "id": "C09",
+      "requirement": "GENERATED_FRESH_EMX目标误差与同几何proxy偏差",
+      "status": "REUSABLE_ACCEPTED_PARTIAL_PHYSICAL_FRAME",
+      "evidence_ids": [
+        "S04_PUBLIC_REPORT",
+        "S06_PUBLIC_QA",
+        "S07_NUMERIC_QA",
+        "S23_PHYSICAL_METRICS",
+        "S31_PHYSICAL_SELECTED"
+      ],
+      "available": "S54闭合63请求/693槽/560独立求解/533strict+27invalid；EMX-target及EMX-frozen-grid-proxy四指标六统计已有，selected/all、strict/finite diagnostic、scope分别保存。",
+      "missing": "原320请求仅63结算；正式10K15物理NOT_RUN，随机C目标物理不在当前已验收H请求结果。",
+      "caveat": "已闭合46解析/60GDS/27DRC；全计划221解析含未结算预知失败，不能同闭合分母相加；失败null不是0。"
+    },
+    {
+      "id": "C10",
+      "requirement": "每个Q评分曲线、预选误差、联合命中和失败数",
+      "status": "REUSABLE_ACCEPTED",
+      "evidence_ids": [
+        "S26_PHYSICAL_FIGURE_INDEX",
+        "S30_FIGURE_TIMELINE",
+        "S04_PUBLIC_REPORT",
+        "S07_NUMERIC_QA"
+      ],
+      "available": "本轮23请求46新图+5累计汇总精确GO；旧40图复用；按原11槽保留失败且q_proxy先于EMX冻结。",
+      "missing": "q_emx非完整请求保持null；不是把可解Q中的最好值作全11最优。",
+      "caveat": "STATUS历史PENDING保留，后置FIGURE_RELEASE_STATUS只批准精确图；不能批准未来快照。"
+    },
+    {
+      "id": "C11",
+      "requirement": "固定Q15/q_proxy/q_emx共同完整候选集比较",
+      "status": "REUSABLE_ACCEPTED_SMALL_N",
+      "evidence_ids": [
+        "S24_SELECTION",
+        "S07_NUMERIC_QA",
+        "S26_PHYSICAL_FIGURE_INDEX"
+      ],
+      "available": "累计7请求full11 strict有效，192比较行与selection图已验收；新增f10第四12/11、f6第四10/12。",
+      "missing": "其余56闭合请求无完整q_emx；各路共同集极小，不能推成选择性能冠军。",
+      "caveat": "q_emx为事后同评分oracle，未必每个物理指标单独最优；三策略必须共同集，不拿幸存者补齐。"
+    },
+    {
+      "id": "C12",
+      "requirement": "物理残差CDF/目标–实际密度，重点15GHz",
+      "status": "NOT_AVAILABLE_AT_FROZEN_S54",
+      "evidence_ids": [
+        "S25_PHYSICAL_DISTRIBUTION_AVAILABILITY",
+        "S29_SNAPSHOT"
+      ],
+      "available": "原可用性表逐16频明确不可用：CDF需要至少5个不同请求，density需要至少20个请求及目标变化。可复用正式15 SELF_PROXY CDF但必须明确证据类。",
+      "missing": "S54仅3–4请求/频；物理CDF与密度无已GO产物；正式15新几何EMX仍NOT_RUN。",
+      "caveat": "不把同请求11候选膨胀为独立N，不用代理CDF或原forward散点代替physical density；这些阈值是既有显示政策，不宣称统计充分性定理。"
+    },
+    {
+      "id": "C13",
+      "requirement": "CI、物理分母与负结果可复核",
+      "status": "REUSABLE_ACCEPTED_WITH_CAVEATS",
+      "evidence_ids": [
+        "S07_NUMERIC_QA",
+        "S23_PHYSICAL_METRICS",
+        "S24_SELECTION",
+        "S04_PUBLIC_REPORT"
+      ],
+      "available": "整请求2000次bootstrap、seed2026090801、95%百分位；每路小样本描述；R1不可估计，R2–R4暂定。两负例原门禁保留。",
+      "missing": "无多seed训练重复、总体抽样设计或充分功效；不报告因果优化冠军。",
+      "caveat": "独立求解身份不是IID统计单位；joint hit逐四项绝对容差，不能用平均分替代。"
+    },
+    {
+      "id": "C14",
+      "requirement": "16状态与导师PPT更新边界",
+      "status": "REUSABLE_SOURCE_PPT_UPDATE_PENDING",
+      "evidence_ids": [
+        "S09_STATUS",
+        "S30_FIGURE_TIMELINE",
+        "S28_PPT40_QA",
+        "S06_PUBLIC_QA"
+      ],
+      "available": "16行训练/代理/物理/图表分列已有；旧40PPT10页10原生图6表有GO、NOT_NATIVE_POWERPOINT_TESTED。",
+      "missing": "63版PPT由父任务独立负责，本审查未构建、未提前授予其视觉/原生验收。会议日期时区尚未获确证，不把工程预算当会议截止。",
+      "caveat": "只引用S54科学数值；晚于S54的69运营计数/未QA快照禁止填入本版。"
+    }
+  ],
+  "source_pins": {
+    "S01_REQUIREMENT": {
+      "path": "Codex_Priority_5_20GHz_Train_Evaluate_Plot_v3.md",
+      "sha256": "e9e1ad7003425b611ff19b51270f885bddac8f60fc521caf9e331ab177bbdd63",
+      "bytes": 11467,
+      "path_base": "EXTERNAL_USER_ATTACHMENT_FILENAME_ONLY",
+      "availability": "SOURCE_NOT_INCLUDED_IN_THIS_BUNDLE"
+    },
+    "S02_MEMORY": {
+      "path": "reports/chat_memory_20260821/CURRENT_ENGINEERING_MEMORY_CN.md",
+      "sha256": "dcad1d11a1db25165658f948eff6cdf7fe83520c45497bdd75f77473af1436e3",
+      "bytes": 1352835,
+      "path_base": "RESEARCH_ROOT",
+      "availability": "SOURCE_NOT_INCLUDED_IN_THIS_BUNDLE"
+    },
+    "S03_HISTORY": {
+      "path": "reports/chat_memory_20260820/SIMULATED_TRANSFORMER_NN_ENGINEERING_MEMORY_CN.md",
+      "sha256": "28d091e93ce8e8dfeba670f8b60d2e791e923ab5d0a193fe878a3e8662105931",
+      "bytes": 52023,
+      "path_base": "RESEARCH_ROOT",
+      "availability": "SOURCE_NOT_INCLUDED_IN_THIS_BUNDLE"
+    },
+    "S04_PUBLIC_REPORT": {
+      "path": "github_worktrees/frequency-indexed-mlp-20260908/docs/research/frequency5to20_new23_cumulative63_20260908_v1/README_CN.md",
+      "sha256": "67903de2c9d9c79c5acad45a3e9551ad22ada9a245914bda7a32d768c6bb4979",
+      "bytes": 14387,
+      "path_base": "RESEARCH_ROOT",
+      "availability": "SOURCE_NOT_INCLUDED_IN_THIS_BUNDLE"
+    },
+    "S05_PUBLIC_RECEIPT": {
+      "path": "github_worktrees/frequency-indexed-mlp-20260908/docs/research/frequency5to20_new23_cumulative63_20260908_v1/PUBLIC_RECEIPT.json",
+      "sha256": "d9c1004f3d853004dd4b4e8ede3992023c8e0cf9d48a379fdd3cbd404235cd8e",
+      "bytes": 118561,
+      "path_base": "RESEARCH_ROOT",
+      "availability": "SOURCE_NOT_INCLUDED_IN_THIS_BUNDLE"
+    },
+    "S06_PUBLIC_QA": {
+      "path": "reports/frequency5to20_20260908T063800Z/milestone_new23_cumulative63_v1/public_package_qa_v1/PUBLIC_PACKAGE_INDEPENDENT_QA.json",
+      "sha256": "29c8d659c3aa608cab297c998b01b8754e395b560878a043f3282e8699f2a8f3",
+      "bytes": 7763,
+      "path_base": "RESEARCH_ROOT",
+      "availability": "SOURCE_NOT_INCLUDED_IN_THIS_BUNDLE"
+    },
+    "S07_NUMERIC_QA": {
+      "path": "reports/frequency5to20_20260908T063800Z/milestone_new23_cumulative63_v1/numeric_qa_v1/attempt_v2/INDEPENDENT_NUMERICAL_QA_RECEIPT.json",
+      "sha256": "644730ae7c7dfd5a149971044facfde766773edba01723355674a414a8ae7a91",
+      "bytes": 99361,
+      "path_base": "RESEARCH_ROOT",
+      "availability": "SOURCE_NOT_INCLUDED_IN_THIS_BUNDLE"
+    },
+    "S08_STATUS_QA": {
+      "path": "reports/frequency5to20_20260908T063800Z/milestone_new23_cumulative63_v1/status_qa_v1/INDEPENDENT_STATUS_QA_RECEIPT.json",
+      "sha256": "d45e99cbfbb7ff5005506174086f8df3d55a92e80e9ad601393e87214627263a",
+      "bytes": 8157,
+      "path_base": "RESEARCH_ROOT",
+      "availability": "SOURCE_NOT_INCLUDED_IN_THIS_BUNDLE"
+    },
+    "S09_STATUS": {
+      "path": "github_worktrees/frequency-indexed-mlp-20260908/docs/research/frequency5to20_new23_cumulative63_20260908_v1/STATUS16.json",
+      "sha256": "c305155148efa00787fa0d27a337664a529e477e3770b146e372dce276ba3acb",
+      "bytes": 48975,
+      "path_base": "RESEARCH_ROOT",
+      "availability": "SOURCE_NOT_INCLUDED_IN_THIS_BUNDLE"
+    },
+    "S10_MODEL_SPEC": {
+      "path": "github_worktrees/frequency-indexed-mlp-20260908/docs/FREQUENCY_INDEXED_TANDEM.md",
+      "sha256": "ca80a0761422a2cb823b1e84ddc33e4be7d70f0ff72800605fd008a3541fb4b2",
+      "bytes": 5855,
+      "path_base": "RESEARCH_ROOT",
+      "availability": "SOURCE_NOT_INCLUDED_IN_THIS_BUNDLE"
+    },
+    "S11_PROFILE": {
+      "path": "reports/frequency5to20_20260908T063800Z/training/f05/posttrain/profile/frequency_data_profile.json",
+      "sha256": "6277b34c471bd101fa87ada0668324f515dc975539dc3a93dca9713db8798de6",
+      "bytes": 1418506,
+      "path_base": "RESEARCH_ROOT",
+      "availability": "SOURCE_NOT_INCLUDED_IN_THIS_BUNDLE"
+    },
+    "S12_PROFILE_RECEIPT": {
+      "path": "reports/frequency5to20_20260908T063800Z/training/f05/posttrain/profile/PROFILE_RECEIPT.json",
+      "sha256": "bc8389e48ccf65f96b111abc4d451e8386c8929d6b3306c6e350b272a874200c",
+      "bytes": 35688,
+      "path_base": "RESEARCH_ROOT",
+      "availability": "SOURCE_NOT_INCLUDED_IN_THIS_BUNDLE"
+    },
+    "S13_TRAIN_STATUS": {
+      "path": "reports/frequency5to20_20260908T063800Z/rollup_v3/FREQUENCY_STATUS.csv",
+      "sha256": "40079440bb24c8171009263aaf18e9bf24992e5769e82dcf62a42a0f6edd3bf6",
+      "bytes": 3785,
+      "path_base": "RESEARCH_ROOT",
+      "availability": "SOURCE_NOT_INCLUDED_IN_THIS_BUNDLE"
+    },
+    "S14_HELDOUT_METRICS": {
+      "path": "reports/frequency5to20_20260908T063800Z/rollup_v3/HELDOUT_METRICS.csv",
+      "sha256": "eb0395c7638714d4aeb60e2a48a9834fcbe9ee194b456a778d99614a3552149e",
+      "bytes": 75161,
+      "path_base": "RESEARCH_ROOT",
+      "availability": "SOURCE_NOT_INCLUDED_IN_THIS_BUNDLE"
+    },
+    "S15_ROLLUP_QA": {
+      "path": "reports/frequency5to20_20260908T063800Z/native_rollup_independent_qa_v1/AUDIT_RECEIPT.json",
+      "sha256": "fb15080fff66c9723de9fdb317419ee40cfadcde7e012029e190c5e4e5833586",
+      "bytes": 9800,
+      "path_base": "RESEARCH_ROOT",
+      "availability": "SOURCE_NOT_INCLUDED_IN_THIS_BUNDLE"
+    },
+    "S16_NATIVE_FIGURE_QA": {
+      "path": "reports/frequency5to20_20260908T063800Z/native_model_figures_qa_v2/FINAL_QA_RECEIPT.json",
+      "sha256": "335ff21e01adbde77c9b66cddcb041189cac563fadda379d9940115817e4b983",
+      "bytes": 15119,
+      "path_base": "RESEARCH_ROOT",
+      "availability": "SOURCE_NOT_INCLUDED_IN_THIS_BUNDLE"
+    },
+    "S17_NATIVE_FIGURE_INDEX": {
+      "path": "reports/frequency5to20_20260908T063800Z/native_model_figures_qa_v2/FINAL_MANIFEST.json",
+      "sha256": "7b3c1612c550451e19938dac8c734a4918274c932811fcc8a5916c5d3dfd5085",
+      "bytes": 134624,
+      "path_base": "RESEARCH_ROOT",
+      "availability": "SOURCE_NOT_INCLUDED_IN_THIS_BUNDLE"
+    },
+    "S18_QSCAN_QA": {
+      "path": "reports/frequency5to20_20260908T063800Z/qscan_formal10k_figures/FINAL_SCOPED_VISUAL_QA.json",
+      "sha256": "0214bd8b615e856e46779eae74de8ccb143e722f73112c5eaf069126dee81145",
+      "bytes": 4742,
+      "path_base": "RESEARCH_ROOT",
+      "availability": "SOURCE_NOT_INCLUDED_IN_THIS_BUNDLE"
+    },
+    "S19_QSCAN_INDEX": {
+      "path": "reports/frequency5to20_20260908T063800Z/qscan_formal10k_figures/FINAL_FIGURE_MANIFEST.json",
+      "sha256": "02793f5f446554b93989b1983f5717d2b0b91332e852f9b988c1ab1d59b3f90f",
+      "bytes": 138887,
+      "path_base": "RESEARCH_ROOT",
+      "availability": "SOURCE_NOT_INCLUDED_IN_THIS_BUNDLE"
+    },
+    "S20_QSUPPORT": {
+      "path": "reports/frequency5to20_20260908T063800Z/model_library_qsupport_v1/q_support_v1/Q_TRAIN_SUPPORT.csv",
+      "sha256": "adb04d3f380d1ed0b68725f39159afd56661a593af9545fb2119f48d59f7d4d6",
+      "bytes": 17151,
+      "path_base": "RESEARCH_ROOT",
+      "availability": "SOURCE_NOT_INCLUDED_IN_THIS_BUNDLE"
+    },
+    "S21_QSUPPORT_NUMERIC_QA": {
+      "path": "reports/frequency5to20_20260908T063800Z/model_library_qsupport_v1/q_support_numerical_qa_v1/NUMERICAL_QA.json",
+      "sha256": "586e4c8c7bd1a306ddc98c1c8a96cbd55b0b6e09e8dd52e844d85dbcf5ae8daf",
+      "bytes": 8594,
+      "path_base": "RESEARCH_ROOT",
+      "availability": "SOURCE_NOT_INCLUDED_IN_THIS_BUNDLE"
+    },
+    "S22_QSUPPORT_VISUAL_QA": {
+      "path": "reports/frequency5to20_20260908T063800Z/model_library_qsupport_v1/q_support_visual_qa_v1/VISUAL_QA.json",
+      "sha256": "b95e92c65ac6571e4c2ee10276e49bba6ca70ed8d2e66b74b8730de4c913bd24",
+      "bytes": 9874,
+      "path_base": "RESEARCH_ROOT",
+      "availability": "SOURCE_NOT_INCLUDED_IN_THIS_BUNDLE"
+    },
+    "S23_PHYSICAL_METRICS": {
+      "path": "github_worktrees/frequency-indexed-mlp-20260908/docs/research/frequency5to20_new23_cumulative63_20260908_v1/METRICS.csv",
+      "sha256": "d8968b5ced3b5ccc5219aa7d54643eb916a361d94a000d72e3296fcf56a4d63a",
+      "bytes": 426369,
+      "path_base": "RESEARCH_ROOT",
+      "availability": "SOURCE_NOT_INCLUDED_IN_THIS_BUNDLE"
+    },
+    "S24_SELECTION": {
+      "path": "github_worktrees/frequency-indexed-mlp-20260908/docs/research/frequency5to20_new23_cumulative63_20260908_v1/SELECTION_COMPARISON.csv",
+      "sha256": "da30034d17bf0f1f603b55475f137df01bd1d954df60d6580c3d6a32657048e9",
+      "bytes": 56668,
+      "path_base": "RESEARCH_ROOT",
+      "availability": "SOURCE_NOT_INCLUDED_IN_THIS_BUNDLE"
+    },
+    "S25_PHYSICAL_DISTRIBUTION_AVAILABILITY": {
+      "path": "reports/frequency5to20_20260908T063800Z/physical_incremental_statistics_v1/run_v1/snapshots/snapshot_0054/figures/DISTRIBUTION_AVAILABILITY.json",
+      "sha256": "c2cf3868899e42040191a4f718501b07fdc6536f6f46934956826d291a41d120",
+      "bytes": 6097,
+      "path_base": "RESEARCH_ROOT",
+      "availability": "SOURCE_NOT_INCLUDED_IN_THIS_BUNDLE"
+    },
+    "S26_PHYSICAL_FIGURE_INDEX": {
+      "path": "reports/frequency5to20_20260908T063800Z/milestone_new23_cumulative63_v1/APPROVED_PUBLIC_FIGURES.json",
+      "sha256": "f0b66d47fcd8eae08318137821b16dedb529e4ca2a903ae92467880fee5272ee",
+      "bytes": 90005,
+      "path_base": "RESEARCH_ROOT",
+      "availability": "SOURCE_NOT_INCLUDED_IN_THIS_BUNDLE"
+    },
+    "S27_LIBRARY_USAGE": {
+      "path": "github_worktrees/frequency-indexed-mlp-20260908/docs/research/FREQUENCY_LIBRARY_USAGE_CN.md",
+      "sha256": "54a54f7f04101eb030fa0dec036f34f6c26c45ba52bc67b5fd14b988c2aab514",
+      "bytes": 2609,
+      "path_base": "RESEARCH_ROOT",
+      "availability": "SOURCE_NOT_INCLUDED_IN_THIS_BUNDLE"
+    },
+    "S28_PPT40_QA": {
+      "path": "github_worktrees/frequency-indexed-mlp-20260908/docs/research/frequency5to20_advisor_cumulative40_20260908_v1/QA_SUMMARY.json",
+      "sha256": "6bb9341fb50e6e2bc787f4f527b3ccc3b6d247bf654c4ec12d3a754712fe90ef",
+      "bytes": 2500,
+      "path_base": "RESEARCH_ROOT",
+      "availability": "SOURCE_NOT_INCLUDED_IN_THIS_BUNDLE"
+    },
+    "S29_SNAPSHOT": {
+      "path": "reports/frequency5to20_20260908T063800Z/physical_incremental_statistics_v1/run_v1/snapshots/snapshot_0054/SNAPSHOT_RECEIPT.json",
+      "sha256": "2ea167b72a3f360c8bdfa448728bf2618c05937c4a619968026af700365e0be3",
+      "bytes": 1212,
+      "path_base": "RESEARCH_ROOT",
+      "availability": "SOURCE_NOT_INCLUDED_IN_THIS_BUNDLE"
+    },
+    "S30_FIGURE_TIMELINE": {
+      "path": "github_worktrees/frequency-indexed-mlp-20260908/docs/research/frequency5to20_new23_cumulative63_20260908_v1/FIGURE_RELEASE_STATUS.json",
+      "sha256": "d758a9612d4571d0849076e8ec0a47f3be382001d302b8790d7a0f83987b28cf",
+      "bytes": 6674,
+      "path_base": "RESEARCH_ROOT",
+      "availability": "SOURCE_NOT_INCLUDED_IN_THIS_BUNDLE"
+    },
+    "S31_PHYSICAL_SELECTED": {
+      "path": "github_worktrees/frequency-indexed-mlp-20260908/docs/research/frequency5to20_new23_cumulative63_20260908_v1/NEW23_SELECTED_PHYSICS.csv",
+      "sha256": "e4a28a270c40023ae1df0c34515e377a3861a75504ab2f9310fab37de7a4a09a",
+      "bytes": 30762,
+      "path_base": "RESEARCH_ROOT",
+      "availability": "SOURCE_NOT_INCLUDED_IN_THIS_BUNDLE"
+    },
+    "S32_DATA_MANIFEST": {
+      "path": "reports/frequency_indexed_mlp_20260908T041800Z/formal10k_15ghz/data/data_manifest.json",
+      "sha256": "390ce2169cc7bf66b9a2c83529fa2c7f217ce1fadea90cd001141ac4ec50d015",
+      "bytes": 203809,
+      "path_base": "RESEARCH_ROOT",
+      "availability": "SOURCE_NOT_INCLUDED_IN_THIS_BUNDLE"
+    },
+    "S33_NATIVE_QA_SCOPE": {
+      "path": "reports/frequency5to20_20260908T063800Z/native_model_figures_qa_v2/REVIEW_NOTES.json",
+      "sha256": "0d7063e73f06f926eebc48c2c7fec825e937a6569f832d0b5afe3418bd7d84c8",
+      "bytes": 4761,
+      "path_base": "RESEARCH_ROOT",
+      "availability": "SOURCE_NOT_INCLUDED_IN_THIS_BUNDLE"
+    }
+  },
+  "reusable_example_exports": [
+    {
+      "role": "learning_curves",
+      "path": "reports/frequency_indexed_mlp_20260908T041800Z/formal10k_15ghz/posttrain/figures/model/learning_curves.png",
+      "sha256": "8b833591cf8ff6b5ab09d2e3da07227a073bd914a9e1197f816296be2fcabaf5",
+      "bytes": 379517,
+      "approved_by": "S16_NATIVE_FIGURE_QA",
+      "path_base": "RESEARCH_ROOT",
+      "availability": "SOURCE_NOT_INCLUDED_IN_THIS_BUNDLE"
+    },
+    {
+      "role": "learning_curves",
+      "path": "reports/frequency_indexed_mlp_20260908T041800Z/formal10k_15ghz/posttrain/figures/model/learning_curves.pdf",
+      "sha256": "5b68c2b79f4b8bf83555ec5aff47f672285f6d645037ae6bc451f1689d98ded0",
+      "bytes": 317785,
+      "approved_by": "S16_NATIVE_FIGURE_QA",
+      "path_base": "RESEARCH_ROOT",
+      "availability": "SOURCE_NOT_INCLUDED_IN_THIS_BUNDLE"
+    },
+    {
+      "role": "forward_scatter",
+      "path": "reports/frequency_indexed_mlp_20260908T041800Z/formal10k_15ghz/posttrain/figures/model/forward_scatter.png",
+      "sha256": "4b5174c762fd90b81c9904f8264f3d3713e457cdac3ed8eb486f9d9ad0933683",
+      "bytes": 644821,
+      "approved_by": "S16_NATIVE_FIGURE_QA",
+      "path_base": "RESEARCH_ROOT",
+      "availability": "SOURCE_NOT_INCLUDED_IN_THIS_BUNDLE"
+    },
+    {
+      "role": "forward_scatter",
+      "path": "reports/frequency_indexed_mlp_20260908T041800Z/formal10k_15ghz/posttrain/figures/model/forward_scatter.pdf",
+      "sha256": "54d455dda89f959490a27ac669c14fd26788250506c48edbfad9fbc7346d2f1b",
+      "bytes": 96817,
+      "approved_by": "S16_NATIVE_FIGURE_QA",
+      "path_base": "RESEARCH_ROOT",
+      "availability": "SOURCE_NOT_INCLUDED_IN_THIS_BUNDLE"
+    },
+    {
+      "role": "inverse_residuals",
+      "path": "reports/frequency_indexed_mlp_20260908T041800Z/formal10k_15ghz/posttrain/figures/model/inverse_residuals.png",
+      "sha256": "e80b9e9e757852621015aa8df6d2925dedcf3681938ed66ad661f8161324b219",
+      "bytes": 403337,
+      "approved_by": "S16_NATIVE_FIGURE_QA",
+      "path_base": "RESEARCH_ROOT",
+      "availability": "SOURCE_NOT_INCLUDED_IN_THIS_BUNDLE"
+    },
+    {
+      "role": "inverse_residuals",
+      "path": "reports/frequency_indexed_mlp_20260908T041800Z/formal10k_15ghz/posttrain/figures/model/inverse_residuals.pdf",
+      "sha256": "016c05d8ff36c66958655c6286b684b0f1bf31e2d31c42cf683a2cc9e1be7ebe",
+      "bytes": 29300,
+      "approved_by": "S16_NATIVE_FIGURE_QA",
+      "path_base": "RESEARCH_ROOT",
+      "availability": "SOURCE_NOT_INCLUDED_IN_THIS_BUNDLE"
+    },
+    {
+      "role": "inverse_feasibility_hits",
+      "path": "reports/frequency_indexed_mlp_20260908T041800Z/formal10k_15ghz/posttrain/figures/model/inverse_feasibility_hits.png",
+      "sha256": "a2ab52141a8598e3529490d033cd156e17bbd461c36a2b1496112600d209141a",
+      "bytes": 239838,
+      "approved_by": "S16_NATIVE_FIGURE_QA",
+      "path_base": "RESEARCH_ROOT",
+      "availability": "SOURCE_NOT_INCLUDED_IN_THIS_BUNDLE"
+    },
+    {
+      "role": "inverse_feasibility_hits",
+      "path": "reports/frequency_indexed_mlp_20260908T041800Z/formal10k_15ghz/posttrain/figures/model/inverse_feasibility_hits.pdf",
+      "sha256": "b303a17958987e822d7bd4a79f3311bbfe2a91c6d658cd19b974a9a533beddab",
+      "bytes": 25003,
+      "approved_by": "S16_NATIVE_FIGURE_QA",
+      "path_base": "RESEARCH_ROOT",
+      "availability": "SOURCE_NOT_INCLUDED_IN_THIS_BUNDLE"
+    },
+    {
+      "role": "architecture_routing",
+      "path": "reports/frequency_indexed_mlp_20260908T041800Z/formal10k_15ghz/posttrain/figures/model/architecture_routing.png",
+      "sha256": "60831af8d13cba53bf749c67b2ef8c465c9b8f2ec3b917549bf29ba98a4d7dad",
+      "bytes": 355908,
+      "approved_by": "S16_NATIVE_FIGURE_QA",
+      "path_base": "RESEARCH_ROOT",
+      "availability": "SOURCE_NOT_INCLUDED_IN_THIS_BUNDLE"
+    },
+    {
+      "role": "architecture_routing",
+      "path": "reports/frequency_indexed_mlp_20260908T041800Z/formal10k_15ghz/posttrain/figures/model/architecture_routing.pdf",
+      "sha256": "b834ec4a2a870dbe06e484086017111b6dcf34a38e1740b234a3328d1e652e4f",
+      "bytes": 27026,
+      "approved_by": "S16_NATIVE_FIGURE_QA",
+      "path_base": "RESEARCH_ROOT",
+      "availability": "SOURCE_NOT_INCLUDED_IN_THIS_BUNDLE"
+    },
+    {
+      "role": "frequency_label_counts",
+      "path": "reports/frequency_indexed_mlp_20260908T041800Z/formal10k_15ghz/posttrain/figures/profile/frequency_label_counts.png",
+      "sha256": "6bfe1e078ac254421808600416e136f3853508128d27f7702c762dcfba27a255",
+      "bytes": 317713,
+      "approved_by": "S16_NATIVE_FIGURE_QA",
+      "path_base": "RESEARCH_ROOT",
+      "availability": "SOURCE_NOT_INCLUDED_IN_THIS_BUNDLE"
+    },
+    {
+      "role": "frequency_label_counts",
+      "path": "reports/frequency_indexed_mlp_20260908T041800Z/formal10k_15ghz/posttrain/figures/profile/frequency_label_counts.pdf",
+      "sha256": "01b9781d3c20be2d1b17567266fb0a49961bbdc075121414a9afc137ae7c3c83",
+      "bytes": 29757,
+      "approved_by": "S16_NATIVE_FIGURE_QA",
+      "path_base": "RESEARCH_ROOT",
+      "availability": "SOURCE_NOT_INCLUDED_IN_THIS_BUNDLE"
+    },
+    {
+      "role": "frequency_train_ranges",
+      "path": "reports/frequency_indexed_mlp_20260908T041800Z/formal10k_15ghz/posttrain/figures/profile/frequency_train_ranges.png",
+      "sha256": "51c1d675473b12f379798e91a46c1a47a20fb9ba1795f35766379bcfa0b723bf",
+      "bytes": 385034,
+      "approved_by": "S16_NATIVE_FIGURE_QA",
+      "path_base": "RESEARCH_ROOT",
+      "availability": "SOURCE_NOT_INCLUDED_IN_THIS_BUNDLE"
+    },
+    {
+      "role": "frequency_train_ranges",
+      "path": "reports/frequency_indexed_mlp_20260908T041800Z/formal10k_15ghz/posttrain/figures/profile/frequency_train_ranges.pdf",
+      "sha256": "d66fa7cff23b5bbf1a33e52305a59684c9db3aabd64e402943e07e5b824198cf",
+      "bytes": 43212,
+      "approved_by": "S16_NATIVE_FIGURE_QA",
+      "path_base": "RESEARCH_ROOT",
+      "availability": "SOURCE_NOT_INCLUDED_IN_THIS_BUNDLE"
+    },
+    {
+      "role": "SELF_PROXY_CDF_FORMAL15",
+      "path": "reports/frequency5to20_20260908T063800Z/qscan_formal10k_figures/f15_v1/selected_residual_cdf.svg",
+      "sha256": "e1bd1b8ef1f027bfbc739e10aba1b071436395dfc606ab12775d87a76e06c7bf",
+      "bytes": 199914,
+      "approved_by": "S18_QSCAN_QA",
+      "path_base": "RESEARCH_ROOT",
+      "availability": "SOURCE_NOT_INCLUDED_IN_THIS_BUNDLE"
+    },
+    {
+      "role": "SELF_PROXY_CDF_FORMAL15",
+      "path": "reports/frequency5to20_20260908T063800Z/qscan_formal10k_figures/f15_v1/selected_residual_cdf.pdf",
+      "sha256": "f3bd3259411eb630463425342e9a8ebfde3f35c44d1147ad6a918a79639edc9c",
+      "bytes": 86290,
+      "approved_by": "S18_QSCAN_QA",
+      "path_base": "RESEARCH_ROOT",
+      "availability": "SOURCE_NOT_INCLUDED_IN_THIS_BUNDLE"
+    },
+    {
+      "role": "SELF_PROXY_CDF_FORMAL15",
+      "path": "reports/frequency5to20_20260908T063800Z/qscan_formal10k_figures/f15_v1/selected_residual_cdf.png",
+      "sha256": "024186efc42ae782293d21a980ef68096624a709ca314ba6a0acaf27a175990e",
+      "bytes": 462482,
+      "approved_by": "S18_QSCAN_QA",
+      "path_base": "RESEARCH_ROOT",
+      "availability": "SOURCE_NOT_INCLUDED_IN_THIS_BUNDLE"
+    },
+    {
+      "role": "TRAIN_Q_SUPPORT_16x11",
+      "path": "reports/frequency5to20_20260908T063800Z/model_library_qsupport_v1/q_support_v1/q_train_support_5to20.png",
+      "sha256": "147f687cc621f7453ace5811510b8042ad8d0c2aa4831be59fca8819e93ac63e",
+      "bytes": 845016,
+      "approved_by": "S22_QSUPPORT_VISUAL_QA",
+      "path_base": "RESEARCH_ROOT",
+      "availability": "SOURCE_NOT_INCLUDED_IN_THIS_BUNDLE"
+    }
+  ],
+  "formal_frequency_train_metadata": [
+    {
+      "frequency_ghz": 5,
+      "total_unique_geometries": 10000,
+      "descriptor": 10000,
+      "strict": 10000,
+      "train": 6015,
+      "validation": 2002,
+      "test": 1983
+    },
+    {
+      "frequency_ghz": 6,
+      "total_unique_geometries": 10000,
+      "descriptor": 10000,
+      "strict": 10000,
+      "train": 6015,
+      "validation": 2002,
+      "test": 1983
+    },
+    {
+      "frequency_ghz": 7,
+      "total_unique_geometries": 10000,
+      "descriptor": 10000,
+      "strict": 10000,
+      "train": 6015,
+      "validation": 2002,
+      "test": 1983
+    },
+    {
+      "frequency_ghz": 8,
+      "total_unique_geometries": 10000,
+      "descriptor": 10000,
+      "strict": 9997,
+      "train": 6014,
+      "validation": 2001,
+      "test": 1982
+    },
+    {
+      "frequency_ghz": 9,
+      "total_unique_geometries": 10000,
+      "descriptor": 10000,
+      "strict": 9960,
+      "train": 5997,
+      "validation": 1989,
+      "test": 1974
+    },
+    {
+      "frequency_ghz": 10,
+      "total_unique_geometries": 10000,
+      "descriptor": 10000,
+      "strict": 9851,
+      "train": 5933,
+      "validation": 1965,
+      "test": 1953
+    },
+    {
+      "frequency_ghz": 11,
+      "total_unique_geometries": 10000,
+      "descriptor": 10000,
+      "strict": 9606,
+      "train": 5793,
+      "validation": 1908,
+      "test": 1905
+    },
+    {
+      "frequency_ghz": 12,
+      "total_unique_geometries": 10000,
+      "descriptor": 10000,
+      "strict": 9092,
+      "train": 5486,
+      "validation": 1800,
+      "test": 1806
+    },
+    {
+      "frequency_ghz": 13,
+      "total_unique_geometries": 10000,
+      "descriptor": 10000,
+      "strict": 8179,
+      "train": 4937,
+      "validation": 1618,
+      "test": 1624
+    },
+    {
+      "frequency_ghz": 14,
+      "total_unique_geometries": 10000,
+      "descriptor": 10000,
+      "strict": 6824,
+      "train": 4107,
+      "validation": 1341,
+      "test": 1376
+    },
+    {
+      "frequency_ghz": 15,
+      "total_unique_geometries": 10000,
+      "descriptor": 9999,
+      "strict": 5227,
+      "train": 3175,
+      "validation": 1006,
+      "test": 1046
+    },
+    {
+      "frequency_ghz": 16,
+      "total_unique_geometries": 10000,
+      "descriptor": 9997,
+      "strict": 3658,
+      "train": 2225,
+      "validation": 711,
+      "test": 722
+    },
+    {
+      "frequency_ghz": 17,
+      "total_unique_geometries": 10000,
+      "descriptor": 9983,
+      "strict": 2343,
+      "train": 1420,
+      "validation": 468,
+      "test": 455
+    },
+    {
+      "frequency_ghz": 18,
+      "total_unique_geometries": 10000,
+      "descriptor": 9960,
+      "strict": 1462,
+      "train": 886,
+      "validation": 280,
+      "test": 296
+    },
+    {
+      "frequency_ghz": 19,
+      "total_unique_geometries": 10000,
+      "descriptor": 9918,
+      "strict": 870,
+      "train": 537,
+      "validation": 154,
+      "test": 179
+    },
+    {
+      "frequency_ghz": 20,
+      "total_unique_geometries": 10000,
+      "descriptor": 9851,
+      "strict": 464,
+      "train": 279,
+      "validation": 89,
+      "test": 96
+    }
+  ],
+  "physical_distribution_availability": [
+    {
+      "frequency_ghz": 5,
+      "dataset_scope": "FORMAL_10K",
+      "N_strict_valid_requests": 4,
+      "CDF": "NOT_AVAILABLE_NEEDS_5_REQUESTS",
+      "attainment": "NOT_AVAILABLE_NEEDS_5_REQUESTS",
+      "density": "NOT_AVAILABLE_NEEDS_20_REQUESTS_AND_TARGET_VARIATION",
+      "reason": "Distinct request support, never11-candidate inflation. Exact rows retained for sparse cases."
+    },
+    {
+      "frequency_ghz": 6,
+      "dataset_scope": "FORMAL_10K",
+      "N_strict_valid_requests": 4,
+      "CDF": "NOT_AVAILABLE_NEEDS_5_REQUESTS",
+      "attainment": "NOT_AVAILABLE_NEEDS_5_REQUESTS",
+      "density": "NOT_AVAILABLE_NEEDS_20_REQUESTS_AND_TARGET_VARIATION",
+      "reason": "Distinct request support, never11-candidate inflation. Exact rows retained for sparse cases."
+    },
+    {
+      "frequency_ghz": 7,
+      "dataset_scope": "FORMAL_10K",
+      "N_strict_valid_requests": 4,
+      "CDF": "NOT_AVAILABLE_NEEDS_5_REQUESTS",
+      "attainment": "NOT_AVAILABLE_NEEDS_5_REQUESTS",
+      "density": "NOT_AVAILABLE_NEEDS_20_REQUESTS_AND_TARGET_VARIATION",
+      "reason": "Distinct request support, never11-candidate inflation. Exact rows retained for sparse cases."
+    },
+    {
+      "frequency_ghz": 8,
+      "dataset_scope": "FORMAL_10K",
+      "N_strict_valid_requests": 4,
+      "CDF": "NOT_AVAILABLE_NEEDS_5_REQUESTS",
+      "attainment": "NOT_AVAILABLE_NEEDS_5_REQUESTS",
+      "density": "NOT_AVAILABLE_NEEDS_20_REQUESTS_AND_TARGET_VARIATION",
+      "reason": "Distinct request support, never11-candidate inflation. Exact rows retained for sparse cases."
+    },
+    {
+      "frequency_ghz": 9,
+      "dataset_scope": "FORMAL_10K",
+      "N_strict_valid_requests": 4,
+      "CDF": "NOT_AVAILABLE_NEEDS_5_REQUESTS",
+      "attainment": "NOT_AVAILABLE_NEEDS_5_REQUESTS",
+      "density": "NOT_AVAILABLE_NEEDS_20_REQUESTS_AND_TARGET_VARIATION",
+      "reason": "Distinct request support, never11-candidate inflation. Exact rows retained for sparse cases."
+    },
+    {
+      "frequency_ghz": 10,
+      "dataset_scope": "FORMAL_10K",
+      "N_strict_valid_requests": 4,
+      "CDF": "NOT_AVAILABLE_NEEDS_5_REQUESTS",
+      "attainment": "NOT_AVAILABLE_NEEDS_5_REQUESTS",
+      "density": "NOT_AVAILABLE_NEEDS_20_REQUESTS_AND_TARGET_VARIATION",
+      "reason": "Distinct request support, never11-candidate inflation. Exact rows retained for sparse cases."
+    },
+    {
+      "frequency_ghz": 11,
+      "dataset_scope": "FORMAL_10K",
+      "N_strict_valid_requests": 4,
+      "CDF": "NOT_AVAILABLE_NEEDS_5_REQUESTS",
+      "attainment": "NOT_AVAILABLE_NEEDS_5_REQUESTS",
+      "density": "NOT_AVAILABLE_NEEDS_20_REQUESTS_AND_TARGET_VARIATION",
+      "reason": "Distinct request support, never11-candidate inflation. Exact rows retained for sparse cases."
+    },
+    {
+      "frequency_ghz": 12,
+      "dataset_scope": "FORMAL_10K",
+      "N_strict_valid_requests": 4,
+      "CDF": "NOT_AVAILABLE_NEEDS_5_REQUESTS",
+      "attainment": "NOT_AVAILABLE_NEEDS_5_REQUESTS",
+      "density": "NOT_AVAILABLE_NEEDS_20_REQUESTS_AND_TARGET_VARIATION",
+      "reason": "Distinct request support, never11-candidate inflation. Exact rows retained for sparse cases."
+    },
+    {
+      "frequency_ghz": 13,
+      "dataset_scope": "FORMAL_10K",
+      "N_strict_valid_requests": 4,
+      "CDF": "NOT_AVAILABLE_NEEDS_5_REQUESTS",
+      "attainment": "NOT_AVAILABLE_NEEDS_5_REQUESTS",
+      "density": "NOT_AVAILABLE_NEEDS_20_REQUESTS_AND_TARGET_VARIATION",
+      "reason": "Distinct request support, never11-candidate inflation. Exact rows retained for sparse cases."
+    },
+    {
+      "frequency_ghz": 14,
+      "dataset_scope": "FORMAL_10K",
+      "N_strict_valid_requests": 4,
+      "CDF": "NOT_AVAILABLE_NEEDS_5_REQUESTS",
+      "attainment": "NOT_AVAILABLE_NEEDS_5_REQUESTS",
+      "density": "NOT_AVAILABLE_NEEDS_20_REQUESTS_AND_TARGET_VARIATION",
+      "reason": "Distinct request support, never11-candidate inflation. Exact rows retained for sparse cases."
+    },
+    {
+      "frequency_ghz": 15,
+      "dataset_scope": "DEVELOPMENT_5K_NOT_FORMAL_10K",
+      "N_strict_valid_requests": 4,
+      "CDF": "NOT_AVAILABLE_NEEDS_5_REQUESTS",
+      "attainment": "NOT_AVAILABLE_NEEDS_5_REQUESTS",
+      "density": "NOT_AVAILABLE_NEEDS_20_REQUESTS_AND_TARGET_VARIATION",
+      "reason": "Distinct request support, never11-candidate inflation. Exact rows retained for sparse cases."
+    },
+    {
+      "frequency_ghz": 16,
+      "dataset_scope": "FORMAL_10K",
+      "N_strict_valid_requests": 4,
+      "CDF": "NOT_AVAILABLE_NEEDS_5_REQUESTS",
+      "attainment": "NOT_AVAILABLE_NEEDS_5_REQUESTS",
+      "density": "NOT_AVAILABLE_NEEDS_20_REQUESTS_AND_TARGET_VARIATION",
+      "reason": "Distinct request support, never11-candidate inflation. Exact rows retained for sparse cases."
+    },
+    {
+      "frequency_ghz": 17,
+      "dataset_scope": "FORMAL_10K",
+      "N_strict_valid_requests": 4,
+      "CDF": "NOT_AVAILABLE_NEEDS_5_REQUESTS",
+      "attainment": "NOT_AVAILABLE_NEEDS_5_REQUESTS",
+      "density": "NOT_AVAILABLE_NEEDS_20_REQUESTS_AND_TARGET_VARIATION",
+      "reason": "Distinct request support, never11-candidate inflation. Exact rows retained for sparse cases."
+    },
+    {
+      "frequency_ghz": 18,
+      "dataset_scope": "FORMAL_10K",
+      "N_strict_valid_requests": 4,
+      "CDF": "NOT_AVAILABLE_NEEDS_5_REQUESTS",
+      "attainment": "NOT_AVAILABLE_NEEDS_5_REQUESTS",
+      "density": "NOT_AVAILABLE_NEEDS_20_REQUESTS_AND_TARGET_VARIATION",
+      "reason": "Distinct request support, never11-candidate inflation. Exact rows retained for sparse cases."
+    },
+    {
+      "frequency_ghz": 19,
+      "dataset_scope": "FORMAL_10K",
+      "N_strict_valid_requests": 3,
+      "CDF": "NOT_AVAILABLE_NEEDS_5_REQUESTS",
+      "attainment": "NOT_AVAILABLE_NEEDS_5_REQUESTS",
+      "density": "NOT_AVAILABLE_NEEDS_20_REQUESTS_AND_TARGET_VARIATION",
+      "reason": "Distinct request support, never11-candidate inflation. Exact rows retained for sparse cases."
+    },
+    {
+      "frequency_ghz": 20,
+      "dataset_scope": "FORMAL_10K",
+      "N_strict_valid_requests": 4,
+      "CDF": "NOT_AVAILABLE_NEEDS_5_REQUESTS",
+      "attainment": "NOT_AVAILABLE_NEEDS_5_REQUESTS",
+      "density": "NOT_AVAILABLE_NEEDS_20_REQUESTS_AND_TARGET_VARIATION",
+      "reason": "Distinct request support, never11-candidate inflation. Exact rows retained for sparse cases."
+    }
+  ],
+  "review_limits": [
+    "Existing numerical and visual QA reused, not recomputed or upgraded.",
+    "Native model and Qscan QA have contact-sheet/spot-check boundaries, retained verbatim in their source receipts.",
+    "The private profile pins metadata only; large raw data and model weights were not reopened or rehashed.",
+    "This is content coverage GO with documented gaps, not approval of the new63 PPT.",
+    "No independent evaluator, statistical convergence, joint reachability or controlled cross-frequency winner is inferred."
+  ],
+  "skills_applied": [
+    "transformer-inverse-modeling-semantic-layer: current symmetric Q contract overrides stale historical one-sided guidance",
+    "validate-data: explicit evidence classes, original denominators, missing coverage and source authority",
+    "build-report: technical concise Q&A as explicitly requested; no extra HTML/report framework"
+  ],
+  "public_source_note": "All paths use the research-root-relative base unless explicitly EXTERNAL_USER_ATTACHMENT_FILENAME_ONLY. Private raw data, weights, QA source files and user attachments are not included; a path reference is not a claim of GitHub upload."
+}

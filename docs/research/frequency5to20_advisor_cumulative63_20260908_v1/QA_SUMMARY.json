@@ -1,0 +1,34 @@
+{
+  "schema": "advisor63_public_qa_summary.v1",
+  "status": "GO_EXACT_DECK_AND_COVERAGE_SCOPE",
+  "pptx_sha256": "cd49400f0ff518143ec5365476819d9c39a6d2293910c9d2a94eb4a68b8c3af2",
+  "slides": 10,
+  "native_charts": 10,
+  "native_tables": 6,
+  "embedded_literal_workbooks": 10,
+  "exact_go_receipts": [
+    {
+      "path": "reports/frequency5to20_20260908T063800Z/advisor_slides_cumulative63_20260908T182629Z/independent_numeric_qa_v1/CANDIDATE_V2_NUMERIC_GO.json",
+      "sha256": "889abf4d80ec529afd0c3acc2c7176db365e93ea9b77d5536099f44790115a11",
+      "availability": "PRIVATE_QA_RECEIPT_NOT_INCLUDED"
+    },
+    {
+      "path": "reports/frequency5to20_20260908T063800Z/advisor_slides_cumulative63_20260908T182629Z/independent_visual_qa_v2/GO_OR_NO_GO.json",
+      "sha256": "14366933cdf02e2454a585e99e59c5af789b4adcf3e3558663f8966240843eda",
+      "availability": "PRIVATE_QA_RECEIPT_NOT_INCLUDED"
+    },
+    {
+      "path": "reports/frequency5to20_20260908T063800Z/advisor_slides_cumulative63_20260908T182629Z/coverage_independent_qa_v1/INDEPENDENT_COVERAGE_QA.json",
+      "sha256": "3335aeed60fb8f29899e7955ef39f737b61ff79c6b0ef5a3507c796fe882260c",
+      "availability": "PRIVATE_QA_RECEIPT_NOT_INCLUDED"
+    }
+  ],
+  "evidence_boundary": "Does not approve newer EMX snapshots, physical CDF/density, convergence or full320 completion.",
+  "native_powerpoint": "NOT_NATIVE_POWERPOINT_TESTED",
+  "source_author_draft": "Literal-data draft of previously accepted40 deck. Unchanged charts retain numeric data; intentionally materialized literal workbooks do not invent original formulas.",
+  "failed_candidate_retained": {
+    "path": "reports/frequency5to20_20260908T063800Z/advisor_slides_cumulative63_20260908T182629Z/candidate_v1",
+    "pptx_sha256": "e053fe48e1763ee28c7024dea022a0daa6fa3223ded4d33d9e6ecda2f2b2f00d",
+    "reason": "Slide8 literal backslash-n display, fixed only in new candidate_v2."
+  }
+}
