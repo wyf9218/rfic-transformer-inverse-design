@@ -1,0 +1,97 @@
+{
+  "schema": "frequency5to20_native_resume_public_status.v1",
+  "created_utc": "2026-09-08T16:47:39.997Z",
+  "goal_status": "ACTIVE",
+  "milestone_status": "NATIVE_WAIT_INSTALLED_REPORT_SUCCESSOR_CODE_READY",
+  "previous_goal_turn": "VERIFIED_WAIT",
+  "native": {
+    "scheduler": "at",
+    "job_id": 1,
+    "pid": 2094607,
+    "uid": 2259579,
+    "start_ticks": 368977125,
+    "verified_utc": "2026-09-08T16:44:29.018342+00:00",
+    "status": "WAITING_ORIGINAL_IDENTITY_EXIT",
+    "child_started": false,
+    "original_process": {
+      "pid": 2146776,
+      "uid": 2259579,
+      "start_ticks": 366027333
+    },
+    "max_dispatcher_invocations": 1,
+    "restart": false,
+    "signals": false
+  },
+  "budget": {
+    "original_admission_deadline_utc": "2026-09-08T18:00:00Z",
+    "separate_new_admission_deadline_utc": "2026-09-10T18:00:00Z",
+    "runtime_activation": "NOT_STARTED_AT_VERIFICATION",
+    "scientific_frame": "original320 requests/3520 candidate slots only",
+    "resources_unchanged": true
+  },
+  "evidence": {
+    "installation_sha256": "7f07f83c76d9b0fe10a100f88947a28c6367fc2b52c83fd6fb7ca60d35e48b62",
+    "wait_config_sha256": "10b9f6d4c844fa2c16fa8895bc25ec9510450f475b63e2e9bcf17fe05ac0aea6",
+    "budget_sha256": "581f7479088c171ae33d668dee2e494fdd6f46373b438926af8999c4039e0691",
+    "base_config_sha256": "35b380eb5d7d1309e87e1bc63e6e93144bd6515187fe8b13da43311d7603b09a",
+    "native_tests_receipt_sha256": "15cd3abb4c8bbd55b6bbc2ab390d93f8854f14de6b27e55f4e1ba5b236b3ed4f",
+    "actual_preflight_receipt_sha256": "a1639323e0ed95d8fff6a5fd6977e14de809e796833a3310dd5b4756f8f582dd",
+    "native_source_review_sha256": "0a8ece1d25307c3e12bee1591e1920ab09c3efd84945e06082f758dac11d56f0",
+    "reporting_source_review_sha256": "eb95e11d7c1de2006142d40c42bfa3a85fcc1cdf541949b1aa0f2e4701fc7115"
+  },
+  "software_tests": {
+    "operational_budget_native_linux": 31,
+    "native_waiter_local_final": 23,
+    "reporting_successor_local": 23,
+    "scope": "Synthetic software tests, not physical solves",
+    "native_waiter_initial_22_pass_retained": true,
+    "review_fix": "Receipt-write failure after Popen now retains failure and waits child without timeout/signals; focused test added"
+  },
+  "source_pins": [
+    {
+      "path": "research/broadband56_nn/frequency_physical_resume_once.py",
+      "sha256": "980317ae0bb591ba8599df63c8cbc1a68e779deab51a5277364d13288796df81",
+      "bytes": 14031
+    },
+    {
+      "path": "tests/test_frequency_physical_resume_once.py",
+      "sha256": "ca8204fee4378fa84718b89c1272ef352ea8271be7927e0251658aa52bbd467d",
+      "bytes": 13242
+    },
+    {
+      "path": "research/broadband56_nn/frequency_physical_reporting_resume.py",
+      "sha256": "caf500fd07592caf33142e1cf3683af1fd5c455ac79a917ab36ecea83b56f0c1",
+      "bytes": 20445
+    },
+    {
+      "path": "tests/test_frequency_physical_reporting_resume.py",
+      "sha256": "8eb425b37976b968973b1767852a273e3c72c359f6e6358d98451db3f57ef9c4",
+      "bytes": 17808
+    }
+  ],
+  "reporting": {
+    "old_consumer_pid": 50120,
+    "old_export_once_pid": 80544,
+    "old_processes_live_observed_utc": "2026-09-08T16:34:16Z",
+    "successor_code": "READY_SOURCE_REVIEW_PASS",
+    "automatic_successor": "NOT_INSTALLED",
+    "real_successor_preflight": "NOT_RUN_DEPENDENCIES_STILL_LIVE",
+    "real_new_statistics_or_figures_created_by_this_milestone": 0
+  },
+  "scientific_status": {
+    "models_16": "PARTIAL_PROVISIONAL_FIRST_BUDGET",
+    "self_proxy_logical_candidates_completed": 1760000,
+    "last_direct_physical_count": {
+      "observed_utc": "2026-09-08T16:34:16Z",
+      "accounted_requests": 58,
+      "original_requests": 320,
+      "not_complete_strict11_count": true
+    },
+    "latest_approved_numerical_snapshot": "snapshot_0031 cumulative40",
+    "formal10k_15GHz_fresh_EMX": "NOT_RUN",
+    "current15GHz_physical_model_scope": "DEVELOPMENT_5K_SEPARATE"
+  },
+  "next_safe_action": "Install the thin resolved-dependency reporting handoff once; original native at job and both existing local processes must not be duplicated. After genuine natural exit the single native dispatcher enforces original PARTIAL/noFAILURE/leases and reuse. Validate only genuinely new terminal report artifacts.",
+  "private_evidence_directory": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/frequency5to20_20260908T063800Z/native_budget_release_20260908T161000Z",
+  "production_or_GUI_modified": false
+}

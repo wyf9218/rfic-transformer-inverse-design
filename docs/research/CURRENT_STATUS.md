@@ -1,10 +1,14 @@
 # Current Evidence Status
 
-Latest [GPT-ready handoff](GPT_HANDOFF_20260908T1610_CN.md): the original MARS
-queue was live at 16:10 UTC with 56 of 320 requests accounted. This is not the
-latest independently approved numerical snapshot, which remains cumulative40.
-The next-budget release is locally packaged only; transport, native Linux
-validation and actual continuation are not yet performed.
+Latest [native-resume installation](frequency5to20_native_resume_20260908_v1/README_CN.md):
+MARS at job1 / PID2094607 was alive at16:44:29 UTC, waiting for the original
+PID2146776 identity to exit. No successor physical child was started then.
+Transport,31 native-Linux synthetic tests and actual input preflight passed.
+The separately recorded budget is not yet active. Reporting-successor code
+passed23 synthetic tests and source review; its automatic handoff is NOT_INSTALLED.
+The [16-frequency GPT handoff](GPT_HANDOFF_20260908T1610_CN.md) remains a historical
+16:10 snapshot; a later direct16:34 check counted58/320 closed requests, not58
+complete-strict11 sweeps. Latest independently approved numerical report is cumulative40.
 
 ## 2026-09-08: One Local Terminal-Export Waiter Installed
 
