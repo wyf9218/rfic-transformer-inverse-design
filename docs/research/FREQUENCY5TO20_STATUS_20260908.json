@@ -365,7 +365,7 @@
     "boot_auto_restart": "NOT_INSTALLED",
     "visual_qa_sha256": "613b4588cd3136835ddbc35aa62a00af9e8c133188ae8ba0ee07136bf78e3eab"
   },
-  "stage_status16": "frequency5to20_new6_cumulative34_20260908_v1/STATUS16.json",
+  "stage_status16": "frequency5to20_new6_cumulative40_20260908_v2/STATUS16.json",
   "advisor_presentation": {
     "status": "COMPLETE_PUBLIC_REVIEWABLE_DRAFT",
     "slides": 10,
@@ -384,108 +384,119 @@
     "visible_slides_and_native_chart_values_unchanged": true
   },
   "latest_physical_snapshot": {
-    "source_snapshot": "physical_incremental_statistics_v1/run_v1/snapshots/snapshot_0025",
-    "source_snapshot_utc": "2026-09-08T13:30:30.769638+00:00",
-    "snapshot_bundle_utc": "2026-09-08T13:30:35.054959+00:00",
-    "snapshot_sha256": "246d35a378008aa3f8cffa7ab07c132db1d29884b410a578be3f7ff719995346",
-    "statistics_sha256": "9dcc8b81d2c52f3ecfef100a716d92e1f681773cb69b52e5dd5b50af72f0c11b",
-    "summary_sha256": "b3a0e68b0b8f9cb7fefd6bdfba636e2ed747554de93a7129c80ac0faad0b8593",
-    "accounted_requests": 34,
-    "accounted_candidates": 374,
-    "independent_solves": 300,
-    "strict_valid": 288,
-    "strict_invalid": 12,
+    "source_snapshot": "physical_incremental_statistics_v1/run_v1/snapshots/snapshot_0031",
+    "source_snapshot_utc": "2026-09-08T14:10:53.000718+00:00",
+    "snapshot_bundle_utc": "2026-09-08T14:10:57.229418+00:00",
+    "snapshot_sha256": "0cfc7a314e8c2fda50acf6a1ce95eb8c3a4f015ba0e4dc2fde5d77aaa7e8f903",
+    "statistics_sha256": "30893a768643367b53ae9e2e804dead319bea5a01f56af7427de5172fe5c6c00",
+    "summary_sha256": "ead7d7f00a523ababc21126546eed0500b1e64113961e617a6388d7f1e9654d6",
+    "accounted_requests": 40,
+    "accounted_candidates": 440,
+    "independent_solves": 353,
+    "strict_valid": 339,
+    "strict_invalid": 14,
     "accounted_failures": {
       "analytic": 26,
-      "gds": 32,
-      "drc": 16
+      "gds": 40,
+      "drc": 21
     },
     "original_requests": 320,
     "original_candidates": 3520,
     "planned_analytic_fail": 221,
-    "pending_candidates": 2951,
-    "not_accounted_requests": 286,
-    "complete_strict11_requests": 4,
+    "pending_candidates": 2885,
+    "not_accounted_requests": 280,
+    "complete_strict11_requests": 5,
     "new6": {
       "requests": 6,
       "candidates": 66,
-      "solves": 48,
-      "strict_valid": 46,
+      "solves": 53,
+      "strict_valid": 51,
       "strict_invalid": 2,
-      "analytic": 15,
-      "gds": 3,
-      "drc": 0
+      "analytic": 0,
+      "gds": 8,
+      "drc": 5
     },
-    "scientific_interpretation": "Fixed HELDOUT_TRIPLE_AUDIT requests: R1/R2/R3 per estimand, not proven IID; whole-request bootstrap descriptive only, no population accuracy or causal frequency ranking.",
+    "scientific_interpretation": "Fixed HELDOUT_TRIPLE_AUDIT requests, not proven IID; whole-request bootstrap descriptive only. No population accuracy or causal frequency ranking.",
     "formal10k15_fresh_emx": "NOT_RUN_DEVELOPMENT5K_ROUTE_IS_SEPARATE",
     "random10000_fresh_emx": "DEFERRED_SEPARATE_FRAME",
-    "runtime": {
-      "observed_utc": "2026-09-08T13:33:42Z",
-      "queue_alive": true,
-      "pid": 2146776,
-      "active_frequency_ghz": 10,
-      "request": "f10_qscan-HELDOUT_TRIPLE_AUDIT-000002",
-      "stage": "emx_q20",
-      "child_pid": 2325270,
-      "numerical_counts_not_from_runtime_observation": true
-    },
     "numeric_qa": {
       "status": "GO_NUMERICAL_SCOPE_ONLY",
-      "receipt_sha256": "5b2c9cb0344f015d2784bb69ec1b6c146e61e4916affa2b5d9996d7eeb53671b",
+      "receipt_sha256": "b4213f4c9e2f693ea1dd8830c576a0bec12fec6c116fbeddf5502aae6c894d58",
       "new_requests": 6,
       "unaffected_candidate_rows_unchanged": 3454,
       "affected_metric_rows_verified": 192,
-      "scalar_error_metrics_verified": 1152
+      "scalar_error_metrics_verified": 1152,
+      "selection_rows": 72
     },
     "status16_qa": {
       "status": "GO_16_EXACT_METADATA_AND_PHYSICAL_COUNT_ROWS",
-      "receipt_sha256": "f807c4a90fc04e6a97adeefdaebc70b59edb49a1055f92f71141ca315d637a74"
+      "receipt_sha256": "713736ee4da14ba968003aa8ccf7aaf1b2a23996b8a787cdcf573308af535ca0"
     },
-    "public_directory": "docs/research/frequency5to20_new6_cumulative34_20260908_v1",
-    "remaining": "286 requests not yet accounted in frozen S25; native fixed-order resource-gated execution continues under original 18:00 UTC dispatch / 18:15 UTC report cutoffs.",
+    "public_directory": "docs/research/frequency5to20_new6_cumulative40_20260908_v2",
+    "remaining": "280requests not closed in S31; engineering-config dispatch/report limits unchanged, exact user meeting time not proven. RESOURCE_WAIT last observed14:13:58UTC, not a current live claim.",
     "negative_evidence": {
-      "f17_second_q10_q13": {
-        "descriptor_valid": true,
-        "physics_qa_pass": true,
+      "f20_third_preselected_q13": {
+        "strict_valid": true,
+        "joint_hit": false,
+        "K_abs_emx_minus_target": 0.041373774013270415,
+        "K_abs_absolute_tolerance": 0.04,
+        "K_abs_target_absolute_relative_percent": 31.27710869141991
+      },
+      "f20_third_q10_q12": {
         "below_half_srf": false,
         "strict_lumped_valid": false,
-        "original_flags_sha256": "efb20066a9196fbd5590ce265a03b27b391d8babff9efa8639dfac3cf14a6ac6"
+        "secondary_srf_brackets_GHz": [
+          [
+            36,
+            37
+          ],
+          [
+            38,
+            39
+          ]
+        ],
+        "not_preselected_q13": true
       },
-      "gds_failed_candidates": [
-        "f16 second Q15",
-        "f19 second Q16",
-        "f5 third Q10"
-      ],
-      "gds_original_failed_checks": [
-        "ground_clearance_pass",
-        "foundry_power_line_contract_pass",
-        "foundry_via_stack_and_landing_pad_pass"
-      ],
+      "gds_failures": 8,
+      "drc_failures": 5,
+      "original_flags_sha256": "e3d350c05713724b3d8714d089f0efd3caa4a42ba2e0e9f74bc8784a6d24236e",
       "causal_root_cause": "NOT_INFERRED"
-    },
-    "complete11_new18": {
-      "q_proxy": 17,
-      "q_emx": 17,
-      "selection_loss": 0
     },
     "aggregate_visual_qa": {
       "status": "GO_EXACT_FIVE_PNG_AND_FIVE_PDF_VISUAL_SCOPE",
-      "four_go_sha256": "9297cb2ea363119a76d56778e8fcebbaacf78487e4c97f7c72adf774517d05c9",
-      "selection_v3_independent_go_sha256": "9adaf24ef486b469ac3dcc8ce6ebe82d7f748f052a3d81eec8ea0c710ef101ea",
+      "receipt_sha256": "d96f70e77472d191f49e1a02c8eb73349caa505631a0fab5e13fb8147c5bbca1",
       "original_no_go_figures_preserved": 2,
-      "intermediate_selection_v2_no_go_preserved": true
+      "renderers": "UNCHANGED_PREVIOUSLY_VERIFIED_V2_AND_V3"
     },
     "request_visual_qa": {
       "original_new12_png_pdf": {
-        "pass": 6,
-        "no_go": 6,
-        "receipt_sha256": "a09b6b9a616d3f9a7ffc280f1a73942dc178191d5a175859d22009f899c89688"
+        "pass": 4,
+        "no_go": 8,
+        "receipt_sha256": "5d29e6442cf0d2924a4ad4494d1afb6deae93d2eab3b51f064d224f7deb8a905"
       },
-      "repaired_six": "GO_EXACT_SIX_PNG_AND_SIX_COMPLETE_PDF_PAGES",
-      "repaired_six_go_sha256": "c46dd84ecb080273e037d3e248b042a930d048f0828765b55365949a0fd55545",
-      "prior28": "UNCHANGED_PRIOR_EXACT_QA_REUSED",
+      "repaired_eight": "GO_EXACT_EIGHT_PNG_AND_EIGHT_COMPLETE_PDF_PAGES",
+      "repaired_eight_go_sha256": "44f25e1f90a75cd093c9c0ca1f0de45b2cef07da87258ea62baff76de747c5f1",
+      "prior34": "UNCHANGED_PRIOR_EXACT_QA_REUSED",
       "live_renderer_unchanged": true
-    }
+    },
+    "complete11_new9": {
+      "q_proxy": 13,
+      "q_emx": 12,
+      "selection_loss": 0.0009579096860278555
+    },
+    "runtime": {
+      "observed_utc": "2026-09-08T14:13:58Z",
+      "queue_alive": true,
+      "pid": 2146776,
+      "active_frequency_ghz": null,
+      "request": null,
+      "stage": "RESOURCE_WAIT",
+      "load_one_minute": 228.5966796875,
+      "cpu_logical": 192,
+      "numerical_counts_not_from_runtime_observation": true,
+      "not_live_at_publication": true
+    },
+    "deadline_audit_sha256": "d690d1fa59c0ca99af0b3e96ed22185ab76b45e971d0678aa5a88d171b278cae"
   },
   "snapshot_reading_rule": "latest_physical_snapshot is the authoritative frozen physical source; older physical_lane/observer/presentation fields retain their explicitly dated snapshots, not live or cumulative truth."
 }
