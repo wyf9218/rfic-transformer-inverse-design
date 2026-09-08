@@ -1,0 +1,38 @@
+{
+  "schema": "advisor_report_delivery.v2",
+  "status": "STRUCTURAL_PASS_BROWSER_QA_NOT_COMPLETED",
+  "created_utc": "2026-09-08T09:07:20Z",
+  "report": "report.html",
+  "report_sha256": "946c75a760d36e879b114b58a4ebf9f77c23f7c45ef9f6e84570d0a1a3cd684c",
+  "artifact": "artifact.json",
+  "artifact_sha256": "d425508748799ad7ed7d134cd7c5a6a20014b139593f7617dc25f1e79c8852f8",
+  "supersedes_for_delivery": "../advisor_report_v1/report.html; original v1 preserved unchanged",
+  "change": "18 metadata fields removed; 9 unique source identities, repeated in manifest and top-level sources. Unrecorded actual SQL executed_at omitted, snapshot retained separately.",
+  "content_unchanged": {
+    "sections": 8,
+    "blocks": 28,
+    "charts": 1,
+    "tables": 10,
+    "formal_frequencies": 16,
+    "physical_cases": 2,
+    "reported_native_solves": 17
+  },
+  "report_evidence_snapshot_utc": "2026-09-08T08:49:47.652591Z",
+  "queue_last_observed_utc": "2026-09-08T08:38:35Z",
+  "verification": {
+    "validation": "passed",
+    "package": "passed",
+    "verification": "structural_only"
+  },
+  "limitation": "No compatible installed headless shell detected. Exact canonical-payload and required-reader/semantic-root structural checks pass; no browser layout, source interaction or static-chart SVG verification is claimed. Two prior explicit Chrome timeouts remain in v1; no new Chrome retry or browser installation.",
+  "science_or_query_recomputed": false,
+  "original_source_files_modified": false,
+  "v1_manifest_check": "15/15 PASS",
+  "supporting": [
+    "TIME_SEMANTICS_CORRECTION.json",
+    "SOURCE_NOTES.json",
+    "SOURCE_PATHS.json",
+    "BUILD_RECEIPT.json"
+  ],
+  "goal_complete": false
+}

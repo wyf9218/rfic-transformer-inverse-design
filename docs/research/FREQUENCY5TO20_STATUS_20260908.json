@@ -1,6 +1,6 @@
 {
   "schema": "public_frequency_research_status.v2",
-  "observed_utc": "2026-09-08T08:38:35Z",
+  "observed_utc": "2026-09-08T09:07:13.436765+00:00",
   "priority": "integer-frequency-routed 256x3 Tandem MLP; 5 through 20 GHz",
   "frequencies_ghz": [
     5,
@@ -99,9 +99,9 @@
       "status": "RUNNING",
       "requests_frozen": 320,
       "logical_candidates": 3520,
-      "requests_accounted": 1,
-      "total_solver_receipts_observed": 14,
-      "first_formal5_request": "RUNNING_Q10_TO_Q14_SOLVE_AND_EXTRACTION_DONE",
+      "requests_accounted": 4,
+      "total_solver_receipts_observed": 36,
+      "first_formal5_request": "REQUEST_ACCOUNTED_8_SOLVED_3_CALIBRE_BLOCKED",
       "max_global_emx": 4,
       "per_request_warmup": 1,
       "cadence_jobs": 1,
@@ -109,7 +109,78 @@
       "boot_auto_restart": "NOT_INSTALLED",
       "production_modified": false
     },
-    "native_smoke": "PASS_16_METADATA_ROUTES_8_INHERITED_LEASE_TESTS_NO_SIMULATOR"
+    "native_smoke": "PASS_16_METADATA_ROUTES_8_INHERITED_LEASE_TESTS_NO_SIMULATOR",
+    "collected_requests": [
+      {
+        "request_id": "qscan15_development5k_20260908_v1-HELDOUT_TRIPLE_AUDIT-000000",
+        "frequency_ghz": 15,
+        "model_id": "f15-5a9547401a37",
+        "dataset_scope": "DEVELOPMENT_5K_NOT_FORMAL_10K",
+        "q_proxy": 14,
+        "q_emx": null,
+        "N_original": 11,
+        "N_analytic_fail": 2,
+        "N_gds_pass": 9,
+        "N_drc_pass": 9,
+        "N_solved": 9,
+        "N_strict_valid": 9,
+        "N_joint_hit": 5,
+        "selected_strict_joint_hit": true,
+        "capture_sha256": "fbd43fcd83633c6dca58f54449e806946e4564da443d11db878b1e53616c0710"
+      },
+      {
+        "request_id": "f05_qscan-HELDOUT_TRIPLE_AUDIT-000000",
+        "frequency_ghz": 5,
+        "model_id": "f5-fac1f3ff42e4",
+        "dataset_scope": "FORMAL_10K",
+        "q_proxy": 10,
+        "q_emx": null,
+        "N_original": 11,
+        "N_analytic_fail": 0,
+        "N_gds_pass": 11,
+        "N_drc_pass": 8,
+        "N_solved": 8,
+        "N_strict_valid": 8,
+        "N_joint_hit": 3,
+        "selected_strict_joint_hit": true,
+        "capture_sha256": "74523b90e5209e76bda7b3b2f4382700eac3a0ed4f23002b6aeed44fe339a10a"
+      },
+      {
+        "request_id": "f10_qscan-HELDOUT_TRIPLE_AUDIT-000000",
+        "frequency_ghz": 10,
+        "model_id": "f10-d26d41688df1",
+        "dataset_scope": "FORMAL_10K",
+        "q_proxy": 10,
+        "q_emx": null,
+        "N_original": 11,
+        "N_analytic_fail": 0,
+        "N_gds_pass": 10,
+        "N_drc_pass": 9,
+        "N_solved": 9,
+        "N_strict_valid": 9,
+        "N_joint_hit": 4,
+        "selected_strict_joint_hit": true,
+        "capture_sha256": "958fe98685ce13f57f91bac7db93300c8543d4b8be2b2b144672f813f543a392"
+      },
+      {
+        "request_id": "f20_qscan-HELDOUT_TRIPLE_AUDIT-000000",
+        "frequency_ghz": 20,
+        "model_id": "f20-4d6b0c6066ee",
+        "dataset_scope": "FORMAL_10K",
+        "q_proxy": 15,
+        "q_emx": null,
+        "N_original": 11,
+        "N_analytic_fail": 0,
+        "N_gds_pass": 10,
+        "N_drc_pass": 10,
+        "N_solved": 10,
+        "N_strict_valid": 10,
+        "N_joint_hit": 4,
+        "selected_strict_joint_hit": true,
+        "capture_sha256": "1e2aab5f1b6ba48ab0c3b2a2082bd94e8d33c4d866cb47c6f96d3adcbaff6880"
+      }
+    ],
+    "count_note": "Immutable collected first four H requests only, not real-time queue total or population accuracy."
   },
   "metrics_contract": {
     "score_spans": [
@@ -136,7 +207,7 @@
     "rollup_receipt": "8e0777b0dab4504932ec07d5dd4ac4c8c4a6d2662e8d22d0b7717766433d4fba",
     "source_manifest": "2113ae4d831a2bbeac19553a36cad398672ff5a62a7a12fd1b38c7fa5dd678fa",
     "rollup_sha256sums": "72ff8fd728482544050dc3b8f7efc4313cffbdae64a70683fa7d7651e49a1843",
-    "integrated_tests": "227f9f453dd8988ad27dddf2678a0eff1960212101673066a4feebac1ba0262b",
+    "integrated_tests": "96603738eb9e5e74b4542bd8836dd3e1eada98ceef18604dfc229f9eeb8a0bcb",
     "physical_first15_complete": "3783c01b2968ecde510027d7df21106b1121138fe1ba7041baa37220981f3cf0",
     "physical_dispatch_native_qa": "e06963d9f1390b5625475665d78fea5a0b58837fbd99ca67157d43853ee8d135",
     "physical_dispatch_config": "35b380eb5d7d1309e87e1bc63e6e93144bd6515187fe8b13da43311d7603b09a",
@@ -148,5 +219,30 @@
     "Different frequency-specific eligible subsets and update counts preclude causal cross-frequency ranking.",
     "Qscan analytic feasibility is not Calibre or manufacturing signoff.",
     "Private datasets, weights, physical configuration and raw logs remain in the private research handoff."
-  ]
+  ],
+  "updated_utc": "2026-09-08T09:11:03Z",
+  "readonly_report_observer": {
+    "status": "INSTALLED_FINITE_PROCESS",
+    "poll_seconds": 120,
+    "frame_requests": 16,
+    "frame_candidates": 176,
+    "remote_writes": false,
+    "AI_polling": false,
+    "boot_auto_restart": "NOT_INSTALLED",
+    "first_verified_cycle_accounted": 4,
+    "first_verified_cycle_sha256": "575bc3ad7870611794a9cb27dcb52ab324fe79b110e3b5c4259755b20e92d700",
+    "launch_receipt_sha256": "1cbf4a64f80dc4dea9600828128cc32ba68cd3c4ef7d908d510aa5026f817e4c",
+    "final_report": "NOT_YET_GENERATED_AT_THIS_SNAPSHOT"
+  },
+  "advisor_report": {
+    "path": "frequency5to20_report_20260908_v2/report.html",
+    "artifact": "frequency5to20_report_20260908_v2/artifact.json",
+    "status": "STRUCTURAL_PASS_BROWSER_QA_NOT_COMPLETED",
+    "report_sha256": "946c75a760d36e879b114b58a4ebf9f77c23f7c45ef9f6e84570d0a1a3cd684c",
+    "receipt_sha256": "47ea6c2ed50b51ede06576bf98d79da272714115bc36c8ada35b62c902973861",
+    "evidence_snapshot_utc": "2026-09-08T08:49:47.652591Z",
+    "physical_cases": 2,
+    "physical_solves": 17,
+    "note": "Frozen report snapshot precedes current four-request collection; browser layout verification incomplete."
+  }
 }

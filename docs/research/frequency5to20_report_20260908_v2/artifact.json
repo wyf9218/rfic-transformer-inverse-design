@@ -1,0 +1,2439 @@
+{
+  "surface": "report",
+  "manifest": {
+    "version": 1,
+    "surface": "report",
+    "title": "5–20 GHz 逐频率逆向建模技术报告",
+    "description": "导师技术汇报；固定快照；正式10K留出与SELF_PROXY、两个不同模型的单请求fresh EMX严格分开。",
+    "generatedAt": "2026-09-08T08:49:47.652591Z",
+    "sources": [
+      {
+        "id": "status",
+        "label": "正式16频率训练与支持统计",
+        "path": "reports/frequency5to20_20260908T063800Z/rollup_v3/FREQUENCY_STATUS.csv",
+        "query": {
+          "engine": "SQLite in-memory with Python sqlite3",
+          "description": "每频率同一冻结10000源几何；读取既有终态计数，不加载网络。\nreports/frequency5to20_20260908T063800Z/rollup_v3/FREQUENCY_STATUS.csv | SHA-256 40079440bb24c8171009263aaf18e9bf24992e5769e82dcf62a42a0f6edd3bf6\nreports/frequency5to20_20260908T063800Z/rollup_v3/MODEL_REGISTRY.json | SHA-256 0499cc7b9bc54602443391db5871d6442d3bd20e2207b4448d861bb1eec08c00\n本报告实际执行的只读SQL转换；原始文件与SHA仍是上游证据，不声称历史训练/评估由SQL生成。",
+          "tables_used": [
+            "reports/frequency5to20_20260908T063800Z/rollup_v3/FREQUENCY_STATUS.csv",
+            "reports/frequency5to20_20260908T063800Z/rollup_v3/MODEL_REGISTRY.json"
+          ],
+          "metric_definitions": [
+            "strict_total=train+validation+test；实际梯度行数不等于源表几何数。"
+          ],
+          "filters": [
+            "固定报告快照；不读取模型权重、不重新推理、不新增仿真。"
+          ],
+          "sql": "SELECT CAST(json_extract(value,'$.frequency_ghz') AS INTEGER) AS frequency,\n CAST(json_extract(value,'$.strict_total') AS INTEGER) AS strict_total,\n CAST(json_extract(value,'$.gradient_train') AS INTEGER) AS gradient_train,\n CAST(json_extract(value,'$.validation') AS INTEGER) AS validation,\n CAST(json_extract(value,'$.test') AS INTEGER) AS test,\n json_extract(value,'$.F_updates') || ' / ' || json_extract(value,'$.I_updates') AS updates\nFROM json_each(:frequency_status_json) ORDER BY frequency;\n"
+        }
+      },
+      {
+        "id": "forward",
+        "label": "留出集正向误差（已有EM标签）",
+        "path": "reports/frequency5to20_20260908T063800Z/rollup_v3/HELDOUT_METRICS.csv",
+        "query": {
+          "engine": "SQLite in-memory with Python sqlite3",
+          "description": "筛选panel=A_HELDOUT_FORWARD、mode=forward；按frequency_ghz连接支持计数；保留全部有限预测。\nreports/frequency5to20_20260908T063800Z/rollup_v3/HELDOUT_METRICS.csv | SHA-256 eb0395c7638714d4aeb60e2a48a9834fcbe9ee194b456a778d99614a3552149e\nreports/frequency5to20_20260908T063800Z/rollup_v3/FREQUENCY_STATUS.csv | SHA-256 40079440bb24c8171009263aaf18e9bf24992e5769e82dcf62a42a0f6edd3bf6\n本报告实际执行的只读SQL转换；原始文件与SHA仍是上游证据，不声称历史训练/评估由SQL生成。\nheldout_predictions由16份原预测CSV逐行读取，误差=prediction−truth；linear_p95为脚本内线性经验分位聚合。\nreports/frequency5to20_20260908T063800Z/training/f05/posttrain/evaluation/test/forward_predictions.csv | SHA-256 80f7da3394d3a5dde810f01fa830a664545b618c6dcdeaac31003422aebaeb1a\nreports/frequency5to20_20260908T063800Z/training/f06/posttrain/evaluation/test/forward_predictions.csv | SHA-256 7007312e6e6f157d83308b2e7b72ffb1f2bb8653fd89e182c7ed97a357ff8492\nreports/frequency5to20_20260908T063800Z/training/f07/posttrain/evaluation/test/forward_predictions.csv | SHA-256 1949a57b33561329410ba5a6b3074590365c24baf199ff2bc654f64be7c5558c\nreports/frequency5to20_20260908T063800Z/training/f08/posttrain/evaluation/test/forward_predictions.csv | SHA-256 8b3ae7bc5ac7653615095745f850728bc0eea37960f131358a8aa8f1bf1fdb02\nreports/frequency5to20_20260908T063800Z/training/f09/posttrain/evaluation/test/forward_predictions.csv | SHA-256 02d1f52a7d4fdb6a76251b852543a42e3e2d30997ec370008e83a463ed5345c6\nreports/frequency5to20_20260908T063800Z/training/f10/posttrain/evaluation/test/forward_predictions.csv | SHA-256 23e3eaf5dda9ea1ef13e8043d6e1fd843c5a70c3a4556da843ca4ef2c402bff6\nreports/frequency5to20_20260908T063800Z/training/f11/posttrain/evaluation/test/forward_predictions.csv | SHA-256 9333a9291c405705c4777dcc4c6957c1c4010ff5b1fe2a4193cc381e9e8b9267\nreports/frequency5to20_20260908T063800Z/training/f12/posttrain/evaluation/test/forward_predictions.csv | SHA-256 5c9a583155bc20a91d17b7c5e2aa1ada025b0ec0002fb5adf506ca1ea4661ea5\nreports/frequency5to20_20260908T063800Z/training/f13/posttrain/evaluation/test/forward_predictions.csv | SHA-256 a3243b15655f89b3d8a784663184f85e5a2c6b4e41d07f25066f1bea0a2493a1\nreports/frequency5to20_20260908T063800Z/training/f14/posttrain/evaluation/test/forward_predictions.csv | SHA-256 bf47e3b3db3345cdeb54db32541b6f8a596dafc7fea9d70ea1bfaf3d712fa46b\nreports/frequency_indexed_mlp_20260908T041800Z/formal10k_15ghz/posttrain/evaluation/test/forward_predictions.csv | SHA-256 738c7e2ce7f9557cf3742d8f129c38aa56eeff1f6b4db61899b7b9ec83aba88a\nreports/frequency5to20_20260908T063800Z/training/f16/posttrain/evaluation/test/forward_predictions.csv | SHA-256 82772e07bf20203cf068e2a7d7086c873c2fa980284e040a97f9cf97ebaa6e05\nreports/frequency5to20_20260908T063800Z/training/f17/posttrain/evaluation/test/forward_predictions.csv | SHA-256 3486031df3c3adac38cdeebf0c2933c2a3cf1478addfc050552b10f97432381e\nreports/frequency5to20_20260908T063800Z/training/f18/posttrain/evaluation/test/forward_predictions.csv | SHA-256 40ad63e0faef04d6527ab7ec67b69e33729d42ea62f36d7202f8ab921dff07f9\nreports/frequency5to20_20260908T063800Z/training/f19/posttrain/evaluation/test/forward_predictions.csv | SHA-256 49a96d795c98abc8a2ae8b4a21b8cf0e1dcd392174ca80b7dd0884b1f27c0898\nreports/frequency5to20_20260908T063800Z/training/f20/posttrain/evaluation/test/forward_predictions.csv | SHA-256 e69b9a67668f982fd06660949997874088c75bd83cc9499e2d4734d3f202e790",
+          "tables_used": [
+            "reports/frequency5to20_20260908T063800Z/rollup_v3/HELDOUT_METRICS.csv",
+            "reports/frequency5to20_20260908T063800Z/rollup_v3/FREQUENCY_STATUS.csv",
+            "reports/frequency5to20_20260908T063800Z/training/f05/posttrain/evaluation/test/forward_predictions.csv",
+            "reports/frequency5to20_20260908T063800Z/training/f06/posttrain/evaluation/test/forward_predictions.csv",
+            "reports/frequency5to20_20260908T063800Z/training/f07/posttrain/evaluation/test/forward_predictions.csv",
+            "reports/frequency5to20_20260908T063800Z/training/f08/posttrain/evaluation/test/forward_predictions.csv",
+            "reports/frequency5to20_20260908T063800Z/training/f09/posttrain/evaluation/test/forward_predictions.csv",
+            "reports/frequency5to20_20260908T063800Z/training/f10/posttrain/evaluation/test/forward_predictions.csv",
+            "reports/frequency5to20_20260908T063800Z/training/f11/posttrain/evaluation/test/forward_predictions.csv",
+            "reports/frequency5to20_20260908T063800Z/training/f12/posttrain/evaluation/test/forward_predictions.csv",
+            "reports/frequency5to20_20260908T063800Z/training/f13/posttrain/evaluation/test/forward_predictions.csv",
+            "reports/frequency5to20_20260908T063800Z/training/f14/posttrain/evaluation/test/forward_predictions.csv",
+            "reports/frequency_indexed_mlp_20260908T041800Z/formal10k_15ghz/posttrain/evaluation/test/forward_predictions.csv",
+            "reports/frequency5to20_20260908T063800Z/training/f16/posttrain/evaluation/test/forward_predictions.csv",
+            "reports/frequency5to20_20260908T063800Z/training/f17/posttrain/evaluation/test/forward_predictions.csv",
+            "reports/frequency5to20_20260908T063800Z/training/f18/posttrain/evaluation/test/forward_predictions.csv",
+            "reports/frequency5to20_20260908T063800Z/training/f19/posttrain/evaluation/test/forward_predictions.csv",
+            "reports/frequency5to20_20260908T063800Z/training/f20/posttrain/evaluation/test/forward_predictions.csv"
+          ],
+          "metric_definitions": [
+            "MAE=mean(abs(prediction-label))；P95=线性经验95分位绝对误差；Lp/Ls单位nH，Qmin/|k|无量纲。"
+          ],
+          "filters": [
+            "固定报告快照；不读取模型权重、不重新推理、不新增仿真。"
+          ],
+          "sql": "SELECT frequency, COUNT(*) AS N_test,\n AVG(ABS(lp_error)) AS lp_mae, AVG(ABS(ls_error)) AS ls_mae,\n AVG(ABS(q_error)) AS q_mae, AVG(ABS(k_error)) AS k_mae,\n SQRT(AVG(q_error*q_error)) AS q_rmse, linear_p95(ABS(q_error)) AS q_p95\nFROM heldout_predictions GROUP BY frequency ORDER BY frequency;\n"
+        }
+      },
+      {
+        "id": "model",
+        "label": "网络与训练合同",
+        "path": "github_worktrees/frequency-indexed-mlp-20260908/research/broadband56_nn/bb00.py",
+        "query": {
+          "engine": "local-file-snapshot",
+          "description": "源码与32份真实训练配置共同约束网络、损失、归一化、AdamW和更新预算；不加载checkpoint。\ngithub_worktrees/frequency-indexed-mlp-20260908/research/broadband56_nn/bb00.py | SHA-256 f9427804e06a5698d6469b1a995f0679cc66af8bb9b85fe79dbaa7b2042dff1e\ngithub_worktrees/frequency-indexed-mlp-20260908/research/broadband56_nn/frequency_tandem.py | SHA-256 f6e80d85e44368f226b0c31b72402c50f131f44e764137b8cc99a3b8be9be982\nreports/frequency5to20_20260908T063800Z/training/f05/forward/attempt_0001/config.json | SHA-256 de8e5ae2a7509c909400020a15015e28fa7eeca915f463731ec6377b4cb01959\nreports/frequency5to20_20260908T063800Z/training/f05/inverse/attempt_0001/config.json | SHA-256 80416b4c82355aca94f643d80a9dc0dee7e72380226b46e941f57e7b0c115156\nreports/frequency5to20_20260908T063800Z/training/f06/forward/attempt_0001/config.json | SHA-256 a9e4ecdcd61bdff03debbd569c0125702c6114cb59f20d8a8ac78fa977ca688c\nreports/frequency5to20_20260908T063800Z/training/f06/inverse/attempt_0001/config.json | SHA-256 7a71bfec96041c92d8e6b79f85288028ca19a5909489228af70bbcfb2d9ee8dc\nreports/frequency5to20_20260908T063800Z/training/f07/forward/attempt_0001/config.json | SHA-256 f1a78f663f84f25d2a9fcf96657a7da1020693a8b482c5a0c25244582e4097e6\nreports/frequency5to20_20260908T063800Z/training/f07/inverse/attempt_0001/config.json | SHA-256 69a8f524419796087e889fffebae4bf3c2e1265b7c787c4b6e283927950cb38d\nreports/frequency5to20_20260908T063800Z/training/f08/forward/attempt_0001/config.json | SHA-256 eff940d6a95af71abe77a810854e8ed5d8290bbd9d6c7fc5581cfdd1437f76ab\nreports/frequency5to20_20260908T063800Z/training/f08/inverse/attempt_0001/config.json | SHA-256 62b9d2f16d2be00d5bd0f2592a6d71bda9f99c644008fa53fe9b2d22a0c0cb4d\nreports/frequency5to20_20260908T063800Z/training/f09/forward/attempt_0001/config.json | SHA-256 1f11b56a1138330913d057e227f78896a078248d9f5daf062a8884e6ab9f901e\nreports/frequency5to20_20260908T063800Z/training/f09/inverse/attempt_0001/config.json | SHA-256 5521a6495b2061df4a0b40a577c15e4d8cfa6c63772a11c1ae544634447a7f61\nreports/frequency5to20_20260908T063800Z/training/f10/forward/attempt_0001/config.json | SHA-256 3e21ee6ba60bc7f62065c4f29b50365b22d8502cf56564b05f00e4af4345d739\nreports/frequency5to20_20260908T063800Z/training/f10/inverse/attempt_0001/config.json | SHA-256 ca1e14b277fcb9528603cbaa3cc03da8ab7f6a481ba9987e2fd0b8f32acff25e\nreports/frequency5to20_20260908T063800Z/training/f11/forward/attempt_0001/config.json | SHA-256 4e23b3930ac446dcc21292bd593576de5b5496be479398de4399fa0c40950868\nreports/frequency5to20_20260908T063800Z/training/f11/inverse/attempt_0001/config.json | SHA-256 8a62a1dfa9d52a3f1060001b464e00855f441efd90098bc0477b7209da4e28b0\nreports/frequency5to20_20260908T063800Z/training/f12/forward/attempt_0001/config.json | SHA-256 2b0cfcc11c0cd6f3c3dad89c547155657e760377ccaa4d7ecbc685ea20271f6e\nreports/frequency5to20_20260908T063800Z/training/f12/inverse/attempt_0001/config.json | SHA-256 456223e5c17815984d7d8ccd09f31ce68bd5660eb2ba66202285cecd3eb919d0\nreports/frequency5to20_20260908T063800Z/training/f13/forward/attempt_0001/config.json | SHA-256 77bd65182937700bb7abaaf25fa55bac8ac453937569425c2531f7a51ea1b226\nreports/frequency5to20_20260908T063800Z/training/f13/inverse/attempt_0001/config.json | SHA-256 f6354e4efeab3e48523ba0b3bf470588deac14ce1685c99ac4018f9ad141add9\nreports/frequency5to20_20260908T063800Z/training/f14/forward/attempt_0001/config.json | SHA-256 05f1904e833fc52e4b9433db4a3797fa1e8c936e3e9283136eecac7e0bda04c7\nreports/frequency5to20_20260908T063800Z/training/f14/inverse/attempt_0001/config.json | SHA-256 46c406ad752774bc05d198c9a309c8696d676d7fc69089c61f57ee3d249f4ba4\nreports/frequency_indexed_mlp_20260908T041800Z/formal10k_15ghz/forward/attempt_0001/config.json | SHA-256 231b04df72f09a16538938021242e035393b79f3f1df5f5fbf11dc47f81e6cb0\nreports/frequency_indexed_mlp_20260908T041800Z/formal10k_15ghz/inverse/attempt_0001/config.json | SHA-256 43d4436a949fb8dbcd6ec8a474809d03f28231c168c40696bf96426ca13a926a\nreports/frequency5to20_20260908T063800Z/training/f16/forward/attempt_0001/config.json | SHA-256 072bbc04fc6ef588b0b08fcf5d997c6af07daf46cc8185c68acb970ddd455df7\nreports/frequency5to20_20260908T063800Z/training/f16/inverse/attempt_0001/config.json | SHA-256 6ad86762b556154df145fda40cdfdf3974aa565593103124d308d1311cfb23e1\nreports/frequency5to20_20260908T063800Z/training/f17/forward/attempt_0001/config.json | SHA-256 fe66a99d27fff6d63c6978e914d93f866c9c8d0f37dab61ca6bd351fb15986d4\nreports/frequency5to20_20260908T063800Z/training/f17/inverse/attempt_0001/config.json | SHA-256 74639b53fcfa2906b9e898b3c350c7160af62f08f9674f6b68cf2b02fa734169\nreports/frequency5to20_20260908T063800Z/training/f18/forward/attempt_0001/config.json | SHA-256 50b8f13a04337a0e26069b3ea31d149c70092b36c0314680b999cf3ca01c5fdb\nreports/frequency5to20_20260908T063800Z/training/f18/inverse/attempt_0001/config.json | SHA-256 4f27f41d27aa3e4ee4c404f54970ac02fc01fb685fc4c082e4a637c1781b5180\nreports/frequency5to20_20260908T063800Z/training/f19/forward/attempt_0001/config.json | SHA-256 051074ffbf44f2659b8cb4bd27d86effbac29ac161ecdaa7c0cec1809c0473cb\nreports/frequency5to20_20260908T063800Z/training/f19/inverse/attempt_0001/config.json | SHA-256 cbb66da3f2b5178931f7c20d2f8eb9b7f4a75922406206ccba26699d3a4c0571\nreports/frequency5to20_20260908T063800Z/training/f20/forward/attempt_0001/config.json | SHA-256 d0d246390af9609733022b5a9668dd64b9363e2cb8d3797070abcee2919ae2da\nreports/frequency5to20_20260908T063800Z/training/f20/inverse/attempt_0001/config.json | SHA-256 eb855e2513bab97b99396b935e7632005acb1480bd28f39863e91d3d945cd961",
+          "tables_used": [
+            "github_worktrees/frequency-indexed-mlp-20260908/research/broadband56_nn/bb00.py",
+            "github_worktrees/frequency-indexed-mlp-20260908/research/broadband56_nn/frequency_tandem.py",
+            "reports/frequency5to20_20260908T063800Z/training/f05/forward/attempt_0001/config.json",
+            "reports/frequency5to20_20260908T063800Z/training/f05/inverse/attempt_0001/config.json",
+            "reports/frequency5to20_20260908T063800Z/training/f06/forward/attempt_0001/config.json",
+            "reports/frequency5to20_20260908T063800Z/training/f06/inverse/attempt_0001/config.json",
+            "reports/frequency5to20_20260908T063800Z/training/f07/forward/attempt_0001/config.json",
+            "reports/frequency5to20_20260908T063800Z/training/f07/inverse/attempt_0001/config.json",
+            "reports/frequency5to20_20260908T063800Z/training/f08/forward/attempt_0001/config.json",
+            "reports/frequency5to20_20260908T063800Z/training/f08/inverse/attempt_0001/config.json",
+            "reports/frequency5to20_20260908T063800Z/training/f09/forward/attempt_0001/config.json",
+            "reports/frequency5to20_20260908T063800Z/training/f09/inverse/attempt_0001/config.json",
+            "reports/frequency5to20_20260908T063800Z/training/f10/forward/attempt_0001/config.json",
+            "reports/frequency5to20_20260908T063800Z/training/f10/inverse/attempt_0001/config.json",
+            "reports/frequency5to20_20260908T063800Z/training/f11/forward/attempt_0001/config.json",
+            "reports/frequency5to20_20260908T063800Z/training/f11/inverse/attempt_0001/config.json",
+            "reports/frequency5to20_20260908T063800Z/training/f12/forward/attempt_0001/config.json",
+            "reports/frequency5to20_20260908T063800Z/training/f12/inverse/attempt_0001/config.json",
+            "reports/frequency5to20_20260908T063800Z/training/f13/forward/attempt_0001/config.json",
+            "reports/frequency5to20_20260908T063800Z/training/f13/inverse/attempt_0001/config.json",
+            "reports/frequency5to20_20260908T063800Z/training/f14/forward/attempt_0001/config.json",
+            "reports/frequency5to20_20260908T063800Z/training/f14/inverse/attempt_0001/config.json",
+            "reports/frequency_indexed_mlp_20260908T041800Z/formal10k_15ghz/forward/attempt_0001/config.json",
+            "reports/frequency_indexed_mlp_20260908T041800Z/formal10k_15ghz/inverse/attempt_0001/config.json",
+            "reports/frequency5to20_20260908T063800Z/training/f16/forward/attempt_0001/config.json",
+            "reports/frequency5to20_20260908T063800Z/training/f16/inverse/attempt_0001/config.json",
+            "reports/frequency5to20_20260908T063800Z/training/f17/forward/attempt_0001/config.json",
+            "reports/frequency5to20_20260908T063800Z/training/f17/inverse/attempt_0001/config.json",
+            "reports/frequency5to20_20260908T063800Z/training/f18/forward/attempt_0001/config.json",
+            "reports/frequency5to20_20260908T063800Z/training/f18/inverse/attempt_0001/config.json",
+            "reports/frequency5to20_20260908T063800Z/training/f19/forward/attempt_0001/config.json",
+            "reports/frequency5to20_20260908T063800Z/training/f19/inverse/attempt_0001/config.json",
+            "reports/frequency5to20_20260908T063800Z/training/f20/forward/attempt_0001/config.json",
+            "reports/frequency5to20_20260908T063800Z/training/f20/inverse/attempt_0001/config.json"
+          ],
+          "metric_definitions": [],
+          "filters": [
+            "固定报告快照；不读取模型权重、不重新推理、不新增仿真。"
+          ]
+        }
+      },
+      {
+        "id": "protocol",
+        "label": "冻结三输入Q扫描合同",
+        "path": "reports/frequency5to20_20260908T063800Z/qscan_formal10k/f05_qscan/QSCAN_FREEZE.json",
+        "query": {
+          "engine": "local-file-snapshot",
+          "description": "固定三目标、Q10..20对称扫描；STRICT_LUMPED沿用原始有效性门，不重标标签。\nreports/frequency5to20_20260908T063800Z/qscan_formal10k/f05_qscan/QSCAN_FREEZE.json | SHA-256 8ff4ce19a04383b826531ed81da4bd934a2a3298d0d0d6f11857f4dbc841550f\ngithub_worktrees/frequency-indexed-mlp-20260908/research/broadband56_nn/frequency_profile.py | SHA-256 0399037e22a68ff42ee1f57b1a81934cd79a9bb411abd1b8131b58ff34381711",
+          "tables_used": [
+            "reports/frequency5to20_20260908T063800Z/qscan_formal10k/f05_qscan/QSCAN_FREEZE.json",
+            "github_worktrees/frequency-indexed-mlp-20260908/research/broadband56_nn/frequency_profile.py"
+          ],
+          "metric_definitions": [],
+          "filters": [
+            "固定报告快照；不读取模型权重、不重新推理、不新增仿真。"
+          ]
+        }
+      },
+      {
+        "id": "qscan",
+        "label": "正式16频率Q扫描已发布数表",
+        "path": "reports/frequency5to20_20260908T063800Z/qscan_formal10k_figures/f05_v2/selected_requests.csv",
+        "query": {
+          "engine": "SQLite in-memory with Python sqlite3",
+          "description": "逐selected_requests.csv按H/C分别计数；end_to_end_proxy_hit=True为响应四项容差与解析几何门交集；与rollup逐频核对。\nreports/frequency5to20_20260908T063800Z/qscan_formal10k_figures/f05_v2/selected_requests.csv | SHA-256 67b8d028912fd55287d9c58756237c4702bfaedad2be03a9ebf9141c60e83489\nreports/frequency5to20_20260908T063800Z/qscan_formal10k_figures/f06_v2/selected_requests.csv | SHA-256 0ee261635a8359985e5fb66976280f56d22d09b5ff03d1da6b9b2c3562f89f32\nreports/frequency5to20_20260908T063800Z/qscan_formal10k_figures/f07_v2/selected_requests.csv | SHA-256 34b7a2d3745bb1ee1ae320211abc5a0f91574223c4daf0e098b00843c6a8a275\nreports/frequency5to20_20260908T063800Z/qscan_formal10k_figures/f08_v1/selected_requests.csv | SHA-256 dd36145392b947e6306be3a69525f2d6333fc0c9c799cf639a880b39aafa9c51\nreports/frequency5to20_20260908T063800Z/qscan_formal10k_figures/f09_v2/selected_requests.csv | SHA-256 d8df004f951d244934333f6cb99a276e5396cd126eac5f6e5d02f05f6dbfd8be\nreports/frequency5to20_20260908T063800Z/qscan_formal10k_figures/f10_v1/selected_requests.csv | SHA-256 bb6bccc12176b717d08c8904c20a2c4c8375840e29644daf1ce4a90b25615a2f\nreports/frequency5to20_20260908T063800Z/qscan_formal10k_figures/f11_v2/selected_requests.csv | SHA-256 218d99b8f502aa5e75835e82cc988ce8d34a4344d8bdf19ae27ea680694f5002\nreports/frequency5to20_20260908T063800Z/qscan_formal10k_figures/f12_v1/selected_requests.csv | SHA-256 35daaffed240b294a8d7ddefe96335eb7d4201d5acc8ef3bce8a1a880fe9b711\nreports/frequency5to20_20260908T063800Z/qscan_formal10k_figures/f13_v1/selected_requests.csv | SHA-256 24f62880e63aebd6ac61fc881f1fd2d71d0f71712030df036c4f0bb0fad89f80\nreports/frequency5to20_20260908T063800Z/qscan_formal10k_figures/f14_v1/selected_requests.csv | SHA-256 6fe96b3ef408b42ee2c29108dbf48ea644b7be422668678d88fa93a41d906984\nreports/frequency5to20_20260908T063800Z/qscan_formal10k_figures/f15_v1/selected_requests.csv | SHA-256 8f4ded01fcb1c1334657c0557b79f8e0f58eedab6dc9f0d642183f3873697367\nreports/frequency5to20_20260908T063800Z/qscan_formal10k_figures/f16_v1/selected_requests.csv | SHA-256 bc93a25b096436b8c6f91d9b3b07dfa4fcac81041246c590ade4849a2e0ff1dc\nreports/frequency5to20_20260908T063800Z/qscan_formal10k_figures/f17_v1/selected_requests.csv | SHA-256 2bccf486b33255cca6c6860871657f80793169c9948affa0dd01e70da2a84416\nreports/frequency5to20_20260908T063800Z/qscan_formal10k_figures/f18_v1/selected_requests.csv | SHA-256 3b9ba599e09c78dcedb38c6cb9414b5a40eb62b9952753891bd465033465e942\nreports/frequency5to20_20260908T063800Z/qscan_formal10k_figures/f19_v1/selected_requests.csv | SHA-256 663425ce8419a7c3f346e1f69f3bf7a7bef5aa2d2e4b09ad34cb7287977d494d\nreports/frequency5to20_20260908T063800Z/qscan_formal10k_figures/f20_v1/selected_requests.csv | SHA-256 dea873fc6a7220f4ccec79f2b99747d1c607764f26687968eba44749a8e8c1fb\nreports/frequency5to20_20260908T063800Z/qscan_formal10k_figures/FINAL_FIGURE_MANIFEST.json | SHA-256 02793f5f446554b93989b1983f5717d2b0b91332e852f9b988c1ab1d59b3f90f\n本报告实际执行的只读SQL转换；原始文件与SHA仍是上游证据，不声称历史训练/评估由SQL生成。",
+          "tables_used": [
+            "reports/frequency5to20_20260908T063800Z/qscan_formal10k_figures/f05_v2/selected_requests.csv",
+            "reports/frequency5to20_20260908T063800Z/qscan_formal10k_figures/f06_v2/selected_requests.csv",
+            "reports/frequency5to20_20260908T063800Z/qscan_formal10k_figures/f07_v2/selected_requests.csv",
+            "reports/frequency5to20_20260908T063800Z/qscan_formal10k_figures/f08_v1/selected_requests.csv",
+            "reports/frequency5to20_20260908T063800Z/qscan_formal10k_figures/f09_v2/selected_requests.csv",
+            "reports/frequency5to20_20260908T063800Z/qscan_formal10k_figures/f10_v1/selected_requests.csv",
+            "reports/frequency5to20_20260908T063800Z/qscan_formal10k_figures/f11_v2/selected_requests.csv",
+            "reports/frequency5to20_20260908T063800Z/qscan_formal10k_figures/f12_v1/selected_requests.csv",
+            "reports/frequency5to20_20260908T063800Z/qscan_formal10k_figures/f13_v1/selected_requests.csv",
+            "reports/frequency5to20_20260908T063800Z/qscan_formal10k_figures/f14_v1/selected_requests.csv",
+            "reports/frequency5to20_20260908T063800Z/qscan_formal10k_figures/f15_v1/selected_requests.csv",
+            "reports/frequency5to20_20260908T063800Z/qscan_formal10k_figures/f16_v1/selected_requests.csv",
+            "reports/frequency5to20_20260908T063800Z/qscan_formal10k_figures/f17_v1/selected_requests.csv",
+            "reports/frequency5to20_20260908T063800Z/qscan_formal10k_figures/f18_v1/selected_requests.csv",
+            "reports/frequency5to20_20260908T063800Z/qscan_formal10k_figures/f19_v1/selected_requests.csv",
+            "reports/frequency5to20_20260908T063800Z/qscan_formal10k_figures/f20_v1/selected_requests.csv",
+            "reports/frequency5to20_20260908T063800Z/qscan_formal10k_figures/FINAL_FIGURE_MANIFEST.json"
+          ],
+          "metric_definitions": [
+            "C每频率10000请求；H每频率100，20GHz因原test仅96而为96；每请求11候选不是11个独立样本。"
+          ],
+          "filters": [
+            "固定报告快照；不读取模型权重、不重新推理、不新增仿真。"
+          ],
+          "sql": "SELECT frequency,\n SUM(target_source='HELDOUT_TRIPLE_AUDIT') AS H_N,\n SUM(target_source='HELDOUT_TRIPLE_AUDIT' AND end_to_end_proxy_hit='True') AS H_joint,\n SUM(target_source='RANDOM_LHS_TRIPLE') AS C_N,\n SUM(target_source='RANDOM_LHS_TRIPLE' AND selected_joint_response_hit='True') AS C_response,\n SUM(target_source='RANDOM_LHS_TRIPLE' AND selected_analytic_pass='True') AS C_analytic,\n SUM(target_source='RANDOM_LHS_TRIPLE' AND end_to_end_proxy_hit='True') AS C_joint\nFROM selected_requests GROUP BY frequency ORDER BY frequency;\n"
+        }
+      },
+      {
+        "id": "physical",
+        "label": "首15GHz开发5K请求的真实EMX",
+        "path": "reports/frequency5to20_20260908T063800Z/physical_first15_v1/evidence_first_request_complete_v1/ACTUAL_REQUEST_SUMMARY.json",
+        "query": {
+          "engine": "SQLite in-memory with Python sqlite3",
+          "description": "一个预选H请求；11原候选，9真实求解，2解析失败。Q14为EMX前冻结选择，q_emx为空。\nreports/frequency5to20_20260908T063800Z/physical_first15_v1/evidence_first_request_complete_v1/ACTUAL_REQUEST_SUMMARY.json | SHA-256 0510233cc286fbb6421008429ba06aa8e746fe8d572644df270a267e1b2b8193\nreports/frequency5to20_20260908T063800Z/physical_first15_v1/evidence_first_request_complete_v1/candidate_by_q.csv | SHA-256 3c42f3f63d94a3649eb5f44d410410611aaa20893302d48807565cf116ca6f7d\nreports/frequency5to20_20260908T063800Z/physical_first15_v1/evidence_first_request_complete_v1/emx_q10_v1/features_v1/FEATURE_RECEIPT.json | SHA-256 c5b89aee233d0ebe4423f1cd0f8319ed98eb15b62c193f72c431e81e5a5a76c6\nreports/frequency5to20_20260908T063800Z/physical_first15_v1/evidence_first_request_complete_v1/emx_q11_v1/features_v1/FEATURE_RECEIPT.json | SHA-256 416322aa0917311f9e904b7b2247b8ac6ecc4d56668b7b3ebe8563e91eac109d\nreports/frequency5to20_20260908T063800Z/physical_first15_v1/evidence_first_request_complete_v1/emx_q12_v1/features_v1/FEATURE_RECEIPT.json | SHA-256 a8a51ed48c88e3fe0929e5a409380089870183144af0998d67eda3c16eb45c90\nreports/frequency5to20_20260908T063800Z/physical_first15_v1/evidence_first_request_complete_v1/emx_q13_v1/features_v1/FEATURE_RECEIPT.json | SHA-256 c2e42bfd2c91a8972c4e0919e0b2d7bdf64bc43b3a07b2c970b6bc010404e08a\nreports/frequency5to20_20260908T063800Z/physical_first15_v1/evidence_first_request_complete_v1/emx_q14_v1/features_v1/FEATURE_RECEIPT.json | SHA-256 cfef839df2da031f05ac29208477234a4e229d7102d91f1ce642149a172431c5\nreports/frequency5to20_20260908T063800Z/physical_first15_v1/evidence_first_request_complete_v1/emx_q15_v1/features_v1/FEATURE_RECEIPT.json | SHA-256 b9e8b163d4c9048f1b55ae623006451c569124e69736227891b9bbd9cf53e01a\nreports/frequency5to20_20260908T063800Z/physical_first15_v1/evidence_first_request_complete_v1/emx_q16_v1/features_v1/FEATURE_RECEIPT.json | SHA-256 dfd315dd87a39560ff9df565ed7fd4d891b6c99fbe0ddcb2abec73a515f66e9b\nreports/frequency5to20_20260908T063800Z/physical_first15_v1/evidence_first_request_complete_v1/emx_q17_v1/features_v1/FEATURE_RECEIPT.json | SHA-256 0a7cdb8286c73ee032d614800ccb858f3a8137f02080942a3b04f661842a643a\nreports/frequency5to20_20260908T063800Z/physical_first15_v1/evidence_first_request_complete_v1/emx_q18_v1/features_v1/FEATURE_RECEIPT.json | SHA-256 e79da6aca4304a5526fce2989b5b9e147fdd4fdf3fbfc5facc756795fbfec0e1\n本报告实际执行的只读SQL转换；原始文件与SHA仍是上游证据，不声称历史训练/评估由SQL生成。",
+          "tables_used": [
+            "reports/frequency5to20_20260908T063800Z/physical_first15_v1/evidence_first_request_complete_v1/ACTUAL_REQUEST_SUMMARY.json",
+            "reports/frequency5to20_20260908T063800Z/physical_first15_v1/evidence_first_request_complete_v1/candidate_by_q.csv",
+            "reports/frequency5to20_20260908T063800Z/physical_first15_v1/evidence_first_request_complete_v1/emx_q10_v1/features_v1/FEATURE_RECEIPT.json",
+            "reports/frequency5to20_20260908T063800Z/physical_first15_v1/evidence_first_request_complete_v1/emx_q11_v1/features_v1/FEATURE_RECEIPT.json",
+            "reports/frequency5to20_20260908T063800Z/physical_first15_v1/evidence_first_request_complete_v1/emx_q12_v1/features_v1/FEATURE_RECEIPT.json",
+            "reports/frequency5to20_20260908T063800Z/physical_first15_v1/evidence_first_request_complete_v1/emx_q13_v1/features_v1/FEATURE_RECEIPT.json",
+            "reports/frequency5to20_20260908T063800Z/physical_first15_v1/evidence_first_request_complete_v1/emx_q14_v1/features_v1/FEATURE_RECEIPT.json",
+            "reports/frequency5to20_20260908T063800Z/physical_first15_v1/evidence_first_request_complete_v1/emx_q15_v1/features_v1/FEATURE_RECEIPT.json",
+            "reports/frequency5to20_20260908T063800Z/physical_first15_v1/evidence_first_request_complete_v1/emx_q16_v1/features_v1/FEATURE_RECEIPT.json",
+            "reports/frequency5to20_20260908T063800Z/physical_first15_v1/evidence_first_request_complete_v1/emx_q17_v1/features_v1/FEATURE_RECEIPT.json",
+            "reports/frequency5to20_20260908T063800Z/physical_first15_v1/evidence_first_request_complete_v1/emx_q18_v1/features_v1/FEATURE_RECEIPT.json"
+          ],
+          "metric_definitions": [
+            "目标相对绝对误差%=100*abs(actual-target)/abs(target)，仅补充读数，不替代冻结绝对容差。"
+          ],
+          "filters": [
+            "固定报告快照；不读取模型权重、不重新推理、不新增仿真。"
+          ],
+          "sql": "SELECT CAST(json_extract(value,'$.q') AS INTEGER) AS q,\n json_extract(value,'$.status') AS status,\n json_extract(value,'$.strict_joint_hit') AS strict_joint_hit,\n CASE WHEN json_extract(value,'$.status')='REAL_EMX_PASS'\n      THEN CAST(json_extract(value,'$.fresh_emx_score') AS REAL) ELSE NULL END AS fresh_emx_score,\n json_extract(value,'$.target_Lp_nH') AS target_Lp_nH,\n json_extract(value,'$.target_Ls_nH') AS target_Ls_nH,\n json_extract(value,'$.target_Qmin') AS target_Qmin,\n json_extract(value,'$.target_K_abs') AS target_K_abs,\n json_extract(value,'$.fresh_emx_Lp_nH') AS actual_Lp_nH,\n json_extract(value,'$.fresh_emx_Ls_nH') AS actual_Ls_nH,\n json_extract(value,'$.fresh_emx_Qmin') AS actual_Qmin,\n json_extract(value,'$.fresh_emx_K_abs') AS actual_K_abs,\n value AS original_csv_record\nFROM json_each(:candidate_by_q_json) ORDER BY q;\n"
+        }
+      },
+      {
+        "id": "formal_physical",
+        "label": "首5GHz正式10K请求的真实EMX",
+        "path": "reports/frequency5to20_20260908T063800Z/physical_formal5_first_request_v1/ACTUAL_SUMMARY.json",
+        "query": {
+          "engine": "SQLite in-memory with Python sqlite3",
+          "description": "一个预选H请求；11原候选GDS通过，3个Calibre阻断不派发，8个有效新求解；全部原11分母保留，不能形成完整物理冠军。\nreports/frequency5to20_20260908T063800Z/physical_formal5_first_request_v1/ACTUAL_SUMMARY.json | SHA-256 6f0e5e3055ac46a6e430c2a70d7570c2f8f865505d547caaef826815537ec034\nreports/frequency5to20_20260908T063800Z/physical_formal5_first_request_v1/DELIVERY_RECEIPT.json | SHA-256 e4e0980cab2d580d125130160970b2653c3c25a27c404ec2bae96459dbfd5cc1\nreports/frequency5to20_20260908T063800Z/physical_formal5_first_request_v1/COLLECTION_MANIFEST.json | SHA-256 e69c811352f72c3c900ebcf6bb1d9fd47f1aa4df7de607dba51e93b044f0aca2\nreports/frequency5to20_20260908T063800Z/physical_formal5_first_request_v1/evidence/emx_q10/features/FEATURE_RECEIPT.json | SHA-256 3d50b0b6d9f02100219f2d2cffd1dc53704b201683ed7186c9f281556a2bc3d6\n本报告实际执行的只读SQL转换；原始文件与SHA仍是上游证据，不声称历史训练/评估由SQL生成。",
+          "tables_used": [
+            "reports/frequency5to20_20260908T063800Z/physical_formal5_first_request_v1/ACTUAL_SUMMARY.json",
+            "reports/frequency5to20_20260908T063800Z/physical_formal5_first_request_v1/DELIVERY_RECEIPT.json",
+            "reports/frequency5to20_20260908T063800Z/physical_formal5_first_request_v1/COLLECTION_MANIFEST.json",
+            "reports/frequency5to20_20260908T063800Z/physical_formal5_first_request_v1/evidence/emx_q10/features/FEATURE_RECEIPT.json"
+          ],
+          "metric_definitions": [],
+          "filters": [
+            "固定报告快照；不读取模型权重、不重新推理、不新增仿真。"
+          ],
+          "sql": "SELECT json_extract(value,'$.q') AS q,\n json_extract(value,'$.gds_status') AS gds_status,\n json_extract(value,'$.drc_status') AS drc_status,\n json_extract(value,'$.blocking_drc_violation_count') AS blocking_drc_violation_count,\n json_extract(value,'$.emx_status') AS emx_status,\n json_extract(value,'$.strict_joint_hit') AS strict_joint_hit,\n json_extract(value,'$.target') AS target,\n json_extract(value,'$.actual_fresh_emx') AS actual_fresh_emx,\n json_extract(value,'$.target_relative_absolute_percent') AS target_relative_absolute_percent\nFROM json_each(:actual_summary_json,'$.all11') ORDER BY q;\n"
+        }
+      },
+      {
+        "id": "audit",
+        "label": "独立保存CSV复核",
+        "path": "reports/frequency5to20_20260908T063800Z/native_rollup_independent_qa_v1/AUDIT_RECEIPT.json",
+        "query": {
+          "engine": "local-file-snapshot",
+          "description": "192指标行、64089原CSV行、2656标量核对；最大差5.551115123125783e-17，无模型调用。\nreports/frequency5to20_20260908T063800Z/native_rollup_independent_qa_v1/AUDIT_RECEIPT.json | SHA-256 fb15080fff66c9723de9fdb317419ee40cfadcde7e012029e190c5e4e5833586\nreports/frequency5to20_20260908T063800Z/rollup_v3/ROLLUP_RECEIPT.json | SHA-256 8e0777b0dab4504932ec07d5dd4ac4c8c4a6d2662e8d22d0b7717766433d4fba",
+          "tables_used": [
+            "reports/frequency5to20_20260908T063800Z/native_rollup_independent_qa_v1/AUDIT_RECEIPT.json",
+            "reports/frequency5to20_20260908T063800Z/rollup_v3/ROLLUP_RECEIPT.json"
+          ],
+          "metric_definitions": [],
+          "filters": [
+            "固定报告快照；不读取模型权重、不重新推理、不新增仿真。"
+          ]
+        }
+      },
+      {
+        "id": "progress",
+        "label": "有限物理队列固定快照",
+        "path": "reports/frequency5to20_20260908T063800Z/physical_dispatch_release_v1/PROGRESS_SNAPSHOT_V2.json",
+        "query": {
+          "engine": "local-file-snapshot",
+          "description": "2026年9月8日08:38:35 UTC的只读现场；不在本报告推算未读取的候选通过数。\nreports/frequency5to20_20260908T063800Z/physical_dispatch_release_v1/PROGRESS_SNAPSHOT_V2.json | SHA-256 8bf461a7dd0c7c509b2b7097a7bcb0df03e0131790255b4b4cab4fde89d505d1\nreports/frequency5to20_20260908T063800Z/physical_dispatch_release_v1/RUNTIME_CONFIG.json | SHA-256 35b380eb5d7d1309e87e1bc63e6e93144bd6515187fe8b13da43311d7603b09a\nreports/frequency5to20_20260908T063800Z/physical_dispatch_release_v1/FINITE_LAUNCH_RECEIPT.json | SHA-256 428c9e41355c13a4b47f504b0bfca8ab03f58c2b0601dda4260c2b697d9ca62c\nreports/frequency5to20_20260908T063800Z/physical_dispatch_release_v1/code/research/broadband56_nn/frequency_physical_dispatch.py | SHA-256 1d78eb5b778d641eb4fb95ac98941408769f2fb4462c50ceba202279dc07eb0d",
+          "tables_used": [
+            "reports/frequency5to20_20260908T063800Z/physical_dispatch_release_v1/PROGRESS_SNAPSHOT_V2.json",
+            "reports/frequency5to20_20260908T063800Z/physical_dispatch_release_v1/RUNTIME_CONFIG.json",
+            "reports/frequency5to20_20260908T063800Z/physical_dispatch_release_v1/FINITE_LAUNCH_RECEIPT.json",
+            "reports/frequency5to20_20260908T063800Z/physical_dispatch_release_v1/code/research/broadband56_nn/frequency_physical_dispatch.py"
+          ],
+          "metric_definitions": [],
+          "filters": [
+            "固定报告快照；不读取模型权重、不重新推理、不新增仿真。"
+          ]
+        }
+      }
+    ],
+    "blocks": [
+      {
+        "id": "title",
+        "type": "markdown",
+        "body": "# 5–20 GHz 逐频率逆向建模技术报告"
+      },
+      {
+        "id": "summary",
+        "type": "markdown",
+        "body": "## 技术摘要：代理阶段完整，物理证据仍是两个独立个案\n\n5–20 GHz 的 **16 组独立正向/逆向网络**已完成本轮预算训练、保存重载、留出评价与 Q 扫描。这表示研究流程已有可复用成果，**不表示充分收敛或最终研究目标完成**。所有正式模型共享冻结的 10,000 个源几何，但实际训练支持必须逐频率计数。",
+        "sourceId": "status"
+      },
+      {
+        "id": "summary_physical",
+        "type": "markdown",
+        "body": "首个 **15 GHz 开发5K**物理请求保留全部 11 个 Q 候选：9 个完成有效 fresh EMX，2 个解析失败。EMX 前预选的 **Q14 四项均命中冻结绝对容差**；它只证明一个预选目标的结果，不能推广为正式10K模型或跨频率整体准确率。",
+        "sourceId": "physical"
+      },
+      {
+        "id": "summary_formal",
+        "type": "markdown",
+        "body": "新增 **5 GHz 正式10K**首个H请求：原11候选全部通过解析与实际GDS审计，3个被Calibre阻断，8个完成有效fresh EMX。预选 **Q10命中四项容差**。这与开发15 GHz是两个不同模型、不同频率的固定个案，不能合并成统一模型准确率或数据规模效果。",
+        "sourceId": "formal_physical"
+      },
+      {
+        "id": "summary_snapshot",
+        "type": "markdown",
+        "body": "本报告是 **2026年9月8日 08:49:47 UTC 的已封存证据快照**。正式5 GHz完整首请求已纳入；其他正式请求在本报告中均为 **尚未报告**。队列的较早运行快照独立标时，不据此推算后续完成量。"
+      },
+      {
+        "id": "definitions",
+        "type": "markdown",
+        "body": "## 先固定数据、证据与误差分母\n\n正式数据是同一批 **10,000 个唯一几何、每几何56个频率点**；全局按几何划分 train/validation/test = **6,015 / 2,002 / 1,983**，同一几何在不同频率不改变 split。各频率再取原始严格有效掩码、四项有效标记和有限标签的交集，因此“10K”不是每个网络实际使用10K梯度训练行。\n\n- **A 正向留出检验**：在未用于梯度训练的真实已有 EM 标签上比较 `F(g)` 与标签；它不是新生成几何的 fresh EMX。\n- **B 单次逆向检验**：`F(I(y))` 仍由本模型自身正向网络打分，是 SELF_PROXY；与下面逐Q扫描的 H/C 分开。\n- **H / C Q扫描**：H 使用留出几何的三目标，C 使用单次随机 LHS 三目标盒；每个请求扫描 Q=10…20。分母是请求数，不把11候选当成11独立请求。\n- **fresh EMX**：对候选身份绑定且通过实际 GDS 与零阻断 Calibre 门的同一 GDS 新求解。\n\nMAE = 平均绝对残差，P95 = 绝对残差的线性经验95分位。Lp/Ls 用 nH，Qmin 与 |k| 无量纲；Qmin = min(Qp,Qs)。\n\n当前扫描是**对称四项匹配**：`S = sqrt(mean(((response−target(Q))/[2.5,2.5,20,0.8])²))`。四项命中阈值是 **[0.125 nH, 0.125 nH, 1, 0.04]**，即固定声明跨度的5%，**不是每个目标值的相对5%**。",
+        "sourceId": "protocol"
+      },
+      {
+        "id": "model_spec",
+        "type": "markdown",
+        "body": "## 模型规格固定；高频更新预算并不相同\n\n每个整数频率独立训练一对网络，频率只用于路由，不是网络输入，也不向邻频回退。正向结构 **10→256→256→256→4（135,428参数）**；逆向 **4→256→256→256→10（135,434参数）**。隐藏层为 tanh 近似 GELU；逆向输出通过独立 sigmoid 映射到该频率有效训练几何的观测包络，**不保证耦合几何可制造性**。\n\n均值、总体标准差和几何包络仅由该频率严格有效的 train 子集计算，标准差下限为1e−6。接口输入/输出为真实物理单位，网络内部使用标准化变量；四项响应顺序为 Lp、Ls、Qmin、|k|。10维几何顺序为：初级外宽、初级外高、次级外宽、次级外高、线宽、初级端口y跨度、次级端口y跨度、偏移量、初级馈线延长、次级馈线延长，均以μm表示。\n\n训练从头初始化，不载入历史权重。统一 **seed17、AdamW(lr=3e−4, weight_decay=1e−4)、恒定学习率、梯度范数裁剪1、有效batch32 / microbatch8、CPU2线程**；训练样本均匀有放回抽取。每100更新验证和保存，patience20；停止于12,000更新、200等效epoch上限或其他冻结停止门。best只由validation选择，test不参与优化或选择。\n\n设 `Lr = mean(((F(g)−y)/σy)² × w)`，`w=(σy/span)² / mean((σy/span)²)`。逆向损失为 `λ(t)Lr(F(I(y)),y) + 0.01 mean(((I(y)−g)/σg)²)`；拓扑惩罚权重为0。正向权重冻结，但梯度仍穿过正向网络传给逆向几何。λ前600更新为0，随后3,000更新线性升至1，之后用验证事件EMA（衰减0.95）调节到0.25–4倍。验证选择用 `sqrt(Lr)`，逆向再加 `0.01 sqrt(Lg)`，不包含λ。\n\n**19/20 GHz 在响应权重爬坡完成前即触及等效epoch预算。** 因此这组频率比较既改变有效样本，也改变更新次数，不能称作严格控制变量的频率或数据量因果实验；此实现也不是历史优化器状态的精确续训。",
+        "sourceId": "model"
+      },
+      {
+        "id": "support",
+        "type": "markdown",
+        "body": "## 20 GHz 仅有279个梯度几何，必须单列支持边界\n\n下表列出全部16频率的实际计数，F/I更新数指本轮真正执行的优化器更新。5–16 GHz均为12,000；17–20 GHz按200等效epoch上限分别为8,875、5,538、3,357、1,744。20 GHz只剩464个严格有效几何，其中train/validation/test为279/89/96；高频结论应标为暂定，而不是通过放宽标签补齐样本。",
+        "sourceId": "status"
+      },
+      {
+        "id": "training_low_block",
+        "type": "table",
+        "tableId": "training_low"
+      },
+      {
+        "id": "training_high_block",
+        "type": "table",
+        "tableId": "training_high"
+      },
+      {
+        "id": "forward_findings",
+        "type": "markdown",
+        "body": "### 正向留出误差可量化，但不等于逆向物理准确率\n\nA检验直接使用每频率未参与梯度训练的已有 EM 标签。Qmin MAE 从5 GHz的 **0.0818** 到20 GHz的 **0.3928**，20 GHz Qmin绝对误差P95为 **1.1272**，且只有96个test几何。下图以频率为离散类别、从零起绘制同单位MAE，不混合Lp/Ls和|k|；高频误差与样本/预算同时变化，因此仅支持描述性对照。",
+        "sourceId": "forward"
+      },
+      {
+        "id": "forward_chart_block",
+        "type": "chart",
+        "chartId": "q_mae_by_frequency"
+      },
+      {
+        "id": "forward_low_block",
+        "type": "table",
+        "tableId": "forward_low"
+      },
+      {
+        "id": "forward_high_block",
+        "type": "table",
+        "tableId": "forward_high"
+      },
+      {
+        "id": "qscan_findings",
+        "type": "markdown",
+        "body": "## Q扫描的高命中仍是SELF_PROXY，不可借作物理真值\n\nC每频率保留10,000个随机LHS请求，共160,000请求、1,760,000个Q候选；H另计，20 GHz为96请求，其余为100。每请求从完整11个代理评分中选最小者，精确同分选较小Q；不剪裁目标，不重选成功替代项。\n\n“响应命中”与“解析通过”必须求交集：例如8 GHz C响应命中8,844/10,000，解析通过8,222/10,000，两者同时通过只有 **7,498/10,000**；仅报响应命中会隐藏版图几何风险。下面保留全部原请求作分母，H和C不混算。单次LHS是有限覆盖实验，不是独立同分布部署样本，因而不绘制伪总体置信区间。",
+        "sourceId": "qscan"
+      },
+      {
+        "id": "qscan_low_block",
+        "type": "table",
+        "tableId": "qscan_low"
+      },
+      {
+        "id": "qscan_high_block",
+        "type": "table",
+        "tableId": "qscan_high"
+      },
+      {
+        "id": "physical_findings",
+        "type": "markdown",
+        "body": "## 两个预选个案均命中，但失败门阻止完整物理冠军\n\n### 个案一：15 GHz 开发5K，预选Q14\n\n这不是正式10K的15 GHz模型：本节保持原 **开发5K、15 GHz、一个预选H请求** 的身份。原11候选中9个同一审计GDS通过零阻断foundry macro/IP-back-end Calibre并完成standard/typical-process exact56 EMX，Q19/20解析失败而未派发；9个有效响应中5个满足四项容差，原分母仍是11，而不是只报成功子集。\n\n**EMX前冻结的q_proxy=14是HIT**：四项目标相对误差分别约 **0.079%、0.341%、0.636%、0.294%**。这些百分比只是便于阅读的补充值；判定仍依据冻结绝对容差。此结果证明这个请求和所审计物理链可运行，不构成整体模型精度估计。",
+        "sourceId": "physical"
+      },
+      {
+        "id": "physical_selected_block",
+        "type": "table",
+        "tableId": "physical_selected"
+      },
+      {
+        "id": "physical_negative",
+        "type": "markdown",
+        "body": "**负结果不能省略。** Q10的Qmin真实值为11.625204，对目标10的绝对偏差1.625204，超过Q容差1，因此是NOT_HIT；它的EMX和严格描述符本身有效，并非求解失败。Ls虽有10.27%目标相对误差，但绝对偏差0.091136 nH仍小于0.125 nH容差。**Q19/20没有数值EMX结果，不填零。** 完整物理最优Q要求11/11原候选均有效；本请求未满足，所以 **q_emx=null**，不能把“9个幸存者最优”改名为完整Q冠军。",
+        "sourceId": "physical"
+      },
+      {
+        "id": "physical_candidates_block",
+        "type": "table",
+        "tableId": "physical_candidates"
+      },
+      {
+        "id": "formal_physical_findings",
+        "type": "markdown",
+        "body": "### 个案二：5 GHz 正式10K，预选Q10\n\n该模型使用10,000源几何，实际train/validation/test为6,015/2,002/1,983；本物理个案仍只取一个冻结H请求。11原候选全部通过解析与实际GDS审计，但 **Q15、Q17、Q18各有1项Calibre阻断而未运行EMX**。其余8个响应严格有效；其中3个四项命中，仍以原11候选报告，不能改为挑选成功的分母。\n\n求解前预选的 **q_proxy=10是HIT**：Lp、Ls、Qmin、|k|的目标相对绝对误差为 **0.163%、0.0017%、1.689%、0.0108%**。三个DRC失败使11/11有效物理门未满足，因此 **q_emx=null，选择一致率亦未定义**。这验证了正式模型的一个请求，也证明实际Calibre门不是可被代理或解析门代替的步骤。",
+        "sourceId": "formal_physical"
+      },
+      {
+        "id": "formal_selected_block",
+        "type": "table",
+        "tableId": "formal_selected"
+      },
+      {
+        "id": "formal_candidates_block",
+        "type": "table",
+        "tableId": "formal_candidates"
+      },
+      {
+        "id": "limits",
+        "type": "markdown",
+        "body": "## 数值已独立复核，外推与因果结论仍须限制\n\n保存CSV的独立审计核对 **192个指标行、64,089个源行、2,656个标量**，最大差为5.55×10⁻¹⁷，未调用模型。这确认汇总口径和数值可重现，不为模型泛化或物理正确性额外背书。",
+        "sourceId": "audit"
+      },
+      {
+        "id": "limits_actions",
+        "type": "markdown",
+        "body": "- **泛化边界**：同一源数据、单seed、逐频严格子集，缺少跨seed、真实部署分布和跨结构外推证据；训练包可重载不代表收敛。\n- **物理边界**：Calibre范围是foundry macro/IP后端门，不是全芯片签核或流片认证；现有standard/typical求解未建立网格收敛、PVT稳健性或测量一致性。\n- **下一合法动作**：复用现有模型、Q候选和首15物理成果，沿冻结轮转顺序补充候选绑定的真实响应；报告每请求通过、失败、待定及原11分母，绝不以成功替代失败。\n- **待补实验**：若要解释高频误差原因，另行冻结同split、同架构、同更新预算和多seed的受控对照；若要估计整体物理精度，先完成有明确定义抽样框的多请求fresh EMX。"
+      },
+      {
+        "id": "progress_actions",
+        "type": "markdown",
+        "body": "**08:38:35 UTC的运行快照**确认有限队列存活；冻结配置规定：每请求先顺序完成一个求解，再允许最多4个全局EMX；Cadence仍为1路，资源门和全局互斥租约保持有效，派发预算至当日18:00 UTC；不是开机自启动服务。本报告不由这个较早进程快照推算后续计数。正式5 GHz的新增首请求只由单独封存的完整收据支持，完整目标仍未完成；后续状态须另出新版本。",
+        "sourceId": "progress"
+      },
+      {
+        "id": "questions",
+        "type": "markdown",
+        "body": "## 导师可能追问：本轮能回答什么？\n\n**为什么保留256×3结构？** 为保持已记录的结构与损失实验口径，先建立逐频率可复用基线；本轮未比较替代架构，不能声称它最优。\n\n**为什么“10K模型”在20 GHz只训练279个几何？** 10K描述源快照；严格集总有效性过滤后，只有该频率的train子集进入梯度。不能用有限S参数或较宽descriptor标签冒充严格标签。\n\n**Q14误差都小，为什么还没有物理冠军？** q_proxy在求解前冻结；q_emx需要全部11原候选有效。两个解析失败使完整冠军门未通过，小误差也不能补造缺失候选。\n\n**现在可以说“准确率超过99%”吗？** 不可以。留出正向误差、SELF_PROXY命中率和单请求fresh EMX回答不同问题；本轮没有可用于总体物理准确率的样本与不确定性估计。\n\n**本轮最明确的交付是什么？** 已保存并可追溯的16频率模型/留出结果/代理扫描，以及分别属于开发15 GHz与正式5 GHz的两个真实物理个案；两者均保留负结果和原11分母，下一步是完成冻结的跨频率物理证据链。"
+      }
+    ],
+    "charts": [
+      {
+        "id": "q_mae_by_frequency",
+        "title": "各频率的留出Qmin平均绝对误差",
+        "subtitle": "A 正向留出检验；每频率test N=96–1,983；Qmin无量纲；零基线；无总体置信区间",
+        "showDescription": true,
+        "type": "bar",
+        "dataset": "forward",
+        "sourceId": "forward",
+        "layout": "full",
+        "maxRows": 16,
+        "xAxisTitle": "独立网络的频率路由",
+        "yAxisTitle": "Qmin MAE（无量纲）",
+        "valueFormat": "number",
+        "palette": {
+          "kind": "categorical",
+          "name": "blue"
+        },
+        "encodings": {
+          "x": {
+            "field": "frequency_label",
+            "type": "ordinal",
+            "label": "频率"
+          },
+          "y": {
+            "field": "q_mae",
+            "type": "quantitative",
+            "label": "Qmin MAE",
+            "format": "number"
+          },
+          "tooltip": [
+            {
+              "field": "N_test",
+              "type": "quantitative",
+              "label": "test N"
+            },
+            {
+              "field": "N_train",
+              "type": "quantitative",
+              "label": "梯度train N"
+            },
+            {
+              "field": "q_p95",
+              "type": "quantitative",
+              "label": "Qmin绝对误差P95"
+            }
+          ]
+        },
+        "intent": "comparison",
+        "question": "同单位的留出Qmin MAE在16个独立频率模型中如何分布？",
+        "rationale": "16个有顺序的离散频率，单指标柱状图；不混单位，不将不同支持/预算归因于频率。",
+        "comparisonContext": {
+          "grain": "每频率一个已冻结模型",
+          "denominator": "各频率原严格test子集",
+          "unit": "dimensionless Qmin"
+        }
+      }
+    ],
+    "tables": [
+      {
+        "id": "training_low",
+        "title": "实际训练支持：5–12 GHz",
+        "dataset": "training_low",
+        "sourceId": "status",
+        "layout": "full",
+        "density": "dense",
+        "subtitle": "每行一个频率；源几何固定10,000，非每行10,000梯度样本",
+        "showDescription": true,
+        "columns": [
+          {
+            "field": "frequency",
+            "label": "GHz",
+            "type": "number"
+          },
+          {
+            "field": "strict_total",
+            "label": "严格有效",
+            "type": "number"
+          },
+          {
+            "field": "gradient_train",
+            "label": "梯度train",
+            "type": "number"
+          },
+          {
+            "field": "validation",
+            "label": "validation",
+            "type": "number"
+          },
+          {
+            "field": "test",
+            "label": "test",
+            "type": "number"
+          },
+          {
+            "field": "updates",
+            "label": "F / I 更新",
+            "type": "text"
+          }
+        ],
+        "defaultSort": {
+          "field": "frequency",
+          "direction": "asc"
+        }
+      },
+      {
+        "id": "training_high",
+        "title": "实际训练支持：13–20 GHz",
+        "dataset": "training_high",
+        "sourceId": "status",
+        "layout": "full",
+        "density": "dense",
+        "subtitle": "每行一个频率；源几何固定10,000，非每行10,000梯度样本",
+        "showDescription": true,
+        "columns": [
+          {
+            "field": "frequency",
+            "label": "GHz",
+            "type": "number"
+          },
+          {
+            "field": "strict_total",
+            "label": "严格有效",
+            "type": "number"
+          },
+          {
+            "field": "gradient_train",
+            "label": "梯度train",
+            "type": "number"
+          },
+          {
+            "field": "validation",
+            "label": "validation",
+            "type": "number"
+          },
+          {
+            "field": "test",
+            "label": "test",
+            "type": "number"
+          },
+          {
+            "field": "updates",
+            "label": "F / I 更新",
+            "type": "text"
+          }
+        ],
+        "defaultSort": {
+          "field": "frequency",
+          "direction": "asc"
+        }
+      },
+      {
+        "id": "forward_low",
+        "title": "A 正向留出误差：5–12 GHz",
+        "dataset": "forward_low",
+        "sourceId": "forward",
+        "layout": "full",
+        "density": "dense",
+        "subtitle": "全部有限预测；固定留出集、单seed；不报告总体置信区间",
+        "showDescription": true,
+        "columns": [
+          {
+            "field": "frequency",
+            "label": "GHz",
+            "type": "number"
+          },
+          {
+            "field": "N_test",
+            "label": "test N",
+            "type": "number"
+          },
+          {
+            "field": "lp_display",
+            "label": "Lp MAE/nH",
+            "type": "text"
+          },
+          {
+            "field": "ls_display",
+            "label": "Ls MAE/nH",
+            "type": "text"
+          },
+          {
+            "field": "q_display",
+            "label": "Qmin MAE",
+            "type": "text"
+          },
+          {
+            "field": "k_display",
+            "label": "|k| MAE",
+            "type": "text"
+          },
+          {
+            "field": "q_p95_display",
+            "label": "Qmin P95",
+            "type": "text"
+          }
+        ],
+        "defaultSort": {
+          "field": "frequency",
+          "direction": "asc"
+        }
+      },
+      {
+        "id": "forward_high",
+        "title": "A 正向留出误差：13–20 GHz",
+        "dataset": "forward_high",
+        "sourceId": "forward",
+        "layout": "full",
+        "density": "dense",
+        "subtitle": "全部有限预测；固定留出集、单seed；不报告总体置信区间",
+        "showDescription": true,
+        "columns": [
+          {
+            "field": "frequency",
+            "label": "GHz",
+            "type": "number"
+          },
+          {
+            "field": "N_test",
+            "label": "test N",
+            "type": "number"
+          },
+          {
+            "field": "lp_display",
+            "label": "Lp MAE/nH",
+            "type": "text"
+          },
+          {
+            "field": "ls_display",
+            "label": "Ls MAE/nH",
+            "type": "text"
+          },
+          {
+            "field": "q_display",
+            "label": "Qmin MAE",
+            "type": "text"
+          },
+          {
+            "field": "k_display",
+            "label": "|k| MAE",
+            "type": "text"
+          },
+          {
+            "field": "q_p95_display",
+            "label": "Qmin P95",
+            "type": "text"
+          }
+        ],
+        "defaultSort": {
+          "field": "frequency",
+          "direction": "asc"
+        }
+      },
+      {
+        "id": "qscan_low",
+        "title": "Q扫描选中候选的代理门结果：5–12 GHz",
+        "dataset": "qscan_low",
+        "sourceId": "qscan",
+        "layout": "full",
+        "density": "dense",
+        "subtitle": "“联合/交集”=响应四项绝对容差命中且解析几何通过；所有值均为SELF_PROXY",
+        "showDescription": true,
+        "columns": [
+          {
+            "field": "frequency",
+            "label": "GHz",
+            "type": "number"
+          },
+          {
+            "field": "H_display",
+            "label": "H 联合 / N",
+            "type": "text"
+          },
+          {
+            "field": "C_response_display",
+            "label": "C 响应 / N",
+            "type": "text"
+          },
+          {
+            "field": "C_analytic_display",
+            "label": "C 解析 / N",
+            "type": "text"
+          },
+          {
+            "field": "C_joint_display",
+            "label": "C 交集 / N",
+            "type": "text"
+          }
+        ],
+        "defaultSort": {
+          "field": "frequency",
+          "direction": "asc"
+        }
+      },
+      {
+        "id": "qscan_high",
+        "title": "Q扫描选中候选的代理门结果：13–20 GHz",
+        "dataset": "qscan_high",
+        "sourceId": "qscan",
+        "layout": "full",
+        "density": "dense",
+        "subtitle": "“联合/交集”=响应四项绝对容差命中且解析几何通过；所有值均为SELF_PROXY",
+        "showDescription": true,
+        "columns": [
+          {
+            "field": "frequency",
+            "label": "GHz",
+            "type": "number"
+          },
+          {
+            "field": "H_display",
+            "label": "H 联合 / N",
+            "type": "text"
+          },
+          {
+            "field": "C_response_display",
+            "label": "C 响应 / N",
+            "type": "text"
+          },
+          {
+            "field": "C_analytic_display",
+            "label": "C 解析 / N",
+            "type": "text"
+          },
+          {
+            "field": "C_joint_display",
+            "label": "C 交集 / N",
+            "type": "text"
+          }
+        ],
+        "defaultSort": {
+          "field": "frequency",
+          "direction": "asc"
+        }
+      },
+      {
+        "id": "physical_selected",
+        "title": "预选Q14：目标、真实响应与误差",
+        "dataset": "physical_selected",
+        "sourceId": "physical",
+        "layout": "full",
+        "density": "dense",
+        "subtitle": "同一请求；Lp/Ls单位nH，Qmin与|k|无量纲；相对百分比不用于替代门限",
+        "showDescription": true,
+        "columns": [
+          {
+            "field": "feature",
+            "label": "特征",
+            "type": "text"
+          },
+          {
+            "field": "target",
+            "label": "目标",
+            "type": "text"
+          },
+          {
+            "field": "actual",
+            "label": "fresh EMX",
+            "type": "text"
+          },
+          {
+            "field": "abs_error",
+            "label": "绝对误差",
+            "type": "text"
+          },
+          {
+            "field": "relative_percent",
+            "label": "目标相对误差",
+            "type": "text"
+          }
+        ],
+        "defaultSort": {
+          "field": "feature",
+          "direction": "asc"
+        }
+      },
+      {
+        "id": "physical_candidates",
+        "title": "原始11候选的物理状态",
+        "dataset": "physical_candidates",
+        "sourceId": "physical",
+        "layout": "full",
+        "density": "dense",
+        "subtitle": "固定11原候选；保留解析失败、NOT_HIT和NOT_RUN；不进行成功替换",
+        "showDescription": true,
+        "columns": [
+          {
+            "field": "q",
+            "label": "目标Q",
+            "type": "number"
+          },
+          {
+            "field": "chosen",
+            "label": "预选身份",
+            "type": "text"
+          },
+          {
+            "field": "state",
+            "label": "物理状态",
+            "type": "text"
+          },
+          {
+            "field": "joint",
+            "label": "绝对容差联合门",
+            "type": "text"
+          },
+          {
+            "field": "score_display",
+            "label": "真实对称评分S",
+            "type": "text"
+          }
+        ],
+        "defaultSort": {
+          "field": "q",
+          "direction": "asc"
+        }
+      },
+      {
+        "id": "formal_selected",
+        "title": "正式5 GHz预选Q10：目标与真实响应",
+        "dataset": "formal_selected",
+        "sourceId": "formal_physical",
+        "layout": "full",
+        "density": "dense",
+        "subtitle": "正式10K模型、一个固定H请求；Lp/Ls单位nH，Qmin与|k|无量纲",
+        "showDescription": true,
+        "columns": [
+          {
+            "field": "feature",
+            "label": "特征",
+            "type": "text"
+          },
+          {
+            "field": "target",
+            "label": "目标",
+            "type": "text"
+          },
+          {
+            "field": "actual",
+            "label": "fresh EMX",
+            "type": "text"
+          },
+          {
+            "field": "abs_error",
+            "label": "绝对误差",
+            "type": "text"
+          },
+          {
+            "field": "relative_percent",
+            "label": "目标相对误差",
+            "type": "text"
+          }
+        ],
+        "defaultSort": {
+          "field": "feature",
+          "direction": "asc"
+        }
+      },
+      {
+        "id": "formal_candidates",
+        "title": "正式5 GHz原始11候选的门状态",
+        "dataset": "formal_candidates",
+        "sourceId": "formal_physical",
+        "layout": "full",
+        "density": "dense",
+        "subtitle": "3个Calibre阻断候选不求解；警告不冒充阻断，也不将FAIL改为PASS",
+        "showDescription": true,
+        "columns": [
+          {
+            "field": "q",
+            "label": "目标Q",
+            "type": "number"
+          },
+          {
+            "field": "chosen",
+            "label": "预选身份",
+            "type": "text"
+          },
+          {
+            "field": "gds",
+            "label": "实际GDS",
+            "type": "text"
+          },
+          {
+            "field": "calibre",
+            "label": "Calibre",
+            "type": "text"
+          },
+          {
+            "field": "emx",
+            "label": "fresh EMX",
+            "type": "text"
+          },
+          {
+            "field": "joint",
+            "label": "四项容差",
+            "type": "text"
+          }
+        ],
+        "defaultSort": {
+          "field": "q",
+          "direction": "asc"
+        }
+      }
+    ]
+  },
+  "snapshot": {
+    "version": 1,
+    "generatedAt": "2026-09-08T08:49:47.652591Z",
+    "status": "partial",
+    "datasets": {
+      "forward": [
+        {
+          "frequency": 5,
+          "frequency_label": "5 GHz",
+          "N_test": 1983,
+          "N_train": 6015,
+          "lp_mae": 0.004929160604559678,
+          "ls_mae": 0.004950569447288545,
+          "q_mae": 0.08183545163851408,
+          "k_mae": 0.005468598535531383,
+          "lp_display": "0.00493",
+          "ls_display": "0.00495",
+          "q_display": "0.0818",
+          "k_display": "0.005469",
+          "q_rmse": 0.10820957142843007,
+          "q_p95": 0.21564623135004524,
+          "q_p95_display": "0.2156",
+          "evidence": "留出旧EM标签；不是新几何fresh EMX"
+        },
+        {
+          "frequency": 6,
+          "frequency_label": "6 GHz",
+          "N_test": 1983,
+          "N_train": 6015,
+          "lp_mae": 0.005888667241836669,
+          "ls_mae": 0.005916164133512933,
+          "q_mae": 0.09199562175665142,
+          "k_mae": 0.005743605851240654,
+          "lp_display": "0.00589",
+          "ls_display": "0.00592",
+          "q_display": "0.0920",
+          "k_display": "0.005744",
+          "q_rmse": 0.12039750094894876,
+          "q_p95": 0.2335245730562854,
+          "q_p95_display": "0.2335",
+          "evidence": "留出旧EM标签；不是新几何fresh EMX"
+        },
+        {
+          "frequency": 7,
+          "frequency_label": "7 GHz",
+          "N_test": 1983,
+          "N_train": 6015,
+          "lp_mae": 0.005742374722615413,
+          "ls_mae": 0.006709414342381725,
+          "q_mae": 0.10374793923235695,
+          "k_mae": 0.005936727737791495,
+          "lp_display": "0.00574",
+          "ls_display": "0.00671",
+          "q_display": "0.1037",
+          "k_display": "0.005937",
+          "q_rmse": 0.13601022645622227,
+          "q_p95": 0.2722166443575789,
+          "q_p95_display": "0.2722",
+          "evidence": "留出旧EM标签；不是新几何fresh EMX"
+        },
+        {
+          "frequency": 8,
+          "frequency_label": "8 GHz",
+          "N_test": 1982,
+          "N_train": 6014,
+          "lp_mae": 0.00609919626169114,
+          "ls_mae": 0.0074598060533516575,
+          "q_mae": 0.12355041676727271,
+          "k_mae": 0.005952816734277052,
+          "lp_display": "0.00610",
+          "ls_display": "0.00746",
+          "q_display": "0.1236",
+          "k_display": "0.005953",
+          "q_rmse": 0.1597244114483622,
+          "q_p95": 0.3111115255937031,
+          "q_p95_display": "0.3111",
+          "evidence": "留出旧EM标签；不是新几何fresh EMX"
+        },
+        {
+          "frequency": 9,
+          "frequency_label": "9 GHz",
+          "N_test": 1974,
+          "N_train": 5997,
+          "lp_mae": 0.007455953368458089,
+          "ls_mae": 0.007150838066251784,
+          "q_mae": 0.13750641085419346,
+          "k_mae": 0.006463678502208107,
+          "lp_display": "0.00746",
+          "ls_display": "0.00715",
+          "q_display": "0.1375",
+          "k_display": "0.006464",
+          "q_rmse": 0.17711226620205717,
+          "q_p95": 0.35016114816460714,
+          "q_p95_display": "0.3502",
+          "evidence": "留出旧EM标签；不是新几何fresh EMX"
+        },
+        {
+          "frequency": 10,
+          "frequency_label": "10 GHz",
+          "N_test": 1953,
+          "N_train": 5933,
+          "lp_mae": 0.007915253454852401,
+          "ls_mae": 0.008198602354417595,
+          "q_mae": 0.146183984630514,
+          "k_mae": 0.006181468184896683,
+          "lp_display": "0.00792",
+          "ls_display": "0.00820",
+          "q_display": "0.1462",
+          "k_display": "0.006181",
+          "q_rmse": 0.19002681794765586,
+          "q_p95": 0.38574012525123785,
+          "q_p95_display": "0.3857",
+          "evidence": "留出旧EM标签；不是新几何fresh EMX"
+        },
+        {
+          "frequency": 11,
+          "frequency_label": "11 GHz",
+          "N_test": 1905,
+          "N_train": 5793,
+          "lp_mae": 0.008184119997241751,
+          "ls_mae": 0.008317952499683567,
+          "q_mae": 0.1492036034109985,
+          "k_mae": 0.006456349260236026,
+          "lp_display": "0.00818",
+          "ls_display": "0.00832",
+          "q_display": "0.1492",
+          "k_display": "0.006456",
+          "q_rmse": 0.19437851756598915,
+          "q_p95": 0.3912662251510177,
+          "q_p95_display": "0.3913",
+          "evidence": "留出旧EM标签；不是新几何fresh EMX"
+        },
+        {
+          "frequency": 12,
+          "frequency_label": "12 GHz",
+          "N_test": 1806,
+          "N_train": 5486,
+          "lp_mae": 0.008586638431073613,
+          "ls_mae": 0.008151478090668181,
+          "q_mae": 0.14485491953344476,
+          "k_mae": 0.006047433124049789,
+          "lp_display": "0.00859",
+          "ls_display": "0.00815",
+          "q_display": "0.1449",
+          "k_display": "0.006047",
+          "q_rmse": 0.19241896934003347,
+          "q_p95": 0.38645609239609335,
+          "q_p95_display": "0.3865",
+          "evidence": "留出旧EM标签；不是新几何fresh EMX"
+        },
+        {
+          "frequency": 13,
+          "frequency_label": "13 GHz",
+          "N_test": 1624,
+          "N_train": 4937,
+          "lp_mae": 0.007406472895414295,
+          "ls_mae": 0.0074735477532848005,
+          "q_mae": 0.14342973104743473,
+          "k_mae": 0.0064819587209861635,
+          "lp_display": "0.00741",
+          "ls_display": "0.00747",
+          "q_display": "0.1434",
+          "k_display": "0.006482",
+          "q_rmse": 0.19266167581092872,
+          "q_p95": 0.3821938435434863,
+          "q_p95_display": "0.3822",
+          "evidence": "留出旧EM标签；不是新几何fresh EMX"
+        },
+        {
+          "frequency": 14,
+          "frequency_label": "14 GHz",
+          "N_test": 1376,
+          "N_train": 4107,
+          "lp_mae": 0.007364215142417128,
+          "ls_mae": 0.007250542549016412,
+          "q_mae": 0.14814517329573712,
+          "k_mae": 0.006442047234369095,
+          "lp_display": "0.00736",
+          "ls_display": "0.00725",
+          "q_display": "0.1481",
+          "k_display": "0.006442",
+          "q_rmse": 0.20781191960725215,
+          "q_p95": 0.39864233475817024,
+          "q_p95_display": "0.3986",
+          "evidence": "留出旧EM标签；不是新几何fresh EMX"
+        },
+        {
+          "frequency": 15,
+          "frequency_label": "15 GHz",
+          "N_test": 1046,
+          "N_train": 3175,
+          "lp_mae": 0.007439891262192293,
+          "ls_mae": 0.009066370074204709,
+          "q_mae": 0.162300497044709,
+          "k_mae": 0.007293296119495754,
+          "lp_display": "0.00744",
+          "ls_display": "0.00907",
+          "q_display": "0.1623",
+          "k_display": "0.007293",
+          "q_rmse": 0.22582707778519442,
+          "q_p95": 0.47506705131849936,
+          "q_p95_display": "0.4751",
+          "evidence": "留出旧EM标签；不是新几何fresh EMX"
+        },
+        {
+          "frequency": 16,
+          "frequency_label": "16 GHz",
+          "N_test": 722,
+          "N_train": 2225,
+          "lp_mae": 0.007979536610068765,
+          "ls_mae": 0.009492333885022273,
+          "q_mae": 0.18592043174447986,
+          "k_mae": 0.007941538607625781,
+          "lp_display": "0.00798",
+          "ls_display": "0.00949",
+          "q_display": "0.1859",
+          "k_display": "0.007942",
+          "q_rmse": 0.26652555815769285,
+          "q_p95": 0.531748944886533,
+          "q_p95_display": "0.5317",
+          "evidence": "留出旧EM标签；不是新几何fresh EMX"
+        },
+        {
+          "frequency": 17,
+          "frequency_label": "17 GHz",
+          "N_test": 455,
+          "N_train": 1420,
+          "lp_mae": 0.009276201838822927,
+          "ls_mae": 0.009129307822731641,
+          "q_mae": 0.21428299183596536,
+          "k_mae": 0.010712772913324224,
+          "lp_display": "0.00928",
+          "ls_display": "0.00913",
+          "q_display": "0.2143",
+          "k_display": "0.010713",
+          "q_rmse": 0.30885047640151897,
+          "q_p95": 0.5900573778498918,
+          "q_p95_display": "0.5901",
+          "evidence": "留出旧EM标签；不是新几何fresh EMX"
+        },
+        {
+          "frequency": 18,
+          "frequency_label": "18 GHz",
+          "N_test": 296,
+          "N_train": 886,
+          "lp_mae": 0.011056639516828276,
+          "ls_mae": 0.010759854228034795,
+          "q_mae": 0.2749003355281446,
+          "k_mae": 0.017002120846344674,
+          "lp_display": "0.01106",
+          "ls_display": "0.01076",
+          "q_display": "0.2749",
+          "k_display": "0.017002",
+          "q_rmse": 0.38526473818575846,
+          "q_p95": 0.7806701370269109,
+          "q_p95_display": "0.7807",
+          "evidence": "留出旧EM标签；不是新几何fresh EMX"
+        },
+        {
+          "frequency": 19,
+          "frequency_label": "19 GHz",
+          "N_test": 179,
+          "N_train": 537,
+          "lp_mae": 0.013626954887789625,
+          "ls_mae": 0.01280621586659,
+          "q_mae": 0.34428581516104784,
+          "k_mae": 0.02595256395930867,
+          "lp_display": "0.01363",
+          "ls_display": "0.01281",
+          "q_display": "0.3443",
+          "k_display": "0.025953",
+          "q_rmse": 0.47782530640947796,
+          "q_p95": 0.9490801691065869,
+          "q_p95_display": "0.9491",
+          "evidence": "留出旧EM标签；不是新几何fresh EMX"
+        },
+        {
+          "frequency": 20,
+          "frequency_label": "20 GHz",
+          "N_test": 96,
+          "N_train": 279,
+          "lp_mae": 0.018797640827662762,
+          "ls_mae": 0.013541967984957465,
+          "q_mae": 0.39284841656686287,
+          "k_mae": 0.03141697600953471,
+          "lp_display": "0.01880",
+          "ls_display": "0.01354",
+          "q_display": "0.3928",
+          "k_display": "0.031417",
+          "q_rmse": 0.5132169689106822,
+          "q_p95": 1.1272194416065169,
+          "q_p95_display": "1.1272",
+          "evidence": "留出旧EM标签；不是新几何fresh EMX"
+        }
+      ],
+      "physical_candidates": [
+        {
+          "q": 10,
+          "chosen": "—",
+          "state": "真实EMX有效",
+          "joint": "NOT_HIT",
+          "score": 0.04458118151008283,
+          "score_display": "0.044581"
+        },
+        {
+          "q": 11,
+          "chosen": "—",
+          "state": "真实EMX有效",
+          "joint": "NOT_HIT",
+          "score": 0.032322447625997265,
+          "score_display": "0.032322"
+        },
+        {
+          "q": 12,
+          "chosen": "—",
+          "state": "真实EMX有效",
+          "joint": "HIT",
+          "score": 0.00348412327471434,
+          "score_display": "0.003484"
+        },
+        {
+          "q": 13,
+          "chosen": "—",
+          "state": "真实EMX有效",
+          "joint": "HIT",
+          "score": 0.006418115158457145,
+          "score_display": "0.006418"
+        },
+        {
+          "q": 14,
+          "chosen": "预选 q_proxy",
+          "state": "真实EMX有效",
+          "joint": "HIT",
+          "score": 0.002331939820944512,
+          "score_display": "0.002332"
+        },
+        {
+          "q": 15,
+          "chosen": "—",
+          "state": "真实EMX有效",
+          "joint": "HIT",
+          "score": 0.006746902859344369,
+          "score_display": "0.006747"
+        },
+        {
+          "q": 16,
+          "chosen": "—",
+          "state": "真实EMX有效",
+          "joint": "HIT",
+          "score": 0.02459884900706497,
+          "score_display": "0.024599"
+        },
+        {
+          "q": 17,
+          "chosen": "—",
+          "state": "真实EMX有效",
+          "joint": "NOT_HIT",
+          "score": 0.038865249884084255,
+          "score_display": "0.038865"
+        },
+        {
+          "q": 18,
+          "chosen": "—",
+          "state": "真实EMX有效",
+          "joint": "NOT_HIT",
+          "score": 0.06524653051672938,
+          "score_display": "0.065247"
+        },
+        {
+          "q": 19,
+          "chosen": "—",
+          "state": "解析失败；未派发",
+          "joint": "NOT_RUN",
+          "score": null,
+          "score_display": "NOT_RUN"
+        },
+        {
+          "q": 20,
+          "chosen": "—",
+          "state": "解析失败；未派发",
+          "joint": "NOT_RUN",
+          "score": null,
+          "score_display": "NOT_RUN"
+        }
+      ],
+      "physical_selected": [
+        {
+          "feature": "Lp (nH)",
+          "target": "1.411494111",
+          "actual": "1.412605597",
+          "abs_error": "0.001111486",
+          "relative_percent": "0.078745%",
+          "tolerance": "0.125"
+        },
+        {
+          "feature": "Ls (nH)",
+          "target": "0.887261610",
+          "actual": "0.890285533",
+          "abs_error": "0.003023922",
+          "relative_percent": "0.340815%",
+          "tolerance": "0.125"
+        },
+        {
+          "feature": "Qmin (无量纲)",
+          "target": "14.000000000",
+          "actual": "13.910957182",
+          "abs_error": "0.089042818",
+          "relative_percent": "0.636020%",
+          "tolerance": "1.0"
+        },
+        {
+          "feature": "|k| (无量纲)",
+          "target": "0.141170770",
+          "actual": "0.141586072",
+          "abs_error": "0.000415302",
+          "relative_percent": "0.294184%",
+          "tolerance": "0.04000000000000001"
+        }
+      ],
+      "formal_candidates": [
+        {
+          "q": 10,
+          "chosen": "预选 q_proxy",
+          "gds": "PASS",
+          "calibre": "PASS：零阻断",
+          "emx": "有效",
+          "joint": "HIT"
+        },
+        {
+          "q": 11,
+          "chosen": "—",
+          "gds": "PASS",
+          "calibre": "PASS：零阻断",
+          "emx": "有效",
+          "joint": "HIT"
+        },
+        {
+          "q": 12,
+          "chosen": "—",
+          "gds": "PASS",
+          "calibre": "PASS：零阻断",
+          "emx": "有效",
+          "joint": "HIT"
+        },
+        {
+          "q": 13,
+          "chosen": "—",
+          "gds": "PASS",
+          "calibre": "PASS：零阻断",
+          "emx": "有效",
+          "joint": "NOT_HIT"
+        },
+        {
+          "q": 14,
+          "chosen": "—",
+          "gds": "PASS",
+          "calibre": "PASS：零阻断",
+          "emx": "有效",
+          "joint": "NOT_HIT"
+        },
+        {
+          "q": 15,
+          "chosen": "—",
+          "gds": "PASS",
+          "calibre": "FAIL：1项阻断",
+          "emx": "NOT_RUN",
+          "joint": "NOT_RUN"
+        },
+        {
+          "q": 16,
+          "chosen": "—",
+          "gds": "PASS",
+          "calibre": "PASS：零阻断",
+          "emx": "有效",
+          "joint": "NOT_HIT"
+        },
+        {
+          "q": 17,
+          "chosen": "—",
+          "gds": "PASS",
+          "calibre": "FAIL：1项阻断",
+          "emx": "NOT_RUN",
+          "joint": "NOT_RUN"
+        },
+        {
+          "q": 18,
+          "chosen": "—",
+          "gds": "PASS",
+          "calibre": "FAIL：1项阻断",
+          "emx": "NOT_RUN",
+          "joint": "NOT_RUN"
+        },
+        {
+          "q": 19,
+          "chosen": "—",
+          "gds": "PASS",
+          "calibre": "PASS：零阻断",
+          "emx": "有效",
+          "joint": "NOT_HIT"
+        },
+        {
+          "q": 20,
+          "chosen": "—",
+          "gds": "PASS",
+          "calibre": "PASS：零阻断",
+          "emx": "有效",
+          "joint": "NOT_HIT"
+        }
+      ],
+      "formal_selected": [
+        {
+          "feature": "Lp (nH)",
+          "target": "1.277057059",
+          "actual": "1.279139961",
+          "abs_error": "0.002082901",
+          "relative_percent": "0.163102%"
+        },
+        {
+          "feature": "Ls (nH)",
+          "target": "0.998302171",
+          "actual": "0.998319488",
+          "abs_error": "0.000017317",
+          "relative_percent": "0.001735%"
+        },
+        {
+          "feature": "Qmin (无量纲)",
+          "target": "10.000000000",
+          "actual": "10.168947350",
+          "abs_error": "0.168947350",
+          "relative_percent": "1.689473%"
+        },
+        {
+          "feature": "|k| (无量纲)",
+          "target": "0.301008047",
+          "actual": "0.300975521",
+          "abs_error": "0.000032526",
+          "relative_percent": "0.010806%"
+        }
+      ],
+      "training_low": [
+        {
+          "frequency": 5,
+          "strict_total": 10000,
+          "gradient_train": 6015,
+          "validation": 2002,
+          "test": 1983,
+          "updates": "12000 / 12000",
+          "scope": "正式10K",
+          "convergence": "未确立"
+        },
+        {
+          "frequency": 6,
+          "strict_total": 10000,
+          "gradient_train": 6015,
+          "validation": 2002,
+          "test": 1983,
+          "updates": "12000 / 12000",
+          "scope": "正式10K",
+          "convergence": "未确立"
+        },
+        {
+          "frequency": 7,
+          "strict_total": 10000,
+          "gradient_train": 6015,
+          "validation": 2002,
+          "test": 1983,
+          "updates": "12000 / 12000",
+          "scope": "正式10K",
+          "convergence": "未确立"
+        },
+        {
+          "frequency": 8,
+          "strict_total": 9997,
+          "gradient_train": 6014,
+          "validation": 2001,
+          "test": 1982,
+          "updates": "12000 / 12000",
+          "scope": "正式10K",
+          "convergence": "未确立"
+        },
+        {
+          "frequency": 9,
+          "strict_total": 9960,
+          "gradient_train": 5997,
+          "validation": 1989,
+          "test": 1974,
+          "updates": "12000 / 12000",
+          "scope": "正式10K",
+          "convergence": "未确立"
+        },
+        {
+          "frequency": 10,
+          "strict_total": 9851,
+          "gradient_train": 5933,
+          "validation": 1965,
+          "test": 1953,
+          "updates": "12000 / 12000",
+          "scope": "正式10K",
+          "convergence": "未确立"
+        },
+        {
+          "frequency": 11,
+          "strict_total": 9606,
+          "gradient_train": 5793,
+          "validation": 1908,
+          "test": 1905,
+          "updates": "12000 / 12000",
+          "scope": "正式10K",
+          "convergence": "未确立"
+        },
+        {
+          "frequency": 12,
+          "strict_total": 9092,
+          "gradient_train": 5486,
+          "validation": 1800,
+          "test": 1806,
+          "updates": "12000 / 12000",
+          "scope": "正式10K",
+          "convergence": "未确立"
+        }
+      ],
+      "training_high": [
+        {
+          "frequency": 13,
+          "strict_total": 8179,
+          "gradient_train": 4937,
+          "validation": 1618,
+          "test": 1624,
+          "updates": "12000 / 12000",
+          "scope": "正式10K",
+          "convergence": "未确立"
+        },
+        {
+          "frequency": 14,
+          "strict_total": 6824,
+          "gradient_train": 4107,
+          "validation": 1341,
+          "test": 1376,
+          "updates": "12000 / 12000",
+          "scope": "正式10K",
+          "convergence": "未确立"
+        },
+        {
+          "frequency": 15,
+          "strict_total": 5227,
+          "gradient_train": 3175,
+          "validation": 1006,
+          "test": 1046,
+          "updates": "12000 / 12000",
+          "scope": "正式10K",
+          "convergence": "未确立"
+        },
+        {
+          "frequency": 16,
+          "strict_total": 3658,
+          "gradient_train": 2225,
+          "validation": 711,
+          "test": 722,
+          "updates": "12000 / 12000",
+          "scope": "正式10K",
+          "convergence": "未确立"
+        },
+        {
+          "frequency": 17,
+          "strict_total": 2343,
+          "gradient_train": 1420,
+          "validation": 468,
+          "test": 455,
+          "updates": "8875 / 8875",
+          "scope": "正式10K",
+          "convergence": "未确立"
+        },
+        {
+          "frequency": 18,
+          "strict_total": 1462,
+          "gradient_train": 886,
+          "validation": 280,
+          "test": 296,
+          "updates": "5538 / 5538",
+          "scope": "正式10K",
+          "convergence": "未确立"
+        },
+        {
+          "frequency": 19,
+          "strict_total": 870,
+          "gradient_train": 537,
+          "validation": 154,
+          "test": 179,
+          "updates": "3357 / 3357",
+          "scope": "正式10K",
+          "convergence": "未确立"
+        },
+        {
+          "frequency": 20,
+          "strict_total": 464,
+          "gradient_train": 279,
+          "validation": 89,
+          "test": 96,
+          "updates": "1744 / 1744",
+          "scope": "正式10K",
+          "convergence": "未确立"
+        }
+      ],
+      "forward_low": [
+        {
+          "frequency": 5,
+          "frequency_label": "5 GHz",
+          "N_test": 1983,
+          "N_train": 6015,
+          "lp_mae": 0.004929160604559678,
+          "ls_mae": 0.004950569447288545,
+          "q_mae": 0.08183545163851408,
+          "k_mae": 0.005468598535531383,
+          "lp_display": "0.00493",
+          "ls_display": "0.00495",
+          "q_display": "0.0818",
+          "k_display": "0.005469",
+          "q_rmse": 0.10820957142843007,
+          "q_p95": 0.21564623135004524,
+          "q_p95_display": "0.2156",
+          "evidence": "留出旧EM标签；不是新几何fresh EMX"
+        },
+        {
+          "frequency": 6,
+          "frequency_label": "6 GHz",
+          "N_test": 1983,
+          "N_train": 6015,
+          "lp_mae": 0.005888667241836669,
+          "ls_mae": 0.005916164133512933,
+          "q_mae": 0.09199562175665142,
+          "k_mae": 0.005743605851240654,
+          "lp_display": "0.00589",
+          "ls_display": "0.00592",
+          "q_display": "0.0920",
+          "k_display": "0.005744",
+          "q_rmse": 0.12039750094894876,
+          "q_p95": 0.2335245730562854,
+          "q_p95_display": "0.2335",
+          "evidence": "留出旧EM标签；不是新几何fresh EMX"
+        },
+        {
+          "frequency": 7,
+          "frequency_label": "7 GHz",
+          "N_test": 1983,
+          "N_train": 6015,
+          "lp_mae": 0.005742374722615413,
+          "ls_mae": 0.006709414342381725,
+          "q_mae": 0.10374793923235695,
+          "k_mae": 0.005936727737791495,
+          "lp_display": "0.00574",
+          "ls_display": "0.00671",
+          "q_display": "0.1037",
+          "k_display": "0.005937",
+          "q_rmse": 0.13601022645622227,
+          "q_p95": 0.2722166443575789,
+          "q_p95_display": "0.2722",
+          "evidence": "留出旧EM标签；不是新几何fresh EMX"
+        },
+        {
+          "frequency": 8,
+          "frequency_label": "8 GHz",
+          "N_test": 1982,
+          "N_train": 6014,
+          "lp_mae": 0.00609919626169114,
+          "ls_mae": 0.0074598060533516575,
+          "q_mae": 0.12355041676727271,
+          "k_mae": 0.005952816734277052,
+          "lp_display": "0.00610",
+          "ls_display": "0.00746",
+          "q_display": "0.1236",
+          "k_display": "0.005953",
+          "q_rmse": 0.1597244114483622,
+          "q_p95": 0.3111115255937031,
+          "q_p95_display": "0.3111",
+          "evidence": "留出旧EM标签；不是新几何fresh EMX"
+        },
+        {
+          "frequency": 9,
+          "frequency_label": "9 GHz",
+          "N_test": 1974,
+          "N_train": 5997,
+          "lp_mae": 0.007455953368458089,
+          "ls_mae": 0.007150838066251784,
+          "q_mae": 0.13750641085419346,
+          "k_mae": 0.006463678502208107,
+          "lp_display": "0.00746",
+          "ls_display": "0.00715",
+          "q_display": "0.1375",
+          "k_display": "0.006464",
+          "q_rmse": 0.17711226620205717,
+          "q_p95": 0.35016114816460714,
+          "q_p95_display": "0.3502",
+          "evidence": "留出旧EM标签；不是新几何fresh EMX"
+        },
+        {
+          "frequency": 10,
+          "frequency_label": "10 GHz",
+          "N_test": 1953,
+          "N_train": 5933,
+          "lp_mae": 0.007915253454852401,
+          "ls_mae": 0.008198602354417595,
+          "q_mae": 0.146183984630514,
+          "k_mae": 0.006181468184896683,
+          "lp_display": "0.00792",
+          "ls_display": "0.00820",
+          "q_display": "0.1462",
+          "k_display": "0.006181",
+          "q_rmse": 0.19002681794765586,
+          "q_p95": 0.38574012525123785,
+          "q_p95_display": "0.3857",
+          "evidence": "留出旧EM标签；不是新几何fresh EMX"
+        },
+        {
+          "frequency": 11,
+          "frequency_label": "11 GHz",
+          "N_test": 1905,
+          "N_train": 5793,
+          "lp_mae": 0.008184119997241751,
+          "ls_mae": 0.008317952499683567,
+          "q_mae": 0.1492036034109985,
+          "k_mae": 0.006456349260236026,
+          "lp_display": "0.00818",
+          "ls_display": "0.00832",
+          "q_display": "0.1492",
+          "k_display": "0.006456",
+          "q_rmse": 0.19437851756598915,
+          "q_p95": 0.3912662251510177,
+          "q_p95_display": "0.3913",
+          "evidence": "留出旧EM标签；不是新几何fresh EMX"
+        },
+        {
+          "frequency": 12,
+          "frequency_label": "12 GHz",
+          "N_test": 1806,
+          "N_train": 5486,
+          "lp_mae": 0.008586638431073613,
+          "ls_mae": 0.008151478090668181,
+          "q_mae": 0.14485491953344476,
+          "k_mae": 0.006047433124049789,
+          "lp_display": "0.00859",
+          "ls_display": "0.00815",
+          "q_display": "0.1449",
+          "k_display": "0.006047",
+          "q_rmse": 0.19241896934003347,
+          "q_p95": 0.38645609239609335,
+          "q_p95_display": "0.3865",
+          "evidence": "留出旧EM标签；不是新几何fresh EMX"
+        }
+      ],
+      "forward_high": [
+        {
+          "frequency": 13,
+          "frequency_label": "13 GHz",
+          "N_test": 1624,
+          "N_train": 4937,
+          "lp_mae": 0.007406472895414295,
+          "ls_mae": 0.0074735477532848005,
+          "q_mae": 0.14342973104743473,
+          "k_mae": 0.0064819587209861635,
+          "lp_display": "0.00741",
+          "ls_display": "0.00747",
+          "q_display": "0.1434",
+          "k_display": "0.006482",
+          "q_rmse": 0.19266167581092872,
+          "q_p95": 0.3821938435434863,
+          "q_p95_display": "0.3822",
+          "evidence": "留出旧EM标签；不是新几何fresh EMX"
+        },
+        {
+          "frequency": 14,
+          "frequency_label": "14 GHz",
+          "N_test": 1376,
+          "N_train": 4107,
+          "lp_mae": 0.007364215142417128,
+          "ls_mae": 0.007250542549016412,
+          "q_mae": 0.14814517329573712,
+          "k_mae": 0.006442047234369095,
+          "lp_display": "0.00736",
+          "ls_display": "0.00725",
+          "q_display": "0.1481",
+          "k_display": "0.006442",
+          "q_rmse": 0.20781191960725215,
+          "q_p95": 0.39864233475817024,
+          "q_p95_display": "0.3986",
+          "evidence": "留出旧EM标签；不是新几何fresh EMX"
+        },
+        {
+          "frequency": 15,
+          "frequency_label": "15 GHz",
+          "N_test": 1046,
+          "N_train": 3175,
+          "lp_mae": 0.007439891262192293,
+          "ls_mae": 0.009066370074204709,
+          "q_mae": 0.162300497044709,
+          "k_mae": 0.007293296119495754,
+          "lp_display": "0.00744",
+          "ls_display": "0.00907",
+          "q_display": "0.1623",
+          "k_display": "0.007293",
+          "q_rmse": 0.22582707778519442,
+          "q_p95": 0.47506705131849936,
+          "q_p95_display": "0.4751",
+          "evidence": "留出旧EM标签；不是新几何fresh EMX"
+        },
+        {
+          "frequency": 16,
+          "frequency_label": "16 GHz",
+          "N_test": 722,
+          "N_train": 2225,
+          "lp_mae": 0.007979536610068765,
+          "ls_mae": 0.009492333885022273,
+          "q_mae": 0.18592043174447986,
+          "k_mae": 0.007941538607625781,
+          "lp_display": "0.00798",
+          "ls_display": "0.00949",
+          "q_display": "0.1859",
+          "k_display": "0.007942",
+          "q_rmse": 0.26652555815769285,
+          "q_p95": 0.531748944886533,
+          "q_p95_display": "0.5317",
+          "evidence": "留出旧EM标签；不是新几何fresh EMX"
+        },
+        {
+          "frequency": 17,
+          "frequency_label": "17 GHz",
+          "N_test": 455,
+          "N_train": 1420,
+          "lp_mae": 0.009276201838822927,
+          "ls_mae": 0.009129307822731641,
+          "q_mae": 0.21428299183596536,
+          "k_mae": 0.010712772913324224,
+          "lp_display": "0.00928",
+          "ls_display": "0.00913",
+          "q_display": "0.2143",
+          "k_display": "0.010713",
+          "q_rmse": 0.30885047640151897,
+          "q_p95": 0.5900573778498918,
+          "q_p95_display": "0.5901",
+          "evidence": "留出旧EM标签；不是新几何fresh EMX"
+        },
+        {
+          "frequency": 18,
+          "frequency_label": "18 GHz",
+          "N_test": 296,
+          "N_train": 886,
+          "lp_mae": 0.011056639516828276,
+          "ls_mae": 0.010759854228034795,
+          "q_mae": 0.2749003355281446,
+          "k_mae": 0.017002120846344674,
+          "lp_display": "0.01106",
+          "ls_display": "0.01076",
+          "q_display": "0.2749",
+          "k_display": "0.017002",
+          "q_rmse": 0.38526473818575846,
+          "q_p95": 0.7806701370269109,
+          "q_p95_display": "0.7807",
+          "evidence": "留出旧EM标签；不是新几何fresh EMX"
+        },
+        {
+          "frequency": 19,
+          "frequency_label": "19 GHz",
+          "N_test": 179,
+          "N_train": 537,
+          "lp_mae": 0.013626954887789625,
+          "ls_mae": 0.01280621586659,
+          "q_mae": 0.34428581516104784,
+          "k_mae": 0.02595256395930867,
+          "lp_display": "0.01363",
+          "ls_display": "0.01281",
+          "q_display": "0.3443",
+          "k_display": "0.025953",
+          "q_rmse": 0.47782530640947796,
+          "q_p95": 0.9490801691065869,
+          "q_p95_display": "0.9491",
+          "evidence": "留出旧EM标签；不是新几何fresh EMX"
+        },
+        {
+          "frequency": 20,
+          "frequency_label": "20 GHz",
+          "N_test": 96,
+          "N_train": 279,
+          "lp_mae": 0.018797640827662762,
+          "ls_mae": 0.013541967984957465,
+          "q_mae": 0.39284841656686287,
+          "k_mae": 0.03141697600953471,
+          "lp_display": "0.01880",
+          "ls_display": "0.01354",
+          "q_display": "0.3928",
+          "k_display": "0.031417",
+          "q_rmse": 0.5132169689106822,
+          "q_p95": 1.1272194416065169,
+          "q_p95_display": "1.1272",
+          "evidence": "留出旧EM标签；不是新几何fresh EMX"
+        }
+      ],
+      "qscan_low": [
+        {
+          "frequency": 5,
+          "H_N": 100,
+          "H_joint": 100,
+          "H_display": "100 / 100",
+          "C_N": 10000,
+          "C_response": 9012,
+          "C_analytic": 10000,
+          "C_joint": 9012,
+          "C_response_display": "9012 / 10000",
+          "C_analytic_display": "10000 / 10000",
+          "C_joint_display": "9012 / 10000",
+          "C_joint_rate": 0.9012,
+          "logical_candidates": 111100,
+          "evidence": "SELF_PROXY",
+          "source_sha256": "67b8d028912fd55287d9c58756237c4702bfaedad2be03a9ebf9141c60e83489"
+        },
+        {
+          "frequency": 6,
+          "H_N": 100,
+          "H_joint": 100,
+          "H_display": "100 / 100",
+          "C_N": 10000,
+          "C_response": 9089,
+          "C_analytic": 10000,
+          "C_joint": 9089,
+          "C_response_display": "9089 / 10000",
+          "C_analytic_display": "10000 / 10000",
+          "C_joint_display": "9089 / 10000",
+          "C_joint_rate": 0.9089,
+          "logical_candidates": 111100,
+          "evidence": "SELF_PROXY",
+          "source_sha256": "0ee261635a8359985e5fb66976280f56d22d09b5ff03d1da6b9b2c3562f89f32"
+        },
+        {
+          "frequency": 7,
+          "H_N": 100,
+          "H_joint": 100,
+          "H_display": "100 / 100",
+          "C_N": 10000,
+          "C_response": 8974,
+          "C_analytic": 10000,
+          "C_joint": 8974,
+          "C_response_display": "8974 / 10000",
+          "C_analytic_display": "10000 / 10000",
+          "C_joint_display": "8974 / 10000",
+          "C_joint_rate": 0.8974,
+          "logical_candidates": 111100,
+          "evidence": "SELF_PROXY",
+          "source_sha256": "34b7a2d3745bb1ee1ae320211abc5a0f91574223c4daf0e098b00843c6a8a275"
+        },
+        {
+          "frequency": 8,
+          "H_N": 100,
+          "H_joint": 91,
+          "H_display": "91 / 100",
+          "C_N": 10000,
+          "C_response": 8844,
+          "C_analytic": 8222,
+          "C_joint": 7498,
+          "C_response_display": "8844 / 10000",
+          "C_analytic_display": "8222 / 10000",
+          "C_joint_display": "7498 / 10000",
+          "C_joint_rate": 0.7498,
+          "logical_candidates": 111100,
+          "evidence": "SELF_PROXY",
+          "source_sha256": "dd36145392b947e6306be3a69525f2d6333fc0c9c799cf639a880b39aafa9c51"
+        },
+        {
+          "frequency": 9,
+          "H_N": 100,
+          "H_joint": 100,
+          "H_display": "100 / 100",
+          "C_N": 10000,
+          "C_response": 8901,
+          "C_analytic": 10000,
+          "C_joint": 8901,
+          "C_response_display": "8901 / 10000",
+          "C_analytic_display": "10000 / 10000",
+          "C_joint_display": "8901 / 10000",
+          "C_joint_rate": 0.8901,
+          "logical_candidates": 111100,
+          "evidence": "SELF_PROXY",
+          "source_sha256": "d8df004f951d244934333f6cb99a276e5396cd126eac5f6e5d02f05f6dbfd8be"
+        },
+        {
+          "frequency": 10,
+          "H_N": 100,
+          "H_joint": 100,
+          "H_display": "100 / 100",
+          "C_N": 10000,
+          "C_response": 8940,
+          "C_analytic": 8540,
+          "C_joint": 7936,
+          "C_response_display": "8940 / 10000",
+          "C_analytic_display": "8540 / 10000",
+          "C_joint_display": "7936 / 10000",
+          "C_joint_rate": 0.7936,
+          "logical_candidates": 111100,
+          "evidence": "SELF_PROXY",
+          "source_sha256": "bb6bccc12176b717d08c8904c20a2c4c8375840e29644daf1ce4a90b25615a2f"
+        },
+        {
+          "frequency": 11,
+          "H_N": 100,
+          "H_joint": 100,
+          "H_display": "100 / 100",
+          "C_N": 10000,
+          "C_response": 8951,
+          "C_analytic": 10000,
+          "C_joint": 8951,
+          "C_response_display": "8951 / 10000",
+          "C_analytic_display": "10000 / 10000",
+          "C_joint_display": "8951 / 10000",
+          "C_joint_rate": 0.8951,
+          "logical_candidates": 111100,
+          "evidence": "SELF_PROXY",
+          "source_sha256": "218d99b8f502aa5e75835e82cc988ce8d34a4344d8bdf19ae27ea680694f5002"
+        },
+        {
+          "frequency": 12,
+          "H_N": 100,
+          "H_joint": 100,
+          "H_display": "100 / 100",
+          "C_N": 10000,
+          "C_response": 9093,
+          "C_analytic": 8739,
+          "C_joint": 8217,
+          "C_response_display": "9093 / 10000",
+          "C_analytic_display": "8739 / 10000",
+          "C_joint_display": "8217 / 10000",
+          "C_joint_rate": 0.8217,
+          "logical_candidates": 111100,
+          "evidence": "SELF_PROXY",
+          "source_sha256": "35daaffed240b294a8d7ddefe96335eb7d4201d5acc8ef3bce8a1a880fe9b711"
+        }
+      ],
+      "qscan_high": [
+        {
+          "frequency": 13,
+          "H_N": 100,
+          "H_joint": 100,
+          "H_display": "100 / 100",
+          "C_N": 10000,
+          "C_response": 9267,
+          "C_analytic": 9506,
+          "C_joint": 8973,
+          "C_response_display": "9267 / 10000",
+          "C_analytic_display": "9506 / 10000",
+          "C_joint_display": "8973 / 10000",
+          "C_joint_rate": 0.8973,
+          "logical_candidates": 111100,
+          "evidence": "SELF_PROXY",
+          "source_sha256": "24f62880e63aebd6ac61fc881f1fd2d71d0f71712030df036c4f0bb0fad89f80"
+        },
+        {
+          "frequency": 14,
+          "H_N": 100,
+          "H_joint": 100,
+          "H_display": "100 / 100",
+          "C_N": 10000,
+          "C_response": 9419,
+          "C_analytic": 9867,
+          "C_joint": 9379,
+          "C_response_display": "9419 / 10000",
+          "C_analytic_display": "9867 / 10000",
+          "C_joint_display": "9379 / 10000",
+          "C_joint_rate": 0.9379,
+          "logical_candidates": 111100,
+          "evidence": "SELF_PROXY",
+          "source_sha256": "6fe96b3ef408b42ee2c29108dbf48ea644b7be422668678d88fa93a41d906984"
+        },
+        {
+          "frequency": 15,
+          "H_N": 100,
+          "H_joint": 100,
+          "H_display": "100 / 100",
+          "C_N": 10000,
+          "C_response": 9510,
+          "C_analytic": 9612,
+          "C_joint": 9307,
+          "C_response_display": "9510 / 10000",
+          "C_analytic_display": "9612 / 10000",
+          "C_joint_display": "9307 / 10000",
+          "C_joint_rate": 0.9307,
+          "logical_candidates": 111100,
+          "evidence": "SELF_PROXY",
+          "source_sha256": "8f4ded01fcb1c1334657c0557b79f8e0f58eedab6dc9f0d642183f3873697367"
+        },
+        {
+          "frequency": 16,
+          "H_N": 100,
+          "H_joint": 100,
+          "H_display": "100 / 100",
+          "C_N": 10000,
+          "C_response": 9564,
+          "C_analytic": 9844,
+          "C_joint": 9507,
+          "C_response_display": "9564 / 10000",
+          "C_analytic_display": "9844 / 10000",
+          "C_joint_display": "9507 / 10000",
+          "C_joint_rate": 0.9507,
+          "logical_candidates": 111100,
+          "evidence": "SELF_PROXY",
+          "source_sha256": "bc93a25b096436b8c6f91d9b3b07dfa4fcac81041246c590ade4849a2e0ff1dc"
+        },
+        {
+          "frequency": 17,
+          "H_N": 100,
+          "H_joint": 100,
+          "H_display": "100 / 100",
+          "C_N": 10000,
+          "C_response": 9832,
+          "C_analytic": 9629,
+          "C_joint": 9581,
+          "C_response_display": "9832 / 10000",
+          "C_analytic_display": "9629 / 10000",
+          "C_joint_display": "9581 / 10000",
+          "C_joint_rate": 0.9581,
+          "logical_candidates": 111100,
+          "evidence": "SELF_PROXY",
+          "source_sha256": "2bccf486b33255cca6c6860871657f80793169c9948affa0dd01e70da2a84416"
+        },
+        {
+          "frequency": 18,
+          "H_N": 100,
+          "H_joint": 100,
+          "H_display": "100 / 100",
+          "C_N": 10000,
+          "C_response": 9870,
+          "C_analytic": 8983,
+          "C_joint": 8965,
+          "C_response_display": "9870 / 10000",
+          "C_analytic_display": "8983 / 10000",
+          "C_joint_display": "8965 / 10000",
+          "C_joint_rate": 0.8965,
+          "logical_candidates": 111100,
+          "evidence": "SELF_PROXY",
+          "source_sha256": "3b9ba599e09c78dcedb38c6cb9414b5a40eb62b9952753891bd465033465e942"
+        },
+        {
+          "frequency": 19,
+          "H_N": 100,
+          "H_joint": 100,
+          "H_display": "100 / 100",
+          "C_N": 10000,
+          "C_response": 9510,
+          "C_analytic": 9302,
+          "C_joint": 8983,
+          "C_response_display": "9510 / 10000",
+          "C_analytic_display": "9302 / 10000",
+          "C_joint_display": "8983 / 10000",
+          "C_joint_rate": 0.8983,
+          "logical_candidates": 111100,
+          "evidence": "SELF_PROXY",
+          "source_sha256": "663425ce8419a7c3f346e1f69f3bf7a7bef5aa2d2e4b09ad34cb7287977d494d"
+        },
+        {
+          "frequency": 20,
+          "H_N": 96,
+          "H_joint": 95,
+          "H_display": "95 / 96",
+          "C_N": 10000,
+          "C_response": 9510,
+          "C_analytic": 9603,
+          "C_joint": 9370,
+          "C_response_display": "9510 / 10000",
+          "C_analytic_display": "9603 / 10000",
+          "C_joint_display": "9370 / 10000",
+          "C_joint_rate": 0.937,
+          "logical_candidates": 111056,
+          "evidence": "SELF_PROXY",
+          "source_sha256": "dea873fc6a7220f4ccec79f2b99747d1c607764f26687968eba44749a8e8c1fb"
+        }
+      ]
+    },
+    "accessIssues": [
+      {
+        "id": "physical_incomplete",
+        "sourceId": "progress",
+        "scope": "跨频率fresh EMX",
+        "message": "已封存开发15 GHz单请求9个有效求解与正式5 GHz单请求8个有效求解；不合并为总体准确率。其他正式请求尚未报告，完整目标未完成。"
+      }
+    ]
+  },
+  "sources": [
+    {
+      "id": "status",
+      "label": "正式16频率训练与支持统计",
+      "path": "reports/frequency5to20_20260908T063800Z/rollup_v3/FREQUENCY_STATUS.csv",
+      "query": {
+        "engine": "SQLite in-memory with Python sqlite3",
+        "description": "每频率同一冻结10000源几何；读取既有终态计数，不加载网络。\nreports/frequency5to20_20260908T063800Z/rollup_v3/FREQUENCY_STATUS.csv | SHA-256 40079440bb24c8171009263aaf18e9bf24992e5769e82dcf62a42a0f6edd3bf6\nreports/frequency5to20_20260908T063800Z/rollup_v3/MODEL_REGISTRY.json | SHA-256 0499cc7b9bc54602443391db5871d6442d3bd20e2207b4448d861bb1eec08c00\n本报告实际执行的只读SQL转换；原始文件与SHA仍是上游证据，不声称历史训练/评估由SQL生成。",
+        "tables_used": [
+          "reports/frequency5to20_20260908T063800Z/rollup_v3/FREQUENCY_STATUS.csv",
+          "reports/frequency5to20_20260908T063800Z/rollup_v3/MODEL_REGISTRY.json"
+        ],
+        "metric_definitions": [
+          "strict_total=train+validation+test；实际梯度行数不等于源表几何数。"
+        ],
+        "filters": [
+          "固定报告快照；不读取模型权重、不重新推理、不新增仿真。"
+        ],
+        "sql": "SELECT CAST(json_extract(value,'$.frequency_ghz') AS INTEGER) AS frequency,\n CAST(json_extract(value,'$.strict_total') AS INTEGER) AS strict_total,\n CAST(json_extract(value,'$.gradient_train') AS INTEGER) AS gradient_train,\n CAST(json_extract(value,'$.validation') AS INTEGER) AS validation,\n CAST(json_extract(value,'$.test') AS INTEGER) AS test,\n json_extract(value,'$.F_updates') || ' / ' || json_extract(value,'$.I_updates') AS updates\nFROM json_each(:frequency_status_json) ORDER BY frequency;\n"
+      }
+    },
+    {
+      "id": "forward",
+      "label": "留出集正向误差（已有EM标签）",
+      "path": "reports/frequency5to20_20260908T063800Z/rollup_v3/HELDOUT_METRICS.csv",
+      "query": {
+        "engine": "SQLite in-memory with Python sqlite3",
+        "description": "筛选panel=A_HELDOUT_FORWARD、mode=forward；按frequency_ghz连接支持计数；保留全部有限预测。\nreports/frequency5to20_20260908T063800Z/rollup_v3/HELDOUT_METRICS.csv | SHA-256 eb0395c7638714d4aeb60e2a48a9834fcbe9ee194b456a778d99614a3552149e\nreports/frequency5to20_20260908T063800Z/rollup_v3/FREQUENCY_STATUS.csv | SHA-256 40079440bb24c8171009263aaf18e9bf24992e5769e82dcf62a42a0f6edd3bf6\n本报告实际执行的只读SQL转换；原始文件与SHA仍是上游证据，不声称历史训练/评估由SQL生成。\nheldout_predictions由16份原预测CSV逐行读取，误差=prediction−truth；linear_p95为脚本内线性经验分位聚合。\nreports/frequency5to20_20260908T063800Z/training/f05/posttrain/evaluation/test/forward_predictions.csv | SHA-256 80f7da3394d3a5dde810f01fa830a664545b618c6dcdeaac31003422aebaeb1a\nreports/frequency5to20_20260908T063800Z/training/f06/posttrain/evaluation/test/forward_predictions.csv | SHA-256 7007312e6e6f157d83308b2e7b72ffb1f2bb8653fd89e182c7ed97a357ff8492\nreports/frequency5to20_20260908T063800Z/training/f07/posttrain/evaluation/test/forward_predictions.csv | SHA-256 1949a57b33561329410ba5a6b3074590365c24baf199ff2bc654f64be7c5558c\nreports/frequency5to20_20260908T063800Z/training/f08/posttrain/evaluation/test/forward_predictions.csv | SHA-256 8b3ae7bc5ac7653615095745f850728bc0eea37960f131358a8aa8f1bf1fdb02\nreports/frequency5to20_20260908T063800Z/training/f09/posttrain/evaluation/test/forward_predictions.csv | SHA-256 02d1f52a7d4fdb6a76251b852543a42e3e2d30997ec370008e83a463ed5345c6\nreports/frequency5to20_20260908T063800Z/training/f10/posttrain/evaluation/test/forward_predictions.csv | SHA-256 23e3eaf5dda9ea1ef13e8043d6e1fd843c5a70c3a4556da843ca4ef2c402bff6\nreports/frequency5to20_20260908T063800Z/training/f11/posttrain/evaluation/test/forward_predictions.csv | SHA-256 9333a9291c405705c4777dcc4c6957c1c4010ff5b1fe2a4193cc381e9e8b9267\nreports/frequency5to20_20260908T063800Z/training/f12/posttrain/evaluation/test/forward_predictions.csv | SHA-256 5c9a583155bc20a91d17b7c5e2aa1ada025b0ec0002fb5adf506ca1ea4661ea5\nreports/frequency5to20_20260908T063800Z/training/f13/posttrain/evaluation/test/forward_predictions.csv | SHA-256 a3243b15655f89b3d8a784663184f85e5a2c6b4e41d07f25066f1bea0a2493a1\nreports/frequency5to20_20260908T063800Z/training/f14/posttrain/evaluation/test/forward_predictions.csv | SHA-256 bf47e3b3db3345cdeb54db32541b6f8a596dafc7fea9d70ea1bfaf3d712fa46b\nreports/frequency_indexed_mlp_20260908T041800Z/formal10k_15ghz/posttrain/evaluation/test/forward_predictions.csv | SHA-256 738c7e2ce7f9557cf3742d8f129c38aa56eeff1f6b4db61899b7b9ec83aba88a\nreports/frequency5to20_20260908T063800Z/training/f16/posttrain/evaluation/test/forward_predictions.csv | SHA-256 82772e07bf20203cf068e2a7d7086c873c2fa980284e040a97f9cf97ebaa6e05\nreports/frequency5to20_20260908T063800Z/training/f17/posttrain/evaluation/test/forward_predictions.csv | SHA-256 3486031df3c3adac38cdeebf0c2933c2a3cf1478addfc050552b10f97432381e\nreports/frequency5to20_20260908T063800Z/training/f18/posttrain/evaluation/test/forward_predictions.csv | SHA-256 40ad63e0faef04d6527ab7ec67b69e33729d42ea62f36d7202f8ab921dff07f9\nreports/frequency5to20_20260908T063800Z/training/f19/posttrain/evaluation/test/forward_predictions.csv | SHA-256 49a96d795c98abc8a2ae8b4a21b8cf0e1dcd392174ca80b7dd0884b1f27c0898\nreports/frequency5to20_20260908T063800Z/training/f20/posttrain/evaluation/test/forward_predictions.csv | SHA-256 e69b9a67668f982fd06660949997874088c75bd83cc9499e2d4734d3f202e790",
+        "tables_used": [
+          "reports/frequency5to20_20260908T063800Z/rollup_v3/HELDOUT_METRICS.csv",
+          "reports/frequency5to20_20260908T063800Z/rollup_v3/FREQUENCY_STATUS.csv",
+          "reports/frequency5to20_20260908T063800Z/training/f05/posttrain/evaluation/test/forward_predictions.csv",
+          "reports/frequency5to20_20260908T063800Z/training/f06/posttrain/evaluation/test/forward_predictions.csv",
+          "reports/frequency5to20_20260908T063800Z/training/f07/posttrain/evaluation/test/forward_predictions.csv",
+          "reports/frequency5to20_20260908T063800Z/training/f08/posttrain/evaluation/test/forward_predictions.csv",
+          "reports/frequency5to20_20260908T063800Z/training/f09/posttrain/evaluation/test/forward_predictions.csv",
+          "reports/frequency5to20_20260908T063800Z/training/f10/posttrain/evaluation/test/forward_predictions.csv",
+          "reports/frequency5to20_20260908T063800Z/training/f11/posttrain/evaluation/test/forward_predictions.csv",
+          "reports/frequency5to20_20260908T063800Z/training/f12/posttrain/evaluation/test/forward_predictions.csv",
+          "reports/frequency5to20_20260908T063800Z/training/f13/posttrain/evaluation/test/forward_predictions.csv",
+          "reports/frequency5to20_20260908T063800Z/training/f14/posttrain/evaluation/test/forward_predictions.csv",
+          "reports/frequency_indexed_mlp_20260908T041800Z/formal10k_15ghz/posttrain/evaluation/test/forward_predictions.csv",
+          "reports/frequency5to20_20260908T063800Z/training/f16/posttrain/evaluation/test/forward_predictions.csv",
+          "reports/frequency5to20_20260908T063800Z/training/f17/posttrain/evaluation/test/forward_predictions.csv",
+          "reports/frequency5to20_20260908T063800Z/training/f18/posttrain/evaluation/test/forward_predictions.csv",
+          "reports/frequency5to20_20260908T063800Z/training/f19/posttrain/evaluation/test/forward_predictions.csv",
+          "reports/frequency5to20_20260908T063800Z/training/f20/posttrain/evaluation/test/forward_predictions.csv"
+        ],
+        "metric_definitions": [
+          "MAE=mean(abs(prediction-label))；P95=线性经验95分位绝对误差；Lp/Ls单位nH，Qmin/|k|无量纲。"
+        ],
+        "filters": [
+          "固定报告快照；不读取模型权重、不重新推理、不新增仿真。"
+        ],
+        "sql": "SELECT frequency, COUNT(*) AS N_test,\n AVG(ABS(lp_error)) AS lp_mae, AVG(ABS(ls_error)) AS ls_mae,\n AVG(ABS(q_error)) AS q_mae, AVG(ABS(k_error)) AS k_mae,\n SQRT(AVG(q_error*q_error)) AS q_rmse, linear_p95(ABS(q_error)) AS q_p95\nFROM heldout_predictions GROUP BY frequency ORDER BY frequency;\n"
+      }
+    },
+    {
+      "id": "model",
+      "label": "网络与训练合同",
+      "path": "github_worktrees/frequency-indexed-mlp-20260908/research/broadband56_nn/bb00.py",
+      "query": {
+        "engine": "local-file-snapshot",
+        "description": "源码与32份真实训练配置共同约束网络、损失、归一化、AdamW和更新预算；不加载checkpoint。\ngithub_worktrees/frequency-indexed-mlp-20260908/research/broadband56_nn/bb00.py | SHA-256 f9427804e06a5698d6469b1a995f0679cc66af8bb9b85fe79dbaa7b2042dff1e\ngithub_worktrees/frequency-indexed-mlp-20260908/research/broadband56_nn/frequency_tandem.py | SHA-256 f6e80d85e44368f226b0c31b72402c50f131f44e764137b8cc99a3b8be9be982\nreports/frequency5to20_20260908T063800Z/training/f05/forward/attempt_0001/config.json | SHA-256 de8e5ae2a7509c909400020a15015e28fa7eeca915f463731ec6377b4cb01959\nreports/frequency5to20_20260908T063800Z/training/f05/inverse/attempt_0001/config.json | SHA-256 80416b4c82355aca94f643d80a9dc0dee7e72380226b46e941f57e7b0c115156\nreports/frequency5to20_20260908T063800Z/training/f06/forward/attempt_0001/config.json | SHA-256 a9e4ecdcd61bdff03debbd569c0125702c6114cb59f20d8a8ac78fa977ca688c\nreports/frequency5to20_20260908T063800Z/training/f06/inverse/attempt_0001/config.json | SHA-256 7a71bfec96041c92d8e6b79f85288028ca19a5909489228af70bbcfb2d9ee8dc\nreports/frequency5to20_20260908T063800Z/training/f07/forward/attempt_0001/config.json | SHA-256 f1a78f663f84f25d2a9fcf96657a7da1020693a8b482c5a0c25244582e4097e6\nreports/frequency5to20_20260908T063800Z/training/f07/inverse/attempt_0001/config.json | SHA-256 69a8f524419796087e889fffebae4bf3c2e1265b7c787c4b6e283927950cb38d\nreports/frequency5to20_20260908T063800Z/training/f08/forward/attempt_0001/config.json | SHA-256 eff940d6a95af71abe77a810854e8ed5d8290bbd9d6c7fc5581cfdd1437f76ab\nreports/frequency5to20_20260908T063800Z/training/f08/inverse/attempt_0001/config.json | SHA-256 62b9d2f16d2be00d5bd0f2592a6d71bda9f99c644008fa53fe9b2d22a0c0cb4d\nreports/frequency5to20_20260908T063800Z/training/f09/forward/attempt_0001/config.json | SHA-256 1f11b56a1138330913d057e227f78896a078248d9f5daf062a8884e6ab9f901e\nreports/frequency5to20_20260908T063800Z/training/f09/inverse/attempt_0001/config.json | SHA-256 5521a6495b2061df4a0b40a577c15e4d8cfa6c63772a11c1ae544634447a7f61\nreports/frequency5to20_20260908T063800Z/training/f10/forward/attempt_0001/config.json | SHA-256 3e21ee6ba60bc7f62065c4f29b50365b22d8502cf56564b05f00e4af4345d739\nreports/frequency5to20_20260908T063800Z/training/f10/inverse/attempt_0001/config.json | SHA-256 ca1e14b277fcb9528603cbaa3cc03da8ab7f6a481ba9987e2fd0b8f32acff25e\nreports/frequency5to20_20260908T063800Z/training/f11/forward/attempt_0001/config.json | SHA-256 4e23b3930ac446dcc21292bd593576de5b5496be479398de4399fa0c40950868\nreports/frequency5to20_20260908T063800Z/training/f11/inverse/attempt_0001/config.json | SHA-256 8a62a1dfa9d52a3f1060001b464e00855f441efd90098bc0477b7209da4e28b0\nreports/frequency5to20_20260908T063800Z/training/f12/forward/attempt_0001/config.json | SHA-256 2b0cfcc11c0cd6f3c3dad89c547155657e760377ccaa4d7ecbc685ea20271f6e\nreports/frequency5to20_20260908T063800Z/training/f12/inverse/attempt_0001/config.json | SHA-256 456223e5c17815984d7d8ccd09f31ce68bd5660eb2ba66202285cecd3eb919d0\nreports/frequency5to20_20260908T063800Z/training/f13/forward/attempt_0001/config.json | SHA-256 77bd65182937700bb7abaaf25fa55bac8ac453937569425c2531f7a51ea1b226\nreports/frequency5to20_20260908T063800Z/training/f13/inverse/attempt_0001/config.json | SHA-256 f6354e4efeab3e48523ba0b3bf470588deac14ce1685c99ac4018f9ad141add9\nreports/frequency5to20_20260908T063800Z/training/f14/forward/attempt_0001/config.json | SHA-256 05f1904e833fc52e4b9433db4a3797fa1e8c936e3e9283136eecac7e0bda04c7\nreports/frequency5to20_20260908T063800Z/training/f14/inverse/attempt_0001/config.json | SHA-256 46c406ad752774bc05d198c9a309c8696d676d7fc69089c61f57ee3d249f4ba4\nreports/frequency_indexed_mlp_20260908T041800Z/formal10k_15ghz/forward/attempt_0001/config.json | SHA-256 231b04df72f09a16538938021242e035393b79f3f1df5f5fbf11dc47f81e6cb0\nreports/frequency_indexed_mlp_20260908T041800Z/formal10k_15ghz/inverse/attempt_0001/config.json | SHA-256 43d4436a949fb8dbcd6ec8a474809d03f28231c168c40696bf96426ca13a926a\nreports/frequency5to20_20260908T063800Z/training/f16/forward/attempt_0001/config.json | SHA-256 072bbc04fc6ef588b0b08fcf5d997c6af07daf46cc8185c68acb970ddd455df7\nreports/frequency5to20_20260908T063800Z/training/f16/inverse/attempt_0001/config.json | SHA-256 6ad86762b556154df145fda40cdfdf3974aa565593103124d308d1311cfb23e1\nreports/frequency5to20_20260908T063800Z/training/f17/forward/attempt_0001/config.json | SHA-256 fe66a99d27fff6d63c6978e914d93f866c9c8d0f37dab61ca6bd351fb15986d4\nreports/frequency5to20_20260908T063800Z/training/f17/inverse/attempt_0001/config.json | SHA-256 74639b53fcfa2906b9e898b3c350c7160af62f08f9674f6b68cf2b02fa734169\nreports/frequency5to20_20260908T063800Z/training/f18/forward/attempt_0001/config.json | SHA-256 50b8f13a04337a0e26069b3ea31d149c70092b36c0314680b999cf3ca01c5fdb\nreports/frequency5to20_20260908T063800Z/training/f18/inverse/attempt_0001/config.json | SHA-256 4f27f41d27aa3e4ee4c404f54970ac02fc01fb685fc4c082e4a637c1781b5180\nreports/frequency5to20_20260908T063800Z/training/f19/forward/attempt_0001/config.json | SHA-256 051074ffbf44f2659b8cb4bd27d86effbac29ac161ecdaa7c0cec1809c0473cb\nreports/frequency5to20_20260908T063800Z/training/f19/inverse/attempt_0001/config.json | SHA-256 cbb66da3f2b5178931f7c20d2f8eb9b7f4a75922406206ccba26699d3a4c0571\nreports/frequency5to20_20260908T063800Z/training/f20/forward/attempt_0001/config.json | SHA-256 d0d246390af9609733022b5a9668dd64b9363e2cb8d3797070abcee2919ae2da\nreports/frequency5to20_20260908T063800Z/training/f20/inverse/attempt_0001/config.json | SHA-256 eb855e2513bab97b99396b935e7632005acb1480bd28f39863e91d3d945cd961",
+        "tables_used": [
+          "github_worktrees/frequency-indexed-mlp-20260908/research/broadband56_nn/bb00.py",
+          "github_worktrees/frequency-indexed-mlp-20260908/research/broadband56_nn/frequency_tandem.py",
+          "reports/frequency5to20_20260908T063800Z/training/f05/forward/attempt_0001/config.json",
+          "reports/frequency5to20_20260908T063800Z/training/f05/inverse/attempt_0001/config.json",
+          "reports/frequency5to20_20260908T063800Z/training/f06/forward/attempt_0001/config.json",
+          "reports/frequency5to20_20260908T063800Z/training/f06/inverse/attempt_0001/config.json",
+          "reports/frequency5to20_20260908T063800Z/training/f07/forward/attempt_0001/config.json",
+          "reports/frequency5to20_20260908T063800Z/training/f07/inverse/attempt_0001/config.json",
+          "reports/frequency5to20_20260908T063800Z/training/f08/forward/attempt_0001/config.json",
+          "reports/frequency5to20_20260908T063800Z/training/f08/inverse/attempt_0001/config.json",
+          "reports/frequency5to20_20260908T063800Z/training/f09/forward/attempt_0001/config.json",
+          "reports/frequency5to20_20260908T063800Z/training/f09/inverse/attempt_0001/config.json",
+          "reports/frequency5to20_20260908T063800Z/training/f10/forward/attempt_0001/config.json",
+          "reports/frequency5to20_20260908T063800Z/training/f10/inverse/attempt_0001/config.json",
+          "reports/frequency5to20_20260908T063800Z/training/f11/forward/attempt_0001/config.json",
+          "reports/frequency5to20_20260908T063800Z/training/f11/inverse/attempt_0001/config.json",
+          "reports/frequency5to20_20260908T063800Z/training/f12/forward/attempt_0001/config.json",
+          "reports/frequency5to20_20260908T063800Z/training/f12/inverse/attempt_0001/config.json",
+          "reports/frequency5to20_20260908T063800Z/training/f13/forward/attempt_0001/config.json",
+          "reports/frequency5to20_20260908T063800Z/training/f13/inverse/attempt_0001/config.json",
+          "reports/frequency5to20_20260908T063800Z/training/f14/forward/attempt_0001/config.json",
+          "reports/frequency5to20_20260908T063800Z/training/f14/inverse/attempt_0001/config.json",
+          "reports/frequency_indexed_mlp_20260908T041800Z/formal10k_15ghz/forward/attempt_0001/config.json",
+          "reports/frequency_indexed_mlp_20260908T041800Z/formal10k_15ghz/inverse/attempt_0001/config.json",
+          "reports/frequency5to20_20260908T063800Z/training/f16/forward/attempt_0001/config.json",
+          "reports/frequency5to20_20260908T063800Z/training/f16/inverse/attempt_0001/config.json",
+          "reports/frequency5to20_20260908T063800Z/training/f17/forward/attempt_0001/config.json",
+          "reports/frequency5to20_20260908T063800Z/training/f17/inverse/attempt_0001/config.json",
+          "reports/frequency5to20_20260908T063800Z/training/f18/forward/attempt_0001/config.json",
+          "reports/frequency5to20_20260908T063800Z/training/f18/inverse/attempt_0001/config.json",
+          "reports/frequency5to20_20260908T063800Z/training/f19/forward/attempt_0001/config.json",
+          "reports/frequency5to20_20260908T063800Z/training/f19/inverse/attempt_0001/config.json",
+          "reports/frequency5to20_20260908T063800Z/training/f20/forward/attempt_0001/config.json",
+          "reports/frequency5to20_20260908T063800Z/training/f20/inverse/attempt_0001/config.json"
+        ],
+        "metric_definitions": [],
+        "filters": [
+          "固定报告快照；不读取模型权重、不重新推理、不新增仿真。"
+        ]
+      }
+    },
+    {
+      "id": "protocol",
+      "label": "冻结三输入Q扫描合同",
+      "path": "reports/frequency5to20_20260908T063800Z/qscan_formal10k/f05_qscan/QSCAN_FREEZE.json",
+      "query": {
+        "engine": "local-file-snapshot",
+        "description": "固定三目标、Q10..20对称扫描；STRICT_LUMPED沿用原始有效性门，不重标标签。\nreports/frequency5to20_20260908T063800Z/qscan_formal10k/f05_qscan/QSCAN_FREEZE.json | SHA-256 8ff4ce19a04383b826531ed81da4bd934a2a3298d0d0d6f11857f4dbc841550f\ngithub_worktrees/frequency-indexed-mlp-20260908/research/broadband56_nn/frequency_profile.py | SHA-256 0399037e22a68ff42ee1f57b1a81934cd79a9bb411abd1b8131b58ff34381711",
+        "tables_used": [
+          "reports/frequency5to20_20260908T063800Z/qscan_formal10k/f05_qscan/QSCAN_FREEZE.json",
+          "github_worktrees/frequency-indexed-mlp-20260908/research/broadband56_nn/frequency_profile.py"
+        ],
+        "metric_definitions": [],
+        "filters": [
+          "固定报告快照；不读取模型权重、不重新推理、不新增仿真。"
+        ]
+      }
+    },
+    {
+      "id": "qscan",
+      "label": "正式16频率Q扫描已发布数表",
+      "path": "reports/frequency5to20_20260908T063800Z/qscan_formal10k_figures/f05_v2/selected_requests.csv",
+      "query": {
+        "engine": "SQLite in-memory with Python sqlite3",
+        "description": "逐selected_requests.csv按H/C分别计数；end_to_end_proxy_hit=True为响应四项容差与解析几何门交集；与rollup逐频核对。\nreports/frequency5to20_20260908T063800Z/qscan_formal10k_figures/f05_v2/selected_requests.csv | SHA-256 67b8d028912fd55287d9c58756237c4702bfaedad2be03a9ebf9141c60e83489\nreports/frequency5to20_20260908T063800Z/qscan_formal10k_figures/f06_v2/selected_requests.csv | SHA-256 0ee261635a8359985e5fb66976280f56d22d09b5ff03d1da6b9b2c3562f89f32\nreports/frequency5to20_20260908T063800Z/qscan_formal10k_figures/f07_v2/selected_requests.csv | SHA-256 34b7a2d3745bb1ee1ae320211abc5a0f91574223c4daf0e098b00843c6a8a275\nreports/frequency5to20_20260908T063800Z/qscan_formal10k_figures/f08_v1/selected_requests.csv | SHA-256 dd36145392b947e6306be3a69525f2d6333fc0c9c799cf639a880b39aafa9c51\nreports/frequency5to20_20260908T063800Z/qscan_formal10k_figures/f09_v2/selected_requests.csv | SHA-256 d8df004f951d244934333f6cb99a276e5396cd126eac5f6e5d02f05f6dbfd8be\nreports/frequency5to20_20260908T063800Z/qscan_formal10k_figures/f10_v1/selected_requests.csv | SHA-256 bb6bccc12176b717d08c8904c20a2c4c8375840e29644daf1ce4a90b25615a2f\nreports/frequency5to20_20260908T063800Z/qscan_formal10k_figures/f11_v2/selected_requests.csv | SHA-256 218d99b8f502aa5e75835e82cc988ce8d34a4344d8bdf19ae27ea680694f5002\nreports/frequency5to20_20260908T063800Z/qscan_formal10k_figures/f12_v1/selected_requests.csv | SHA-256 35daaffed240b294a8d7ddefe96335eb7d4201d5acc8ef3bce8a1a880fe9b711\nreports/frequency5to20_20260908T063800Z/qscan_formal10k_figures/f13_v1/selected_requests.csv | SHA-256 24f62880e63aebd6ac61fc881f1fd2d71d0f71712030df036c4f0bb0fad89f80\nreports/frequency5to20_20260908T063800Z/qscan_formal10k_figures/f14_v1/selected_requests.csv | SHA-256 6fe96b3ef408b42ee2c29108dbf48ea644b7be422668678d88fa93a41d906984\nreports/frequency5to20_20260908T063800Z/qscan_formal10k_figures/f15_v1/selected_requests.csv | SHA-256 8f4ded01fcb1c1334657c0557b79f8e0f58eedab6dc9f0d642183f3873697367\nreports/frequency5to20_20260908T063800Z/qscan_formal10k_figures/f16_v1/selected_requests.csv | SHA-256 bc93a25b096436b8c6f91d9b3b07dfa4fcac81041246c590ade4849a2e0ff1dc\nreports/frequency5to20_20260908T063800Z/qscan_formal10k_figures/f17_v1/selected_requests.csv | SHA-256 2bccf486b33255cca6c6860871657f80793169c9948affa0dd01e70da2a84416\nreports/frequency5to20_20260908T063800Z/qscan_formal10k_figures/f18_v1/selected_requests.csv | SHA-256 3b9ba599e09c78dcedb38c6cb9414b5a40eb62b9952753891bd465033465e942\nreports/frequency5to20_20260908T063800Z/qscan_formal10k_figures/f19_v1/selected_requests.csv | SHA-256 663425ce8419a7c3f346e1f69f3bf7a7bef5aa2d2e4b09ad34cb7287977d494d\nreports/frequency5to20_20260908T063800Z/qscan_formal10k_figures/f20_v1/selected_requests.csv | SHA-256 dea873fc6a7220f4ccec79f2b99747d1c607764f26687968eba44749a8e8c1fb\nreports/frequency5to20_20260908T063800Z/qscan_formal10k_figures/FINAL_FIGURE_MANIFEST.json | SHA-256 02793f5f446554b93989b1983f5717d2b0b91332e852f9b988c1ab1d59b3f90f\n本报告实际执行的只读SQL转换；原始文件与SHA仍是上游证据，不声称历史训练/评估由SQL生成。",
+        "tables_used": [
+          "reports/frequency5to20_20260908T063800Z/qscan_formal10k_figures/f05_v2/selected_requests.csv",
+          "reports/frequency5to20_20260908T063800Z/qscan_formal10k_figures/f06_v2/selected_requests.csv",
+          "reports/frequency5to20_20260908T063800Z/qscan_formal10k_figures/f07_v2/selected_requests.csv",
+          "reports/frequency5to20_20260908T063800Z/qscan_formal10k_figures/f08_v1/selected_requests.csv",
+          "reports/frequency5to20_20260908T063800Z/qscan_formal10k_figures/f09_v2/selected_requests.csv",
+          "reports/frequency5to20_20260908T063800Z/qscan_formal10k_figures/f10_v1/selected_requests.csv",
+          "reports/frequency5to20_20260908T063800Z/qscan_formal10k_figures/f11_v2/selected_requests.csv",
+          "reports/frequency5to20_20260908T063800Z/qscan_formal10k_figures/f12_v1/selected_requests.csv",
+          "reports/frequency5to20_20260908T063800Z/qscan_formal10k_figures/f13_v1/selected_requests.csv",
+          "reports/frequency5to20_20260908T063800Z/qscan_formal10k_figures/f14_v1/selected_requests.csv",
+          "reports/frequency5to20_20260908T063800Z/qscan_formal10k_figures/f15_v1/selected_requests.csv",
+          "reports/frequency5to20_20260908T063800Z/qscan_formal10k_figures/f16_v1/selected_requests.csv",
+          "reports/frequency5to20_20260908T063800Z/qscan_formal10k_figures/f17_v1/selected_requests.csv",
+          "reports/frequency5to20_20260908T063800Z/qscan_formal10k_figures/f18_v1/selected_requests.csv",
+          "reports/frequency5to20_20260908T063800Z/qscan_formal10k_figures/f19_v1/selected_requests.csv",
+          "reports/frequency5to20_20260908T063800Z/qscan_formal10k_figures/f20_v1/selected_requests.csv",
+          "reports/frequency5to20_20260908T063800Z/qscan_formal10k_figures/FINAL_FIGURE_MANIFEST.json"
+        ],
+        "metric_definitions": [
+          "C每频率10000请求；H每频率100，20GHz因原test仅96而为96；每请求11候选不是11个独立样本。"
+        ],
+        "filters": [
+          "固定报告快照；不读取模型权重、不重新推理、不新增仿真。"
+        ],
+        "sql": "SELECT frequency,\n SUM(target_source='HELDOUT_TRIPLE_AUDIT') AS H_N,\n SUM(target_source='HELDOUT_TRIPLE_AUDIT' AND end_to_end_proxy_hit='True') AS H_joint,\n SUM(target_source='RANDOM_LHS_TRIPLE') AS C_N,\n SUM(target_source='RANDOM_LHS_TRIPLE' AND selected_joint_response_hit='True') AS C_response,\n SUM(target_source='RANDOM_LHS_TRIPLE' AND selected_analytic_pass='True') AS C_analytic,\n SUM(target_source='RANDOM_LHS_TRIPLE' AND end_to_end_proxy_hit='True') AS C_joint\nFROM selected_requests GROUP BY frequency ORDER BY frequency;\n"
+      }
+    },
+    {
+      "id": "physical",
+      "label": "首15GHz开发5K请求的真实EMX",
+      "path": "reports/frequency5to20_20260908T063800Z/physical_first15_v1/evidence_first_request_complete_v1/ACTUAL_REQUEST_SUMMARY.json",
+      "query": {
+        "engine": "SQLite in-memory with Python sqlite3",
+        "description": "一个预选H请求；11原候选，9真实求解，2解析失败。Q14为EMX前冻结选择，q_emx为空。\nreports/frequency5to20_20260908T063800Z/physical_first15_v1/evidence_first_request_complete_v1/ACTUAL_REQUEST_SUMMARY.json | SHA-256 0510233cc286fbb6421008429ba06aa8e746fe8d572644df270a267e1b2b8193\nreports/frequency5to20_20260908T063800Z/physical_first15_v1/evidence_first_request_complete_v1/candidate_by_q.csv | SHA-256 3c42f3f63d94a3649eb5f44d410410611aaa20893302d48807565cf116ca6f7d\nreports/frequency5to20_20260908T063800Z/physical_first15_v1/evidence_first_request_complete_v1/emx_q10_v1/features_v1/FEATURE_RECEIPT.json | SHA-256 c5b89aee233d0ebe4423f1cd0f8319ed98eb15b62c193f72c431e81e5a5a76c6\nreports/frequency5to20_20260908T063800Z/physical_first15_v1/evidence_first_request_complete_v1/emx_q11_v1/features_v1/FEATURE_RECEIPT.json | SHA-256 416322aa0917311f9e904b7b2247b8ac6ecc4d56668b7b3ebe8563e91eac109d\nreports/frequency5to20_20260908T063800Z/physical_first15_v1/evidence_first_request_complete_v1/emx_q12_v1/features_v1/FEATURE_RECEIPT.json | SHA-256 a8a51ed48c88e3fe0929e5a409380089870183144af0998d67eda3c16eb45c90\nreports/frequency5to20_20260908T063800Z/physical_first15_v1/evidence_first_request_complete_v1/emx_q13_v1/features_v1/FEATURE_RECEIPT.json | SHA-256 c2e42bfd2c91a8972c4e0919e0b2d7bdf64bc43b3a07b2c970b6bc010404e08a\nreports/frequency5to20_20260908T063800Z/physical_first15_v1/evidence_first_request_complete_v1/emx_q14_v1/features_v1/FEATURE_RECEIPT.json | SHA-256 cfef839df2da031f05ac29208477234a4e229d7102d91f1ce642149a172431c5\nreports/frequency5to20_20260908T063800Z/physical_first15_v1/evidence_first_request_complete_v1/emx_q15_v1/features_v1/FEATURE_RECEIPT.json | SHA-256 b9e8b163d4c9048f1b55ae623006451c569124e69736227891b9bbd9cf53e01a\nreports/frequency5to20_20260908T063800Z/physical_first15_v1/evidence_first_request_complete_v1/emx_q16_v1/features_v1/FEATURE_RECEIPT.json | SHA-256 dfd315dd87a39560ff9df565ed7fd4d891b6c99fbe0ddcb2abec73a515f66e9b\nreports/frequency5to20_20260908T063800Z/physical_first15_v1/evidence_first_request_complete_v1/emx_q17_v1/features_v1/FEATURE_RECEIPT.json | SHA-256 0a7cdb8286c73ee032d614800ccb858f3a8137f02080942a3b04f661842a643a\nreports/frequency5to20_20260908T063800Z/physical_first15_v1/evidence_first_request_complete_v1/emx_q18_v1/features_v1/FEATURE_RECEIPT.json | SHA-256 e79da6aca4304a5526fce2989b5b9e147fdd4fdf3fbfc5facc756795fbfec0e1\n本报告实际执行的只读SQL转换；原始文件与SHA仍是上游证据，不声称历史训练/评估由SQL生成。",
+        "tables_used": [
+          "reports/frequency5to20_20260908T063800Z/physical_first15_v1/evidence_first_request_complete_v1/ACTUAL_REQUEST_SUMMARY.json",
+          "reports/frequency5to20_20260908T063800Z/physical_first15_v1/evidence_first_request_complete_v1/candidate_by_q.csv",
+          "reports/frequency5to20_20260908T063800Z/physical_first15_v1/evidence_first_request_complete_v1/emx_q10_v1/features_v1/FEATURE_RECEIPT.json",
+          "reports/frequency5to20_20260908T063800Z/physical_first15_v1/evidence_first_request_complete_v1/emx_q11_v1/features_v1/FEATURE_RECEIPT.json",
+          "reports/frequency5to20_20260908T063800Z/physical_first15_v1/evidence_first_request_complete_v1/emx_q12_v1/features_v1/FEATURE_RECEIPT.json",
+          "reports/frequency5to20_20260908T063800Z/physical_first15_v1/evidence_first_request_complete_v1/emx_q13_v1/features_v1/FEATURE_RECEIPT.json",
+          "reports/frequency5to20_20260908T063800Z/physical_first15_v1/evidence_first_request_complete_v1/emx_q14_v1/features_v1/FEATURE_RECEIPT.json",
+          "reports/frequency5to20_20260908T063800Z/physical_first15_v1/evidence_first_request_complete_v1/emx_q15_v1/features_v1/FEATURE_RECEIPT.json",
+          "reports/frequency5to20_20260908T063800Z/physical_first15_v1/evidence_first_request_complete_v1/emx_q16_v1/features_v1/FEATURE_RECEIPT.json",
+          "reports/frequency5to20_20260908T063800Z/physical_first15_v1/evidence_first_request_complete_v1/emx_q17_v1/features_v1/FEATURE_RECEIPT.json",
+          "reports/frequency5to20_20260908T063800Z/physical_first15_v1/evidence_first_request_complete_v1/emx_q18_v1/features_v1/FEATURE_RECEIPT.json"
+        ],
+        "metric_definitions": [
+          "目标相对绝对误差%=100*abs(actual-target)/abs(target)，仅补充读数，不替代冻结绝对容差。"
+        ],
+        "filters": [
+          "固定报告快照；不读取模型权重、不重新推理、不新增仿真。"
+        ],
+        "sql": "SELECT CAST(json_extract(value,'$.q') AS INTEGER) AS q,\n json_extract(value,'$.status') AS status,\n json_extract(value,'$.strict_joint_hit') AS strict_joint_hit,\n CASE WHEN json_extract(value,'$.status')='REAL_EMX_PASS'\n      THEN CAST(json_extract(value,'$.fresh_emx_score') AS REAL) ELSE NULL END AS fresh_emx_score,\n json_extract(value,'$.target_Lp_nH') AS target_Lp_nH,\n json_extract(value,'$.target_Ls_nH') AS target_Ls_nH,\n json_extract(value,'$.target_Qmin') AS target_Qmin,\n json_extract(value,'$.target_K_abs') AS target_K_abs,\n json_extract(value,'$.fresh_emx_Lp_nH') AS actual_Lp_nH,\n json_extract(value,'$.fresh_emx_Ls_nH') AS actual_Ls_nH,\n json_extract(value,'$.fresh_emx_Qmin') AS actual_Qmin,\n json_extract(value,'$.fresh_emx_K_abs') AS actual_K_abs,\n value AS original_csv_record\nFROM json_each(:candidate_by_q_json) ORDER BY q;\n"
+      }
+    },
+    {
+      "id": "formal_physical",
+      "label": "首5GHz正式10K请求的真实EMX",
+      "path": "reports/frequency5to20_20260908T063800Z/physical_formal5_first_request_v1/ACTUAL_SUMMARY.json",
+      "query": {
+        "engine": "SQLite in-memory with Python sqlite3",
+        "description": "一个预选H请求；11原候选GDS通过，3个Calibre阻断不派发，8个有效新求解；全部原11分母保留，不能形成完整物理冠军。\nreports/frequency5to20_20260908T063800Z/physical_formal5_first_request_v1/ACTUAL_SUMMARY.json | SHA-256 6f0e5e3055ac46a6e430c2a70d7570c2f8f865505d547caaef826815537ec034\nreports/frequency5to20_20260908T063800Z/physical_formal5_first_request_v1/DELIVERY_RECEIPT.json | SHA-256 e4e0980cab2d580d125130160970b2653c3c25a27c404ec2bae96459dbfd5cc1\nreports/frequency5to20_20260908T063800Z/physical_formal5_first_request_v1/COLLECTION_MANIFEST.json | SHA-256 e69c811352f72c3c900ebcf6bb1d9fd47f1aa4df7de607dba51e93b044f0aca2\nreports/frequency5to20_20260908T063800Z/physical_formal5_first_request_v1/evidence/emx_q10/features/FEATURE_RECEIPT.json | SHA-256 3d50b0b6d9f02100219f2d2cffd1dc53704b201683ed7186c9f281556a2bc3d6\n本报告实际执行的只读SQL转换；原始文件与SHA仍是上游证据，不声称历史训练/评估由SQL生成。",
+        "tables_used": [
+          "reports/frequency5to20_20260908T063800Z/physical_formal5_first_request_v1/ACTUAL_SUMMARY.json",
+          "reports/frequency5to20_20260908T063800Z/physical_formal5_first_request_v1/DELIVERY_RECEIPT.json",
+          "reports/frequency5to20_20260908T063800Z/physical_formal5_first_request_v1/COLLECTION_MANIFEST.json",
+          "reports/frequency5to20_20260908T063800Z/physical_formal5_first_request_v1/evidence/emx_q10/features/FEATURE_RECEIPT.json"
+        ],
+        "metric_definitions": [],
+        "filters": [
+          "固定报告快照；不读取模型权重、不重新推理、不新增仿真。"
+        ],
+        "sql": "SELECT json_extract(value,'$.q') AS q,\n json_extract(value,'$.gds_status') AS gds_status,\n json_extract(value,'$.drc_status') AS drc_status,\n json_extract(value,'$.blocking_drc_violation_count') AS blocking_drc_violation_count,\n json_extract(value,'$.emx_status') AS emx_status,\n json_extract(value,'$.strict_joint_hit') AS strict_joint_hit,\n json_extract(value,'$.target') AS target,\n json_extract(value,'$.actual_fresh_emx') AS actual_fresh_emx,\n json_extract(value,'$.target_relative_absolute_percent') AS target_relative_absolute_percent\nFROM json_each(:actual_summary_json,'$.all11') ORDER BY q;\n"
+      }
+    },
+    {
+      "id": "audit",
+      "label": "独立保存CSV复核",
+      "path": "reports/frequency5to20_20260908T063800Z/native_rollup_independent_qa_v1/AUDIT_RECEIPT.json",
+      "query": {
+        "engine": "local-file-snapshot",
+        "description": "192指标行、64089原CSV行、2656标量核对；最大差5.551115123125783e-17，无模型调用。\nreports/frequency5to20_20260908T063800Z/native_rollup_independent_qa_v1/AUDIT_RECEIPT.json | SHA-256 fb15080fff66c9723de9fdb317419ee40cfadcde7e012029e190c5e4e5833586\nreports/frequency5to20_20260908T063800Z/rollup_v3/ROLLUP_RECEIPT.json | SHA-256 8e0777b0dab4504932ec07d5dd4ac4c8c4a6d2662e8d22d0b7717766433d4fba",
+        "tables_used": [
+          "reports/frequency5to20_20260908T063800Z/native_rollup_independent_qa_v1/AUDIT_RECEIPT.json",
+          "reports/frequency5to20_20260908T063800Z/rollup_v3/ROLLUP_RECEIPT.json"
+        ],
+        "metric_definitions": [],
+        "filters": [
+          "固定报告快照；不读取模型权重、不重新推理、不新增仿真。"
+        ]
+      }
+    },
+    {
+      "id": "progress",
+      "label": "有限物理队列固定快照",
+      "path": "reports/frequency5to20_20260908T063800Z/physical_dispatch_release_v1/PROGRESS_SNAPSHOT_V2.json",
+      "query": {
+        "engine": "local-file-snapshot",
+        "description": "2026年9月8日08:38:35 UTC的只读现场；不在本报告推算未读取的候选通过数。\nreports/frequency5to20_20260908T063800Z/physical_dispatch_release_v1/PROGRESS_SNAPSHOT_V2.json | SHA-256 8bf461a7dd0c7c509b2b7097a7bcb0df03e0131790255b4b4cab4fde89d505d1\nreports/frequency5to20_20260908T063800Z/physical_dispatch_release_v1/RUNTIME_CONFIG.json | SHA-256 35b380eb5d7d1309e87e1bc63e6e93144bd6515187fe8b13da43311d7603b09a\nreports/frequency5to20_20260908T063800Z/physical_dispatch_release_v1/FINITE_LAUNCH_RECEIPT.json | SHA-256 428c9e41355c13a4b47f504b0bfca8ab03f58c2b0601dda4260c2b697d9ca62c\nreports/frequency5to20_20260908T063800Z/physical_dispatch_release_v1/code/research/broadband56_nn/frequency_physical_dispatch.py | SHA-256 1d78eb5b778d641eb4fb95ac98941408769f2fb4462c50ceba202279dc07eb0d",
+        "tables_used": [
+          "reports/frequency5to20_20260908T063800Z/physical_dispatch_release_v1/PROGRESS_SNAPSHOT_V2.json",
+          "reports/frequency5to20_20260908T063800Z/physical_dispatch_release_v1/RUNTIME_CONFIG.json",
+          "reports/frequency5to20_20260908T063800Z/physical_dispatch_release_v1/FINITE_LAUNCH_RECEIPT.json",
+          "reports/frequency5to20_20260908T063800Z/physical_dispatch_release_v1/code/research/broadband56_nn/frequency_physical_dispatch.py"
+        ],
+        "metric_definitions": [],
+        "filters": [
+          "固定报告快照；不读取模型权重、不重新推理、不新增仿真。"
+        ]
+      }
+    }
+  ]
+}
