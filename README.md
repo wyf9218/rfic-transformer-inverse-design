@@ -41,8 +41,10 @@ NN-disabled configuration and the GUI worktree were not changed.
 
 The [terminal-export handoff](docs/research/frequency5to20_terminal_export_20260908_v1/README_CN.md)
 adds a tested finite export CLI and one installed local producer-exit waiter.
-It does not restart physics or grant visual acceptance; actual terminal export
-is still pending, and reboot auto-restart is NOT_INSTALLED.
+The [actual18:02 handoff observation](docs/research/frequency5to20_actual_handoff_20260908_v1/README_CN.md)
+confirms natural old-process exits, native successor998085 and reporting
+successor86088. Terminal exports exited0, but that does not grant new scientific
+or visual acceptance. Reboot auto-restart is NOT_INSTALLED.
 
 The production observations and earlier project records below are timestamped
 historical evidence, not current live counters.

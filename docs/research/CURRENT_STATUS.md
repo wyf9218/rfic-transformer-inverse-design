@@ -1,5 +1,18 @@
 # Current Evidence Status
 
+## Actual automatic native and reporting handoff, 18:02 UTC
+
+[The actual handoff observation](frequency5to20_actual_handoff_20260908_v1/README_CN.md)
+confirms original2146776 ended naturally at its18:00 cutoff, then the installed
+waiter started native998085 once with the separate operational budget.
+Read-only18:02:05 inspection found it alive at7GHz's fifth request,EMX Q10.
+Original local50120/80544 also exited naturally; the existing86088 process
+entered the reporting successor at18:01:54,seeded69 requests and did not rerender
+the baseline. No process was manually launched,restarted or signalled.
+69/320 is the operational handoff count, not a new scientific release.
+The latest independently approved numbers/figures remain cumulative63 below;
+snapshot0060 and terminal exports still need their own scoped review.
+
 ## Frozen cumulative63 report, 2026-09-08 17:11:58 UTC
 
 The [new23 / cumulative63 physical report](frequency5to20_new23_cumulative63_20260908_v1/README_CN.md)

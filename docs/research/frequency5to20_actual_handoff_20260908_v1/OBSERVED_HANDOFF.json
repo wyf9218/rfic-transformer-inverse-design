@@ -1,0 +1,85 @@
+{
+  "schema": "native_and_reporting_handoff_observed.v1",
+  "status": "ACTUAL_AUTOMATIC_HANDOFF_CONFIRMED_NOT_GOAL_COMPLETION",
+  "observed_utc": "2026-09-08T18:02:05Z",
+  "recorded_utc": "2026-09-08T18:04:42.120Z",
+  "previous_native": {
+    "pid": 2146776,
+    "status": "NATURALLY_EXITED",
+    "partial_status": "PARTIAL_BUDGET_ENDED_NO_CHILD_STOPPED",
+    "partial_utc": "2026-09-08T18:00:00.349086+00:00",
+    "partial_remote_sha256": "a1b02e4c2bc7c35ffe0c644ca64e3ef6ebe0c9535839fe162f2a7da7dde947cf"
+  },
+  "native_successor": {
+    "pid": 998085,
+    "uid": 2259579,
+    "start_ticks": 369433155,
+    "launch_utc": "2026-09-08T18:00:02.562195+00:00",
+    "alive_at_observation": true,
+    "launch": {
+      "path": "reports/frequency5to20_20260908T063800Z/reporting_handoff_install_20260908T165505Z/wait_v1/native/CHILD_LAUNCH_RECEIPT.json",
+      "sha256": "f9228b51f7ea837af75c0e532720ce38d37b715c93efcb20c1e8479f50e648de",
+      "bytes": 4162
+    },
+    "base_config_sha256": "35b380eb5d7d1309e87e1bc63e6e93144bd6515187fe8b13da43311d7603b09a",
+    "operational_budget_sha256": "581f7479088c171ae33d668dee2e494fdd6f46373b438926af8999c4039e0691",
+    "new_budget_dispatch_deadline_utc": "2026-09-10T18:00:00Z",
+    "observed_request": "f07_qscan-HELDOUT_TRIPLE_AUDIT-000004",
+    "observed_stage": "emx_q10",
+    "stage_started_utc": "2026-09-08T18:00:50.716462+00:00",
+    "solver_child_pid_at_stage_start": 1039004,
+    "waiter_pid": 2094607
+  },
+  "reporting": {
+    "original_consumer_pid": 50120,
+    "original_export_waiter_pid": 80544,
+    "original_processes_exited": true,
+    "original_final_status": "PARTIAL",
+    "original_final_error": null,
+    "original_accounted_requests": 69,
+    "original_pending_requests": 251,
+    "original_total_requests": 320,
+    "original_snapshot": "snapshot_0060",
+    "terminal_export_status": "FINITE_EXPORT_EXITED_ZERO_REVIEW_REQUIRED",
+    "finite_export_jobs": 5,
+    "successor_pid": 86088,
+    "same_handoff_process_not_extra_worker": true,
+    "successor_launch_utc": "2026-09-08T18:01:54.145108+00:00",
+    "successor_alive_observed": true,
+    "seeded_requests": 69,
+    "baseline_rerender": false,
+    "launch": {
+      "path": "reports/frequency5to20_20260908T063800Z/reporting_handoff_install_20260908T165505Z/reporter_v1/LAUNCH.json",
+      "sha256": "5df72c9cad723b6577b248be54dbcd692ece82af6ef177ac7db0bd63216a76f7",
+      "bytes": 2259
+    },
+    "same_reporting_lock": "reports/frequency5to20_20260908T063800Z/physical_incremental_statistics_v1/incremental_report.lock",
+    "role": "READ_ONLY_REPORTING_SUCCESSOR_NOT_PHYSICS_OWNER"
+  },
+  "evidence_boundary": {
+    "latest_independently_released_numerical_snapshot": "snapshot_0054",
+    "released_requests": 63,
+    "released_figures": 51,
+    "new_snapshot0060_numerical_or_visual_go": "NOT_GRANTED_BY_THIS_OBSERVATION",
+    "latest_ppt_requests": 40,
+    "new_scientific_calls_by_this_observer": 0,
+    "new_manual_launches": 0,
+    "signals": 0,
+    "production_modified": false,
+    "gui_modified": false,
+    "full_goal_complete": false
+  },
+  "next_safe_action": "Keep the actual native successor998085 and reporter86088. Validate only genuinely new outputs; do not restart, reinstall, duplicate, or treat69 seeded requests/export exit0 as scientific release GO.",
+  "private_source": {
+    "path": "reports/frequency5to20_20260908T063800Z/native_report_handoff_observed_20260908T180205Z/OBSERVATION_RECEIPT.json",
+    "sha256": "4106089312d1402eb39268028db4955ed0bdf39392845e5ebe12ed271430c8b3",
+    "bytes": 3451,
+    "availability": "PRIVATE_NOT_INCLUDED"
+  },
+  "independent_metadata_qa": {
+    "path": "reports/frequency5to20_20260908T063800Z/native_report_handoff_observed_20260908T180205Z/independent_metadata_qa_v1/INDEPENDENT_METADATA_QA_RECEIPT.json",
+    "sha256": "28c52c28b231e90de050abdcc9cb23030f0a42db3ddb9b750d01334901048aac",
+    "bytes": 7409,
+    "availability": "PRIVATE_NOT_INCLUDED"
+  }
+}
