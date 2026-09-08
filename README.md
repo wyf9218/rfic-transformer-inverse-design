@@ -27,6 +27,11 @@ frequency, then match four physical targets with a separate 256×3 forward/inver
 pair. All16 frequency pairs now have formal10K-snapshot first-budget training,
 saved packages, load/diagnostic-resume evidence and held-out tests. All remain
 PARTIAL/PROVISIONAL, not established convergence. The latest
+[static physical report](docs/research/frequency5to20_new23_cumulative63_20260908_v1/README_CN.md)
+freezes63/320 settled requests at2026-09-08 17:11:58 UTC, with560 actual
+solves,533 strict-valid outputs and all failures retained. Only7 requests
+have all11 candidates strict-valid. Its51 figures have exact scoped review;
+see PACKAGE_QA.json for the independent publication receipt. The latest
 [10-slide advisor deck](docs/research/frequency5to20_advisor_cumulative40_20260908_v1/README_CN.md)
 uses the independently approved cumulative40-request physical snapshot, with
 353 independent solves and339 strict-valid labels. Physical15GHz remains a

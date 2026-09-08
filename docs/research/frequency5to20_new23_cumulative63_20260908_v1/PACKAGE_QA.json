@@ -1,0 +1,44 @@
+{
+  "schema": "snapshot0054_publication_independent_qa_summary.v1",
+  "status": "GO_SCOPED_RELEASE",
+  "created_utc": "2026-09-08T17:58:08.474Z",
+  "independent_package_qa": {
+    "path": "reports/frequency5to20_20260908T063800Z/milestone_new23_cumulative63_v1/public_package_qa_v1/PUBLIC_PACKAGE_INDEPENDENT_QA.json",
+    "sha256": "29c8d659c3aa608cab297c998b01b8754e395b560878a043f3282e8699f2a8f3",
+    "bytes": 7763,
+    "availability": "PRIVATE_NOT_INCLUDED"
+  },
+  "reviewed_author_receipt": {
+    "path": "PUBLIC_RECEIPT.json",
+    "sha256": "d9c1004f3d853004dd4b4e8ede3992023c8e0cf9d48a379fdd3cbd404235cd8e",
+    "bytes": 118561
+  },
+  "source_numerical_qa": {
+    "path": "reports/frequency5to20_20260908T063800Z/milestone_new23_cumulative63_v1/numeric_qa_v1/attempt_v2/INDEPENDENT_NUMERICAL_QA_RECEIPT.json",
+    "sha256": "644730ae7c7dfd5a149971044facfde766773edba01723355674a414a8ae7a91",
+    "bytes": 99361,
+    "availability": "PRIVATE_NOT_INCLUDED"
+  },
+  "exact_figure_index": {
+    "path": "reports/frequency5to20_20260908T063800Z/milestone_new23_cumulative63_v1/APPROVED_PUBLIC_FIGURES.json",
+    "sha256": "f0b66d47fcd8eae08318137821b16dedb529e4ca2a903ae92467880fee5272ee",
+    "bytes": 90005,
+    "availability": "PRIVATE_NOT_INCLUDED"
+  },
+  "publication_note": "PUBLIC_RECEIPT and SHA256SUMS preserve the exact pre-review candidate. This subsequent GO closes that review; RELEASE_SHA256SUMS also indexes this release receipt.",
+  "snapshot": "snapshot_0054",
+  "accounted_requests": 63,
+  "planned_requests": 320,
+  "solves": 560,
+  "strict_valid": 533,
+  "approved_request_figures": 46,
+  "approved_aggregate_figures": 5,
+  "full_goal_complete": false,
+  "limitations": [
+    "All16 first-budget model pairs remain PARTIAL/PROVISIONAL",
+    "Formal10K15 fresh EMX NOT_RUN; physical15 is development5K",
+    "Only7 complete-strict11 requests",
+    "Current PPT remains cumulative40",
+    "No future numerical/visual release approval"
+  ]
+}

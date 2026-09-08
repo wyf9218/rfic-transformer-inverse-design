@@ -1,5 +1,31 @@
 # Current Evidence Status
 
+## Frozen cumulative63 report, 2026-09-08 17:11:58 UTC
+
+The [new23 / cumulative63 physical report](frequency5to20_new23_cumulative63_20260908_v1/README_CN.md)
+contains the latest independently checked numerical snapshot:63/320 settled
+requests,693 original slots,560 actual solves=533 strict-valid+27 invalid.
+The other133 closed slots retain46 analytical,60 GDS and27 DRC failures.
+Only7 complete-strict11 requests permit full-set q_emx. The released figure
+index contains46 request figures and5 aggregates; exact publication acceptance
+is recorded separately in PACKAGE_QA.json, not inferred from renderer success.
+STATUS16 preserves its earlier candidate timestamp; FIGURE_RELEASE_STATUS
+records the later exact figure approval without rewriting historical pending fields.
+
+All16 frequency pairs remain first-budget PARTIAL/PROVISIONAL with saved
+load/diagnostic-resume, held-out and1,760,000 total SELF_PROXY candidate evidence.
+Physical15GHz is development5K; formal10K15 fresh EMX remains NOT_RUN.
+The latest advisor PPT remains cumulative40. This new static report does not
+change that deck or claim the original320-request goal is complete.
+
+Direct read-only runtime observation at17:43:13 UTC found MARS PID2146776
+alive and advancing20GHz's fifth request atEMX Q15. PID2094607 remained
+waiting for its natural exit; the successor had not started. Local50120,
+80544 and86088 were alive at17:42. These later runtime observations are
+not included in the frozen63 numerical counts. No process was signalled.
+
+## Historical operational installation notes, 16:59 UTC and earlier
+
 Latest [reporting handoff installation](frequency5to20_reporting_handoff_20260908_v1/README_CN.md):
 local PID86088 was verified alive at16:59:09 UTC, waiting for exact old producer
 exits and the real native-child receipt.23 final synthetic tests/source review
@@ -50,7 +76,7 @@ production/GUI or the running native reporting program. The deck preserves
 the original training/data/held-out plots and adds a real20GHz NOT_HIT example.
 
 
-## Current Authorized Data Campaign
+## Historical Production Observation, 2026-09-05
 
 Latest published observation: `2026-09-05T00:38:32Z`, not a live dashboard.
 The active objective is exactly **200,000 unique accepted fresh real-EMX

@@ -1,0 +1,60 @@
+{
+  "schema": "frequency_incremental_public_qa.v1",
+  "status": "GO_SOURCE_NUMBERS_AND_LISTED_FIGURES_ONLY",
+  "snapshot": "snapshot_0054",
+  "numeric": {
+    "path": "reports/frequency5to20_20260908T063800Z/milestone_new23_cumulative63_v1/numeric_qa_v1/attempt_v2/INDEPENDENT_NUMERICAL_QA_RECEIPT.json",
+    "sha256": "644730ae7c7dfd5a149971044facfde766773edba01723355674a414a8ae7a91",
+    "bytes": 99361,
+    "availability": "PRIVATE_NOT_INCLUDED"
+  },
+  "status16": {
+    "path": "reports/frequency5to20_20260908T063800Z/milestone_new23_cumulative63_v1/status_qa_v1/INDEPENDENT_STATUS_QA_RECEIPT.json",
+    "sha256": "d45e99cbfbb7ff5005506174086f8df3d55a92e80e9ad601393e87214627263a",
+    "bytes": 8157,
+    "availability": "PRIVATE_NOT_INCLUDED"
+  },
+  "figures_index": {
+    "path": "reports/frequency5to20_20260908T063800Z/milestone_new23_cumulative63_v1/APPROVED_PUBLIC_FIGURES.json",
+    "sha256": "f0b66d47fcd8eae08318137821b16dedb529e4ca2a903ae92467880fee5272ee",
+    "bytes": 90005,
+    "availability": "PRIVATE_NOT_INCLUDED"
+  },
+  "limitations": [
+    "Future/live snapshots",
+    "visual figures handled separately",
+    "population accuracy or causal frequency ranking",
+    "formal10K15 physical borrowing from development5K15"
+  ],
+  "new23_counts": {
+    "N_accounted_candidates": 253,
+    "N_analytic_fail": 20,
+    "N_drc_fail": 6,
+    "N_emx_not_solved": 0,
+    "N_gds_fail": 20,
+    "N_independent_solves": 207,
+    "N_invalid": 13,
+    "N_joint_hit": 124,
+    "N_original": 253,
+    "N_pending": 0,
+    "N_solved": 207,
+    "N_strict_valid": 194,
+    "N_unique_s4p_sha": 207
+  },
+  "accounted63_counts": {
+    "N_accounted_candidates": 693,
+    "N_analytic_fail": 46,
+    "N_drc_fail": 27,
+    "N_emx_not_solved": 0,
+    "N_gds_fail": 60,
+    "N_independent_solves": 560,
+    "N_invalid": 27,
+    "N_joint_hit": 309,
+    "N_original": 693,
+    "N_pending": 0,
+    "N_solved": 560,
+    "N_strict_valid": 533,
+    "N_unique_s4p_sha": 560
+  },
+  "qa_not_equal_goal_completion": true
+}
