@@ -1,0 +1,5 @@
+request_id,frequency_ghz,model_id,dataset_scope,q_proxy,q_emx,N_original,N_solved,N_strict_valid,N_invalid,N_analytic_fail,N_gds_fail,N_drc_fail,N_joint_hit,selected_stage,selected_strict_valid,selected_joint_hit
+qscan15_development5k_20260908_v1-HELDOUT_TRIPLE_AUDIT-000001,15,f15-5a9547401a37,DEVELOPMENT_5K_NOT_FORMAL_10K,11,,11,8,5,3,3,0,0,3,SOLVED_STRICT_VALID,true,true
+f05_qscan-HELDOUT_TRIPLE_AUDIT-000001,5,f5-fac1f3ff42e4,FORMAL_10K,10,,11,10,10,0,0,0,1,3,SOLVED_STRICT_VALID,true,true
+f10_qscan-HELDOUT_TRIPLE_AUDIT-000001,10,f10-d26d41688df1,FORMAL_10K,12,,11,9,9,0,0,2,0,6,SOLVED_STRICT_VALID,true,true
+f20_qscan-HELDOUT_TRIPLE_AUDIT-000001,20,f20-4d6b0c6066ee,FORMAL_10K,15,,11,9,8,1,0,2,0,2,SOLVED_INVALID,false,false

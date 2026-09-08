@@ -1,0 +1,212 @@
+{
+  "schema": "FREQUENCY5TO20_SECONDWAVE4_PUBLIC_RECEIPT_V1",
+  "status": "GO_EXACT_PUBLISHED_PNG_AND_NUMERICAL_SNAPSHOT",
+  "source": {
+    "source_snapshot": "physical_incremental_statistics_v1/run_v1/snapshots/snapshot_0011",
+    "source_snapshot_utc": "2026-09-08T11:17:57.612361+00:00",
+    "snapshot_sha256": "b584c804154ceadca6f940d0c7a5eda70551f918d2ed575aa88a01e4f315f535",
+    "statistics_sha256": "e00057e102e8b7be33ae6603f77d910ee80f31c35d800649db5b9a904f19ecaf",
+    "summary_sha256": "aa94d519b71dc9a614b99db63ad9c2d6757d0680edc9e9aa540ee653f82c66e4",
+    "accounted_requests": 20,
+    "accounted_candidates": 220,
+    "independent_solves": 176,
+    "strict_valid": 167,
+    "strict_invalid": 9,
+    "pending_candidates": 3090,
+    "original_requests": 320,
+    "original_candidates": 3520,
+    "complete_strict11_requests": 1,
+    "scientific_interpretation": "Fixed heldout requests, R1 or R2 per route; no population accuracy or causal frequency ranking.",
+    "formal10k15_fresh_emx": "NOT_RUN_DEVELOPMENT5K_ROUTE_IS_SEPARATE",
+    "runtime": {
+      "observed_utc": "2026-09-08T11:23:36Z",
+      "queue_alive": true,
+      "pid": 2146776,
+      "active_frequency_ghz": 6,
+      "request": "f06_qscan-HELDOUT_TRIPLE_AUDIT-000001",
+      "stage": "RESOURCE_WAIT",
+      "load_one_minute": 192.52099609375,
+      "cpu_logical": 192
+    },
+    "accounted_failures": {
+      "analytic": 11,
+      "gds": 20,
+      "drc": 13
+    },
+    "new4_requests": 4,
+    "new4_candidates": 44,
+    "new4_solves": 36,
+    "new4_strict_valid": 32,
+    "new4_strict_invalid": 4,
+    "new4_failures": {
+      "analytic": 3,
+      "gds": 4,
+      "drc": 1
+    },
+    "selected_strict_valid_requests": 18,
+    "complete_strict11_frequency_ghz": 14,
+    "new20_selected_q15": "SOLVED_INVALID_EXCLUDED_FROM_STRICT_MAIN",
+    "numeric_qa": {
+      "status": "GO_NUMERICAL_SCOPE_ONLY",
+      "receipt_sha256": "c35336dd42c1a60318e2d6913b58da364226c17d150b6d668766f860440fb3c6",
+      "delivery_sha256": "7d60fb0778ee892007bd8290ec90d6b9a2c31a6af7a3be7b5307d637e471c11a",
+      "scalar_error_metrics_verified": 768,
+      "affected_metric_rows_verified": 128
+    },
+    "aggregate_visual_qa": {
+      "route_status": "PASS_PNG",
+      "all_candidates_mae_p95": "PASS_PNG",
+      "normalized_mae_heatmap": "PASS_PNG",
+      "selected_q_proxy_original": "NO_GO_NEAR_ZERO_GLYPH_CLIPPING",
+      "selected_q_proxy_v2": "GO_EXACT_PNG_AND_PDF",
+      "selected_q_proxy_v2_GO_sha256": "077831f4acdd6b513053c2d19b8a52ba33671556a67ce827b97500b5ae161a3b"
+    },
+    "public_directory": "docs/research/frequency5to20_secondwave4_20260908_v1",
+    "remaining": "300 requests not yet accounted in this frozen snapshot; native resource wait is healthy; original budget cutoffs unchanged.",
+    "request_visual_qa": {
+      "original_secondwave4": {
+        "PASS": 4,
+        "NO_GO": 4,
+        "receipt_sha256": "1dea1a9c702a666fb7ff9439a99fd8b6ba6665b2b0af888dc42f49a8bf7c69d2"
+      },
+      "corrected_four": "GO_EXACT_FOUR_FROZEN_FIGURES_AND_STANDALONE_ENTRY_ONLY",
+      "corrected_four_GO_sha256": "1f868ca4ddd0af1651175ba947c1ccf079865a37df7fc40f9eee41ac72f0e63a",
+      "untouched_first16": "PRIOR_EXACT_QA_REUSED",
+      "live_renderer_unchanged": true
+    }
+  },
+  "artifacts": [
+    {
+      "sha256": "d93a283ab1f7564b1a73ae2a355ce2258d8256e0e0765282e5bdf6507676f49a",
+      "path": "README_CN.md"
+    },
+    {
+      "sha256": "16b0b497def3b822aa6428b04bcfd0ebd3736f73eef9a2d05fe29a8e1af7d5d3",
+      "path": "STATUS16.json"
+    },
+    {
+      "sha256": "2bdbd414d0c89a05fd85bdf4bf8bd4e1a75cca7ab4792d819a41cadcd661366e",
+      "path": "NEW4_REQUEST_STATUS.csv"
+    },
+    {
+      "sha256": "75e8cf8ca798dad225f770fad81b457e8f168b4a5f675f2355d387d9baf3db44",
+      "path": "NEW4_SELECTED_PHYSICS.csv"
+    },
+    {
+      "sha256": "7439ecdcf9fe42a692b12660831a0181fb70402d40fef4b0ee151a731c7e2188",
+      "path": "f05_second_percent.png"
+    },
+    {
+      "sha256": "7d93504c8528976447bd8e9da885b80d741f09326a4ed5d0f120ddb0a674468e",
+      "path": "f05_second_score.png"
+    },
+    {
+      "sha256": "8e08147f4fcdac4e69357f2797ba1fbff607a0b6a183fe5ce6f6358cd6b07c98",
+      "path": "f10_second_percent.png"
+    },
+    {
+      "sha256": "974f44e53a7858058cdae0877527aa7f77838b0bc70709b13885607edc9094d7",
+      "path": "f10_second_score.png"
+    },
+    {
+      "sha256": "70f6379035671f8f69e6d0b6d9def2201657485551adf975cabb49841e89a134",
+      "path": "f15_second_percent.png"
+    },
+    {
+      "sha256": "60885b1639a1d2eb7984ff86b2300c5a0c833731cb97c9023cd5a78afbf37e14",
+      "path": "f15_second_score.png"
+    },
+    {
+      "sha256": "a43f62041ebba856ae8ef44b614876eafacc230a505dc426bcc091dcce3f32f1",
+      "path": "f20_second_percent.png"
+    },
+    {
+      "sha256": "a4bc2440b28ad1ccb9e657b57f84b3d6aeeedce01867d63bc62691ef9f123fce",
+      "path": "f20_second_score.png"
+    },
+    {
+      "sha256": "896ceb9a544ce35104deae9b454ec6a1e95a99eb1826d18b01c83065871a1e44",
+      "path": "formal_all_candidates_mae_p95.png"
+    },
+    {
+      "sha256": "89121551aa2f03dd1904ea1217fbeb1b08358ecd256a4dfbb2f141d784c6bd66",
+      "path": "formal_normalized_mae_heatmap.png"
+    },
+    {
+      "sha256": "662d965e494d7ed2a87fd75ad4c12c6d0736dac96b9cc960a3f422bdde9fa18a",
+      "path": "formal_selected_q_proxy_mae_p95.png"
+    },
+    {
+      "sha256": "89896e12129227353b4ca0a9d7a7297e25eb3eb0fa02194e84caf504f32eb9ab",
+      "path": "route_status.png"
+    }
+  ],
+  "software": [
+    {
+      "path": "research/broadband56_nn/frequency_physical_metric_panels_v2.py",
+      "sha256": "31addc1cdb33c34e3eb8c6c415e499d7304b443586ed11609b25be1db92b6865"
+    },
+    {
+      "path": "tests/test_frequency_physical_metric_panels_v2.py",
+      "sha256": "952f4564db5d8c2067d9da81fbdab4740963b170862dfb230953c6784acd6d87"
+    },
+    {
+      "path": "research/broadband56_nn/frequency_physical_request_figures_v3.py",
+      "sha256": "0fd86eb3316ab6a4767db696e87ecaa04935eb57e07b3921efcde0e45fccfa47"
+    },
+    {
+      "path": "tests/test_frequency_physical_request_figures_v3.py",
+      "sha256": "9559a226f65511cc7629be3435fd05378aae013bf5bca14f43992578dd12c060"
+    }
+  ],
+  "checks": {
+    "source_numeric": "INDEPENDENT_GO_128_ROWS_768_SCALARS_AND_REQUEST_CI",
+    "png_visual": "12_EXACT_PNG_PASS",
+    "pdf_visual": "REQUEST_EIGHT_AND_CORRECTED_AGGREGATE_ONE_PASS_NOT_PUBLISHED_HERE",
+    "svg_manual": "NOT_RUN_NOT_PUBLISHED_HERE",
+    "new_synthetic_tests": 20,
+    "narrative": "INDEPENDENT_REVIEW_PASS_WITH_R_INTERPRETATION_CLARIFIED",
+    "csv_line_endings": "LF_EXACT_SOURCE_BYTES",
+    "git_blob_check": "REQUIRED_AFTER_COMMIT_RECORDED_IN_PRIVATE_PUSH_RECEIPT"
+  },
+  "immutable_evidence": [
+    {
+      "path": "milestone_secondwave4_v1/REQUEST_FIGURES_V3_INDEPENDENT_GO.json",
+      "sha256": "1f868ca4ddd0af1651175ba947c1ccf079865a37df7fc40f9eee41ac72f0e63a"
+    },
+    {
+      "path": "milestone_secondwave4_v1/AGGREGATE_VISUAL_INSPECTION.json",
+      "sha256": "6d6e27f4c10da0f498c1edb41cd6c16ffce2511396bdcf6146912ea30e41af08"
+    },
+    {
+      "path": "milestone_secondwave4_v1/METRIC_PANEL_V2_INDEPENDENT_GO.json",
+      "sha256": "077831f4acdd6b513053c2d19b8a52ba33671556a67ce827b97500b5ae161a3b"
+    },
+    {
+      "path": "milestone_secondwave4_v1/LIVE_OBSERVATION.json",
+      "sha256": "c4d28d45e5ab7701349792f411fb47fc59616175e8939ac07361456c8e7deffb"
+    },
+    {
+      "path": "physical_incremental_statistics_v1/request_secondwave4_visual_fix_v3/DELIVERY_RECEIPT.json",
+      "sha256": "2d5a91eab3dcd81a1eef334c6dff217a01a0333cc568a905a8890c5797f59d94"
+    },
+    {
+      "path": "physical_incremental_statistics_v1/request_secondwave4_visual_fix_v3/SELF_CHECK.json",
+      "sha256": "eba0925fa3ae7f3167bbf0eb7e74ae058ff804cbea44578ba3be1e73d1dc98c2"
+    },
+    {
+      "path": "physical_incremental_statistics_v1/request_secondwave4_visual_fix_v3/REPAIR_EXPORT_INDEX.json",
+      "sha256": "1913fed9fe57b41cdd5d6f8b6f25bc110384ccffd85f2fa08fb41658756ed005"
+    }
+  ],
+  "limitations": [
+    "Models remain first-budget PARTIAL/PROVISIONAL, not convergence claims.",
+    "R counts different fixed request groups, not proven IID; R1 CI not estimable and R2 descriptive only.",
+    "Formal10K15 fresh EMX NOT_RUN; physical15 DEVELOPMENT5K retained.",
+    "Fresh random10000 physics DEFERRED; current fixed heldout20/320 is not that frame.",
+    "Five original display NO-GO artifacts preserved. Reusable entry tests do not approve future figures automatically.",
+    "No active renderer, collector, production, model or data mutation; no repeated solves.",
+    "One first seal helper field assertion failure was preserved; corrected seal changed no numerical or visual outputs."
+  ],
+  "no_private_weights_or_data": true
+}

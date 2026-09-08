@@ -81,3 +81,11 @@ PYTHONDONTWRITEBYTECODE=1 PYTHONOPTIMIZE=0 python -B -m research.broadband56_nn.
 训练核心源码、原数据、私有配置、PDK和生产运行均不改动。前阶段281合成测试通过；新增统计/绘图/消费者联合57项通过，14条依赖弃用警告保留。测试数不等于真实训练或仿真数。
 
 图表和私有模型/日志的精确路径与SHA在私有交付目录，公开仅工程代码、测试和脱敏状态。剩余最高优先级为完成真实物理链，再按冻结请求顺序跨频率轮转；不是追加复杂网络实验。
+
+## 11:17UTC冻结补充：累计20请求
+
+[第二轮4请求补充包](frequency5to20_secondwave4_20260908_v1/README_CN.md)以snapshot_0011为唯一累计来源：20请求/220原槽、176独立求解、167严格有效、9严格无效，另11解析/20GDS/13Calibre失败。新增开发15、正式5/10/20 GHz各第二请求；20GHz预选Q15虽完成求解但strict无效，保留负结果，不改选、不进入strict主精度。正式10K15的fresh EMX仍NOT_RUN。
+
+128受影响metric记录/768误差值与整请求CI通过独立核对。12张公开PNG各有精确数值/视觉证据；5个显示缺陷已在新输出修复，原NO-GO保留。新离线入口frequency_physical_metric_panels_v2与frequency_physical_request_figures_v3复用既有绘图逻辑，新增9+11合成测试PASS，未热升级运行中的消费者或renderer。
+
+11:23:36UTC原MARS队列存活、6GHz第二请求Q10完成后RESOURCE_WAIT；CPU负载门等待，不扩容抢占生产。冻结报告以每路线R1/R2为限，不把Q候选当独立请求、不作总体准确率。18:00UTC新派发截止与18:15UTC报告截止不变。旧PPT是首6/51求解快照，不能当作本次20/176的图表。
