@@ -1,5 +1,11 @@
 # Current Evidence Status
 
+Latest [GPT-ready handoff](GPT_HANDOFF_20260908T1610_CN.md): the original MARS
+queue was live at 16:10 UTC with 56 of 320 requests accounted. This is not the
+latest independently approved numerical snapshot, which remains cumulative40.
+The next-budget release is locally packaged only; transport, native Linux
+validation and actual continuation are not yet performed.
+
 ## 2026-09-08: One Local Terminal-Export Waiter Installed
 
 The [finite export delivery](frequency5to20_terminal_export_20260908_v1/README_CN.md)
