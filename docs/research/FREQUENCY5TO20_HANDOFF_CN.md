@@ -12,7 +12,9 @@
 
 16组分别完成10000随机三目标的Q10..20扫描，共1760000逻辑候选，另有固定留出三目标审计。代理候选数不是独立EMX求解数。旧四目标一次推理压力试验是独立补充，不冒充Q扫描。
 
-首组15 GHz使用已存在开发5K模型立即启动独立MARS Cadence-only链：11逻辑候选中9解析通过派发，2失败保留。该观测时Calibre/fresh EMX尚未完成，q_emx不可填造；生产控制器、数据、环境与配置未改。
+首组15 GHz沿用已存在开发5K模型：11原始候选中9项完成实际GDS、Calibre零阻断、同一GDS的fresh EMX与严格标签，2解析失败保留。预先选定Q14的Lp/Ls/Qmin/|k|相对误差分别约0.079%/0.341%/0.636%/0.294%，严格联合命中。该结论只限一个预选目标；q_emx仍为空，不能从9成功子集推断完整11项最优，也不能用于新正式10K15模型的物理准确率。
+
+独立有限物理程序已实际部署并启动。每请求先完成一个原生求解，再进入全局最多4槽；Cadence和Calibre按请求单通道，原候选固定顺序跨频率轮转，资源不足等待。08:38:35UTC首个正式5 GHz请求已完成Q10–14真实求解与提取，其余仍运行；两组累计14个求解收据，不代表320请求完成。MARS重启后自动启动未安装；同一config只在确认无活进程/子进程及占锁后诊断恢复，不重复提交。
 
 ## 统一入口
 
@@ -40,5 +42,18 @@ python -m research.broadband56_nn.frequency_rollup --training-root /PRIVATE/TRAI
 评分跨度[2.5nH,2.5nH,20,0.8]；成功绝对容差[0.125nH,0.125nH,1,0.04]，不是目标相对5%。随机三目标的真实可达性默认UNKNOWN。域外、解析失败、DRC失败、缺失及pending保留原分母；不以成功子集冒称11项完整最优。
 
 聚合CSV的误差统计保留全部有限代理预测（包括解析失败），另核验原评价的可评价条件分母，两个口径明确区分。单seed、固定留出描述性统计，不提供未经设计的总体置信区间或因果排名。
+
+训练预算同时受12000步和200 epoch上限约束；高频有效训练数较少，17/18/19/20 GHz实际更新8875/5538/3357/1744。反向响应项有600步warmup和3000步ramp，19/20 GHz在渐增阶段结束。这是本轮PARTIAL限制，不能把跨频率差异解释成已收敛性能优劣；未擅自改变冻结实验或覆盖模型。
+
+## 唯一物理队列与恢复入口
+
+```sh
+PYTHONDONTWRITEBYTECODE=1 PYTHONOPTIMIZE=0 python -B -m research.broadband56_nn.frequency_physical_dispatch --config /PRIVATE/RUNTIME_CONFIG.json --preflight
+PYTHONDONTWRITEBYTECODE=1 PYTHONOPTIMIZE=0 python -B -m research.broadband56_nn.frequency_physical_dispatch --config /PRIVATE/RUNTIME_CONFIG.json
+```
+
+该接口已用实际Linux16组元数据、8次继承锁检查及原有同GDS命令preflight验证；实际Cadence、GDS检查、Calibre和新5GHz求解均已走通。精确机器命令/config/SHA/PID在私有handoff；公开占位符不是含数据的可直接运行配置。第二条同时是检查后恢复入口，无独立重复提交命令。已有完整阶段按精确intent/terminal复用；仅有solver PASS而缺提取时仅调用extract，失败/部分原生输出停门保留。不能手工删除锁、改失败记录或换新输出路径重复仿真。
+
+源码、原数据、私有配置、PDK和生产运行均不改动。当前281合成测试通过，测试数不等于真实训练或仿真数。
 
 图表和私有模型/日志的精确路径与SHA在私有交付目录，公开仅工程代码、测试和脱敏状态。剩余最高优先级为完成真实物理链，再按冻结请求顺序跨频率轮转；不是追加复杂网络实验。
