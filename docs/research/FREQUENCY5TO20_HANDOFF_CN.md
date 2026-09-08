@@ -1,5 +1,17 @@
 # 5–20 GHz 单频 Tandem 研究交接
 
+## 最新冻结补充：累计28请求（snapshot_0019）
+
+[第二轮8请求增量包](frequency5to20_secondwave8_20260908_v1/README_CN.md)固定统计2026-09-08 12:38:23.642122UTC，包创建12:38:27.721717UTC：28个关闭请求、308原始Q槽，252次独立求解=242严格有效+10严格无效；另11解析/29GDS/16Calibre失败。全计划320请求/3520槽，221预先解析失败及3002 pending另列；292请求尚未关闭，不宣称目标全部完成。
+
+本增量只验收6/7/8/9/11/12/13/14 GHz的第二请求：88槽、76求解、75strict有效、1无效、9GDS/3DRC失败；旧20请求逐条保持。8/13 GHz原预选Q在GDS失败，保留缺值、不换Q。11 GHz预选Q11严格有效，但|k|残差0.046436273081205515大于0.04，未联合命中；另一个Q14的原strict_lumped_valid=false，二者不能混为同一失败。新9/14 GHz原11项全部strict有效，q_proxy/q_emx分别11/11与16/14；加上14 GHz第一请求，累计只有3个完整严格11项请求。
+
+16频率训练/测试/物理/出图分列见[当前STATUS16](frequency5to20_secondwave8_20260908_v1/STATUS16.json)。16对首预算训练、保存/加载/诊断续训/test及176万SELF_PROXY候选均已完成并复用；仍PARTIAL/PROVISIONAL，不宣称收敛。15 GHz物理继续冻结开发5K，正式10K15 freshEMX仍NOT_RUN。R=1/2是固定请求组数，不是已证IID；请求bootstrap仅描述性，不作总体准确率或跨频率因果冠军。
+
+21张公开PNG逐图绑定独立数值与精确视觉证据；原8请求图和2汇总图的显示NO-GO保留，仅用既有独立入口在新目录修复，未热改运行renderer。四项MAE/RMSE/Bias/P50/P90/P95与共同集选择表可直接审查，EMX-target和EMX-frozen-proxy分开。全部16频率Q20超STRICT观察训练范围的[既有覆盖补充](frequency_library_qsupport_20260908_v1/README_CN.md)继续适用，不表示物理不可达。
+
+12:43:36UTC最后只读现场观察：MARS2146776正在16GHz第二请求emx_q14；本机50120/52155存活。此现场不混入S19数值。原有限队列继续全局max4EMX×2CPU、Cadence1/Calibre1与资源门，18:00UTC停止新派发/18:15UTC报告截止不变，不重启、发信号、抢占生产或GUI。开机恢复NOT_INSTALLED，无AI周期轮询；旧PPT仍固定首6请求/51求解。以下各节均为保留的历史时点，不要把其计数与最新快照相加。
+
 ## 新补充：按频率调用与训练Q覆盖
 
 [统一模型库命令](FREQUENCY_LIBRARY_USAGE_CN.md)及[真实验收和16×11训练Q覆盖图](frequency_library_qsupport_20260908_v1/README_CN.md)已完成。16个正式10K路由核验、15GHz一次实际CLI调用、176格train-only计数与PNG/PDF独立QA均通过。Q=20在全部16频率的STRICT训练Q范围之外；该边界不能推成物理不可达或用代理外推宣称精度。源码36+14项新合成测试通过，未重训/重复Qscan/仿真。12:29:09UTC原物理队列仍在13GHz第二请求EMX；原物理统计冻结20请求/176求解不混入新现场阶段，详情见上述补充。

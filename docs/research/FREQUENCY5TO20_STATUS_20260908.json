@@ -1,18 +1,18 @@
 {
-"model_library_qsupport": {
-  "status": "GO_SCOPED_ENTRY_AND_TRAIN_SUPPORT",
-  "observed_utc": "2026-09-08T12:29:09Z",
-  "delivery": "frequency_library_qsupport_20260908_v1/README_CN.md",
-  "entry": "FREQUENCY_LIBRARY_USAGE_CN.md",
-  "metadata_routes": 16,
-  "actual15_cli_inferences": 1,
-  "new_training_updates": 0,
-  "integer_q_coverage_cells": 176,
-  "OUT_cells": 54,
-  "all16_Q20_outside_observed_train_range": true,
-  "physical_snapshot_unchanged": "snapshot_0011;20requests/176independent solves",
-  "runtime_observation": "OriginalMARS2146776 alive;f13second request emx_q17;local50120/52155 alive; no new numerical harvest."
-},
+  "model_library_qsupport": {
+    "status": "GO_SCOPED_ENTRY_AND_TRAIN_SUPPORT",
+    "observed_utc": "2026-09-08T12:29:09Z",
+    "delivery": "frequency_library_qsupport_20260908_v1/README_CN.md",
+    "entry": "FREQUENCY_LIBRARY_USAGE_CN.md",
+    "metadata_routes": 16,
+    "actual15_cli_inferences": 1,
+    "new_training_updates": 0,
+    "integer_q_coverage_cells": 176,
+    "OUT_cells": 54,
+    "all16_Q20_outside_observed_train_range": true,
+    "physical_snapshot_unchanged": "snapshot_0011;20requests/176independent solves",
+    "runtime_observation": "OriginalMARS2146776 alive;f13second request emx_q17;local50120/52155 alive; no new numerical harvest."
+  },
   "schema": "public_frequency_research_status.v2",
   "observed_utc": "2026-09-08T09:55:27.547311+00:00",
   "priority": "integer-frequency-routed 256x3 Tandem MLP; 5 through 20 GHz",
@@ -306,7 +306,7 @@
     "Qscan analytic feasibility is not Calibre or manufacturing signoff.",
     "Private datasets, weights, physical configuration and raw logs remain in the private research handoff."
   ],
-  "updated_utc": "2026-09-08T11:50:00Z",
+  "updated_utc": "2026-09-08T13:08:00Z",
   "readonly_report_observer": {
     "status": "INSTALLED_FINITE_PROCESS",
     "poll_seconds": 120,
@@ -359,7 +359,7 @@
     "boot_auto_restart": "NOT_INSTALLED",
     "visual_qa_sha256": "613b4588cd3136835ddbc35aa62a00af9e8c133188ae8ba0ee07136bf78e3eab"
   },
-  "stage_status16": "FREQUENCY5TO20_STAGE_STATUS16_20260908.json",
+  "stage_status16": "frequency5to20_secondwave8_20260908_v1/STATUS16.json",
   "advisor_presentation": {
     "status": "COMPLETE_PUBLIC_REVIEWABLE_DRAFT",
     "slides": 10,
@@ -378,76 +378,91 @@
     "visible_slides_and_native_chart_values_unchanged": true
   },
   "latest_physical_snapshot": {
-    "source_snapshot": "physical_incremental_statistics_v1/run_v1/snapshots/snapshot_0011",
-    "source_snapshot_utc": "2026-09-08T11:17:57.612361+00:00",
-    "snapshot_sha256": "b584c804154ceadca6f940d0c7a5eda70551f918d2ed575aa88a01e4f315f535",
-    "statistics_sha256": "e00057e102e8b7be33ae6603f77d910ee80f31c35d800649db5b9a904f19ecaf",
-    "summary_sha256": "aa94d519b71dc9a614b99db63ad9c2d6757d0680edc9e9aa540ee653f82c66e4",
-    "accounted_requests": 20,
-    "accounted_candidates": 220,
-    "independent_solves": 176,
-    "strict_valid": 167,
-    "strict_invalid": 9,
-    "pending_candidates": 3090,
-    "original_requests": 320,
-    "original_candidates": 3520,
-    "complete_strict11_requests": 1,
-    "scientific_interpretation": "Fixed heldout requests, R1 or R2 per route; no population accuracy or causal frequency ranking.",
-    "formal10k15_fresh_emx": "NOT_RUN_DEVELOPMENT5K_ROUTE_IS_SEPARATE",
-    "runtime": {
-      "observed_utc": "2026-09-08T11:23:36Z",
-      "queue_alive": true,
-      "pid": 2146776,
-      "active_frequency_ghz": 6,
-      "request": "f06_qscan-HELDOUT_TRIPLE_AUDIT-000001",
-      "stage": "RESOURCE_WAIT",
-      "load_one_minute": 192.52099609375,
-      "cpu_logical": 192
-    },
+    "source_snapshot": "physical_incremental_statistics_v1/run_v1/snapshots/snapshot_0019",
+    "source_snapshot_utc": "2026-09-08T12:38:23.642122+00:00",
+    "snapshot_bundle_utc": "2026-09-08T12:38:27.721717+00:00",
+    "snapshot_sha256": "79f474d508bcc9db6927e0787a39d5570db938da5f996a62d8c61def0177f97f",
+    "statistics_sha256": "7a7e51f384303c918c1a3111476ec965bf6d4198c40f5dbf14e7e762ddf4d433",
+    "summary_sha256": "9d89a8a734693c63b2cf12fdf580cd1dba69549d0e5b3127f61b552eccc2418b",
+    "accounted_requests": 28,
+    "accounted_candidates": 308,
+    "independent_solves": 252,
+    "strict_valid": 242,
+    "strict_invalid": 10,
     "accounted_failures": {
       "analytic": 11,
-      "gds": 20,
-      "drc": 13
+      "gds": 29,
+      "drc": 16
     },
-    "new4_requests": 4,
-    "new4_candidates": 44,
-    "new4_solves": 36,
-    "new4_strict_valid": 32,
-    "new4_strict_invalid": 4,
-    "new4_failures": {
-      "analytic": 3,
-      "gds": 4,
-      "drc": 1
+    "original_requests": 320,
+    "original_candidates": 3520,
+    "planned_analytic_fail": 221,
+    "pending_candidates": 3002,
+    "not_accounted_requests": 292,
+    "complete_strict11_requests": 3,
+    "new8": {
+      "requests": 8,
+      "candidates": 88,
+      "solves": 76,
+      "strict_valid": 75,
+      "strict_invalid": 1,
+      "analytic": 0,
+      "gds": 9,
+      "drc": 3
     },
-    "selected_strict_valid_requests": 18,
-    "complete_strict11_frequency_ghz": 14,
-    "new20_selected_q15": "SOLVED_INVALID_EXCLUDED_FROM_STRICT_MAIN",
+    "scientific_interpretation": "Fixed HELDOUT_TRIPLE_AUDIT requests: R1 or R2 per route, not proven IID; request bootstrap descriptive only, no population accuracy or causal frequency ranking.",
+    "formal10k15_fresh_emx": "NOT_RUN_DEVELOPMENT5K_ROUTE_IS_SEPARATE",
+    "random10000_fresh_emx": "DEFERRED_SEPARATE_FRAME",
+    "runtime": {
+      "observed_utc": "2026-09-08T12:43:36Z",
+      "queue_alive": true,
+      "pid": 2146776,
+      "active_frequency_ghz": 16,
+      "request": "f16_qscan-HELDOUT_TRIPLE_AUDIT-000001",
+      "stage": "emx_q14",
+      "child_pid": 220719,
+      "numerical_counts_not_from_runtime_observation": true
+    },
     "numeric_qa": {
       "status": "GO_NUMERICAL_SCOPE_ONLY",
-      "receipt_sha256": "c35336dd42c1a60318e2d6913b58da364226c17d150b6d668766f860440fb3c6",
-      "delivery_sha256": "7d60fb0778ee892007bd8290ec90d6b9a2c31a6af7a3be7b5307d637e471c11a",
-      "scalar_error_metrics_verified": 768,
-      "affected_metric_rows_verified": 128
+      "receipt_sha256": "75439bf9fb85923953d3a42dbfa2534d4eff3f993cf6d6313f42a73139121e8d",
+      "new_requests": 8,
+      "unaffected_candidate_rows_unchanged": 3432,
+      "affected_metric_rows_verified": 256,
+      "scalar_error_metrics_verified": 1536
     },
     "aggregate_visual_qa": {
-      "route_status": "PASS_PNG",
-      "all_candidates_mae_p95": "PASS_PNG",
-      "normalized_mae_heatmap": "PASS_PNG",
-      "selected_q_proxy_original": "NO_GO_NEAR_ZERO_GLYPH_CLIPPING",
-      "selected_q_proxy_v2": "GO_EXACT_PNG_AND_PDF",
-      "selected_q_proxy_v2_GO_sha256": "077831f4acdd6b513053c2d19b8a52ba33671556a67ce827b97500b5ae161a3b"
+      "status": "GO_EXACT_FIVE_PNG_AND_FIVE_PDF_VISUAL_SCOPE",
+      "receipt_sha256": "7e0f2da651d79116ab6b54135efc8b024b60758486aaf7fced7aee34defa03d8",
+      "original_no_go_figures_preserved": 2
     },
-    "public_directory": "docs/research/frequency5to20_secondwave4_20260908_v1",
-    "remaining": "300 requests not yet accounted in this frozen snapshot; native resource wait is healthy; original budget cutoffs unchanged.",
-    "request_visual_qa": {
-      "original_secondwave4": {
-        "PASS": 4,
-        "NO_GO": 4,
-        "receipt_sha256": "1dea1a9c702a666fb7ff9439a99fd8b6ba6665b2b0af888dc42f49a8bf7c69d2"
+    "public_directory": "docs/research/frequency5to20_secondwave8_20260908_v1",
+    "remaining": "292 requests not yet accounted in frozen S19; native fixed-order resource-gated execution continues under original18:00UTC dispatch/18:15UTC report cutoffs.",
+    "negative_evidence": {
+      "f8_f13_second_selected_q": "GDS_FAIL_VALUES_NULL_NO_REPLACEMENT",
+      "f11_second_selected_q11": {
+        "strict_valid": true,
+        "joint_hit": false,
+        "absolute_k_residual": 0.046436273081205515,
+        "k_tolerance": 0.04
       },
-      "corrected_four": "GO_EXACT_FOUR_FROZEN_FIGURES_AND_STANDALONE_ENTRY_ONLY",
-      "corrected_four_GO_sha256": "1f868ca4ddd0af1651175ba947c1ccf079865a37df7fc40f9eee41ac72f0e63a",
-      "untouched_first16": "PRIOR_EXACT_QA_REUSED",
+      "f11_second_q14": {
+        "descriptor_valid": true,
+        "strict_lumped_valid": false,
+        "physics_qa_pass": true,
+        "below_half_srf": false,
+        "source_receipt_sha256": "2f7ccfe62cc0966cfa5df79264bf157f7bff4631bd6f3e11089749c3c6a7500f"
+      }
+    },
+    "request_visual_qa": {
+      "original_new16_png_pdf": {
+        "pass": 8,
+        "no_go": 8,
+        "receipt_sha256": "60ca6c46f8727fa11f2a656014bb2f51c8eecb6f0cf5dda73e993113e05a497d"
+      },
+      "repaired_eight": "GO_EXACT_EIGHT_PNG_AND_EIGHT_COMPLETE_PDF_PAGES",
+      "repaired_eight_go_sha256": "1a204bb1745df88b226165e6e0152674aa9052b24c7ee18c154ae089ac5475bf",
+      "prior20": "UNCHANGED_PRIOR_EXACT_QA_REUSED",
       "live_renderer_unchanged": true
     }
   },
