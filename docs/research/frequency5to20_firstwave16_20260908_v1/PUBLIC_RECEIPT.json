@@ -42,7 +42,7 @@
   "artifacts": [
     {
       "path": "firstwave16.csv",
-      "sha256": "b52c7baeba1ed9aa30e5d17cc6d63adc59d97392cd190b5e4a9fb71f6702e854"
+      "sha256": "e2fca9bf4cac93bd5d6d49754b1fe65478a99fa54ffc7b44af521d8e07333080"
     },
     {
       "path": "selected_q_errors.png",
@@ -84,5 +84,14 @@
     "Only first16, not full320 or random10k physics",
     "PPT remains first6 snapshot; this is a separately frozen addendum",
     "Original failed selection/f16/f17 score figures not accepted; exact v2 corrections accepted separately"
-  ]
+  ],
+  "publication_line_endings": {
+    "source": "CRLF",
+    "published_csv": "LF",
+    "transformation": "CRLF to LF only; field strings and numerical values unchanged",
+    "source_sha256": "b52c7baeba1ed9aa30e5d17cc6d63adc59d97392cd190b5e4a9fb71f6702e854",
+    "published_sha256": "e2fca9bf4cac93bd5d6d49754b1fe65478a99fa54ffc7b44af521d8e07333080",
+    "superseded_publication_commit": "7358ba1dbd53915ee842c209c0f64cd4ba974d7b",
+    "superseded_publication_issue": "CSV artifact checksum used the CRLF source while Git stored LF; scientific contents unchanged. Corrected in a follow-up commit, original commit retained."
+  }
 }
