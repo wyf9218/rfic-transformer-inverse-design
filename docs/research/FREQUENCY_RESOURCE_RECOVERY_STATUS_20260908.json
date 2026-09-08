@@ -1,0 +1,45 @@
+{
+  "schema": "frequency_resource_recovery_code_public_status.v1",
+  "status": "CODE_REVIEWED_NOT_DEPLOYED",
+  "observed_utc": "2026-09-08T19:14:52Z",
+  "scope": "Continue the original320 requests/3520 Q slots; preserve original science, data, budget and leases",
+  "dispatcher": {
+    "path": "research/broadband56_nn/frequency_physical_dispatch.py",
+    "sha256": "27fd16c8dc5d8418bbe1d6c92b099f7dd0c06093796a7b27751e73bdc8ddcf0c",
+    "author_synthetic_passed": 106,
+    "independent_synthetic_passed": 50,
+    "independent_tests_overlap_note": "Independent50 comprise40 repeated author cases and10 additional cases; do not add counts as unique tests",
+    "independent_code_review_sha256": "a29958f10a640325be53e9a09e89877a627932ea6fe37eb693b585fb267d143e",
+    "test_path": "tests/test_frequency_physical_resource_wait_recovery.py",
+    "test_sha256": "bcab2be9422453c5afe7394ba94a2667a1a8503d7fd40b50e3f2f6e17698e181"
+  },
+  "reporter": {
+    "path": "research/broadband56_nn/frequency_physical_reporting_recovery_once.py",
+    "sha256": "6caef15fe697484427d8a70c8aab62c2ade24823cff284abf7935a5118e70a86",
+    "test_path": "tests/test_frequency_physical_reporting_recovery_once.py",
+    "test_sha256": "3ce0a3b2bea60fffbbec95568e7c0a1c46ebc3c32e9bbfa126686e307cec2101",
+    "new_author_synthetic_passed": 24,
+    "independent_new_and_existing_regression_passed": 70,
+    "independent_qa_sha256": "9ebe565e3f3877c7bf17da3c9ca7c239b669282164d999bf0fb078207cd9e1b7",
+    "actual_predecessor_metadata_lineage": "PASS_72_REUSABLE_CAPTURES_NO_NEW_STATISTICS_OR_RENDERING",
+    "installed": false
+  },
+  "recovery_contract": [
+    "Explicit manifest required for the exact preserved preflight-only Q17 resource rejection",
+    "Original failed PROCESS and log remain unchanged; supplementary receipts record any recovery",
+    "Reuse Q10..16 completion evidence; do not repeat completed native solves",
+    "Only resource refusal before solver launch may wait; partial solves and unknown failures remain fail-closed",
+    "Same original queue/global leases, maximum4 solvers and2 CPUs per solver, unchanged admission deadline",
+    "Exact previous wrapper path/PYTHONPATH and budget identity preserved",
+    "Reporter reuses72 accepted captures and prior figures, and only adds genuinely new closed requests"
+  ],
+  "native_linux_tests": "NOT_RUN_AT_THIS_CODE_CHECKPOINT",
+  "native_input_preflight": "NOT_RUN_AT_THIS_CODE_CHECKPOINT",
+  "mars_candidate_transport": "NOT_COMPLETED_AT_THIS_CODE_CHECKPOINT",
+  "new_native_launch": "NOT_STARTED",
+  "latest_approved_scientific_requests": 63,
+  "new_scientific_or_visual_release": false,
+  "production_or_gui_modified": false,
+  "full_goal_complete": false,
+  "private_evidence": "Receipt SHAs refer to private research evidence not included here; source and synthetic tests are public. Private runtime inputs and site data are required for actual installation."
+}

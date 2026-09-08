@@ -1,5 +1,21 @@
 # Current Evidence Status
 
+## Recovery code checkpoint, 2026-09-08 19:14 UTC
+
+[Exact code identities and test evidence](FREQUENCY_RESOURCE_RECOVERY_STATUS_20260908.json):
+resource-only dispatcher recovery passed106 author synthetic tests and50
+independent cases (40 overlap plus10 additional). Independent code review
+found no material blocker in that scope. The thin reporting successor passed70
+new/existing regressions and read-only validation of the actual72-request
+predecessor lineage. No baseline was recaptured, recalculated or rerendered.
+The code and tests are committed separately from the advisor deck.
+
+Deployment is not complete: native Linux tests, actual input preflight and
+real launch evidence remain necessary. Neither a live MARS continuation nor
+new scientific results are claimed. The exact original budget,4×2CPU research
+cap, two leases, old failure evidence and all completed EMX artifacts remain
+the required continuation contract.
+
 ## Advisor63 publication and diagnosed native exit, 2026-09-08 18:52 UTC
 
 The [10-slide cumulative63 advisor deck and10 Q&A](frequency5to20_advisor_cumulative63_20260908_v1/README_CN.md)

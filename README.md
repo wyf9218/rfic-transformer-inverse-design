@@ -49,7 +49,8 @@ queue exited at18:33 after11GHz's fifth request,Q17,failed its resource-admissio
 gate before starting EMX. Existing Q10–Q16 results remain preserved. Reporting
 ended PARTIAL at72/320 accounted requests; those72 are operational metadata,
 not an extension of the independently approved63-request results.
-Recovery code is under development and has not been deployed. Terminal exports
+[Recovery code and reporting compatibility](docs/research/FREQUENCY_RESOURCE_RECOVERY_STATUS_20260908.json)
+passed scoped independent review and synthetic tests, but have not been deployed. Terminal exports
 exited0, but that does not grant new scientific or visual acceptance.
 Reboot auto-restart is NOT_INSTALLED.
 
