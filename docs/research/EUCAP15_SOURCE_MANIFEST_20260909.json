@@ -1,0 +1,194 @@
+{
+  "schema": "eucap15_public_source_preflight.v1",
+  "status": "PASS_SCOPED_SOURCE_REVIEW",
+  "utc": "2026-09-09T21:19:06.458247+00:00",
+  "parent_commit": "627ccd7572fae6bbb6507f2aa2600dc20e8db07a",
+  "files": [
+    {
+      "path": "docs/INDEX.md",
+      "sha256": "4652c9fafa4adb98d073071e86a68f09b21f67f2b24d5c8bd66f49d05cd4ba77",
+      "bytes": 2289
+    },
+    {
+      "path": "docs/research/EUCAP15_CURRENT_RESEARCH_20260909.md",
+      "sha256": "86890baf9b780f913e03727cb131c5ae7e08493d08b68fc57d05dcf8f639269a",
+      "bytes": 9169
+    },
+    {
+      "path": "research/broadband56_nn/bb00.py",
+      "sha256": "aa2bd332a4a0e1f15015f9e361fec08222d22f8f0c26f8701ed584fb0895dd45",
+      "bytes": 37332
+    },
+    {
+      "path": "research/broadband56_nn/eucap15_acquisition.py",
+      "sha256": "d55eedd5955a6654966fd3dd0ad32074cae4376ef2709ffdbbcfe8edee431f0a",
+      "bytes": 14393
+    },
+    {
+      "path": "research/broadband56_nn/eucap15_acquisition_budget.py",
+      "sha256": "c8dcf998f3b5a95b8a57bb5ca71edd0f702ff538a3584a37b0ff09b22c83fe9b",
+      "bytes": 15562
+    },
+    {
+      "path": "research/broadband56_nn/eucap15_acquisition_evidence.py",
+      "sha256": "2dc03ec9b10b4f10b22069cdb222a6253ae5026dfbe6d8784212ba1dfacae6a0",
+      "bytes": 20036
+    },
+    {
+      "path": "research/broadband56_nn/eucap15_development_data.py",
+      "sha256": "b686fd86240f9ecf567d8a89bb41686e7135b5f6898c4f72dc485bffbd606132",
+      "bytes": 18931
+    },
+    {
+      "path": "research/broadband56_nn/eucap15_development_evaluation.py",
+      "sha256": "059a159f63132a02179144e0d8c241b0beb6bed12e78209c0cf76a3d3d5d0083",
+      "bytes": 18520
+    },
+    {
+      "path": "research/broadband56_nn/eucap15_development_tables.py",
+      "sha256": "988d2480198c5f2f5732b2ab31c6186c61cf09785f31cd5fdc8eab25047deffb",
+      "bytes": 27679
+    },
+    {
+      "path": "research/broadband56_nn/eucap15_final_audit.py",
+      "sha256": "361cdec80485eff109470643bab4f0ca7945c30215bf780aa979fd6c74115ec7",
+      "bytes": 12572
+    },
+    {
+      "path": "research/broadband56_nn/eucap15_final_frame.py",
+      "sha256": "811ebabc5b1b90ab8b33142612eb7c09de5bc1a9a4ca04ffbfe5abc9032bfec9",
+      "bytes": 22604
+    },
+    {
+      "path": "research/broadband56_nn/eucap15_final_routing.py",
+      "sha256": "de926c9285bcc88203bc35ce05028986f4fd53aeeb4069cbb08204243c20d119",
+      "bytes": 9757
+    },
+    {
+      "path": "research/broadband56_nn/eucap15_final_statistics.py",
+      "sha256": "e976507873b69c366b137f833882ad518ca0c42716e21fa2aeb3d3b4aaf97ab6",
+      "bytes": 10884
+    },
+    {
+      "path": "research/broadband56_nn/eucap15_formal_development_view.py",
+      "sha256": "ecf7aa45c07e3540ac8e70fe6afeb2a918203d5a868e56a9c89cf31f8c63d7fa",
+      "bytes": 22383
+    },
+    {
+      "path": "research/broadband56_nn/eucap15_prepare_acquisition.py",
+      "sha256": "79d36c84bbd9f24b03b0b6c34a2d06fb348e2649a3ab65471d8c19a1e5aefa24",
+      "bytes": 22865
+    },
+    {
+      "path": "research/broadband56_nn/eucap15_selected_evidence.py",
+      "sha256": "3f1e129d95be75bc0be227f4368d55c9da9350fe09feae30dc5b3eebf9551b5a",
+      "bytes": 23439
+    },
+    {
+      "path": "research/broadband56_nn/eucap15_selected_metrics.py",
+      "sha256": "6655369601f5f26f7d2a251fd1fa6c3a434b0bdc66eddcf88bea00feeec441cb",
+      "bytes": 15155
+    },
+    {
+      "path": "research/broadband56_nn/frequency_study.py",
+      "sha256": "407042407396e2c2555fc44e0921b05ef0583f0a1c17021c3269a2c2de9ee284",
+      "bytes": 17105
+    },
+    {
+      "path": "research/broadband56_nn/frequency_tandem.py",
+      "sha256": "0251dba10a831b2595c60fcb8c2274a1188faa346b4c80b65f9555e5550ef4b7",
+      "bytes": 8281
+    },
+    {
+      "path": "tests/site_integration_tests.txt",
+      "sha256": "14796bb2cdd332af13703a16f878c002ad6995c5da8788fa0bbc8eefd813c2b6",
+      "bytes": 2912
+    },
+    {
+      "path": "tests/test_eucap15_acquisition.py",
+      "sha256": "9cbd2c68ef41ded54686133c539656df0de51bb58641a7ae5ddc6346ac614c42",
+      "bytes": 11388
+    },
+    {
+      "path": "tests/test_eucap15_acquisition_budget.py",
+      "sha256": "467dc1d6bba90552de0fb138f0a3a6a89c103950ee7e0d40e49432086121401a",
+      "bytes": 11534
+    },
+    {
+      "path": "tests/test_eucap15_acquisition_evidence.py",
+      "sha256": "12416585f13b4e7783885e7dc9b8ac6667e9e484ee11d95579b323ab69f74a39",
+      "bytes": 11631
+    },
+    {
+      "path": "tests/test_eucap15_development_evaluation.py",
+      "sha256": "3cb4f24b16a4a641e3078ea36a0a473ffae0e8918d5ebff564a8eb40d0232121",
+      "bytes": 9689
+    },
+    {
+      "path": "tests/test_eucap15_development_tables_receipts.py",
+      "sha256": "1795cd349a91a20996c3b67d634ffe126602110c1df91d56df280337885833c0",
+      "bytes": 4018
+    },
+    {
+      "path": "tests/test_eucap15_final_audit.py",
+      "sha256": "ac821d78ce0346d684bdf29ea002369191ab5affc5ab5be26e582f2b218700c9",
+      "bytes": 9820
+    },
+    {
+      "path": "tests/test_eucap15_final_frame.py",
+      "sha256": "efc88f34d0893309876474e8d3167f120f6b39a3884c269df9634f0d2f16ef4a",
+      "bytes": 10272
+    },
+    {
+      "path": "tests/test_eucap15_final_routing.py",
+      "sha256": "14f466c3687b16f8cc3cdef5017628c267b70ed04ce7250a2385e41be18944ea",
+      "bytes": 9032
+    },
+    {
+      "path": "tests/test_eucap15_final_statistics.py",
+      "sha256": "4078764a91bd9c56de89638ddd7ab7ad5898c01a0634690dd27cf3a5a1970abf",
+      "bytes": 7331
+    },
+    {
+      "path": "tests/test_eucap15_formal_development_view.py",
+      "sha256": "0174e1f9b23128e17a6906d122dfb0666ac01a1aabf05726b4037fe8f69e6045",
+      "bytes": 13408
+    },
+    {
+      "path": "tests/test_eucap15_formal_view_join_order.py",
+      "sha256": "97b458c7351a3f82174a0c01ae8f0c1e227a51e74aa1b8c1c38f2281421d9d40",
+      "bytes": 2132
+    },
+    {
+      "path": "tests/test_eucap15_mirror_reader.py",
+      "sha256": "d2adfac58147c9d166237fc81981b2c82772a206757f85e7c7cb6f5c3fdfcd02",
+      "bytes": 7869
+    },
+    {
+      "path": "tests/test_eucap15_mlp_capacity.py",
+      "sha256": "37de3652b5bef3076d60e7547135c6ec176c9ae251e30ecdbcd7e5f42ff24d3c",
+      "bytes": 18975
+    },
+    {
+      "path": "tests/test_eucap15_serial_budget.py",
+      "sha256": "5d6cee800724fd54b35c3a1ced29861fa9ea79123e9cbcebd47d87d50c94ae01",
+      "bytes": 4567
+    },
+    {
+      "path": "tests/test_eucap15_shared_forward_study.py",
+      "sha256": "17f1cfe2476eb18996f18e2b20f87407cce01873d67cd3b6aca3e546f3922f0b",
+      "bytes": 7234
+    },
+    {
+      "path": "tests/test_eucap15_terminal_metrics.py",
+      "sha256": "7a2f049db0ae63b1aeb917efffe2d16121d41b23ff69e057c8db8be7271ac85e",
+      "bytes": 7355
+    }
+  ],
+  "issues": [],
+  "private_artifacts_included": false,
+  "syntax": "AST_ONLY_NO_IMPORTS",
+  "full_regression": "NOT_RERUN_USER_NO_REPEAT",
+  "tests": "Existing exact source receipts plus21 new metadata tests; not a fresh full-suite claim",
+  "public_ci_integration_exclusion": "14 mirror tests require exact sibling snapshots; preserved, not silently counted PASS"
+}

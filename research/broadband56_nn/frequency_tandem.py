@@ -1,4 +1,4 @@
-"""Frequency-routed, independent 256x3 Tandem MLPs using the BB00 trainer.
+"""Frequency-routed Tandem MLPs using BB00 (default 256x3; explicit capacity option).
 
 Frequency is a route, never a network input. This entry never invokes EMX,
 changes production, fills absent frequencies, or promotes SELF_PROXY to truth.

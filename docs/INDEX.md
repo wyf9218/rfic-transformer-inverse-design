@@ -2,6 +2,8 @@
 
 ## Start Here
 
+Latest active paper line: [15 GHz EuCAP research and evidence (2026-09-09)](research/EUCAP15_CURRENT_RESEARCH_20260909.md). Earlier campaign links below are retained as history, not current execution instructions.
+
 1. [Canonical Broadband56 V2 execution map](research/BROADBAND56_V2_CANONICAL_EXECUTION_MAP_20260902.json)
 2. [2026-08-23 Chinese research handoff](research/ENGINEERING_HANDOFF_20260823_CN.md)
 3. [Machine-readable handoff state](research/HANDOFF_STATE_20260823.json)

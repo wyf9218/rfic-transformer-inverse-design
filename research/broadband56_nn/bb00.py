@@ -1,9 +1,11 @@
-"""v3 BB00: new-snapshot training of the historical 256x3 tandem structure.
+"""EuCAP capacity revision of BB00, retaining 256x3 as the default.
 
 Uses shared data/checkpoint/device/RNG primitives. Historical weights are NEVER
 used by train_bb00. Replacement optimization is explicit, not legacy resume.
 Public inference units: forward(geometry_um)->[Lp_nH,Ls_nH,Qmin,K_abs];
 inverse(physical_15ghz)->geometry_um. No frequency input, S outputs or BB tokens.
+Only the five user-specified MLP shapes are allowed. Original BB00 runtime and
+reference checkpoints remain in the separate frequency-indexed worktree.
 """
 from __future__ import annotations
 
@@ -22,6 +24,18 @@ from torch import nn
 from .io import read_json, save_json, sha256, canonical_sha, save_checkpoint, load_checkpoint, utc_now
 from .training import Bundle, configure_device, model_digest, _rng_state, _restore_rng
 from rfic_transformer_inverse_design.synthesis.frozen_mlp import GEOMETRY_COLUMNS
+
+
+CAPACITY_SHAPES = ((256, 256), (128, 128, 128), (256, 256, 256),
+                   (512, 512, 512), (256, 256, 256, 256, 256))
+
+
+def validate_hidden_layers(value):
+    if (not isinstance(value, (list, tuple)) or
+            any(type(width) is not int for width in value) or
+            tuple(value) not in CAPACITY_SHAPES):
+        raise ValueError("hidden_layers must be exactly one of the five EuCAP MLP shapes")
+    return tuple(value)
 
 
 @dataclass
@@ -48,16 +62,18 @@ class BB00Config:
     label_mode: str = "STRICT_LUMPED"
     checkpoint_interval: int = 1
     log_progress: bool = False
+    hidden_layers: tuple = (256, 256, 256)
 
 
 class BB00MLP(nn.Module):
-    def __init__(self, role, normalizer):
+    def __init__(self, role, normalizer, hidden_layers=(256, 256, 256)):
         super().__init__()
         if role not in ("forward", "inverse"):
             raise ValueError("BB00 role must be forward or inverse")
         self.role = role
         self.geometry_dim = len(normalizer["g_mean"])
-        dimensions = [self.geometry_dim, 256, 256, 256, 4] if role == "forward" else [4, 256, 256, 256, self.geometry_dim]
+        hidden = list(validate_hidden_layers(hidden_layers))
+        dimensions = [self.geometry_dim, *hidden, 4] if role == "forward" else [4, *hidden, self.geometry_dim]
         self.layers = nn.ModuleList(nn.Linear(a, b) for a, b in zip(dimensions[:-1], dimensions[1:]))
         for key in ("g_mean", "g_scale", "y_mean", "y_scale", "g_lower", "g_upper"):
             self.register_buffer(key, torch.as_tensor(normalizer[key], dtype=torch.float32))
@@ -184,7 +200,14 @@ def load_bb00(checkpoint, device="cpu", expected_sha256=None):
         raise ValueError("not a new-data BB00 checkpoint; historical reference is separate")
     if canonical_sha(state["normalizer"]) != state["normalizer_sha"]:
         raise ValueError("BB00 normalizer identity mismatch")
-    model = BB00MLP(state["role"], state["normalizer"]).to(device)
+    widths = state.get("architecture", {}).get("widths")
+    if not isinstance(widths, list) or any(type(value) is not int for value in widths):
+        raise ValueError("checkpoint architecture widths missing or invalid")
+    hidden = validate_hidden_layers(widths[1:-1])
+    configured = validate_hidden_layers(state.get("train_config", {}).get("hidden_layers", (256, 256, 256)))
+    if hidden != configured:
+        raise ValueError("checkpoint architecture and training configuration disagree")
+    model = BB00MLP(state["role"], state["normalizer"], hidden).to(device)
     model.load_state_dict(state["model_state"])
     if model.architecture != state["architecture"] or model_digest(model) != state["model_sha"]:
         raise ValueError("BB00 model identity mismatch")
@@ -330,6 +353,7 @@ def train_bb00(data_root, out, config, contract_path, legacy_replay_receipt,
 
 def _train(data_root, out, config, contract_path, legacy_path, legacy_sha, resume, resume_best, resume_best_sha, resume_probe):
     start = time.monotonic()
+    validate_hidden_layers(config.hidden_layers)
     if config.role not in ("forward", "inverse") or config.steps < 1 or config.schedule_total_steps < 1:
         raise ValueError("positive bounded BB00 training configuration required")
     if config.effective_batch != 32 or config.micro_batch < 1 or 32 % config.micro_batch:
@@ -366,7 +390,7 @@ def _train(data_root, out, config, contract_path, legacy_path, legacy_sha, resum
     torch.manual_seed(config.seed)
     device = configure_device(config)
     rng = np.random.default_rng(config.seed)
-    model = BB00MLP(config.role, norm).to(device)
+    model = BB00MLP(config.role, norm, config.hidden_layers).to(device)
     optimizer = torch.optim.AdamW(model.parameters(), lr=config.lr, weight_decay=config.weight_decay)
     scheduler = torch.optim.lr_scheduler.LambdaLR(optimizer, lambda _: 1.0)
     forward, fsha = None, None
@@ -378,6 +402,9 @@ def _train(data_root, out, config, contract_path, legacy_path, legacy_sha, resum
         if (fs["role"] != "forward" or fs["data_sha"] != bundle.data_sha or fs["normalizer_sha"] != norm_sha or
                 fs["contract_sha"] != contract_sha or fs["step"] < 1):
             raise ValueError("forward snapshot/normalizer/contract qualification mismatch")
+        if (fs.get("resume_probe") or fs.get("research_comparison_eligible") is False or
+                fs["model_sha"] != fs["best_model_sha"]):
+            raise ValueError("forward must be a validation-selected, non-probe checkpoint")
         forward.eval().requires_grad_(False)
     initial_digest, forward_digest = model_digest(model), model_digest(forward) if forward is not None else None
     begin, best, stale, best_path, history, seen = 0, math.inf, 0, None, [], set()
@@ -386,7 +413,8 @@ def _train(data_root, out, config, contract_path, legacy_path, legacy_sha, resum
     if resume:
         for key, expected in {"schema": "bb00_training_state.v1", "role": config.role, "kind": "BB00", "data_sha": bundle.data_sha,
              "normalizer_sha": norm_sha, "contract_sha": contract_sha, "forward_checkpoint_sha256": fsha,
-             "fixed_train_config_sha": canonical_sha(fixed_config), "recipe_sha256": canonical_sha(recipe), "runtime_source_sha256": sources}.items():
+             "fixed_train_config_sha": canonical_sha(fixed_config), "recipe_sha256": canonical_sha(recipe), "runtime_source_sha256": sources,
+             "architecture": model.architecture}.items():
             if initial.get(key) != expected:
                 raise ValueError("BB00 exact resume mismatch: "+key)
         model.load_state_dict(initial["model_state"])
@@ -400,9 +428,11 @@ def _train(data_root, out, config, contract_path, legacy_path, legacy_sha, resum
             raise ValueError("relocated best requires exact original SHA")
         if resume_best_sha and sha256(best_path) != resume_best_sha:
             raise ValueError("relocated BB00 best SHA mismatch")
-        bs = load_checkpoint(best_path)
+        best_model, bs = load_bb00(best_path, device="cpu")
+        del best_model
         if (bs["model_sha"] != initial["best_model_sha"] or bs["step"] > begin or bs["best_validation"] != best or
-                any(bs.get(key) != initial.get(key) for key in ("role", "data_sha", "normalizer_sha", "contract_sha", "forward_checkpoint_sha256"))):
+                bs.get("resume_probe") or bs.get("research_comparison_eligible") is False or
+                any(bs.get(key) != initial.get(key) for key in ("schema", "kind", "role", "data_sha", "normalizer_sha", "contract_sha", "forward_checkpoint_sha256", "architecture", "fixed_train_config_sha", "runtime_source_sha256", "recipe_sha256"))):
             raise ValueError("resume best identity mismatch")
         schedule, history, seen = initial["response_schedule_state"], initial["history"], set(initial["gradient_source_indices_seen"])
         _restore_rng(initial["rng_state"], rng)
@@ -544,6 +574,8 @@ def _train(data_root, out, config, contract_path, legacy_path, legacy_sha, resum
         "historical_weights_loaded": False, "real_emx_validation": "NOT_RUN", "created_utc": utc_now()}
     receipt.update(frequency_ghz=config.frequency_ghz, label_mode=config.label_mode,
                    validation_selected_checkpoint=True, convergence_claim="NOT_ESTABLISHED")
+    receipt.update(architecture=model.architecture,
+                   capacity_scope="user-specified five-shape MLP family; not a completed architecture comparison")
     receipt.update(resume_probe=resume_probe, research_comparison_eligible=not resume_probe)
     save_json(out/"history.json", history)
     save_json(out/"TRAINING_RECEIPT.json", receipt)
