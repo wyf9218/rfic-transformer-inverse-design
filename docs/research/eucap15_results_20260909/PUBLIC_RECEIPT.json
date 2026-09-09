@@ -1,0 +1,36 @@
+{
+  "schema": "eucap15_public_milestone_delivery.v1",
+  "status": "LOCAL_PUBLIC_ARTIFACTS_PREPARED_NOT_GIT_COMMITTED",
+  "created_utc": "2026-09-09T21:45:07.339870+00:00",
+  "manifest": {
+    "project_relative_path": "docs/research/eucap15_results_20260909/SOURCE_OUTPUT_MANIFEST.json",
+    "sha256": "110e59e3e9e5661f65afed9c927373bddf4524c5b6b2d5f44b4aa4ab22f7fb25",
+    "bytes": 5959
+  },
+  "approved_csv_copies": [
+    {
+      "source_workspace_relative_path": "reports/eucap15ghz_20260908T220300Z/formal6329_capacity_20260909_v1/compact_comparison_v1/run_v1/COMPARISON_5ROW.csv",
+      "output_project_relative_path": "docs/research/eucap15_results_20260909/COMPARISON_5ROW.csv",
+      "sha256": "35253ece9c4b83f8f2a17988e99c2a5b7ad65efd0173273feb8f2181734cd188",
+      "bytes": 3240,
+      "copy_method": "EXACT_BYTES_NO_RECOMPUTATION",
+      "rows": 5,
+      "columns": 29
+    },
+    {
+      "source_workspace_relative_path": "reports/eucap15ghz_20260908T220300Z/acquisition_prefix16_statistics_20260909_v1/run_v2/MATCHED16_COMPARISON.csv",
+      "output_project_relative_path": "docs/research/eucap15_results_20260909/MATCHED16_COMPARISON.csv",
+      "sha256": "d60883a507d1a2cbddf3055c3bc32a212a8e9af7fbc33290ee1fe68c310b05f4",
+      "bytes": 410,
+      "copy_method": "EXACT_BYTES_NO_RECOMPUTATION",
+      "rows": 2,
+      "columns": 16
+    }
+  ],
+  "privacy_check": "PASS_PUBLIC_FILES_NO_MACHINE_ABSOLUTE_PATHS_RAW_GEOMETRY_WEIGHTS_OR_CREDENTIALS",
+  "scientific_QA": "INHERITED_EXACT_SOURCE_QA_NO_NEW_STATISTICAL_CLAIM",
+  "scientific_runs": 0,
+  "figures": 0,
+  "git_operations": 0,
+  "existing_manifests_or_index_modified": false
+}

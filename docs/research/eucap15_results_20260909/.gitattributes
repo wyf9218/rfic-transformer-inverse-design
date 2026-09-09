@@ -1,0 +1,3 @@
+# Preserve byte-exact scientific CSV exports and their recorded SHA-256 values.
+MATCHED16_COMPARISON.csv -text whitespace=cr-at-eol
+COMPARISON_5ROW.csv -text
