@@ -1,0 +1,41 @@
+{
+  "schema": "eucap15_author_sources_public_state.v1",
+  "updated_utc": "2026-09-09T23:49:08Z",
+  "phase": "AUTHOR_DATA_DELIVERED_WAITING_EXISTING_NATIVE256",
+  "goal": "ACTIVE_NOT_FINAL",
+  "private_source_copies": 21,
+  "derived_csv_rows": [
+    29600,
+    64,
+    30
+  ],
+  "new_tests_passed": 7,
+  "sha_entries_verified": 44,
+  "new_training_updates": 0,
+  "new_model_inferences": 0,
+  "new_native_calls_by_research": 0,
+  "new_figures": 0,
+  "training": {
+    "roles": 30,
+    "validation_early_stop": 24,
+    "update_budget_complete": 6,
+    "time_partial": 0,
+    "primary_updates": 538099,
+    "convergence": "NOT_ESTABLISHED"
+  },
+  "native_observation": {
+    "utc": "2026-09-09T23:37:20.268579+00:00",
+    "owner_alive": true,
+    "extracted": 73,
+    "execution_failure": 8,
+    "held": 53,
+    "no_terminal": 122,
+    "new128_running": false,
+    "automatic_successor": "NOT_INSTALLED",
+    "snapshot_not_current_liveness": true
+  },
+  "private_delivery_receipt_sha256": "3a11cb93687627ba72a3931fb37b8ccaa844eb0dc5827499ebd7e7f3328e240d",
+  "private_manifest_sha256": "e55150cc100dfd20d8dd66ad811d3cee2d4b9d5c71503670d8fdc487302a8bb8",
+  "private_sums_sha256": "63c103f23339d46a07bfc01a06b36139d324b5dfac5197db815e45e94012c49e",
+  "blocker": "Original256 natural full accounting and owner termination, then fresh sole-owner admission for frozen128."
+}
