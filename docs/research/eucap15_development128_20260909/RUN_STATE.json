@@ -1,0 +1,104 @@
+{
+  "schema": "eucap15_public_development128_status.v1",
+  "updated_utc": "2026-09-09T22:25:37Z",
+  "goal_status": "ACTIVE_NOT_FINAL",
+  "phase": "INITIAL_LEDGER_COMPLETE_NATIVE_ADAPTER_PENDING",
+  "scope": "DEVELOPMENT_CURRENT_SNAPSHOT",
+  "dataset": {
+    "source": 6329,
+    "train": 3801,
+    "validation": 1269,
+    "test_unevaluated": 1259,
+    "sha256": "4dc6e91a644db2aca0a580958ac8b31e1e26ed73497b935145202b07227ef580"
+  },
+  "model": {
+    "id": "f15-development6329-3x256-seed17-9d69d7ebfc66",
+    "role": "PREDECLARED_BASELINE_NOT_FINAL",
+    "shape": "3x256",
+    "seed": 17,
+    "ablation_winner_claim": false,
+    "new_model_fresh_emx": "NOT_RUN"
+  },
+  "training": {
+    "existing_pairs": 15,
+    "roles": 30,
+    "primary_updates": 538099,
+    "status": "BUDGET_OR_EARLY_STOP_FINISHED_PARTIAL_CONVERGENCE_NOT_ESTABLISHED",
+    "all_inverse_shared_forward": true,
+    "all_load_resume_proofs": "PASS",
+    "new_training_this_increment": 0
+  },
+  "pilot": {
+    "seed": 202609091501,
+    "requests": 128,
+    "q_scan": [
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20
+    ],
+    "proxy_slots": 1408,
+    "q_proxy_frozen": 128,
+    "analytic_pass": 93,
+    "analytic_fail": 35,
+    "replacement": false,
+    "native_started": 0,
+    "REAL_EMX_VALIDATION": "NOT_RUN",
+    "candidate_qa_sha256": "ede9ed845a8c804de16450f5636cab0b9244b66ae03796de3755c12c5b1b4acb"
+  },
+  "owner_intake": {
+    "status": "RECEIVED_NOT_DISPATCHABLE",
+    "receipt_sha256": "0a7cc5cc47683256556a2e26de65e94bdb6953b75c3643366e035b292a69b372",
+    "mars_metadata_files": 9,
+    "adapter": "NOT_INSTALLED",
+    "source_closure": "PARTIAL",
+    "dedup_admission": "NOT_RUN_FOR_NEW128",
+    "post256_queue": "NOT_INSTALLED",
+    "sole_owner_preserved": true
+  },
+  "reader": {
+    "module": "research.broadband56_nn.eucap15_development128_reader",
+    "source_sha256": "8d90cce9b55ba25fabaf36cd3b3c07d2d9bdf7e1b5f1f34a33fa4b2070151284",
+    "synthetic_tests": 9,
+    "independent_static_review": "GO_STATIC_REVIEW_ONLY",
+    "actual_execution_count": 1,
+    "actual_receipt_sha256": "9b8856a7f733b5712fdbee7559d5360a1ebe119bd757624b2a808e3dd8582711",
+    "outputs_sha_verified": 6,
+    "mode": "FROZEN_INITIAL_LEDGER_NOT_CURRENT_LIVE_STATUS",
+    "rows": 128,
+    "analytical_fail": 35,
+    "pending_no_physical_evidence": 93,
+    "physical_error_values": null,
+    "completed_hit_fraction": null,
+    "native_result_consumer": "NOT_INSTALLED_AWAIT_OWNER_SCHEMA"
+  },
+  "paper": {
+    "pages_including_references": 5,
+    "docx_sha256": "a4588cf527087054bc6ccd9d23319c56a3319dde10e0b7d6eda157cd8c5721a5",
+    "independent_review_sha256": "7665503c0f2d42387dfc68aa725b04039de5e02c354775d81f55892b036eae8d",
+    "status": "DISCUSSION_DRAFT_REVIEWED_NOT_FINAL",
+    "new_generated_figures": 0,
+    "author_details": "PENDING",
+    "submission_font_compliance": "NOT_CERTIFIED"
+  },
+  "storage": {
+    "local_df_available_kib": 442976944,
+    "deleted_files": 0,
+    "freed_bytes": 0
+  },
+  "final_campaign": {
+    "data_and_model": "NOT_FINAL",
+    "main10000": "NOT_RUN",
+    "audit100_full11Q": "NOT_RUN"
+  },
+  "blocker": "Sole-owner new128 native scope adapter, full source closure, admission and supported post256 handoff remain incomplete.",
+  "next_safe_action": "Consume only actual owner adapter/return contract; then add narrow identity-bound physical-result reader. No repeated inference, trained15 or historical64 solves.",
+  "private_data_note": "Weights, candidate geometry, raw records, PDK and physical evidence are not contained in the public repository."
+}
