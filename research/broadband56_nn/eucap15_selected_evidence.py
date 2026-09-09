@@ -24,6 +24,12 @@ FLAG_FIELDS = ("finite_values", "positive_primary_resistance", "positive_seconda
                "positive_primary_inductive_reactance", "positive_secondary_inductive_reactance")
 FEATURE_SCHEMA = "eucap15_selected_fresh_features.v1"
 PROOF_SCHEMA = "eucap15_selected_emx_preflight.v1"
+DEVELOPMENT_SCHEMA = "eucap15_current_development_selected_handoff.v1"
+DEVELOPMENT_MODEL = "f15-development6329-3x256-seed17-9d69d7ebfc66"
+DEVELOPMENT_SCOPE = "DEVELOPMENT_CURRENT_SNAPSHOT"
+DEVELOPMENT_MANIFEST_SHA = "b3d388571dbbd6f94d1d273d11910cb9518038ac790233ad2bd483bb5f337ff8"
+DEVELOPMENT_QA_SHA = "ede9ed845a8c804de16450f5636cab0b9244b66ae03796de3755c12c5b1b4acb"
+DEVELOPMENT_QA_BYTES = 62529
 
 
 class SelectedEvidenceError(ValueError):
@@ -114,12 +120,82 @@ def _original_row_matches_csv(original, csv_row):
             _require(isinstance(value, str) and text == value, "original text field differs: " + key)
 
 
+def _development_scope(ctx, item, reference, *, checked, frozen):
+    """Check the owner's exact128 scope without repeating its full source QA.
+
+    The caller previously validated the original128 context once. It supplies
+    per-item development_binding, comparison_protocol, reference_receipt_pin
+    and original_manifest_pin, with actual native paths (not mirror paths).
+    Only the consumed pair/QA metadata pins are checked here, never176 sources,
+    a model, a dataset or a new selection. Pure synthetic tests replace the
+    three immutable QA/manifest constants with their fixture identities only.
+    """
+    _require(all(hasattr(ctx, key) for key in ("original_manifest_pin", "reference_receipt_pin",
+        "comparison_protocol", "development_binding")), "development128 context bridge incomplete")
+    _fields(ctx.manifest, {"schema": DEVELOPMENT_SCHEMA,
+        "status": "NOT_DISPATCHED_REQUIRES_OWNER_DEVELOPMENT_SCOPE_ADAPTER",
+        "model_id": DEVELOPMENT_MODEL, "dataset_scope": DEVELOPMENT_SCOPE,
+        "model_role": "DEVELOPMENT_BASELINE_NOT_FINAL", "frequency_ghz": 15,
+        "label_mode": "STRICT_LUMPED", "N_original_requests": 128,
+        "N_proxy_slots": 1408, "N_q_proxy_selected": 128,
+        "N_selected_analytic_pass": 93, "N_native_started": 0,
+        "no_failure_replacement": True, "production_campaign_membership": False,
+        "FINAL": False, "REAL_EMX_VALIDATION": "NOT_RUN"}, "development128 pilot")
+    _require(ctx.manifest_pin["sha256"] == DEVELOPMENT_MANIFEST_SHA and
+             frozen(ctx.original_manifest_pin) == ctx.manifest_pin,
+             "development128 original manifest identity differs")
+    _fields(reference, {"schema": "eucap15_current_development_model_identity.v1",
+        "model_id": DEVELOPMENT_MODEL, "experiment_class": DEVELOPMENT_SCOPE,
+        "model_role": "DEVELOPMENT_BASELINE_NOT_FINAL", "source_rows": 6329,
+        "gradient_train_rows": 3801, "validation_rows": 1269,
+        "test_rows_count_only": 1259, "FINAL": False, "REAL_EMX_VALIDATION": "NOT_RUN",
+        "selection_basis": "PREDECLARED_FIRST_COMPLETED_3X256_SEED17_NOT_ABLATION_WINNER"},
+        "development128 model identity")
+    _require(frozen(ctx.manifest["model_identity"]) == ctx.reference_pin and
+             ctx.freeze["model_identity"] == ctx.manifest["model_identity"] and
+             frozen(ctx.manifest["freeze"]) == ctx.freeze_pin,
+             "development128 model/freeze provenance differs")
+    _fields(ctx.freeze, {"schema": "eucap15_current_development_pilot_freeze.v1",
+        "status": "FROZEN_BEFORE_ANY_PREDICTION_AND_NATIVE", "model_id": DEVELOPMENT_MODEL,
+        "frequency_ghz": 15, "config": {"dataset_scope": DEVELOPMENT_SCOPE, "allow_extrapolation": True},
+        "N_original_requests": 128, "N_proxy_slots": 1408,
+        "score_scale": [2.5, 2.5, 20.0, 0.8],
+        "absolute_tolerances": [0.125, 0.125, 1.0, 0.04000000000000001],
+        "tie_break": "EXACT_TIE_SMALLER_Q",
+        "selection": "ALL_ELEVEN_FINITE_SCORES_THEN_MINIMUM_NO_ANALYTICAL_RERANK"},
+        "development128 freeze")
+    protocol = {"q_values": list(range(10, 21)), "q_scalar": "min(Qp,Qs)",
+                "score_scale": ctx.freeze["score_scale"],
+                "absolute_tolerances": ctx.freeze["absolute_tolerances"]}
+    _require(_same(ctx.comparison_protocol, protocol), "development128 comparison protocol differs")
+    pair = checked(ctx.reference_receipt_pin)
+    _require(frozen(reference["pair"]) == pair, "development128 model pair pin differs")
+    supplied = ctx.development_binding
+    _require(isinstance(supplied, dict), "per-request development_binding required")
+    qa = checked(supplied["independent_candidate_qa"])
+    _require(qa["sha256"] == DEVELOPMENT_QA_SHA and qa["bytes"] == DEVELOPMENT_QA_BYTES,
+             "development128 exact candidate QA differs")
+    expected = {"schema": "eucap15_development128_physical_binding.v1",
+        "dataset_scope": DEVELOPMENT_SCOPE, "model_role": "DEVELOPMENT_BASELINE_NOT_FINAL",
+        "model_id": DEVELOPMENT_MODEL, "model_identity": ctx.reference_pin,
+        "original_model_identity": ctx.manifest["model_identity"], "model_pair": pair,
+        "selected_manifest": ctx.manifest_pin, "original_selected_manifest": ctx.original_manifest_pin,
+        "independent_candidate_qa": qa, "original_request_denominator": 128,
+        "request_id": item["request_id"], "q_proxy": item["q_proxy"],
+        "selected_candidate_id": item["candidate_id"],
+        "candidate_geometry_identity_sha256": item["candidate_geometry_identity_sha256"],
+        "no_failure_replacement": True, "production_campaign_membership": False, "FINAL": False}
+    _require(_same(supplied, expected), "development128 per-request binding differs")
+    return protocol, expected
+
+
 def inspect_features(entry, item, ctx, *, physical_path_map=None):
     """Return one verified completed selected candidate, or fail closed.
 
     Caller owns PENDING status for requests with no closed feature manifest.
     Merely supplying a missing or incomplete manifest never creates a terminal.
-    ctx is one previously validated complete pilot64 context; it may have been
+    ctx is one previously validated complete pilot64 or exact development128
+    context; for128 its development_binding belongs to the current item. It may have been
     loaded for another request. This function never uses ctx.selected to choose.
 
     physical_path_map, when supplied, is an exact recorded absolute path ->
@@ -201,16 +277,27 @@ def _inspect_features(entry, item, ctx, *, physical_path_map=None):
     _require(entry["request_id"] == item["request_id"], "publication entry/request mismatch")
     _require(document(ctx.manifest_pin) == ctx.manifest and document(ctx.freeze_pin) == ctx.freeze,
              "previously validated pilot context changed")
-    _fields(ctx.manifest, {"schema": "eucap15_selected_candidate_handoff.v1", "N_requests": 64,
-        "N_proxy_candidates": 704, "research_phase": "DEVELOPMENT_PILOT_NOT_FINAL10K",
-        "frequency_ghz": 15, "dataset_scope": "FORMAL_10K", "label_mode": "STRICT_LUMPED"}, "pilot")
-    _require(len(ctx.manifest["requests"]) == 64 and
-             sum(candidate == item for candidate in ctx.manifest["requests"]) == 1,
-             "item is not a unique unchanged member of original64")
+    development = ctx.manifest.get("schema") == DEVELOPMENT_SCHEMA
     reference = document(ctx.reference_pin)
-    _fields(reference, {"schema": "eucap15_reference_identity.v1", "reference_label": "FORMAL10K_REFERENCE",
-        "status": "REFERENCE_LOADED_NOT_FINAL", "source_snapshot_geometries": 10000,
-        "frequency_ghz": 15, "model_id": ctx.manifest["model_id"], "label_mode": "STRICT_LUMPED"}, "reference")
+    if development:
+        protocol, development_binding = _development_scope(ctx, item, reference,
+            checked=checked, frozen=frozen)
+        denominator, dataset_scope, target_source = 128, DEVELOPMENT_SCOPE, "DEVELOPMENT_CURRENT_SNAPSHOT_UNIFORM_TRIPLE"
+        tau = protocol["absolute_tolerances"]
+    else:
+        _fields(ctx.manifest, {"schema": "eucap15_selected_candidate_handoff.v1", "N_requests": 64,
+            "N_proxy_candidates": 704, "research_phase": "DEVELOPMENT_PILOT_NOT_FINAL10K",
+            "frequency_ghz": 15, "dataset_scope": "FORMAL_10K", "label_mode": "STRICT_LUMPED"}, "pilot")
+        _fields(reference, {"schema": "eucap15_reference_identity.v1", "reference_label": "FORMAL10K_REFERENCE",
+            "status": "REFERENCE_LOADED_NOT_FINAL", "source_snapshot_geometries": 10000,
+            "frequency_ghz": 15, "model_id": ctx.manifest["model_id"], "label_mode": "STRICT_LUMPED"}, "reference")
+        denominator, dataset_scope, target_source = 64, "FORMAL_10K", "DEVELOPMENT_UNIFORM_TRIPLE"
+        protocol = ctx.freeze["protocol"]
+        tau = ctx.freeze["executed_legacy_tolerance_float64"]
+        development_binding = None
+    _require(len(ctx.manifest["requests"]) == denominator and
+             sum(candidate == item for candidate in ctx.manifest["requests"]) == 1,
+             "item is not a unique unchanged member of original frame")
     records_pin = frozen(item["source_records"])
     records = verified_read(resolved_pin(records_pin), jsonl=True)
     _require(len(records) == 11 and [r["q_target"] for r in records] == list(range(10, 21)),
@@ -220,8 +307,8 @@ def _inspect_features(entry, item, ctx, *, physical_path_map=None):
     chosen = chosen[0]
     _fields(chosen, {"request_id": item["request_id"], "q_target": item["q_proxy"],
         "q_proxy": item["q_proxy"], "proxy_preselected": True, "analytic_grid": True,
-        "model_id": ctx.manifest["model_id"], "frequency_ghz": 15, "dataset_scope": "FORMAL_10K",
-        "target_source": "DEVELOPMENT_UNIFORM_TRIPLE", "evidence_source": "SELF_PROXY",
+        "model_id": ctx.manifest["model_id"], "frequency_ghz": 15, "dataset_scope": dataset_scope,
+        "target_source": target_source, "evidence_source": "SELF_PROXY",
         "emx_status": "NOT_RUN", "actual_response": None}, "frozen selected")
     _require(item["selected_analytic_pass"] is True and
              records[item["record_line_number"]-1] == chosen and
@@ -237,8 +324,7 @@ def _inspect_features(entry, item, ctx, *, physical_path_map=None):
     candidate_id = chosen["candidate_id"]
     geometry_sha = chosen["candidate_geometry_identity_sha256"]
     candidate_sha = hashlib.sha256(candidate_id.encode()).hexdigest()
-    scale = ctx.freeze["protocol"]["score_scale"]
-    tau = ctx.freeze["executed_legacy_tolerance_float64"]
+    scale = protocol["score_scale"]
     _require(len(scale) == len(tau) == 4 and all(math.isfinite(v) and v > 0 for v in scale + tau),
              "frozen executed scale/tolerance invalid")
 
@@ -260,11 +346,13 @@ def _inspect_features(entry, item, ctx, *, physical_path_map=None):
         by_name[Path(actual["path"]).name] = actual
     feature = document(by_name["FEATURE_RECEIPT.json"])
     context_fields = {"candidate_id": candidate_id, "model_id": ctx.manifest["model_id"],
-        "dataset_scope": "FORMAL_10K", "frequency_ghz": 15, "q_requested": item["q_proxy"],
+        "dataset_scope": dataset_scope, "frequency_ghz": 15, "q_requested": item["q_proxy"],
         "q_proxy": item["q_proxy"], "q_emx": None}
     selected_fields = {"physical_selection": "Q_PROXY_ONLY", "selected_manifest": ctx.manifest_pin,
-        "reference": ctx.reference_pin, "original_request_denominator": 64,
+        "reference": ctx.reference_pin, "original_request_denominator": denominator,
         "unselected_physical_status": "NOT_REQUESTED_MAIN_PILOT"}
+    if development:
+        selected_fields["development_binding"] = development_binding
     _fields(feature, {**context_fields, **selected_fields, "schema": FEATURE_SCHEMA,
         "status": "PASS_EXTRACTION", "target": wanted, "proxy_self": proxy, "score_scale": scale,
         "absolute_hit_tolerances": tau, "q_optimum_status": "NOT_EVALUATED_MAIN_PRESELECTED_CANDIDATE",
@@ -277,7 +365,7 @@ def _inspect_features(entry, item, ctx, *, physical_path_map=None):
     proof = document(proof_pin)
     _fields(proof, {**context_fields, **selected_fields, "schema": PROOF_SCHEMA, "status": "PASS",
         "request_id": item["request_id"], "candidate_id_sha256": candidate_sha, "geometry_sha256": geometry_sha,
-        "original_record": chosen, "protocol": ctx.freeze["protocol"], "executed_hit_tolerances": tau,
+        "original_record": chosen, "protocol": protocol, "executed_hit_tolerances": tau,
         "frequency_grid_hz": FREQUENCIES, "port_order": ["P001", "P002", "P003", "P004"],
         "port_permutation": [0, 1, 3, 2], "reference_ohm": 50,
         "full11_physical_optimum": "NOT_EVALUATED_SINGLE_PRESELECTED_CANDIDATE",
@@ -287,8 +375,10 @@ def _inspect_features(entry, item, ctx, *, physical_path_map=None):
     request = document(proof["request"])
     _fields(request, {**{k: v for k, v in context_fields.items() if k != "q_emx"},
         "schema": "eucap15_selected_emx_request.v1", "request_id": item["request_id"],
-        "target_source": "DEVELOPMENT_UNIFORM_TRIPLE", "production_campaign_membership": False,
+        "target_source": target_source, "production_campaign_membership": False,
         "records": records_pin, "qscan_freeze": ctx.freeze_pin}, "native selected request")
+    if development:
+        _fields(request, {"development_binding": development_binding}, "development native request")
     _require(frozen(request["selected_manifest"]) == ctx.manifest_pin,
              "native request selected manifest relocation differs")
     required_sources = [proof["request"], request["records"], request["qscan_freeze"],
@@ -299,6 +389,9 @@ def _inspect_features(entry, item, ctx, *, physical_path_map=None):
     audit = document(request["gds_audit"])
     _fields(audit, {"schema": "eucap15_selected_request_gds_audit.v1", "physical_selection": "Q_PROXY_ONLY",
         "selected_candidate_id": candidate_id, "N_selected": 1, "N_audit_attempted": 1}, "selected GDS audit")
+    if development:
+        _fields(audit, {"development_binding": development_binding,
+            "original_request_denominator": 128}, "development GDS audit")
     _fields(audit["source_pins"], {"eleven_records": records_pin, "qscan_freeze": ctx.freeze_pin,
         "selected_manifest": ctx.manifest_pin, "reference": ctx.reference_pin,
         "private_config": request["private_config"]}, "GDS source chain")
