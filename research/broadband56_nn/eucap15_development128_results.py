@@ -216,9 +216,8 @@ def failure_stage(result, item, root, ctx, mirror, release_pin):
         request = mirror.document(mirror.known(required_arg))
         fields(request, dict(development_binding=ctx.development_binding), 'failed stage binding')
     if name == 'emx':
-        # The native command includes both solver and extraction. Do not turn
-        # an extraction/preflight error into a claimed failed EMX solve.
-        raise ValueError('EMX_PIPELINE_FAILURE_REQUIRES_SPECIFIC_SOLVER_OR_EXTRACTION_EVIDENCE; NO_GO preserved')
+        from .eucap15_development128_failed_evidence import inspect_emx_failure
+        return inspect_emx_failure(result, item, root, ctx, mirror, release_pin)
     return state, dict(stage=name, process=mirror.known(root/(name+'_PROCESS.json')),
         detail=error, interpretation='PIPELINE_STAGE_FAILURE_NOT_PROOF_OF_NATIVE_SOLVER_START')
 
@@ -266,6 +265,7 @@ def consume(ctx, snapshot, mirror):
             require(item['selected_analytic_pass'] is True, 'failed original selection dispatched')
             native = remote_context(ctx, config, item, mirror)
             row['state'], detail = failure_stage(result, item, candidate_root, native, mirror, release_pin)
+            row['touchstone_sha'] = detail.get('touchstone_sha')
             closures.append(dict(request_id=item['request_id'], failure=detail))
         elif result['status'] == 'FRESH_EMX_EXTRACTED':
             require(item['selected_analytic_pass'] is True, 'failed original selection dispatched')
@@ -302,10 +302,54 @@ def consume(ctx, snapshot, mirror):
     return rows, closures
 
 
-def validate_export(ctx, snapshot, mirror):
+def _is_delta(owner):
+    return 'previous_export' in owner or owner.get('status') == 'BYTE_COPY_ONLY_REQUIRES_CLOSED_EXPORT_RECEIPT'
+
+
+def _validate_closed_delta(owner, snapshot, mirror):
+    """Bind a final external snapshot to the owner's successful closed preview.
+
+    The preview precedes the closing receipt, avoiding circular hashes. It is
+    never independently consumable by build(), which requires this closure.
+    """
+    if not _is_delta(owner):
+        require('closed_delta' not in snapshot, 'closure attached to a non-delta export')
+        return
+    require(owner.get('status') == 'BYTE_COPY_ONLY_REQUIRES_CLOSED_EXPORT_RECEIPT',
+            'unknown incremental export status')
+    require('closed_delta' in snapshot, 'closed delta receipt required; byte-copy preview is not consumable')
+    root = Path(snapshot['owner_export']['path']).parent
+    closing_pin = initial.pin_shape(snapshot['closed_delta'])
+    require(Path(closing_pin['path']) == root/'CLOSED_EXPORT_RECEIPT.json', 'wrong closed delta location')
+    closed = mirror.document(closing_pin)
+    fields(closed, dict(schema='eucap15_development128_closed_local_delta.v1',
+        status='PASS_CLOSED_BYTE_EXPORT_NOT_ACCEPTED', export=snapshot['owner_export'],
+        N_original_requests=128, N_original_analytic_failures=35, old_results_recopied=0,
+        source_bytes_unchanged_at_final_check=True, actual_emx_execution_in_this_export=False,
+        native_calls=0, ssh_calls=0, process_queries=0, FINAL=False), 'closed delta')
+    preview_pin = initial.pin_shape(closed['snapshot'])
+    require(Path(preview_pin['path']) == root/'READER_SNAPSHOT.json', 'wrong closed preview location')
+    preview = mirror.document(preview_pin)
+    external = deepcopy(snapshot)
+    external.pop('closed_delta')
+    extra = [dict(original=p, resolved=p) for p in (closing_pin, preview_pin)]
+    require(external['sources'][-2:] == extra, 'closed proof sources must be exact and explicit')
+    external['sources'] = external['sources'][:-2]
+    require(external == preview, 'external snapshot differs from the closed preview')
+    ids = closed['new_terminal_ids']
+    require(isinstance(ids, list) and ids and len(ids) == len(set(ids)) and
+        len(ids) == closed['new_results_copied'] == owner['new_results_copied'], 'closed delta count mismatch')
+    published = {entry['request_id'] for entry in snapshot['requests'] if entry['result'] is not None}
+    require(set(ids) <= published, 'closed delta names unpublished terminals')
+    require(owner['old_results_recopied'] == 0, 'old results must not be recopied')
+
+
+def validate_export(ctx, snapshot, mirror, *, allow_unclosed_delta=False):
     """The research index must match the owner's fixed terminal publication."""
     owner = mirror.document(snapshot['owner_export'])
     fields(owner, dict(schema='eucap15_development128_terminal_export.v1', original_denominator=128), 'owner export')
+    if not allow_unclosed_delta:
+        _validate_closed_delta(owner, snapshot, mirror)
     require(owner['release']['original'] == snapshot['release'], 'snapshot release differs from owner export')
     release = mirror.document(snapshot['release'])
     require(owner['config']['original'] == release['config'], 'export config differs from release')
@@ -326,9 +370,11 @@ def validate_export(ctx, snapshot, mirror):
         fixed['no_terminal_count_at_capture'] == owner['no_terminal_at_snapshot'] == 128-count, 'published counts differ')
 
 
-def prepare_snapshot(export_pin, out):
+def prepare_snapshot(export_pin, out, *, allow_unclosed_delta=False):
     """One no-clobber metadata index from an existing byte-pinned owner export.
 
+    allow_unclosed_delta is only for the exporter's internal pre-close check;
+    build() never enables it. Default external snapshots require a closing receipt.
     This only assembles paths/identities. It does not redo candidate QA, read
     terminal content, calculate errors or inspect a remote/current directory.
     """
@@ -369,6 +415,17 @@ def prepare_snapshot(export_pin, out):
         snapshot_utc=fixed['capture_completed_utc'], owner_export=export_pin,
         release=owner['release']['original'], sources=sources,
         requests=[dict(request_id=r['request_id'], result=r['terminal']) for r in fixed['rows']], batch=None)
+    if _is_delta(owner) and not allow_unclosed_delta:
+        closing_pin = pin(export_root/'CLOSED_EXPORT_RECEIPT.json')
+        closing_mirror = Mirror([dict(original=closing_pin, resolved=closing_pin)])
+        closed = closing_mirror.document(closing_pin)
+        preview_pin = initial.pin_shape(closed['snapshot'])
+        require(Path(preview_pin['path']) == export_root/'READER_SNAPSHOT.json', 'wrong closed preview location')
+        snapshot['closed_delta'] = closing_pin
+        sources.extend(dict(original=p, resolved=p) for p in (closing_pin, preview_pin))
+        proof_mirror = Mirror(sources)
+        _validate_closed_delta(owner, snapshot, proof_mirror)
+        proof_mirror.recheck()
     # This operation has no scientific outputs; the full consumer checks every
     # consumed source before any metric is released.
     require(pin(export_pin['path']) == export_pin, 'owner export changed during preparation')
@@ -422,7 +479,9 @@ def build(manifest_pin, qa_pin, snapshot_pin, out):
         save(out/'RECEIPT.json', dict(schema='eucap15_development128_result_receipt.v1',
             status='PASS_PUBLISHED_SNAPSHOT_ACCOUNTING_NOT_FINAL', created_utc=utc_now(),
             artifacts=artifacts, implementation=[pin(Path(__file__)), pin(Path(inspect_features.__code__.co_filename)),
-                pin(Path(summarize.__code__.co_filename)), pin(Path(initial.__file__))],
+                pin(Path(summarize.__code__.co_filename)), pin(Path(initial.__file__)),
+                pin(Path(__file__).with_name('eucap15_development128_failed_evidence.py')),
+                pin(Path(__file__).with_name('eucap15_final_failures.py'))],
             N_original_requests=128, native_calls=0, model_inferences=0, new_training_updates=0,
             source_or_mirror_modifications=0, figures_created=0, FINAL=False))
         with (out/'SHA256SUMS').open('x') as stream:

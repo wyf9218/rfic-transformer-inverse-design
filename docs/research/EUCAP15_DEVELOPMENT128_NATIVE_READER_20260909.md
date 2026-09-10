@@ -31,7 +31,7 @@ dispatch native jobs, change q_proxy, or replace failed candidates.
   published failure identities matched, original128 retained, 93 pending.
   Seven output hashes passed. No model/solver/data-array access occurred.
 - Actual result receipt SHA: `ef106a890bcdea8ce2f0548999471afe1bccc7c00aefc3d8a8e00d5c999e8d61`.
-- Final consumer SHA: `d3aa73f431f6839882b39fc5677344028958afaa4a6131473461a6c2a44fa4c0`.
+- Consumer SHA at that historical read: `d3aa73f431f6839882b39fc5677344028958afaa4a6131473461a6c2a44fa4c0`.
 - Validation: 149 affected evidence tests; 57 consumer tests before a narrow
   DRC-binding fix; four new DRC tests after that fix (the57 were not repeated).
   Independent static review cleared the final consumer for this scoped read.
@@ -69,3 +69,47 @@ The required inputs are `--manifest`, `--qa-receipt`, `--snapshot`,
 `--snapshot-sha256`, and a **new** `--out` directory.
 The dated private work-package receipt records the one actual command and
 artifact hashes. Do not rerun a completed read merely to reproduce a report.
+
+## Incremental closed publications (2026-09-10)
+
+The original35 publication is unchanged. Later physical results require the
+sole owner's explicit-file delta exporter, not a fresh scan of active MARS
+outputs. The exporter references previous terminals without recopying them.
+Its `EXPORT_RECEIPT.json` is an intermediate byte-copy index: the closing
+`CLOSED_EXPORT_RECEIPT.json` must bind that export and its exact checked preview.
+
+Only exporter-internal `prepare_snapshot` and `validate_export` calls may use
+the keyword `allow_unclosed_delta=True`. There is no CLI bypass. The internal
+`READER_SNAPSHOT.json` cannot be consumed by `build`, even after closure exists.
+After a successful export, call default `prepare_snapshot(export_pin, new_path)`
+to obtain the external snapshot with exact closing-receipt and preview pins.
+Default validation rejects missing/changed closure or a substituted preview.
+This gate establishes closed-preview identity; preservation of the exact
+previous/new terminal difference is checked by the owner exporter and its tests.
+
+The development-specific failure reader reuses the existing128 scope and
+frozen native release, never a fabricated FINAL binding. A recognized positive
+native exit with its closed original process/log/runtime/GDS/DRC evidence yields
+`SOLVER_FAIL`. A successful same-GDS solve followed by a recognized original56
+extractor rejection yields `FEATURE_FAIL`; its S4P SHA can remain, but actual
+values and joint-hit stay null. Unknown/partial/resource/signal/I/O/integrity
+failures remain NO_GO, not guessed solver failures or substituted candidates.
+
+`N_feature_fail` is a separate terminal count. FEATURE_FAIL contributes neither
+strict-valid samples nor numeric errors, and the original128 denominator and
+all scoring/tolerance/percentage formulas are unchanged. Failure-reader and
+shared-helper code identities are now included in the result receipt.
+
+Synthetic integration is software evidence only. New128 physical accuracy,
+FINAL data/model freeze, and FINAL10000/100x11Q remain separate unfinished work.
+No old physical output or historical result receipt is rewritten by this change.
+
+Validation:37 distinct new synthetic cases have final PASS results. The first
+run had34PASS/3fixture failures; only those3 were repeated after narrow fixes.
+After the owner's two independently identified publication-boundary fixes,
+only6 affected exporter integrations were repeated on final source1bb58a166.
+All failures remain archived;46 case executions are not46 independent tests.
+No old suite or real physical read was repeated. Six cases depend on the private
+owner exporter and two frozen helpers; a fresh public clone skips those cases
+when dependencies are absent, rather than claiming full integration PASS.
+Exact source and evidence identities: [incremental delivery status](eucap15_development128_incremental_20260910/RUN_STATE.json).

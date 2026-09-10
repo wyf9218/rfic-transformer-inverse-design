@@ -1,0 +1,62 @@
+{
+  "schema": "eucap15_development128_incremental_public_state.v1",
+  "status": "LOCAL_CODE_AND_SYNTHETIC_INTEGRATION_PASS_NOT_ACTUAL_EXPORT",
+  "updated_utc": "2026-09-10T04:26:13Z",
+  "goal_status": "ACTIVE_NOT_FINAL",
+  "consumer": {
+    "path": "research/broadband56_nn/eucap15_development128_results.py",
+    "sha256": "e409b2ba5152cf428bec8d9e1f1fbc7a28a13f4a6540b762410e2a41586c9e72"
+  },
+  "failure_helper": {
+    "path": "research/broadband56_nn/eucap15_development128_failed_evidence.py",
+    "sha256": "ea858416b326d77d2553143e2b04dc01e2b349597e1c4bc21982bde612f3f5a0"
+  },
+  "statistics": {
+    "path": "research/broadband56_nn/eucap15_selected_metrics.py",
+    "sha256": "024e167f5858287228b9d1fe7ecc5a0843abfecd4204dd1cb748d9e7d403ce19"
+  },
+  "private_owner_exporter_sha256": "1bb58a1665da85e2ed8917557d42c7f99bdc6737e1dc5173cc0d357d4fcbb282",
+  "tests": {
+    "distinct": 37,
+    "latest_pass": 37,
+    "first_run": {
+      "pass": 34,
+      "fail": 3
+    },
+    "fixture_fix_retest": 3,
+    "final_exporter_affected_retest": 6,
+    "total_case_executions": 46,
+    "old_suites_run": 0,
+    "local_skips": 0,
+    "private_dependency_cases": 6
+  },
+  "author_receipt_sha256": "5b92ca54eb13bd70022c7afbd1b8e55b1f1eee8309b05fbb302d8ce7ea34f9b9",
+  "test_manifest_sha256": "1f4e516c67b9d778b0313e306389dd0962f913ae5d47999b6e81e6b768f1e0f2",
+  "test_sums_sha256": "6a348797d8f857d57a32fac0f9e8366b3624ca902c6050bbcd7e888241870d6b",
+  "static_consumer_review_sha256": "19708a214a9eadb4ffd72a5d6f065d6252a44baca6b882b7935d0756da276f56",
+  "static_exporter_no_go_preserved_sha256": "cf24c4d64042eb0b309ff5f39b32cdcc2d2e5351206764b7e30d6387b1321b78",
+  "static_exporter_fix_review_sha256": "52deaa1e80f8cba0d44c514674eee11479259f45dd79575358310872bb8e673c",
+  "frozen_source_train_val_test": [
+    6329,
+    3801,
+    1269,
+    1259
+  ],
+  "new_training_updates": 0,
+  "new_physical_results_consumed": 0,
+  "new_native_calls": 0,
+  "actual_delta_export": "NOT_RUN",
+  "new_inverse_physical_accuracy": "NOT_RUN",
+  "native_observation_utc": "2026-09-10T03:47:59Z",
+  "native128_at_observation": {
+    "analytic_fail": 35,
+    "no_terminal": 93
+  },
+  "limitations": [
+    "Synthetic labels are not native physical evidence",
+    "Six full exporter integration cases require private owner helpers; missing dependencies skip, not pass",
+    "No live MARS observation, native dispatch or active-runtime change in this package",
+    "FINAL model/data and final10000/100x11Q unfinished"
+  ],
+  "next": "Reuse this closed interface when the sole owner publishes actual frozen new128 terminals; no duplicate training or dispatch"
+}

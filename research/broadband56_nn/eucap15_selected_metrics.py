@@ -29,7 +29,7 @@ FEATURES = ("Lp_nH", "Ls_nH", "Qmin", "K_abs")
 UNITS = ("nH", "nH", "dimensionless", "dimensionless")
 SCORE_SPANS = (2.5, 2.5, 20.0, 0.8)
 STATES = ("ANALYTIC_FAIL", "PENDING", "STRICT_VALID", "EMX_INVALID",
-          "GDS_FAIL", "DRC_FAIL", "SOLVER_FAIL")
+          "GDS_FAIL", "DRC_FAIL", "SOLVER_FAIL", "FEATURE_FAIL")
 COMPARISONS = ("emx_minus_target", "emx_minus_grid_proxy")
 REQUIRED = frozenset((
     "request_id", "candidate_id", "candidate_geometry_identity_sha256",
@@ -111,6 +111,11 @@ def _validated_rows(rows, tolerances):
                 _require(hit is None, prefix + "pre-EM state must have null strict_joint_hit")
                 _require(actual is None and touchstone is None,
                          prefix + "pre-EM state must have null actual and touchstone_sha")
+            elif state == "FEATURE_FAIL":
+                _require(actual is None and hit is None,
+                         prefix + "FEATURE_FAIL must have null actual and strict_joint_hit")
+                # A closed successful solve may retain its S4P identity even
+                # when extraction failed. It supplies no numeric observation.
             else:
                 _require(hit is None or hit is False,
                          prefix + "EMX_INVALID strict_joint_hit must be False or null")
@@ -207,7 +212,7 @@ def summarize(rows, *, score_spans, tolerances):
         N_terminal_requests=original - pending, N_pending_requests=pending,
         N_strict_valid=valid, N_analytic_fail=counts["ANALYTIC_FAIL"],
         N_gds_fail=counts["GDS_FAIL"], N_drc_fail=counts["DRC_FAIL"],
-        N_solver_fail=counts["SOLVER_FAIL"],
+        N_solver_fail=counts["SOLVER_FAIL"], N_feature_fail=counts["FEATURE_FAIL"],
         N_emx_invalid=counts["EMX_INVALID"], N_joint_hit=hits, N_strict_not_hit=valid - hits,
         state_counts={state: counts[state] for state in STATES},
         completion_status=("EMPTY_FRAME" if not original else
