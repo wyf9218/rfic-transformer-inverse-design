@@ -80,6 +80,30 @@ def _fields(value, expected, label):
         _require(name in value and _same(value[name], wanted), label + " mismatch: " + name)
 
 
+def _same_response_score(saved, recomputed):
+    """Only this derived sqrt score permits one adjacent binary64 value.
+
+    A native JSON score and a local recomputation differed by one ULP while
+    their original labels, residuals and scales matched exactly. The cause is
+    not attributed to a particular runtime. No relative/absolute tolerance is
+    applied to other fields, to Q selection, or to hit/validity decisions.
+    nextafter is deliberate: an ulp-sized interval at a power of two would
+    wrongly admit two representable values on its lower side. Zero and null
+    remain exact; no integer/bool/string coercion or nonfinite score is allowed.
+    """
+    if recomputed is None:
+        return saved is None
+    if not all(type(v) is float and math.isfinite(v) and
+               math.copysign(1.0, v) == 1.0 for v in (saved, recomputed)):
+        return False
+    if saved == recomputed:
+        return True
+    if saved == 0.0 or recomputed == 0.0:
+        return False
+    return saved in (math.nextafter(recomputed, -math.inf),
+                     math.nextafter(recomputed, math.inf))
+
+
 def _path(value):
     _require(isinstance(value, str), "pin path must be text")
     path = Path(value)
@@ -470,13 +494,19 @@ def _inspect_features(entry, item, ctx, *, physical_path_map=None):
     valid = bool(finite and descriptor and strict and physics)
     score = math.sqrt(sum((e/s)**2 for e, s in zip(errors, scale))/4) if finite else None
     _fields(feature, {"actual_fresh_emx": actual, "emx_minus_target": clean(errors),
-        "emx_minus_proxy": clean(proxy_errors), "normalized_response_score": score,
+        "emx_minus_proxy": clean(proxy_errors),
         "within_tolerance": hits, "joint_response_hit": all(hits),
         "descriptor_valid": descriptor, "strict_lumped_valid": strict, "physics_qa_pass": physics,
         "valid_for_strict_comparison": valid, "strict_joint_hit": bool(all(hits) and valid),
         "target_relative_signed_percent": clean([100*e/t for e,t in zip(errors,wanted)]),
         "target_relative_absolute_percent": clean([100*abs(e)/t for e,t in zip(errors,wanted)])},
         "recomputed original15 feature")
+    _require("normalized_response_score" in feature and
+             _same_response_score(feature["normalized_response_score"], score),
+             "recomputed original15 feature mismatch: normalized_response_score")
+    score_check = {"policy": "DERIVED_SQRT_BINARY64_ADJACENT_ONE_STEP_ZERO_NULL_EXACT_V1",
+        "saved": feature["normalized_response_score"], "recomputed": score,
+        "comparison": "EXACT" if feature["normalized_response_score"] == score else "ONE_ULP"}
     # Reverify the closure after all parsing. Never turn a changed source into a
     # successful statistic or silently fetch a replacement.
     for artifact in list(evidence.values()):
@@ -484,5 +514,6 @@ def _inspect_features(entry, item, ctx, *, physical_path_map=None):
     return {"actual": actual, "valid_for_strict_comparison": valid,
         "strict_joint_hit": bool(all(hits) and valid), "evidence_pins": list(evidence.values()),
         "resolution_evidence": list(resolutions.values()),
+        "derived_score_check": score_check,
         "geometry_sha": geometry_sha, "touchstone_sha": touchstone["sha256"],
         "status": "STRICT_VALID" if valid else "EMX_INVALID"}
