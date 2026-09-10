@@ -1,0 +1,53 @@
+{
+  "schema": "eucap15_validation_tradeoff_public.v1",
+  "status": "COMPLETE_DESCRIPTIVE_VALIDATION_ONLY",
+  "experiment": "DEVELOPMENT_CURRENT_SNAPSHOT",
+  "source_rows": 6329,
+  "gradient_train_rows": 3801,
+  "validation_rows": 1269,
+  "sealed_test_rows": 1259,
+  "shapes": [
+    "2x256",
+    "3x128",
+    "3x256",
+    "3x512",
+    "5x256"
+  ],
+  "seeds": [
+    17,
+    29,
+    43
+  ],
+  "completed_pairs": 15,
+  "completed_role_runs": 30,
+  "primary_training_updates": 538099,
+  "new_training_updates_in_this_package": 0,
+  "fixed_spans": [
+    2.5,
+    2.5,
+    20,
+    0.8
+  ],
+  "equal_seed_aggregation": "POSTHOC_DESCRIPTIVE_NOT_PREREGISTERED_MODEL_SELECTION",
+  "lowest_observed_forward_score": "3x256",
+  "parameter_error_nondominated": [
+    "3x128",
+    "3x256"
+  ],
+  "final_model_selection": "NOT_PERFORMED",
+  "convergence": "NOT_ESTABLISHED",
+  "inverse_evidence": "SELF_PROXY_COMMON_F_NOT_PHYSICS",
+  "inverse_full_cohort_metric": "UNDEFINED_FOR_ALL_FIVE_SHAPES_FAILURES_RETAINED",
+  "test_evaluation": "NOT_RUN",
+  "new_model_native_validation": "NO_CLOSED_RESULT_RECEIVED",
+  "frozen128_changed": false,
+  "stage238_exact_matches": 48,
+  "stage238_family_known": 0,
+  "historical_joint_total": "NOT_VERIFIED",
+  "new_samples_added": 0,
+  "summary_sha256": "6253c3a55aa626b523dff072d759b3e70cc85ac61626dd664452b01425eb7412",
+  "independent_qa_sha256": "8918f2889a134a2f06dd4c78b16dc6f5201c9ba70f11ba66dd78860807794879",
+  "independent_checks": 769,
+  "source_sha256": "f2bbc1443c2c957637d524cead9cc299d1dc035bbe080b9512f03b1b98290dbf",
+  "stage238_receipt_sha256": "2c010aa6dbb437a043df94c4b96de1421c47a8b0165c696f36f85f239f33f885"
+}
