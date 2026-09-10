@@ -1,7 +1,7 @@
 {
   "schema": "eucap15_interface_routing.v1",
-  "updated_utc": "2026-09-10T01:48:28Z",
-  "scope": "INTERFACE_STATE_RECONCILIATION_NOT_NEW_EXPERIMENT",
+  "updated_utc": "2026-09-10T02:09:34Z",
+  "scope": "DEPLOYED_SUCCESSOR_INTAKE_NOT_COMPLETED_HANDOFF",
   "goal_status": "ACTIVE_NOT_FINAL",
   "development128": {
     "historical_initial_status": {
@@ -22,9 +22,19 @@
     "pending_in_consumed_capture": 93,
     "physical_error_observations": 0,
     "completed_joint_hit_fraction": null,
-    "automatic_successor_last_verified": "NOT_INSTALLED",
-    "automatic_successor_receipt_utc": "2026-09-10T01:14:51.811752Z",
-    "new_installation_receipt": "NOT_YET_RECEIVED"
+    "automatic_successor_last_verified": "INSTALLED_AND_FIRST_ATD_CHECK_VERIFIED",
+    "automatic_successor_receipt_utc": "2026-09-10T01:57:43.035863+00:00",
+    "new_installation_receipt": "RECEIVED_SEVEN_PACKAGE_SHAS_VERIFIED",
+    "installation_receipt_sha256": "09f04b4af68ac0f8947a946f23e553f850d2f1076c9af755ecb30cbcac6cd2ea",
+    "deployed_manifest_sha256": "9d8eaa346771604965ca9ed8adfc13933bdd269fbc262d86492f73d7518ac243",
+    "adapter_source_sha256": "85ff89e1dbb1d81aa1233cf52f50c05c22820f44e803be976365976643bf952d",
+    "native_execution_at_installation": {
+      "observed_utc": "2026-09-10T01:57:25.570107+00:00",
+      "status": "WAIT_PREDECESSOR_ALIVE",
+      "successor_owner_count": 0,
+      "native_exec_intent_exists": false,
+      "physical_handoff_completed": false
+    }
   },
   "final_interfaces": {
     "main_statistics_module": "research.broadband56_nn.eucap15_final_statistics",
@@ -44,8 +54,43 @@
     "model_inferences": 0,
     "native_dispatches_by_research": 0,
     "physical_results_reconsumed": 0,
-    "tests_rerun": 0,
+    "existing_tests_rerun": 0,
     "plots_generated": 0,
-    "historical_captures_modified": false
+    "historical_captures_modified": false,
+    "new_process_integration_tests": {
+      "distinct": 2,
+      "executions": 1,
+      "status": "PASS_SYNTHETIC_ONLY",
+      "seconds": 0.008,
+      "source_sha256": "5368e4a5f66db11251f311f4d248c8be4e47438efd19a9be8d06a13cf61e51b2",
+      "real_proc_or_scheduler_access": false
+    }
+  },
+  "scheduler": {
+    "facility": "system_atd",
+    "interval_minutes": 5,
+    "AI_monitor": false,
+    "systemd_user_unit_installed": false,
+    "initial_ticket_consumed": true,
+    "next_job_at_installation": "4",
+    "next_check_at_installation_utc": "2026-09-10T02:02:00Z",
+    "current_job_after_capture": "NOT_POLLED_BY_RESEARCH",
+    "immutable_deadline_utc": "2026-09-10T18:00:00Z",
+    "new_native_concurrency": 1,
+    "manual_duplicate_launch_forbidden": true
+  },
+  "predecessor_capture": {
+    "observed_utc": "2026-09-10T01:57:15.940828+00:00",
+    "pid": 3434374,
+    "start_ticks": "378052001",
+    "pid_alive": true,
+    "original_candidates": 256,
+    "emx_extracted": 104,
+    "execution_failures": 11,
+    "held": 53,
+    "no_terminal": 88,
+    "strict_count": "NOT_RECOUNTED",
+    "new_accepted_count": "NOT_ESTABLISHED",
+    "source_receipt_sha256": "f48fc7c4e86f741fdc409c117f9440e6a14aed3684845aaaaa127d84ccd27d09"
   }
 }

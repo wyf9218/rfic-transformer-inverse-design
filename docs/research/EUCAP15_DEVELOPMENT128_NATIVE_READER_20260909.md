@@ -23,8 +23,10 @@ dispatch native jobs, change q_proxy, or replace failed candidates.
 - Source export SHA: `f6b31c9dfca54bc3e997591fd9a33f9ec28b3545cfaf5396f9378a8d282f1341`.
 - New128 real GDS/DRC/EMX results are absent from that capture. No physical
   error or completed success rate can be inferred from it.
-- Automatic follow-up after the existing256 owner: NOT_INSTALLED. Prepared
-  release files are not a submitted or running successor queue.
+- Automatic follow-up was NOT_INSTALLED at that historical capture. The sole
+  owner has since verified the first real atd check on 2026-09-10 01:57:43 UTC;
+  see [deployed successor source and scope](../../research/eucap15_native_successor/README.md).
+  Installation is not completed handoff or new128 physical results.
 - Research-side actual read completed once at 2026-09-09 23:13:48 UTC: all35
   published failure identities matched, original128 retained, 93 pending.
   Seven output hashes passed. No model/solver/data-array access occurred.
