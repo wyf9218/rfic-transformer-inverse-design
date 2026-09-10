@@ -1,0 +1,47 @@
+{
+  "schema": "eucap15_acquisition_delta120_public_state.v1",
+  "status": "VALIDATED_DESCRIPTIVE_INCREMENT_NOT_FINAL",
+  "source_observation_utc": "2026-09-10T05:29:13.367425+00:00",
+  "actual_readonly_acceptance_utc": "2026-09-10",
+  "original_proposals": 256,
+  "previous_accounted_excluded": 45,
+  "new_closed": 120,
+  "held_at_snapshot": 53,
+  "pending_at_snapshot": 38,
+  "new_state_counts": {
+    "STRICT_VALID": 43,
+    "EMX_INVALID": 61,
+    "GDS_FAIL": 16
+  },
+  "strict_core_eligible_observations": 31,
+  "new_training_members": "NOT_DEDUPLICATED_OR_ADMITTED",
+  "targeted_original_denominator": 42,
+  "targeted_strict_numeric_denominator": 11,
+  "targeted_joint_hits": 10,
+  "physical_scope": "UNMATCHED_ACQUISITION_DELTA_NOT_MODEL_ACCURACY",
+  "development128_new_closed": 0,
+  "development128_snapshot": {
+    "original_analytic_failure": 35,
+    "no_result": 93
+  },
+  "new_training_runs": 0,
+  "optimizer_updates": 0,
+  "new_native_actions": 0,
+  "old_physical_rows_reprocessed": 0,
+  "consumer_seconds": 3.72,
+  "original_failed_run_preserved": true,
+  "full_goal_status": "ACTIVE_NOT_FINAL",
+  "final10000": "NOT_RUN",
+  "full11Q100": "NOT_RUN",
+  "independent_numeric_qa": {
+    "status": "GO_SCOPED_SAVED_VALUES_AND_IDENTITIES",
+    "receipt_sha256": "a33c07d01f0cffad9ef65fd5ce42440ecf11c179f87a889c42c2ca0534f1a50a",
+    "field_assertions": 35538,
+    "original56_csvs": 104,
+    "source_files_rechecked": 324
+  },
+  "summary_sha256": "6dd9da265a628cb58ab126be75170c1e063c96547ec75512cee7c445d9e03cdb",
+  "receipt_sha256": "0687ca2f9c3589b4a28d912dff64d17df80822da8ea4fc1791e7d51b4507afcd",
+  "figures": "AUTHOR_MADE_ONLY_REAL_SOURCE_TABLES_AND_CAPTIONS",
+  "current_native_pid_health": "NOT_OBSERVED"
+}

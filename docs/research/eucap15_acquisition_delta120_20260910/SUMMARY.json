@@ -1,0 +1,119 @@
+{
+  "schema": "eucap15_acquisition_closed_delta_statistics.v1",
+  "status": "COMPLETE_NEW_DELTA_PENDING_INDEPENDENT_NUMERIC_QA",
+  "original_proposals": 256,
+  "original_proposals_per_arm": 128,
+  "previous_research_accounted": 45,
+  "new_closed_delta": 120,
+  "previous_plus_new_closed": 165,
+  "original_holds_at_owner_snapshot": 53,
+  "pending_at_owner_snapshot": 38,
+  "snapshot_utc": "2026-09-10T05:29:13.367425+00:00",
+  "state_counts": {
+    "GDS_FAIL": 16,
+    "EMX_INVALID": 61,
+    "STRICT_VALID": 43
+  },
+  "groups": [
+    {
+      "source": "SPARSE_TARGETED",
+      "original_delta_requests": 42,
+      "states": {
+        "GDS_FAIL": 7,
+        "EMX_INVALID": 24,
+        "STRICT_VALID": 11
+      },
+      "strict_core_eligible": 10
+    },
+    {
+      "source": "GEOMETRY_DOE",
+      "original_delta_requests": 66,
+      "states": {
+        "GDS_FAIL": 9,
+        "EMX_INVALID": 32,
+        "STRICT_VALID": 25
+      },
+      "strict_core_eligible": 17
+    },
+    {
+      "source": "EXPLORATION",
+      "original_delta_requests": 12,
+      "states": {
+        "STRICT_VALID": 7,
+        "EMX_INVALID": 5
+      },
+      "strict_core_eligible": 4
+    }
+  ],
+  "targeted_original_delta_denominator": 42,
+  "targeted_strict_valid": 11,
+  "targeted_strict_joint_hits": 10,
+  "targeted_strict_joint_hit_rate": 0.23809523809523808,
+  "physical_feature_metrics": [
+    {
+      "feature": "Lp_nH",
+      "evidence": "FRESH_EMX_STRICT_TARGETED_SURVIVORS",
+      "original_targeted_delta_denominator": 42,
+      "strict_numeric_denominator": 11,
+      "mae": 0.019121596539342322,
+      "rmse": 0.024474012721147582,
+      "target_relative_mape_percent": 2.6388416738366356
+    },
+    {
+      "feature": "Ls_nH",
+      "evidence": "FRESH_EMX_STRICT_TARGETED_SURVIVORS",
+      "original_targeted_delta_denominator": 42,
+      "strict_numeric_denominator": 11,
+      "mae": 0.022593403096099987,
+      "rmse": 0.03209786571173181,
+      "target_relative_mape_percent": 3.5521658431925616
+    },
+    {
+      "feature": "Qmin",
+      "evidence": "FRESH_EMX_STRICT_TARGETED_SURVIVORS",
+      "original_targeted_delta_denominator": 42,
+      "strict_numeric_denominator": 11,
+      "mae": 0.31996701707386116,
+      "rmse": 0.39663560832020067,
+      "target_relative_mape_percent": 2.3411495904891857
+    },
+    {
+      "feature": "K_abs",
+      "evidence": "FRESH_EMX_STRICT_TARGETED_SURVIVORS",
+      "original_targeted_delta_denominator": 42,
+      "strict_numeric_denominator": 11,
+      "mae": 0.017074828111853447,
+      "rmse": 0.026775137067940404,
+      "target_relative_mape_percent": 3.4528586351419253
+    }
+  ],
+  "score_spans": [
+    2.5,
+    2.5,
+    20.0,
+    0.8
+  ],
+  "absolute_tolerances": [
+    0.125,
+    0.125,
+    1.0,
+    0.04
+  ],
+  "coverage_gain": null,
+  "equal_budget_comparison": null,
+  "train_admission": "NOT_PERFORMED",
+  "q_emx": null,
+  "complete11_status": "NOT_EVALUATED_NO_Q_REPLACEMENT",
+  "scope": "UNMATCHED_CLOSED_DELTA_NOT_IID_MODEL_ACCURACY_NOT_FINAL",
+  "new_native_actions": 0,
+  "model_loads": 0,
+  "optimizer_updates": 0,
+  "old_physical_rows_reprocessed": 0,
+  "caveats": [
+    "Owner snapshot counts are not current liveness.",
+    "Unmatched completion subset cannot establish same-budget superiority.",
+    "DOE/exploration have no response target; do not invent residuals.",
+    "Numeric errors are conditional on strict targeted survivors; original failures remain in the joint-hit denominator."
+  ],
+  "source_bindings_consumed": 2914
+}
