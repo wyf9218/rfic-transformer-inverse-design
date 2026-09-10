@@ -1,0 +1,512 @@
+{
+  "schema": "eucap15_abc_increment_public.v1",
+  "status": "A_COMPLETE_INDEPENDENTLY_VERIFIED_BC_PARTIAL_BLOCKED",
+  "goal": "ACTIVE_NOT_FINAL_100K_TARGET_AND_FINAL10K_UNCHANGED",
+  "A": {
+    "original_delta": 120,
+    "potential_strict_core": 31,
+    "admitted_unique_geometries": 31,
+    "admitted_by_split": {
+      "train": 20,
+      "validation": 3,
+      "test": 8
+    },
+    "excluded_potential": 0,
+    "conflict_reasons_nonexclusive": {},
+    "train_coverage": {
+      "before_occupied": 159,
+      "after_occupied": 163,
+      "newly_occupied": 4,
+      "sparse_crossed_5": 0,
+      "sparse_lt5_before": 402,
+      "sparse_lt5_after": 402,
+      "occupancy_fraction_gain": 0.0078125,
+      "admitted_train_added": 20,
+      "deficit_before": 1921,
+      "deficit_after": 1913,
+      "filled_deficit": 8
+    },
+    "train_distributions_before": {
+      "n": 3801,
+      "high_k_threshold": 0.8,
+      "high_k_rule": "K_abs > threshold",
+      "high_k_count": 0,
+      "max_k": 0.5806891255192034,
+      "max_q": 18.70441442177916,
+      "k_bin_counts": [
+        2181,
+        1176,
+        376,
+        62,
+        6,
+        0,
+        0,
+        0
+      ],
+      "q_strata": {
+        "N_q_below10": 2,
+        "N_q10_12": 513,
+        "N_q12_14": 1855,
+        "N_q14_16": 1201,
+        "N_q16_18": 220,
+        "N_q18_20": 10,
+        "N_q_above20": 0
+      },
+      "q10_20": 3799
+    },
+    "train_distributions_after": {
+      "n": 3821,
+      "high_k_threshold": 0.8,
+      "high_k_rule": "K_abs > threshold",
+      "high_k_count": 0,
+      "max_k": 0.6726857936480449,
+      "max_q": 18.70441442177916,
+      "k_bin_counts": [
+        2188,
+        1182,
+        378,
+        65,
+        7,
+        1,
+        0,
+        0
+      ],
+      "q_strata": {
+        "N_q_below10": 2,
+        "N_q10_12": 514,
+        "N_q12_14": 1868,
+        "N_q14_16": 1205,
+        "N_q16_18": 222,
+        "N_q18_20": 10,
+        "N_q_above20": 0
+      },
+      "q10_20": 3819
+    },
+    "source_contributions": {
+      "SPARSE_TARGETED": {
+        "original_delta_rows": 42,
+        "potential_strict_core": 10,
+        "admitted_by_split": {
+          "train": 7,
+          "test": 3
+        },
+        "train_added": 7,
+        "newly_occupied_cells": 4,
+        "sparse_crossed_5": 0,
+        "sparse_lt5_before": 402,
+        "sparse_lt5_after": 402,
+        "deficit_before": 1921,
+        "deficit_after": 1914,
+        "filled_deficit": 7,
+        "overlap_note": "Source new-bin counts need not add: sources may enter the same bin"
+      },
+      "GEOMETRY_DOE": {
+        "original_delta_rows": 66,
+        "potential_strict_core": 17,
+        "admitted_by_split": {
+          "train": 11,
+          "validation": 3,
+          "test": 3
+        },
+        "train_added": 11,
+        "newly_occupied_cells": 0,
+        "sparse_crossed_5": 0,
+        "sparse_lt5_before": 402,
+        "sparse_lt5_after": 402,
+        "deficit_before": 1921,
+        "deficit_after": 1920,
+        "filled_deficit": 1,
+        "overlap_note": "Source new-bin counts need not add: sources may enter the same bin"
+      },
+      "EXPLORATION": {
+        "original_delta_rows": 12,
+        "potential_strict_core": 4,
+        "admitted_by_split": {
+          "train": 2,
+          "test": 2
+        },
+        "train_added": 2,
+        "newly_occupied_cells": 0,
+        "sparse_crossed_5": 0,
+        "sparse_lt5_before": 402,
+        "sparse_lt5_after": 402,
+        "deficit_before": 1921,
+        "deficit_after": 1921,
+        "filled_deficit": 0,
+        "overlap_note": "Source new-bin counts need not add: sources may enter the same bin"
+      }
+    },
+    "population_boundary": "Separate research increment; unchanged model gradient exposure3801; after3821 is admitted train-eligible pool, not new training. New validation/test members are not final10K target evaluation.",
+    "production_accepted_added": 0,
+    "known_pool_members": 6329,
+    "additional_known_pool_members": 6700,
+    "previous45_checked": 45,
+    "reserved_allQ_geometry_rows": 2112,
+    "all_history_dedup_certified": false,
+    "family_independence_certified": false,
+    "source_summary_sha256": "e462845c6fb9ba127881225ba1ebba40ca321d7a399b80d7ca434b615eca8993",
+    "decision_recipe_sha256": "e24e5b84dd4d0e7010613397322ece2d5cdc0241c63fca5265f1894f0482a342",
+    "decision_baseline_train": 1804,
+    "retrospective_coverage_baseline_train": 3801,
+    "independent_admission_qa_sha256": "d5754007bd53ad2b3d88bbbb944c30ef89043cba47f522fc1ee6b40b9c6d9d47",
+    "independent_admission_qa_status": "GO_SCOPED_RESEARCH_ADMISSION_AND_TRAIN_COVERAGE"
+  },
+  "costs_and_invalid_reasons": {
+    "groups": [
+      {
+        "source": "SPARSE_TARGETED",
+        "original_delta_n": 42,
+        "states": {
+          "GDS_FAIL": 7,
+          "EMX_INVALID": 24,
+          "STRICT_VALID": 11
+        },
+        "costs": {
+          "cadence_elapsed_seconds": {
+            "recorded_n": 42,
+            "missing_n": 0,
+            "observed_sum": 265.0465237549506,
+            "observed_mean": 6.310631517975015,
+            "full_original_group_sum": 265.0465237549506
+          },
+          "cadence_active_worker_elapsed_seconds_sum": {
+            "recorded_n": 42,
+            "missing_n": 0,
+            "observed_sum": 264.7930556158535,
+            "observed_mean": 6.304596562282226,
+            "full_original_group_sum": 264.7930556158535
+          },
+          "gds_audit_elapsed_seconds": {
+            "recorded_n": 0,
+            "missing_n": 42,
+            "observed_sum": null,
+            "observed_mean": null,
+            "full_original_group_sum": null
+          },
+          "calibre_elapsed_seconds": {
+            "recorded_n": 0,
+            "missing_n": 42,
+            "observed_sum": null,
+            "observed_mean": null,
+            "full_original_group_sum": null
+          },
+          "emx_native_wallclock_seconds": {
+            "recorded_n": 35,
+            "missing_n": 7,
+            "observed_sum": 2119.58,
+            "observed_mean": 60.55942857142857,
+            "full_original_group_sum": null
+          },
+          "emx_reported_cpu_seconds": {
+            "recorded_n": 35,
+            "missing_n": 7,
+            "observed_sum": 4263.68,
+            "observed_mean": 121.81942857142857,
+            "full_original_group_sum": null
+          },
+          "solver_wrapper_interval_seconds": {
+            "recorded_n": 35,
+            "missing_n": 7,
+            "observed_sum": 2132.900807,
+            "observed_mean": 60.94002305714286,
+            "full_original_group_sum": null
+          },
+          "all_stages_end_to_end_seconds": {
+            "recorded_n": 0,
+            "missing_n": 42,
+            "observed_sum": null,
+            "observed_mean": null,
+            "full_original_group_sum": null
+          }
+        },
+        "invalid_n": 24,
+        "overlapping_invalid_reason_counts": {
+          "BELOW_HALF_SRF_FALSE": 24
+        },
+        "exclusive_invalid_reason_combinations": {
+          "BELOW_HALF_SRF_FALSE": 24
+        },
+        "gds_rejection_check_counts": {
+          "ground_clearance_pass": 7,
+          "foundry_power_line_contract_pass": 7,
+          "foundry_via_stack_and_landing_pad_pass": 7
+        }
+      },
+      {
+        "source": "GEOMETRY_DOE",
+        "original_delta_n": 66,
+        "states": {
+          "GDS_FAIL": 9,
+          "EMX_INVALID": 32,
+          "STRICT_VALID": 25
+        },
+        "costs": {
+          "cadence_elapsed_seconds": {
+            "recorded_n": 66,
+            "missing_n": 0,
+            "observed_sum": 461.13074588170275,
+            "observed_mean": 6.986829483056102,
+            "full_original_group_sum": 461.13074588170275
+          },
+          "cadence_active_worker_elapsed_seconds_sum": {
+            "recorded_n": 66,
+            "missing_n": 0,
+            "observed_sum": 460.7119234590791,
+            "observed_mean": 6.980483688773926,
+            "full_original_group_sum": 460.7119234590791
+          },
+          "gds_audit_elapsed_seconds": {
+            "recorded_n": 0,
+            "missing_n": 66,
+            "observed_sum": null,
+            "observed_mean": null,
+            "full_original_group_sum": null
+          },
+          "calibre_elapsed_seconds": {
+            "recorded_n": 0,
+            "missing_n": 66,
+            "observed_sum": null,
+            "observed_mean": null,
+            "full_original_group_sum": null
+          },
+          "emx_native_wallclock_seconds": {
+            "recorded_n": 57,
+            "missing_n": 9,
+            "observed_sum": 4127.36,
+            "observed_mean": 72.4098245614035,
+            "full_original_group_sum": null
+          },
+          "emx_reported_cpu_seconds": {
+            "recorded_n": 57,
+            "missing_n": 9,
+            "observed_sum": 8342.99,
+            "observed_mean": 146.3682456140351,
+            "full_original_group_sum": null
+          },
+          "solver_wrapper_interval_seconds": {
+            "recorded_n": 57,
+            "missing_n": 9,
+            "observed_sum": 4148.981879,
+            "observed_mean": 72.78915577192983,
+            "full_original_group_sum": null
+          },
+          "all_stages_end_to_end_seconds": {
+            "recorded_n": 0,
+            "missing_n": 66,
+            "observed_sum": null,
+            "observed_mean": null,
+            "full_original_group_sum": null
+          }
+        },
+        "invalid_n": 32,
+        "overlapping_invalid_reason_counts": {
+          "BELOW_HALF_SRF_FALSE": 32
+        },
+        "exclusive_invalid_reason_combinations": {
+          "BELOW_HALF_SRF_FALSE": 32
+        },
+        "gds_rejection_check_counts": {
+          "ground_clearance_pass": 9,
+          "foundry_power_line_contract_pass": 9,
+          "foundry_via_stack_and_landing_pad_pass": 9
+        }
+      },
+      {
+        "source": "EXPLORATION",
+        "original_delta_n": 12,
+        "states": {
+          "STRICT_VALID": 7,
+          "EMX_INVALID": 5
+        },
+        "costs": {
+          "cadence_elapsed_seconds": {
+            "recorded_n": 12,
+            "missing_n": 0,
+            "observed_sum": 88.492615647614,
+            "observed_mean": 7.374384637301167,
+            "full_original_group_sum": 88.492615647614
+          },
+          "cadence_active_worker_elapsed_seconds_sum": {
+            "recorded_n": 12,
+            "missing_n": 0,
+            "observed_sum": 88.41568086016923,
+            "observed_mean": 7.367973405014102,
+            "full_original_group_sum": 88.41568086016923
+          },
+          "gds_audit_elapsed_seconds": {
+            "recorded_n": 0,
+            "missing_n": 12,
+            "observed_sum": null,
+            "observed_mean": null,
+            "full_original_group_sum": null
+          },
+          "calibre_elapsed_seconds": {
+            "recorded_n": 0,
+            "missing_n": 12,
+            "observed_sum": null,
+            "observed_mean": null,
+            "full_original_group_sum": null
+          },
+          "emx_native_wallclock_seconds": {
+            "recorded_n": 12,
+            "missing_n": 0,
+            "observed_sum": 892.27,
+            "observed_mean": 74.35583333333334,
+            "full_original_group_sum": 892.27
+          },
+          "emx_reported_cpu_seconds": {
+            "recorded_n": 12,
+            "missing_n": 0,
+            "observed_sum": 1799.05,
+            "observed_mean": 149.92083333333332,
+            "full_original_group_sum": 1799.05
+          },
+          "solver_wrapper_interval_seconds": {
+            "recorded_n": 12,
+            "missing_n": 0,
+            "observed_sum": 896.963611,
+            "observed_mean": 74.74696758333333,
+            "full_original_group_sum": 896.963611
+          },
+          "all_stages_end_to_end_seconds": {
+            "recorded_n": 0,
+            "missing_n": 12,
+            "observed_sum": null,
+            "observed_mean": null,
+            "full_original_group_sum": null
+          }
+        },
+        "invalid_n": 5,
+        "overlapping_invalid_reason_counts": {
+          "BELOW_HALF_SRF_FALSE": 5
+        },
+        "exclusive_invalid_reason_combinations": {
+          "BELOW_HALF_SRF_FALSE": 5
+        },
+        "gds_rejection_check_counts": {}
+      },
+      {
+        "source": "ALL_NEW120",
+        "original_delta_n": 120,
+        "states": {
+          "GDS_FAIL": 16,
+          "EMX_INVALID": 61,
+          "STRICT_VALID": 43
+        },
+        "costs": {
+          "cadence_elapsed_seconds": {
+            "recorded_n": 120,
+            "missing_n": 0,
+            "observed_sum": 814.6698852842674,
+            "observed_mean": 6.788915710702228,
+            "full_original_group_sum": 814.6698852842674
+          },
+          "cadence_active_worker_elapsed_seconds_sum": {
+            "recorded_n": 120,
+            "missing_n": 0,
+            "observed_sum": 813.9206599351019,
+            "observed_mean": 6.782672166125849,
+            "full_original_group_sum": 813.9206599351019
+          },
+          "gds_audit_elapsed_seconds": {
+            "recorded_n": 0,
+            "missing_n": 120,
+            "observed_sum": null,
+            "observed_mean": null,
+            "full_original_group_sum": null
+          },
+          "calibre_elapsed_seconds": {
+            "recorded_n": 0,
+            "missing_n": 120,
+            "observed_sum": null,
+            "observed_mean": null,
+            "full_original_group_sum": null
+          },
+          "emx_native_wallclock_seconds": {
+            "recorded_n": 104,
+            "missing_n": 16,
+            "observed_sum": 7139.21,
+            "observed_mean": 68.64625,
+            "full_original_group_sum": null
+          },
+          "emx_reported_cpu_seconds": {
+            "recorded_n": 104,
+            "missing_n": 16,
+            "observed_sum": 14405.72,
+            "observed_mean": 138.51653846153846,
+            "full_original_group_sum": null
+          },
+          "solver_wrapper_interval_seconds": {
+            "recorded_n": 104,
+            "missing_n": 16,
+            "observed_sum": 7178.846297,
+            "observed_mean": 69.02736824038462,
+            "full_original_group_sum": null
+          },
+          "all_stages_end_to_end_seconds": {
+            "recorded_n": 0,
+            "missing_n": 120,
+            "observed_sum": null,
+            "observed_mean": null,
+            "full_original_group_sum": null
+          }
+        },
+        "invalid_n": 61,
+        "overlapping_invalid_reason_counts": {
+          "BELOW_HALF_SRF_FALSE": 61
+        },
+        "exclusive_invalid_reason_combinations": {
+          "BELOW_HALF_SRF_FALSE": 61
+        },
+        "gds_rejection_check_counts": {
+          "ground_clearance_pass": 16,
+          "foundry_power_line_contract_pass": 16,
+          "foundry_via_stack_and_landing_pad_pass": 16
+        }
+      }
+    ],
+    "complete_all_stage_cost": null,
+    "scope": "Sum of recorded EMX Wall-clock time is cumulative per-solver elapsed, not CPU cost or campaign parallel wall time. CPU time footer reported separately. Wrapper intervals overlap solver elapsed and must not be added to it.",
+    "reason_definition": "Recorded failure predicates; overlapping reasons and mutually exclusive full reason combinations both reported; no assumption that all invalid rows are SRF failures.",
+    "source_summary_sha256": "4daa5e0ed49bb1051077f6689be3bbebc2dec5e5f6e8f4abf961946340a49483",
+    "numeric_cost_review_sha256": "5eca2daae2c2a24b43b9e0e6bd19ecd0ebcc208bd479a3cb18572efdadc47bbd"
+  },
+  "B": {
+    "status": "BLOCKED_SSH_AUTHENTICATION",
+    "attempt_utc": "2026-09-10T12:56:50+00:00",
+    "current_native_state": "UNKNOWN",
+    "new128_terminals_received_this_work_package": 0,
+    "new128_native_closed_count_now": null,
+    "new128_strict_count_now": null,
+    "new128_joint_hits_now": null,
+    "preserved_original_analytic_failures": 35,
+    "hold_vs_pending": "HOLD with original RESULT participates in terminal256 accounting; missing RESULT is pending. Static code finding only; no live bug conclusion.",
+    "new_controllers": 0,
+    "new_solver_dispatches_by_research": 0,
+    "blocked_receipt_sha256": "1f591505beb96093a1b66fed30955a530cef08297e9ef342108d4b0ece2ba507"
+  },
+  "C": {
+    "status": "PARTIAL_OFFLINE_SOURCE_IDENTIFICATION_LIVE_CLASSIFICATION_BLOCKED",
+    "historical_p215_rows": 215785,
+    "historical_source_inventory_entries": 10,
+    "historical_active_v13_rows_already_in_p215": 118218,
+    "classification_unit": "Unique current-compatible geometries; counts NOT_VERIFIED, not zero",
+    "four_category_counts": {
+      "ready_for_reextraction": null,
+      "response_readable_missing_identity_or_physics": null,
+      "trusted_geometry_only": null,
+      "undetermined_isolation": null
+    },
+    "current100K_qualified_count_certified": false,
+    "current_qualified_count": null,
+    "missing_evidence": "Pinned merge_source row values joined with source_row_index, current source identities, actual frequency/port/SRF and GDS/DRC/process closure.",
+    "source_summary_sha256": "447580557f050b2846e8a98d5c5714afc16bb8154938e3117f38690bde57f495"
+  },
+  "boundaries": [
+    "reference64, acquisition120/targeted42 and new6329model128 remain separate.",
+    "No model retraining, final10000 target generation, completed EMX rerun, test-driven sampling, or paper rewrite.",
+    "Unequal completed subsets42/66/12 cannot prove same-budget acquisition superiority.",
+    "Nominal-grid diagnostic is not actual GDS equivalence or geometric-family independence.",
+    "Real aggregate figure sources only; author creates and verifies final paper figures."
+  ]
+}
