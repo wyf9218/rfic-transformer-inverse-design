@@ -1,0 +1,16 @@
+{
+  "schema": "eucap15_public_aggregate_source_map.v1",
+  "evidence_class": "DESCRIPTIVE_DEVELOPMENT_CURRENT_SNAPSHOT_NOT_FINAL",
+  "research_run": "development128_statistics_20260910T145600Z",
+  "native_observation_utc": "2026-09-10T14:30:19Z",
+  "local_publication_snapshot_utc": "2026-09-10T14:53:51.313119+00:00",
+  "original_denominator": 128,
+  "metric_denominator": 48,
+  "independent_qa_sha256": "14ec1067a5bb6aa807b89856f281364523e05282c6381ab757f012088fd1dd03",
+  "sources": [
+    {"filename": "SUMMARY.json", "source_sha256": "c38fdac76de70088095d2486c790dc1320f55087ecfb6625ee424f480c3b3144", "public_sha256": "c38fdac76de70088095d2486c790dc1320f55087ecfb6625ee424f480c3b3144", "transformation": "NONE_EXACT_BYTES"},
+    {"filename": "PHYSICAL_METRICS.csv", "source_sha256": "d0762affb5ca0b2625ec9ecd41924384fd01d723036859e705734d4f765122ea", "public_sha256": "7fc91acc5bfce3e52d38965778bbd802f0b22209d061b073ffcc6db7803bb83e", "transformation": "CRLF_TO_LF_ONLY", "source_bytes": 5164, "public_bytes": 5155, "parsed_rows": 8, "exact_parsed_field_equality_verified": true, "normalized_lf_byte_equality_verified": true}
+  ],
+  "private_artifacts_omitted": ["geometry", "weights", "PDK", "native closure paths", "full per-request evidence"],
+  "no_inference": "No full128 completed success probability,no confidence interval,no causal superiority,no 100Keligible-count claim"
+}
