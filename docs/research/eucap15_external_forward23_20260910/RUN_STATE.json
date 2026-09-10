@@ -98,5 +98,62 @@
     "Current test1259 is not accessed; no FINAL10000 targets exist here",
     "Not model tuning or physical accuracy of inverse-generated new6329 candidates"
   ],
-  "private_data_in_repository": false
+  "private_data_in_repository": false,
+  "paper_update": {
+    "root": "paper_external23_update_20260910_v1",
+    "status": "FIVE_PAGE_DISCUSSION_DRAFT_CONTENT_AND_VISUAL_QA_GO_NOT_FINAL",
+    "docx": {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/paper_external23_update_20260910_v1/document_v1/EuCAP_15GHz_ExternalEM_Results_Draft.docx",
+      "sha256": "13ffb14084d0ee5d1a34ac9486219a71c54034758a4c9ee2c47ef65476f8a3f3",
+      "bytes": 34198
+    },
+    "independent_review": {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/paper_external23_update_20260910_v1/independent_content_qa_v1/QA_RECEIPT.json",
+      "sha256": "4f7bc520b6ef6f35189000da806474abd3cacedbbf6c45ae70b160edd0cdbc31",
+      "checks": 139,
+      "status": "GO"
+    },
+    "delivery": {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/paper_external23_update_20260910_v1/DELIVERY_RECEIPT.json",
+      "sha256": "ae34fd8552386d29f4b265b9c5fc90053da3fd32de5ab2948de6ff3d33a5dccf",
+      "bytes": 1790
+    },
+    "manifest": {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/paper_external23_update_20260910_v1/MANIFEST.json",
+      "sha256": "d6e178a98c5e5a674b357766d60e7bfca77834bf8c39fb51ecd2e450b1cc568a",
+      "bytes": 7904
+    },
+    "identity_sha256": "36d1b3163a1b3c551952dc6ae3578c7f147834db4cb873c77826a1f76d235145",
+    "sha256sums": "1450a2ae47d483a6b42d453a3c20360516c3df6abe7edddf9a296cfd2907c9c7",
+    "hashes_passed": 26,
+    "pages_including_references": 5,
+    "words": 4114,
+    "local_changes": 9,
+    "previous_docx_unchanged": {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/paper_formal6329_update_20260909_v1/document_v1/EuCAP_15GHz_Formal6329_Results_Draft.docx",
+      "sha256": "a4588cf527087054bc6ccd9d23319c56a3319dde10e0b7d6eda157cd8c5721a5",
+      "bytes": 33236
+    },
+    "new_training_updates": 0,
+    "new_inference": 0,
+    "new_native": 0,
+    "new_figures": 0,
+    "scientific_final": false,
+    "submission_font_compliance": "NOT_CERTIFIED",
+    "author_details": "PENDING_AUTHOR",
+    "private_document_published": false
+  },
+  "latest_native_observation": {
+    "utc": "2026-09-10T01:14:51.811752+00:00",
+    "original_proposals": 256,
+    "extracted": 95,
+    "strict_flags": 41,
+    "execution_fail": 10,
+    "held": 53,
+    "pending": 98,
+    "new128_started": false,
+    "automatic_successor": "NOT_INSTALLED",
+    "receipt_sha256": "12d16d253809cd0c3333e5a6f02b5dbc2782e43e63b4611a6663735a6ce3cfbd",
+    "not_training_admission": true
+  }
 }

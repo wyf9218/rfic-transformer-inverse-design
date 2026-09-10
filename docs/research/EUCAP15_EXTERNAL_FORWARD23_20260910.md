@@ -82,3 +82,25 @@ The completed run must be reused, not automatically repeated.
 Code tests:21 new synthetic cases once; post-model output arithmetic reviewed
 separately. Historical failed input-audit serialization is preserved, not a
 failed model training or failed native experiment.
+
+## Discussion-paper incorporation
+
+The existing five-page English draft now includes these external23 forward
+errors and the separately accounted fixed13 acquisition increment. Nine local
+changes retain the capacity table, references, model identities and both
+percentage-error denominators. Independent content QA passed139 checks and all
+five rendered pages were inspected. This is a discussion draft, not a final
+paper or physical validation of the new inverse. No training or inference was
+repeated and no paper figure was generated.
+
+The DOCX remains private. Identity SHA-256:
+13ffb14084d0ee5d1a34ac9486219a71c54034758a4c9ee2c47ef65476f8a3f3.
+Delivery receipt SHA-256:
+ae34fd8552386d29f4b265b9c5fc90053da3fd32de5ab2948de6ff3d33a5dccf.
+The adjacent RUN_STATE.json records its exact local path and source/QA hashes.
+
+Native execution remains separate: the sole-owner observation at
+2026-09-10T01:14:51Z recorded95 extracted,10 execution failures,53 holds and98
+pending out of256 proposals. The41 strict flags are not new accepted training
+rows. New128 was not started; automatic successor registration is NOT_INSTALLED.
+This is a timestamped snapshot, not continuous liveness or a new admission.
