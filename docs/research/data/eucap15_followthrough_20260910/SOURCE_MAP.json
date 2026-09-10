@@ -1,0 +1,27 @@
+{
+  "schema": "eucap15_public_followthrough_sources.v1",
+  "status_json_sha256": "db8b86869a1f71a476df4777a860bf0697a01be46289a783931284e41c75e36d",
+  "publication": "Aggregate/status metadata only; private artifacts below are not included in this public directory.",
+  "research_root": "reports/eucap15ghz_20260908T220300Z",
+  "native_owner_root": "reports/eucap15_native_owner_20260909T062500Z",
+  "research_artifacts": [
+    {"path":"development128_statistics_20260910T145600Z/SUMMARY.json","sha256":"c38fdac76de70088095d2486c790dc1320f55087ecfb6625ee424f480c3b3144","reuse":"Already accepted physical counts;not rerun"},
+    {"path":"development128_failure_diagnosis_20260910_v1/RECEIPT.json","sha256":"ede6c3dc85c789b4dfa978d6e2b9cefefed9ca57be3f200000e54d814fe0e3fb"},
+    {"path":"development128_k_tail_diagnosis_20260910_v1/run_v1/DIAGNOSIS.json","sha256":"54b21e77f965088dc51202c31c70bd8d4bf121ee8e6b4b0fbc0d7ac8a6e3c57b"},
+    {"path":"acquisition_round_trace_20260910_v1/run_v2/RECEIPT.json","sha256":"7932bb1345e6551eca37294197dad1a383cc3ea189eab16a1b5a74d0208ddd83"},
+    {"path":"acquisition_round_trace_20260910_v1/trace_qa_v1/REVIEW.json","sha256":"69de33f7b72305ee5815019c3c86d3018d9a74a1bb900e70e912f793b7412d69"},
+    {"path":"acquisition_round_trace_20260910_v1/trace_qa_v1/GUARD_REVIEW.json","sha256":"4923ec2fe17fac2d678c240e624fa18e2d72232bd001d6e9a606d8e4ca6dd844"},
+    {"path":"acquisition_controlled_budget_20260910_v1/EXECUTION_RECEIPT.json","sha256":"a2e0d4f7cd9205367092ef9b641f6c752cd5cd11b8f88126956a748e4a802d3b"},
+    {"path":"acquisition_controlled_budget_20260910_v1/MANIFEST.json","sha256":"7a1620865a54b16f9a172cc68158481545abf888ea36dc4b35acd283f3bd7e92"},
+    {"path":"acquisition_controlled_budget_20260910_v1/independent_read_review_v1/REVIEW.json","sha256":"473d41a7ce9b9969de03377147701a7d27d1a212fa9f2f6e5b7b0832ea872d3b"}
+  ],
+  "native_owner_artifacts": [
+    {"path":"offline_handoff_20260910_v1/run_v1/HANDOFF_RECEIPT.json","sha256":"1a749e2f8841c18849b759e7b616083962990c8a27975aa80d9bc873decb3874"},
+    {"path":"offline_handoff_20260910_v1/run_v1/P215_QUALIFICATION_STATUS.json","sha256":"0554d5e152ebdd3682417e7e5adfe0964ea9686a3e8e1a4b927cc082c1f09c6b"},
+    {"path":"offline_handoff_20260910_v1/run_v1/COST_SUMMARY.json","sha256":"d9aeb4f0866d7b066ddbc9a06d76ab4412f5750c7068ded8687f612434fc7d98"},
+    {"path":"offline_handoff_20260910_v1/run_v1/RESEARCH31_PRODUCTION_GAPS.json","sha256":"d82879661f98140b461a3808dcf52e7f096cf8512d929c22f7ebb93968104f26"},
+    {"path":"offline_handoff_20260910_v1/run_v1/RUNNER_INTERFACE_GAPS.json","sha256":"fec4245228cf3e352748144a45110c2d0eb78bdd8ba17e6cab687bd955e3507e"}
+  ],
+  "category_semantics": "Owner routing names are preserved in its source receipt. No rows were individually classified. Public status uses the user's original four definitions and keeps215785 unprocessed; no inference of215785 failures.",
+  "native_cost_scope": "Original solver-footer observations only; disk allocation, quota, actual end-to-end throughput and current resource admission remain unknown."
+}
