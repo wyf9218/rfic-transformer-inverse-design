@@ -1,0 +1,51 @@
+{
+  "schema": "eucap15_interface_routing.v1",
+  "updated_utc": "2026-09-10T01:48:28Z",
+  "scope": "INTERFACE_STATE_RECONCILIATION_NOT_NEW_EXPERIMENT",
+  "goal_status": "ACTIVE_NOT_FINAL",
+  "development128": {
+    "historical_initial_status": {
+      "path": "docs/research/eucap15_development128_20260909/RUN_STATE.json",
+      "sha256": "421f6a7d65650372b9190e0dc12da46125601279a39b4321e0dee4a9b6c10b4c",
+      "treatment": "PRESERVED_HISTORICAL_CAPTURE_NOT_CURRENT_ROUTING"
+    },
+    "current_consumer_status": {
+      "path": "docs/research/eucap15_development128_native_reader_20260909/RUN_STATE.json",
+      "sha256": "e89c0ef6fb2666cdc99fb0ffbf7df2c0093deb72cc858e9a6f92abc3a402ea46",
+      "treatment": "DELIVERED_CONSUMER_FIXED_CAPTURE_NOT_LIVE_PROCESS_STATUS"
+    },
+    "consumer_module": "research.broadband56_nn.eucap15_development128_results",
+    "consumer_sha256": "d3aa73f431f6839882b39fc5677344028958afaa4a6131473461a6c2a44fa4c0",
+    "result_receipt_sha256": "ef106a890bcdea8ce2f0548999471afe1bccc7c00aefc3d8a8e00d5c999e8d61",
+    "original_requests": 128,
+    "consumed_analytic_failure_terminals": 35,
+    "pending_in_consumed_capture": 93,
+    "physical_error_observations": 0,
+    "completed_joint_hit_fraction": null,
+    "automatic_successor_last_verified": "NOT_INSTALLED",
+    "automatic_successor_receipt_utc": "2026-09-10T01:14:51.811752Z",
+    "new_installation_receipt": "NOT_YET_RECEIVED"
+  },
+  "final_interfaces": {
+    "main_statistics_module": "research.broadband56_nn.eucap15_final_statistics",
+    "main_sha256": "e976507873b69c366b137f833882ad518ca0c42716e21fa2aeb3d3b4aaf97ab6",
+    "audit_module": "research.broadband56_nn.eucap15_final_audit",
+    "audit_sha256": "361cdec80485eff109470643bab4f0ca7945c30215bf780aa979fd6c74115ec7",
+    "delivery_receipt_sha256": "fc42826dc7788820e5736009ec4270fdbbac11362cb905d2405331e5f4a0b908",
+    "pure_statistics": "IMPLEMENTED_SYNTHETIC_VALIDATED_NOT_PHYSICAL_EVIDENCE",
+    "physical_evidence_ingestion": "NOT_INSTALLED",
+    "native_owner_binding": "NOT_INSTALLED",
+    "final_data_model": "NOT_FROZEN",
+    "actual_final_requests_created": 0,
+    "actual_final_physical_results": 0
+  },
+  "this_increment": {
+    "training_updates": 0,
+    "model_inferences": 0,
+    "native_dispatches_by_research": 0,
+    "physical_results_reconsumed": 0,
+    "tests_rerun": 0,
+    "plots_generated": 0,
+    "historical_captures_modified": false
+  }
+}

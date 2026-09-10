@@ -1,5 +1,11 @@
 # Development128: native-return reader
 
+Current routing clarification (2026-09-10): this result consumer supersedes the
+initial-ledger-only implementation. The dated JSON captures remain unchanged;
+their NOT_INSTALLED fields describe the time of capture, not a request to
+reimplement this reader. [Current interface routing](eucap15_interface_routing_20260910/RUN_STATE.json)
+separates delivered code from native execution and FINAL evidence.
+
 Scope: DEVELOPMENT_CURRENT_SNAPSHOT, not FINAL. This extends the frozen
 initial ledger; it does not regenerate targets, perform inference, retrain,
 dispatch native jobs, change q_proxy, or replace failed candidates.
