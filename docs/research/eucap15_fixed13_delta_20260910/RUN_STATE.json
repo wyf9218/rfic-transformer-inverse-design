@@ -1,0 +1,62 @@
+{
+  "schema": "eucap15_fixed13_public_state.v1",
+  "status": "COMPLETE_FIXED13_ACCOUNTING_INDEPENDENT_QA_GO",
+  "fixed_delta_requests": 13,
+  "original_proposals": 256,
+  "original_per_arm": 128,
+  "existing_physical_chains": 11,
+  "strict_valid": 3,
+  "strict_core": 3,
+  "SRF_invalid": 8,
+  "GDS_fail": 2,
+  "groups": [
+    {
+      "source": "EXPLORATION",
+      "original_fixed_delta_rows": 1,
+      "STRICT_VALID": 0,
+      "EMX_INVALID": 0,
+      "GDS_FAIL": 1,
+      "strict_core_eligible": 0
+    },
+    {
+      "source": "GEOMETRY_DOE",
+      "original_fixed_delta_rows": 7,
+      "STRICT_VALID": 3,
+      "EMX_INVALID": 4,
+      "GDS_FAIL": 0,
+      "strict_core_eligible": 3
+    },
+    {
+      "source": "SPARSE_TARGETED",
+      "original_fixed_delta_rows": 5,
+      "STRICT_VALID": 0,
+      "EMX_INVALID": 4,
+      "GDS_FAIL": 1,
+      "strict_core_eligible": 0
+    }
+  ],
+  "targeted_residual_rows": 4,
+  "targeted_residual_scope": "DESCRIPTOR_ONLY_NOT_STRICT",
+  "actual_executions": 1,
+  "runtime_seconds": 1.06,
+  "maximum_RSS_bytes": 131104768,
+  "source_bindings": 330,
+  "synthetic_tests": 16,
+  "independent_numeric_qa": {
+    "status": "GO",
+    "checks": 2371,
+    "source_pins_read": 45,
+    "sha256": "0e6c730070eafa847026fd53748ea30200e22340a529d2da930fd7960b51d85d"
+  },
+  "source_summary_sha256": "d3300ef7a91b95a2687e18c373f597c0fe51d04f3b697091bb7463b11a769a52",
+  "new_native_calls": 0,
+  "training_updates": 0,
+  "model_loads": 0,
+  "train_admission": "NOT_PERFORMED",
+  "coverage_gain": null,
+  "equal_budget_comparison": null,
+  "FINAL": false,
+  "figures_generated": 0,
+  "native_process_check": "NOT_REFRESHED",
+  "private_inputs_in_repository": false
+}

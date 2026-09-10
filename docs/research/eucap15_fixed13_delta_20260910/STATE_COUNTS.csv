@@ -1,0 +1,4 @@
+source,original_fixed_delta_rows,STRICT_VALID,EMX_INVALID,GDS_FAIL,strict_core_eligible
+EXPLORATION,1,0,0,1,0
+GEOMETRY_DOE,7,3,4,0,3
+SPARSE_TARGETED,5,0,4,1,0
