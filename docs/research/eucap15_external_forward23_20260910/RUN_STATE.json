@@ -1,0 +1,102 @@
+{
+  "schema": "eucap15_external_forward_public_state.v1",
+  "status": "COMPLETE_CONDITIONAL_DIAGNOSTIC_QA_GO",
+  "scope": "PRIOR_REAL_EM_EXTERNAL_DEVELOPMENT_DIAGNOSTIC",
+  "model": {
+    "role": "forward",
+    "seed": 17,
+    "step": 14300,
+    "widths": [
+      10,
+      256,
+      256,
+      256,
+      4
+    ]
+  },
+  "data_sha": "4dc6e91a644db2aca0a580958ac8b31e1e26ed73497b935145202b07227ef580",
+  "data_counts": {
+    "source": 6329,
+    "train": 3801,
+    "validation": 1269,
+    "sealed_test": 1259
+  },
+  "N_original": 64,
+  "N_strict": 23,
+  "N_forward_complete": 23,
+  "original_physical_counts": {
+    "ANALYTIC_FAIL": 2,
+    "PENDING": 0,
+    "STRICT_VALID": 23,
+    "EMX_INVALID": 35,
+    "GDS_FAIL": 4,
+    "DRC_FAIL": 0,
+    "SOLVER_FAIL": 0
+  },
+  "actual_execution_count": 1,
+  "model_loads": 1,
+  "train_updates": 0,
+  "inverse_loads": 0,
+  "native_calls": 0,
+  "runtime_seconds": 1.4,
+  "maximum_rss_bytes": 345866240,
+  "metrics": [
+    {
+      "feature": "Lp_nH",
+      "unit": "nH",
+      "N": 23,
+      "mae": 0.010147071035636574,
+      "rmse": 0.014272895706222647,
+      "p95_absolute_error_linear": 0.03260194131199034,
+      "EM_truth_relative_MAPE_percent": 1.1001054779901782
+    },
+    {
+      "feature": "Ls_nH",
+      "unit": "nH",
+      "N": 23,
+      "mae": 0.006462533259928699,
+      "rmse": 0.00774241666180789,
+      "p95_absolute_error_linear": 0.012870579949797154,
+      "EM_truth_relative_MAPE_percent": 0.6153194817260274
+    },
+    {
+      "feature": "Qmin",
+      "unit": "dimensionless",
+      "N": 23,
+      "mae": 0.18574399654557222,
+      "rmse": 0.2323364876731845,
+      "p95_absolute_error_linear": 0.47703892257582925,
+      "EM_truth_relative_MAPE_percent": 1.442565245543673
+    },
+    {
+      "feature": "K_abs",
+      "unit": "dimensionless",
+      "N": 23,
+      "mae": 0.01135884811183699,
+      "rmse": 0.014034312511400377,
+      "p95_absolute_error_linear": 0.02175702618129528,
+      "EM_truth_relative_MAPE_percent": 3.1446614303823264
+    }
+  ],
+  "independent_qa": {
+    "status": "GO_SHARE_WITH_CAVEATS",
+    "checks": 1840,
+    "sha256": "9377eecf3de892743b8eab0d042c1760121f0b2951ed3e14387ee4a7bfbe0321"
+  },
+  "synthetic_tests": 21,
+  "code_sha256": "4e09593ec6a0abdbd3d46c09f7dcf687a93c51651137e5f6a55d509508f348e5",
+  "summary_sha256": "b8151f5c045a6d3b6f57f05cf98c6f2fd50d5ec0b186be8f34720d8003715e51",
+  "receipt_sha256": "8c44a07a6fbe2005448cec8ccf401ba19d37f8eae94b5873ef4f11008b803598",
+  "test_evaluation": "NOT_RUN",
+  "new_inverse_REAL_EMX_VALIDATION": "NOT_RUN",
+  "FINAL": false,
+  "figures_generated": 0,
+  "limitations": [
+    "Historical reference selectedQ and physical strict survivor selection",
+    "N23 is small and case distribution is not random or representative of the target box",
+    "Known exact geometry exclusion is not proof of family/prototype independence",
+    "Current test1259 is not accessed; no FINAL10000 targets exist here",
+    "Not model tuning or physical accuracy of inverse-generated new6329 candidates"
+  ],
+  "private_data_in_repository": false
+}
