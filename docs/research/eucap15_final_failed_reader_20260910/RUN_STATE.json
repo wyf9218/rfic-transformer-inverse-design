@@ -1,0 +1,64 @@
+{
+  "schema": "eucap15_final_failed_reader_public_status.v1",
+  "updated_utc": "2026-09-10T03:50:38Z",
+  "status": "DELIVERED_CODE_AND_SYNTHETIC_TESTS_NOT_NATIVE_DEPLOYMENT",
+  "source": "ac92b439141fa969c0b30ca4c5941a01ecf6e7dfa1e1b3583c28094a8817e931",
+  "tests": {
+    "distinct_new_tests": 104,
+    "executions": 1,
+    "passed": 104,
+    "failed": 0,
+    "elapsed_seconds": 7.99,
+    "old_suite_rerun": false
+  },
+  "independent_static_qa_sha256": "a8df58e1912bf93ee8670518757085de6734b481fd6056f8490aff1bed785838",
+  "author_receipt_sha256": "23b7049464b3afdc7474d589db16967a623a90433dc13b73f64f1d0b50a9cfb9",
+  "implemented": [
+    "FINAL candidate-bound GDS/DRC pipeline and actual gate rejection",
+    "Exact positive native EMX exit with original command/log/closed process chain",
+    "Original56 extractor rejection after verified successful own-S4P solver",
+    "NO_GO for resource/partial/interrupted/unknown/integrity/contradictory evidence"
+  ],
+  "not_installed": [
+    "FINAL native producer",
+    "FINAL campaign exporter",
+    "development128 incremental physical-success/failure exporter"
+  ],
+  "native_observation": {
+    "utc": "2026-09-10T03:47:59Z",
+    "receipt_sha256": "cd62002eaf1d0c823ebb4d69de06c11449deb0aae1d3673e0aabb192b8308c01",
+    "original256": {
+      "extracted": 125,
+      "execution_failures": 16,
+      "frozen_holds": 53,
+      "no_terminal": 62,
+      "strict_source_flags": 49,
+      "not_formal_accepted": true
+    },
+    "development128": {
+      "original_analytic_failures": 35,
+      "no_terminal": 93,
+      "new_physical_results_received": 0
+    },
+    "successor": "INSTALLED_WAIT_PREDECESSOR_ALIVE_AT_OBSERVATION",
+    "live_owner_verified_by_sole_owner": true,
+    "instantaneous_native_zero_does_not_authorize_handoff": true,
+    "new_submissions": 0
+  },
+  "data_state": {
+    "scope": "DEVELOPMENT_CURRENT_SNAPSHOT",
+    "source": 6329,
+    "train": 3801,
+    "validation": 1269,
+    "sealed_test": 1259,
+    "new_census": false
+  },
+  "new_real_model_loads": 0,
+  "new_training_updates": 0,
+  "new_physical_error_statistics": 0,
+  "new_final_targets": 0,
+  "new_paper_figures": 0,
+  "git_parent": "366127e84f77fcebdfed99c190a661468933e48d",
+  "goal_status": "ACTIVE_NOT_FINAL",
+  "next_safe_entry": "Sole owner's existing server successor continues; prepare supported development128 closed-result incremental export, then consume only new frozen artifacts. Do not duplicate dispatch."
+}
