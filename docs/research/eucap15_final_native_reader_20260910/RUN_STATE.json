@@ -1,0 +1,89 @@
+{
+  "schema": "eucap15_final_completed_reader_public_state.v1",
+  "updated_utc": "2026-09-10 03:10:50 UTC",
+  "status": "CODE_VERIFIED_COMPLETED_FEATURE_PATH_ONLY",
+  "goal_status": "ACTIVE_NOT_FINAL",
+  "new_tests": {
+    "context": 40,
+    "binding": 30,
+    "feature_values": 64,
+    "completed_evidence": 94,
+    "total_passed": 228,
+    "failures": 0,
+    "old_suites_rerun": false,
+    "test_kind": "SYNTHETIC_NOT_PHYSICAL_VALIDATION"
+  },
+  "code_pins": [
+    {
+      "path": "research/broadband56_nn/eucap15_final_context.py",
+      "sha256": "fcc9257770d05b3ceb2a44802086d964a5fb7da5be2b7fdaf78c2dd0cde492fa",
+      "bytes": 12803
+    },
+    {
+      "path": "research/broadband56_nn/eucap15_final_binding.py",
+      "sha256": "c17bb2794a65eb1daf310f9161ee3fb2846f23dbdeb7c6be3ef8ed618bc42131",
+      "bytes": 10263
+    },
+    {
+      "path": "research/broadband56_nn/eucap15_feature_values.py",
+      "sha256": "3b5d769c43707f4af45c8d245a078e0091c8b431fa882178a732171cbf003c8b",
+      "bytes": 5832
+    },
+    {
+      "path": "research/broadband56_nn/eucap15_final_evidence.py",
+      "sha256": "ce3479f05a2122fe973d1ea2637a3835acc23651468650d39a3b74bb9f59a3ed",
+      "bytes": 16015
+    },
+    {
+      "path": "tests/test_eucap15_final_context.py",
+      "sha256": "6cd4b909e5d28fcb1d93c246750b6c965e7f1570cf466a51b5e34dab48ffa793",
+      "bytes": 17060
+    },
+    {
+      "path": "tests/test_eucap15_final_binding.py",
+      "sha256": "1f44bc82829432b9029285f95c59150edcd73efcf941322c5633ac5714632dd4",
+      "bytes": 9689
+    },
+    {
+      "path": "tests/test_eucap15_feature_values.py",
+      "sha256": "8bcbe0136b7e149d1a1fa6ac95b46640689126937db5c72b71acf5c7196743b6",
+      "bytes": 6866
+    },
+    {
+      "path": "tests/test_eucap15_final_evidence.py",
+      "sha256": "2b5bc6839c70c1a67e51eeb0e5998691366ec715fe0aaa278767d6558aab18ea",
+      "bytes": 14130
+    },
+    {
+      "path": "tests/fixtures/eucap15_final_evidence_fixture.py",
+      "sha256": "5008654d659e1567b61f6d70a301fd443f8f64815a6a5b4f779ce741793de76a",
+      "bytes": 13240
+    },
+    {
+      "path": "docs/research/EUCAP15_FINAL_COMPLETED_EVIDENCE_READER_20260910.md",
+      "sha256": "62c3721894eb1818ccafa7d0688fcd99a01fa002785c11e8f4880cac4e13487c",
+      "bytes": 4624
+    }
+  ],
+  "independent_review": {
+    "feature_review_sha256": "e25990bc56861b47a03c1b8616775c31852b9ce53014ad572c47899932a0e1a7",
+    "completed_evidence_review_sha256": "f467d689758c8cc8223ce306b48f3eb135a278b4f72d42c1cf346393a8bd0393",
+    "scope": "STATIC_AND_NEW_SYNTHETIC_ONLY_NOT_NATIVE_DEPLOYMENT",
+    "context_review_sha256": "760aa222a80fe1b5a5fa75897629d9c2ee6660cd1932eb87da2bf75836c6ba43",
+    "binding_review_sha256": "72de42e0be24b3ed0c1288b766ab8b0023c24b93ab339c18dc2ab4b25980aedd"
+  },
+  "final_native_producer": "NOT_INSTALLED",
+  "native_failure_stage_consumer": "NOT_IMPLEMENTED",
+  "full_campaign_native_export_orchestrator": "NOT_IMPLEMENTED",
+  "final_models_frozen_this_work_package": 0,
+  "final_targets_generated": 0,
+  "new_training_updates": 0,
+  "new_native_executions": 0,
+  "new_physical_statistics": 0,
+  "real_labels_or_weights_read": false,
+  "server_state_refreshed": false,
+  "existing_development_successor_modified": false,
+  "figures_created": 0,
+  "public_artifacts": "Code, synthetic fixtures/tests, interface documentation and nonnumerical status only",
+  "next_required": "Bind sole-owner FINAL producer and exact failed-stage evidence before any release-quality FINAL statistics; do not regenerate old targets or rerun completed physics"
+}
