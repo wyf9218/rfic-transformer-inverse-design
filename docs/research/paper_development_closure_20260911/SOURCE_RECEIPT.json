@@ -1,0 +1,86 @@
+{
+  "schema": "eucap15_paper_text_public_copy.v1",
+  "status": "TEXT_ONLY_UPDATE_WORD_LAYOUT_NOT_UPDATED",
+  "source_receipt_sha256": "93e320da769bec5f3de501fd6efeaf043620f3cf96c3ed46ec6d058ea284b588",
+  "manuscript_sha256": "ecc8049f2a506ee423fb49a5b29ddcde8c26067114954540ad4c8c8be36e8c7a",
+  "source_pins": [
+    {
+      "artifact": "paper_tandem_citation_20260910_v1/document_v1/manuscript.md",
+      "sha256": "d11be23d1557d1696427ce1036ec7ef4a70bc56e8a4c5da6472dcabacd602503"
+    },
+    {
+      "artifact": "development128_last2_received_20260911_v1/RECEIPT.json",
+      "sha256": "a0d205d84a6a2f62ea7fb43b4577d1233e24e340d4056d4512f7ab5e1d0ef248"
+    },
+    {
+      "artifact": "development128_last2_received_20260911_v1/SUMMARY.json",
+      "sha256": "4ce2e2c1220d36432d2d4ba6f2ae04836052ab4b7bacf98419ffe040dfb3febc"
+    },
+    {
+      "artifact": "formal6329_holdout_20260911_v1/run_v2/RECEIPT.json",
+      "sha256": "aa12f42ed9ed21100703d4ea5893ea3014dc02b9219e119e156e820b4ef6cbe9"
+    },
+    {
+      "artifact": "formal6329_holdout_20260911_v1/run_v2/evaluation/EVALUATION_SUMMARY.json",
+      "sha256": "62be2c463bb7e786a20825220b7335f0e7348fe3804d717fc21bc7524afbe6b2"
+    }
+  ],
+  "reused_claims": {
+    "development128": {
+      "model_id": "f15-development6329-3x256-seed17-9d69d7ebfc66",
+      "original_requests": 128,
+      "terminal": 128,
+      "pending": 0,
+      "analytic_fail": 35,
+      "gds_fail": 7,
+      "strict_invalid": 38,
+      "strict_valid": 48,
+      "joint_hit": 40,
+      "joint_hit_original": "40/128 = 31.25%",
+      "joint_hit_conditional_strict": "40/48 = 83.33%",
+      "unmodified_targets_and_q_proxy": true,
+      "native_attempt_count": "NOT_INFERRED_FROM_86_TOUCHSTONE_OUTCOMES",
+      "scope": "DEVELOPMENT_CURRENT_SNAPSHOT_NOT_FINAL"
+    },
+    "holdout1259": {
+      "source_geometries": 6329,
+      "train": 3801,
+      "validation": 1269,
+      "test": 1259,
+      "forward_evidence": "HELDOUT_EM_LABELS",
+      "forward_mae_published_units": [
+        0.007493030552808328,
+        0.007142173079920638,
+        0.148353159736356,
+        0.006409172713045139
+      ],
+      "forward_step": 14300,
+      "inverse_step": 11300,
+      "seed": 17,
+      "continuous_joint_hit": 1253,
+      "grid_joint_hit": 1253,
+      "original_denominator": 1259,
+      "analytical_pass": 1254,
+      "analytical_invalid": 5,
+      "inverse_evidence": "SELF_PROXY",
+      "real_emx_validation": "NOT_RUN",
+      "new_model_selection": false,
+      "qscan_calls": 0,
+      "scope": "DEVELOPMENT_HOLDOUT_NOT_FINAL"
+    }
+  },
+  "presentation_limits": [
+    "Word/PDF source artifacts were neither edited nor rendered; no new five-page pagination or visual acceptance is claimed.",
+    "No new controlled64 physical results or live progress were inserted.",
+    "Historical64, external23, development128 and holdout1259 remain separate evidence populations.",
+    "SELF_PROXY is not fresh EMX, physical accuracy or demonstrated manufacturability.",
+    "40/48 is strict-survivor conditional attainment, not whole-frame model accuracy.",
+    "No five-configuration complete F/I physical ranking, final model or100K completion is claimed.",
+    "No reference searches, new citations, model evaluation, raw-label inspection or numerical-statistics rerun were performed.",
+    "Existing scientific tables and citations were preserved rather than re-reviewed in this text-only increment."
+  ],
+  "model_runs": 0,
+  "statistical_recomputations": 0,
+  "figures_created": 0,
+  "docx_or_pdf_modified": false
+}

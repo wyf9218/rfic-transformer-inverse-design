@@ -14,7 +14,7 @@ from pathlib import Path
 
 from .eucap15_selected_evidence import (
     _require, _strict_json, _same, _fields, _path, _boolean_text,
-    _numeric_text, _original_row_matches_csv, FREQUENCIES, PHYSICAL_FIELDS,
+    _numeric_text, _original_row_matches_csv, _same_response_score, FREQUENCIES, PHYSICAL_FIELDS,
     FLAG_FIELDS, clean, pin,
 )
 
@@ -128,7 +128,7 @@ def verify_labels(feature, proposal, raw_csv):
     core = bool(valid and .5<=actual[0]<=2 and .5<=actual[1]<=2 and .2<=actual[3]<=.85)
     score = math.sqrt(sum((e/s)**2 for e,s in zip(errors,SCALE))/4) if finite and targeted else None
     expected = dict(actual_fresh_emx=clean(actual), target=wanted, proxy_self=proxy,
-        emx_minus_target=clean(errors), emx_minus_proxy=clean(proxy_errors), normalized_response_score=score,
+        emx_minus_target=clean(errors), emx_minus_proxy=clean(proxy_errors),
         within_tolerance=hits, joint_response_hit=all(hits) if targeted else None,
         descriptor_valid=descriptor, strict_lumped_valid=strict, physics_qa_pass=physics,
         valid_for_strict_comparison=valid, strict_joint_hit=bool(all(hits) and valid) if targeted else None,
@@ -137,7 +137,16 @@ def verify_labels(feature, proposal, raw_csv):
         target_errors_defined=targeted, core15_eligible=core,
         q10_to20_supported=bool(finite and 10<=actual[2]<=20))
     _fields(feature, expected, 'Reconciled15 labels')
+    # Reuse the previously verified adjacent-binary64 policy for this derived
+    # sqrt score only. Original labels/residuals/targets/flags remain exact.
+    _require('normalized_response_score' in feature and
+             _same_response_score(feature['normalized_response_score'],score),
+             'Reconciled15 labels mismatch: normalized_response_score')
+    score_check=dict(policy='DERIVED_SQRT_BINARY64_ADJACENT_ONE_STEP_ZERO_NULL_EXACT_V1',
+        saved=feature['normalized_response_score'],recomputed=score,
+        comparison='EXACT' if feature['normalized_response_score']==score else 'ONE_ULP')
     return dict(actual=clean(actual), strict_valid=valid, core_eligible=core, target_errors_defined=targeted,
+        derived_score_check=score_check,
         emx_minus_target=clean(errors), emx_minus_proxy=clean(proxy_errors), strict_joint_hit=expected['strict_joint_hit'],
         below_half_srf=_boolean_text(row['below_half_srf'],'below_half_srf'),
         descriptor_valid=descriptor, physics_qa_pass=physics, q10_to20_supported=expected['q10_to20_supported'])

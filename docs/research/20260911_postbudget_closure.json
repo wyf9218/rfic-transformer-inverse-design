@@ -1,0 +1,161 @@
+{
+  "schema": "eucap15_postbudget_verified_increment.v1",
+  "scope": "DEVELOPMENT_SINGLE_FROZEN_POLICY_PAIR_NOT_FINAL",
+  "observed_utc": "2026-09-11T18:34:13.616632+00:00",
+  "original_owner": {
+    "pid": 715544,
+    "start_ticks": 391857869,
+    "alive": false
+  },
+  "batch_closed_utc": "2026-09-11T11:22:26.571483+00:00",
+  "original_deadline_utc": "2026-09-11T14:18:31.094118+00:00",
+  "end_reason": "BOTH_ARMS_16_ACTUAL_START_CAP",
+  "budget": {
+    "total_actual_starts": 32,
+    "cap_per_arm": 16,
+    "restarts": 0,
+    "additional_budget": 0,
+    "unresolved_reservations": 0,
+    "remaining_unstarted": 13,
+    "remaining_disposition": "CLOSED_BUDGET_NOT_DISPATCHED_NOT_PENDING"
+  },
+  "original_denominator": 64,
+  "coverage_directed_eligible_train_source": "EXPLORATION-005_NOT_TARGETED_SUCCESS",
+  "saved_results_review": {"status":"GO_SAVED_RESULTS_ARITHMETIC_ONLY","sha256":"5750e84443b7ebe7c79cd147ea2f3bbea20d5cec28d35caa749feefd022def32","path":"reports/eucap15ghz_20260908T220300Z/controlled64_delta_consumer_20260911_v1/result_review_v1/run_v1/REVIEW.json"},
+  "arms": [
+    {
+      "arm": "COVERAGE_DIRECTED",
+      "original_requests": 32,
+      "native_starts": 16,
+      "physical_complete": 16,
+      "strict_valid": 2,
+      "strict_invalid": 14,
+      "strict_core": 1,
+      "core_train": 1,
+      "core_test": 0,
+      "analytic_fail": 10,
+      "pre_native_failure_unclassified": 2,
+      "budget_not_dispatched": 4,
+      "eligible_unique_train": 1,
+      "newly_occupied_cells": 0,
+      "sparse_crossed_5": 0,
+      "formal_added": 0
+    },
+    {
+      "arm": "GEOMETRY_DOE_CONTROL",
+      "original_requests": 32,
+      "native_starts": 16,
+      "physical_complete": 16,
+      "strict_valid": 10,
+      "strict_invalid": 6,
+      "strict_core": 5,
+      "core_train": 4,
+      "core_test": 1,
+      "analytic_fail": 4,
+      "pre_native_failure_unclassified": 3,
+      "budget_not_dispatched": 9,
+      "eligible_unique_train": 4,
+      "newly_occupied_cells": 0,
+      "sparse_crossed_5": 0,
+      "formal_added": 0
+    }
+  ],
+  "comparisons": {
+    "actual_starts_m16": "MATCHED_CLOSED",
+    "first_qualified_train_K4": "NOT_REACHED",
+    "baseline_train": 3801,
+    "occupied_before": 159,
+    "occupied_after_each_arm": 159,
+    "grid_cells": 512,
+    "prior20_used_for_decision": false,
+    "CI": "NOT_ESTIMATED",
+    "algorithm_advantage": "NOT_ESTABLISHED"
+  },
+  "intake": {
+    "new_result_artifact_sets": 61,
+    "previous_hold_metadata_reconciled": 2,
+    "old_physical_rows_reused": 1,
+    "new_physical_chains": 31,
+    "physical_rows": 32,
+    "prior_physical_file_reads": 0,
+    "consumer_native_actions": 0,
+    "failed_attempts_preserved": [
+      "run_v1",
+      "run_v2"
+    ],
+    "note": "New chains may have been read in memory in failed attempts; no solver was repeated. Original14 analytic failures counted once."
+  },
+  "doe001": {
+    "strict_valid": true,
+    "K_abs": 0.17105661961941435,
+    "core_eligible": false,
+    "eligible_train": 0,
+    "new_cells": 0,
+    "target": null,
+    "target_error": null,
+    "q_proxy": null
+  },
+  "cost": {
+    "solver_wall_seconds_by_arm": null,
+    "solver_cpu_seconds_by_arm": null,
+    "total_stage_cost_seconds_by_arm": null,
+    "retained_cost_bytes_by_arm": null,
+    "missing_cost_is_zero": false
+  },
+  "storage": {
+    "observed_utc": "2026-09-11T18:34:47.178500+00:00",
+    "mount_free_bytes": 409227071488,
+    "workdir_allocated_bytes": 248311808,
+    "research_mount_quota": null,
+    "quota_status": "UNKNOWN_OTHER_MOUNT_QUOTA_NOT_SUBSTITUTED",
+    "deleted_files": 0,
+    "released_space_claimed_bytes": 0,
+    "complete_100k_cost": "NOT_ESTIMATED"
+  },
+  "separate_first_qualification": {
+    "cohort": "OLD120_NOT_NEW64",
+    "candidate_id": "eucap15_dev_acquisition_pair_20260909_v1-GEOMETRY_DOE-006",
+    "processed": 1,
+    "qualified_increment_committed": 1,
+    "increment_sequence": 1,
+    "idempotent_replay_added": 0,
+    "remaining_of31": 30,
+    "old_broadband_added": 0,
+    "old_broadband_accepted_sequence": null,
+    "current_100k_certified_total": null,
+    "known_certified_increment_lower_bound": 1,
+    "new_model_training_rows": 0
+  },
+  "sources": {
+    "research_receipt": {
+      "path": "reports/eucap15ghz_20260908T220300Z/controlled64_delta_consumer_20260911_v1/run_v3/RECEIPT.json",
+      "sha256": "83d355a3f6f00d120c03200b17c6f8639733a0d7a33f83e34cf0b2eb88e3b47f"
+    },
+    "research_summary": {
+      "path": "reports/eucap15ghz_20260908T220300Z/controlled64_delta_consumer_20260911_v1/run_v3/SUMMARY.json",
+      "sha256": "004bf770f401c187b0c5fc83ae2344159e3cdf3f8b4a61d7ad238515a82996d0"
+    },
+    "research_rows": {
+      "path": "reports/eucap15ghz_20260908T220300Z/controlled64_delta_consumer_20260911_v1/run_v3/REQUEST_RESULTS.json",
+      "sha256": "1a030c64a40f97d3c964ab686edf21352dc6ef94fd7178445c9a09cd09df2fe9"
+    },
+    "formal_record": {
+      "path": "reports/eucap15_native_owner_20260909T062500Z/qualified15_single_member_adapter_v1/deployment_20260911T185658649019Z/000001.json",
+      "sha256": "ad2a96db8e9ac5e8e5ae7c8ea8aec11cd8eafedfbd8439ec755864f6db15e1bc"
+    },
+    "full_native_ledger": {
+      "sha256": "5f9544b3efa3743c20dc174d7b3a6475bd29c8d3ac1bc56a402e3bd0e3cee9ec"
+    },
+    "scene": {
+      "path": "reports/eucap15ghz_20260908T220300Z/postbudget_qualification_20260911_v1/SCENE_RECEIPT.json",
+      "sha256": "80025ce63c93f7221a504dd625aba6e5c9ccb0c40a6fbfc2d8167d3caf40d3f3"
+    }
+  },
+  "limits": [
+    "Formal qualification of one old120 member does not admit five new64 train candidates or the remaining30.",
+    "All original failures and13 budget-unstarted remain in64. DOE/exploration without original targets have no fabricated target error.",
+    "Five pre-native failures are conservatively unclassified by this reader; owner reports GDS audit but no unsupported fine classification is added.",
+    "This single frozen policy pair shows no coverage gain and does not establish general DOE or directed-sampling superiority.",
+    "Prior12840/128 and1253/1259SELF_PROXY holdout are separate experiments."
+  ]
+}

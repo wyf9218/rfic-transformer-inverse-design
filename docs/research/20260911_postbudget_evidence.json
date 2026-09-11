@@ -1,0 +1,104 @@
+{
+  "schema": "eucap15_postbudget_public_evidence_index.v1",
+  "base_commit": "cc3e59f3df590f62c880878bdec49f5f98000655",
+  "public_files": [
+    {
+      "sha256": "16a415ae3086019dd0a18f88441e18f0ae0717fb60efadf1ba0de8b075532f5b",
+      "path": "research/broadband56_nn/eucap15_acquisition_evidence.py"
+    },
+    {
+      "sha256": "237e340c7830ac6e86b9d4579df66a365dd78010be4681eba4679d361a6fee97",
+      "path": "research/broadband56_nn/eucap15_controlled_evidence.py"
+    },
+    {
+      "sha256": "2bf638fed13b9745a4db5bb94f492b44680f9fbeb37474aba4129bd15bfd88a7",
+      "path": "research/broadband56_nn/eucap15_controlled_results.py"
+    },
+    {
+      "sha256": "2385e3e8263dc6e95e8cf57dbf3cac670f994dc50a1025934ae86a63eda3366a",
+      "path": "tests/test_eucap15_acquisition_score_ulp.py"
+    },
+    {
+      "sha256": "0bde5abcd8fdd58c1a698cdf81053d90ae2c8ae016153ea3be8c862009bae910",
+      "path": "tests/test_eucap15_controlled_birth_argv.py"
+    },
+    {
+      "sha256": "06f1897ddb4d4e79ad1e1188f16b8470118e5faaf18a6e2a1f9ded64bc0a05ae",
+      "path": "tests/test_eucap15_controlled_delta.py"
+    },
+    {
+      "sha256": "8351c4b976bb2967b938d32b129f8319e05dd6f15aece6fced582ec97273499a",
+      "path": "docs/research/CURRENT_STATUS.md"
+    },
+    {
+      "sha256": "ca3fccbfa9fb8d914bca845ee405261251ee5e60dac61f63b86746cf04ab5c3e",
+      "path": "docs/research/20260911_first_qualified_increment.json"
+    },
+    {
+      "sha256": "07170372c78eded62e2418a7532f5e38fb763c1ce90100218c28a4b61734447a",
+      "path": "docs/research/20260911_postbudget_closure.json"
+    },
+    {
+      "sha256": "b775934bef875615549034b9b273e6311fa67067bc651db61b9eb97baee9fed2",
+      "path": "docs/research/20260911_postbudget_closure.md"
+    },
+    {
+      "sha256": "ada06c50eff923b01e859b17f17af47c05e4279577bcb97bfdfb29edcc61f7e5",
+      "path": "docs/research/code/qualified15_single_member_20260911/adapter.py"
+    },
+    {
+      "sha256": "9ba7ce18ab839c44da857689b7c53cb59041bd556a98d9e82442bed592c6ddb0",
+      "path": "docs/research/code/qualified15_single_member_20260911/atomic_primitives.py"
+    },
+    {
+      "sha256": "f699ab045a8edbc7a378276512ac28d21efb277d09db49b3edcde243bbb36225",
+      "path": "docs/research/code/qualified15_single_member_20260911/README.md"
+    },
+    {
+      "sha256": "1fb83b825059a8a03bb87380b3adebae9c13aa6da9294f15cb7232c6b472f273",
+      "path": "docs/research/code/qualified15_single_member_20260911/SOURCE_MAP.json"
+    },
+    {
+      "sha256": "ecc8049f2a506ee423fb49a5b29ddcde8c26067114954540ad4c8c8be36e8c7a",
+      "path": "docs/research/paper_development_closure_20260911/manuscript.md"
+    },
+    {
+      "sha256": "0680fd8cb939236ee20f920e67fd6f7928f9828df0416716021c969c1febd5b2",
+      "path": "docs/research/paper_development_closure_20260911/SOURCE_RECEIPT.json"
+    }
+  ],
+  "private_evidence": {
+    "delta_actual": {
+      "receipt_sha256": "83d355a3f6f00d120c03200b17c6f8639733a0d7a33f83e34cf0b2eb88e3b47f",
+      "spec_sha256": "f503ddbba841adf302cbec1d516dfb7134d9242d2847a8e6b5ffa8a2e3c5c61a",
+      "new_tests_unique": 45,
+      "additional_new_test_assertion_compatibility_check": 1,
+      "old_suite_reruns": 0
+    },
+    "source_QA": {
+      "delta": "503ca6e8d7f912e200953e9cc6cf15bda0246f71368d183316987f19c4d0dc8a",
+      "score": "d40723a88af56d492dfe278a3334c50b4ae0678790e027d358263b2c489916c8",
+      "birth": "9b958a9f82dfaa3bc3447216f8b1ba98cbfe50f8aa5c3337fae8429178db8797"
+    },
+    "saved_results_QA": {
+      "sha256": "5750e84443b7ebe7c79cd147ea2f3bbea20d5cec28d35caa749feefd022def32",
+      "checks": 5962,
+      "scope": "Saved output arithmetic only; not repeated physical/full-pool QA"
+    },
+    "formal_exact_one_QA": {
+      "sha256": "90030f0a09cf804d78a17f75e92ebf6eb56dbe2a35baff04a8a6acfe3ca93984",
+      "scope": "Exact one old120 member only; not whole historical certification"
+    },
+    "failed_attempts_preserved": [
+      {
+        "path": "controlled64_delta_consumer_20260911_v1/run_v1/FAILURE_RECEIPT.json",
+        "sha256": "456fc591497f07fbcc01a771b57c5dfed313ab2afe5e52d20ed5ccb101531c4c"
+      },
+      {
+        "path": "controlled64_delta_consumer_20260911_v1/run_v2/FAILURE_RECEIPT.json",
+        "sha256": "d5879d9557bbe0e429162d8d5d48f88dd9cb0e988a79856aa1dde689f8efc539"
+      }
+    ]
+  },
+  "publication_boundaries": "No raw geometries, private dataset/model/PDK, secrets or deployment configuration. All16 public pins exclude this index itself. Private full mapping remains in immutableSPEC/capture. No new models/EMX/controller."
+}

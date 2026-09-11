@@ -1,0 +1,40 @@
+{
+  "schema": "eucap15_public_single_qualified_increment.v1",
+  "status": "ONE_SCOPED_QUALIFIED_INCREMENT_COMMITTED_AND_READ_BACK",
+  "native_commit_utc": "2026-09-11T18:56:59.784021+00:00",
+  "request_id": "eucap15_dev_acquisition_pair_20260909_v1-GEOMETRY_DOE-006",
+  "geometry_sha256": "804eddfad6a985c668daae57cba007891999da88db9d09d20df210ea8bd48205",
+  "increment_sequence": 1,
+  "original_split": "train",
+  "qualification_processed": 1,
+  "qualified_increment_added": 1,
+  "remaining_of31": 30,
+  "idempotent_replay_added": 0,
+  "old_broadband_accepted_sequence": null,
+  "old_broadband_added": 0,
+  "current_100k_complete_total": null,
+  "known_certified_increment_unique_lower_bound": 1,
+  "not_a_6701_or_21136_union": true,
+  "new_training_rows": 0,
+  "fresh_emx_repeated": 0,
+  "source_evidence": {
+    "record": {
+      "path": "reports/eucap15_native_owner_20260909T062500Z/qualified15_single_member_adapter_v1/deployment_20260911T185658649019Z/000001.json",
+      "sha256": "ad2a96db8e9ac5e8e5ae7c8ea8aec11cd8eafedfbd8439ec755864f6db15e1bc"
+    },
+    "readback": {
+      "path": "reports/eucap15_native_owner_20260909T062500Z/qualified15_single_member_adapter_v1/deployment_20260911T185658649019Z/OBSERVATION.json",
+      "sha256": "919e3d7af8d80577e241ece9118d1a308dd836e831824495e8f3c390845a777a"
+    },
+    "independent_review": {
+      "path": "reports/eucap15ghz_20260908T220300Z/postbudget_qualification_20260911_v1/formal_admission_review_v1/REVIEW.json",
+      "sha256": "90030f0a09cf804d78a17f75e92ebf6eb56dbe2a35baff04a8a6acfe3ca93984"
+    }
+  },
+  "limits": [
+    "Qualification and deduplication are limited to the enumerated known pools and the exact member.",
+    "Future historical imports must deduplicate against this immutable geometry before a union is counted.",
+    "Existing 31 research membership and frozen 6329 model/data are unchanged.",
+    "This public file is a sanitized evidence index, not the private ledger, data, PDK or a native-dispatch authorization."
+  ]
+}

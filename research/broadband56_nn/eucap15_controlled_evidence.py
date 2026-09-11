@@ -312,12 +312,12 @@ def _closed_birth(reader, result, proof, solver, batch, original, *,
     process=birth['process']; ancestor=birth['ancestor']; ancestry=birth['ancestry']
     _require(isinstance(ancestry,list) and ancestry, 'Missing native ancestry')
     identity=('pid','start_ticks','uid','ppid','argv')
-    for p in [process,ancestor,*ancestry]:
+    for i,p in enumerate([process,ancestor,*ancestry]):
         _require(isinstance(p,dict) and set(identity)|{'state'}<=set(p),
                  'Missing process identity or state')
         _require(all(type(p[k]) is int and p[k]>0 for k in ('pid','start_ticks')) and
                  type(p['uid']) is int and p['uid']>=0 and type(p['ppid']) is int and p['ppid']>=0 and
-                 isinstance(p['argv'],list) and p['argv'] and
+                 isinstance(p['argv'],list) and (p['argv'] or i==1) and
                  all(isinstance(a,str) for a in p['argv']), 'Malformed process identity')
         _require(p['state'] in ('R','S','D','T','t','I','W','K','P'),
                  'Missing or non-live process state')
@@ -325,9 +325,20 @@ def _closed_birth(reader, result, proof, solver, batch, original, *,
     # /proc observations are not simultaneous: R/S may change without a new
     # process. Keep both live observations, but compare only stable identity.
     _require(len(chain)==len(ancestry) and process['pid'] in chain and ancestor['pid'] in chain and
-             all(_same(p[k],chain[p['pid']][k]) for p in (process,ancestor) for k in identity) and
+             all(_same(p[k],chain[p['pid']][k]) for p in (process,ancestor) for k in identity[:-1]) and
+             _same(process['argv'],chain[process['pid']]['argv']) and
              observation['wrapper_pid']==ancestor['pid'],
              'Native ancestry identity conflict')
+    direct_wrapper_argv_missing = ancestor['argv']==[]
+    if direct_wrapper_argv_missing:
+        # Preserve the missing direct observation; only the same pinned birth's
+        # complete wrapper ancestry can supply redundant identity evidence.
+        # Native and every ancestry record still require nonempty argv above.
+        _require(_same(chain[ancestor['pid']]['argv'],['/bin/bash',*birth['command']]),
+                 'Missing direct wrapper argv lacks exact same-birth command evidence')
+    else:
+        _require(_same(ancestor['argv'],chain[ancestor['pid']]['argv']),
+                 'Native ancestry identity conflict')
     _require(process['state']!='Z' and process['uid']==ancestor['uid'] and
              isinstance(process['argv'],list) and len(process['argv'])==len(proof['command']) and
              process['argv'][1:]==proof['command'][1:], 'Not the exact native executable invocation')
@@ -341,6 +352,9 @@ def _closed_birth(reader, result, proof, solver, batch, original, *,
     _require(admitted<=observed<=ended<=solver_ended<=frame._time(capture_completed_utc,'capture close'),
              'Native observation/publication chronology differs')
     return dict(native_birth_identity_verified=True,native_birth_process=process,
+        direct_wrapper_argv_observation='MISSING' if direct_wrapper_argv_missing else 'PRESENT',
+        wrapper_identity_source='COMPLETE_SAME_BIRTH_ANCESTRY' if direct_wrapper_argv_missing else
+                                'DIRECT_AND_SAME_BIRTH_ANCESTRY',
         native_observation='VERIFIED_BIRTH_OBSERVATION_FULL_START_CHRONOLOGY_UNRESOLVED',
         native_birth_observed_utc=birth['observed_utc'],native_count_in_this_result=1,
         native_observation_pin=observation_pin,slot=slot,
@@ -361,6 +375,26 @@ def inspect_closed_result(reader, candidate_id, result_pin, batch, *, owner_root
         _require(_same(value,dict(base,status=status,actual_native_starts=0)), 'Original hold RESULT differs')
         return dict(state='ANALYTIC_FAIL',native_count_in_this_result=0,terminal_publication_verified=True)
     _require(original['local_dispatch_eligible'] is True, 'Held proposal executed')
+    if status in ('NOT_DISPATCHED_ARM_START_CAP','NOT_DISPATCHED_DEADLINE','NOT_DISPATCHED_STORAGE_CAP'):
+        # This is a published budget decision, not yet proof of zero births.
+        # The complete-ledger adapter must establish the latter independently.
+        _require(_same(value,dict(base,status=status,plan=value['plan'],
+            budget_decision=value['budget_decision'],stage_evidence=[value['budget_decision']])),
+            'Budget RESULT changed original identity or fabricated physical values')
+        _require(Path(value['budget_decision']['path']).parent==candidate_root,
+                 'Budget decision belongs to another candidate')
+        decision=reader.document(value['budget_decision'])
+        plan=reader.document(value['plan'])
+        _require(plan['release']==expected_release,'Budget plan release differs')
+        plan_sha=hashlib.sha256(json.dumps(plan,sort_keys=True,separators=(',',':'),allow_nan=False).encode()).hexdigest()
+        _fields(decision,dict(schema='eucap15_controlled64_budget_decision.v1',
+            candidate_id=candidate_id,plan_sha256=plan_sha,status=status), 'Budget decision')
+        _require(frame._time(decision['observed_utc'],'budget observation')<=
+                 frame._time(capture_completed_utc,'capture cutoff'), 'Future budget decision')
+        return dict(state='BUDGET_NOT_DISPATCHED',native_count_in_this_result=None,
+            terminal_publication_verified=True,budget_status=status,
+            budget_decision=value['budget_decision'],budget_decision_value=decision,
+            plan_pin=value['plan'],native_observation='PUBLISHED_BUDGET_DECISION_BIRTH_LEDGER_REQUIRED')
     if status=='CANDIDATE_FAILURE_RETAINED_NO_SUBSTITUTION':
         _require(isinstance(value['error'],str) and value['error'] and isinstance(value['stage_evidence'],list),
                  'Malformed retained failure')

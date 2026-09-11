@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import argparse
 from collections import Counter
+from copy import deepcopy
 import csv
 from datetime import datetime, timezone
 import hashlib
@@ -29,10 +30,12 @@ from .data import _split_for_hash
 INTENT_SHA = 'ea8cb05f228215932a47ee6620267ca299818e8ea76299f9862f920b362c2abb'
 MANIFEST_SHA = '007f0c42e597089029111cbb005e4679fc5dad55efa735a94fe7baaba916de46'
 PROPOSALS_SHA = '17de43afa74182674d6391c3b84bc8dca729d6c3f6d1b711e8c5728fab642fa3'
+PRIOR_RECEIPT_SHA = '7d997c5a226da5f10cf600f1fd7db2caca208f0fd24ec74c46067b7e07989294'
 ARMS = ('COVERAGE_DIRECTED', 'GEOMETRY_DOE_CONTROL')
 COUNTS = {'SPARSE_TARGETED': 25, 'EXPLORATION': 7, 'GEOMETRY_DOE': 32}
 IDENTITY = ('candidate_id', 'request_id', 'arm', 'arm_order', 'global_order', 'q_proxy')
-PRE_FAILURE = ('ANALYTIC_FAIL', 'DUPLICATE_HOLD', 'GDS_FAIL', 'DRC_FAIL')
+PRE_FAILURE = ('ANALYTIC_FAIL', 'DUPLICATE_HOLD', 'GDS_FAIL', 'DRC_FAIL',
+               'PRE_NATIVE_FAILURE_UNCLASSIFIED')
 # Prefix blockers; NO_CLOSED/UNCLASSIFIED do NOT assert that a solver never started.
 UNSTARTED = ('PENDING', 'RESOURCE_PENDING', 'BUDGET_NOT_DISPATCHED',
              'NO_CLOSED_RESULT_IN_CAPTURE', 'CANDIDATE_FAILURE_UNCLASSIFIED')
@@ -406,6 +409,324 @@ def run_closed_capture(spec_path, spec_sha, output):
         raise
 
 
+class DeltaReader(MirrorReader):
+    """An accepted candidate can supply birth metadata, never old physics again."""
+    def __init__(self,path_map,protected=()):
+        super().__init__(path_map)
+        self.protected=tuple(Path(p) for p in protected)
+
+    def read(self,expected):
+        original=Path(expected['path']); resolved=Path(self.paths.get(str(original),str(original)))
+        for path in (original,resolved):
+            for root in self.protected:
+                if path.is_relative_to(root):
+                    _require(path.is_relative_to(root/'emx_selected/solve/native_observation'),
+                             'Accepted candidate physics must not be reopened: '+str(path))
+        return super().read(expected)
+
+
+def _merge_reads(target,source):
+    for path,item in source.evidence.items():
+        _require(path not in target.evidence or target.evidence[path]==item,'Conflicting incremental source')
+        target.evidence[path]=item
+
+
+def load_previous(reader,receipt_pin,ctx,*,expected_release,expected_owner_config):
+    """Reuse the exact previously accepted output, not fresh asserted row values."""
+    _require(receipt_pin['sha256']==PRIOR_RECEIPT_SHA,'Only the accepted DOE001 receipt is reusable')
+    receipt=reader.document(receipt_pin)
+    _fields(receipt,dict(schema='eucap15_controlled64_closed_capture_consumer_receipt.v1',
+        status='PASS_SCOPED_CLOSED_CAPTURE_NOT_FULL_START_LEDGER',source_bytes_unchanged=True,
+        native_actions_performed=False,model_loads=0,target_generation=0,training_admission=False),'Prior receipt')
+    spec=reader.document(receipt['spec'])
+    _fields(spec,dict(schema='eucap15_controlled_closed_capture_consumer.v1',intent=ctx['intent'],
+        preparation_manifest=ctx['manifest'],expected_release=expected_release,
+        expected_owner_config=expected_owner_config),'Prior experiment authority')
+    artifacts=receipt['artifacts']
+    for name,p in artifacts.items():
+        _require(Path(p['path'])==Path(receipt_pin['path']).parent/name,'Prior artifact path differs')
+    table=reader.document(artifacts['REQUEST_RESULTS.json'])
+    _require(table['schema']=='eucap15_controlled64_request_rows.v1','Prior row schema')
+    rows=table['rows']; compare(ctx,rows,publication_verified=True)
+    closure=reader.document(artifacts['READ_SOURCE_PINS.json'])
+    bindings={}
+    for entry in closure:
+        op,rp=entry['original'],entry['resolved']
+        _require(op['sha256']==rp['sha256'] and op['bytes']==rp['bytes'] and
+                 (op['path'] not in bindings or bindings[op['path']]==entry),'Prior source closure conflict')
+        bindings[op['path']]=entry
+    protected=[]; accepted=[]
+    for row in rows:
+        p=row.get('source_result')
+        if not row.get('terminal_publication_verified'): continue
+        _require(p and p['path'] in bindings and bindings[p['path']]['original']==p,
+                 'Prior accepted RESULT lacks its original closure')
+        accepted.append(row['candidate_id'])
+        if row['physical_chain_verified']:
+            protected.extend([str(Path(p['path']).parent),
+                              str(Path(bindings[p['path']]['resolved']['path']).parent)])
+    _require(len(accepted)==1 and sum(r['physical_chain_verified'] for r in rows)==1,
+             'Expected exactly the one accepted DOE001 row')
+    return deepcopy(rows),protected,dict(receipt=receipt_pin,artifacts=artifacts,
+        accepted_candidate_ids=accepted,original_evidence_closure_reused_not_rehashed=True)
+
+
+def bind_full_start_ledger(reader,ledger_pin,ctx,rows,*,expected_release,expected_owner_config):
+    """Bind the actual owner birth ledger; slot/RESULT order never supplies rank."""
+    ledger=reader.document(ledger_pin); plan=reader.document(ledger['plan'])
+    _fields(ledger,dict(schema='eucap15_controlled64_full_native_start_capture.v1',
+        release=expected_release,original_denominator=64,all_reserved_candidates_included=True,
+        unclosed_births_included=True,order_basis='LINUX_PROC_START_TICKS_NOT_FROZEN_PROPOSAL_ORDER'),
+        'Complete native start capture')
+    _require(_time(ledger['capture_started_utc'],'capture start')<=_time(ledger['cutoff_utc'],'cutoff'),
+             'Ledger cutoff precedes capture')
+    keys=('request_id','candidate_id','arm','arm_order','global_order',
+          'canonical_geometry_sha256','q_proxy','local_dispatch_eligible')
+    _fields(plan,dict(schema='eucap15_controlled64_start_slot_plan.v1',release=expected_release,
+        manifest_sha256=ctx['manifest']['sha256'],intent_sha256=ctx['intent']['sha256'],
+        per_arm_max=16,total_max=32,incremental_storage_max_bytes=2147483648,
+        candidates={cid:{k:p[k] for k in keys} for cid,p in ctx['rows'].items()}),'Frozen ledger plan')
+    admitted=_time(plan['admitted_at_utc'],'admission'); deadline=_time(plan['deadline_utc'],'deadline')
+    _require((deadline-admitted).total_seconds()==21600,'Six-hour budget changed')
+    plan_sha=hashlib.sha256(json.dumps(plan,sort_keys=True,separators=(',',':'),allow_nan=False).encode()).hexdigest()
+    config=reader.document(expected_owner_config)
+    exe=config['emx_runtime']['native_executable']
+    by_id={r['candidate_id']:r for r in rows}; births=[]; slots={}; global_slots=set(); arm_slots=set()
+    unresolved=[]
+    for entry in ledger['rows']:
+        slot=entry['slot']; cid=slot['candidate_id']
+        _require(cid in by_id and cid not in slots and ctx['rows'][cid]['local_dispatch_eligible'],
+                 'Duplicate/held/foreign native slot')
+        _fields(slot,dict(schema='eucap15_controlled64_start_slot.v1',status='RESERVED_NOT_NATIVE_PROOF',
+            plan_sha256=plan_sha,candidate=plan['candidates'][cid],arm=ctx['rows'][cid]['arm'],
+            automatic_redispatch_allowed=False,native_started=None,native_process_evidence=None),'Persistent slot')
+        _require(type(slot['global_slot']) is int and 1<=slot['global_slot']<=32 and
+                 type(slot['arm_slot']) is int and 1<=slot['arm_slot']<=16 and
+                 slot['global_slot'] not in global_slots and (slot['arm'],slot['arm_slot']) not in arm_slots,
+                 'Duplicate/out-of-budget slot')
+        global_slots.add(slot['global_slot']); arm_slots.add((slot['arm'],slot['arm_slot'])); slots[cid]=slot
+        _require(type(entry['result_closed']) is bool and
+                 entry['result_closed']==bool(by_id[cid].get('terminal_publication_verified')) and
+                 entry['reservation_is_not_native_start'] is True,'Slot closure differs from received result')
+        _require(isinstance(entry['births'],list) and len(entry['births'])<=1,'Duplicate native solver birth')
+        _require(entry['actual_native_starts']==len(entry['births']),'Slot birth count differs')
+        if not entry['births']: unresolved.append(cid); continue
+        bp=entry['births'][0]; birth=reader.document(bp['pin'])
+        _require(_same(birth,bp['birth']),'Embedded native birth differs from pinned bytes')
+        _fields(birth,dict(schema='eucap15_controlled64_native_birth.v1',status='OBSERVED_EXACT_NATIVE_PROCESS',
+            native_started=True,candidate=slot['candidate'],arm=slot['arm'],arm_slot=slot['arm_slot'],
+            global_slot=slot['global_slot'],plan_sha256=plan_sha,launch_binding=slot['launch_binding'],
+            command=slot['launch_binding']['command'],expected_executable=exe,
+            executable_sha256=exe['sha256'],executable_bytes=exe['bytes']),'Native ledger birth')
+        native=Path(bp['pin']['path'])
+        _require(native.parent==Path(expected_release['path']).parent/ctx['rows'][cid]['request_id']/
+                 'emx_selected/solve/native_observation' and
+                 native.name==f"NATIVE_BIRTH_{birth['process']['pid']}_{birth['process']['start_ticks']}.json",
+                 'Native birth path/candidate differs')
+        # The physical inspector has already checked executable/ancestry/command
+        # and the single observation. Reuse that authority, not a wrapper PID.
+        row=by_id[cid]
+        _require(row.get('native_birth_identity_verified') is True and row['native_birth_process']==birth['process'] and
+                 row['slot']==slot,'Ledger birth is not the checked candidate birth')
+        observation=reader.document(row['native_observation_pin'])
+        _require(observation['observations']==[birth] and observation['slot']==slot,
+                 'Ledger differs from solver-bound observation')
+        ticks=birth['process']['start_ticks']; hz=birth['clock_ticks_per_second']; epoch=birth['kernel_boot_time_epoch_seconds']
+        _require(type(ticks) is int and type(hz) is int and hz>0 and type(epoch) is int and epoch>0 and
+                 birth['wall_time_precision_seconds']==1 and isinstance(birth['boot_id'],str) and birth['boot_id'],
+                 'Kernel clock identity missing')
+        seconds=ticks/hz
+        _require(_same(seconds,birth['kernel_start_since_boot_seconds']) and
+                 _time(birth['kernel_start_utc'],'kernel birth')==datetime.fromtimestamp(epoch+seconds,timezone.utc),
+                 'Kernel-derived time differs; observed/capture time is not birth')
+        _require(admitted<=_time(birth['kernel_start_utc'],'birth')<=_time(birth['observed_utc'],'observed')<=
+                 _time(ledger['cutoff_utc'],'cutoff') and
+                 _time(slot['reserved_utc'],'reservation')<=_time(birth['observed_utc'],'observation'),
+                 'Birth/reservation/cutoff chronology differs')
+        _require(_time(birth['kernel_start_utc'],'birth')<=deadline,
+                 'Actual native birth exceeds the frozen deadline')
+        births.append(dict(pin=bp['pin'],birth=birth))
+    _require(isinstance(ledger['unresolved_reservations'],list),'Unresolved reservations missing')
+    # Unknown reservation formats are not silently treated as no-start. This
+    # terminal adapter accepts only the actually closed, gap-free ledger.
+    _require(not unresolved and ledger['unresolved_reservations']==[],
+             'Unresolved reservations block complete-budget comparisons')
+    _require(len({(x['birth']['boot_id'],x['birth']['process']['pid'],x['birth']['process']['start_ticks']) for x in births})==len(births),
+             'Native process reused across candidates')
+    boots={x['birth']['boot_id'] for x in births}
+    clocks={(x['birth']['clock_ticks_per_second'],x['birth']['kernel_boot_time_epoch_seconds']) for x in births}
+    _require(len(boots)<=1 and len(clocks)<=1 and ledger['boot_ids']==sorted(boots), 'Cross-boot chronology unresolved')
+    births.sort(key=lambda x:x['birth']['process']['start_ticks'])
+    _require(len({x['birth']['process']['start_ticks'] for x in births})==len(births),
+             'Equal native ticks do not establish a total ordering')
+    wanted=[dict(x,order=i) for i,x in enumerate(births,1)]
+    _require(_same(wanted,ledger['actual_start_order']) and
+             ledger['actual_native_starts']==ledger['observed_native_start_lower_bound']==len(births),
+             'Actual birth ledger count/order differs')
+    for i,item in enumerate(births,1):
+        birth=item['birth']; row=by_id[birth['candidate']['candidate_id']]
+        row.update(solver_start_verified=True,solver_start_order=i,solver_started_utc=birth['kernel_start_utc'],
+            native_start_pin=item['pin'],native_boot_id=birth['boot_id'],native_clock_precision_seconds=1,
+            native_observation='VERIFIED_NATIVE_BIRTH_AND_COMPLETE_LEDGER',native_accounting='STARTED_CLOSED')
+        _require(row['state'] in SOLVER_CLOSED,'Unclassified/absent native closure blocks matched comparison')
+    for row in rows:
+        cid=row['candidate_id']
+        if cid in slots: continue
+        _require(not row.get('native_birth_identity_verified') and row['state'] not in SOLVER_CLOSED,
+                 'Verified physical result omitted from complete ledger')
+        row['native_start_absence_verified_at_cutoff']=True
+        if row['state']=='CANDIDATE_FAILURE_UNCLASSIFIED':
+            row.update(state='PRE_NATIVE_FAILURE_UNCLASSIFIED',native_count_in_this_result=0,
+                native_accounting='CLOSED_FAILURE_NO_NATIVE_BIRTH',
+                failure_classification='PRE_NATIVE_STAGE_UNCLASSIFIED_NOT_INFERRED_FROM_ERROR')
+        elif row['state']=='BUDGET_NOT_DISPATCHED':
+            decision=row['budget_decision_value']; status=row['budget_status']
+            _require(row['plan_pin']==ledger['plan'],'Budget terminal uses different plan')
+            stamp=_time(decision['observed_utc'],'budget decision')
+            if status=='NOT_DISPATCHED_ARM_START_CAP':
+                prior=[x for x in births if x['birth']['arm']==row['arm'] and
+                       _time(x['birth']['kernel_start_utc'],'birth')<=stamp]
+                _require(len(prior)==16,'Arm cap was not reached by actual native starts')
+            elif status=='NOT_DISPATCHED_DEADLINE':
+                _require(stamp>=deadline,'Deadline terminal was premature')
+            else:
+                _require(type(decision['allocated_incremental_bytes']) is int and
+                    decision['allocated_incremental_bytes']>=plan['incremental_storage_max_bytes'],
+                    'Storage terminal does not demonstrate the bound')
+            row.update(native_count_in_this_result=0,native_accounting='BUDGET_NOT_DISPATCHED_VERIFIED')
+        elif row['state'] in PRE_FAILURE:
+            row.update(native_count_in_this_result=0,native_accounting='ORIGINAL_HOLD_NO_NATIVE_BIRTH')
+        else: row['native_accounting']='UNOBSERVED_RESULT_NOT_PROOF_OF_DISPATCH'
+    return dict(pin=ledger_pin,actual_native_starts=len(births),reserved_candidates=len(slots),
+        unresolved_reservations=0,cutoff_utc=ledger['cutoff_utc'],order_basis=ledger['order_basis'],
+        wall_time_precision_seconds=1,wrapper_and_reservation_not_counted=True)
+
+
+def consume_closed_delta(reader,transport_pin,previous_receipt,terminal_pin,ctx,*,
+                         expected_release,expected_owner_config):
+    """Inspect each new RESULT once and inherit the accepted DOE physical row."""
+    from .eucap15_controlled_evidence import inspect_closed_result
+    transport=reader.document(transport_pin)
+    _fields(transport,dict(schema='eucap15_controlled64_private_capture.v1',native_actions_by_capture=0,
+                          production_accepted_added=0),'Native transport')
+    cutoff=transport['utc']; _time(cutoff,'transport cutoff')
+    owner_root=Path(expected_release['path']).parent
+    _require(owner_root.is_relative_to(Path(transport['remote_root'])) and
+             Path(expected_owner_config['path']).parent==owner_root,'Transport/release/config root differs')
+    rows,protected,reuse=load_previous(reader,previous_receipt,ctx,
+        expected_release=expected_release,expected_owner_config=expected_owner_config)
+    reader.protected=tuple(Path(p) for p in protected)
+    _require(Path(terminal_pin['path'])==owner_root/'BATCH_RECEIPT.json','Wrong batch terminal root')
+    terminal=reader.document(terminal_pin)
+    _fields(terminal,dict(status='ALL_ORIGINAL64_ACCOUNTED_WITHIN_BUDGET_NOT_PRODUCTION_ACCEPTANCE',
+        release=expected_release,N_original_requests=64,production_accepted_added=0),'Closed64 batch')
+    _require(_time(terminal['utc'],'batch close')<=_time(cutoff,'transport cutoff'),'Future batch terminal')
+    observed=transport['closed']; _require(isinstance(observed,list) and len(observed)==64,'All64 terminal pins required')
+    entries={}
+    for item in observed:
+        rid=item['request_id']; _require(rid not in entries,'Duplicate transported request')
+        entries[rid]=item
+    _require(set(entries)=={r['request_id'] for r in rows} and
+             {p['path']:p for p in terminal['results']}=={v['result']['path']:v['result'] for v in observed} and
+             len(terminal['results'])==64,'Batch/transport full denominator or RESULT pins differ')
+    new=[]; reused=[]
+    for row in rows:
+        cid=row['candidate_id']; item=entries[row['request_id']]; rp=item['result']
+        _require(Path(rp['path'])==owner_root/row['request_id']/'RESULT.json','Mixed candidate RESULT root')
+        if row.get('terminal_publication_verified'):
+            _require(rp==row['source_result'] and item['status']=='FRESH_EMX_EXTRACTED',
+                     'Previously accepted RESULT changed or withdrawn')
+            reused.append(cid); row['reused_from_receipt']=previous_receipt; continue
+        child=DeltaReader(reader.paths,protected)
+        value=child.document(rp); _require(value['status']==item['status'],'Transport status differs from RESULT')
+        checked=inspect_closed_result(child,cid,rp,ctx,owner_root=str(owner_root),
+            capture_completed_utc=terminal['utc'],expected_release=expected_release,expected_owner_config=expected_owner_config)
+        row.update(checked,source_result=rp,capture_state='PINNED_CLOSED_RESULT')
+        if checked['state'] in ('STRICT_VALID','EMX_INVALID'):
+            row['physical_chain_verified']=True
+            cell=actual_landing([row['actual'][j] for j in (0,1,3)])
+            row['actual_cell']=list(cell) if cell is not None else None
+        child.recheck(); _merge_reads(reader,child); new.append(cid)
+    _require(new,'No new RESULT; do not rerun accepted capture')
+    # New feature/budget publications were checked against BATCH above. For
+    # inherited physics use the accepted saved closure, never reopen FEATURE.
+    _require(all(_time(r['closed_utc'],'physical close')<=_time(terminal['utc'],'batch close')
+                 for r in rows if r['physical_chain_verified']),
+             'Batch terminal predates an accepted physical closure')
+    ledger=bind_full_start_ledger(reader,transport['ledger'],ctx,rows,
+        expected_release=expected_release,expected_owner_config=expected_owner_config)
+    _require(all(_time(r['solver_started_utc'],'birth')<=_time(terminal['utc'],'batch close')
+                 for r in rows if r['solver_start_verified']), 'Batch terminal predates an actual birth')
+    _require(terminal['plan']['plan']==reader.document(transport['ledger'])['plan'] and
+             terminal['plan']['release']==expected_release and
+             _time(terminal['utc'],'terminal')<=_time(ledger['cutoff_utc'],'ledger cutoff')<=_time(cutoff,'transport'),
+             'Terminal/ledger authority or cutoff differs')
+    summary=compare(ctx,rows,publication_verified=True)
+    transported={p['original']['path']:p['original'] for p in transport['files']}
+    new_sets=[entries[by_id['request_id']]['result'] for by_id in rows if by_id['candidate_id'] in new and
+              entries[by_id['request_id']]['result']['path'] in transported]
+    previous_holds=[r for r in rows if r['candidate_id'] in new and r['source_result']['path'] not in transported]
+    _require(all(transported[p['path']]==p for p in new_sets) and
+             all(r['state']=='ANALYTIC_FAIL' for r in previous_holds),'Undeclared new RESULT artifact set')
+    summary.update(N_closed_result_sources=64,N_new_result_sources=len(new),N_reused_physical_rows=len(reused),
+        new_result_artifact_sets=len(new_sets),previous_hold_metadata_reconciled=len(previous_holds),
+        old_physical_rows_reused=len(reused),new_physical_chains=sum(r['physical_chain_verified'] and
+            r['candidate_id'] in new for r in rows),old_physical_chains_reopened=0,
+        new_candidate_ids=new,reused_candidate_ids=reused,full_native_start_ledger=ledger,
+        native_result_consumer='INCREMENTAL_CLOSED64_AND_FULL_NATIVE_LEDGER',
+        physical_rows=sum(r['physical_chain_verified'] for r in rows),
+        prior_physical_file_reads=0,model_loads=0,target_generation=0,source_result_reuse=reuse,
+        no_source_population_training_admission=True)
+    reader.recheck()
+    return dict(rows=rows,summary=summary)
+
+
+def run_closed_delta(spec_path,spec_sha,output):
+    """One no-clobber delta CLI; no scheduling, model, or native execution."""
+    from . import eucap15_controlled_evidence as evidence
+    spec_path,output=Path(spec_path).absolute(),Path(output).absolute()
+    no_symlinks(spec_path); no_symlinks(output)
+    sp=pin(spec_path); _require(sp['sha256']==spec_sha,'Spec SHA differs')
+    spec=_strict_json(spec_path.read_bytes()); _require(pin(spec_path)==sp,'Spec mutated')
+    required={'schema','intent','preparation_manifest','path_map','implementation','transport',
+              'previous_receipt','batch_receipt','expected_release','expected_owner_config'}
+    _require(set(spec)==required and spec['schema']=='eucap15_controlled_closed_delta_consumer.v1','Exact delta spec required')
+    output.mkdir(parents=False,exist_ok=False); reader=DeltaReader(spec['path_map'])
+    try:
+        implementation=spec['implementation']
+        _require(pin(Path(__file__).resolve()) in implementation and pin(Path(evidence.__file__).resolve()) in implementation,
+                 'Both active reader sources must be pinned')
+        for p in implementation: _require(pin(Path(p['path']))==p,'Source changed')
+        release=reader.document(spec['expected_release']); config=reader.document(spec['expected_owner_config'])
+        _require(release['config']==spec['expected_owner_config'] and
+                 config['original_manifest']==spec['preparation_manifest'],'Caller authority differs')
+        ctx=evidence.load_context(reader,spec['intent'],spec['preparation_manifest'])
+        result=consume_closed_delta(reader,spec['transport'],spec['previous_receipt'],spec['batch_receipt'],ctx,
+            expected_release=spec['expected_release'],expected_owner_config=spec['expected_owner_config'])
+        put_json(output/'REQUEST_RESULTS.json',dict(schema='eucap15_controlled64_request_rows.v1',rows=result['rows']))
+        fields=sorted({k for row in result['rows'] for k in row})
+        flat=[{k:json.dumps(r.get(k),allow_nan=False,sort_keys=True) if isinstance(r.get(k),(dict,list)) else r.get(k)
+               for k in fields} for r in result['rows']]
+        put_csv(output/'REQUEST_RESULTS.csv',flat,fields); put_json(output/'SUMMARY.json',result['summary'])
+        reader.recheck(); _require(pin(spec_path)==sp,'Spec changed during delta')
+        for p in implementation: _require(pin(Path(p['path']))==p,'Source changed during delta')
+        put_json(output/'READ_SOURCE_PINS.json',list(reader.evidence.values()))
+        artifacts={p.name:pin(p) for p in output.iterdir() if p.is_file()}
+        receipt=dict(schema='eucap15_controlled64_closed_delta_receipt.v1',status='PASS_SCOPED_INCREMENTAL_CLOSED64',
+            spec=sp,implementation=implementation,artifacts=artifacts,source_bytes_unchanged=True,
+            previous_receipt=spec['previous_receipt'],native_actions_performed=False,model_loads=0,
+            target_generation=0,training_admission=False,prior_physical_file_reads=0)
+        put_json(output/'RECEIPT.json',receipt)
+        with (output/'SHA256SUMS').open('x') as stream:
+            for p in sorted(output.iterdir()):
+                if p.is_file() and p.name!='SHA256SUMS':stream.write(pin(p)['sha256']+'  '+p.name+'\n')
+        return receipt
+    except Exception as error:
+        put_json(output/'FAILURE_RECEIPT.json',dict(status='FAIL_PRESERVED_NO_RETRY',spec=sp,
+            error=repr(error),traceback=traceback.format_exc(),native_actions_performed=False))
+        raise
+
+
 def run_preflight(spec_path, spec_sha, output):
     """Only the frozen64 metadata CLI; native-result ingestion is not invoked.
 
@@ -461,12 +782,13 @@ def run_preflight(spec_path, spec_sha, output):
 
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('command',choices=['validate-context','consume-closed'])
+    parser.add_argument('command',choices=['validate-context','consume-closed','consume-closed-delta'])
     parser.add_argument('--spec',required=True)
     parser.add_argument('--spec-sha',required=True)
     parser.add_argument('--out',required=True)
     args=parser.parse_args()
-    receipt=(run_preflight if args.command=='validate-context' else run_closed_capture)(args.spec,args.spec_sha,args.out)
+    commands={'validate-context':run_preflight,'consume-closed':run_closed_capture,'consume-closed-delta':run_closed_delta}
+    receipt=commands[args.command](args.spec,args.spec_sha,args.out)
     print(json.dumps(dict(status=receipt['status'],output=args.out),allow_nan=False))
 
 

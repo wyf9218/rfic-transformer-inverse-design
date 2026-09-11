@@ -1,5 +1,15 @@
 # Current Evidence Status
 
+## Latest 15 GHz postbudget closure — 2026-09-11 18:34 UTC scene
+
+[Closed64 and first qualified increment](20260911_postbudget_closure.md) supersedes the08:24 alive/first-result snapshot below.
+Original owner exited; both arms ended at16 actual starts before the original deadline,64 terminal/0 pending.
+Directed/DOE: strict2/10, core1/5, eligible train1/4, new occupied cells0/0; m16 reached, primary firstK4 NOT_REACHED.
+No new solver/restart/budget;13 budget-unstarted and all original failures remain in64.
+Separately, one old120 member was formally committed/read back; remaining30 are unprocessed and full100K union remains UNKNOWN.
+Research quota UNKNOWN. Paper text now retains40/128 versus conditional40/48, separate from1253/1259SELF_PROXY.
+The prior sections are dated history and do not authorize old multi-frequency work or imply current liveness.
+
 ## Current 15 GHz increment — 2026-09-11
 
 [New verified results and code](20260911_heldout_and_last2.md): MARS owner access restored;

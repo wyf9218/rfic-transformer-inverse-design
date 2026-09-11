@@ -1,0 +1,18 @@
+{
+  "schema": "exact_case_public_source_map.v1",
+  "files": [
+    {
+      "file": "adapter.py",
+      "public_sha256": "ada06c50eff923b01e859b17f17af47c05e4279577bcb97bfdfb29edcc61f7e5",
+      "private_sha256": "ada06c50eff923b01e859b17f17af47c05e4279577bcb97bfdfb29edcc61f7e5",
+      "transformation": "BYTE_IDENTICAL"
+    },
+    {
+      "file": "atomic_primitives.py",
+      "public_sha256": "9ba7ce18ab839c44da857689b7c53cb59041bd556a98d9e82442bed592c6ddb0",
+      "private_sha256": "f397cd6390a146c41b2563f10f3430590fc632c2e23fc059468a80ebe36da4ca",
+      "transformation": "ONE_TRAILING_BLANK_LINE_REMOVED; NOT_BYTE_IDENTICAL; executable statements unchanged"
+    }
+  ],
+  "private_input_and_deployment_not_published": true
+}
