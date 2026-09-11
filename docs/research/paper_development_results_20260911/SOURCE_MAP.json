@@ -1,0 +1,41 @@
+[
+  {
+    "source": {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/paper_controlled32_increment_20260911_v1/document_v3/EuCAP_15GHz_Development_Results_Draft.docx",
+      "sha256": "4fecf1a3009e3925cc55219ea01812ca0371be7dd1f29c4d479033b8dd544242",
+      "bytes": 36420
+    },
+    "public": {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/github_worktrees/eucap15-mlp-capacity-20260909/docs/research/paper_development_results_20260911/EuCAP_15GHz_Development_Results_Draft.docx",
+      "sha256": "4fecf1a3009e3925cc55219ea01812ca0371be7dd1f29c4d479033b8dd544242",
+      "bytes": 36420
+    },
+    "byte_identical": true
+  },
+  {
+    "source": {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/paper_controlled32_increment_20260911_v1/document_v3/manuscript.md",
+      "sha256": "f418251bf93ab48e73b7ad9fddf82a5f0a25fbf9f9e78e0186f4c2f1b67b5249",
+      "bytes": 28417
+    },
+    "public": {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/github_worktrees/eucap15-mlp-capacity-20260909/docs/research/paper_development_results_20260911/manuscript.md",
+      "sha256": "f418251bf93ab48e73b7ad9fddf82a5f0a25fbf9f9e78e0186f4c2f1b67b5249",
+      "bytes": 28417
+    },
+    "byte_identical": true
+  },
+  {
+    "source": {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/paper_controlled32_increment_20260911_v1/document_v3/FINAL_RECEIPT.json",
+      "sha256": "dbfb6001a16ddb6d1ee9ec38b1e5cd48b8ba5fbc5ba3e5f07117be0a682fdfcb",
+      "bytes": 5122
+    },
+    "public": {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/github_worktrees/eucap15-mlp-capacity-20260909/docs/research/paper_development_results_20260911/REVIEW_RECEIPT.json",
+      "sha256": "dbfb6001a16ddb6d1ee9ec38b1e5cd48b8ba5fbc5ba3e5f07117be0a682fdfcb",
+      "bytes": 5122
+    },
+    "byte_identical": true
+  }
+]

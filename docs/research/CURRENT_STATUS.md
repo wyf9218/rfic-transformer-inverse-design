@@ -1,5 +1,15 @@
 # Current Evidence Status
 
+## Qualified train partition and cost supplement — 2026-09-11 22:05 UTC
+
+[Actual qualification, cost and paper increment](20260911_qualified20_cost_paper.md): nineteen new formal qualification commits were read back; the separate ledger now contains twenty unique train geometries. The three validation and eight test members remain untouched. Old broadband21135 and frozen6329 membership are unchanged; full100K qualification remains unclosed, not21135+20 or6700+20.
+
+At22:05:01 the original controlled64 owner was absent, related native processes were empty and the three checked locks had no holders. The original32-start budget stays closed; no new solver, candidate, model fit or cleanup was performed. Earlier alive snapshots below are historical.
+
+[Native solver cost evidence](controlled64_costs_20260911/README.md) now records1103.26s directed versus1262.35s DOE across16 starts each. All64 proposals and missing-cost nulls remain visible. Full pipeline/storage cost is unknown; there is no new occupied-cell gain or general sampling-advantage claim, and firstK4 remains NOT_REACHED.
+
+[Updated discussion draft](paper_development_results_20260911/README.md) retains40/128 physical attainment, conditional40/48, and the separate1253/1259SELF_PROXY holdout. No AI scientific figures or FINAL-model claims are added. Research space available was392333971456B at22:01:56; quota remains UNKNOWN for that mount, and controlled64 du was248311808B at22:05:01.
+
 ## Latest 15 GHz postbudget closure — 2026-09-11 18:34 UTC scene
 
 [Closed64 and first qualified increment](20260911_postbudget_closure.md) supersedes the08:24 alive/first-result snapshot below.

@@ -1,0 +1,58 @@
+{
+  "status": "PASS_SAVED_COST_PROJECTION",
+  "created_utc": "2026-09-11T22:02:17.659784+00:00",
+  "builder": {
+    "path": "reports/eucap15ghz_20260908T220300Z/qualification_cost_paper_20260911_v1/export_public_costs.py",
+    "sha256": "e0c1fb423590bd381c602f92160fd4448a47647557bce0316b6f05b9d4c4dc54",
+    "bytes": 7154
+  },
+  "sources": [
+    {
+      "path": "reports/eucap15ghz_20260908T220300Z/controlled64_delta_consumer_20260911_v1/cost_supplement_20260911_v1/run_v1/RECEIPT.json",
+      "sha256": "65eb3b63f8ca3c0bb07eb4bc1656ef567beac91bc4620302539a22e413e9abe3",
+      "bytes": 2702
+    },
+    {
+      "path": "reports/eucap15ghz_20260908T220300Z/controlled64_delta_consumer_20260911_v1/cost_supplement_20260911_v1/run_v1/SUMMARY.json",
+      "sha256": "cae65d6829dda07a940af2f585ffe6d46ad90553e40450d35f134465e5bc321f",
+      "bytes": 158670
+    },
+    {
+      "path": "reports/eucap15ghz_20260908T220300Z/controlled64_delta_consumer_20260911_v1/cost_supplement_20260911_v1/run_v1/REQUEST_COSTS.json",
+      "sha256": "049078f69f1a9447c40eff327ed041692e2f159669d6bad39b8c29aceacf3d44",
+      "bytes": 803750
+    },
+    {
+      "path": "reports/eucap15ghz_20260908T220300Z/controlled64_delta_consumer_20260911_v1/cost_supplement_20260911_v1/cost_review_v1/REVIEW.json",
+      "sha256": "f551ead1be72167cd0eb2a2ee0bc633b4502298d41d25e2a01b7952f01d21469",
+      "bytes": 34863
+    }
+  ],
+  "outputs": [
+    {
+      "path": "docs/research/controlled64_costs_20260911/SUMMARY.json",
+      "sha256": "0bdd50b438e476c06720538e72ff2be1b1ae308f0b13f90e929728c197a0d121",
+      "bytes": 21394
+    },
+    {
+      "path": "docs/research/controlled64_costs_20260911/REQUEST_COSTS.json",
+      "sha256": "9236f707a7cdd6efdf5d4d95b4e17fcad9f71657bea31de8c9ac4ea849b77a02",
+      "bytes": 99399
+    },
+    {
+      "path": "docs/research/controlled64_costs_20260911/REQUEST_COSTS.csv",
+      "sha256": "b101f6b2e79cf1ea75cbc60f0dcd7b693ed6638b644c71f337ac77a9547e0c1b",
+      "bytes": 15435
+    },
+    {
+      "path": "docs/research/controlled64_costs_20260911/README.md",
+      "sha256": "653a6e878e541b26124bd354cb3fc01a6f096e5723fae89e3395c1420a574fab",
+      "bytes": 1975
+    }
+  ],
+  "source_rows": 64,
+  "output_rows": 64,
+  "new_native_calls": 0,
+  "new_physical_reducer_calls": 0,
+  "source_recheck": true
+}

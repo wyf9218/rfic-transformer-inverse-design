@@ -1,0 +1,67 @@
+[
+  {
+    "source": {
+      "path": "reports/eucap15_native_owner_20260909T062500Z/qualified15_train_partition_v2/admission.py",
+      "sha256": "a85e2200913bcf79377f1c4fb61b4839c65984d86c29532dd1098532b39acddd",
+      "bytes": 14941
+    },
+    "public": {
+      "path": "github_worktrees/eucap15-mlp-capacity-20260909/docs/research/qualification20_20260911/code/admission.py",
+      "sha256": "a85e2200913bcf79377f1c4fb61b4839c65984d86c29532dd1098532b39acddd",
+      "bytes": 14941
+    },
+    "byte_identical": true
+  },
+  {
+    "source": {
+      "path": "reports/eucap15_native_owner_20260909T062500Z/qualified15_train_partition_v2/run_remote.py",
+      "sha256": "d3250e746cd355131ae24faf7a3fd711dccafe3dc2be4a399a67dfd3007e12f6",
+      "bytes": 5937
+    },
+    "public": {
+      "path": "github_worktrees/eucap15-mlp-capacity-20260909/docs/research/qualification20_20260911/code/run_remote.py",
+      "sha256": "d3250e746cd355131ae24faf7a3fd711dccafe3dc2be4a399a67dfd3007e12f6",
+      "bytes": 5937
+    },
+    "byte_identical": true
+  },
+  {
+    "source": {
+      "path": "reports/eucap15_native_owner_20260909T062500Z/qualified15_train_partition_v2/atomic_primitives.py",
+      "sha256": "f397cd6390a146c41b2563f10f3430590fc632c2e23fc059468a80ebe36da4ca",
+      "bytes": 1647
+    },
+    "public": {
+      "path": "github_worktrees/eucap15-mlp-capacity-20260909/docs/research/qualification20_20260911/code/atomic_primitives.py",
+      "sha256": "f397cd6390a146c41b2563f10f3430590fc632c2e23fc059468a80ebe36da4ca",
+      "bytes": 1647
+    },
+    "byte_identical": true
+  },
+  {
+    "source": {
+      "path": "reports/eucap15_native_owner_20260909T062500Z/qualified15_train_partition_v2/geometry_helpers.py",
+      "sha256": "b6311d77e65b514d8a186394f6352500f7e717cc02507c0190e401ccd197bf98",
+      "bytes": 2938
+    },
+    "public": {
+      "path": "github_worktrees/eucap15-mlp-capacity-20260909/docs/research/qualification20_20260911/code/geometry_helpers.py",
+      "sha256": "b6311d77e65b514d8a186394f6352500f7e717cc02507c0190e401ccd197bf98",
+      "bytes": 2938
+    },
+    "byte_identical": true
+  },
+  {
+    "source": {
+      "path": "reports/eucap15_native_owner_20260909T062500Z/qualified15_train_partition_v2/test_admission.py",
+      "sha256": "78587120ffe701566a9828ed926a50f93b3112053cf6c95fd4cd199fe4ca523b",
+      "bytes": 5916
+    },
+    "public": {
+      "path": "github_worktrees/eucap15-mlp-capacity-20260909/docs/research/qualification20_20260911/code/test_admission.py",
+      "sha256": "78587120ffe701566a9828ed926a50f93b3112053cf6c95fd4cd199fe4ca523b",
+      "bytes": 5916
+    },
+    "byte_identical": true
+  }
+]

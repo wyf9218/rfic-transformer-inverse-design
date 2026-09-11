@@ -1,0 +1,682 @@
+[
+  {
+    "request_id": "eucap15_dev_acquisition_pair_20260909_v1-GEOMETRY_DOE-006",
+    "candidate_id": "eucap15_dev_acquisition_pair_20260909_v1-GEOMETRY_DOE-006",
+    "candidate_id_sha256": "978a353a8e813888e8057ad66d6a1d4075ae24b464e109a0e667ac9e56eb4ad8",
+    "geometry_sha256": "804eddfad6a985c668daae57cba007891999da88db9d09d20df210ea8bd48205",
+    "split": "train",
+    "source": "GEOMETRY_DOE",
+    "frequency_hz": 15000000000,
+    "increment_sequence": 1,
+    "production_accepted_sequence": null,
+    "old_broadband_production_accepted": false,
+    "eucap15_qualified_accepted": true,
+    "record_pin": {
+      "path": "reports/eucap15_native_owner_20260909T062500Z/qualified15_train_partition_v2/deployment_20260911T220153575746Z/records/000001.json",
+      "sha256": "ad2a96db8e9ac5e8e5ae7c8ea8aec11cd8eafedfbd8439ec755864f6db15e1bc",
+      "bytes": 70413
+    },
+    "physical15": {
+      "k_abs": 0.3427842209673956,
+      "lp_nh": 1.47033505750342,
+      "ls_nh": 1.000801935739861,
+      "qmin": 12.783755674733582,
+      "qp": 12.783755674733582,
+      "qs": 17.88523443771205
+    },
+    "checkpoint": {
+      "increment_15ghz_rows": 1,
+      "increment_accepted": 1,
+      "last_increment_sequence": 1,
+      "prior_commit": null,
+      "referenced_frequency_rows": 56
+    },
+    "evidence_digest": "19c9467e59e84559484fac58cad6a276094760ef29ab33eec4ff6c4a6960f3fd"
+  },
+  {
+    "request_id": "eucap15_dev_acquisition_pair_20260909_v1-GEOMETRY_DOE-061",
+    "candidate_id": "eucap15_dev_acquisition_pair_20260909_v1-GEOMETRY_DOE-061",
+    "candidate_id_sha256": "05624f709b16442e4598af28276b6ced08abfe965c0e02f74b8dc95142bc81f6",
+    "geometry_sha256": "7de08f56c869526d8bf920c366705c29c1b8bcecaacad1acc09aab2b9282cea3",
+    "split": "train",
+    "source": "GEOMETRY_DOE",
+    "frequency_hz": 15000000000,
+    "increment_sequence": 2,
+    "production_accepted_sequence": null,
+    "old_broadband_production_accepted": false,
+    "eucap15_qualified_accepted": true,
+    "record_pin": {
+      "path": "reports/eucap15_native_owner_20260909T062500Z/qualified15_train_partition_v2/deployment_20260911T220153575746Z/records/000002.json",
+      "sha256": "089eb0c21531ef746521e06d4b0e1ba49d070f936f0412c7952c94a9ec0c13d3",
+      "bytes": 35476
+    },
+    "physical15": {
+      "k_abs": 0.33471600879559865,
+      "lp_nh": 1.475381479187455,
+      "ls_nh": 1.2824694527042306,
+      "qmin": 13.503873139290427,
+      "qp": 13.503873139290427,
+      "qs": 16.17454189189068
+    },
+    "checkpoint": {
+      "increment_15ghz_rows": 2,
+      "increment_accepted": 2,
+      "last_increment_sequence": 2,
+      "prior_commit": "ad2a96db8e9ac5e8e5ae7c8ea8aec11cd8eafedfbd8439ec755864f6db15e1bc",
+      "referenced_frequency_rows": 112
+    },
+    "evidence_digest": "3e98eb6cb9f1e920fa8ecf57ab1f76fdb8c06dd28d8adee389ac968c5d629859"
+  },
+  {
+    "request_id": "eucap15_dev_acquisition_pair_20260909_v1-GEOMETRY_DOE-090",
+    "candidate_id": "eucap15_dev_acquisition_pair_20260909_v1-GEOMETRY_DOE-090",
+    "candidate_id_sha256": "664c6a4ae8fbfdf0e272ec94685c2ab43ddafbd3dfd49c49ed4ffd1f782cd591",
+    "geometry_sha256": "a29a82ca85066a14714e3e1f20c9f54aeb9050e289b2d4e7dba22ae015041420",
+    "split": "train",
+    "source": "GEOMETRY_DOE",
+    "frequency_hz": 15000000000,
+    "increment_sequence": 3,
+    "production_accepted_sequence": null,
+    "old_broadband_production_accepted": false,
+    "eucap15_qualified_accepted": true,
+    "record_pin": {
+      "path": "reports/eucap15_native_owner_20260909T062500Z/qualified15_train_partition_v2/deployment_20260911T220153575746Z/records/000003.json",
+      "sha256": "50a5bf0966c4c70dd019f53f96456bcb92fbb8117e8c9706dde6b833f1611b49",
+      "bytes": 35420
+    },
+    "physical15": {
+      "k_abs": 0.28629755639375126,
+      "lp_nh": 1.1904935908860488,
+      "ls_nh": 1.2062340258830346,
+      "qmin": 15.499190592756772,
+      "qp": 16.10269498094616,
+      "qs": 15.499190592756772
+    },
+    "checkpoint": {
+      "increment_15ghz_rows": 3,
+      "increment_accepted": 3,
+      "last_increment_sequence": 3,
+      "prior_commit": "089eb0c21531ef746521e06d4b0e1ba49d070f936f0412c7952c94a9ec0c13d3",
+      "referenced_frequency_rows": 168
+    },
+    "evidence_digest": "40de782757cc46cd16756e4181cca6de98825f5db9c4ac84515c2ab88330f7c3"
+  },
+  {
+    "request_id": "eucap15_dev_acquisition_pair_20260909_v1-EXPLORATION-002",
+    "candidate_id": "eucap15_dev_acquisition_pair_20260909_v1-EXPLORATION-002",
+    "candidate_id_sha256": "e43bcaec30c6e8f63e48465cd3ac8d9a5bc15aacd616f48cb161142f0c297a57",
+    "geometry_sha256": "af912a0857f6b21b8182048789a43fc1c6b1d420e6504746f8b3aecc5804a647",
+    "split": "train",
+    "source": "EXPLORATION",
+    "frequency_hz": 15000000000,
+    "increment_sequence": 4,
+    "production_accepted_sequence": null,
+    "old_broadband_production_accepted": false,
+    "eucap15_qualified_accepted": true,
+    "record_pin": {
+      "path": "reports/eucap15_native_owner_20260909T062500Z/qualified15_train_partition_v2/deployment_20260911T220153575746Z/records/000004.json",
+      "sha256": "5e1f121aba523936688b6017741972eb8c6685705bdca26bffe08129a9a21798",
+      "bytes": 35459
+    },
+    "physical15": {
+      "k_abs": 0.22959058119511747,
+      "lp_nh": 1.4839571904381428,
+      "ls_nh": 1.464283855090104,
+      "qmin": 12.442618735722078,
+      "qp": 12.442618735722078,
+      "qs": 14.280551771073027
+    },
+    "checkpoint": {
+      "increment_15ghz_rows": 4,
+      "increment_accepted": 4,
+      "last_increment_sequence": 4,
+      "prior_commit": "50a5bf0966c4c70dd019f53f96456bcb92fbb8117e8c9706dde6b833f1611b49",
+      "referenced_frequency_rows": 224
+    },
+    "evidence_digest": "33e3c6001c486d327697b797b9b731a388f4b56eea84cdd3098c4b8f59d17fe7"
+  },
+  {
+    "request_id": "eucap15_dev_acquisition_pair_20260909_v1-SPARSE-059",
+    "candidate_id": "eucap15_dev_acquisition_pair_20260909_v1-SPARSE-059-q14",
+    "candidate_id_sha256": "378a9180bb13a9c6330f36b975388d22027d06fe55bac77632eb3e8eb2ade037",
+    "geometry_sha256": "a199208d0fb707a74116f7bf37a2caf2dc1cc606cb8f7279a7c3e9a23a1962c2",
+    "split": "train",
+    "source": "SPARSE_TARGETED",
+    "frequency_hz": 15000000000,
+    "increment_sequence": 5,
+    "production_accepted_sequence": null,
+    "old_broadband_production_accepted": false,
+    "eucap15_qualified_accepted": true,
+    "record_pin": {
+      "path": "reports/eucap15_native_owner_20260909T062500Z/qualified15_train_partition_v2/deployment_20260911T220153575746Z/records/000005.json",
+      "sha256": "ffd50bd2165089f4d773a398b3d70df46ebe6cc3831cb656fa389a3f21c30b67",
+      "bytes": 36145
+    },
+    "physical15": {
+      "k_abs": 0.44427190355370116,
+      "lp_nh": 1.1674256742386073,
+      "ls_nh": 0.7047715072565852,
+      "qmin": 13.443762356481164,
+      "qp": 13.443762356481164,
+      "qs": 17.976822728896376
+    },
+    "checkpoint": {
+      "increment_15ghz_rows": 5,
+      "increment_accepted": 5,
+      "last_increment_sequence": 5,
+      "prior_commit": "5e1f121aba523936688b6017741972eb8c6685705bdca26bffe08129a9a21798",
+      "referenced_frequency_rows": 280
+    },
+    "evidence_digest": "8da2918ccce13acfd9b528574b39e5853eab79985a176f57375be304517ed8cc"
+  },
+  {
+    "request_id": "eucap15_dev_acquisition_pair_20260909_v1-GEOMETRY_DOE-112",
+    "candidate_id": "eucap15_dev_acquisition_pair_20260909_v1-GEOMETRY_DOE-112",
+    "candidate_id_sha256": "4b8554a4af6ef6d998fa5b57fadc752a26cd57b5f6883fb32eb4eaea55f6d7ec",
+    "geometry_sha256": "9715c7f035ba85772ca2300ed636e9af5e09697b639b7dad7b519c74da30aa50",
+    "split": "train",
+    "source": "GEOMETRY_DOE",
+    "frequency_hz": 15000000000,
+    "increment_sequence": 6,
+    "production_accepted_sequence": null,
+    "old_broadband_production_accepted": false,
+    "eucap15_qualified_accepted": true,
+    "record_pin": {
+      "path": "reports/eucap15_native_owner_20260909T062500Z/qualified15_train_partition_v2/deployment_20260911T220153575746Z/records/000006.json",
+      "sha256": "e60918e23a5454b48a8593203f848f4869801b28831c59b8bfe7f68c13f6f08a",
+      "bytes": 35454
+    },
+    "physical15": {
+      "k_abs": 0.36962485133752027,
+      "lp_nh": 1.6815895528930973,
+      "ls_nh": 1.461318775676788,
+      "qmin": 12.387004419395497,
+      "qp": 12.387004419395497,
+      "qs": 15.083563735350543
+    },
+    "checkpoint": {
+      "increment_15ghz_rows": 6,
+      "increment_accepted": 6,
+      "last_increment_sequence": 6,
+      "prior_commit": "ffd50bd2165089f4d773a398b3d70df46ebe6cc3831cb656fa389a3f21c30b67",
+      "referenced_frequency_rows": 336
+    },
+    "evidence_digest": "e0606a6fa1db9b3b82adf843f8c2aba18c55ad8e0a823a46feeb6435bb0327b3"
+  },
+  {
+    "request_id": "eucap15_dev_acquisition_pair_20260909_v1-GEOMETRY_DOE-038",
+    "candidate_id": "eucap15_dev_acquisition_pair_20260909_v1-GEOMETRY_DOE-038",
+    "candidate_id_sha256": "8a67f2630de545fbd01eaa5b7c24da808c537e38e1a6809bda9b1eb9b4865b46",
+    "geometry_sha256": "bfe1f0e7e2eb5021518b4945caddd4bd6392860fce8ad6db90f6bfb907817103",
+    "split": "train",
+    "source": "GEOMETRY_DOE",
+    "frequency_hz": 15000000000,
+    "increment_sequence": 7,
+    "production_accepted_sequence": null,
+    "old_broadband_production_accepted": false,
+    "eucap15_qualified_accepted": true,
+    "record_pin": {
+      "path": "reports/eucap15_native_owner_20260909T062500Z/qualified15_train_partition_v2/deployment_20260911T220153575746Z/records/000007.json",
+      "sha256": "acb3d227cdbb8553d5adc232d9ce21bf3edbc3704ad50086fe42c49951ae6c21",
+      "bytes": 35409
+    },
+    "physical15": {
+      "k_abs": 0.2518044924479867,
+      "lp_nh": 1.561370973844436,
+      "ls_nh": 1.2012597224912764,
+      "qmin": 12.555456449499466,
+      "qp": 12.555456449499466,
+      "qs": 16.85859716887297
+    },
+    "checkpoint": {
+      "increment_15ghz_rows": 7,
+      "increment_accepted": 7,
+      "last_increment_sequence": 7,
+      "prior_commit": "e60918e23a5454b48a8593203f848f4869801b28831c59b8bfe7f68c13f6f08a",
+      "referenced_frequency_rows": 392
+    },
+    "evidence_digest": "08a012622edebdc5a4736716d3fe8a17551f98f090821c128eae8ebb2d785420"
+  },
+  {
+    "request_id": "eucap15_dev_acquisition_pair_20260909_v1-SPARSE-039",
+    "candidate_id": "eucap15_dev_acquisition_pair_20260909_v1-SPARSE-039-q14",
+    "candidate_id_sha256": "aa93fb9f0b118c6175b2a52232c1d3e3a567ee66c180fc026f88850899f6014d",
+    "geometry_sha256": "9fadbda1d5dc54df6ff5205f851b90c87ca3a3a73b08f580b0dd9dda33503219",
+    "split": "train",
+    "source": "SPARSE_TARGETED",
+    "frequency_hz": 15000000000,
+    "increment_sequence": 8,
+    "production_accepted_sequence": null,
+    "old_broadband_production_accepted": false,
+    "eucap15_qualified_accepted": true,
+    "record_pin": {
+      "path": "reports/eucap15_native_owner_20260909T062500Z/qualified15_train_partition_v2/deployment_20260911T220153575746Z/records/000008.json",
+      "sha256": "6e65dfed75beb468f6b84e36e58df42d160e728ba1c3bb746da96eac08ee74d2",
+      "bytes": 36030
+    },
+    "physical15": {
+      "k_abs": 0.5858757944016372,
+      "lp_nh": 0.6398039440787234,
+      "ls_nh": 0.7758476068367909,
+      "qmin": 13.478705170938746,
+      "qp": 13.478705170938746,
+      "qs": 15.763246381890234
+    },
+    "checkpoint": {
+      "increment_15ghz_rows": 8,
+      "increment_accepted": 8,
+      "last_increment_sequence": 8,
+      "prior_commit": "acb3d227cdbb8553d5adc232d9ce21bf3edbc3704ad50086fe42c49951ae6c21",
+      "referenced_frequency_rows": 448
+    },
+    "evidence_digest": "576d48c46cfc946987d5b3a7f0875bd6da35fd8219786cfa4ad2c236a494f4ac"
+  },
+  {
+    "request_id": "eucap15_dev_acquisition_pair_20260909_v1-GEOMETRY_DOE-012",
+    "candidate_id": "eucap15_dev_acquisition_pair_20260909_v1-GEOMETRY_DOE-012",
+    "candidate_id_sha256": "bc18d3bd3425e07615dbd759403bf6bf7bb39ca277b48ba04d6592a5908d43d2",
+    "geometry_sha256": "c4030f720f076b9fc6fc5b37dbfe273fb66e7e158afe71731edd11bb7fc5a236",
+    "split": "train",
+    "source": "GEOMETRY_DOE",
+    "frequency_hz": 15000000000,
+    "increment_sequence": 9,
+    "production_accepted_sequence": null,
+    "old_broadband_production_accepted": false,
+    "eucap15_qualified_accepted": true,
+    "record_pin": {
+      "path": "reports/eucap15_native_owner_20260909T062500Z/qualified15_train_partition_v2/deployment_20260911T220153575746Z/records/000009.json",
+      "sha256": "8edd5799a31926103ca90b48fb8ba602881815733126d2be7b5ead0d41ec7b39",
+      "bytes": 35448
+    },
+    "physical15": {
+      "k_abs": 0.22196020663953672,
+      "lp_nh": 1.4907622910793814,
+      "ls_nh": 1.1324689327858302,
+      "qmin": 14.00003990216059,
+      "qp": 14.00003990216059,
+      "qs": 17.445459576153215
+    },
+    "checkpoint": {
+      "increment_15ghz_rows": 9,
+      "increment_accepted": 9,
+      "last_increment_sequence": 9,
+      "prior_commit": "6e65dfed75beb468f6b84e36e58df42d160e728ba1c3bb746da96eac08ee74d2",
+      "referenced_frequency_rows": 504
+    },
+    "evidence_digest": "4645679b28845a200f852d1ab35551baf2f43d2d8c87e927edc2fadcf0982a4e"
+  },
+  {
+    "request_id": "eucap15_dev_acquisition_pair_20260909_v1-SPARSE-053",
+    "candidate_id": "eucap15_dev_acquisition_pair_20260909_v1-SPARSE-053-q16",
+    "candidate_id_sha256": "a25ac0193b012adff262ce04b7c99e0048712fae3d2dd34922854788f9bbc551",
+    "geometry_sha256": "24661d9e151c5aeeaa2f3e0da3072066f5a1a8bb19257fe3d62ecc6e96192b83",
+    "split": "train",
+    "source": "SPARSE_TARGETED",
+    "frequency_hz": 15000000000,
+    "increment_sequence": 10,
+    "production_accepted_sequence": null,
+    "old_broadband_production_accepted": false,
+    "eucap15_qualified_accepted": true,
+    "record_pin": {
+      "path": "reports/eucap15_native_owner_20260909T062500Z/qualified15_train_partition_v2/deployment_20260911T220153575746Z/records/000010.json",
+      "sha256": "179c5d527cf60daf431c59807c92ec9dd0f9c3a5c4c994bdeb4f5c013c8bfcff",
+      "bytes": 36038
+    },
+    "physical15": {
+      "k_abs": 0.4599949709183144,
+      "lp_nh": 0.7084571147482928,
+      "ls_nh": 0.6367220375167074,
+      "qmin": 16.291176545087755,
+      "qp": 16.291176545087755,
+      "qs": 17.607920807907465
+    },
+    "checkpoint": {
+      "increment_15ghz_rows": 10,
+      "increment_accepted": 10,
+      "last_increment_sequence": 10,
+      "prior_commit": "8edd5799a31926103ca90b48fb8ba602881815733126d2be7b5ead0d41ec7b39",
+      "referenced_frequency_rows": 560
+    },
+    "evidence_digest": "4d324b7c56359ede0101bd40a0fded0cd5c46bbcc659e3cf1b88d0c6541d9f88"
+  },
+  {
+    "request_id": "eucap15_dev_acquisition_pair_20260909_v1-SPARSE-076",
+    "candidate_id": "eucap15_dev_acquisition_pair_20260909_v1-SPARSE-076-q13",
+    "candidate_id_sha256": "97ee5eda6ff287f632da188b7774a9c3bef10e0513e435250aebaad71fb5b22d",
+    "geometry_sha256": "fef1086426907758dab851ae1202cac00264b0fc25ae3b956b0ba8ece9b2bcd2",
+    "split": "train",
+    "source": "SPARSE_TARGETED",
+    "frequency_hz": 15000000000,
+    "increment_sequence": 11,
+    "production_accepted_sequence": null,
+    "old_broadband_production_accepted": false,
+    "eucap15_qualified_accepted": true,
+    "record_pin": {
+      "path": "reports/eucap15_native_owner_20260909T062500Z/qualified15_train_partition_v2/deployment_20260911T220153575746Z/records/000011.json",
+      "sha256": "044b76c8fd29ec05b422a8c4da06ee5174815388cb123be02ac88761d34c254a",
+      "bytes": 36068
+    },
+    "physical15": {
+      "k_abs": 0.6726857936480449,
+      "lp_nh": 0.6471621222962906,
+      "ls_nh": 0.5936874255674117,
+      "qmin": 13.32498138261384,
+      "qp": 13.32498138261384,
+      "qs": 14.499824898978085
+    },
+    "checkpoint": {
+      "increment_15ghz_rows": 11,
+      "increment_accepted": 11,
+      "last_increment_sequence": 11,
+      "prior_commit": "179c5d527cf60daf431c59807c92ec9dd0f9c3a5c4c994bdeb4f5c013c8bfcff",
+      "referenced_frequency_rows": 616
+    },
+    "evidence_digest": "7729ce5beff9440fe3b2dbecfee5224c0b48897cd34108ca3de43db70856fe05"
+  },
+  {
+    "request_id": "eucap15_dev_acquisition_pair_20260909_v1-GEOMETRY_DOE-034",
+    "candidate_id": "eucap15_dev_acquisition_pair_20260909_v1-GEOMETRY_DOE-034",
+    "candidate_id_sha256": "c4d7895fb9459f00474e6803531d5258265bc79152f5ae918543bc4661063393",
+    "geometry_sha256": "57204b6ae5c60a0995ece9aabfb64caa2b1debe0774d74b36291851c0ed4fa83",
+    "split": "train",
+    "source": "GEOMETRY_DOE",
+    "frequency_hz": 15000000000,
+    "increment_sequence": 12,
+    "production_accepted_sequence": null,
+    "old_broadband_production_accepted": false,
+    "eucap15_qualified_accepted": true,
+    "record_pin": {
+      "path": "reports/eucap15_native_owner_20260909T062500Z/qualified15_train_partition_v2/deployment_20260911T220153575746Z/records/000012.json",
+      "sha256": "8dd23234c99d7fc39be60f368d28730443f346b9a6717d56f94194e1c560b249",
+      "bytes": 35437
+    },
+    "physical15": {
+      "k_abs": 0.28440733139471225,
+      "lp_nh": 1.4027738525662898,
+      "ls_nh": 1.1411203719205403,
+      "qmin": 13.358653674118722,
+      "qp": 13.358653674118722,
+      "qs": 14.956349106430089
+    },
+    "checkpoint": {
+      "increment_15ghz_rows": 12,
+      "increment_accepted": 12,
+      "last_increment_sequence": 12,
+      "prior_commit": "044b76c8fd29ec05b422a8c4da06ee5174815388cb123be02ac88761d34c254a",
+      "referenced_frequency_rows": 672
+    },
+    "evidence_digest": "7e5e7e60dc8fb6d6b1d2a9fe28fe3eefaf95869bec2df4780e5aaa9bc04fa009"
+  },
+  {
+    "request_id": "eucap15_dev_acquisition_pair_20260909_v1-SPARSE-036",
+    "candidate_id": "eucap15_dev_acquisition_pair_20260909_v1-SPARSE-036-q12",
+    "candidate_id_sha256": "ea9ab3c937137a7b137c18b136e9dcfccb7324724b763d533e9d2a00c276d655",
+    "geometry_sha256": "2b782965d64ec27f29f95b8bafc22e20fa6100a25c669d9fdf270166ccfd4c37",
+    "split": "train",
+    "source": "SPARSE_TARGETED",
+    "frequency_hz": 15000000000,
+    "increment_sequence": 13,
+    "production_accepted_sequence": null,
+    "old_broadband_production_accepted": false,
+    "eucap15_qualified_accepted": true,
+    "record_pin": {
+      "path": "reports/eucap15_native_owner_20260909T062500Z/qualified15_train_partition_v2/deployment_20260911T220153575746Z/records/000013.json",
+      "sha256": "80409065cda9789a5e1829680134e5e5d63d6236493b97cc5f1bc7b977154fbd",
+      "bytes": 35994
+    },
+    "physical15": {
+      "k_abs": 0.3856744657775072,
+      "lp_nh": 1.3358182362950992,
+      "ls_nh": 0.6984092195011603,
+      "qmin": 12.24709059960183,
+      "qp": 12.24709059960183,
+      "qs": 18.39650268700627
+    },
+    "checkpoint": {
+      "increment_15ghz_rows": 13,
+      "increment_accepted": 13,
+      "last_increment_sequence": 13,
+      "prior_commit": "8dd23234c99d7fc39be60f368d28730443f346b9a6717d56f94194e1c560b249",
+      "referenced_frequency_rows": 728
+    },
+    "evidence_digest": "0a6abfd5f4e87292428545de0f456759576b319814a0acd54099cb88e5747d41"
+  },
+  {
+    "request_id": "eucap15_dev_acquisition_pair_20260909_v1-EXPLORATION-018",
+    "candidate_id": "eucap15_dev_acquisition_pair_20260909_v1-EXPLORATION-018",
+    "candidate_id_sha256": "db01854829aff9c4d09797766db5771c363c1f7b5b7adb63a4d81f7b032913dd",
+    "geometry_sha256": "4b11a6ad4c66587a52b2fc1eee69119fd5a6528b31688c9a3d89d12b01066589",
+    "split": "train",
+    "source": "EXPLORATION",
+    "frequency_hz": 15000000000,
+    "increment_sequence": 14,
+    "production_accepted_sequence": null,
+    "old_broadband_production_accepted": false,
+    "eucap15_qualified_accepted": true,
+    "record_pin": {
+      "path": "reports/eucap15_native_owner_20260909T062500Z/qualified15_train_partition_v2/deployment_20260911T220153575746Z/records/000014.json",
+      "sha256": "d290b2e7d90af4ca4a7e50bb8b6070a4c10838260892337fb0edadceb573415b",
+      "bytes": 35459
+    },
+    "physical15": {
+      "k_abs": 0.2370305006689997,
+      "lp_nh": 1.0666694574040003,
+      "ls_nh": 0.9657782418599052,
+      "qmin": 16.190926498082685,
+      "qp": 16.190926498082685,
+      "qs": 17.652277714167816
+    },
+    "checkpoint": {
+      "increment_15ghz_rows": 14,
+      "increment_accepted": 14,
+      "last_increment_sequence": 14,
+      "prior_commit": "80409065cda9789a5e1829680134e5e5d63d6236493b97cc5f1bc7b977154fbd",
+      "referenced_frequency_rows": 784
+    },
+    "evidence_digest": "77858d59c0c10c9bcb315f3fa37724b438c7a3154f57f4d69789ae7fd3d0f6ef"
+  },
+  {
+    "request_id": "eucap15_dev_acquisition_pair_20260909_v1-GEOMETRY_DOE-091",
+    "candidate_id": "eucap15_dev_acquisition_pair_20260909_v1-GEOMETRY_DOE-091",
+    "candidate_id_sha256": "5a2318cccc1a816029639a6512e0e606cbd3deaed01e124fb161a32333acda32",
+    "geometry_sha256": "cab57620242f01992f71972e8e4db03705e7d22128f89bc6466b5329721b4869",
+    "split": "train",
+    "source": "GEOMETRY_DOE",
+    "frequency_hz": 15000000000,
+    "increment_sequence": 15,
+    "production_accepted_sequence": null,
+    "old_broadband_production_accepted": false,
+    "eucap15_qualified_accepted": true,
+    "record_pin": {
+      "path": "reports/eucap15_native_owner_20260909T062500Z/qualified15_train_partition_v2/deployment_20260911T220153575746Z/records/000015.json",
+      "sha256": "eaeddeadf535f59dc5f210a8786f04a6ee475131cdf48f807296d2e72951bb42",
+      "bytes": 35494
+    },
+    "physical15": {
+      "k_abs": 0.29005474061947045,
+      "lp_nh": 0.9983595401872307,
+      "ls_nh": 1.2511410076379543,
+      "qmin": 12.909603856500071,
+      "qp": 16.923291707064262,
+      "qs": 12.909603856500071
+    },
+    "checkpoint": {
+      "increment_15ghz_rows": 15,
+      "increment_accepted": 15,
+      "last_increment_sequence": 15,
+      "prior_commit": "d290b2e7d90af4ca4a7e50bb8b6070a4c10838260892337fb0edadceb573415b",
+      "referenced_frequency_rows": 840
+    },
+    "evidence_digest": "40ec7ef20ae5b6a3779e75563a6dc373cc22813148cb2e26585867a14aac9be2"
+  },
+  {
+    "request_id": "eucap15_dev_acquisition_pair_20260909_v1-GEOMETRY_DOE-053",
+    "candidate_id": "eucap15_dev_acquisition_pair_20260909_v1-GEOMETRY_DOE-053",
+    "candidate_id_sha256": "e57c2189d9e8d22ed2dfa9f71557c4955aa4f222d3ee816e299f21dc1d1ff038",
+    "geometry_sha256": "4ab90ac89b634ff6c1beac704139ce7896604f9b813b00ec2baba9fe169e426f",
+    "split": "train",
+    "source": "GEOMETRY_DOE",
+    "frequency_hz": 15000000000,
+    "increment_sequence": 16,
+    "production_accepted_sequence": null,
+    "old_broadband_production_accepted": false,
+    "eucap15_qualified_accepted": true,
+    "record_pin": {
+      "path": "reports/eucap15_native_owner_20260909T062500Z/qualified15_train_partition_v2/deployment_20260911T220153575746Z/records/000016.json",
+      "sha256": "95c20c8dbe58e81e1b98b08894cc3cec086f93a85497af8f1f95a939d7a12672",
+      "bytes": 35453
+    },
+    "physical15": {
+      "k_abs": 0.20242817355420298,
+      "lp_nh": 1.446711851110245,
+      "ls_nh": 0.9054255377104311,
+      "qmin": 12.993935031055155,
+      "qp": 12.993935031055155,
+      "qs": 20.5255398017751
+    },
+    "checkpoint": {
+      "increment_15ghz_rows": 16,
+      "increment_accepted": 16,
+      "last_increment_sequence": 16,
+      "prior_commit": "eaeddeadf535f59dc5f210a8786f04a6ee475131cdf48f807296d2e72951bb42",
+      "referenced_frequency_rows": 896
+    },
+    "evidence_digest": "791ff2e52398a1b298de665323ed629767448cb08dc85da693b14a734dfe9d31"
+  },
+  {
+    "request_id": "eucap15_dev_acquisition_pair_20260909_v1-SPARSE-026",
+    "candidate_id": "eucap15_dev_acquisition_pair_20260909_v1-SPARSE-026-q15",
+    "candidate_id_sha256": "b308f65f3dab0a1649f03614dcf69eaabf6a1f58b8396387fbdaf699ee778e66",
+    "geometry_sha256": "fbbd97920f849ebe08f33dcf0f5fcd8633914d0333ba8f9f31588bdb4277aa37",
+    "split": "train",
+    "source": "SPARSE_TARGETED",
+    "frequency_hz": 15000000000,
+    "increment_sequence": 17,
+    "production_accepted_sequence": null,
+    "old_broadband_production_accepted": false,
+    "eucap15_qualified_accepted": true,
+    "record_pin": {
+      "path": "reports/eucap15_native_owner_20260909T062500Z/qualified15_train_partition_v2/deployment_20260911T220153575746Z/records/000017.json",
+      "sha256": "3f1a79101ed301ca6bce01503484783d10b127658ead56f1f0e0381551cfec0e",
+      "bytes": 36113
+    },
+    "physical15": {
+      "k_abs": 0.47195840988878035,
+      "lp_nh": 0.9366625148091439,
+      "ls_nh": 0.8198483655707823,
+      "qmin": 15.114387774599857,
+      "qp": 15.114387774599857,
+      "qs": 17.25618228763899
+    },
+    "checkpoint": {
+      "increment_15ghz_rows": 17,
+      "increment_accepted": 17,
+      "last_increment_sequence": 17,
+      "prior_commit": "95c20c8dbe58e81e1b98b08894cc3cec086f93a85497af8f1f95a939d7a12672",
+      "referenced_frequency_rows": 952
+    },
+    "evidence_digest": "b2a51c52d2441f33e9ad81427a6248562bf5a290acf13ccfbf9a7b1237b875e4"
+  },
+  {
+    "request_id": "eucap15_dev_acquisition_pair_20260909_v1-GEOMETRY_DOE-046",
+    "candidate_id": "eucap15_dev_acquisition_pair_20260909_v1-GEOMETRY_DOE-046",
+    "candidate_id_sha256": "6c3689293430c894da8437f1b1fc4de006d4b0fe75d2761cbe34ed8401b932c9",
+    "geometry_sha256": "b2eb1a2789a7d42e5f4f0c97b2c2cf88c70b509dd7cd1df2efe61fcef69ed42e",
+    "split": "train",
+    "source": "GEOMETRY_DOE",
+    "frequency_hz": 15000000000,
+    "increment_sequence": 18,
+    "production_accepted_sequence": null,
+    "old_broadband_production_accepted": false,
+    "eucap15_qualified_accepted": true,
+    "record_pin": {
+      "path": "reports/eucap15_native_owner_20260909T062500Z/qualified15_train_partition_v2/deployment_20260911T220153575746Z/records/000018.json",
+      "sha256": "8fe3188373bf7f5b5b7bb36ccb23ba283f0644981cf61628836d0d84670320f1",
+      "bytes": 35451
+    },
+    "physical15": {
+      "k_abs": 0.26626371483341404,
+      "lp_nh": 1.4589090896996133,
+      "ls_nh": 1.6119690039904782,
+      "qmin": 12.88361942003374,
+      "qp": 12.88576927352727,
+      "qs": 12.88361942003374
+    },
+    "checkpoint": {
+      "increment_15ghz_rows": 18,
+      "increment_accepted": 18,
+      "last_increment_sequence": 18,
+      "prior_commit": "3f1a79101ed301ca6bce01503484783d10b127658ead56f1f0e0381551cfec0e",
+      "referenced_frequency_rows": 1008
+    },
+    "evidence_digest": "ce6c3063395deef1da15d3ecfd3d4a669695b294968eacdf7fccc818f5ec4a76"
+  },
+  {
+    "request_id": "eucap15_dev_acquisition_pair_20260909_v1-GEOMETRY_DOE-082",
+    "candidate_id": "eucap15_dev_acquisition_pair_20260909_v1-GEOMETRY_DOE-082",
+    "candidate_id_sha256": "cd53cf9196e0ecfc1fd3fcecded549075de7cf0c5c04ba7a57ba24fbc2430c5b",
+    "geometry_sha256": "83af4ca10041084db2813b88273b9efd9c2ff59484a97887daa3f7670ffb7597",
+    "split": "train",
+    "source": "GEOMETRY_DOE",
+    "frequency_hz": 15000000000,
+    "increment_sequence": 19,
+    "production_accepted_sequence": null,
+    "old_broadband_production_accepted": false,
+    "eucap15_qualified_accepted": true,
+    "record_pin": {
+      "path": "reports/eucap15_native_owner_20260909T062500Z/qualified15_train_partition_v2/deployment_20260911T220153575746Z/records/000019.json",
+      "sha256": "f85bcfa2c8bb2c13fd57e05a360313af8690228d737fb77aadb3b408c8e675f0",
+      "bytes": 35479
+    },
+    "physical15": {
+      "k_abs": 0.2770606999466419,
+      "lp_nh": 1.1372347118664168,
+      "ls_nh": 1.2697575859010939,
+      "qmin": 15.0364232951256,
+      "qp": 16.114953611564996,
+      "qs": 15.0364232951256
+    },
+    "checkpoint": {
+      "increment_15ghz_rows": 19,
+      "increment_accepted": 19,
+      "last_increment_sequence": 19,
+      "prior_commit": "8fe3188373bf7f5b5b7bb36ccb23ba283f0644981cf61628836d0d84670320f1",
+      "referenced_frequency_rows": 1064
+    },
+    "evidence_digest": "590c438ab853d1811471e44a03001420a45f792fbee514763b0b4ae8ac22562a"
+  },
+  {
+    "request_id": "eucap15_dev_acquisition_pair_20260909_v1-SPARSE-047",
+    "candidate_id": "eucap15_dev_acquisition_pair_20260909_v1-SPARSE-047-q12",
+    "candidate_id_sha256": "7b195f171700bd331608f6b223c9660f34683b879593d287e5637fa93cc81124",
+    "geometry_sha256": "b4307fc1254df47cd5096ff0fd63e295a3090a5573fc160450b3c953b98c4121",
+    "split": "train",
+    "source": "SPARSE_TARGETED",
+    "frequency_hz": 15000000000,
+    "increment_sequence": 20,
+    "production_accepted_sequence": null,
+    "old_broadband_production_accepted": false,
+    "eucap15_qualified_accepted": true,
+    "record_pin": {
+      "path": "reports/eucap15_native_owner_20260909T062500Z/qualified15_train_partition_v2/deployment_20260911T220153575746Z/records/000020.json",
+      "sha256": "8778c05165ee0bb200a3705a2a0ed864807a3d395f1f3cb0069858fc92d76a33",
+      "bytes": 36072
+    },
+    "physical15": {
+      "k_abs": 0.2816343198939164,
+      "lp_nh": 1.5763867476281876,
+      "ls_nh": 0.7876139838329659,
+      "qmin": 11.926849004863087,
+      "qp": 11.926849004863087,
+      "qs": 20.38048243775345
+    },
+    "checkpoint": {
+      "increment_15ghz_rows": 20,
+      "increment_accepted": 20,
+      "last_increment_sequence": 20,
+      "prior_commit": "f85bcfa2c8bb2c13fd57e05a360313af8690228d737fb77aadb3b408c8e675f0",
+      "referenced_frequency_rows": 1120
+    },
+    "evidence_digest": "41b01e9587fca600a98d60944636a6d44d270d4ecaeadc422189fc1fdea8eac6"
+  }
+]

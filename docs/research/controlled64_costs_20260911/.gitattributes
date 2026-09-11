@@ -1,0 +1,2 @@
+# Preserve the frozen CSV bytes and its receipt SHA-256 across Git checkout.
+REQUEST_COSTS.csv -text

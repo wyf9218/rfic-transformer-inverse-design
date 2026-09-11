@@ -1,0 +1,71 @@
+{
+  "schema": "eucap15_qualified20_cost_paper_delivery.v1",
+  "created_utc": "2026-09-11T22:13:57.454337+00:00",
+  "status": "REVIEWED_INCREMENT_READY_TO_COMMIT",
+  "based_on_commit": "2724e6fb8a1613b15263b94eaf1b3afbb107f8fd",
+  "observation_utc": "2026-09-11T22:05:01.371450+00:00",
+  "owner_alive": false,
+  "related_native_processes": [],
+  "lock_holders": [
+    [],
+    [],
+    []
+  ],
+  "closed64_original_native_budget": 32,
+  "new_native_starts": 0,
+  "new_training_updates": 0,
+  "new_formal_commits": 19,
+  "certified_increment_unique": 20,
+  "full100k_certified_total": null,
+  "remaining_of31": {
+    "validation": 3,
+    "test": 8,
+    "reason": "NOT_PROCESSED_OR_REASSIGNED"
+  },
+  "new64_formal_accepted": 0,
+  "model6329_unchanged": true,
+  "capacity_observed_utc": "2026-09-11T22:01:56.658759+00:00",
+  "available_disk_bytes": 392333971456,
+  "quota": "UNKNOWN_FOR_RESEARCH_MOUNT",
+  "workdir_allocated_bytes": 248311808,
+  "cleanup": 0,
+  "solver_cost_scope": "NATIVE_FOOTER_SUM_ONLY_NOT_END_TO_END",
+  "full_pipeline_cost": null,
+  "native_wall_seconds": {
+    "directed": 1103.26,
+    "DOE": 1262.35
+  },
+  "paper": {
+    "source": {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/paper_controlled32_increment_20260911_v1/document_v3/EuCAP_15GHz_Development_Results_Draft.docx",
+      "sha256": "4fecf1a3009e3925cc55219ea01812ca0371be7dd1f29c4d479033b8dd544242",
+      "bytes": 36420
+    },
+    "review": {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/paper_controlled32_increment_20260911_v1/document_v3/FINAL_RECEIPT.json",
+      "sha256": "dbfb6001a16ddb6d1ee9ec38b1e5cd48b8ba5fbc5ba3e5f07117be0a682fdfcb",
+      "bytes": 5122
+    },
+    "page_count": 5,
+    "scientific_final": false,
+    "scientific_images_added": 0
+  },
+  "evidence": [
+    {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/github_worktrees/eucap15-mlp-capacity-20260909/docs/research/qualification20_20260911/SUMMARY.json",
+      "sha256": "077b68933b73862407eccc1907b1e242f0523a6d3e1696ea7076b7a50b819222",
+      "bytes": 2249
+    },
+    {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/github_worktrees/eucap15-mlp-capacity-20260909/docs/research/controlled64_costs_20260911/SUMMARY.json",
+      "sha256": "0bdd50b438e476c06720538e72ff2be1b1ae308f0b13f90e929728c197a0d121",
+      "bytes": 21394
+    },
+    {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/qualified15_train_partition_v2/closing_20260911T220500843002Z/OBSERVATION.json",
+      "sha256": "22936f7d767b49446562e535e8a89486a166f3268d751c33e7ce6055efa3b5b7",
+      "bytes": 993
+    }
+  ],
+  "blocker": "Historical source qualification and cross-source union dedup remain unclosed; twenty known-pool qualified members do not certify the full100K total."
+}

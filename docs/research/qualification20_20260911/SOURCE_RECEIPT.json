@@ -1,0 +1,32 @@
+{
+  "status": "PASS_COMMITTED_PARTITION_PROJECTION",
+  "utc": "2026-09-11T22:07:50.305040+00:00",
+  "sources": [
+    {
+      "path": "reports/eucap15_native_owner_20260909T062500Z/qualified15_train_partition_v2/deployment_20260911T220153575746Z/READBACK_RECEIPT.json",
+      "sha256": "2676fca7b4e2cb863f9519c56a0d5326b73b18c29b5c86d58376a2c06ac78b4e",
+      "bytes": 23137
+    },
+    {
+      "path": "reports/eucap15ghz_20260908T220300Z/qualification_cost_paper_20260911_v1/qualification_review_v1/REVIEW.json",
+      "sha256": "437527fbb5de9c414d6444b7095aac3fb4be1602ee4769c6607bb6c5fafec78c",
+      "bytes": 25035
+    },
+    {
+      "path": "reports/eucap15_native_owner_20260909T062500Z/qualified15_train_partition_v2/deployment_20260911T220153575746Z/RELEASE.json",
+      "sha256": "e0e8ae056d9b7475c3c72e535fcd05371b9880e90435f0adfdc1d4e29ae46c2b",
+      "bytes": 3139
+    },
+    {
+      "path": "reports/eucap15ghz_20260908T220300Z/qualification_cost_paper_20260911_v1/export_qualification.py",
+      "sha256": "3c00b44032b59d0e2b03addf69c083edfeb0d4916b9fa73a888089b5d876343b",
+      "bytes": 6799
+    }
+  ],
+  "original_rows": 20,
+  "public_rows": 20,
+  "records_source_rechecked": true,
+  "new_native": 0,
+  "new_training": 0,
+  "formal_actions_by_exporter": 0
+}

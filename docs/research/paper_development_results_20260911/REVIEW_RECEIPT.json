@@ -1,0 +1,97 @@
+{
+  "schema": "eucap15_five_page_document_delivery.v3",
+  "status": "COMPLETE_CHECKABLE_FIVE_PAGE_DISCUSSION_DRAFT",
+  "completed_utc": "2026-09-11T22:13:28.427526+00:00",
+  "docx": {
+    "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/paper_controlled32_increment_20260911_v1/document_v3/EuCAP_15GHz_Development_Results_Draft.docx",
+    "sha256": "4fecf1a3009e3925cc55219ea01812ca0371be7dd1f29c4d479033b8dd544242",
+    "bytes": 36420
+  },
+  "manuscript": {
+    "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/paper_controlled32_increment_20260911_v1/document_v3/manuscript.md",
+    "sha256": "f418251bf93ab48e73b7ad9fddf82a5f0a25fbf9f9e78e0186f4c2f1b67b5249",
+    "bytes": 28417
+  },
+  "visual_qa": {
+    "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/paper_controlled32_increment_20260911_v1/document_v3/VISUAL_QA.json",
+    "sha256": "4ac19e9727cc0b6a2105a15f558c8aacdf92811840c23d9bdf6a4a025e65f06b",
+    "bytes": 4382
+  },
+  "latest_build": {
+    "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/paper_controlled32_increment_20260911_v1/document_v3/BUILD_RECEIPT.json",
+    "sha256": "c521488d83c771acc4bb701ba9adca99ed7ee1ec6e2894fa1d04bf330d40ff57",
+    "bytes": 3170
+  },
+  "original_increment": {
+    "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/paper_controlled32_increment_20260911_v1/manuscript.md",
+    "sha256": "38375d1f11a771b541a551009fdb4834d99900aac578fb724e228216acd319ef",
+    "bytes": 35229
+  },
+  "original_increment_receipt": {
+    "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/paper_controlled32_increment_20260911_v1/RECEIPT.json",
+    "sha256": "940b33a25650a094c1aa5518545e2ac3e2bcff81b736f0e3970168b1e86f2358",
+    "bytes": 8340
+  },
+  "cost_review": {
+    "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/controlled64_delta_consumer_20260911_v1/cost_supplement_20260911_v1/cost_review_v1/REVIEW.json",
+    "sha256": "f551ead1be72167cd0eb2a2ee0bc633b4502298d41d25e2a01b7952f01d21469",
+    "bytes": 34863
+  },
+  "cost_scope": "Native solver subtotal only; not whole-pipeline/storage cost or whole-paper physical QA.",
+  "build_chain": [
+    {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/paper_controlled32_increment_20260911_v1/document_v1/BUILD_RECEIPT.json",
+      "sha256": "a6183d90a6f44ec76a3c85fdd2e803141a7104f680f4ae1ac45ed1b7ed10321b",
+      "bytes": 3116
+    },
+    {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/paper_controlled32_increment_20260911_v1/document_v2/BUILD_RECEIPT.json",
+      "sha256": "95371b922038dab4f9bda77adbe4a39d334aa4b5f8d68ad29ac06551ed86565e",
+      "bytes": 3737
+    },
+    {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/paper_controlled32_increment_20260911_v1/document_v3/BUILD_RECEIPT.json",
+      "sha256": "c521488d83c771acc4bb701ba9adca99ed7ee1ec6e2894fa1d04bf330d40ff57",
+      "bytes": 3170
+    }
+  ],
+  "text_changes": "Added saved holdout, fixed128 and controlled32 results, then condensed repeated exposition. Full diffs and per-paragraph reasons retained.",
+  "word_count": 3902,
+  "page_count": 5,
+  "tableI_values_unchanged": true,
+  "references_text_unchanged": true,
+  "original_docx_unchanged": {
+    "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/paper_tandem_citation_20260910_v1/document_v1/EuCAP_15GHz_Tandem_Cited_Draft.docx",
+    "sha256": "d0072cf39927c9d5d3f5cb03bb93073751da57db360ab82f84ebe5f42dc2c954",
+    "bytes": 34714
+  },
+  "all_opaque_parts_unchanged": true,
+  "marker_invocations": 1,
+  "render_iterations": 3,
+  "iteration_history": [
+    "v1: six-page budget failure retained.",
+    "v2: five pages but small table split across columns, retained.",
+    "v3: explicitly authorized keepNext-only repair, five-page visual PASS."
+  ],
+  "environment": {
+    "python": "/Users/wyf/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+    "python_version": "3.12.14 (main, Aug 25 2026, 13:50:33) [Clang 22.1.3 ]",
+    "renderer": "/Users/wyf/.codex/plugins/cache/openai-primary-runtime/documents/26.909.12148/skills/documents/render_docx.py",
+    "bundled_libreoffice": "/Users/wyf/.cache/codex-runtimes/codex-primary-runtime/dependencies/native/libreoffice-headless/libreoffice/LibreOfficeDev.app/Contents/MacOS/soffice",
+    "no_desktop_libreoffice": true
+  },
+  "new_training": 0,
+  "new_inference": 0,
+  "new_native": 0,
+  "source_statistics_recomputed": false,
+  "old_scientific_qa_rerun": false,
+  "scientific_images_added": 0,
+  "qa_images_only": true,
+  "git_mutations": 0,
+  "states_modified": 0,
+  "skills": [
+    "documents:documents",
+    "transformer-inverse-modeling-semantic-layer"
+  ],
+  "delivery_is_paper_final": false
+}

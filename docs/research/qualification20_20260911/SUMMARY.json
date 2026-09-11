@@ -1,0 +1,61 @@
+{
+  "utc": "2026-09-11T22:01:56.658759+00:00",
+  "status": "BOUNDED_PARTITION_PROCESSED_NOT_FULL_HISTORY_COMPLETION",
+  "processed": 19,
+  "qualified": 19,
+  "committed_new": 19,
+  "preexisting_replays": 0,
+  "verification_replays": 19,
+  "replay_added": 0,
+  "held": 0,
+  "unprocessed": 0,
+  "before_checkpoint": {
+    "increment_15ghz_rows": 1,
+    "increment_accepted": 1,
+    "last_increment_sequence": 1,
+    "prior_commit": null,
+    "referenced_frequency_rows": 56
+  },
+  "final_checkpoint": {
+    "increment_15ghz_rows": 20,
+    "increment_accepted": 20,
+    "last_increment_sequence": 20,
+    "prior_commit": "f85bcfa2c8bb2c13fd57e05a360313af8690228d737fb77aadb3b408c8e675f0",
+    "referenced_frequency_rows": 1120
+  },
+  "unchanged_remaining_splits": {
+    "test": 8,
+    "validation": 3
+  },
+  "old_broadband_accepted": 21135,
+  "old_broadband_feature_rows": 1183560,
+  "old_broadband_added": 0,
+  "full_100k_qualified_total": null,
+  "native_actions": 0,
+  "training_actions": 0,
+  "new64_admissions": 0,
+  "historical_index_queries": 0,
+  "physical_qa_reruns": 0,
+  "available_disk_bytes": 392333971456,
+  "schema": "eucap15_public_qualified20_partition.v1",
+  "current_certified_increment_unique_lower_bound": 20,
+  "original_research_members": 31,
+  "unchanged_frozen_model_dataset": 6329,
+  "remaining_priority31": 11,
+  "remaining_status": "THREE_VALIDATION_EIGHT_TEST_NOT_PROCESSED_OR_REASSIGNED",
+  "qualified_total_not_sum_of_6700_21135_and20": true,
+  "quota_status": "RESEARCH_MOUNT_UNKNOWN_ONLY_OTHER_MOUNTS_LISTED",
+  "source_receipt": {
+    "path": "reports/eucap15_native_owner_20260909T062500Z/qualified15_train_partition_v2/deployment_20260911T220153575746Z/READBACK_RECEIPT.json",
+    "sha256": "2676fca7b4e2cb863f9519c56a0d5326b73b18c29b5c86d58376a2c06ac78b4e",
+    "bytes": 23137
+  },
+  "independent_review": {
+    "path": "reports/eucap15ghz_20260908T220300Z/qualification_cost_paper_20260911_v1/qualification_review_v1/REVIEW.json",
+    "sha256": "437527fbb5de9c414d6444b7095aac3fb4be1602ee4769c6607bb6c5fafec78c",
+    "bytes": 25035
+  },
+  "physical56_scope": "ORIGINAL_56_RESPONSES_REFERENCED_NOT_ALL_FREQUENCIES_STRICT_VALID",
+  "research_31_and_new64_are_different_cohorts": true,
+  "new64_formal_accepted": 0
+}
