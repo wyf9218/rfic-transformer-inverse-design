@@ -1,5 +1,10 @@
 # Research code evidence
 
+The newest controlled64 feature-chain code and its limited synthetic-test
+status are described in `../EUCAP15_CONTROLLED64_FEATURE_CHAIN_20260911.md`.
+`native64_result_bridge_20260911` contains unchanged native-owner component
+review copies, not a deployed execution package.
+
 `eucap15_proxy_preselection_20260911.py` is the byte-preserved script executed
 once for the original development128 saved-proxy tolerance and signed K_abs
 diagnosis. SHA-256:

@@ -1,0 +1,83 @@
+{
+  "schema": "eucap15_controlled64_feature_chain_increment.v1",
+  "updated_utc": "2026-09-11T01:47:22Z",
+  "independent_static_review": {"status":"GO_LOCAL_SOURCE_RUNTIME_BINDING_FIX_ONLY","reviewed_source_sha256":"7f60518fff103c7251aec2e259e02473ee917e9f47c92e8e5944bda40c0b7673","receipt_sha256":"7c05a1ef3c5229e34caacb2f3e68c7b9b59c4002291f7ff4e4b8b30210aa42a7","new_confirmed_issues":0,"independent_tests_rerun":0,"physical_or_native_go":false},
+  "owner_closed_metadata_capture": {"source_sha256":"de7bc877c73105262757b2ec785f706f31806ec7d5dea329dd7283efd9f06353","receipt_sha256":"6b9490b3c1ef21e25265b240d6d08806afbc3d82f1cb0e805cf156f926181f10","recorded_utc":"2026-09-11T01:42:13Z","new_directed_tests_passed":12,"test_seconds":0.026,"status":"STANDALONE_NOT_OWNER_INTEGRATED_NOT_DEPLOYED","real_captures_executed":0,"actual_native_start_order":"NOT_RECONSTRUCTED","physical_artifact_transport":"NOT_IMPLEMENTED"},
+  "status": "SCOPED_SYNTHETIC_COMPONENT_PASS_NOT_DEPLOYED",
+  "goal_complete": false,
+  "implementation": {
+    "path": "research/broadband56_nn/eucap15_controlled_evidence.py",
+    "sha256": "7f60518fff103c7251aec2e259e02473ee917e9f47c92e8e5944bda40c0b7673"
+  },
+  "new_synthetic_tests": {
+    "distinct_cases": 83,
+    "passed": 83,
+    "failed": 0,
+    "executions": 1,
+    "seconds": 2.45,
+    "old_test_cases_executed": 0,
+    "author_receipt_sha256": "fd8430d209a1691e2544776889703b05696ebd7812f0b105706ab0441260563b",
+    "junit_sha256": "75a638cb0260ed553375708fa36a8a24e350852177811cb634d4cdc8a4ef4362"
+  },
+  "feature_chain_scope": {
+    "candidate_identity": true,
+    "pinned_runtime_source_closure": true,
+    "original_56_labels": true,
+    "terminal_publication_verified": false,
+    "solver_birth_and_order_verified": false,
+    "production_admission": false
+  },
+  "owner_result_bridge": {
+    "source_sha256": "212fbec34d8a193034424df348e3c055def3b812fe73d79328accc5ef290062a",
+    "original_receipt_sha256": "2f7deab5facfe0ca60ae08fb2f27e2babd7be436cb05d3f8cae01a409d3661ae",
+    "current_directed_tests_passed": 16,
+    "tests_seconds": 0.038,
+    "old_tests_rerun": false,
+    "owner_callsite": "NOT_INSTALLED",
+    "native_deployment": "NOT_INSTALLED",
+    "closed_export": "NOT_IMPLEMENTED_AT_RECEIPT_TIME",
+    "status_as_of_utc": "2026-09-11T01:26:28Z"
+  },
+  "actual_increment": {
+    "native_starts_observed": 0,
+    "native_terminals_received": 0,
+    "certified_production_uniques_submitted": 0,
+    "training_updates": 0,
+    "candidate_regenerations": 0,
+    "additional_ssh_attempts": 0
+  },
+  "unknown_not_zero": {
+    "current_last2_state": [
+      "000125/Q10",
+      "000126/Q15"
+    ],
+    "current_100k_certified_total": null,
+    "current_mars_disk_available_bytes": null,
+    "current_mars_quota": null,
+    "allocated_bytes_per_certified_unique": null,
+    "current_controlled64_solver_budget_consumption": null
+  },
+  "actual_comparison": {
+    "same_solve_budget": "NOT_RUN",
+    "first_four_qualified_train_per_arm": "NOT_RUN",
+    "new_coverage_gain": null
+  },
+  "limits": {
+    "original_candidates": 64,
+    "max_actual_native_starts_per_arm": 16,
+    "max_actual_native_starts_total": 32,
+    "max_hours": 6,
+    "max_incremental_bytes": 2147483648,
+    "max_concurrent_after_live_admission": 2,
+    "qualified_train_target_per_arm": 4,
+    "frozen_proposals_sha256": "17de43afa74182674d6391c3b84bc8dca729d6c3f6d1b711e8c5728fab642fa3"
+  },
+  "native_access": {
+    "last_actual_attempt_utc": "2026-09-11T00:40:39Z",
+    "exit_code": 255,
+    "error": "Connection closed by UNKNOWN port 65535",
+    "authenticated_observation": "UNAVAILABLE",
+    "security_bypass": false
+  },
+  "remaining_blocker": "No observable authenticated MARS channel; native executable identity, current last2/leases/resources and real storage reservation remain unavailable. No physical deployment or qualification is inferred from local tests."
+}

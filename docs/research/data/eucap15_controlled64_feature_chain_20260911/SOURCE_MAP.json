@@ -1,0 +1,76 @@
+{
+  "schema": "eucap15_controlled64_public_source_map.v1",
+  "base_commit": "353a4a72425625f1aeab578e418950a281141b3c",
+  "files": [
+    {
+      "path": "research/broadband56_nn/eucap15_controlled_evidence.py",
+      "sha256": "7f60518fff103c7251aec2e259e02473ee917e9f47c92e8e5944bda40c0b7673"
+    },
+    {
+      "path": "tests/fixtures/eucap15_controlled_evidence_fixture.py",
+      "sha256": "aee10564be08737ab06099f13586cbb986b76d7b3695d52eb2bb4910837b6a06"
+    },
+    {
+      "path": "tests/test_eucap15_controlled_evidence.py",
+      "sha256": "c5f7ff49562f33b44268f9f7493dc5afd08415afbceb45bf1d8d440868f62fcd"
+    },
+    {
+      "path": "docs/research/EUCAP15_CONTROLLED64_FEATURE_CHAIN_20260911.md",
+      "sha256": "10e4f7e6717c483411932cdd7c41c43f881a8f4b2fbefd4765f0b987a2777e85"
+    },
+    {
+      "path": "docs/research/code/README.md",
+      "sha256": "b0aacd97be2902a7b2b1995ec1dd754849c7d70877a360f23a7c910bf944f3de"
+    },
+    {
+      "path": "docs/research/code/native64_result_bridge_20260911/controlled_result.py",
+      "sha256": "212fbec34d8a193034424df348e3c055def3b812fe73d79328accc5ef290062a"
+    },
+    {
+      "path": "docs/research/code/native64_result_bridge_20260911/native_birth.py",
+      "sha256": "793cace3fed8782768b0f9552853bd21bf963f711cff91b88f047cc9648ac3d2"
+    },
+    {
+      "path": "docs/research/code/native64_result_bridge_20260911/start_slots.py",
+      "sha256": "5a49f380f41e5465aa4ce3a076156e43adb3c677d59c7e630f8e9154bab5a520"
+    },
+    {
+      "path": "docs/research/code/native64_result_bridge_20260911/controlled_metadata.py",
+      "sha256": "820e7b87d51d5929a217b1b415088d8188c25a355b7057f779c6e0dc2b66082f"
+    },
+    {
+      "path": "docs/research/code/native64_result_bridge_20260911/closed_export.py",
+      "sha256": "de7bc877c73105262757b2ec785f706f31806ec7d5dea329dd7283efd9f06353"
+    },
+    {
+      "path": "docs/research/code/native64_result_bridge_20260911/README.md",
+      "sha256": "4e4c50646174cf69ee821777b413f797326223116093464042ef36cca7ce7adb"
+    },
+    {
+      "path": "docs/research/data/eucap15_controlled64_feature_chain_20260911/STATUS.json",
+      "sha256": "75f774cb60c8982f7bb570877f2972a4b8b802db52d28dffa88e5eaba1027975"
+    }
+  ],
+  "original_private_receipts": [
+    {
+      "role": "author_synthetic_test",
+      "sha256": "fd8430d209a1691e2544776889703b05696ebd7812f0b105706ab0441260563b"
+    },
+    {
+      "role": "independent_static_review",
+      "sha256": "7c05a1ef3c5229e34caacb2f3e68c7b9b59c4002291f7ff4e4b8b30210aa42a7"
+    },
+    {
+      "role": "native_result_component",
+      "sha256": "2f7deab5facfe0ca60ae08fb2f27e2babd7be436cb05d3f8cae01a409d3661ae"
+    },
+    {
+      "role": "native_closed_capture_component",
+      "sha256": "6b9490b3c1ef21e25265b240d6d08806afbc3d82f1cb0e805cf156f926181f10"
+    }
+  ],
+  "omitted": "Actual frozen proposals, models, GDS/S4P, PDK, private path-bound owner fixtures and unredacted owner receipts. No scientific raw data was copied into the public code archive.",
+  "public_summary_is_not_original_receipt": true,
+  "native_deployment": "NOT_INSTALLED",
+  "new_real_results": 0
+}
