@@ -1,5 +1,17 @@
 # Research code evidence
 
+`eucap15_proxy_preselection_20260911.py` is the byte-preserved script executed
+once for the original development128 saved-proxy tolerance and signed K_abs
+diagnosis. SHA-256:
+`85e92e7539cc18d921778eebfd0b39e05d9f2e9a5f5b33790292a7ebb3cfe938`.
+It pins the existing result CSV and original pilot freeze, preserves UNKNOWN,
+uses only standard-library arithmetic, and neither reloads the model nor runs
+native simulation. Its execution is already complete; do not repeat it for
+status checks. It is not a generic mutable-data study runner.
+
+The current increment is documented in
+`../EUCAP15_NATIVE_RESUME_INCREMENT_20260911.md`.
+
 `eucap15_controlled_prepare_20260910.py` is a byte-preserved review copy of the
 thin adapter actually used for the new64-proposal bounded15GHz comparison.
 SHA-256: `ceadaabee8da5958a36839604ae2ee9f3803ff72d8786f79865d61d890c9c734`.

@@ -1,0 +1,117 @@
+{
+  "latest_increment_supplement_20260911": {"latest_proxy_independent_review":{"sha256":"960e79c02747fceacebf2ec7796e5df1affccb3e69667e183d8a6108eb516d46","status":"GO_SAVED_PROXY_ARITHMETIC_AND_STRICT48_MEMBERSHIP_ONLY","strict48_both_pass":40,"strict48_both_fail":8,"strict48_discordant":0},"latest_native_owner_checkpoint":{"recorded_utc":"2026-09-11T01:09:16Z","receipt_sha256":"f17464d6fed69e5b2cf53f34b141c9985afe1f047e9ef37fd5b984663c7e679d","new_33_tests":"PASS_SOFTWARE_ONLY","context_and_feature_route":"LOCAL_IMPLEMENTED","budgeted_native_launcher":"NOT_IMPLEMENTED_FAIL_CLOSED","owner_loop_RESULT":"NOT_IMPLEMENTED","deployment":"NOT_INSTALLED","actual_native_starts_by_adapter":0}},
+  "schema": "eucap15_native_recovery_work_package.v1",
+  "updated_utc": "2026-09-11T01:07:06Z",
+  "parent_commit": "0699bab965c48b4bc243f757fa300250edf378a1",
+  "status": "NEW_OFFLINE_RESULTS_AND_TESTED_INTERFACES_NATIVE_ACCESS_UNVERIFIED_NOT_FINAL",
+  "scope": {
+    "frequency_GHz": 15,
+    "qualified_geometry_goal": 100000,
+    "final_independent_requests": 10000,
+    "changed": false
+  },
+  "native": {
+    "owner_thread": "019eb52f-9739-73b2-8483-af70553603a8",
+    "last_connection_attempt_utc": "2026-09-11T00:40:39Z",
+    "exit_code": 255,
+    "stderr": "Connection closed by UNKNOWN port 65535",
+    "remote_observation_bytes": 0,
+    "user_reports_login": true,
+    "usable_research_connection": "UNVERIFIED",
+    "retries": 0,
+    "research_native_calls": 0,
+    "additional_terminal_receipts_received": 0,
+    "pending_000125_Q10": "UNKNOWN_CURRENT_STATE",
+    "pending_000126_Q15": "UNKNOWN_CURRENT_STATE",
+    "last_accepted_physical_snapshot_utc": "2026-09-10T14:30:19Z",
+    "original128_accepted_terminal": 126,
+    "original128_pending_in_snapshot": 2,
+    "human_action": "Run hostname in the already authenticated MARS terminal and return only the hostname output, never a password or Duo code."
+  },
+  "qualification": {
+    "existing_p215_row_artifact_index": "LOCATED_NO_FULL_RESCAN",
+    "historical_rows": 215785,
+    "new_current_contract_classifications": 0,
+    "unprocessed_historical_rows": 215785,
+    "certified_unique_subset_added": 0,
+    "production_submissions_added": 0,
+    "production_accepted_added": 0,
+    "current_100k_certified_unique_count": null,
+    "prior_research_members": 31,
+    "prior_research_split": {
+      "train": 20,
+      "validation": 3,
+      "test": 8
+    },
+    "gap": "Actual current production ledger, all-history qualified deduplication, per-member compatibility and formal committed admission remain unverified."
+  },
+  "controlled64": {
+    "original_proposals": 64,
+    "original_analytic_failures": 14,
+    "unobserved_eligible": 50,
+    "research_metadata_preflight": "PASS_ONCE_REAL_FROZEN_INPUT",
+    "new_synthetic_tests": 32,
+    "new_synthetic_tests_result": "PASS",
+    "native_deployment": "NOT_INSTALLED",
+    "native_owner_component_status": "PARTIAL_LOCAL_IMPLEMENTATION_NOT_NATIVE_READY_AT_LAST_READ",
+    "actual_starts_observed_this_package": 0,
+    "current_total_actual_starts": null,
+    "new_completed_results_received": 0,
+    "budget_actual_consumed": null,
+    "caps": {
+      "actual_starts_per_arm": 16,
+      "total_actual_starts": 32,
+      "max_concurrency_after_admission": 2,
+      "native_seconds": 21600,
+      "incremental_storage_bytes": 2147483648
+    },
+    "equal_solve_budget": "NOT_RUN",
+    "equal_first4_qualified_train": "NOT_REACHED_NO_NATIVE_RESULTS",
+    "reservations_are_actual_starts": false
+  },
+  "new_offline_diagnosis": {
+    "original_requests": 128,
+    "proxy_exceeds_at_least_one_tolerance": 58,
+    "proxy_exceeds_fraction": 0.453125,
+    "proxy_within_all_four": 70,
+    "unknown_proxy_comparisons": 0,
+    "nonexclusive_feature_exceedances": {
+      "Lp_nH": 36,
+      "Ls_nH": 27,
+      "Qmin": 22,
+      "K_abs": 54
+    },
+    "signed_K_complete": 85,
+    "signed_K_strict": 48,
+    "signed_K_descriptor_only_invalid": 37,
+    "signed_K_actual_missing": 43,
+    "causal_attribution": "NOT_IDENTIFIED"
+  },
+  "last2_reader": {
+    "implementation_sha256": "0e8d27c9c3e669b9ab13ab3be98e243cc309a9ebc88d076bee136316200a4c61",
+    "review_sha256": "eae86a7c645b858cb1ceaca0f3039cc04c34d4fe8abd06e298a1e6745657773e",
+    "independent_review": "GO_SCOPED_SOFTWARE_AND_ACCEPTED126_BASELINE_REUSE",
+    "first_version_tests_passed": 24,
+    "final_version_new_integration_tests_passed": 5,
+    "final_actual_baseline_preflight": "PASS",
+    "actual_new_physical_consumption": "NOT_RUN",
+    "persistent_automatic_consumption": "NOT_INSTALLED_FIXED126_BASELINE_ONLY"
+  },
+  "storage": {
+    "current_MARS_available_bytes": null,
+    "current_MARS_quota_bytes": null,
+    "allocated_bytes_per_certified_unique": null,
+    "new_cleanup_actions": 0,
+    "reason": "No usable remote observation; prior solver peak RAM is not disk or quota."
+  },
+  "preservation": {
+    "new_training_updates": 0,
+    "new_candidates_generated": 0,
+    "old128_chains_reconsumed": 0,
+    "old_accepted_QA_reruns": 0,
+    "full_P215_rejoins": 0,
+    "paper_figures_generated": 0
+  },
+  "remaining_blocker": "Existing authenticated MARS access is not reachable from the native owner's original SSH interface; current process, production ledger and resources cannot yet be observed.",
+  "skills_effect": "Semantic-layer/data-quality separation of metadata, proxy, physical and formally accepted evidence; original denominators and null unknowns retained."
+}
