@@ -1,0 +1,82 @@
+{
+  "schema": "eucap15_controlled64_guard_delta_receipt.v1",
+  "status": "LOCAL_TARGETED_FIX_TESTED_NOT_INTEGRATED_NOT_DEPLOYED",
+  "recorded_utc": "2026-09-11T01:14:16Z",
+  "source_pins": [
+    {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/controlled64_guard_delta_20260911_v1/start_slots.py",
+      "sha256": "5a49f380f41e5465aa4ce3a076156e43adb3c677d59c7e630f8e9154bab5a520",
+      "bytes": 8104
+    },
+    {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/controlled64_guard_delta_20260911_v1/native_resource_probe.py",
+      "sha256": "2b4e525ee3bd75c42a4182333f9e868d67fd2f251e8af16fecb163b9ad0b038c",
+      "bytes": 5588
+    },
+    {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/controlled64_guard_delta_20260911_v1/controlled_metadata.py",
+      "sha256": "820e7b87d51d5929a217b1b415088d8188c25a355b7057f779c6e0dc2b66082f",
+      "bytes": 8191
+    },
+    {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/controlled64_guard_delta_20260911_v1/test_guard_delta.py",
+      "sha256": "3a8ebadb4ab602eb12b3b9ea4f77012a736b2a0ff5fdcf7d6b20b0ab5897b3eb",
+      "bytes": 5782
+    }
+  ],
+  "preserved_parent_sources": [
+    {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/controlled64_adapter_20260911_v1/start_slots.py",
+      "sha256": "c951e372818e78d26ba71315d76c596eea3162ebd962e2062efa2db7057b659e",
+      "bytes": 7817
+    },
+    {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/controlled64_adapter_20260911_v1/native_resource_probe.py",
+      "sha256": "cbb3f47ca1039be821c1db0228a7891d97c8b0f5a932c7c7047fa1e1704b97c7",
+      "bytes": 5196
+    }
+  ],
+  "parent_receipt": {
+    "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/controlled64_adapter_20260911_v1/LOCAL_CONTEXT_OBSERVER_RECEIPT_v1.json",
+    "sha256": "f17464d6fed69e5b2cf53f34b141c9985afe1f047e9ef37fd5b984663c7e679d"
+  },
+  "parent_bytes_rechecked_unchanged": true,
+  "changes": [
+    {
+      "function": "start_slots.SlotBook.records",
+      "fix": "Require non-bool integer arm/global slots and exactly unique contiguous global sequence 1..N on serialized readback"
+    },
+    {
+      "function": "native_resource_probe.evaluate",
+      "fix": "Require the actual8 CPU counters to be nonnegative integers, all deltas nonnegative and total delta positive; invalid sample forces sample/iowait false, iowait null and WAIT"
+    }
+  ],
+  "tests": {
+    "command": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/broadband56_nn_v2_20260907T212216Z/environment/bin/python -B -m unittest -v test_guard_delta.py",
+    "cwd": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/controlled64_guard_delta_20260911_v1",
+    "exit_code": 0,
+    "test_cases": 11,
+    "result": "Ran 11 tests in 0.018s; OK",
+    "output": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/controlled64_guard_delta_20260911_v1/TEST_OUTPUT.txt",
+    "scope": "Only 5 slot-sequence and 6 CPU-counter tests with synthetic temporary ledgers and synthetic resource inputs",
+    "old_defects_reproduced": [
+      "Old records accepts duplicate/gapped global_slot",
+      "Old evaluate returns PASS for negative iowait counter delta",
+      "Old evaluate returns PASS for other negative CPU delta with positive total",
+      "Old evaluate returns PASS for zero CPU delta total"
+    ],
+    "no_live_resource_pass_claim": true,
+    "previous_25_or_33_tests_rerun": false
+  },
+  "native_budget_integration": "NOT_IMPLEMENTED",
+  "native_owner_result_producer": "NOT_IMPLEMENTED",
+  "deployed": false,
+  "real_native_starts": 0,
+  "remote_actions": 0,
+  "additional_ssh_attempts": 0,
+  "scientific_contract_changed": false,
+  "resource_thresholds_changed": false,
+  "candidate_proposals_or_orders_changed": false,
+  "nn_training_started": false,
+  "remaining": "Merge this verified delta into the future immutable64 runtime, finish budget/owner integration, then perform actual final-package Linux/real-path preflight after authentication; do not dispatch the old unbudgeted64 route"
+}
