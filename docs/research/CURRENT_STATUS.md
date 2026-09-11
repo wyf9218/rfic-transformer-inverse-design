@@ -5,8 +5,11 @@
 [New verified results and code](20260911_heldout_and_last2.md): MARS owner access restored;
 original128 now128 terminal/0pending,48strict and40joint hits; fixed selected6329-model
 holdout evaluated once on1259 rows (inverse SELF_PROXY only, not fresh EMX or FINAL).
-New64 research consumer integration passed16 new synthetic tests; native execution
-has not yet been received. Priority31 production certification and100K total remain unclosed.
+[First real controlled64 result](20260911_controlled64_first_real.md) is now verified:
+1 actual DOE EMX start/complete at the08:24:57 snapshot; strict-valid but K_abs0.1711<0.2,
+so0 new qualified in-range samples. Original14 analytical failures remain in64; no advantage claim.
+Reader R/S correction passed29 new scoped tests; no native rerun or old-suite rerun.
+Priority31 lookup found0 matches only in the named index; formal qualification/100K count remain unclosed.
 The16-frequency/320-request sections below are historical and do not authorize continuation;
 the current paper scope remains15GHz/100K qualified uniques/final independent10000 requests.
 

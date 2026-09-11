@@ -1,0 +1,155 @@
+{
+  "schema": "eucap15_controlled64_first_real_increment.v1",
+  "status": "FIRST_FRESH_RESULT_VERIFIED_CAMPAIGN_NOT_COMPLETE",
+  "recorded_utc": "2026-09-11 08:46:15 UTC",
+  "goal_complete": false,
+  "scope": "DEVELOPMENT_SINGLE_FROZEN_POLICY_PAIR_NOT_FINAL",
+  "native_owner": {
+    "thread_id": "019eb52f-9739-73b2-8483-af70553603a8",
+    "host": "mars-0002.ece.wisc.edu",
+    "observation_utc": "2026-09-11T08:24:57.689026+00:00",
+    "pid": 715544,
+    "start_ticks": 391857869,
+    "alive_at_observation": true,
+    "actual_emx_starts_at_cutoff": 1,
+    "starts_per_arm": {
+      "GEOMETRY_DOE_CONTROL": 1,
+      "COVERAGE_DIRECTED": 0
+    },
+    "unresolved_reservations": 0,
+    "physical_result_received": 1,
+    "physical_solver_failures_received": 0,
+    "original_analytic_failures": 14,
+    "analytical_failures_new_native_publications": 2,
+    "original_denominator": 64,
+    "locally_unobserved_eligible_results": 49,
+    "health_not_asserted_beyond_observation": true
+  },
+  "budget": {
+    "max_starts_per_arm": 16,
+    "max_starts_total": 32,
+    "max_incremental_bytes": 2147483648,
+    "max_concurrency": 2,
+    "configured_concurrency": 1,
+    "threads_per_solver": 2,
+    "admitted_utc": "2026-09-11T08:18:31.094118+00:00",
+    "deadline_utc": "2026-09-11T14:18:31.094118+00:00",
+    "allocated_incremental_bytes_at_observation": 12705792,
+    "available_disk_bytes_at_observation": 552901066752,
+    "quota": "UNKNOWN_FOR_RESEARCH_MOUNT",
+    "deleted_files": 0,
+    "observed_freed_bytes": 0
+  },
+  "first_physical_result": {
+    "request_id": "eucap15_controlled_budget_20260910_v1-GEOMETRY_DOE-001",
+    "arm": "GEOMETRY_DOE_CONTROL",
+    "original_order": 1,
+    "split": "train",
+    "geometry_sha256": "466158930936002dc2243a21382957143ae474a996f6f95c414f7bcb2a2ec51a",
+    "feature_order": [
+      "Lp_nH",
+      "Ls_nH",
+      "Qmin",
+      "K_abs"
+    ],
+    "actual": [
+      1.6270013554897969,
+      0.866027615192219,
+      11.523871922963538,
+      0.17105661961941435
+    ],
+    "strict_valid": true,
+    "below_half_srf": true,
+    "core_eligible": false,
+    "reason": "K_abs is below fixed 0.2 lower bound",
+    "new_qualified_train": 0,
+    "target": null,
+    "q_proxy": null,
+    "frozen_proxy": null,
+    "target_error": null,
+    "joint_hit": null,
+    "coverage_cells_added_by_this_row": 0,
+    "closed_utc": "2026-09-11T08:23:03.447860+00:00",
+    "evidence_class": "FRESH_REAL_EMX",
+    "physical_chain_verified": true
+  },
+  "comparison": {
+    "equal_solver_budget": "NOT_REACHED",
+    "first4_qualified_train_per_arm": "NOT_REACHED",
+    "comparative_coverage_gain": null,
+    "algorithm_advantage_claim": false,
+    "cost_per_qualified_sample": null,
+    "reason": "Only one native solve and no in-core qualified train result received; pure capture does not reconstruct whole start ledger."
+  },
+  "priority31": {
+    "lookup_utc": "2026-09-11T08:22:57.097306+00:00",
+    "queries": 31,
+    "matches_in_named_index": 0,
+    "namespace_policy": "research_geometry/raw_geometry/production_geometry retained separately",
+    "full_history_exhaustive": false,
+    "classification": "IDENTITY_LOOKUP_ONLY_NOT_PRODUCTION_ADMISSION",
+    "missing_evidence": [
+      "Serialized source geometry field order/precision and source input pin not in lookup receipt",
+      "Current process/port/GDS/DRC/EMX/SRF and sample-specific production qualification closure",
+      "Formal accepted submission receipt"
+    ],
+    "new_certified_subset_received": 0,
+    "new_formal_production_accepted": 0,
+    "current_100k_certified_unique": null
+  },
+  "reader_fix": {
+    "old_failed_attempt_preserved": true,
+    "new_birth_only_tests_pass": 29,
+    "old_tests_rerun": false,
+    "stable_fields": [
+      "pid",
+      "start_ticks",
+      "uid",
+      "ppid",
+      "argv"
+    ],
+    "volatile_state_not_identity": true,
+    "dead_missing_state_rejected": true,
+    "actual_intake_exit_code": 0,
+    "actual_intake_status": "PASS_SCOPED_CLOSED_CAPTURE_NOT_FULL_START_LEDGER",
+    "model_loads": 0,
+    "training_updates": 0,
+    "native_actions_by_research": 0
+  },
+  "sources": {
+    "consumer_receipt": {
+      "sha256": "7d997c5a226da5f10cf600f1fd7db2caca208f0fd24ec74c46067b7e07989294",
+      "artifact": "run_v2/RECEIPT.json"
+    },
+    "request_results": {
+      "sha256": "b40bc1644dad65af9da10a240d0141476141a019d541cdd772962f707daab766",
+      "artifact": "run_v2/REQUEST_RESULTS.json"
+    },
+    "summary": {
+      "sha256": "e11328d800a62a4980b8c8e3e76d1aa3e2b95fc593182993348825436dc9a587",
+      "artifact": "run_v2/SUMMARY.json"
+    },
+    "transport": {
+      "sha256": "e05bdea9607625e62bce1ee58e7b85268993e9d1cde71f03561425aa1d7e2e21",
+      "artifact": "controlled64_capture_20260911T082457174018Z/TRANSPORT_RECEIPT.json"
+    },
+    "whole_start_ledger": {
+      "sha256": "18895b667cc0c1779a93fc75613358c69c2ba9e9b247abefbe6f57e8b156c653",
+      "artifact": "observations/20260911T082457174018Z_FULL_NATIVE_START_LEDGER.json"
+    },
+    "priority31_lookup": {
+      "sha256": "a4f345218df7bea70816ee6d4f219a146fe38831a0209a5d71ffeac8343dc739",
+      "artifact": "research31_historical_lookup_20260911T082256632619Z/OBSERVATION.json"
+    },
+    "author_test_receipt": {
+      "sha256": "5a933b66ca3ac27864a479c24f5cbdd9101c9be9143ce7c38da2cc7893eab1f3",
+      "artifact": "reader_fix_v2/AUTHOR_RECEIPT.json"
+    },
+    "independent_fix_review": {
+      "sha256": "c5f9d1695e1ad303fc7e45b1b1a2428520b20fd91d912817022e27d366eaeb28",
+      "artifact": "reader_fix_v2/INDEPENDENT_REVIEW.json"
+    }
+  },
+  "next_action": "Keep sole native owner finite program, receive only genuinely new closed captures; close current-contract evidence and production submission for first eligible subset.",
+  "blocker": "Priority31 has no current-contract qualification and formal accepted submission receipt yet; certified 100K count remains unknown."
+}

@@ -311,14 +311,23 @@ def _closed_birth(reader, result, proof, solver, batch, original, *,
         'Native birth source binding')
     process=birth['process']; ancestor=birth['ancestor']; ancestry=birth['ancestry']
     _require(isinstance(ancestry,list) and ancestry, 'Missing native ancestry')
-    chain={p['pid']:p for p in ancestry}
-    _require(len(chain)==len(ancestry) and process==chain.get(process['pid']) and
-             ancestor==chain.get(ancestor['pid']) and observation['wrapper_pid']==ancestor['pid'],
-             'Native ancestry identity conflict')
-    for p in ancestry:
+    identity=('pid','start_ticks','uid','ppid','argv')
+    for p in [process,ancestor,*ancestry]:
+        _require(isinstance(p,dict) and set(identity)|{'state'}<=set(p),
+                 'Missing process identity or state')
         _require(all(type(p[k]) is int and p[k]>0 for k in ('pid','start_ticks')) and
-                 type(p['uid']) is int and p['uid']>=0 and type(p['ppid']) is int and p['ppid']>=0,
-                 'Malformed process identity')
+                 type(p['uid']) is int and p['uid']>=0 and type(p['ppid']) is int and p['ppid']>=0 and
+                 isinstance(p['argv'],list) and p['argv'] and
+                 all(isinstance(a,str) for a in p['argv']), 'Malformed process identity')
+        _require(p['state'] in ('R','S','D','T','t','I','W','K','P'),
+                 'Missing or non-live process state')
+    chain={p['pid']:p for p in ancestry}
+    # /proc observations are not simultaneous: R/S may change without a new
+    # process. Keep both live observations, but compare only stable identity.
+    _require(len(chain)==len(ancestry) and process['pid'] in chain and ancestor['pid'] in chain and
+             all(_same(p[k],chain[p['pid']][k]) for p in (process,ancestor) for k in identity) and
+             observation['wrapper_pid']==ancestor['pid'],
+             'Native ancestry identity conflict')
     _require(process['state']!='Z' and process['uid']==ancestor['uid'] and
              isinstance(process['argv'],list) and len(process['argv'])==len(proof['command']) and
              process['argv'][1:]==proof['command'][1:], 'Not the exact native executable invocation')
