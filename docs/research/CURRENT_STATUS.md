@@ -1,5 +1,15 @@
 # Current Evidence Status
 
+## Current 15 GHz increment — 2026-09-11
+
+[New verified results and code](20260911_heldout_and_last2.md): MARS owner access restored;
+original128 now128 terminal/0pending,48strict and40joint hits; fixed selected6329-model
+holdout evaluated once on1259 rows (inverse SELF_PROXY only, not fresh EMX or FINAL).
+New64 research consumer integration passed16 new synthetic tests; native execution
+has not yet been received. Priority31 production certification and100K total remain unclosed.
+The16-frequency/320-request sections below are historical and do not authorize continuation;
+the current paper scope remains15GHz/100K qualified uniques/final independent10000 requests.
+
 ## Latest approved scientific release: 83 / 320
 
 [New7 / cumulative83 results and 16-frequency table](frequency5to20_new7_cumulative83_20260908_v1/README_CN.md) and [exact release receipt](frequency5to20_new7_cumulative83_20260908_v1/PACKAGE_QA.json).

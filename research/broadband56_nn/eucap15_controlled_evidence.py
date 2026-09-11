@@ -1,7 +1,9 @@
 """Read-only physical feature-chain checks for the unchanged controlled64.
 
-This is not an owner RESULT/export verifier, solver-start observer, dispatcher
-or production admission interface. Call load_context once for the exact frozen
+The feature inspector alone is not an owner RESULT/export verifier. The closed
+result adapter below binds the existing owner publication without inferring a
+complete solver-start ledger. This is never a dispatcher or admission interface.
+Call load_context once for the exact frozen
 frame, then inspect only genuinely new owner-provided candidate evidence. No
 old256 identity is substituted into the new64 receipts; no simulator is loaded.
 """
@@ -10,12 +12,13 @@ from __future__ import annotations
 import csv
 import hashlib
 import io
+import json
 from pathlib import Path
 
 from . import eucap15_controlled_results as frame
 from .eucap15_acquisition_evidence import (
     CONFIG_SHA, DECK_SHA, FREQUENCIES, GEOMETRY_CHECKS, SCALE, TAU,
-    MirrorReader, _fields, _path, _require, pin, verify_labels,
+    MirrorReader, _fields, _path, _require, _same, pin, verify_labels,
 )
 
 SCOPE = 'DEVELOPMENT_CONTROLLED_ACQUISITION64'
@@ -241,3 +244,143 @@ def inspect_feature_chain(reader, entry, batch):
         solver=solver_pin, preflight=proof_pin, evidence_class='FRESH_REAL_EMX',
         source_validation='PINNED_CANDIDATE_CHAIN_AND_ORIGINAL56_RECONCILED',
         terminal_publication_verified=False, solver_start_verified=False, production_admission=False)
+
+
+def _result_base(batch, original):
+    """Exact fields of the published controlled_result.base, not new authority."""
+    return dict(schema='eucap15_controlled64_result.v1',
+        request_id=original['request_id'], candidate_id=original['candidate_id'],
+        original_proposal=original, original_proposal_denominator=64,
+        original_request_denominator=64, controlled_manifest=batch['manifest'],
+        controlled_intent=batch['intent'], arm=original['arm'], arm_order=original['arm_order'],
+        global_order=original['global_order'], source=original['source'], q_proxy=original['q_proxy'], q_emx=None,
+        candidate_geometry_identity_sha256=original['canonical_geometry_sha256'],
+        model_used_for_proposal=original['source']=='SPARSE_TARGETED', candidate_model_id=original['model_id'],
+        production_accepted=False, actual_response=None, actual_native_starts=None,
+        valid_for_strict_comparison=None, strict_joint_hit=None, feature=None,
+        native_observation=None, stage_evidence=[], automatic_retry_allowed=False)
+
+
+def _closed_birth(reader, result, proof, solver, batch, original, *,
+                  expected_release, expected_owner_config, capture_completed_utc):
+    """Verify one saved birth identity; neither slot rank nor observed UTC is start order/time."""
+    plan = reader.document(result['plan'])
+    _require(plan['release']==expected_release, 'Result release is not the caller-frozen release')
+    release = reader.document(expected_release)
+    _require(release['config']==expected_owner_config, 'Owner config differs from caller-frozen config')
+    config = reader.document(expected_owner_config)
+    _require(config['original_manifest']==batch['manifest'], 'Owner config belongs to another frame')
+    request = reader.document(proof['request'])
+    rt = config['emx_runtime']
+    _fields(request['runtime'], {k:rt[k] for k in ('repo','source_pins','emx_wrapper','process_file')},
+            'Request runtime is not the bound owner runtime')
+    exe = rt['native_executable']
+    _require(isinstance(exe,dict) and set(exe)=={'path','sha256','bytes'} and
+             str(_path(exe['path']))==exe['path'] and type(exe['bytes']) is int and exe['bytes']>0 and
+             isinstance(exe['sha256'],str) and len(exe['sha256'])==64 and
+             set(exe['sha256'])<=set('0123456789abcdef'), 'Bound native executable pin required')
+    # Its opaque digest is the caller-bound binary identity; no executable or model is loaded.
+    keys=('request_id','candidate_id','arm','arm_order','global_order',
+          'canonical_geometry_sha256','q_proxy','local_dispatch_eligible')
+    _fields(plan, dict(schema='eucap15_controlled64_start_slot_plan.v1',
+        manifest_sha256=batch['manifest']['sha256'], intent_sha256=batch['intent']['sha256'],
+        per_arm_max=16,total_max=32,incremental_storage_max_bytes=2147483648,
+        candidates={cid:{k:p[k] for k in keys} for cid,p in batch['rows'].items()}), 'Frozen start-slot plan')
+    admitted=frame._time(plan['admitted_at_utc'],'admission')
+    _require((frame._time(plan['deadline_utc'],'deadline')-admitted).total_seconds()==21600,
+             'Frozen six-hour plan differs')
+    observation_pin=result['native_observation']
+    _require(observation_pin in solver['artifacts'], 'Native observation absent from solver closure')
+    observation=reader.document(observation_pin)
+    _fields(observation, dict(schema='eucap15_controlled64_native_observation.v1',
+        status='ONE_NATIVE_BIRTH_OBSERVED',actual_native_starts=1,native_starts_observed=1,
+        errors=[]), 'One exact native observation required')
+    _require(len(observation['observations'])==1, 'Ambiguous native birth')
+    slot=observation['slot']; birth=observation['observations'][0]
+    plan_sha=hashlib.sha256(json.dumps(plan,sort_keys=True,separators=(',',':'),allow_nan=False).encode()).hexdigest()
+    _fields(slot,dict(plan_sha256=plan_sha,candidate_id=original['candidate_id'],
+        candidate=plan['candidates'][original['candidate_id']],arm=original['arm'],
+        launch_binding=dict(preflight=result['_feature_preflight'],gds=proof['gds'],command=proof['command'])),
+        'Candidate native slot binding')
+    _require(type(slot['arm_slot']) is int and 1<=slot['arm_slot']<=16 and
+             type(slot['global_slot']) is int and 1<=slot['global_slot']<=32, 'Slot bounds differ')
+    _fields(birth,dict(schema='eucap15_controlled64_native_birth.v1',status='OBSERVED_EXACT_NATIVE_PROCESS',
+        native_started=True,candidate=slot['candidate'],arm=slot['arm'],arm_slot=slot['arm_slot'],
+        global_slot=slot['global_slot'],plan_sha256=slot['plan_sha256'],launch_binding=slot['launch_binding'],
+        command=proof['command'],expected_executable=exe,executable_sha256=exe['sha256'],executable_bytes=exe['bytes']),
+        'Native birth source binding')
+    process=birth['process']; ancestor=birth['ancestor']; ancestry=birth['ancestry']
+    _require(isinstance(ancestry,list) and ancestry, 'Missing native ancestry')
+    chain={p['pid']:p for p in ancestry}
+    _require(len(chain)==len(ancestry) and process==chain.get(process['pid']) and
+             ancestor==chain.get(ancestor['pid']) and observation['wrapper_pid']==ancestor['pid'],
+             'Native ancestry identity conflict')
+    for p in ancestry:
+        _require(all(type(p[k]) is int and p[k]>0 for k in ('pid','start_ticks')) and
+                 type(p['uid']) is int and p['uid']>=0 and type(p['ppid']) is int and p['ppid']>=0,
+                 'Malformed process identity')
+    _require(process['state']!='Z' and process['uid']==ancestor['uid'] and
+             isinstance(process['argv'],list) and len(process['argv'])==len(proof['command']) and
+             process['argv'][1:]==proof['command'][1:], 'Not the exact native executable invocation')
+    current=process['pid']; visited=set()
+    while current in chain and current not in visited and current!=ancestor['pid']:
+        visited.add(current); current=chain[current]['ppid']
+    _require(current==ancestor['pid'], 'Native process is not a wrapper descendant')
+    observed=frame._time(birth['observed_utc'],'birth observation')
+    ended=frame._time(observation['ended_utc'],'wrapper observation close')
+    solver_ended=frame._time(solver['ended_utc'],'solver close')
+    _require(admitted<=observed<=ended<=solver_ended<=frame._time(capture_completed_utc,'capture close'),
+             'Native observation/publication chronology differs')
+    return dict(native_birth_identity_verified=True,native_birth_process=process,
+        native_observation='VERIFIED_BIRTH_OBSERVATION_FULL_START_CHRONOLOGY_UNRESOLVED',
+        native_birth_observed_utc=birth['observed_utc'],native_count_in_this_result=1,
+        native_observation_pin=observation_pin,slot=slot,
+        solver_start_verified=False,solver_start_order=None,solver_started_utc=None)
+
+
+def inspect_closed_result(reader, candidate_id, result_pin, batch, *, owner_root,
+                          capture_completed_utc, expected_release, expected_owner_config):
+    """Consume the existing RESULT schema; unknown failure class stays unknown."""
+    _require(candidate_id in batch['rows'], 'Foreign closed candidate')
+    original=batch['rows'][candidate_id]
+    candidate_root=_path(owner_root)/original['request_id']
+    _require(Path(result_pin['path'])==candidate_root/'RESULT.json', 'Foreign owner RESULT path')
+    value=reader.document(result_pin); base=_result_base(batch,original)
+    status=value['status']
+    if status=='ANALYTIC_FAIL_NOT_DISPATCHED':
+        _require(original['analytic_pass'] is False, 'Original analytical failure replaced')
+        _require(_same(value,dict(base,status=status,actual_native_starts=0)), 'Original hold RESULT differs')
+        return dict(state='ANALYTIC_FAIL',native_count_in_this_result=0,terminal_publication_verified=True)
+    _require(original['local_dispatch_eligible'] is True, 'Held proposal executed')
+    if status=='CANDIDATE_FAILURE_RETAINED_NO_SUBSTITUTION':
+        _require(isinstance(value['error'],str) and value['error'] and isinstance(value['stage_evidence'],list),
+                 'Malformed retained failure')
+        for p in value['stage_evidence']: reader.read(p)
+        _require(_same(value,dict(base,status=status,error=value['error'],stage_evidence=value['stage_evidence'])),
+                 'Failure RESULT fabricated values or changed identity')
+        return dict(state='CANDIDATE_FAILURE_UNCLASSIFIED',error=value['error'],
+            native_count_in_this_result=None,terminal_publication_verified=True,
+            failure_classification='NOT_ESTABLISHED_BY_ERROR_TEXT_OR_UNTYPED_STAGE_PINS')
+    _require(status=='FRESH_EMX_EXTRACTED', 'Unimplemented owner terminal status: '+str(status))
+    feature=reader.document(value['feature'])
+    proof=reader.document(feature['preflight']); solver=reader.document(feature['solver_receipt'])
+    _require(Path(value['feature']['path'])==candidate_root/'emx_selected'/'features'/'FEATURE_RECEIPT.json',
+             'Feature belongs to a different owner candidate directory')
+    entry=dict(candidate_id=candidate_id,geometry_sha256=original['canonical_geometry_sha256'],
+        arm=original['arm'],feature=value['feature'],solver=feature['solver_receipt'],s4p=solver['touchstone'])
+    checked=inspect_feature_chain(reader,entry,batch)
+    _require(frame._time(solver['ended_utc'],'solver close')<=frame._time(feature['generated_utc'],'feature close')<=
+             frame._time(capture_completed_utc,'capture close'), 'Feature publication chronology differs')
+    expected=dict(base,status=status,feature=value['feature'],native_observation=value['native_observation'],
+        plan=value['plan'],release=expected_release,actual_native_starts=1,actual_response=checked['actual'],
+        valid_for_strict_comparison=checked['strict_valid'],strict_joint_hit=checked['strict_joint_hit'],
+        core15_eligible=checked['core_eligible'],q10_to20_supported=checked['q10_to20_supported'],
+        absolute_percent_error=feature['target_relative_absolute_percent'],
+        stage_evidence=[feature['preflight'],feature['solver_receipt'],proof['calibre'],proof['gds'],solver['touchstone']])
+    _require(_same(value,expected), 'RESULT does not match the checked original56 physical chain')
+    birth=_closed_birth(reader,dict(value,_feature_preflight=feature['preflight']),proof,solver,batch,original,
+        expected_release=expected_release,expected_owner_config=expected_owner_config,
+        capture_completed_utc=capture_completed_utc)
+    reader.recheck()
+    return dict(checked,**birth,state='STRICT_VALID' if checked['strict_valid'] else 'EMX_INVALID',
+        terminal_publication_verified=True,closed_utc=solver['ended_utc'])

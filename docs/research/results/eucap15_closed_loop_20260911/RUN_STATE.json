@@ -1,0 +1,78 @@
+{
+  "schema": "eucap15_public_increment.v1",
+  "as_of_utc": "2026-09-11T08:02:04Z",
+  "status": "ACTUAL_RESEARCH_INCREMENT_NOT_GOAL_COMPLETE",
+  "base_commit": "ad33b7ad953e615c5a8281f44ede5e78f0021444",
+  "details": "../../20260911_heldout_and_last2.md",
+  "native_owner_access": "RESTORED_AUTHENTICATED_OBSERVATION_073923Z",
+  "model_id": "f15-development6329-3x256-seed17-9d69d7ebfc66",
+  "development128": {
+    "N": 128,
+    "terminal": 128,
+    "pending": 0,
+    "analytic_fail": 35,
+    "gds_fail": 7,
+    "emx_invalid": 38,
+    "strict_valid": 48,
+    "joint_hits": 40,
+    "new_terminal_received": 2,
+    "new_strict": 0,
+    "new_hit": 0,
+    "native_attempts": null,
+    "scope": "DEVELOPMENT_CURRENT_SNAPSHOT_NOT_FINAL"
+  },
+  "holdout": {
+    "train_validation_test": [
+      3801,
+      1269,
+      1259
+    ],
+    "evaluation_calls": 1,
+    "forward_evidence": "HELDOUT_EM_LABELS",
+    "forward_mae": [
+      0.007493030552808328,
+      0.007142173079920638,
+      0.148353159736356,
+      0.006409172713045139
+    ],
+    "inverse_evidence": "SELF_PROXY",
+    "inverse_hits": 1253,
+    "original": 1259,
+    "analytic_pass": 1254,
+    "new_training_updates": 0,
+    "fresh_emx_calls": 0,
+    "qscan_calls": 0,
+    "family_independence": "NOT_CERTIFIED",
+    "test_used_for_model_selection": false
+  },
+  "controlled64": {
+    "new_synthetic_tests_passed": 16,
+    "physical_results_received": 0,
+    "native_starts_reported": 0,
+    "native_status": "NOT_EXECUTED_AT_OWNER_REPORT",
+    "complete_start_ledger_received": false,
+    "equal_start_count_comparison": null,
+    "first4_qualified_train_comparison": null,
+    "candidates_regenerated": 0
+  },
+  "production": {
+    "new_certified_subsets_received": 0,
+    "new_formal_submissions_received": 0,
+    "current100Kcertified_unique": null
+  },
+  "storage": {
+    "observation_utc": "2026-09-11T07:39:23.301573Z",
+    "research_mount_available_bytes": 557225426944,
+    "quota": "UNKNOWN_FOR_RESEARCH_MOUNT",
+    "all128_request_directory_allocated_bytes": 555569152,
+    "strict48_directory_allocated_bytes": 306262016,
+    "strict_only_mean_bytes": 6380458.666666667,
+    "all128_amortized_per_strict_bytes": 11574357.333333334,
+    "excludes_peak_and_shared_storage": true,
+    "production_accepted_cost": false,
+    "deleted_files": 0,
+    "released_bytes": 0
+  },
+  "receipt_sha256": "aeff70b7721003cccc193eb7dbfb297f5b5e97541099eeefadacc7a40c5ec647",
+  "next": "Sole native owner integrates/admit/executes original bounded64 and supplies first qualified/submitted partition; research consumes only new pinned results."
+}

@@ -33,7 +33,9 @@ ARMS = ('COVERAGE_DIRECTED', 'GEOMETRY_DOE_CONTROL')
 COUNTS = {'SPARSE_TARGETED': 25, 'EXPLORATION': 7, 'GEOMETRY_DOE': 32}
 IDENTITY = ('candidate_id', 'request_id', 'arm', 'arm_order', 'global_order', 'q_proxy')
 PRE_FAILURE = ('ANALYTIC_FAIL', 'DUPLICATE_HOLD', 'GDS_FAIL', 'DRC_FAIL')
-UNSTARTED = ('PENDING', 'RESOURCE_PENDING', 'BUDGET_NOT_DISPATCHED')
+# Prefix blockers; NO_CLOSED/UNCLASSIFIED do NOT assert that a solver never started.
+UNSTARTED = ('PENDING', 'RESOURCE_PENDING', 'BUDGET_NOT_DISPATCHED',
+             'NO_CLOSED_RESULT_IN_CAPTURE', 'CANDIDATE_FAILURE_UNCLASSIFIED')
 SOLVER_CLOSED = ('STRICT_VALID', 'EMX_INVALID', 'SOLVER_FAIL', 'FEATURE_FAIL')
 STATES = (*PRE_FAILURE, *UNSTARTED, *SOLVER_CLOSED, 'SOLVER_PENDING')
 COST_FIELDS = ('solver_wall_seconds', 'solver_cpu_seconds',
@@ -241,6 +243,10 @@ def compare(ctx, rows, *, publication_verified=False):
     if not publication_verified:
         return dict(common,status='NOT_RUN_NO_VERIFIED_NATIVE_PUBLICATION',solver_starts=None,
             equal_m=None,equal_K=None,actual_coverage=None)
+    if any(r['state'] in ('NO_CLOSED_RESULT_IN_CAPTURE','CANDIDATE_FAILURE_UNCLASSIFIED') for r in rows):
+        return dict(common,status='CLOSED_CAPTURE_WITH_UNRESOLVED_NATIVE_LEDGER',solver_starts=None,
+            equal_m=None,equal_K=None,actual_coverage=None,
+            reason='Unobserved or unclassified candidates may have started; closed-result membership is not a complete start ledger.')
     if any(r['state'] in (*SOLVER_CLOSED,'SOLVER_PENDING') and not r['solver_start_verified'] for r in rows):
         return dict(common,status='PHYSICAL_PUBLICATIONS_WITH_UNRESOLVED_NATIVE_START_ORDER',
             solver_starts=None,equal_m=None,equal_K=None,actual_coverage=None,
@@ -286,8 +292,122 @@ def compare(ctx, rows, *, publication_verified=False):
         actual_coverage={a:_prefix(ctx,by_arm[a],closed[a][-1]['arm_order']) if closed[a] else None for a in ARMS})
 
 
+def consume_closed_capture(reader, capture_pin, ctx, *, expected_release, expected_owner_config):
+    """Read the existing owner capture, retaining all64 and no invented start rank.
+
+    The caller-frozen release/config are required independently of result content.
+    The current capture explicitly does not reconstruct the complete start ledger.
+    """
+    from .eucap15_controlled_evidence import inspect_closed_result
+    capture=reader.document(capture_pin)
+    _fields(capture,dict(schema='eucap15_controlled64_closed_metadata_capture.v1',
+        controlled_manifest=ctx['manifest'],controlled_intent=ctx['intent'],original_proposal_denominator=64,
+        actual_native_start_order='NOT_RECONSTRUCTED',native_started_utc=None,
+        raw_artifacts_copied=False,physical_qa_rerun=False,production_accepted_added=0), 'Owner closed capture')
+    start=_time(capture['capture_started_utc'],'capture start')
+    _require(start<=_time(capture['capture_completed_utc'],'capture end'), 'Capture clock reversed')
+    records=capture['records']
+    _require(isinstance(records,list) and len(records)==64, 'Closed capture must retain all64')
+    rows=initial_rows(ctx); sources=[]; statuses=Counter(); unknown=[]; observed=0
+    for row,record in zip(rows,records):
+        cid=row['candidate_id']; proposal=ctx['rows'][cid]
+        _fields(record,dict(request_id=row['request_id'],candidate_id=cid,arm=row['arm'],
+            original_global_order=row['global_order']), 'Capture order/identity')
+        row.update(capture_state=record['capture_state'],source_result=record['source_result'],
+            terminal_publication_verified=False,native_birth_identity_verified=False,
+            native_count_in_this_result=None)
+        if record['capture_state']=='NO_CLOSED_RESULT_IN_THIS_CAPTURE':
+            _fields(record,dict(source_result=None,result=None,actual_native_starts=None), 'Missing capture item')
+            if proposal['local_dispatch_eligible']: row['state']='NO_CLOSED_RESULT_IN_CAPTURE'
+            unknown.append(row['request_id']); continue
+        _require(record['capture_state']=='PINNED_CLOSED_RESULT' and isinstance(record['source_result'],dict),
+                 'Unknown capture state')
+        value=reader.document(record['source_result'])
+        _require(_same(record['result'],value), 'Embedded RESULT differs from its exact source pin')
+        checked=inspect_closed_result(reader,cid,record['source_result'],ctx,
+            owner_root=capture['owner_root'],capture_completed_utc=capture['capture_completed_utc'],
+            expected_release=expected_release,expected_owner_config=expected_owner_config)
+        _require(_same(record['actual_native_starts'],checked['native_count_in_this_result']),
+                 'Capture native count differs from checked result')
+        row.update(checked)
+        if checked['state'] in ('STRICT_VALID','EMX_INVALID'):
+            row['physical_chain_verified']=True
+            landing=actual_landing([row['actual'][j] for j in (0,1,3)])
+            row['actual_cell']=list(landing) if landing is not None else None
+        sources.append(record['source_result']); statuses[value['status']]+=1
+        n=checked['native_count_in_this_result']
+        if n is None: unknown.append(row['request_id'])
+        else: observed+=n
+    _fields(capture,dict(N_closed=len(sources),N_not_observed_closed=64-len(sources),
+        closed_status_counts=dict(statuses),source_result_pins=sources,
+        requests_with_unknown_native_count=unknown,observed_native_births_in_closed_results=observed,
+        native_total_known=not unknown,actual_native_starts=None if unknown else observed,
+        status='COMPLETE_CLOSED_METADATA_CAPTURE' if len(sources)==64 else 'PARTIAL_CLOSED_METADATA_CAPTURE'),
+        'Capture accounting does not match all original rows')
+    reader.recheck()
+    summary=compare(ctx,rows,publication_verified=bool(sources))
+    summary.update(native_result_consumer='CLOSED_CAPTURE_AND_PHYSICAL_CHAIN_INSTALLED',
+        capture=capture_pin,N_closed_result_sources=len(sources),N_unobserved_closed=64-len(sources),
+        observed_native_births_in_closed_results=observed,
+        actual_native_start_ledger='NOT_RECONSTRUCTED_BY_THIS_CAPTURE',
+        physical_rows=sum(r['physical_chain_verified'] for r in rows),
+        capture_completed_utc=capture['capture_completed_utc'],
+        capture_time_is_not_native_birth_time=True,model_loads=0,target_generation=0)
+    return dict(rows=rows,summary=summary)
+
+
+def run_closed_capture(spec_path, spec_sha, output):
+    """Finite no-clobber read of a pinned capture and exact original-to-mirror map."""
+    from . import eucap15_controlled_evidence as evidence
+    spec_path,output=Path(spec_path).absolute(),Path(output).absolute()
+    no_symlinks(spec_path); no_symlinks(output)
+    sp=pin(spec_path); _require(sp['sha256']==spec_sha,'Spec SHA differs')
+    spec=_strict_json(spec_path.read_bytes()); _require(pin(spec_path)==sp,'Spec changed during read')
+    _require(set(spec)=={'schema','intent','preparation_manifest','path_map','implementation',
+                         'capture','expected_release','expected_owner_config'} and
+             spec['schema']=='eucap15_controlled_closed_capture_consumer.v1','Exact closed capture spec required')
+    output.mkdir(parents=False,exist_ok=False)
+    reader=MirrorReader(spec['path_map'])
+    try:
+        implementation=spec['implementation']
+        _require(isinstance(implementation,list) and pin(Path(__file__).resolve()) in implementation and
+                 pin(Path(evidence.__file__).resolve()) in implementation,'Both active reader implementations must be pinned')
+        for p in implementation: _require(pin(Path(p['path']))==p,'Implementation changed')
+        # Bind external authority even for a capture that currently has only holds.
+        release=reader.document(spec['expected_release'])
+        _require(release['config']==spec['expected_owner_config'],'Frozen release/config differ')
+        config=reader.document(spec['expected_owner_config'])
+        _require(config['original_manifest']==spec['preparation_manifest'],'Owner belongs to a different frozen frame')
+        ctx=evidence.load_context(reader,spec['intent'],spec['preparation_manifest'])
+        result=consume_closed_capture(reader,spec['capture'],ctx,
+            expected_release=spec['expected_release'],expected_owner_config=spec['expected_owner_config'])
+        put_json(output/'REQUEST_RESULTS.json',dict(schema='eucap15_controlled64_request_rows.v1',rows=result['rows']))
+        fields=sorted({k for row in result['rows'] for k in row})
+        flat=[{k:json.dumps(r.get(k),allow_nan=False,sort_keys=True) if isinstance(r.get(k),(dict,list))
+               else r.get(k) for k in fields} for r in result['rows']]
+        put_csv(output/'REQUEST_RESULTS.csv',flat,fields)
+        put_json(output/'SUMMARY.json',result['summary'])
+        reader.recheck(); _require(pin(spec_path)==sp,'Spec changed during consumption')
+        for p in implementation: _require(pin(Path(p['path']))==p,'Implementation changed during consumption')
+        put_json(output/'READ_SOURCE_PINS.json',list(reader.evidence.values()))
+        artifacts={p.name:pin(p) for p in output.iterdir() if p.is_file()}
+        receipt=dict(schema='eucap15_controlled64_closed_capture_consumer_receipt.v1',
+            status='PASS_SCOPED_CLOSED_CAPTURE_NOT_FULL_START_LEDGER',spec=sp,implementation=implementation,
+            artifacts=artifacts,source_bytes_unchanged=True,native_actions_performed=False,
+            model_loads=0,target_generation=0,training_admission=False)
+        put_json(output/'RECEIPT.json',receipt)
+        with (output/'SHA256SUMS').open('x') as stream:
+            for p in sorted(output.iterdir()):
+                if p.is_file() and p.name!='SHA256SUMS':stream.write(pin(p)['sha256']+'  '+p.name+'\n')
+        return receipt
+    except Exception as error:
+        put_json(output/'FAILURE_RECEIPT.json',dict(status='FAIL_PRESERVED_NO_RETRY',spec=sp,
+            error=repr(error),traceback=traceback.format_exc(),native_actions_performed=False))
+        raise
+
+
 def run_preflight(spec_path, spec_sha, output):
-    """Only a frozen64 metadata CLI. Native-result ingestion is NOT_INSTALLED.
+    """Only the frozen64 metadata CLI; native-result ingestion is not invoked.
 
     No CLI flag accepts publication_verified or supplied physical results. A
     future owner-schema adapter must verify complete64 observations and the real
@@ -311,7 +431,7 @@ def run_preflight(spec_path, spec_sha, output):
             _require(pin(Path(p['path']))==p,'Implementation changed')
         ctx=load_context(reader,spec['intent'],spec['preparation_manifest'])
         rows=initial_rows(ctx); summary=compare(ctx,rows)
-        summary.update(metadata_preflight='PASS_FROZEN64_ONLY',native_result_consumer='NOT_INSTALLED_PENDING_OWNER_SCHEMA',
+        summary.update(metadata_preflight='PASS_FROZEN64_ONLY',native_result_consumer='NOT_INVOKED_METADATA_ONLY_ENTRYPOINT',
             actual_native_result_reads=0,model_loads=0,target_generation=0,
             original_failure_ids=[r['candidate_id'] for r in rows if r['state']=='ANALYTIC_FAIL'])
         put_json(output/'REQUEST_RESULTS.json',dict(schema='eucap15_controlled64_request_rows.v1',rows=rows))
@@ -324,7 +444,7 @@ def run_preflight(spec_path, spec_sha, output):
         artifacts={p.name:pin(p) for p in output.iterdir() if p.is_file()}
         receipt=dict(schema='eucap15_controlled64_context_preflight_receipt.v1',status='PASS_METADATA_ONLY_PHYSICAL_NOT_RUN',
             created_utc=datetime.now(timezone.utc).isoformat(),spec=sp,implementation=spec['implementation'],artifacts=artifacts,
-            source_bytes_unchanged=True,native_result_consumer='NOT_INSTALLED_PENDING_OWNER_SCHEMA',
+            source_bytes_unchanged=True,native_result_consumer='NOT_INVOKED_METADATA_ONLY_ENTRYPOINT',
             source_validation='FROZEN_PREPARATION_METADATA_ONLY',source_files_read=len(reader.evidence),
             native_actions_performed=False,model_loads=0,target_generation=0,training_admission=False)
         put_json(output/'RECEIPT.json',receipt)
@@ -341,12 +461,12 @@ def run_preflight(spec_path, spec_sha, output):
 
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('command',choices=['validate-context'])
+    parser.add_argument('command',choices=['validate-context','consume-closed'])
     parser.add_argument('--spec',required=True)
     parser.add_argument('--spec-sha',required=True)
     parser.add_argument('--out',required=True)
     args=parser.parse_args()
-    receipt=run_preflight(args.spec,args.spec_sha,args.out)
+    receipt=(run_preflight if args.command=='validate-context' else run_closed_capture)(args.spec,args.spec_sha,args.out)
     print(json.dumps(dict(status=receipt['status'],output=args.out),allow_nan=False))
 
 
