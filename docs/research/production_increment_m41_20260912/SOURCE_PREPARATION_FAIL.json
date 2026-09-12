@@ -1,0 +1,10 @@
+{
+  "status": "SOURCE_PREPARATION_FAIL_BEFORE_FILE_OR_EXECUTION",
+  "reason": "First mechanical substitution expected a wrong failure-status literal and stopped before apply_patch.",
+  "inputs_modified": false,
+  "outputs_created": 0,
+  "recovery": "Used exact existing multiline status declaration; no scientific algorithm change.",
+  "other_read_notes": [
+    "First command metadata preview assumed object for list and failed without writes (f9cc8d). Corrected preview was truncated; no claims based on missing text."
+  ]
+}

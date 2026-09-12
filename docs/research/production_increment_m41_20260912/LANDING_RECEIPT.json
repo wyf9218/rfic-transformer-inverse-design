@@ -1,0 +1,106 @@
+{
+  "schema": "eucap15_received_increment.m41.v1",
+  "status": "PASS_INCREMENT_RECEIVED_NOT_NATIVE_ADMISSION",
+  "observed_utc": "2026-09-12T16:31:28.560563+00:00",
+  "baseline_utc": "2026-09-12T16:06:22.089693+00:00",
+  "completed_utc": "2026-09-12T16:34:50.263173+00:00",
+  "source": {
+    "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/storage_claim_wait_v1/budget_walk_v1/increment_20260912T163128066082Z/OBSERVATION.json",
+    "sha256": "ede5f7995d0f4d5c0b6100ef52076b22dc9e70c414b120bd0c1a81675bd5a0bd",
+    "bytes": 1138423
+  },
+  "counts": {
+    "received_terminal": 82,
+    "emx_completed": 76,
+    "strict_in_range": 37,
+    "formal_admitted": 35,
+    "pending_formal": 2,
+    "formal_train": 23,
+    "formal_validation": 4,
+    "formal_test": 8,
+    "pending_formal_train": 1,
+    "pending_formal_validation": 1,
+    "pending_formal_test": 0,
+    "strict_valid": 51,
+    "analytic_not_dispatched": 6,
+    "candidate_failure_retained": 0,
+    "prior_formal_backfill": 0,
+    "history_formal": 0,
+    "ledger_window_fresh_formal": 35
+  },
+  "formal_union_lower_bound": 7232,
+  "formal_head": {
+    "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/qualified15_single_member_v1/records/007232.json",
+    "sha256": "cda33d4ef7244a5b78b34c70894d8b8bbf66dbe15f5394ff49eb3304c9250d37",
+    "bytes": 189877
+  },
+  "pending_request_ids": [
+    "eucap15_continuous_doe_neighborhood_20260912_batch000007-TRAIN_NEIGHBORHOOD-053",
+    "eucap15_continuous_doe_neighborhood_20260912_batch000007-TRAIN_NEIGHBORHOOD-054"
+  ],
+  "source_script": {
+    "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/landing_increment_m41_new82_v1/receive_m41.py",
+    "sha256": "d6fd99a6d2b8c7ec25c0aeb540c74348325f9b4de6e6e9a08cb2742bf64dcedc",
+    "bytes": 7904
+  },
+  "by_source": {
+    "GEOMETRY_DOE": {
+      "received_terminal": 60,
+      "emx_completed": 54,
+      "strict_in_range": 15,
+      "formal_admitted": 15,
+      "pending_formal": 0,
+      "formal_train": 11,
+      "formal_validation": 1,
+      "formal_test": 3,
+      "pending_formal_train": 0,
+      "pending_formal_validation": 0,
+      "pending_formal_test": 0
+    },
+    "TRAIN_NEIGHBORHOOD": {
+      "received_terminal": 22,
+      "emx_completed": 22,
+      "strict_in_range": 22,
+      "formal_admitted": 20,
+      "pending_formal": 2,
+      "formal_train": 12,
+      "formal_validation": 3,
+      "formal_test": 5,
+      "pending_formal_train": 1,
+      "pending_formal_validation": 1,
+      "pending_formal_test": 0
+    }
+  },
+  "train_descriptive": {
+    "eligible_new_train_rows": 23,
+    "train_landings_in_baseline_empty_cells": 0,
+    "train_landings_in_baseline_underfilled_cells": 3,
+    "train_k_above_point8": 0,
+    "train_q10_20": 23,
+    "train_max_k": 0.4083960580436343,
+    "train_max_q": 15.747691852845133
+  },
+  "artifacts": [
+    {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/landing_increment_m41_new82_v1/RECEIVED_NEW82_VIEW.json",
+      "sha256": "d342c312c73b57a3551d76b94de1f50edfe2f1745789730a40611402a5b6d37d",
+      "bytes": 1077746
+    },
+    {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/landing_increment_m41_new82_v1/ACTUAL_LANDINGS.json",
+      "sha256": "e92dd838f4c13b342ab7e723907b20f2735f249371b16077456f2ef119377a68",
+      "bytes": 1113353
+    },
+    {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/landing_increment_m41_new82_v1/TRAIN_SOURCE_ROWS.json",
+      "sha256": "cd53489f4d4061e654ce0bcf88080101ce04b0ae34023a5a200b85384080a1a6",
+      "bytes": 94714
+    }
+  ],
+  "native_calls": 0,
+  "training_calls": 0,
+  "physical_sources_reextracted": false,
+  "formal_writes": 0,
+  "existing_completed_windows_rerun": 0,
+  "note": "Formal certification is read from sole owner ledger headers; only exact new joins here. 37 core candidates are unique within this window; only35 have formal unique admission,2 remain pending."
+}

@@ -1,0 +1,64 @@
+{
+  "schema": "eucap15_m41_production_and_research_increment.v1",
+  "status": "PROGRESS_NEW76_EMX_35_FORMAL_AND_RECEIVED23_TRAIN",
+  "completed_utc": "2026-09-12T16:35:09.791833+00:00",
+  "observation": {
+    "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/storage_claim_wait_v1/budget_walk_v1/increment_20260912T163128066082Z/OBSERVATION.json",
+    "sha256": "ede5f7995d0f4d5c0b6100ef52076b22dc9e70c414b120bd0c1a81675bd5a0bd",
+    "bytes": 1138423
+  },
+  "observed_utc": "2026-09-12T16:31:28.560563+00:00",
+  "baseline_utc": "2026-09-12T16:06:22.089693+00:00",
+  "counts": {
+    "new_s4p": 76,
+    "analytic_fail": 6,
+    "strict_range_candidates": 37,
+    "new_certified_unique": 35,
+    "pending_formal": 2,
+    "fresh_formal": 35,
+    "history_formal": 0,
+    "formal_union_lower_bound": 7232,
+    "research_train_added": 23,
+    "research_train_union": 4201,
+    "occupied": 163,
+    "deficit": 1901
+  },
+  "landing_receipt": {
+    "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/landing_increment_m41_new82_v1/RECEIPT.json",
+    "sha256": "b405b463a5ff494b7437312b17d94e47565f1950cecd9f7678fd4070611effdf"
+  },
+  "coverage_receipt": {
+    "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/train_coverage_received_m41_v1/RECEIPT.json",
+    "sha256": "6206b18595e18a69c550c602c439758b9ac82811e3ee4f5ba87039485714595a"
+  },
+  "checkpoint": {
+    "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/train_coverage_received_m41_v1/CHECKPOINT.json",
+    "sha256": "6cb3826197ca3a864abab3179329df827c8d7bdc38fe89a0296df74243f63ea2",
+    "bytes": 309721
+  },
+  "formal_head": {
+    "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/qualified15_single_member_v1/records/007232.json",
+    "sha256": "cda33d4ef7244a5b78b34c70894d8b8bbf66dbe15f5394ff49eb3304c9250d37",
+    "bytes": 189877
+  },
+  "pending": [
+    {
+      "id": "eucap15_continuous_doe_neighborhood_20260912_batch000007-TRAIN_NEIGHBORHOOD-053",
+      "split": "validation"
+    },
+    {
+      "id": "eucap15_continuous_doe_neighborhood_20260912_batch000007-TRAIN_NEIGHBORHOOD-054",
+      "split": "train"
+    }
+  ],
+  "actual_emx": 4,
+  "installer_status": "NOT_INSTALLED_WAITING_BATCH7_BOUNDARY",
+  "native_extra_probes": 0,
+  "signals": 0,
+  "restarted": 0,
+  "new_tests": 0,
+  "new_training": 0,
+  "previous_turn": "PROGRESS_TWO_EXACT_HISTORICAL_TUPLE_BINDINGS",
+  "remaining": "Singlewalk boundary not reached; cause of sub-48 concurrency not established by this cut, no resource hard stop evidenced.",
+  "next_safe_action": "Leave healthy batch7 and the sole installer to finish supported boundary/rollback. Resume intake only from M41 for actual new results and exact pending053/054 ledger closure; no repeat nine tests, M41 intake, or unchanged-log polling."
+}
