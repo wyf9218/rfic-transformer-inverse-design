@@ -1,0 +1,358 @@
+{
+  "checks": {
+    "ground_frame_matches_current_recipe": true,
+    "vias_and_landing_match_bound_source": true,
+    "bridges_connected": true,
+    "port_role_labels_match_current": true,
+    "signal_and_ground_labels_on_intended_conductors": true,
+    "geometry_within_bound_current_config": true
+  },
+  "areas": {
+    "frame_missing_um2": 0.0,
+    "frame_extra_um2": 0.0,
+    "landing_missing_um2": 0.0,
+    "via_missing_um2": 0.0,
+    "via_extra_um2": 0.0
+  },
+  "bridges": {
+    "primary_bridge": {
+      "bar_probe": {
+        "x_um": 139.7254813424031,
+        "y_um": 0.0
+      },
+      "bridge_endpoint_x_um_before_snap": 139.7204813424031,
+      "bridge_probe": {
+        "x_um": 139.70548134240312,
+        "y_um": 0.0
+      },
+      "connected_component_index": 0,
+      "datatype": 0,
+      "grid_um": 0.005,
+      "layer": 74,
+      "matching_polygon_count": 5,
+      "nearest_power_line_edge_x_um_before_snap": 139.7154813424031,
+      "overall_status": "PASS",
+      "reason": null,
+      "same_connected_component_after_grid_snap": true,
+      "union_component_count": 1
+    },
+    "secondary_bridge": {
+      "bar_probe": {
+        "x_um": -129.32889602201976,
+        "y_um": 0.0
+      },
+      "bridge_endpoint_x_um_before_snap": -129.32389602201977,
+      "bridge_probe": {
+        "x_um": -129.30889602201978,
+        "y_um": 0.0
+      },
+      "connected_component_index": 0,
+      "datatype": 60,
+      "grid_um": 0.005,
+      "layer": 39,
+      "matching_polygon_count": 7,
+      "nearest_power_line_edge_x_um_before_snap": -129.31889602201977,
+      "overall_status": "PASS",
+      "reason": null,
+      "same_connected_component_after_grid_snap": true,
+      "union_component_count": 3
+    }
+  },
+  "ports": [
+    {
+      "port": "P001",
+      "role": "primary",
+      "signal_drawing_pair": [
+        74,
+        0
+      ],
+      "pin_pair": [
+        126,
+        0
+      ],
+      "signal_label_coordinates": [
+        [
+          -227.82,
+          33.265
+        ]
+      ],
+      "ground_label_coordinates": [
+        [
+          -227.82,
+          33.265
+        ]
+      ],
+      "signal_label_on_own_conductor": true,
+      "ground_label_on_m5": true,
+      "signal_ground_colocated": true
+    },
+    {
+      "port": "P002",
+      "role": "primary",
+      "signal_drawing_pair": [
+        74,
+        0
+      ],
+      "pin_pair": [
+        126,
+        0
+      ],
+      "signal_label_coordinates": [
+        [
+          -227.82,
+          -33.265
+        ]
+      ],
+      "ground_label_coordinates": [
+        [
+          -227.82,
+          -33.265
+        ]
+      ],
+      "signal_label_on_own_conductor": true,
+      "ground_label_on_m5": true,
+      "signal_ground_colocated": true
+    },
+    {
+      "port": "P003",
+      "role": "secondary",
+      "signal_drawing_pair": [
+        39,
+        60
+      ],
+      "pin_pair": [
+        139,
+        0
+      ],
+      "signal_label_coordinates": [
+        [
+          259.96,
+          25.93
+        ]
+      ],
+      "ground_label_coordinates": [
+        [
+          259.96,
+          25.93
+        ]
+      ],
+      "signal_label_on_own_conductor": true,
+      "ground_label_on_m5": true,
+      "signal_ground_colocated": true
+    },
+    {
+      "port": "P004",
+      "role": "secondary",
+      "signal_drawing_pair": [
+        39,
+        60
+      ],
+      "pin_pair": [
+        139,
+        0
+      ],
+      "signal_label_coordinates": [
+        [
+          259.96,
+          -25.93
+        ]
+      ],
+      "ground_label_coordinates": [
+        [
+          259.96,
+          -25.93
+        ]
+      ],
+      "signal_label_on_own_conductor": true,
+      "ground_label_on_m5": true,
+      "signal_ground_colocated": true
+    }
+  ],
+  "geometry_ranges": [
+    {
+      "field": "line_width_um",
+      "value": 10.79031682922519,
+      "bounds": [
+        [
+          3.0,
+          12.0
+        ],
+        [
+          3.0,
+          12.0
+        ]
+      ],
+      "pass_current_config": true
+    },
+    {
+      "field": "offset_um",
+      "value": 5.198292660191658,
+      "bounds": [
+        [
+          -90.0,
+          90.0
+        ]
+      ],
+      "pass_current_config": true
+    },
+    {
+      "field": "primary_feed_extension_um",
+      "value": 116.30881117537776,
+      "bounds": [
+        [
+          100.0,
+          320.0
+        ]
+      ],
+      "pass_current_config": true
+    },
+    {
+      "field": "primary_outer_height_um",
+      "value": 217.35930159310806,
+      "bounds": [
+        [
+          160.0,
+          520.0
+        ]
+      ],
+      "pass_current_config": true
+    },
+    {
+      "field": "primary_outer_width_um",
+      "value": 203.52570473605445,
+      "bounds": [
+        [
+          160.0,
+          520.0
+        ]
+      ],
+      "pass_current_config": true
+    },
+    {
+      "field": "primary_terminal_y_span_um",
+      "value": 66.52625852987262,
+      "bounds": [
+        [
+          20.0,
+          90.0
+        ]
+      ],
+      "pass_current_config": true
+    },
+    {
+      "field": "secondary_feed_extension_um",
+      "value": 122.49377642803343,
+      "bounds": [
+        [
+          100.0,
+          320.0
+        ]
+      ],
+      "pass_current_config": true
+    },
+    {
+      "field": "secondary_outer_height_um",
+      "value": 180.8145044747261,
+      "bounds": [
+        [
+          160.0,
+          520.0
+        ]
+      ],
+      "pass_current_config": true
+    },
+    {
+      "field": "secondary_outer_width_um",
+      "value": 245.03437736442285,
+      "bounds": [
+        [
+          160.0,
+          520.0
+        ]
+      ],
+      "pass_current_config": true
+    },
+    {
+      "field": "secondary_terminal_y_span_um",
+      "value": 51.85746034614063,
+      "bounds": [
+        [
+          20.0,
+          90.0
+        ]
+      ],
+      "pass_current_config": true
+    }
+  ],
+  "frame_recipe": {
+    "schema": "rfic_transformer_foundry_slotted_ground_frame.v1",
+    "manufacturing_grid_um": 0.005,
+    "requested_inner_bbox_um": [
+      -218.07166354340498,
+      -153.01947619483104,
+      250.20925777043647,
+      153.01947619483104
+    ],
+    "snapped_inner_bbox_um": [
+      -218.07,
+      -153.02,
+      250.21,
+      153.02
+    ],
+    "input_snap_max_delta_um": 0.001663543404987422,
+    "requested_frame_width_um": 100.0,
+    "requested_strap_width_um": 10.0,
+    "requested_strap_pitch_um": 20.0,
+    "frame_width_um": 100.0,
+    "strap_width_um": 10.0,
+    "strap_pitch_um": 20.0,
+    "top_bottom_connector_count_each": 23,
+    "left_right_connector_count_each": 15,
+    "polygon_count": 78,
+    "outer_bbox_um": [
+      -318.07,
+      -253.02,
+      350.21000000000004,
+      253.02
+    ]
+  },
+  "actual_gds": {
+    "path": "/Users/wyf/Documents/\u6a21\u62df\u53d8\u538b\u5668AI\u53cd\u5411\u5efa\u6a21/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/history_strict112_next5_artifacts_m35_v1/actual_verification_v1/authority_001/transformer_layout_cadpins.gds",
+    "sha256": "c7306594dc837d251a5625824dbf2b4d73da587de57bb0153415ad60aab2d76a",
+    "bytes": 18432
+  },
+  "status": "NEW_COMPONENT_CHECKS_PASS_NOT_FORMAL_CERTIFICATION",
+  "limitations": [
+    "Port containment is not a complete EM process-byte identity or endpoint overlap proof.",
+    "Geometry tuple source hash namespace and full-history uniqueness are not certified here.",
+    "Original foundry metadata is retained; current recipe comparison is a new diagnostic, not a rewritten historical PASS."
+  ],
+  "original_split": "UNKNOWN",
+  "formal_added": 0,
+  "schema": "eucap15_historical_three_new_physical_components.m36.v1",
+  "utc": "2026-09-12T15:35:33.450625+00:00",
+  "ordinal": 1,
+  "candidate_id_sha256": "04850a987e94fa295207ec590cae78693df6a85d951b867e827e3ca206636949",
+  "prior_checks_reused": {
+    "path": "/Users/wyf/Documents/\u6a21\u62df\u53d8\u538b\u5668AI\u53cd\u5411\u5efa\u6a21/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/history_strict112_next5_artifacts_m35_v1/actual_verification_v1/authority_001/RESULT.json",
+    "sha256": "73436cb96851cfdfd672e6bd26fbaea91c199623175aad0810011d32aa2683c9",
+    "bytes": 12363
+  },
+  "new_inputs": [
+    {
+      "path": "/Users/wyf/Documents/\u6a21\u62df\u53d8\u538b\u5668AI\u53cd\u5411\u5efa\u6a21/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/storage_claim_wait_v1/budget_walk_v1/strict112_three_contract_20260912T153316801496Z/authority_001_foundry_layout_audit.json",
+      "sha256": "66703f236008e1d39e80e64505438c9db54f641a1818182dbc5f390e1a556847",
+      "bytes": 2502
+    },
+    {
+      "path": "/Users/wyf/Documents/\u6a21\u62df\u53d8\u538b\u5668AI\u53cd\u5411\u5efa\u6a21/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/storage_claim_wait_v1/budget_walk_v1/strict112_three_contract_20260912T153316801496Z/authority_001_power_line_geometry.json",
+      "sha256": "f561b0e2abd3153fa72e63a34e707bb8dbe6950026ac297100d3cb86263e6a21",
+      "bytes": 59901
+    },
+    {
+      "path": "/Users/wyf/Documents/\u6a21\u62df\u53d8\u538b\u5668AI\u53cd\u5411\u5efa\u6a21/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/storage_claim_wait_v1/budget_walk_v1/strict112_three_contract_20260912T153316801496Z/current_geometry_config.yaml",
+      "sha256": "431ad59c22df2471746ab5a2eb73a3a7a6484fa511b71c9d6e6c93fb4b3d04d7",
+      "bytes": 3285
+    }
+  ]
+}

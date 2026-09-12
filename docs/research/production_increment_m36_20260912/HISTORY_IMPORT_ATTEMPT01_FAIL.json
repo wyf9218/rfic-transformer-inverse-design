@@ -1,0 +1,9 @@
+{
+  "status": "FAIL_BEFORE_INPUT_READ_OR_OUTPUT_DIRECTORY_CREATION",
+  "error": "ModuleNotFoundError: No module named rfic_transformer_inverse_design",
+  "cause": "Absolute script launch lacked explicit worktree PYTHONPATH",
+  "chunk_id": "f1b87f",
+  "native_actions": 0,
+  "physical_checks_executed": 0,
+  "next_attempt": "Same unchanged script with explicit verified worktree PYTHONPATH; no existing result overwritten"
+}

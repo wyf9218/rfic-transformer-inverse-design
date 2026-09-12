@@ -1,0 +1,358 @@
+{
+  "checks": {
+    "ground_frame_matches_current_recipe": false,
+    "vias_and_landing_match_bound_source": true,
+    "bridges_connected": true,
+    "port_role_labels_match_current": true,
+    "signal_and_ground_labels_on_intended_conductors": true,
+    "geometry_within_bound_current_config": true
+  },
+  "areas": {
+    "frame_missing_um2": 4.302399999996087,
+    "frame_extra_um2": 5.752399999994768,
+    "landing_missing_um2": 0.0,
+    "via_missing_um2": 0.0,
+    "via_extra_um2": 0.0
+  },
+  "bridges": {
+    "primary_bridge": {
+      "bar_probe": {
+        "x_um": 129.7277218870411,
+        "y_um": 0.0
+      },
+      "bridge_endpoint_x_um_before_snap": 129.7227218870411,
+      "bridge_probe": {
+        "x_um": 129.70772188704112,
+        "y_um": 0.0
+      },
+      "connected_component_index": 0,
+      "datatype": 0,
+      "grid_um": 0.005,
+      "layer": 74,
+      "matching_polygon_count": 5,
+      "nearest_power_line_edge_x_um_before_snap": 129.7177218870411,
+      "overall_status": "PASS",
+      "reason": null,
+      "same_connected_component_after_grid_snap": true,
+      "union_component_count": 1
+    },
+    "secondary_bridge": {
+      "bar_probe": {
+        "x_um": -148.88204162110557,
+        "y_um": 0.0
+      },
+      "bridge_endpoint_x_um_before_snap": -148.87704162110558,
+      "bridge_probe": {
+        "x_um": -148.8620416211056,
+        "y_um": 0.0
+      },
+      "connected_component_index": 1,
+      "datatype": 60,
+      "grid_um": 0.005,
+      "layer": 39,
+      "matching_polygon_count": 7,
+      "nearest_power_line_edge_x_um_before_snap": -148.87204162110558,
+      "overall_status": "PASS",
+      "reason": null,
+      "same_connected_component_after_grid_snap": true,
+      "union_component_count": 3
+    }
+  },
+  "ports": [
+    {
+      "port": "P001",
+      "role": "primary",
+      "signal_drawing_pair": [
+        74,
+        0
+      ],
+      "pin_pair": [
+        126,
+        0
+      ],
+      "signal_label_coordinates": [
+        [
+          -437.77,
+          11.675
+        ]
+      ],
+      "ground_label_coordinates": [
+        [
+          -437.77,
+          11.675
+        ]
+      ],
+      "signal_label_on_own_conductor": true,
+      "ground_label_on_m5": true,
+      "signal_ground_colocated": true
+    },
+    {
+      "port": "P002",
+      "role": "primary",
+      "signal_drawing_pair": [
+        74,
+        0
+      ],
+      "pin_pair": [
+        126,
+        0
+      ],
+      "signal_label_coordinates": [
+        [
+          -437.77,
+          -11.675
+        ]
+      ],
+      "ground_label_coordinates": [
+        [
+          -437.77,
+          -11.675
+        ]
+      ],
+      "signal_label_on_own_conductor": true,
+      "ground_label_on_m5": true,
+      "signal_ground_colocated": true
+    },
+    {
+      "port": "P003",
+      "role": "secondary",
+      "signal_drawing_pair": [
+        39,
+        60
+      ],
+      "pin_pair": [
+        139,
+        0
+      ],
+      "signal_label_coordinates": [
+        [
+          231.97,
+          16.54
+        ]
+      ],
+      "ground_label_coordinates": [
+        [
+          231.97,
+          16.54
+        ]
+      ],
+      "signal_label_on_own_conductor": true,
+      "ground_label_on_m5": true,
+      "signal_ground_colocated": true
+    },
+    {
+      "port": "P004",
+      "role": "secondary",
+      "signal_drawing_pair": [
+        39,
+        60
+      ],
+      "pin_pair": [
+        139,
+        0
+      ],
+      "signal_label_coordinates": [
+        [
+          231.97,
+          -16.54
+        ]
+      ],
+      "ground_label_coordinates": [
+        [
+          231.97,
+          -16.54
+        ]
+      ],
+      "signal_label_on_own_conductor": true,
+      "ground_label_on_m5": true,
+      "signal_ground_colocated": true
+    }
+  ],
+  "geometry_ranges": [
+    {
+      "field": "line_width_um",
+      "value": 4.472037581671762,
+      "bounds": [
+        [
+          3.0,
+          12.0
+        ],
+        [
+          3.0,
+          12.0
+        ]
+      ],
+      "pass_current_config": true
+    },
+    {
+      "field": "offset_um",
+      "value": -27.67062300263113,
+      "bounds": [
+        [
+          -90.0,
+          90.0
+        ]
+      ],
+      "pass_current_config": true
+    },
+    {
+      "field": "primary_feed_extension_um",
+      "value": 310.30041223390424,
+      "bounds": [
+        [
+          100.0,
+          320.0
+        ]
+      ],
+      "pass_current_config": true
+    },
+    {
+      "field": "primary_outer_height_um",
+      "value": 195.61729245209287,
+      "bounds": [
+        [
+          160.0,
+          520.0
+        ]
+      ],
+      "pass_current_config": true
+    },
+    {
+      "field": "primary_outer_width_um",
+      "value": 235.43544377408222,
+      "bounds": [
+        [
+          160.0,
+          520.0
+        ]
+      ],
+      "pass_current_config": true
+    },
+    {
+      "field": "primary_terminal_y_span_um",
+      "value": 23.348497630826067,
+      "bounds": [
+        [
+          20.0,
+          90.0
+        ]
+      ],
+      "pass_current_config": true
+    },
+    {
+      "field": "secondary_feed_extension_um",
+      "value": 140.69017913496668,
+      "bounds": [
+        [
+          100.0,
+          320.0
+        ]
+      ],
+      "pass_current_config": true
+    },
+    {
+      "field": "secondary_outer_height_um",
+      "value": 178.94136237810173,
+      "bounds": [
+        [
+          160.0,
+          520.0
+        ]
+      ],
+      "pass_current_config": true
+    },
+    {
+      "field": "secondary_outer_width_um",
+      "value": 218.4028372369489,
+      "bounds": [
+        [
+          160.0,
+          520.0
+        ]
+      ],
+      "pass_current_config": true
+    },
+    {
+      "field": "secondary_terminal_y_span_um",
+      "value": 33.08213275691847,
+      "bounds": [
+        [
+          20.0,
+          90.0
+        ]
+      ],
+      "pass_current_config": true
+    }
+  ],
+  "frame_recipe": {
+    "schema": "rfic_transformer_foundry_slotted_ground_frame.v1",
+    "manufacturing_grid_um": 0.005,
+    "requested_inner_bbox_um": [
+      -428.0181341209453,
+      -136.71296933906964,
+      222.22097475081,
+      136.71296933906964
+    ],
+    "snapped_inner_bbox_um": [
+      -428.02,
+      -136.715,
+      222.22,
+      136.715
+    ],
+    "input_snap_max_delta_um": 0.002030660930358863,
+    "requested_frame_width_um": 100.0,
+    "requested_strap_width_um": 10.0,
+    "requested_strap_pitch_um": 20.0,
+    "frame_width_um": 100.0,
+    "strap_width_um": 10.0,
+    "strap_pitch_um": 20.0,
+    "top_bottom_connector_count_each": 33,
+    "left_right_connector_count_each": 13,
+    "polygon_count": 94,
+    "outer_bbox_um": [
+      -528.02,
+      -236.715,
+      322.22,
+      236.715
+    ]
+  },
+  "actual_gds": {
+    "path": "/Users/wyf/Documents/\u6a21\u62df\u53d8\u538b\u5668AI\u53cd\u5411\u5efa\u6a21/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/history_strict112_next5_artifacts_m35_v1/actual_verification_v1/authority_011/transformer_layout_cadpins.gds",
+    "sha256": "815cb7aac0147de6f58dc0813ee5a4dc831ba1ff8632f4eb131f4e1c1d0a457b",
+    "bytes": 18432
+  },
+  "status": "CURRENT_COMPONENT_MISMATCH",
+  "limitations": [
+    "Port containment is not a complete EM process-byte identity or endpoint overlap proof.",
+    "Geometry tuple source hash namespace and full-history uniqueness are not certified here.",
+    "Original foundry metadata is retained; current recipe comparison is a new diagnostic, not a rewritten historical PASS."
+  ],
+  "original_split": "UNKNOWN",
+  "formal_added": 0,
+  "schema": "eucap15_historical_three_new_physical_components.m36.v1",
+  "utc": "2026-09-12T15:35:33.458178+00:00",
+  "ordinal": 11,
+  "candidate_id_sha256": "1cb0fe03e80a12a03adb1f5bf5aa62475df7625b8f0a51cead7c106b775bad16",
+  "prior_checks_reused": {
+    "path": "/Users/wyf/Documents/\u6a21\u62df\u53d8\u538b\u5668AI\u53cd\u5411\u5efa\u6a21/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/history_strict112_next5_artifacts_m35_v1/actual_verification_v1/authority_011/RESULT.json",
+    "sha256": "afd50479e9e531ad5895364b08a4d51e70591ec4e515f19037d7ce434c2825d5",
+    "bytes": 12373
+  },
+  "new_inputs": [
+    {
+      "path": "/Users/wyf/Documents/\u6a21\u62df\u53d8\u538b\u5668AI\u53cd\u5411\u5efa\u6a21/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/storage_claim_wait_v1/budget_walk_v1/strict112_three_contract_20260912T153316801496Z/authority_011_foundry_layout_audit.json",
+      "sha256": "da0f3237d52c76cb88db4b5074e3f9b1a827abbbc3a9bd83e253a15cd40f8082",
+      "bytes": 2495
+    },
+    {
+      "path": "/Users/wyf/Documents/\u6a21\u62df\u53d8\u538b\u5668AI\u53cd\u5411\u5efa\u6a21/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/storage_claim_wait_v1/budget_walk_v1/strict112_three_contract_20260912T153316801496Z/authority_011_power_line_geometry.json",
+      "sha256": "425dc8f6166fe92041be8e0062384c4b829fe6209cfbf1cd3352f651193d5984",
+      "bytes": 59756
+    },
+    {
+      "path": "/Users/wyf/Documents/\u6a21\u62df\u53d8\u538b\u5668AI\u53cd\u5411\u5efa\u6a21/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/storage_claim_wait_v1/budget_walk_v1/strict112_three_contract_20260912T153316801496Z/current_geometry_config.yaml",
+      "sha256": "431ad59c22df2471746ab5a2eb73a3a7a6484fa511b71c9d6e6c93fb4b3d04d7",
+      "bytes": 3285
+    }
+  ]
+}

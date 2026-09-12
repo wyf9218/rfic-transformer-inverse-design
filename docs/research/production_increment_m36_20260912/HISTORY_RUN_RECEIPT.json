@@ -1,0 +1,65 @@
+{
+  "schema": "eucap15_three_historical_new_component_run.m36.v1",
+  "status": "EXECUTED_TWO_COMPONENT_PASS_ONE_CURRENT_FRAME_MISMATCH",
+  "utc": "2026-09-12 15:35:55 UTC",
+  "previous_goal_turn_classification": "PROGRESS_NEW97_FRESH52_FORMAL_AND_NEW_ACTUAL_HISTORICAL_BYTES",
+  "new_transport": {
+    "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/storage_claim_wait_v1/budget_walk_v1/strict112_three_contract_20260912T153316801496Z/RECEIPT.json",
+    "sha256": "27cbf7578a4f642fa4392f4d0c2588dfa66fbabd8dde6309d2944b702d03c72e",
+    "bytes": 15036,
+    "read_files": 7,
+    "read_bytes": 190308
+  },
+  "execution": {
+    "exit_code": 0,
+    "tool_chunk_id": "38de2e",
+    "successful_executions": 1,
+    "failed_import_attempt": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/history_strict112_three_contract_m36_v1/IMPORT_ATTEMPT01_FAIL.json",
+    "environment": {
+      "PYTHONPATH": "/Users/wyf/Documents/模拟变压器AI反向建模/github_worktrees/eucap15-mlp-capacity-20260909",
+      "python": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/broadband56_nn_v2_20260907T212216Z/environment/bin/python"
+    },
+    "argv": [
+      "-B",
+      "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/history_strict112_three_contract_m36_v1/VERIFY_NEW_PHYSICAL_EVIDENCE.py",
+      "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/history_strict112_three_contract_m36_v1",
+      "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/storage_claim_wait_v1/budget_walk_v1/strict112_three_contract_20260912T153316801496Z",
+      "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/history_strict112_next5_artifacts_m35_v1/actual_verification_v1"
+    ]
+  },
+  "implementation": {
+    "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/history_strict112_three_contract_m36_v1/VERIFY_NEW_PHYSICAL_EVIDENCE.py",
+    "sha256": "2735647053703c3a9b7a597c6f9b5a6cf725b4b1df3827ff49e3f07720894dd7",
+    "bytes": 8315
+  },
+  "foundry_helper": {
+    "path": "/Users/wyf/Documents/模拟变压器AI反向建模/github_worktrees/eucap15-mlp-capacity-20260909/rfic_transformer_inverse_design/layout/foundry_audit.py",
+    "sha256": "18345730dab23fbdf4a88dfab227622a889ca043122089652f68db6a38eb04c3",
+    "bytes": 39567
+  },
+  "export_helper": {
+    "path": "/Users/wyf/Documents/模拟变压器AI反向建模/github_worktrees/eucap15-mlp-capacity-20260909/rfic_transformer_inverse_design/layout/export.py",
+    "sha256": "7030d03fe08806ff1a8b5e3a34dddc8471c135659fe7d9c783613e1058f0e8e7"
+  },
+  "summary": {
+    "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/history_strict112_three_contract_m36_v1/actual_geometry_closure_v1/SUMMARY.json",
+    "sha256": "27d01671ff6230f182510dcf2c9f2b0418439471dbc49e3015a33e480b297baf",
+    "bytes": 4516
+  },
+  "source_specific_failures": {
+    "ordinal_11": {
+      "frame_missing_um2": 4.302399999996087,
+      "frame_extra_um2": 5.752399999994768,
+      "label": "CURRENT_RECIPE_MISMATCH_NOT_RETROACTIVE_HISTORICAL_DRC_FAILURE"
+    }
+  },
+  "remaining": {
+    "ordinals_1_2": "Existing historical schema/geometry-source provenance/current physics compatibility and unique formal merge remain to be implemented/proven.",
+    "ordinal_11": "Current ground-frame recipe mismatch must not be overridden with historical PASS.",
+    "formal_added": 0,
+    "old_93_adapter": "Different source schema; do not rerun old93 or claim it currently accepts strict112."
+  },
+  "no_native_or_gds_write": true,
+  "no_numerical_reextraction": true,
+  "no_old_checks_repeated": true
+}

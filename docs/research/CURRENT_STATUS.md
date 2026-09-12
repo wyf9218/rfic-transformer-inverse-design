@@ -1,5 +1,15 @@
 # 当前研究和生产状态
 
+## 2026-09-12 M36：51新EMX、25正式入账；实际4路
+
+15:30:41 UTC相对15:19:37，51fresh+3解析终态；32strict，27范围strict候选，25确认唯一正式（18train/6validation/1test），邻域057/058两条尚待正式合并，不计新增认证或train。fresh正式+25/history0/补登0，下界7125。[接收证据](production_increment_m36_20260912/LANDING_RECEIPT.json)。
+
+现场4独立EMX×2CPU，容量48；batch6仅20未终态（4EMX、9等Cadence、7无intent），不是48已运行。资源已PASS12/5，34额外份数只是共享RAM预约诊断。原owner与metadata正常，唯一installer仍等安全批边界，timing未安装；程序负责后续资源等待和接续。[现场](production_increment_m36_20260912/NATIVE_COMPACT.json)。此前15:18:01reset实际正文仅cpu失败，load1=1.1374>1.10，其他检查通过；这是一个确定原因，不外推所有reset。[原证据与解读](production_increment_m36_20260912/PREVIOUS_RESOURCE_CAUSE.json)。
+
+新18train资格4143，占格163/512与欠填1903不变，高K>.8新增0；不是新训练。[真实覆盖图源](production_increment_m36_20260912/COVERAGE_AFTER.csv)。历史3个幸存候选新补7文件后实际分量核验：1/2当前地框、过孔、连接桥、标签包含与配置范围通过但未正式认证；11地框与当前recipe差异缺4.3024/多5.7524µm²，保留负结果。[新分量结果](production_increment_m36_20260912/HISTORY_THREE_SUMMARY.json)、[执行源码及命令](production_increment_m36_20260912/HISTORY_RUN_RECEIPT.json)。
+
+既有111 readiness有尚未实现的适配占位，不能把其missing_evidence当物理FAIL；该旧93来源schema与strict112不同。既有56publisher亦不可直接套111，UNKNOWN split保留但不自动入train。[实际源码边界](production_increment_m36_20260912/HISTORY_SOURCE_CONTRACT.md)。历史本轮正式0，不降低物理门禁。[SHA256SUMS](production_increment_m36_20260912/SHA256SUMS)。以下为历史截面。
+
 ## 2026-09-12 M35：97新EMX、52正式入账，当前资源等待
 
 15:19:37 UTC相对15:02:38：新102终态=97fresh+5解析失败；strict64、范围strict唯一52全部正式（30train/10validation/12test），fresh入账+52/history0/补登0/pending0，下界7100。[接收证据](production_increment_m35_20260912/LANDING_RECEIPT.json)。

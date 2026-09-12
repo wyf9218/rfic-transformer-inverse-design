@@ -1,0 +1,62 @@
+{
+  "schema": "eucap15_actual_failed_resource_cause.m36.v1",
+  "source_transport": {
+    "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/storage_claim_wait_v1/budget_walk_v1/scout14_metadata_20260912T153058538048Z/TRANSPORT.json",
+    "sha256": "3b2ac79b696d2675101e78cb6eda58bcdac270849c30054f77d6fad6f52a32cd",
+    "bytes": 14997
+  },
+  "resource_original": {
+    "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_registry_recovery_20260912T131535395596Z/batches/eucap15_continuous_doe_neighborhood_20260912_batch000006/owner/fixed48/RESOURCE_20260912T151801600112Z.json",
+    "sha256": "e6620065521101d18fae721b2006e4e97a71f327d7c4012001a8786bfdc753ec",
+    "bytes": 19542
+  },
+  "source_value": {
+    "utc": "2026-09-12T15:18:01.600068+00:00",
+    "started_utc": "2026-09-12T15:17:00.193489+00:00",
+    "status": "WAIT",
+    "logical_cpus": 192,
+    "normalized_load1": 1.1374359130859375,
+    "normalized_load5": 0.8567860921223959,
+    "interval_seconds": 60.001362655777484,
+    "idle_cpu_equivalents": 5.4433127214618215,
+    "memory_fraction": 0.7623230708557549,
+    "free_disk_bytes": 403744505856,
+    "checks": {
+      "cpu": false,
+      "iowait": true,
+      "isolation": true,
+      "memory": true,
+      "oom": true,
+      "sample": true,
+      "storage": true,
+      "swap": true
+    },
+    "failed_checks": [
+      "cpu"
+    ],
+    "binding": {
+      "owner": {
+        "pid": 959095,
+        "start_ticks": 402855353,
+        "uid": 2259579
+      },
+      "release": {
+        "bytes": 17600,
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_registry_recovery_20260912T131535395596Z/batches/eucap15_continuous_doe_neighborhood_20260912_batch000006/owner/RELEASE.json",
+        "sha256": "210bfafedfaf1d79aa7dc4622543af44d8742186334d932a3604405e7457bb0e"
+      }
+    }
+  },
+  "conclusion": {
+    "failed_checks": [
+      "cpu"
+    ],
+    "scope": "ONE_ACTUAL_PREVIOUS_FAILED_RESOURCE_RECORD_NOT_ALL_RESETS",
+    "cause": "cpu normalized load1=1.1374359130859375 exceeds configured1.10; other recorded checks passed.",
+    "not_inferred_from_later_idle_cpu": true,
+    "not_license_failure": true,
+    "changed_gate": false,
+    "probe_calls": 0,
+    "production_signals": 0
+  }
+}
