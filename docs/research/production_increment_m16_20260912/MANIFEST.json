@@ -1,0 +1,40 @@
+{
+  "schema": "eucap15_m16_publication_manifest.v1",
+  "utc": "2026-09-12 09:55:18 UTC",
+  "scope": "New16 real EMX completions after actual samebatch recovery and first existing25+5 landing projection. Not a new controller, experiment, repeated QA or paper package.",
+  "files": [
+    {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/github_worktrees/eucap15-mlp-capacity-20260909/docs/research/production_increment_m16_20260912/SNAPSHOT.json",
+      "sha256": "0be2dec87d3c6b9fb9bf9bccf2818e0196d1ca4bb20992e27a0b4b63d41330b1"
+    },
+    {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/github_worktrees/eucap15-mlp-capacity-20260909/docs/research/production_increment_m16_20260912/RECEIVED_NEW22.json",
+      "sha256": "f2cc63c02adf4389490d92f7aae00928abda324cc9a22987fde56c49fff27675"
+    },
+    {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/github_worktrees/eucap15-mlp-capacity-20260909/docs/research/production_increment_m16_20260912/NATIVE_FRONTEND_PROGRESS.json",
+      "sha256": "18904671d241b11f2e8f502a9f3db5173640acdcbecda266894cbec6a2cd94cf"
+    },
+    {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/github_worktrees/eucap15-mlp-capacity-20260909/docs/research/production_increment_m16_20260912/ACTUAL_LANDINGS.json",
+      "sha256": "7fd8a1bc1b4a2a4323a54547f954fd4ddde721c1a11ba4c7a7936213d5a4c9bb"
+    },
+    {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/github_worktrees/eucap15-mlp-capacity-20260909/docs/research/production_increment_m16_20260912/RECEIPT.json",
+      "sha256": "5ec331659c9288802376be7e2623b3a2f2a3562d35b31c2bc18e76e8fafefe26"
+    },
+    {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/github_worktrees/eucap15-mlp-capacity-20260909/docs/research/production_increment_m16_20260912/FIGURE_SOURCE_NOTE.md",
+      "sha256": "677e50838056f7e2fe6cf3431f223d39a982c81007c068311f11005e340f2619"
+    }
+  ],
+  "source_observation": {
+    "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/samebatch_hotpath_v1/joint_cut_20260912T095128186925Z/OBSERVATION.json",
+    "sha256": "26bcb9c517f16ec9dee54b2b0f07a9981ac3973499b238940cbdec455a56cf3f"
+  },
+  "previous_publication": "f9e37fa0e0a97a41a66f6f384db53ca570efee06",
+  "new_native_production_code_changes": 0,
+  "new_tests": 0,
+  "old_experiments_repeated": 0,
+  "generated_paper_figures": 0
+}

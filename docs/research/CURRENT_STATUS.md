@@ -1,21 +1,19 @@
 # Current15GHz research/production status
 
-Latest live observation:2026-09-12 09:40:31.630234 UTC.
-[M15 recovery and actual output evidence](production_recovery_m15_20260912/SNAPSHOT.json).
+Latest observation:2026-09-12 09:51:28.868205 UTC.
+[M16 actual production increment](production_increment_m16_20260912/SNAPSHOT.json).
 
-- Requested48/executor48; actual native EMX0. Recovered owner4140036, metadata52932 and standby52934 alive.
-- Resources6/5 PASS;8 storage claims but no active tool permits/native tools. Exact pre-tool step under targeted diagnosis.
-- Since09:18:23:new24 EMX completions,10 strict/range candidate-unique; all10 formally admitted.
-- Fresh formal+15 includes5 prior pending; history formal+28; certified lower bound6452.
-- Original256:231 terminal/182fresh/34fail/15analytic; logicalcore86/formal86;25 verified unstarted.
-- Previous owner exited on a storage-reservation race; dead-parent recovery deployed09:34, no old solver/candidate rerun.
-- Storage claim now waits outside dispatch lock; budget/deadline/identity/fault checks retained.
-- Automatic standby and publication restored09:36; current1/1/48, next8/8/48 at original batch completion.
-- Post-recovery new physical results0 and formal adds0 at this cut; no claim that PID or config equals actual solving.
-- Diskfree477324648448B; quotaUNKNOWN; original256/12h/5GiB budget unchanged.
-- First earlier35+3backfill landing projection completed, with new9 and prior2 train separately counted.
-- No cumulative coverage/sampling superiority claim, old experiment rerun or generated paper figure.
-- Full100K/final independent10K remain incomplete.
+- Requested48/executor48; actual3 native EMX ×2CPU, original batch remaining3.
+- New window since09:40:31:16fresh EMX,7strict/range candidate-unique,6formal,1pending.
+- Fresh formal+6/history+0; certified union lower bound6458.
+- Logical original256:253terminal/198fresh/37candidatefail/18analytic;core93/formal92.
+- Owner4140036, metadata52932, automatic standby52934 alive; no continuationfailure.
+- ResourcegatePASS17/5; no claim that48 are active or96CPU currentlyidle.
+- Nextbatch8/8/48 prepared; automatically waits original batch terminal/owner exit.
+- Samebatch frontend1/1/48 retained; its3 remaining native jobs are the current safe-boundary limit.
+- First prior25+5backfill projection complete; real DOE141 in frozen baseline-empty[4,1,2].
+- No causal sampling advantage, old rerun, model change or generated paper image.
+- Full100K/final independent10K not complete.
 [First real controlled64 result](20260911_controlled64_first_real.md) is now verified:
 1 actual DOE EMX start/complete at the08:24:57 snapshot; strict-valid but K_abs0.1711<0.2,
 so0 new qualified in-range samples. Original14 analytical failures remain in64; no advantage claim.

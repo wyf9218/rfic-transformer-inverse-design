@@ -1,0 +1,106 @@
+{
+  "schema": "eucap15_landing_increment_m16.v1",
+  "utc": "2026-09-12T09:46:09.642243+00:00",
+  "status": "PASS_FIRST_RECEIVED25_PLUS_PRIOR5_BACKFILL_PROJECTION",
+  "input": {
+    "path": "/Users/wyf/Documents/模拟变压器AI反向建模/github_worktrees/eucap15-mlp-capacity-20260909/docs/research/production_recovery_m15_20260912/RECEIVED_NEW25.json",
+    "sha256": "665d61e8598764c2cc1ef692e3c10a41dc48c28158c5911af81756ed8c44783c"
+  },
+  "script": {
+    "path": "/Users/wyf/Documents/模拟变压器AI反向建模/github_worktrees/eucap15-mlp-capacity-20260909/research/broadband56_nn/eucap15_received_landing_increment.py",
+    "sha256": "99462bab7afee5074643626fae8614f3ad71b916f3430dfff58b19828b4ce1ae"
+  },
+  "command": "'/Users/wyf/Documents/模拟变压器AI反向建模/reports/broadband56_nn_v2_20260907T212216Z/environment/bin/python' -B -m research.broadband56_nn.eucap15_received_landing_increment --baseline docs/research/eucap15_abc_increment_20260910/COVERAGE_BEFORE.csv --received docs/research/production_recovery_m15_20260912/RECEIVED_NEW25.json --received-sha256 665d61e8598764c2cc1ef692e3c10a41dc48c28158c5911af81756ed8c44783c --expected-counts '{\"received_terminal\":25,\"emx_completed\":24,\"strict_in_range\":10,\"formal_admitted\":10,\"pending_formal\":0,\"formal_train\":8}' --expected-backfill-counts '{\"formal_admitted\":5,\"formal_train\":4,\"formal_validation\":1,\"formal_test\":0}' --caller-verified-sources",
+  "workdir": "/Users/wyf/Documents/模拟变压器AI反向建模/github_worktrees/eucap15-mlp-capacity-20260909",
+  "exit_code": 0,
+  "actual25_executions": 1,
+  "old35_96_24_executions": 0,
+  "new_tests": 0,
+  "source_counts": {
+    "received_terminal": 25,
+    "emx_completed": 24,
+    "strict_in_range": 10,
+    "formal_admitted": 10,
+    "pending_formal": 0,
+    "formal_train": 8,
+    "formal_validation": 1,
+    "formal_test": 1,
+    "pending_formal_train": 0,
+    "pending_formal_validation": 0,
+    "pending_formal_test": 0
+  },
+  "backfill_counts": {
+    "formal_admitted": 5,
+    "formal_train": 4,
+    "formal_validation": 1,
+    "formal_test": 0
+  },
+  "output": {
+    "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/landing_increment_m16_v3/ACTUAL_LANDINGS.json",
+    "sha256": "7fd8a1bc1b4a2a4323a54547f954fd4ddde721c1a11ba4c7a7936213d5a4c9bb"
+  },
+  "frozen_reference": {
+    "train": 3801,
+    "bins": 512,
+    "occupied": 159,
+    "sha256": "8774136cb90164549b465135d41d206371b8616a86d0b3cf5595848971a948e9"
+  },
+  "descriptive_new_train_landings": {
+    "train_rows": 8,
+    "distinct_cells": 7,
+    "rows_in_baseline_empty_cells": 1,
+    "rows_in_underfilled_cells": 1,
+    "high_k_above_point8": 0,
+    "q10_20": 8,
+    "case": [
+      {
+        "request_id": "eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-141",
+        "source": "GEOMETRY_DOE",
+        "cell": [
+          4,
+          1,
+          2
+        ],
+        "actual_response": [
+          1.4365479856548058,
+          0.8590769759376855,
+          12.62144065307214,
+          0.3855131499929888
+        ],
+        "formal_records": [
+          {
+            "pin": {
+              "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/qualified15_single_member_v1/records/006445.json",
+              "sha256": "d682ad44d9336a7c5cfcfcf0541d54575012a0b3f4f7920a2c031528006553b2",
+              "bytes": 158694
+            },
+            "schema": "eucap15_production256_qualified_increment.v1",
+            "request_id": "eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-141",
+            "utc": "2026-09-12T09:22:13.005658+00:00"
+          }
+        ]
+      }
+    ]
+  },
+  "descriptive_prior_backfill_landings": {
+    "scope": "PRIOR_FORMAL_BACKFILLS_ONLY_NOT_NEW_TERMINALS_EMX_ELIGIBILITY_OR_CUMULATIVE_COVERAGE",
+    "baseline_train_rows": 3801,
+    "baseline_cells": 512,
+    "eligible_backfilled_train_rows": 4,
+    "distinct_train_landing_cells": 4,
+    "train_landings_in_baseline_empty_cells": 0,
+    "distinct_baseline_empty_cells_observed": [],
+    "train_landings_in_baseline_underfilled_cells": 0,
+    "train_k_above_point8": 0,
+    "train_q10_20": 4,
+    "train_max_k": 0.31395659824808947,
+    "train_max_q": 14.180811500688652
+  },
+  "scope": [
+    "This is the first projection of already received physical results, not another simulation or new production output.",
+    "One DOE141 TRAIN geometry occupies frozen baseline cell[4,1,2], previously empty in the3801 reference. No cumulative current-pool occupancy or sampler superiority claim.",
+    "The later formal admission of4 prior TRAIN and1validation rows contributes zero new solve/eligibility count.",
+    "Original sources, split, failures, exact formal joins and labels remain unchanged; no model or sampling baseline updated.",
+    "Native pre-tool diagnosis remains solely with the existing simulator owner and is not blocked by this offline projection."
+  ]
+}

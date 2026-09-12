@@ -1,0 +1,178 @@
+{
+  "schema": "eucap15_production_snapshot_m16.v1",
+  "observed_utc": "2026-09-12T09:51:28.868205+00:00",
+  "window_start_utc": "2026-09-12T09:40:31.630234+00:00",
+  "evidence": {
+    "observation": {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/samebatch_hotpath_v1/joint_cut_20260912T095128186925Z/OBSERVATION.json",
+      "sha256": "26bcb9c517f16ec9dee54b2b0f07a9981ac3973499b238940cbdec455a56cf3f"
+    },
+    "payload": {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/samebatch_hotpath_v1/joint_cut_20260912T095128186925Z/NEW_TERMINAL_RESULTS.json",
+      "sha256": "72a4f04fd08bd9350e7a768c6b042ee0d07f6bb963ecfea4715760689f5e8ccf"
+    },
+    "release": {
+      "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/claimwait_20260912T093250847503Z/owner/RELEASE.json",
+      "sha256": "56565e6fdcbef4eaff0e6aecb35b99bc8f73787dac88ca5e91ecc3f2cfbe6150",
+      "bytes": 207275
+    },
+    "plan": {
+      "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/start_ledger/PLAN.json",
+      "sha256": "fd90b07106fb7020e1e6520deaac932647feb3e5f686b5d41ffa91fffe9871c0",
+      "bytes": 133724
+    }
+  },
+  "requested_concurrency": 48,
+  "executor_capacity": 48,
+  "cpu_per_solver": 2,
+  "resource_gate": {
+    "status": "PASS",
+    "observed_utc": "2026-09-12T09:51:23.056884+00:00",
+    "healthy_checks": 17,
+    "required_checks": 5,
+    "free_license_slots": {
+      "cadence": 3600,
+      "calibre": 85,
+      "emx": 293
+    },
+    "idle_cpu_equivalents": 20.495528432322512,
+    "normalized_load1": 0.9126790364583334,
+    "source": {
+      "bytes": 19497,
+      "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/claimwait_20260912T093250847503Z/owner/fixed48/RESOURCE_20260912T095123056920Z.json",
+      "sha256": "b680fa32acb4f65be3be55af05ff34cc30544f79fe3f63b2971f6968d616d409"
+    },
+    "scope": "PASS of existing resource gate; not an independent claim of 96 currently idle CPU equivalents."
+  },
+  "actual_native_emx": 3,
+  "native_processes": [
+    {
+      "pid": 617655,
+      "start_ticks": 401053397,
+      "state": "R",
+      "ppid": 617539,
+      "cpu_per_solver": 2
+    },
+    {
+      "pid": 637771,
+      "start_ticks": 401056070,
+      "state": "R",
+      "ppid": 637675,
+      "cpu_per_solver": 2
+    },
+    {
+      "pid": 653393,
+      "start_ticks": 401058489,
+      "state": "R",
+      "ppid": 653267,
+      "cpu_per_solver": 2
+    }
+  ],
+  "owner": {
+    "pid": 4140036,
+    "start_ticks": 400956660,
+    "alive": true
+  },
+  "metadata": {
+    "pid": 52932,
+    "alive": true
+  },
+  "standby": {
+    "pid": 52934,
+    "alive": true,
+    "status": "WAITING_FOR_CURRENT_BATCH_TERMINAL_AND_OWNER_EXIT"
+  },
+  "same_batch_pipeline": {
+    "cadence": 1,
+    "calibre": 1,
+    "emx": 48
+  },
+  "prepared_successor_pipeline": {
+    "cadence": 8,
+    "calibre": 8,
+    "emx": 48
+  },
+  "successor_automatically_installed": true,
+  "successor_actually_started": false,
+  "continuation_failure": null,
+  "new_terminal": 22,
+  "new_emx_completed": 16,
+  "new_candidate_failures": 3,
+  "new_analytic_failures": 3,
+  "new_strict_range_candidate_unique": 7,
+  "new_certified_unique_and_formally_admitted": 6,
+  "new_eligible_pending_formal": 1,
+  "pending_request_id": "eucap15_production_doe_neighborhood_20260912_v1-TRAIN_NEIGHBORHOOD-063",
+  "new_fresh_formal": 6,
+  "new_historical_formal": 0,
+  "formal_union_lower_bound": 6458,
+  "formal_head": {
+    "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/qualified15_single_member_v1/records/006458.json",
+    "sha256": "b66546342d17d4fc545d74668877a66cea6662ab35e41133546c6fe83d597fd2",
+    "bytes": 567386
+  },
+  "referenced_frequency_rows": 361648,
+  "logical_original256": {
+    "terminal": 253,
+    "fresh": 198,
+    "candidate_failure": 37,
+    "analytic_failure": 18,
+    "core": 93,
+    "core_formal": 92,
+    "core_pending": 1,
+    "remaining": 3
+  },
+  "remaining_ids": [
+    "GEOMETRY_DOE-186",
+    "GEOMETRY_DOE-190",
+    "TRAIN_NEIGHBORHOOD-062"
+  ],
+  "original_plan": {
+    "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/start_ledger/PLAN.json",
+    "sha256": "fd90b07106fb7020e1e6520deaac932647feb3e5f686b5d41ffa91fffe9871c0",
+    "bytes": 133724
+  },
+  "deadline_utc": "2026-09-12T15:30:49.723123+00:00",
+  "batch_budget": {
+    "original_proposals": 256,
+    "max_hours": 12,
+    "max_allocated_bytes": 5368709120,
+    "reset": false
+  },
+  "storage": {
+    "observed_utc": "2026-09-12T09:51:19.450847+00:00",
+    "allocated_bytes": 2237124608,
+    "reserved_bytes": 243884032,
+    "claims": 4,
+    "disk_free_bytes": 477808672768,
+    "quota": "UNKNOWN"
+  },
+  "first_prior25_landing_projection": {
+    "receipt": {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/landing_increment_m16_v3/RECEIPT.json",
+      "sha256": "5ec331659c9288802376be7e2623b3a2f2a3562d35b31c2bc18e76e8fafefe26"
+    },
+    "new_formal_train": 8,
+    "distinct_cells": 7,
+    "baseline_empty_cell": [
+      4,
+      1,
+      2
+    ],
+    "rows_in_baseline_empty_cell": 1,
+    "prior_backfill_train": 4,
+    "prior_backfill_distinct_cells": 4,
+    "prior_backfill_empty_cells": 0,
+    "scope": "Frozen3801 baseline only; not cumulative coverage gain or algorithm advantage."
+  },
+  "diagnostic_correction": "09:44 storage claim count was22, not25;25 was remaining original candidate count. Observation file unchanged. Native solving resumed naturally; no deadlock/hotspot cause proven.",
+  "read_scope": {
+    "old_result_bodies": 0,
+    "old_ledger_prefix_reaudited": false,
+    "new_resource_probes": 0,
+    "process_signals": 0,
+    "additional_native_dispatch_by_reader": 0
+  },
+  "blocker": "Original batch has only3 remaining candidates and standby requires its terminal/owner-exit boundary; next batch is prepared but not yet physically launched at this cut.",
+  "goal_complete": false
+}
