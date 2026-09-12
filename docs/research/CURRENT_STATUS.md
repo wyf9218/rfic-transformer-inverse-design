@@ -2,6 +2,8 @@
 
 ## 2026-09-12 M29：61新增fresh EMX、25正式入账
 
+13:52离线源码判断已完成：[前置供给判断](production_increment_m29_20260912/FRONTEND_JUDGMENT_CN.md)。同13:44资源仅余46.245CPU当量，可新增23个双CPU工具；无EMX就绪等待。Calibre8未饱和，Cadence8→12离线反事实不增加CPU，未部署配额改动/未重启。此判断不更新运行观察时间。
+
 13:44:51 UTC相对13:32：新61fresh，25范围内strict唯一全部正式，history0/pending0，下界6845。实际nativeEMX0，容量48；7Cadence许可及上游等待仍在，无EMX等待。前置供给/配额正由唯一owner检查，未声称新部署或48实跑。
 已接收train+18至3975，163/512格不变。新闭合第3批成本分析与1875历史同族判定见[production_increment_m29_20260912](production_increment_m29_20260912/README.md)；普通生产不等Git，以下皆历史截面。
 

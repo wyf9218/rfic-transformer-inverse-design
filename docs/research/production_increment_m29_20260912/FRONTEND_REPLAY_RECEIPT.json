@@ -1,0 +1,289 @@
+{
+  "status": "OFFLINE_SOURCE_AND_POLICY_REPLAY_COMPLETE_NO_PRODUCTION_CHANGE",
+  "utc": "2026-09-12T13:52:28.163391+00:00",
+  "observation": {
+    "path": "/Users/wyf/Documents/\u6a21\u62df\u53d8\u538b\u5668AI\u53cd\u5411\u5efa\u6a21/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/storage_claim_wait_v1/budget_walk_v1/increment_20260912T134450531585Z/OBSERVATION.json",
+    "sha256": "88d62c0329b97cbf04b2e4133e725ced5465e647325ed324e880e0c1975b3ad1",
+    "bytes": 945952
+  },
+  "deployment": {
+    "path": "/Users/wyf/Documents/\u6a21\u62df\u53d8\u538b\u5668AI\u53cd\u5411\u5efa\u6a21/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/storage_claim_wait_v1/budget_walk_v1/registry_recovery_20260912T131535395596Z/DEPLOYMENT.json",
+    "sha256": "422196cebc03a198a3f2d8d8293aa7b06a9bdfe0d15bada4befbffc064d2d55f",
+    "bytes": 27601
+  },
+  "script": {
+    "path": "/Users/wyf/Documents/\u6a21\u62df\u53d8\u538b\u5668AI\u53cd\u5411\u5efa\u6a21/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/storage_claim_wait_v1/budget_walk_v1/frontend_supply_m29_v1/analyze_local.py",
+    "sha256": "a464c8594b71a8b36e356225e6ce2c604c880de06954405cdd10e44da60165f9",
+    "bytes": 5764
+  },
+  "sources": [
+    {
+      "local": {
+        "path": "/Users/wyf/Documents/\u6a21\u62df\u53d8\u538b\u5668AI\u53cd\u5411\u5efa\u6a21/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/storage_claim_wait_v1/budget_walk_v1/runtime/fixed48_capacity.py",
+        "sha256": "e9154715ec5c13eea95ee96f1bb015223f6e946a015005a990c5bcfcd4b2f545",
+        "bytes": 7241
+      },
+      "deployed": {
+        "bytes": 7241,
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_registry_recovery_20260912T131535395596Z/runtime/fixed48_capacity.py",
+        "sha256": "e9154715ec5c13eea95ee96f1bb015223f6e946a015005a990c5bcfcd4b2f545"
+      },
+      "functions": {
+        "require": 13,
+        "stamp": 18,
+        "finite": 24,
+        "__init__": 110,
+        "observe": 40,
+        "limits": 60,
+        "claim": 116,
+        "refresh": 128,
+        "release": 135
+      }
+    },
+    {
+      "local": {
+        "path": "/Users/wyf/Documents/\u6a21\u62df\u53d8\u538b\u5668AI\u53cd\u5411\u5efa\u6a21/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/storage_claim_wait_v1/budget_walk_v1/runtime/fixed48_runtime.py",
+        "sha256": "23eddf702afb6c3f5ee64ac9c415c56376199857dd6fe915f67856a456f8b99f",
+        "bytes": 15770
+      },
+      "deployed": {
+        "bytes": 15770,
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_registry_recovery_20260912T131535395596Z/runtime/fixed48_runtime.py",
+        "sha256": "23eddf702afb6c3f5ee64ac9c415c56376199857dd6fe915f67856a456f8b99f"
+      },
+      "functions": {
+        "clock": 19,
+        "suffix": 22,
+        "pointer": 25,
+        "own_peers": 31,
+        "verify_emx_permit": 272,
+        "__init__": 52,
+        "start": 69,
+        "sample_loop": 71,
+        "publish_resource": 107,
+        "counts": 114,
+        "permit_lock": 123,
+        "resource_decision": 128,
+        "claimed_count": 133,
+        "storage_snapshot": 136,
+        "require_wait_ready": 149,
+        "require_ready": 155,
+        "admit_candidate_count": 164,
+        "candidate": 183,
+        "acquire": 200,
+        "release": 247,
+        "close": 267
+      }
+    },
+    {
+      "local": {
+        "path": "/Users/wyf/Documents/\u6a21\u62df\u53d8\u538b\u5668AI\u53cd\u5411\u5efa\u6a21/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/storage_claim_wait_v1/budget_walk_v1/runtime/run_fixed48_native.py",
+        "sha256": "5da87cc5206e314e0aa0ec40989fa45ccb2ff2e91643c0ffe6d874a1a3adbfb5",
+        "bytes": 9060
+      },
+      "deployed": {
+        "bytes": 9060,
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_registry_recovery_20260912T131535395596Z/runtime/run_fixed48_native.py",
+        "sha256": "5da87cc5206e314e0aa0ec40989fa45ccb2ff2e91643c0ffe6d874a1a3adbfb5"
+      },
+      "functions": {
+        "main": 138,
+        "__init__": 18,
+        "admit": 28,
+        "stage": 37,
+        "budget_decision": 55,
+        "one": 68,
+        "run": 95
+      }
+    },
+    {
+      "local": {
+        "path": "/Users/wyf/Documents/\u6a21\u62df\u53d8\u538b\u5668AI\u53cd\u5411\u5efa\u6a21/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/endpoint_v2_successor_v1/runtime/run_controlled_native.py",
+        "sha256": "a8c04db050ee64ba828c9c0ad8fe614b32b0c79bc0f08e49023755945598e68d",
+        "bytes": 15499
+      },
+      "deployed": {
+        "bytes": 15499,
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_registry_recovery_20260912T131535395596Z/runtime/run_controlled_native.py",
+        "sha256": "a8c04db050ee64ba828c9c0ad8fe614b32b0c79bc0f08e49023755945598e68d"
+      },
+      "functions": {
+        "main": 228,
+        "__init__": 22,
+        "verify_release": 43,
+        "predecessor_closed": 54,
+        "event": 100,
+        "deadline": 104,
+        "ensure_plan": 110,
+        "admit": 121,
+        "budget_decision": 136,
+        "cadence_command": 145,
+        "candidate": 151,
+        "capture_result": 181,
+        "run": 189
+      }
+    },
+    {
+      "local": {
+        "path": "/Users/wyf/Documents/\u6a21\u62df\u53d8\u538b\u5668AI\u53cd\u5411\u5efa\u6a21/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/storage_claim_wait_v1/budget_walk_v1/runtime/run_development_native.py",
+        "sha256": "b6184aeccdcc59bcf2a7d29e4b5064145e4b40b346b24b89cb346f4123f0202a",
+        "bytes": 15760
+      },
+      "deployed": {
+        "bytes": 15760,
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_registry_recovery_20260912T131535395596Z/runtime/run_development_native.py",
+        "sha256": "b6184aeccdcc59bcf2a7d29e4b5064145e4b40b346b24b89cb346f4123f0202a"
+      },
+      "functions": {
+        "read": 17,
+        "write": 21,
+        "frozen": 26,
+        "main": 230,
+        "__init__": 37,
+        "verify_release": 57,
+        "predecessor_closed": 65,
+        "event": 84,
+        "deadline": 90,
+        "admit": 94,
+        "module": 104,
+        "cadence_command": 107,
+        "stage": 118,
+        "candidate": 155,
+        "run": 192
+      }
+    },
+    {
+      "local": {
+        "path": "/Users/wyf/Documents/\u6a21\u62df\u53d8\u538b\u5668AI\u53cd\u5411\u5efa\u6a21/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/endpoint_v2_successor_v1/runtime/prepare_successor.py",
+        "sha256": "fada7a1331cec7d8e4fefa23d1da8f6ee20d42b708dd9bc130e98b86aa5ade92",
+        "bytes": 5750
+      },
+      "deployed": {
+        "bytes": 5750,
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_registry_recovery_20260912T131535395596Z/runtime/prepare_successor.py",
+        "sha256": "fada7a1331cec7d8e4fefa23d1da8f6ee20d42b708dd9bc130e98b86aa5ade92"
+      },
+      "functions": {
+        "prepare": 13,
+        "relocate": 23
+      }
+    },
+    {
+      "local": {
+        "path": "/Users/wyf/Documents/\u6a21\u62df\u53d8\u538b\u5668AI\u53cd\u5411\u5efa\u6a21/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/storage_claim_wait_v1/budget_walk_v1/runtime/continue_batches.py",
+        "sha256": "1584fbcf8c377e1d26caf932f1b2442416af18cf15734d3b6562a6f3a13cdbc4",
+        "bytes": 14207
+      },
+      "deployed": {
+        "bytes": 14207,
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_registry_recovery_20260912T131535395596Z/runtime/continue_batches.py",
+        "sha256": "1584fbcf8c377e1d26caf932f1b2442416af18cf15734d3b6562a6f3a13cdbc4"
+      },
+      "functions": {
+        "save": 18,
+        "event": 21,
+        "verify_deployment": 27,
+        "resumed_parent": 38,
+        "replay_waiting_state": 64,
+        "continuation_state": 85,
+        "launch": 115,
+        "attach_publication": 140,
+        "next_inputs": 165,
+        "run": 182,
+        "main": 231
+      }
+    }
+  ],
+  "input_evidence_time": "2026-09-12T13:44:51.197577+00:00",
+  "reused_health_event": {
+    "utc": "2026-09-12T13:44:28.966650+00:00",
+    "pid": 1052218,
+    "status": "FIXED48_RESOURCE_OBSERVED",
+    "evidence": {
+      "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_registry_recovery_20260912T131535395596Z/batches/eucap15_continuous_doe_neighborhood_20260912_batch000004/owner/fixed48/RESOURCE_20260912T134428963541Z.json",
+      "sha256": "fa574cb5892c8f3014a6af4ad047c337123b31ad50ce17de4fd944e54965562e",
+      "bytes": 19527
+    },
+    "healthy_check_streak": 20,
+    "free_license_slots": {
+      "cadence": 3600,
+      "calibre": 85,
+      "emx": 294
+    }
+  },
+  "replay_is_not_current_admission": true,
+  "no_simulators_or_remote_reads": true,
+  "new_resource_snapshots": 0,
+  "process_signals": 0,
+  "production_files_changed": 0,
+  "policy": {
+    "candidate_pipeline_capacity": 64,
+    "candidate_projected_peak_bytes": 67108864,
+    "cpu_per_solver": 2,
+    "cpu_reservation": {
+      "cadence": 2,
+      "calibre": 2,
+      "emx": 2
+    },
+    "five_independent_health_checks": 5,
+    "maximum_snapshot_age_seconds": 90,
+    "memory_reservation_bytes": {
+      "cadence": 8589934592,
+      "calibre": 8589934592,
+      "emx": 8589934592
+    },
+    "minimum_available_memory_fraction": 0.2,
+    "normalized_load1_max": 1.1,
+    "normalized_load5_max": 1.1,
+    "requested_emx": 48,
+    "reservation_basis": "CONSERVATIVE_CONFIGURED_PROJECTION_NOT_ASSERTED_HARD_PEAK_BOUND",
+    "system_cpu_reserve": 4,
+    "tool_executor_capacity": {
+      "cadence": 8,
+      "calibre": 8,
+      "emx": 48
+    }
+  },
+  "actual_replay": {
+    "additional": {
+      "cadence": 1,
+      "calibre": 8,
+      "emx": 23
+    },
+    "reason": "PARTIAL_OR_FULL_CAPACITY_AVAILABLE",
+    "healthy_check_streak": 20,
+    "observed_utc": "2026-09-12T13:44:28.963507+00:00"
+  },
+  "counterfactual_only_not_deployed": {
+    "change": "cadence cap 8 -> 12",
+    "result": {
+      "additional": {
+        "cadence": 5,
+        "calibre": 8,
+        "emx": 23
+      },
+      "reason": "PARTIAL_OR_FULL_CAPACITY_AVAILABLE",
+      "healthy_check_streak": 20,
+      "observed_utc": "2026-09-12T13:44:28.963507+00:00"
+    },
+    "throughput": "NOT_MEASURED",
+    "effect_on_native_emx": "UNKNOWN"
+  },
+  "storage": {
+    "pin": {
+      "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_registry_recovery_20260912T131535395596Z/batches/eucap15_continuous_doe_neighborhood_20260912_batch000004/owner/fixed48/STORAGE_20260912T134450771321Z.json",
+      "sha256": "199186e9cf565a66656be83706db610faa86ec2b18d2b0d0a957d0adf68698a4",
+      "bytes": 15745
+    },
+    "remaining_unreserved_bytes": 231514112,
+    "existing_claims": 63,
+    "new_claim_capacity_before_pipeline_cap": 3,
+    "current_pipeline_capacity": 64,
+    "possible_total_after_storage_reservations": 66
+  },
+  "conclusion": "NO_QUOTA_CHANGE_JUSTIFIED_BY_THIS_CUT",
+  "reason": "Calibre has eight additional eligible slots and no active permit; no EMX intent is waiting. Increasing Cadence cap permits more upstream demand but does not increase measured CPU headroom. Shared admission I/O and lock duration are not instrumented; causal latency remains UNKNOWN.",
+  "supported_switch_boundary": "BATCH_TERMINAL_AND_OWNER_EXIT_WITH_VERIFIED_METADATA_DRAIN",
+  "hot_reload_supported": false,
+  "production_deployment": "NOT_PERFORMED"
+}
