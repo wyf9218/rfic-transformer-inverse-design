@@ -1,0 +1,55 @@
+{
+  "schema": "eucap15_historical_single_member_final_disposition.v1",
+  "evaluation": "d87ff4d971f5f26f",
+  "candidate_id": "m56s4p_klt1_c2r1_v13a_00001",
+  "scope": "THIS_MEMBER_ONLY_NOT_THE_OTHER_63",
+  "decision": "NO_GO_DIRECT_ADMISSION_OF_ORIGINAL_GDS_UNDER_CURRENT_GATE",
+  "reuse_classification": "RAW_RESPONSE_READABLE_CURRENT_NUMERIC_STRICT_BUT_CURRENT_GDS_GATE_FAILS",
+  "geometry_reuse": "TRUSTED_PARAMETER_GEOMETRY_MAY_BE_REVALIDATED_IN_CURRENT_FLOW_WITH_A_NEW_VERSION",
+  "basis": {
+    "numeric_receipt": {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/history_first_member_m27_v1/extraction111_v1/RECEIPT.json",
+      "sha256": "6a60363d164a683ab82381c86703ccf3a8edc57695d55af0e86fe269e8107a0e"
+    },
+    "gds_diagnostic": {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/history_first_member_m27_v1/ACTUAL_GDS_DIAGNOSTIC.json",
+      "sha256": "e433440ad330c7f5b36d75ed276a8078a7c82798c807eccc92960972c3446488"
+    },
+    "diagnostic_receipt": {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/history_first_member_m27_v1/RECEIPT.json",
+      "sha256": "9f6d1be78ce4fd90c343e0f4b341dc8fd0d6dea9a8bbe8c10e1cbe5e792d68e3"
+    }
+  },
+  "numeric": {
+    "current_definition_strict15": true,
+    "descriptor15": true,
+    "below_half_srf": true,
+    "range_inside": true,
+    "q10_20_inside": true,
+    "retained_original_frequency_rows": 111,
+    "fresh_emx": false
+  },
+  "confirmed_current_gate_failures": {
+    "off_grid_label_count": 8,
+    "maximum_grid_error_um": 0.0020000000000024443,
+    "off_grid_polygon_vertex_count": 0,
+    "noncanonical_polygon_edge_count": 0,
+    "conditional_port_position_mismatches_um": {
+      "P005": 0.005,
+      "P007": 0.005
+    },
+    "conditional_port_measurement_reference": "SAVED_HISTORICAL_FRAME_AND_NOMINALS; NOT_A_FULL_CURRENT_FOUNDRY_AUDIT",
+    "via": "NOT_EVALUATED_DUE_TO_UPSTREAM_CONTRACT_FAILURE"
+  },
+  "structural_pass_not_full_gate_pass": "Structural identity allows Cadence pin offsets <=5nm; that does not satisfy the separate all-labels-on-5nm-grid predicate. Do not relax either predicate or substitute one for the other.",
+  "uncertainties_remaining": [
+    "Executed process bytes SHA and historical/current physical version compatibility",
+    "Exact current Calibre DRC result and ruledeck binding; historical foundry_drc_executed is false",
+    "Direct-layout GDS to current Cadence geometry binding",
+    "Original split and cross-source deduplication"
+  ],
+  "formal_added": 0,
+  "old_gds_direct_current_admission": "NOT_ELIGIBLE_AS_OBSERVED",
+  "next_legal_entry": "Sole native owner may preserve these historical S4P/GDS and use the unchanged trusted parameter geometry in a separately versioned current GDS/DRC/EMX flow. Do not edit this historical GDS, inherit its labels automatically after repair, re-extract these 111 rows again, or generalize this member to the 64-row shard.",
+  "original_artifacts_unchanged": true
+}

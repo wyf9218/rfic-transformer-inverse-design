@@ -1,0 +1,229 @@
+{
+  "schema": "eucap15_m27_post_recovery_actual_native_increment.v1",
+  "status": "RUNNING_28_INDEPENDENT_EMX_PARTIAL_RESOURCE_ADMISSION",
+  "goal_status": "ACTIVE",
+  "baseline_utc": "2026-09-12T13:16:53.140996+00:00",
+  "observed_utc": "2026-09-12T13:23:11.275490+00:00",
+  "observation": {
+    "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/storage_claim_wait_v1/budget_walk_v1/increment_20260912T132310639271Z/OBSERVATION.json",
+    "sha256": "472644b5c6df6777f0477639c9067e44ef3eafaf177c5ca25c5e5639d96c8cd6",
+    "bytes": 442288
+  },
+  "window": {
+    "new_terminal": 11,
+    "new_fresh_emx": 9,
+    "new_emx_stage_failure": 1,
+    "new_analytic_failure": 1,
+    "new_strict_range_core_candidates": 4,
+    "new_fresh_formal": 1,
+    "new_historical_formal": 0,
+    "pending_core_formal": 3,
+    "pending_requests": [
+      "eucap15_continuous_doe_neighborhood_20260912_batch000004-GEOMETRY_DOE-002",
+      "eucap15_continuous_doe_neighborhood_20260912_batch000004-TRAIN_NEIGHBORHOOD-000",
+      "eucap15_continuous_doe_neighborhood_20260912_batch000004-TRAIN_NEIGHBORHOOD-002"
+    ],
+    "fresh_splits": {
+      "train": 8,
+      "test": 1
+    },
+    "formal_splits": {
+      "train": 1
+    }
+  },
+  "whole_m27_window": {
+    "baseline_utc": "2026-09-12T12:58:26.315280+00:00",
+    "new_terminal": 26,
+    "new_fresh_emx": 24,
+    "new_strict_range_core_candidates": 11,
+    "new_fresh_formal": 8,
+    "new_historical_formal": 0,
+    "pending_core_formal": 3,
+    "formal_union_lower_bound": 6797,
+    "not_stable_hourly_throughput": true,
+    "core_unique_scope": "Observed candidate identities, not certification of pending3 against every historical source."
+  },
+  "formal_head": {
+    "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/qualified15_single_member_v1/records/006797.json",
+    "sha256": "6436c86319131908ff09c46da739093cb5fcd5a50ba18acbbd37678885c7dcc2",
+    "bytes": 189116
+  },
+  "formal_checkpoint": {
+    "increment_15ghz_rows": 6797,
+    "increment_accepted": 6797,
+    "last_increment_sequence": 6797,
+    "prior_commit": "2eedfb50886447b7e19d5f1c458ea73cf28c692b23d4f65d9d33e49e637bb44c",
+    "referenced_frequency_rows": 380632
+  },
+  "runtime": {
+    "requested_native": 48,
+    "cpu_per_solver": 2,
+    "solver_cpu_requested": 96,
+    "executor_capacity": 48,
+    "actual_native_emx": 28,
+    "permit_counts": {
+      "emx": 28,
+      "cadence": 6
+    },
+    "owner": {
+      "pid": 1052218,
+      "ppid": 1041957,
+      "state": "S",
+      "start_ticks": 402287917,
+      "uid": 2259579,
+      "argv": [
+        "/volumes/research-localdata/ywang3652/rfic-transformer-inverse-design-mars56-s4p-20260702/.venv/bin/python",
+        "-B",
+        "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_registry_recovery_20260912T131535395596Z/runtime/run_fixed48_native.py",
+        "--release",
+        "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_registry_recovery_20260912T131535395596Z/batches/eucap15_continuous_doe_neighborhood_20260912_batch000004/owner/RELEASE.json"
+      ]
+    },
+    "metadata": {
+      "pid": 1052221,
+      "ppid": 1041957,
+      "state": "S",
+      "start_ticks": 402287917,
+      "uid": 2259579,
+      "argv": [
+        "/volumes/research-localdata/ywang3652/rfic-transformer-inverse-design-mars56-s4p-20260702/.venv/bin/python",
+        "-B",
+        "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_fixed48_20260912T060818729473Z/publication_tools/metadata_worker.py",
+        "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_registry_recovery_20260912T131535395596Z/publication_workers/dd9b0808f2f2764913f54172d24a28f0de822d108fa9886a5115625b5ea46ccd/DEPLOYMENT.json"
+      ]
+    },
+    "continuation": {
+      "pid": 1041957,
+      "ppid": 1,
+      "state": "S",
+      "start_ticks": 402286569,
+      "uid": 2259579,
+      "argv": [
+        "/volumes/research-localdata/ywang3652/rfic-transformer-inverse-design-mars56-s4p-20260702/.venv/bin/python",
+        "-B",
+        "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_registry_recovery_20260912T131535395596Z/runtime/continue_batches.py",
+        "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_registry_recovery_20260912T131535395596Z"
+      ]
+    },
+    "release": {
+      "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_registry_recovery_20260912T131535395596Z/batches/eucap15_continuous_doe_neighborhood_20260912_batch000004/owner/RELEASE.json",
+      "sha256": "dd9b0808f2f2764913f54172d24a28f0de822d108fa9886a5115625b5ea46ccd",
+      "bytes": 17594
+    },
+    "config": {
+      "bytes": 171804,
+      "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_registry_recovery_20260912T131535395596Z/batches/eucap15_continuous_doe_neighborhood_20260912_batch000004/owner/CONFIG.json",
+      "sha256": "308d63d292f787b30eba8bb2f480d60b084702b87a37e413be9833907f1a2e04"
+    },
+    "runtime": {
+      "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_registry_recovery_20260912T131535395596Z/runtime/fixed48_runtime.py",
+      "sha256": "23eddf702afb6c3f5ee64ac9c415c56376199857dd6fe915f67856a456f8b99f",
+      "bytes": 15770
+    },
+    "continuation_runtime": {
+      "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_registry_recovery_20260912T131535395596Z/runtime/continue_batches.py",
+      "sha256": "1584fbcf8c377e1d26caf932f1b2442416af18cf15734d3b6562a6f3a13cdbc4",
+      "bytes": 14207
+    },
+    "resource": {
+      "pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_registry_recovery_20260912T131535395596Z/batches/eucap15_continuous_doe_neighborhood_20260912_batch000004/owner/fixed48/RESOURCE_20260912T132259688950Z.json",
+        "sha256": "10fc86c86fb5b005836c21ccce706fb65662a588a223c23b7c35d0f499928b45",
+        "bytes": 19523
+      },
+      "value": {
+        "utc": "2026-09-12T13:22:59.688906+00:00",
+        "status": "PASS",
+        "failed_checks": [],
+        "logical_cpus": 192,
+        "idle_cpu_equivalents": 53.826235576733744,
+        "available_memory_bytes": 449657139200,
+        "memory_fraction": 0.740467977438559,
+        "normalized_load1": 0.5855534871419271,
+        "normalized_load5": 0.3910675048828125,
+        "free_disk_bytes": 458686476288,
+        "free_license_slots": {
+          "cadence": 3600,
+          "calibre": 85,
+          "emx": 268
+        }
+      }
+    },
+    "capacity_components": {
+      "reflected_permits": {
+        "cadence": 0,
+        "calibre": 0,
+        "emx": 12
+      },
+      "pending_permits": {
+        "cadence": 6,
+        "calibre": 0,
+        "emx": 16
+      },
+      "cpu_after_reservations": 5.826235576733744,
+      "memory_after_reservations_bytes": 139226428211.2,
+      "idle_cpu_measured": 53.826235576733744,
+      "memory_available_measured": 449657139200,
+      "per_tool": {
+        "cadence": {
+          "executor": 2,
+          "licenses": 3594,
+          "cpu": 2,
+          "memory": 16
+        },
+        "calibre": {
+          "executor": 8,
+          "licenses": 85,
+          "cpu": 2,
+          "memory": 16
+        },
+        "emx": {
+          "executor": 20,
+          "licenses": 252,
+          "cpu": 2,
+          "memory": 16
+        }
+      }
+    },
+    "limits_replay": {
+      "additional": {
+        "cadence": 2,
+        "calibre": 2,
+        "emx": 2
+      },
+      "reason": "PARTIAL_OR_FULL_CAPACITY_AVAILABLE",
+      "healthy_check_streak": 7,
+      "observed_utc": "2026-09-12T13:22:59.688906+00:00"
+    },
+    "policy_replay_is_not_admission": true,
+    "stage_counts": {
+      "EMX_PERMITTED": 28,
+      "TERMINAL_AT_CUT": 11,
+      "EMX_WAITING_ADMISSION": 8,
+      "CALIBRE_WAITING_ADMISSION": 12,
+      "CADENCE_PERMITTED": 6,
+      "NO_TOOL_INTENT": 191
+    },
+    "ordinary_continuation_installed": true,
+    "new_batch4_to5_transition": "NOT_YET_OBSERVED",
+    "current_healthy_owner_not_restarted": true,
+    "old_budgets_preserved": true
+  },
+  "storage": {
+    "pin": {
+      "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_registry_recovery_20260912T131535395596Z/batches/eucap15_continuous_doe_neighborhood_20260912_batch000004/owner/fixed48/STORAGE_20260912T132310413689Z.json",
+      "sha256": "991e29f2d6c5eeb60ae6235c1cff3c074b119b416cb04082c2cb32d353c5a518",
+      "bytes": 15309
+    },
+    "total_allocated_bytes": 317399040,
+    "remaining_projected_bytes": 3821658112,
+    "ceiling_bytes": 5368709120,
+    "free_disk_bytes": 458686476288,
+    "quota": "UNKNOWN",
+    "projection_is_not_peak_guarantee": true
+  },
+  "remaining_output_constraint": "Current admission after system and in-flight CPU reservations has5.8262355767CPU left; diagnostic shared budget admits at most2 more two-CPU tools, not48 native.",
+  "failure_scope": "DOE021 EMX stage execution failed. Exact log cause not examined in this cut; retained with no substitution, other candidates continue.",
+  "no_additional_ai_resource_probes": true,
+  "no_old_result_bodies_read": true
+}

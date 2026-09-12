@@ -1,0 +1,13 @@
+{
+  "actual_registry_consumer": true,
+  "native_actions": 0,
+  "returncode": 0,
+  "source": {
+    "bytes": 1503,
+    "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_registry_recovery_20260912T131535395596Z/PREFLIGHT.py",
+    "sha256": "1f19101a530cf4e335c49d7f5b89f31138691175f6b71c3e33113501610d3428"
+  },
+  "stderr": "",
+  "stdout": "{\"status\": \"PASS\", \"private_python\": \"/usr/bin/python3.12\", \"current_release\": {\"path\": \"/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_permit_release_20260912T105802513957Z/batches/eucap15_continuous_doe_neighborhood_20260912_batch000003/owner/RELEASE.json\", \"sha256\": \"310fb67b880e085eaf05b8f791778a1ba7cba15d01c9c596601b42b08683bd9c\", \"bytes\": 17474}, \"next_index\": 4, \"profile_registered\": {\"path\": \"/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_registry_recovery_20260912T131535395596Z/batch_registry/569f16030e063ebcb1526a646bf53286344077332c6c60fb0a62073b0ca84e64.json\", \"sha256\": \"1acbe51aaa84e78f9a383193415e8d9b7a6d7f4acb9eecab67a049afbc4639d0\", \"bytes\": 9060}, \"closure_terminal\": {\"path\": \"/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_permit_release_20260912T105802513957Z/batches/eucap15_continuous_doe_neighborhood_20260912_batch000003/owner/BATCH_RECEIPT.json\", \"sha256\": \"8817898ca91bac581241911bb756665ef7bb52fa8b85dff21eb351e136a7f03a\", \"bytes\": 108498}, \"closure_results\": 256, \"prior_batches\": 3, \"native_actions\": 0, \"old_qa_recomputed\": 0, \"verification\": \"ACTUAL_FROZEN_PARENT_RESULT_HASH_BINDINGS_ONLY_REQUIRED_BY_EXISTING_STARTUP\", \"scientific_changes\": 0, \"old_evidence_unchanged\": true}\n",
+  "utc": "2026-09-12T13:15:36.398514+00:00"
+}

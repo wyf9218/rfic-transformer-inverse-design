@@ -1,0 +1,308 @@
+{
+  "schema": "eucap15_first_received_delta_landing_and_train_resume_receipt.v1",
+  "window_id": "M27b_new11",
+  "status": "COMPLETE",
+  "observation_utc": "2026-09-12T13:23:11.275490+00:00",
+  "baseline_observation_utc": "2026-09-12T13:16:53.140996+00:00",
+  "completed_utc": "2026-09-12T13:27:56.302330+00:00",
+  "scope": "NEW11_TERMINALS_AND_ONE_FORMAL_TRAIN_ONLY_RECEIVED_SOURCE_UNION_NOT_FULL_PRODUCTION",
+  "source_reliance": "CALLER_VERIFIED_PHYSICAL_SOURCES_AND_FORMAL_JOINS_NOT_REVERIFIED_HERE",
+  "native_header_schema": "ABSENT_PRESERVED_NOT_SYNTHESIZED",
+  "counts": {
+    "received_terminal": 11,
+    "emx_completed": 9,
+    "strict_in_range": 4,
+    "formal_admitted": 1,
+    "pending_formal": 3,
+    "formal_train": 1,
+    "formal_validation": 0,
+    "formal_test": 0,
+    "pending_formal_train": 3,
+    "pending_formal_validation": 0,
+    "pending_formal_test": 0,
+    "strict_valid": 7,
+    "fresh_emx_extracted": 9,
+    "emx_stage_failure": 1,
+    "analytic_not_dispatched": 1,
+    "backfill_formal": 0
+  },
+  "by_source": {
+    "GEOMETRY_DOE": {
+      "received_terminal": 8,
+      "emx_completed": 6,
+      "strict_in_range": 1,
+      "formal_admitted": 0,
+      "pending_formal": 1,
+      "formal_train": 0,
+      "formal_validation": 0,
+      "formal_test": 0,
+      "pending_formal_train": 1,
+      "pending_formal_validation": 0,
+      "pending_formal_test": 0
+    },
+    "TRAIN_NEIGHBORHOOD": {
+      "received_terminal": 3,
+      "emx_completed": 3,
+      "strict_in_range": 3,
+      "formal_admitted": 1,
+      "pending_formal": 2,
+      "formal_train": 1,
+      "formal_validation": 0,
+      "formal_test": 0,
+      "pending_formal_train": 2,
+      "pending_formal_validation": 0,
+      "pending_formal_test": 0
+    }
+  },
+  "formal_binding": {
+    "header": {
+      "pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/qualified15_single_member_v1/records/006797.json",
+        "sha256": "6436c86319131908ff09c46da739093cb5fcd5a50ba18acbbd37678885c7dcc2",
+        "bytes": 189116
+      },
+      "request_id": "eucap15_continuous_doe_neighborhood_20260912_batch000004-TRAIN_NEIGHBORHOOD-001",
+      "utc": "2026-09-12T13:22:33.562850+00:00",
+      "assigned_split_from_frozen_request": "train",
+      "new_result_release": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_registry_recovery_20260912T131535395596Z/batches/eucap15_continuous_doe_neighborhood_20260912_batch000004/owner/RELEASE.json",
+        "sha256": "dd9b0808f2f2764913f54172d24a28f0de822d108fa9886a5115625b5ea46ccd",
+        "bytes": 17594
+      },
+      "record_keys": [
+        "candidate_id",
+        "candidate_id_sha256",
+        "eucap15_qualified_accepted",
+        "frequency_hz",
+        "geometry",
+        "geometry_fields",
+        "geometry_sha256",
+        "geometry_units",
+        "increment_sequence",
+        "old_broadband_production_accepted",
+        "original56",
+        "original_research_member_unchanged",
+        "physical15",
+        "production_accepted_sequence",
+        "request_id",
+        "scientific_contract_fingerprint",
+        "source",
+        "split"
+      ]
+    },
+    "checks": [
+      "request_id",
+      "assigned_development_split",
+      "new_result_release.path",
+      "new_result_release.sha256",
+      "new_result_release.bytes"
+    ],
+    "original_accepted_flag_retained": true
+  },
+  "pending": [
+    {
+      "request_id": "eucap15_continuous_doe_neighborhood_20260912_batch000004-GEOMETRY_DOE-002",
+      "assigned_development_split": "train",
+      "actual_cell": [
+        2,
+        3,
+        1
+      ],
+      "formal_records": [],
+      "train_reference_comparison_eligible": false
+    },
+    {
+      "request_id": "eucap15_continuous_doe_neighborhood_20260912_batch000004-TRAIN_NEIGHBORHOOD-000",
+      "assigned_development_split": "train",
+      "actual_cell": [
+        3,
+        2,
+        2
+      ],
+      "formal_records": [],
+      "train_reference_comparison_eligible": false
+    },
+    {
+      "request_id": "eucap15_continuous_doe_neighborhood_20260912_batch000004-TRAIN_NEIGHBORHOOD-002",
+      "assigned_development_split": "train",
+      "actual_cell": [
+        2,
+        2,
+        1
+      ],
+      "formal_records": [],
+      "train_reference_comparison_eligible": false
+    }
+  ],
+  "failure": {
+    "request_id": "eucap15_continuous_doe_neighborhood_20260912_batch000004-GEOMETRY_DOE-021",
+    "status": "CANDIDATE_FAILURE_RETAINED_NO_SUBSTITUTION",
+    "observed_stage_error": "STAGE_EXECUTION_FAILED: emx",
+    "actual_native_starts": "SOURCE_NULL_NOT_INFERRED",
+    "full_stage_evidence": "Preserved in received view and ACTUAL_LANDINGS; not a completed extracted fresh result."
+  },
+  "landing": {
+    "argv": [
+      "/Users/wyf/Documents/模拟变压器AI反向建模/reports/broadband56_nn_v2_20260907T212216Z/environment/bin/python",
+      "-m",
+      "research.broadband56_nn.eucap15_received_landing_increment",
+      "--baseline",
+      "/Users/wyf/Documents/模拟变压器AI反向建模/github_worktrees/eucap15-mlp-capacity-20260909/docs/research/eucap15_abc_increment_20260910/COVERAGE_BEFORE.csv",
+      "--received",
+      "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/landing_increment_m27b_new11_v1/RECEIVED_NEW11_VIEW.json",
+      "--received-sha256",
+      "83c1256d3b6fa4a6026fc2cb5eee58721977e0b25489a70c5cba87d14bfbea15",
+      "--expected-counts",
+      "{\"received_terminal\":11,\"emx_completed\":9,\"strict_in_range\":4,\"formal_admitted\":1,\"pending_formal\":3,\"formal_train\":1,\"formal_validation\":0,\"formal_test\":0}",
+      "--expected-backfill-counts",
+      "{\"formal_admitted\":0,\"formal_train\":0,\"formal_validation\":0,\"formal_test\":0}",
+      "--caller-verified-sources",
+      "--output",
+      "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/landing_increment_m27b_new11_v1/ACTUAL_LANDINGS.json"
+    ],
+    "cmd": "'/Users/wyf/Documents/模拟变压器AI反向建模/reports/broadband56_nn_v2_20260907T212216Z/environment/bin/python' '-m' 'research.broadband56_nn.eucap15_received_landing_increment' '--baseline' '/Users/wyf/Documents/模拟变压器AI反向建模/github_worktrees/eucap15-mlp-capacity-20260909/docs/research/eucap15_abc_increment_20260910/COVERAGE_BEFORE.csv' '--received' '/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/landing_increment_m27b_new11_v1/RECEIVED_NEW11_VIEW.json' '--received-sha256' '83c1256d3b6fa4a6026fc2cb5eee58721977e0b25489a70c5cba87d14bfbea15' '--expected-counts' '{\"received_terminal\":11,\"emx_completed\":9,\"strict_in_range\":4,\"formal_admitted\":1,\"pending_formal\":3,\"formal_train\":1,\"formal_validation\":0,\"formal_test\":0}' '--expected-backfill-counts' '{\"formal_admitted\":0,\"formal_train\":0,\"formal_validation\":0,\"formal_test\":0}' '--caller-verified-sources' '--output' '/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/landing_increment_m27b_new11_v1/ACTUAL_LANDINGS.json'",
+    "cwd": "/Users/wyf/Documents/模拟变压器AI反向建模/github_worktrees/eucap15-mlp-capacity-20260909",
+    "exit_code": 0,
+    "tool_chunk_id": "042334",
+    "execution_count_this_window": 1,
+    "output": {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/landing_increment_m27b_new11_v1/ACTUAL_LANDINGS.json",
+      "sha256": "bd1eb9496ffee909bc81ed7c925b00dfb87dda2f2b71145e8b4ae3f2003f7d78",
+      "bytes": 144380,
+      "status": "WRITTEN"
+    },
+    "implementation": {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/github_worktrees/eucap15-mlp-capacity-20260909/research/broadband56_nn/eucap15_received_landing_increment.py",
+      "sha256": "31ec9cdc70142e073de358e4ee1dc76288bccf97dee74ad6f21cc45119bd3a01"
+    },
+    "baseline": {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/github_worktrees/eucap15-mlp-capacity-20260909/docs/research/eucap15_abc_increment_20260910/COVERAGE_BEFORE.csv",
+      "sha256": "8774136cb90164549b465135d41d206371b8616a86d0b3cf5595848971a948e9",
+      "train_rows": 3801
+    }
+  },
+  "formal_train_landing": {
+    "rows": [
+      {
+        "request_id": "eucap15_continuous_doe_neighborhood_20260912_batch000004-TRAIN_NEIGHBORHOOD-001",
+        "source": "TRAIN_NEIGHBORHOOD",
+        "actual_cell": [
+          1,
+          1,
+          4
+        ],
+        "frozen3801_train_cell_count": 3,
+        "actual_response": [
+          0.7238007968141422,
+          0.8498981271055598,
+          13.01434938088742,
+          0.5816410412613466
+        ]
+      }
+    ],
+    "distinct_cells": 1,
+    "baseline_empty_cell_rows": 0,
+    "baseline_underfilled_cell_rows": 1,
+    "high_k_above_0_8": 0,
+    "q10_to20": 1,
+    "max_k": 0.5816410412613466,
+    "max_q": 13.01434938088742,
+    "target_and_predicted_cells": "Retained from originals; null values not fabricated; no requested-target error for targetless sources."
+  },
+  "train_coverage_resume": {
+    "argv": [
+      "/Users/wyf/Documents/模拟变压器AI反向建模/reports/broadband56_nn_v2_20260907T212216Z/environment/bin/python",
+      "-m",
+      "research.broadband56_nn.eucap15_train_coverage_received",
+      "--coverage",
+      "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/train_coverage_received_m27_v1/COVERAGE_AFTER.csv",
+      "--coverage-sha",
+      "2ce53269a3226127ec39d64c1a05bd270ae56f069351cd0e35abe03c71ab05d2",
+      "--received",
+      "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/landing_increment_m27b_new11_v1/TRAIN_SOURCE_ROWS.json",
+      "--received-sha",
+      "eee4dc46b06b6c1f318821e8a5666c64b30f2f98ed2327cb00f4497c930c38a1",
+      "--checkpoint",
+      "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/train_coverage_received_m27_v1/CHECKPOINT.json",
+      "--checkpoint-sha",
+      "2414c1119b66ff3db741f25ad9326a296d88ffbe0b016f74c2ef57dda8e7fdef",
+      "--out",
+      "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/train_coverage_received_m27b_v1"
+    ],
+    "cmd": "'/Users/wyf/Documents/模拟变压器AI反向建模/reports/broadband56_nn_v2_20260907T212216Z/environment/bin/python' '-m' 'research.broadband56_nn.eucap15_train_coverage_received' '--coverage' '/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/train_coverage_received_m27_v1/COVERAGE_AFTER.csv' '--coverage-sha' '2ce53269a3226127ec39d64c1a05bd270ae56f069351cd0e35abe03c71ab05d2' '--received' '/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/landing_increment_m27b_new11_v1/TRAIN_SOURCE_ROWS.json' '--received-sha' 'eee4dc46b06b6c1f318821e8a5666c64b30f2f98ed2327cb00f4497c930c38a1' '--checkpoint' '/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/train_coverage_received_m27_v1/CHECKPOINT.json' '--checkpoint-sha' '2414c1119b66ff3db741f25ad9326a296d88ffbe0b016f74c2ef57dda8e7fdef' '--out' '/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/train_coverage_received_m27b_v1'",
+    "cwd": "/Users/wyf/Documents/模拟变压器AI反向建模/github_worktrees/eucap15-mlp-capacity-20260909",
+    "exit_code": 0,
+    "tool_chunk_id": "1f3792",
+    "execution_count_this_window": 1,
+    "implementation": {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/github_worktrees/eucap15-mlp-capacity-20260909/research/broadband56_nn/eucap15_train_coverage_received.py",
+      "sha256": "7b3c2610b4aec769839501ada546d8ae570571b678457608dc7a263f1027a9b9"
+    },
+    "scope": "RECEIVED_SOURCE_UNION_NOT_FULL_PRODUCTION",
+    "unique_train_before": 3943,
+    "unique_train_after": 3944,
+    "counts": {
+      "input_rows": 1,
+      "unique_geometry": 1,
+      "duplicate_rows": 0,
+      "existing_geometry": 0,
+      "new_geometry": 1,
+      "new_in_domain": 1,
+      "new_out_of_domain": 0
+    },
+    "occupied_before": 163,
+    "occupied_after": 163,
+    "newly_occupied": 0,
+    "sparse_crossed_5": 0,
+    "deficit_before": 1908,
+    "deficit_after": 1907,
+    "pending_included": 0,
+    "val_test_labels_read": false,
+    "held_rows": 0
+  },
+  "not_performed": [
+    "No previous delta reprocessing",
+    "No native calls or SSH",
+    "No formal ledger writes",
+    "No model/training/sampling changes",
+    "No software tests",
+    "No central memory or Git mutation"
+  ],
+  "artifacts": [
+    {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/storage_claim_wait_v1/budget_walk_v1/increment_20260912T132310639271Z/OBSERVATION.json",
+      "sha256": "472644b5c6df6777f0477639c9067e44ef3eafaf177c5ca25c5e5639d96c8cd6",
+      "bytes": 442288
+    },
+    {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/landing_increment_m27b_new11_v1/RECEIVED_NEW11_VIEW.json",
+      "sha256": "83c1256d3b6fa4a6026fc2cb5eee58721977e0b25489a70c5cba87d14bfbea15"
+    },
+    {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/landing_increment_m27b_new11_v1/ACTUAL_LANDINGS.json",
+      "sha256": "bd1eb9496ffee909bc81ed7c925b00dfb87dda2f2b71145e8b4ae3f2003f7d78",
+      "bytes": 144380,
+      "status": "WRITTEN"
+    },
+    {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/landing_increment_m27b_new11_v1/TRAIN_SOURCE_ROWS.json",
+      "sha256": "eee4dc46b06b6c1f318821e8a5666c64b30f2f98ed2327cb00f4497c930c38a1"
+    },
+    {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/train_coverage_received_m27b_v1/CHECKPOINT.json",
+      "sha256": "d6613d6efc1ff00eafe12f0563811f0ceaa8fae5ace50cda9c4e62699df81d86"
+    },
+    {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/train_coverage_received_m27b_v1/COVERAGE_AFTER.csv",
+      "sha256": "39c33f0068be1e50e48a9799dddcc8e280640b4c67edaa20d5fe122acb8b506c"
+    },
+    {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/train_coverage_received_m27b_v1/RECEIPT.json",
+      "sha256": "d2845e10976098cc40b9274f606e7fcf685c153c81a052b848e9114927aad711"
+    },
+    {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/train_coverage_received_m27b_v1/SHA256SUMS",
+      "sha256": "0278d085c91c740571d0c4ba6a4763addc52434327ce3b9d610c7b1b6cb9ec78"
+    }
+  ]
+}

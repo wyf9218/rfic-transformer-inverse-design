@@ -1,0 +1,49 @@
+{
+  "checkpoint": {
+    "bytes": 4366,
+    "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_budget_walk_20260912T112357738265Z/CONTINUATION_CHECKPOINT.json",
+    "sha256": "948f473739875b0ba34ed62b4f37e97507a2803471b15e07f8aba9da80051c5d"
+  },
+  "continuation": {
+    "bytes": 14207,
+    "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_registry_recovery_20260912T131535395596Z/runtime/continue_batches.py",
+    "sha256": "1584fbcf8c377e1d26caf932f1b2442416af18cf15734d3b6562a6f3a13cdbc4"
+  },
+  "deployment": {
+    "bytes": 27601,
+    "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_registry_recovery_20260912T131535395596Z/DEPLOYMENT.json",
+    "sha256": "422196cebc03a198a3f2d8d8293aa7b06a9bdfe0d15bada4befbffc064d2d55f"
+  },
+  "formal_ledger_modified": false,
+  "old_batches_restarted": false,
+  "preflight": {
+    "bytes": 1833,
+    "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_registry_recovery_20260912T131535395596Z/PREFLIGHT_RECEIPT.json",
+    "sha256": "697cfa3ff8048c7c66c114705921848ed2ad5178de58a24b3a8def1aa93b1894"
+  },
+  "process": {
+    "argv": [
+      "/volumes/research-localdata/ywang3652/rfic-transformer-inverse-design-mars56-s4p-20260702/.venv/bin/python",
+      "-B",
+      "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_registry_recovery_20260912T131535395596Z/runtime/continue_batches.py",
+      "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_registry_recovery_20260912T131535395596Z"
+    ],
+    "pid": 1041957,
+    "ppid": 1041267,
+    "start_ticks": 402286569,
+    "state": "S",
+    "uid": 2259579
+  },
+  "registry_recovery": {
+    "bytes": 7647,
+    "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_registry_recovery_20260912T131535395596Z/REGISTRY_RECOVERY_SPEC.json",
+    "sha256": "35f0120a30c8af479ba759e034131a50e52b7ff2d663e2702f1d2f9f673c5950"
+  },
+  "runtime": {
+    "bytes": 15770,
+    "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_registry_recovery_20260912T131535395596Z/runtime/fixed48_runtime.py",
+    "sha256": "23eddf702afb6c3f5ee64ac9c415c56376199857dd6fe915f67856a456f8b99f"
+  },
+  "status": "ORDINARY_CONTINUATION_LAUNCHED_NOT_NATIVE_PROOF",
+  "utc": "2026-09-12T13:15:39.694872+00:00"
+}
