@@ -1,0 +1,938 @@
+{
+  "scope": "Historical recorded argv and current bound preflight/solver receipts; no PDK bytes, native calls or new physical labels.",
+  "files": [
+    {
+      "stage": "historical_commands5",
+      "pin": {
+        "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/storage_claim_wait_v1/budget_walk_v1/strict112_five_artifacts_20260912T152232874343Z/historical_commands5/authority_001_emx_command.json",
+        "sha256": "dbde9b7456cbf188531769d82f330b021123678bcb3940dbb648f69e07079b09",
+        "bytes": 1246
+      },
+      "source": {
+        "path": "/volumes/research-localdata/ywang3652/mars56_s4p_million_campaign_outputs_20260705/mars56_s4p_million_20260705_1256/status/strict_portgate_recovery_20260718/fresh_emx_closure_real_emx_112_v3_20260719/parallel_shards/shard_018/evaluations/aed792320a0ee672/emx/emx_command.json",
+        "sha256": "dbde9b7456cbf188531769d82f330b021123678bcb3940dbb648f69e07079b09",
+        "bytes": 1246
+      },
+      "status": "STABLE_OBSERVED_SHA_NO_PRIOR_EXPECTATION",
+      "data": [
+        "/volumes/research-localdata/ywang3652/rfic-transformer-inverse-design-mars56-s4p-drc-20260705/mars_local_bin/emx_cae_singularity",
+        "/volumes/research-localdata/ywang3652/mars56_s4p_million_campaign_outputs_20260705/mars56_s4p_million_20260705_1256/status/strict_portgate_recovery_20260718/fresh_emx_closure_real_emx_112_v3_20260719/parallel_shards/shard_018/evaluations/aed792320a0ee672/streamout/transformer_layout_cadpins.gds",
+        "TRANSFORMER",
+        "/volumes/research-localdata/PDKs/TSMC65_05_12_26/RC_IRCX_CRN65G+_1P9M+UT-ALRDL_6X1Z1U_MiM_typical.proc",
+        "--touchstone",
+        "--s-impedance=50",
+        "-s",
+        "/volumes/research-localdata/ywang3652/mars56_s4p_million_campaign_outputs_20260705/mars56_s4p_million_20260705_1256/status/strict_portgate_recovery_20260718/fresh_emx_closure_real_emx_112_v3_20260719/parallel_shards/shard_018/evaluations/aed792320a0ee672/emx/emx.s4p",
+        "--include-command-line",
+        "--edge-width=1",
+        "--accuracy=standard",
+        "--verbose=2",
+        "--parallel=2",
+        "--simultaneous-frequencies=0",
+        "--cadence-pins=51",
+        "--port=P001=P001:P001_G",
+        "--port=P002=P002:P002_G",
+        "--port=P003=P003:P003_G",
+        "--port=P004=P004:P004_G",
+        "--sweep",
+        "5000000000",
+        "60000000000",
+        "--sweep-stepsize",
+        "500000000"
+      ]
+    },
+    {
+      "stage": "historical_commands5",
+      "pin": {
+        "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/storage_claim_wait_v1/budget_walk_v1/strict112_five_artifacts_20260912T152232874343Z/historical_commands5/authority_002_emx_command.json",
+        "sha256": "ea8ab479f663b03ea38b928e0e5488f6fcf29bb3e88d522929e9b35f3b24528d",
+        "bytes": 1246
+      },
+      "source": {
+        "path": "/volumes/research-localdata/ywang3652/mars56_s4p_million_campaign_outputs_20260705/mars56_s4p_million_20260705_1256/status/strict_portgate_recovery_20260718/fresh_emx_closure_real_emx_112_v3_20260719/parallel_shards/shard_043/evaluations/3ce0d0fec33da3ea/emx/emx_command.json",
+        "sha256": "ea8ab479f663b03ea38b928e0e5488f6fcf29bb3e88d522929e9b35f3b24528d",
+        "bytes": 1246
+      },
+      "status": "STABLE_OBSERVED_SHA_NO_PRIOR_EXPECTATION",
+      "data": [
+        "/volumes/research-localdata/ywang3652/rfic-transformer-inverse-design-mars56-s4p-drc-20260705/mars_local_bin/emx_cae_singularity",
+        "/volumes/research-localdata/ywang3652/mars56_s4p_million_campaign_outputs_20260705/mars56_s4p_million_20260705_1256/status/strict_portgate_recovery_20260718/fresh_emx_closure_real_emx_112_v3_20260719/parallel_shards/shard_043/evaluations/3ce0d0fec33da3ea/streamout/transformer_layout_cadpins.gds",
+        "TRANSFORMER",
+        "/volumes/research-localdata/PDKs/TSMC65_05_12_26/RC_IRCX_CRN65G+_1P9M+UT-ALRDL_6X1Z1U_MiM_typical.proc",
+        "--touchstone",
+        "--s-impedance=50",
+        "-s",
+        "/volumes/research-localdata/ywang3652/mars56_s4p_million_campaign_outputs_20260705/mars56_s4p_million_20260705_1256/status/strict_portgate_recovery_20260718/fresh_emx_closure_real_emx_112_v3_20260719/parallel_shards/shard_043/evaluations/3ce0d0fec33da3ea/emx/emx.s4p",
+        "--include-command-line",
+        "--edge-width=1",
+        "--accuracy=standard",
+        "--verbose=2",
+        "--parallel=2",
+        "--simultaneous-frequencies=0",
+        "--cadence-pins=51",
+        "--port=P001=P001:P001_G",
+        "--port=P002=P002:P002_G",
+        "--port=P003=P003:P003_G",
+        "--port=P004=P004:P004_G",
+        "--sweep",
+        "5000000000",
+        "60000000000",
+        "--sweep-stepsize",
+        "500000000"
+      ]
+    },
+    {
+      "stage": "historical_commands5",
+      "pin": {
+        "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/storage_claim_wait_v1/budget_walk_v1/strict112_five_artifacts_20260912T152232874343Z/historical_commands5/authority_011_emx_command.json",
+        "sha256": "6f67d6bfbf9987c5b4cd04ef0caea1496966b9d51a9cd865d190174d11545a2a",
+        "bytes": 1246
+      },
+      "source": {
+        "path": "/volumes/research-localdata/ywang3652/mars56_s4p_million_campaign_outputs_20260705/mars56_s4p_million_20260705_1256/status/strict_portgate_recovery_20260718/fresh_emx_closure_real_emx_112_v3_20260719/parallel_shards/shard_007/evaluations/12eaf1dec4971343/emx/emx_command.json",
+        "sha256": "6f67d6bfbf9987c5b4cd04ef0caea1496966b9d51a9cd865d190174d11545a2a",
+        "bytes": 1246
+      },
+      "status": "STABLE_OBSERVED_SHA_NO_PRIOR_EXPECTATION",
+      "data": [
+        "/volumes/research-localdata/ywang3652/rfic-transformer-inverse-design-mars56-s4p-drc-20260705/mars_local_bin/emx_cae_singularity",
+        "/volumes/research-localdata/ywang3652/mars56_s4p_million_campaign_outputs_20260705/mars56_s4p_million_20260705_1256/status/strict_portgate_recovery_20260718/fresh_emx_closure_real_emx_112_v3_20260719/parallel_shards/shard_007/evaluations/12eaf1dec4971343/streamout/transformer_layout_cadpins.gds",
+        "TRANSFORMER",
+        "/volumes/research-localdata/PDKs/TSMC65_05_12_26/RC_IRCX_CRN65G+_1P9M+UT-ALRDL_6X1Z1U_MiM_typical.proc",
+        "--touchstone",
+        "--s-impedance=50",
+        "-s",
+        "/volumes/research-localdata/ywang3652/mars56_s4p_million_campaign_outputs_20260705/mars56_s4p_million_20260705_1256/status/strict_portgate_recovery_20260718/fresh_emx_closure_real_emx_112_v3_20260719/parallel_shards/shard_007/evaluations/12eaf1dec4971343/emx/emx.s4p",
+        "--include-command-line",
+        "--edge-width=1",
+        "--accuracy=standard",
+        "--verbose=2",
+        "--parallel=2",
+        "--simultaneous-frequencies=0",
+        "--cadence-pins=51",
+        "--port=P001=P001:P001_G",
+        "--port=P002=P002:P002_G",
+        "--port=P003=P003:P003_G",
+        "--port=P004=P004:P004_G",
+        "--sweep",
+        "5000000000",
+        "60000000000",
+        "--sweep-stepsize",
+        "500000000"
+      ]
+    },
+    {
+      "stage": "historical_commands5",
+      "pin": {
+        "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/storage_claim_wait_v1/budget_walk_v1/strict112_five_artifacts_20260912T152232874343Z/historical_commands5/authority_013_emx_command.json",
+        "sha256": "c143f9fa201b6a875152d96f5508ed88991dd6580296a5d85a4b1fabe0727f21",
+        "bytes": 1246
+      },
+      "source": {
+        "path": "/volumes/research-localdata/ywang3652/mars56_s4p_million_campaign_outputs_20260705/mars56_s4p_million_20260705_1256/status/strict_portgate_recovery_20260718/fresh_emx_closure_real_emx_112_v3_20260719/parallel_shards/shard_021/evaluations/c22c891aadd9eeb9/emx/emx_command.json",
+        "sha256": "c143f9fa201b6a875152d96f5508ed88991dd6580296a5d85a4b1fabe0727f21",
+        "bytes": 1246
+      },
+      "status": "STABLE_OBSERVED_SHA_NO_PRIOR_EXPECTATION",
+      "data": [
+        "/volumes/research-localdata/ywang3652/rfic-transformer-inverse-design-mars56-s4p-drc-20260705/mars_local_bin/emx_cae_singularity",
+        "/volumes/research-localdata/ywang3652/mars56_s4p_million_campaign_outputs_20260705/mars56_s4p_million_20260705_1256/status/strict_portgate_recovery_20260718/fresh_emx_closure_real_emx_112_v3_20260719/parallel_shards/shard_021/evaluations/c22c891aadd9eeb9/streamout/transformer_layout_cadpins.gds",
+        "TRANSFORMER",
+        "/volumes/research-localdata/PDKs/TSMC65_05_12_26/RC_IRCX_CRN65G+_1P9M+UT-ALRDL_6X1Z1U_MiM_typical.proc",
+        "--touchstone",
+        "--s-impedance=50",
+        "-s",
+        "/volumes/research-localdata/ywang3652/mars56_s4p_million_campaign_outputs_20260705/mars56_s4p_million_20260705_1256/status/strict_portgate_recovery_20260718/fresh_emx_closure_real_emx_112_v3_20260719/parallel_shards/shard_021/evaluations/c22c891aadd9eeb9/emx/emx.s4p",
+        "--include-command-line",
+        "--edge-width=1",
+        "--accuracy=standard",
+        "--verbose=2",
+        "--parallel=2",
+        "--simultaneous-frequencies=0",
+        "--cadence-pins=51",
+        "--port=P001=P001:P001_G",
+        "--port=P002=P002:P002_G",
+        "--port=P003=P003:P003_G",
+        "--port=P004=P004:P004_G",
+        "--sweep",
+        "5000000000",
+        "60000000000",
+        "--sweep-stepsize",
+        "500000000"
+      ]
+    },
+    {
+      "stage": "historical_commands5",
+      "pin": {
+        "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/storage_claim_wait_v1/budget_walk_v1/strict112_five_artifacts_20260912T152232874343Z/historical_commands5/authority_015_emx_command.json",
+        "sha256": "6863b06770c5f4554e1031b10860454d164fcc83e358cab4156b6ab0e3f331db",
+        "bytes": 1246
+      },
+      "source": {
+        "path": "/volumes/research-localdata/ywang3652/mars56_s4p_million_campaign_outputs_20260705/mars56_s4p_million_20260705_1256/status/strict_portgate_recovery_20260718/fresh_emx_closure_real_emx_112_v3_20260719/parallel_shards/shard_044/evaluations/34e8a314b619998b/emx/emx_command.json",
+        "sha256": "6863b06770c5f4554e1031b10860454d164fcc83e358cab4156b6ab0e3f331db",
+        "bytes": 1246
+      },
+      "status": "STABLE_OBSERVED_SHA_NO_PRIOR_EXPECTATION",
+      "data": [
+        "/volumes/research-localdata/ywang3652/rfic-transformer-inverse-design-mars56-s4p-drc-20260705/mars_local_bin/emx_cae_singularity",
+        "/volumes/research-localdata/ywang3652/mars56_s4p_million_campaign_outputs_20260705/mars56_s4p_million_20260705_1256/status/strict_portgate_recovery_20260718/fresh_emx_closure_real_emx_112_v3_20260719/parallel_shards/shard_044/evaluations/34e8a314b619998b/streamout/transformer_layout_cadpins.gds",
+        "TRANSFORMER",
+        "/volumes/research-localdata/PDKs/TSMC65_05_12_26/RC_IRCX_CRN65G+_1P9M+UT-ALRDL_6X1Z1U_MiM_typical.proc",
+        "--touchstone",
+        "--s-impedance=50",
+        "-s",
+        "/volumes/research-localdata/ywang3652/mars56_s4p_million_campaign_outputs_20260705/mars56_s4p_million_20260705_1256/status/strict_portgate_recovery_20260718/fresh_emx_closure_real_emx_112_v3_20260719/parallel_shards/shard_044/evaluations/34e8a314b619998b/emx/emx.s4p",
+        "--include-command-line",
+        "--edge-width=1",
+        "--accuracy=standard",
+        "--verbose=2",
+        "--parallel=2",
+        "--simultaneous-frequencies=0",
+        "--cadence-pins=51",
+        "--port=P001=P001:P001_G",
+        "--port=P002=P002:P002_G",
+        "--port=P003=P003:P003_G",
+        "--port=P004=P004:P004_G",
+        "--sweep",
+        "5000000000",
+        "60000000000",
+        "--sweep-stepsize",
+        "500000000"
+      ]
+    },
+    {
+      "stage": "current_references2",
+      "pin": {
+        "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/storage_claim_wait_v1/budget_walk_v1/strict112_five_artifacts_20260912T152232874343Z/current_references2/current_preflight.json",
+        "sha256": "768c5665252099cabf2e5360c4085a880ae80cf6f15979e0d581a46c9ac0fc07",
+        "bytes": 30135
+      },
+      "source": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_registry_recovery_20260912T131535395596Z/batches/eucap15_continuous_doe_neighborhood_20260912_batch000006/owner/eucap15_continuous_doe_neighborhood_20260912_batch000006-GEOMETRY_DOE-000/emx_selected/PREFLIGHT.json",
+        "sha256": "768c5665252099cabf2e5360c4085a880ae80cf6f15979e0d581a46c9ac0fc07",
+        "bytes": 30135
+      },
+      "status": "MATCH",
+      "data": {
+        "schema": "eucap15_production_geometry_emx_preflight.v1",
+        "status": "PASS",
+        "request": {
+          "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_registry_recovery_20260912T131535395596Z/batches/eucap15_continuous_doe_neighborhood_20260912_batch000006/owner/eucap15_continuous_doe_neighborhood_20260912_batch000006-GEOMETRY_DOE-000/EMX_REQUEST.json",
+          "sha256": "3f03bfafb96770d89b7fde193f57f20b993b15eba0dc1172d7e3570676150ff9",
+          "bytes": 16195
+        },
+        "request_id": "eucap15_continuous_doe_neighborhood_20260912_batch000006-GEOMETRY_DOE-000",
+        "candidate_id": "eucap15_continuous_doe_neighborhood_20260912_batch000006-GEOMETRY_DOE-000",
+        "candidate_id_sha256": "11cf50da034197a8fae6e40edf439759b8d0f1f4af6d00ac83af0de2958a9a3f",
+        "geometry_sha256": "8fbe3fc0b35e703ff09c88fad925c741797d157d304ca5e456e5ada45c4bd332",
+        "frequency_ghz": 15,
+        "q_requested": null,
+        "q_proxy": null,
+        "q_emx": null,
+        "model_id": null,
+        "dataset_scope": "DEVELOPMENT_PRODUCTION_GEOMETRY256",
+        "original_record": {
+          "actual_landing": null,
+          "actual_response": null,
+          "analytic_pass": true,
+          "arm": "GEOMETRY_DOE_PRODUCTION",
+          "arm_order": 1,
+          "assigned_development_split": "train",
+          "base_geometry_hash": null,
+          "base_metadata": null,
+          "base_train_geometry": null,
+          "base_train_id": null,
+          "candidate_id": "eucap15_continuous_doe_neighborhood_20260912_batch000006-GEOMETRY_DOE-000",
+          "canonical_geometry_sha256": "8fbe3fc0b35e703ff09c88fad925c741797d157d304ca5e456e5ada45c4bd332",
+          "coverage_gain": null,
+          "decoded_continuous_geometry": null,
+          "drc_status": "NOT_RUN",
+          "duplicate_reasons": [],
+          "emx_status": "NOT_RUN",
+          "family_warning": "NO_FAMILY_INDEPENDENCE_CLAIM",
+          "final_independent_test_eligible": false,
+          "frequency_hz": 15000000000,
+          "gds_status": "NOT_RUN",
+          "geometry": [
+            375.915,
+            435.59000000000003,
+            482.94,
+            330.36,
+            4.575,
+            71.205,
+            73.88,
+            86.925,
+            167.79,
+            110.58500000000001
+          ],
+          "geometry_fields": [
+            "primary_outer_width_um",
+            "primary_outer_height_um",
+            "secondary_outer_width_um",
+            "secondary_outer_height_um",
+            "line_width_um",
+            "primary_terminal_y_span_um",
+            "secondary_terminal_y_span_um",
+            "offset_um",
+            "primary_feed_extension_um",
+            "secondary_feed_extension_um"
+          ],
+          "geometry_units": "um",
+          "global_order": 1,
+          "identity_not_actual_gds": true,
+          "jitter": null,
+          "local_dispatch_eligible": true,
+          "model_id": null,
+          "native_status": "NOT_SUBMITTED",
+          "neighborhood_lower": null,
+          "neighborhood_unit": null,
+          "neighborhood_upper": null,
+          "no_q_fallback": true,
+          "no_replacement": true,
+          "nominal_grid_geometry_sha256": "8fbe3fc0b35e703ff09c88fad925c741797d157d304ca5e456e5ada45c4bd332",
+          "owner_current_ledger_check": "REQUIRED",
+          "parameter_geometry_hash": "2eedf17d6f65b3f2759defca084c9cdadd3a7f92205e80b29e17f03a67d58688",
+          "predicted_cell": null,
+          "production_geometry_fingerprint": "a5a3b763c1b551bb0d4173ad0538f09a40c35ee011aec21389db274ee8f6f7c7",
+          "protocol_schema": "eucap15_successor_factory_sampler_intent.v1",
+          "proxy": null,
+          "q_emx": null,
+          "q_proxy": null,
+          "qscan_source_candidate": null,
+          "qualification_union_status": "PENDING_KNOWN_POOL_AND_FULL_HISTORY_MERGE",
+          "raw_canonical_geometry_sha256": "4ea57c7b40e7f51877a9b19c9d98f83053c080e0c41636fb265bdd6ebf3b3df1",
+          "raw_lhs_geometry": [
+            375.9138099038617,
+            435.58963469955927,
+            482.94230887041573,
+            330.3602056929507,
+            4.575704926038332,
+            71.20515604609628,
+            73.87977577876686,
+            86.92341327873959,
+            167.78922047713556,
+            110.58438049943598
+          ],
+          "raw_production_geometry_fingerprint": "bf9626eced2df0cd246cee9fa17c1c7c67c1b98720a3f69c64f69fbbbcc0e040",
+          "raw_proposed_geometry": [
+            375.9138099038617,
+            435.58963469955927,
+            482.94230887041573,
+            330.3602056929507,
+            4.575704926038332,
+            71.20515604609628,
+            73.87977577876686,
+            86.92341327873959,
+            167.78922047713556,
+            110.58438049943598
+          ],
+          "recipe_sha256": "71b928fe8c99ceaf4726922eadaa2d78b6afd2e40b811013e6ab303cdaf35edc",
+          "request_id": "eucap15_continuous_doe_neighborhood_20260912_batch000006-GEOMETRY_DOE-000",
+          "requested_triple": null,
+          "reservation_status": "NOT_RESERVED",
+          "schema": "eucap15_acquisition_candidate.v1",
+          "score": null,
+          "seed": 2026091213,
+          "solver_seconds": null,
+          "solver_start_order": null,
+          "source": "GEOMETRY_DOE",
+          "sparse_cell": null,
+          "split_used_for_proposal_selection": false,
+          "storage_bytes": null,
+          "support": "GEOMETRY_PROPOSAL_PHYSICAL_SUPPORT_UNKNOWN",
+          "target": null,
+          "target_cell": null,
+          "total_stage_cost_seconds": null,
+          "grid_geometry": [
+            375.915,
+            435.59000000000003,
+            482.94,
+            330.36,
+            4.575,
+            71.205,
+            73.88,
+            86.925,
+            167.79,
+            110.58500000000001
+          ],
+          "grid_proxy": null,
+          "analytic_grid": true,
+          "candidate_id_sha256": "11cf50da034197a8fae6e40edf439759b8d0f1f4af6d00ac83af0de2958a9a3f",
+          "candidate_geometry_identity_sha256": "8fbe3fc0b35e703ff09c88fad925c741797d157d304ca5e456e5ada45c4bd332"
+        },
+        "original_candidate_statuses": [
+          {
+            "candidate_id": "eucap15_continuous_doe_neighborhood_20260912_batch000006-GEOMETRY_DOE-000",
+            "status": "PASS"
+          }
+        ],
+        "source_pins": [
+          {
+            "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_registry_recovery_20260912T131535395596Z/batches/eucap15_continuous_doe_neighborhood_20260912_batch000006/owner/eucap15_continuous_doe_neighborhood_20260912_batch000006-GEOMETRY_DOE-000/EMX_REQUEST.json",
+            "sha256": "3f03bfafb96770d89b7fde193f57f20b993b15eba0dc1172d7e3570676150ff9",
+            "bytes": 16195
+          },
+          {
+            "bytes": 3322,
+            "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_registry_recovery_20260912T131535395596Z/input_factory/batches/eucap15_continuous_doe_neighborhood_20260912_batch000006/run_v1/MANIFEST.json",
+            "sha256": "5a5fec1ffc3dc888ff4d5c3cce04c50a099eb0c3c461e3018cc25db8add187ea"
+          },
+          {
+            "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_registry_recovery_20260912T131535395596Z/input_factory/batches/eucap15_continuous_doe_neighborhood_20260912_batch000006/INTENT.json",
+            "sha256": "71b928fe8c99ceaf4726922eadaa2d78b6afd2e40b811013e6ab303cdaf35edc",
+            "bytes": 18733
+          },
+          {
+            "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_registry_recovery_20260912T131535395596Z/input_factory/batches/eucap15_continuous_doe_neighborhood_20260912_batch000006/run_v1/SELECTED_CANDIDATES.jsonl",
+            "sha256": "bc3ef40b13b81d142899024ddc3fb94c8251c2049c64d65405e9efda58d89ab2",
+            "bytes": 932040
+          },
+          {
+            "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_registry_recovery_20260912T131535395596Z/input_factory/batches/eucap15_continuous_doe_neighborhood_20260912_batch000006/run_v1/PREPARATION_RECEIPT.json",
+            "sha256": "bcc8fb4d0cdc5a018f0c1f7e7c1f8acab354c9ba9a3305b620344c943282c042",
+            "bytes": 5924
+          },
+          {
+            "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_registry_recovery_20260912T131535395596Z/batches/eucap15_continuous_doe_neighborhood_20260912_batch000006/owner/eucap15_continuous_doe_neighborhood_20260912_batch000006-GEOMETRY_DOE-000/gds_audit/REQUEST_GDS_AUDIT.json",
+            "sha256": "3ad053cc4c5db5cc8bef3ef8a05e9804d50a215a43b51d2c3ca668654a054d98",
+            "bytes": 15159
+          },
+          {
+            "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_registry_recovery_20260912T131535395596Z/batches/eucap15_continuous_doe_neighborhood_20260912_batch000006/owner/eucap15_continuous_doe_neighborhood_20260912_batch000006-GEOMETRY_DOE-000/calibre/drc_index.csv",
+            "sha256": "b9b9aeb2e5fef33fb0daeccbe10ad249e0f2f7728f22f8f1154628e57d6a5471",
+            "bytes": 985
+          },
+          {
+            "bytes": 3285,
+            "path": "/volumes/research-localdata/ywang3652/broadband56_corrected_foundry_layout_candidate_20260902T142945Z/mars_s4p_grounded_powerline_broadband56_56pt_foundry_layout_corrected.yaml",
+            "sha256": "431ad59c22df2471746ab5a2eb73a3a7a6484fa511b71c9d6e6c93fb4b3d04d7"
+          },
+          {
+            "bytes": 3310,
+            "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_endpoint_v2_20260912T090023519751Z/physical_repo/rfic_transformer_inverse_design/api.py",
+            "sha256": "44fb94d8b2600c97cebe0a7e744955fc570bd27f25eefe44d325e414622ef275"
+          },
+          {
+            "bytes": 29903,
+            "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_endpoint_v2_20260912T090023519751Z/physical_repo/rfic_transformer_inverse_design/core/types.py",
+            "sha256": "3aff137bde4a3ac4d553d708604501d85029f5366d42727c300ec78e7953dce3"
+          },
+          {
+            "bytes": 62423,
+            "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_endpoint_v2_20260912T090023519751Z/physical_repo/rfic_transformer_inverse_design/core/defaults.py",
+            "sha256": "157d64f36f683b20665dec01f5dd1912afca972376215be22eb95c8aa80c539d"
+          },
+          {
+            "bytes": 4228,
+            "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_endpoint_v2_20260912T090023519751Z/physical_repo/rfic_transformer_inverse_design/network_analysis.py",
+            "sha256": "a6439fe88bdf9f64eb34182843c0a98f2ef109ad12a4a9bbb0ca7e6f68093bcf"
+          },
+          {
+            "bytes": 1441,
+            "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_endpoint_v2_20260912T090023519751Z/physical_repo/rfic_transformer_inverse_design/paths.py",
+            "sha256": "3d38ee64a03307671cdf05c301995063a4354c74175fc92b2656a988445d3856"
+          },
+          {
+            "bytes": 62162,
+            "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_endpoint_v2_20260912T090023519751Z/physical_repo/rfic_transformer_inverse_design/execution/zeus_cadence.py",
+            "sha256": "3879d9cbeeb3e46844a3363f94e6e74ecfb2bb6d868fb3df6794064a6cee510f"
+          },
+          {
+            "bytes": 12563,
+            "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_endpoint_v2_20260912T090023519751Z/physical_repo/rfic_transformer_inverse_design/sim/emx/simulation.py",
+            "sha256": "30924946cff8ad0ad52cd25174d3d420468e10b0aad228b767a68dd8755ff30e"
+          },
+          {
+            "bytes": 1130,
+            "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_endpoint_v2_20260912T090023519751Z/physical_repo/rfic_transformer_inverse_design/sim/emx/layout_export.py",
+            "sha256": "72d8790a8ddf1c43793ecc39b04779a13a274b6809b2a1c05ed6bbd31c63a5fb"
+          },
+          {
+            "bytes": 7874,
+            "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_endpoint_v2_20260912T090023519751Z/physical_repo/rfic_transformer_inverse_design/sim/touchstone.py",
+            "sha256": "9ee3490be889ea502d4b6e3ffcee5caf8e22d27d0c6f765ac27e9ff523462a3b"
+          },
+          {
+            "bytes": 4964,
+            "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_endpoint_v2_20260912T090023519751Z/physical_repo/rfic_transformer_inverse_design/sim/base.py",
+            "sha256": "f0a6a6a7418834f89cae13cac16a4df1302aac4ecb2ecb92dcc9ceab4c253c24"
+          },
+          {
+            "bytes": 12378,
+            "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_endpoint_v2_20260912T090023519751Z/physical_repo/rfic_transformer_inverse_design/analysis/extraction.py",
+            "sha256": "ff9ac389b04b55ae95ff0839d02d7a4a12be2f6bcdb26e6d871e0557ae516ce0"
+          },
+          {
+            "bytes": 27464,
+            "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_endpoint_v2_20260912T090023519751Z/physical_repo/rfic_transformer_inverse_design/campaigns/broadband56_balanced200k.py",
+            "sha256": "bd82390aa822a6426ad505e99675694be2fc49e017b25c76b7c93fc78121d424"
+          },
+          {
+            "bytes": 35721,
+            "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_endpoint_v2_20260912T090023519751Z/physical_repo/rfic_transformer_inverse_design/campaigns/broadband56_gds_identity.py",
+            "sha256": "172a59c825ae01fd8b25ed033cec32864943f427a35986af48d872ca319c876e"
+          },
+          {
+            "bytes": 48279,
+            "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_endpoint_v2_20260912T090023519751Z/physical_repo/rfic_transformer_inverse_design/campaigns/broadband56_s4p_qa.py",
+            "sha256": "5fbf0e3e22737874ea8b74fc758fb0f6451aca44a146fedb35a2ec95eeb0ac29"
+          },
+          {
+            "bytes": 60246,
+            "path": "/volumes/research-localdata/PDKs/TSMC65_05_12_26/RC_IRCX_CRN65G+_1P9M+UT-ALRDL_6X1Z1U_MiM_typical.proc",
+            "sha256": "c57be9bbb9725771230790b2b892f70fe49b0a62408085bb02aef1205559d47e"
+          },
+          {
+            "bytes": 478,
+            "path": "/volumes/research-localdata/ywang3652/rfic-transformer-inverse-design-mars56-s4p-drc-20260705/mars_local_bin/emx_cae_singularity",
+            "sha256": "3314bbc78b1305fc81b70def010892ae1666896f739cdcc2a720b999aad95731"
+          },
+          {
+            "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_registry_recovery_20260912T131535395596Z/batches/eucap15_continuous_doe_neighborhood_20260912_batch000006/owner/eucap15_continuous_doe_neighborhood_20260912_batch000006-GEOMETRY_DOE-000/cadence_only/parallel_shards/shard_000/evaluations/c36e143511a0ee9d/streamout/transformer_layout_cadpins.gds",
+            "sha256": "96167e1d68d572371278bf877319217dc16b9ecaa5e1dc82ae53f9185c9781b4",
+            "bytes": 22528
+          },
+          {
+            "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_registry_recovery_20260912T131535395596Z/batches/eucap15_continuous_doe_neighborhood_20260912_batch000006/owner/eucap15_continuous_doe_neighborhood_20260912_batch000006-GEOMETRY_DOE-000/cadence_only/parallel_shards/shard_000/evaluations/c36e143511a0ee9d/layout/transformer_layout.layout.json",
+            "sha256": "fa91280f8257222896413fd41f673472359598694c8e44cb50d8afd6ed630781",
+            "bytes": 5408
+          },
+          {
+            "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_registry_recovery_20260912T131535395596Z/batches/eucap15_continuous_doe_neighborhood_20260912_batch000006/owner/eucap15_continuous_doe_neighborhood_20260912_batch000006-GEOMETRY_DOE-000/gds_audit/candidates/11cf50da034197a8fae6e40edf439759b8d0f1f4af6d00ac83af0de2958a9a3f/GEOMETRY_AUDIT.json",
+            "sha256": "f3176c3f38503dc2a40f0daed2a285a80289df4fd38088bd9e46570295f5c5e2",
+            "bytes": 10800
+          },
+          {
+            "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_registry_recovery_20260912T131535395596Z/batches/eucap15_continuous_doe_neighborhood_20260912_batch000006/owner/eucap15_continuous_doe_neighborhood_20260912_batch000006-GEOMETRY_DOE-000/cadence_only/parallel_shards/shard_000/evaluations/c36e143511a0ee9d/layout/transformer_layout.gds",
+            "sha256": "001dedbcff5aa4e8b5daaeb62ddc31caa62596e7a0199742fc7359e14eef2c29",
+            "bytes": 19738
+          },
+          {
+            "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_registry_recovery_20260912T131535395596Z/batches/eucap15_continuous_doe_neighborhood_20260912_batch000006/owner/eucap15_continuous_doe_neighborhood_20260912_batch000006-GEOMETRY_DOE-000/cadence_only/parallel_shards/shard_000/evaluations/c36e143511a0ee9d/summary.json",
+            "sha256": "e872573ead3e8fd8f3ae68c570d2a401f433f5b2a3c69dde89fb48a37ad7eba8",
+            "bytes": 74242
+          },
+          {
+            "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_registry_recovery_20260912T131535395596Z/batches/eucap15_continuous_doe_neighborhood_20260912_batch000006/owner/eucap15_continuous_doe_neighborhood_20260912_batch000006-GEOMETRY_DOE-000/cadence_only/parallel_shards/shard_000/evaluations/c36e143511a0ee9d/layout/foundry_layout_source_audit.json",
+            "sha256": "9fce6e2dcfc48d5256efaef28963a1789bc45aa9e533149eb6fb1eb4191180bf",
+            "bytes": 9820
+          },
+          {
+            "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_registry_recovery_20260912T131535395596Z/batches/eucap15_continuous_doe_neighborhood_20260912_batch000006/owner/eucap15_continuous_doe_neighborhood_20260912_batch000006-GEOMETRY_DOE-000/cadence_only/parallel_shards/shard_000/evaluations/c36e143511a0ee9d/layout/power_line_8port_geometry.json",
+            "sha256": "8892be46b5671466ba77820d7d8fe829ff5440bcf811a80cabb4b9cdf83958b4",
+            "bytes": 58698
+          },
+          {
+            "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_registry_recovery_20260912T131535395596Z/batches/eucap15_continuous_doe_neighborhood_20260912_batch000006/owner/eucap15_continuous_doe_neighborhood_20260912_batch000006-GEOMETRY_DOE-000/cadence_only/parallel_shards/shard_000/candidate_queue_dataset_summary.json",
+            "sha256": "726c33e37ff3ef8cd279c2701f8c8609662a1e1720de9246361875c028bedc9b",
+            "bytes": 15304
+          },
+          {
+            "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_registry_recovery_20260912T131535395596Z/batches/eucap15_continuous_doe_neighborhood_20260912_batch000006/owner/eucap15_continuous_doe_neighborhood_20260912_batch000006-GEOMETRY_DOE-000/cadence_only/parallel_shards/shard_000/dataset_rows.csv",
+            "sha256": "5d07dbb753f055cd3c0ae56129ce23fde8fc41b5942918d6a354a4616f7c3778",
+            "bytes": 5646
+          },
+          {
+            "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_registry_recovery_20260912T131535395596Z/batches/eucap15_continuous_doe_neighborhood_20260912_batch000006/owner/eucap15_continuous_doe_neighborhood_20260912_batch000006-GEOMETRY_DOE-000/calibre/candidates/11cf50da034197a8/drc_summary.json",
+            "sha256": "a89a3144fde1b9792adef7058319cef39b2cb6b78dad84ded96cc82d5848494d",
+            "bytes": 6278
+          },
+          {
+            "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_registry_recovery_20260912T131535395596Z/batches/eucap15_continuous_doe_neighborhood_20260912_batch000006/owner/eucap15_continuous_doe_neighborhood_20260912_batch000006-GEOMETRY_DOE-000/calibre/candidates/11cf50da034197a8/DRC.rep",
+            "sha256": "9173a3753de4d778952bdcbeb7d665701b338ec649108085751cecd290b3710a",
+            "bytes": 93232
+          },
+          {
+            "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_registry_recovery_20260912T131535395596Z/batches/eucap15_continuous_doe_neighborhood_20260912_batch000006/owner/eucap15_continuous_doe_neighborhood_20260912_batch000006-GEOMETRY_DOE-000/calibre/foundry_source_deck.svrf",
+            "sha256": "8252a77efecf92d3b187d83f7047df45433ce662c53683996c175b2aa80653ef",
+            "bytes": 877023
+          },
+          {
+            "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_registry_recovery_20260912T131535395596Z/runtime/research/broadband56_nn/frequency_research_emx.py",
+            "sha256": "e72f8f392305ffb6d412eef2e5321ea1f5b79fc88ed0a80ed7f2a6b32585db4a",
+            "bytes": 43115
+          }
+        ],
+        "gds": {
+          "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_registry_recovery_20260912T131535395596Z/batches/eucap15_continuous_doe_neighborhood_20260912_batch000006/owner/eucap15_continuous_doe_neighborhood_20260912_batch000006-GEOMETRY_DOE-000/cadence_only/parallel_shards/shard_000/evaluations/c36e143511a0ee9d/streamout/transformer_layout_cadpins.gds",
+          "sha256": "96167e1d68d572371278bf877319217dc16b9ecaa5e1dc82ae53f9185c9781b4",
+          "bytes": 22528
+        },
+        "port_manifest": {
+          "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_registry_recovery_20260912T131535395596Z/batches/eucap15_continuous_doe_neighborhood_20260912_batch000006/owner/eucap15_continuous_doe_neighborhood_20260912_batch000006-GEOMETRY_DOE-000/cadence_only/parallel_shards/shard_000/evaluations/c36e143511a0ee9d/layout/transformer_layout.layout.json",
+          "sha256": "fa91280f8257222896413fd41f673472359598694c8e44cb50d8afd6ed630781",
+          "bytes": 5408
+        },
+        "calibre": {
+          "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_registry_recovery_20260912T131535395596Z/batches/eucap15_continuous_doe_neighborhood_20260912_batch000006/owner/eucap15_continuous_doe_neighborhood_20260912_batch000006-GEOMETRY_DOE-000/calibre/candidates/11cf50da034197a8/drc_summary.json",
+          "sha256": "a89a3144fde1b9792adef7058319cef39b2cb6b78dad84ded96cc82d5848494d",
+          "bytes": 6278
+        },
+        "command": [
+          "/volumes/research-localdata/ywang3652/rfic-transformer-inverse-design-mars56-s4p-drc-20260705/mars_local_bin/emx_cae_singularity",
+          "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_registry_recovery_20260912T131535395596Z/batches/eucap15_continuous_doe_neighborhood_20260912_batch000006/owner/eucap15_continuous_doe_neighborhood_20260912_batch000006-GEOMETRY_DOE-000/cadence_only/parallel_shards/shard_000/evaluations/c36e143511a0ee9d/streamout/transformer_layout_cadpins.gds",
+          "TRANSFORMER",
+          "/volumes/research-localdata/PDKs/TSMC65_05_12_26/RC_IRCX_CRN65G+_1P9M+UT-ALRDL_6X1Z1U_MiM_typical.proc",
+          "--touchstone",
+          "--s-impedance=50",
+          "-s",
+          "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_registry_recovery_20260912T131535395596Z/batches/eucap15_continuous_doe_neighborhood_20260912_batch000006/owner/eucap15_continuous_doe_neighborhood_20260912_batch000006-GEOMETRY_DOE-000/emx_selected/solve/emx/emx.s4p",
+          "--include-command-line",
+          "--edge-width=1",
+          "--accuracy=standard",
+          "--verbose=2",
+          "--parallel=2",
+          "--simultaneous-frequencies=0",
+          "--cadence-pins=51",
+          "--port=P001=P001:P001_G",
+          "--port=P002=P002:P002_G",
+          "--port=P003=P003:P003_G",
+          "--port=P004=P004:P004_G",
+          "--sweep",
+          "5000000000",
+          "60000000000",
+          "--sweep-stepsize",
+          "1000000000"
+        ],
+        "frequency_grid_hz": [
+          5000000000,
+          6000000000,
+          7000000000,
+          8000000000,
+          9000000000,
+          10000000000,
+          11000000000,
+          12000000000,
+          13000000000,
+          14000000000,
+          15000000000,
+          16000000000,
+          17000000000,
+          18000000000,
+          19000000000,
+          20000000000,
+          21000000000,
+          22000000000,
+          23000000000,
+          24000000000,
+          25000000000,
+          26000000000,
+          27000000000,
+          28000000000,
+          29000000000,
+          30000000000,
+          31000000000,
+          32000000000,
+          33000000000,
+          34000000000,
+          35000000000,
+          36000000000,
+          37000000000,
+          38000000000,
+          39000000000,
+          40000000000,
+          41000000000,
+          42000000000,
+          43000000000,
+          44000000000,
+          45000000000,
+          46000000000,
+          47000000000,
+          48000000000,
+          49000000000,
+          50000000000,
+          51000000000,
+          52000000000,
+          53000000000,
+          54000000000,
+          55000000000,
+          56000000000,
+          57000000000,
+          58000000000,
+          59000000000,
+          60000000000
+        ],
+        "port_order": [
+          "P001",
+          "P002",
+          "P003",
+          "P004"
+        ],
+        "port_permutation": [
+          0,
+          1,
+          3,
+          2
+        ],
+        "config_differential_port_pairs": [
+          [
+            0,
+            1
+          ],
+          [
+            2,
+            3
+          ]
+        ],
+        "reference_ohm": 50,
+        "protocol": {
+          "score_scale": [
+            2.5,
+            2.5,
+            20,
+            0.8
+          ],
+          "absolute_tolerances": [
+            0.125,
+            0.125,
+            1,
+            0.04
+          ]
+        },
+        "output": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_registry_recovery_20260912T131535395596Z/batches/eucap15_continuous_doe_neighborhood_20260912_batch000006/owner/eucap15_continuous_doe_neighborhood_20260912_batch000006-GEOMETRY_DOE-000/emx_selected",
+        "production_membership": false,
+        "no_gds_generation": true,
+        "no_example_target_objective": true,
+        "physical_selection": "FROZEN_PRODUCTION_GEOMETRY_SINGLE",
+        "controlled_manifest": {
+          "bytes": 3322,
+          "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_registry_recovery_20260912T131535395596Z/input_factory/batches/eucap15_continuous_doe_neighborhood_20260912_batch000006/run_v1/MANIFEST.json",
+          "sha256": "5a5fec1ffc3dc888ff4d5c3cce04c50a099eb0c3c461e3018cc25db8add187ea"
+        },
+        "controlled_intent": {
+          "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_registry_recovery_20260912T131535395596Z/input_factory/batches/eucap15_continuous_doe_neighborhood_20260912_batch000006/INTENT.json",
+          "sha256": "71b928fe8c99ceaf4726922eadaa2d78b6afd2e40b811013e6ab303cdaf35edc",
+          "bytes": 18733
+        },
+        "original_controlled_manifest": {
+          "bytes": 3322,
+          "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_registry_recovery_20260912T131535395596Z/input_factory/batches/eucap15_continuous_doe_neighborhood_20260912_batch000006/run_v1/MANIFEST.json",
+          "sha256": "5a5fec1ffc3dc888ff4d5c3cce04c50a099eb0c3c461e3018cc25db8add187ea"
+        },
+        "original_controlled_intent": {
+          "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_registry_recovery_20260912T131535395596Z/input_factory/batches/eucap15_continuous_doe_neighborhood_20260912_batch000006/INTENT.json",
+          "sha256": "71b928fe8c99ceaf4726922eadaa2d78b6afd2e40b811013e6ab303cdaf35edc",
+          "bytes": 18733
+        },
+        "original_proposal": {
+          "actual_landing": null,
+          "actual_response": null,
+          "analytic_pass": true,
+          "arm": "GEOMETRY_DOE_PRODUCTION",
+          "arm_order": 1,
+          "assigned_development_split": "train",
+          "base_geometry_hash": null,
+          "base_metadata": null,
+          "base_train_geometry": null,
+          "base_train_id": null,
+          "candidate_id": "eucap15_continuous_doe_neighborhood_20260912_batch000006-GEOMETRY_DOE-000",
+          "canonical_geometry_sha256": "8fbe3fc0b35e703ff09c88fad925c741797d157d304ca5e456e5ada45c4bd332",
+          "coverage_gain": null,
+          "decoded_continuous_geometry": null,
+          "drc_status": "NOT_RUN",
+          "duplicate_reasons": [],
+          "emx_status": "NOT_RUN",
+          "family_warning": "NO_FAMILY_INDEPENDENCE_CLAIM",
+          "final_independent_test_eligible": false,
+          "frequency_hz": 15000000000,
+          "gds_status": "NOT_RUN",
+          "geometry": [
+            375.915,
+            435.59000000000003,
+            482.94,
+            330.36,
+            4.575,
+            71.205,
+            73.88,
+            86.925,
+            167.79,
+            110.58500000000001
+          ],
+          "geometry_fields": [
+            "primary_outer_width_um",
+            "primary_outer_height_um",
+            "secondary_outer_width_um",
+            "secondary_outer_height_um",
+            "line_width_um",
+            "primary_terminal_y_span_um",
+            "secondary_terminal_y_span_um",
+            "offset_um",
+            "primary_feed_extension_um",
+            "secondary_feed_extension_um"
+          ],
+          "geometry_units": "um",
+          "global_order": 1,
+          "identity_not_actual_gds": true,
+          "jitter": null,
+          "local_dispatch_eligible": true,
+          "model_id": null,
+          "native_status": "NOT_SUBMITTED",
+          "neighborhood_lower": null,
+          "neighborhood_unit": null,
+          "neighborhood_upper": null,
+          "no_q_fallback": true,
+          "no_replacement": true,
+          "nominal_grid_geometry_sha256": "8fbe3fc0b35e703ff09c88fad925c741797d157d304ca5e456e5ada45c4bd332",
+          "owner_current_ledger_check": "REQUIRED",
+          "parameter_geometry_hash": "2eedf17d6f65b3f2759defca084c9cdadd3a7f92205e80b29e17f03a67d58688",
+          "predicted_cell": null,
+          "production_geometry_fingerprint": "a5a3b763c1b551bb0d4173ad0538f09a40c35ee011aec21389db274ee8f6f7c7",
+          "protocol_schema": "eucap15_successor_factory_sampler_intent.v1",
+          "proxy": null,
+          "q_emx": null,
+          "q_proxy": null,
+          "qscan_source_candidate": null,
+          "qualification_union_status": "PENDING_KNOWN_POOL_AND_FULL_HISTORY_MERGE",
+          "raw_canonical_geometry_sha256": "4ea57c7b40e7f51877a9b19c9d98f83053c080e0c41636fb265bdd6ebf3b3df1",
+          "raw_lhs_geometry": [
+            375.9138099038617,
+            435.58963469955927,
+            482.94230887041573,
+            330.3602056929507,
+            4.575704926038332,
+            71.20515604609628,
+            73.87977577876686,
+            86.92341327873959,
+            167.78922047713556,
+            110.58438049943598
+          ],
+          "raw_production_geometry_fingerprint": "bf9626eced2df0cd246cee9fa17c1c7c67c1b98720a3f69c64f69fbbbcc0e040",
+          "raw_proposed_geometry": [
+            375.9138099038617,
+            435.58963469955927,
+            482.94230887041573,
+            330.3602056929507,
+            4.575704926038332,
+            71.20515604609628,
+            73.87977577876686,
+            86.92341327873959,
+            167.78922047713556,
+            110.58438049943598
+          ],
+          "recipe_sha256": "71b928fe8c99ceaf4726922eadaa2d78b6afd2e40b811013e6ab303cdaf35edc",
+          "request_id": "eucap15_continuous_doe_neighborhood_20260912_batch000006-GEOMETRY_DOE-000",
+          "requested_triple": null,
+          "reservation_status": "NOT_RESERVED",
+          "schema": "eucap15_acquisition_candidate.v1",
+          "score": null,
+          "seed": 2026091213,
+          "solver_seconds": null,
+          "solver_start_order": null,
+          "source": "GEOMETRY_DOE",
+          "sparse_cell": null,
+          "split_used_for_proposal_selection": false,
+          "storage_bytes": null,
+          "support": "GEOMETRY_PROPOSAL_PHYSICAL_SUPPORT_UNKNOWN",
+          "target": null,
+          "target_cell": null,
+          "total_stage_cost_seconds": null
+        },
+        "original_request_denominator": 256,
+        "model_used_for_proposal": false,
+        "candidate_model_id": null,
+        "full11_physical_optimum": "NOT_EVALUATED_NO_Q_REPLACEMENT"
+      }
+    },
+    {
+      "stage": "current_references2",
+      "pin": {
+        "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/storage_claim_wait_v1/budget_walk_v1/strict112_five_artifacts_20260912T152232874343Z/current_references2/current_solver_receipt.json",
+        "sha256": "33b33b24dff4a3e1c9507acc94969e0d074c5e4886c8bb1e41ad8e7bc0cfd022",
+        "bytes": 7269
+      },
+      "source": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_registry_recovery_20260912T131535395596Z/batches/eucap15_continuous_doe_neighborhood_20260912_batch000006/owner/eucap15_continuous_doe_neighborhood_20260912_batch000006-GEOMETRY_DOE-000/emx_selected/SOLVER_RECEIPT.json",
+        "sha256": "33b33b24dff4a3e1c9507acc94969e0d074c5e4886c8bb1e41ad8e7bc0cfd022",
+        "bytes": 7269
+      },
+      "status": "MATCH",
+      "data": {
+        "schema": "frequency_research_fresh_solver.v1",
+        "status": "PASS",
+        "candidate_id": "eucap15_continuous_doe_neighborhood_20260912_batch000006-GEOMETRY_DOE-000",
+        "preflight": {
+          "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_registry_recovery_20260912T131535395596Z/batches/eucap15_continuous_doe_neighborhood_20260912_batch000006/owner/eucap15_continuous_doe_neighborhood_20260912_batch000006-GEOMETRY_DOE-000/emx_selected/PREFLIGHT.json",
+          "sha256": "768c5665252099cabf2e5360c4085a880ae80cf6f15979e0d581a46c9ac0fc07",
+          "bytes": 30135
+        },
+        "source_gds_before": {
+          "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_registry_recovery_20260912T131535395596Z/batches/eucap15_continuous_doe_neighborhood_20260912_batch000006/owner/eucap15_continuous_doe_neighborhood_20260912_batch000006-GEOMETRY_DOE-000/cadence_only/parallel_shards/shard_000/evaluations/c36e143511a0ee9d/streamout/transformer_layout_cadpins.gds",
+          "sha256": "96167e1d68d572371278bf877319217dc16b9ecaa5e1dc82ae53f9185c9781b4",
+          "bytes": 22528
+        },
+        "source_gds_after": {
+          "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_registry_recovery_20260912T131535395596Z/batches/eucap15_continuous_doe_neighborhood_20260912_batch000006/owner/eucap15_continuous_doe_neighborhood_20260912_batch000006-GEOMETRY_DOE-000/cadence_only/parallel_shards/shard_000/evaluations/c36e143511a0ee9d/streamout/transformer_layout_cadpins.gds",
+          "sha256": "96167e1d68d572371278bf877319217dc16b9ecaa5e1dc82ae53f9185c9781b4",
+          "bytes": 22528
+        },
+        "touchstone": {
+          "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_registry_recovery_20260912T131535395596Z/batches/eucap15_continuous_doe_neighborhood_20260912_batch000006/owner/eucap15_continuous_doe_neighborhood_20260912_batch000006-GEOMETRY_DOE-000/emx_selected/solve/emx/emx.s4p",
+          "sha256": "8f6d8a778ce742c01b53b669e93125f74a017a7486b786e99c2555e389acdbe1",
+          "bytes": 26272
+        },
+        "artifacts": [
+          {
+            "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_registry_recovery_20260912T131535395596Z/batches/eucap15_continuous_doe_neighborhood_20260912_batch000006/owner/eucap15_continuous_doe_neighborhood_20260912_batch000006-GEOMETRY_DOE-000/emx_selected/solve/RUNNING.json",
+            "sha256": "e54788852eaadfad8cc6c57b0cfdaf16a34833bc3cd3ec4825900bbbd401d72a",
+            "bytes": 372
+          },
+          {
+            "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_registry_recovery_20260912T131535395596Z/batches/eucap15_continuous_doe_neighborhood_20260912_batch000006/owner/eucap15_continuous_doe_neighborhood_20260912_batch000006-GEOMETRY_DOE-000/emx_selected/solve/emx/emx.s4p",
+            "sha256": "8f6d8a778ce742c01b53b669e93125f74a017a7486b786e99c2555e389acdbe1",
+            "bytes": 26272
+          },
+          {
+            "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_registry_recovery_20260912T131535395596Z/batches/eucap15_continuous_doe_neighborhood_20260912_batch000006/owner/eucap15_continuous_doe_neighborhood_20260912_batch000006-GEOMETRY_DOE-000/emx_selected/solve/emx/emx_command.json",
+            "sha256": "8bb0b9ba19007343af56e519f5593b6b32b12ddc52fb9130d6d56af3c766a48f",
+            "bytes": 1371
+          },
+          {
+            "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_registry_recovery_20260912T131535395596Z/batches/eucap15_continuous_doe_neighborhood_20260912_batch000006/owner/eucap15_continuous_doe_neighborhood_20260912_batch000006-GEOMETRY_DOE-000/emx_selected/solve/emx/emx_stderr.log",
+            "sha256": "206d292a4910f855a68fa47d0b24c96a170e4bb2400c4266d19b10564a15bd6d",
+            "bytes": 1564
+          },
+          {
+            "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_registry_recovery_20260912T131535395596Z/batches/eucap15_continuous_doe_neighborhood_20260912_batch000006/owner/eucap15_continuous_doe_neighborhood_20260912_batch000006-GEOMETRY_DOE-000/emx_selected/solve/emx/emx_stdout.log",
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "bytes": 0
+          },
+          {
+            "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_registry_recovery_20260912T131535395596Z/batches/eucap15_continuous_doe_neighborhood_20260912_batch000006/owner/eucap15_continuous_doe_neighborhood_20260912_batch000006-GEOMETRY_DOE-000/emx_selected/solve/native_observation/INVOCATION_INTENT.json",
+            "sha256": "9f3079898d7a13586d6775857510f4e5a2fbeb16a98403ab836be36f9bc9f96a",
+            "bytes": 5796
+          },
+          {
+            "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_registry_recovery_20260912T131535395596Z/batches/eucap15_continuous_doe_neighborhood_20260912_batch000006/owner/eucap15_continuous_doe_neighborhood_20260912_batch000006-GEOMETRY_DOE-000/emx_selected/solve/native_observation/NATIVE_BIRTH_1202594_402890022.json",
+            "sha256": "5e1461558ab30bcba2966aeb4235e136f174c9d5c12607cbf5dbce1975d2797f",
+            "bytes": 12102
+          },
+          {
+            "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_registry_recovery_20260912T131535395596Z/batches/eucap15_continuous_doe_neighborhood_20260912_batch000006/owner/eucap15_continuous_doe_neighborhood_20260912_batch000006-GEOMETRY_DOE-000/emx_selected/solve/native_observation/OBSERVATION_RECEIPT.json",
+            "sha256": "c4b34e7fa05532de80a4141e95e3ab0ad5699925dd6c9343e5613fd1ca94f1dd",
+            "bytes": 17852
+          },
+          {
+            "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_registry_recovery_20260912T131535395596Z/batches/eucap15_continuous_doe_neighborhood_20260912_batch000006/owner/eucap15_continuous_doe_neighborhood_20260912_batch000006-GEOMETRY_DOE-000/emx_selected/solve/native_observation/WRAPPER_STARTED.json",
+            "sha256": "c33e518b1a84ae04d1675066fef748edc19b8997478e0a48b99c1b3a646a28ba",
+            "bytes": 1800
+          },
+          {
+            "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_registry_recovery_20260912T131535395596Z/batches/eucap15_continuous_doe_neighborhood_20260912_batch000006/owner/eucap15_continuous_doe_neighborhood_20260912_batch000006-GEOMETRY_DOE-000/emx_selected/solve/native_observation/wrapper_stderr.log",
+            "sha256": "206d292a4910f855a68fa47d0b24c96a170e4bb2400c4266d19b10564a15bd6d",
+            "bytes": 1564
+          },
+          {
+            "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_registry_recovery_20260912T131535395596Z/batches/eucap15_continuous_doe_neighborhood_20260912_batch000006/owner/eucap15_continuous_doe_neighborhood_20260912_batch000006-GEOMETRY_DOE-000/emx_selected/solve/native_observation/wrapper_stdout.log",
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "bytes": 0
+          }
+        ],
+        "ended_utc": "2026-09-12T14:57:33.183766+00:00",
+        "real_emx": true,
+        "production_modified": false,
+        "q_emx": null
+      }
+    }
+  ]
+}

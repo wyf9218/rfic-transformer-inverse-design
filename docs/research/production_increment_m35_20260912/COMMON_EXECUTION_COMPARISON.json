@@ -1,0 +1,234 @@
+{
+  "schema": "eucap15.historical_actual_execution_comparison.m35.v1",
+  "status": "PARTIAL_EVIDENCE_NOT_CERTIFIED",
+  "historical_member_count": 5,
+  "transport": {
+    "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/storage_claim_wait_v1/budget_walk_v1/strict112_five_artifacts_20260912T152232874343Z/RECEIPT.json",
+    "sha256": "dd25b0b90aa7ebb25f3cc7b676ff00a02128f6de1eddcadefcd2a344bddc6d7c",
+    "bytes": 82343
+  },
+  "current": {
+    "preflight": {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/storage_claim_wait_v1/budget_walk_v1/strict112_five_artifacts_20260912T152232874343Z/current_references2/current_preflight.json",
+      "sha256": "768c5665252099cabf2e5360c4085a880ae80cf6f15979e0d581a46c9ac0fc07",
+      "bytes": 30135
+    },
+    "solver_receipt": {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/storage_claim_wait_v1/budget_walk_v1/strict112_five_artifacts_20260912T152232874343Z/current_references2/current_solver_receipt.json",
+      "sha256": "33b33b24dff4a3e1c9507acc94969e0d074c5e4886c8bb1e41ad8e7bc0cfd022",
+      "bytes": 7269
+    },
+    "status": "PASS",
+    "real_emx": true,
+    "solver_bound_preflight": true,
+    "gds_unchanged": true,
+    "port_order": [
+      "P001",
+      "P002",
+      "P003",
+      "P004"
+    ],
+    "port_permutation": [
+      0,
+      1,
+      3,
+      2
+    ],
+    "config_differential_port_pairs": [
+      [
+        0,
+        1
+      ],
+      [
+        2,
+        3
+      ]
+    ],
+    "process": {
+      "bytes": 60246,
+      "path": "/volumes/research-localdata/PDKs/TSMC65_05_12_26/RC_IRCX_CRN65G+_1P9M+UT-ALRDL_6X1Z1U_MiM_typical.proc",
+      "sha256": "c57be9bbb9725771230790b2b892f70fe49b0a62408085bb02aef1205559d47e"
+    },
+    "wrapper": {
+      "bytes": 478,
+      "path": "/volumes/research-localdata/ywang3652/rfic-transformer-inverse-design-mars56-s4p-drc-20260705/mars_local_bin/emx_cae_singularity",
+      "sha256": "3314bbc78b1305fc81b70def010892ae1666896f739cdcc2a720b999aad95731"
+    },
+    "actual_command_file_pin": {
+      "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_registry_recovery_20260912T131535395596Z/batches/eucap15_continuous_doe_neighborhood_20260912_batch000006/owner/eucap15_continuous_doe_neighborhood_20260912_batch000006-GEOMETRY_DOE-000/emx_selected/solve/emx/emx_command.json",
+      "sha256": "8bb0b9ba19007343af56e519f5593b6b32b12ddc52fb9130d6d56af3c766a48f",
+      "bytes": 1371
+    },
+    "actual_command_file_body_read": false
+  },
+  "historical": [
+    {
+      "command": {
+        "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/storage_claim_wait_v1/budget_walk_v1/strict112_five_artifacts_20260912T152232874343Z/historical_commands5/authority_001_emx_command.json",
+        "sha256": "dbde9b7456cbf188531769d82f330b021123678bcb3940dbb648f69e07079b09",
+        "bytes": 1246
+      },
+      "source": {
+        "path": "/volumes/research-localdata/ywang3652/mars56_s4p_million_campaign_outputs_20260705/mars56_s4p_million_20260705_1256/status/strict_portgate_recovery_20260718/fresh_emx_closure_real_emx_112_v3_20260719/parallel_shards/shard_018/evaluations/aed792320a0ee672/emx/emx_command.json",
+        "sha256": "dbde9b7456cbf188531769d82f330b021123678bcb3940dbb648f69e07079b09",
+        "bytes": 1246
+      },
+      "read_status": "STABLE_OBSERVED_SHA_NO_PRIOR_EXPECTATION",
+      "gds_argument": "/volumes/research-localdata/ywang3652/mars56_s4p_million_campaign_outputs_20260705/mars56_s4p_million_20260705_1256/status/strict_portgate_recovery_20260718/fresh_emx_closure_real_emx_112_v3_20260719/parallel_shards/shard_018/evaluations/aed792320a0ee672/streamout/transformer_layout_cadpins.gds",
+      "touchstone_argument": "/volumes/research-localdata/ywang3652/mars56_s4p_million_campaign_outputs_20260705/mars56_s4p_million_20260705_1256/status/strict_portgate_recovery_20260718/fresh_emx_closure_real_emx_112_v3_20260719/parallel_shards/shard_018/evaluations/aed792320a0ee672/emx/emx.s4p",
+      "common_arguments_match_current_preflight_except_gds_output_and_stepsize": true,
+      "port_arguments": [
+        "--port=P001=P001:P001_G",
+        "--port=P002=P002:P002_G",
+        "--port=P003=P003:P003_G",
+        "--port=P004=P004:P004_G"
+      ],
+      "process_path": "/volumes/research-localdata/PDKs/TSMC65_05_12_26/RC_IRCX_CRN65G+_1P9M+UT-ALRDL_6X1Z1U_MiM_typical.proc",
+      "historical_process_sha256": "UNKNOWN",
+      "historical_wrapper_sha256": "UNKNOWN",
+      "sweep_hz": [
+        5000000000,
+        60000000000,
+        500000000
+      ]
+    },
+    {
+      "command": {
+        "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/storage_claim_wait_v1/budget_walk_v1/strict112_five_artifacts_20260912T152232874343Z/historical_commands5/authority_002_emx_command.json",
+        "sha256": "ea8ab479f663b03ea38b928e0e5488f6fcf29bb3e88d522929e9b35f3b24528d",
+        "bytes": 1246
+      },
+      "source": {
+        "path": "/volumes/research-localdata/ywang3652/mars56_s4p_million_campaign_outputs_20260705/mars56_s4p_million_20260705_1256/status/strict_portgate_recovery_20260718/fresh_emx_closure_real_emx_112_v3_20260719/parallel_shards/shard_043/evaluations/3ce0d0fec33da3ea/emx/emx_command.json",
+        "sha256": "ea8ab479f663b03ea38b928e0e5488f6fcf29bb3e88d522929e9b35f3b24528d",
+        "bytes": 1246
+      },
+      "read_status": "STABLE_OBSERVED_SHA_NO_PRIOR_EXPECTATION",
+      "gds_argument": "/volumes/research-localdata/ywang3652/mars56_s4p_million_campaign_outputs_20260705/mars56_s4p_million_20260705_1256/status/strict_portgate_recovery_20260718/fresh_emx_closure_real_emx_112_v3_20260719/parallel_shards/shard_043/evaluations/3ce0d0fec33da3ea/streamout/transformer_layout_cadpins.gds",
+      "touchstone_argument": "/volumes/research-localdata/ywang3652/mars56_s4p_million_campaign_outputs_20260705/mars56_s4p_million_20260705_1256/status/strict_portgate_recovery_20260718/fresh_emx_closure_real_emx_112_v3_20260719/parallel_shards/shard_043/evaluations/3ce0d0fec33da3ea/emx/emx.s4p",
+      "common_arguments_match_current_preflight_except_gds_output_and_stepsize": true,
+      "port_arguments": [
+        "--port=P001=P001:P001_G",
+        "--port=P002=P002:P002_G",
+        "--port=P003=P003:P003_G",
+        "--port=P004=P004:P004_G"
+      ],
+      "process_path": "/volumes/research-localdata/PDKs/TSMC65_05_12_26/RC_IRCX_CRN65G+_1P9M+UT-ALRDL_6X1Z1U_MiM_typical.proc",
+      "historical_process_sha256": "UNKNOWN",
+      "historical_wrapper_sha256": "UNKNOWN",
+      "sweep_hz": [
+        5000000000,
+        60000000000,
+        500000000
+      ]
+    },
+    {
+      "command": {
+        "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/storage_claim_wait_v1/budget_walk_v1/strict112_five_artifacts_20260912T152232874343Z/historical_commands5/authority_011_emx_command.json",
+        "sha256": "6f67d6bfbf9987c5b4cd04ef0caea1496966b9d51a9cd865d190174d11545a2a",
+        "bytes": 1246
+      },
+      "source": {
+        "path": "/volumes/research-localdata/ywang3652/mars56_s4p_million_campaign_outputs_20260705/mars56_s4p_million_20260705_1256/status/strict_portgate_recovery_20260718/fresh_emx_closure_real_emx_112_v3_20260719/parallel_shards/shard_007/evaluations/12eaf1dec4971343/emx/emx_command.json",
+        "sha256": "6f67d6bfbf9987c5b4cd04ef0caea1496966b9d51a9cd865d190174d11545a2a",
+        "bytes": 1246
+      },
+      "read_status": "STABLE_OBSERVED_SHA_NO_PRIOR_EXPECTATION",
+      "gds_argument": "/volumes/research-localdata/ywang3652/mars56_s4p_million_campaign_outputs_20260705/mars56_s4p_million_20260705_1256/status/strict_portgate_recovery_20260718/fresh_emx_closure_real_emx_112_v3_20260719/parallel_shards/shard_007/evaluations/12eaf1dec4971343/streamout/transformer_layout_cadpins.gds",
+      "touchstone_argument": "/volumes/research-localdata/ywang3652/mars56_s4p_million_campaign_outputs_20260705/mars56_s4p_million_20260705_1256/status/strict_portgate_recovery_20260718/fresh_emx_closure_real_emx_112_v3_20260719/parallel_shards/shard_007/evaluations/12eaf1dec4971343/emx/emx.s4p",
+      "common_arguments_match_current_preflight_except_gds_output_and_stepsize": true,
+      "port_arguments": [
+        "--port=P001=P001:P001_G",
+        "--port=P002=P002:P002_G",
+        "--port=P003=P003:P003_G",
+        "--port=P004=P004:P004_G"
+      ],
+      "process_path": "/volumes/research-localdata/PDKs/TSMC65_05_12_26/RC_IRCX_CRN65G+_1P9M+UT-ALRDL_6X1Z1U_MiM_typical.proc",
+      "historical_process_sha256": "UNKNOWN",
+      "historical_wrapper_sha256": "UNKNOWN",
+      "sweep_hz": [
+        5000000000,
+        60000000000,
+        500000000
+      ]
+    },
+    {
+      "command": {
+        "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/storage_claim_wait_v1/budget_walk_v1/strict112_five_artifacts_20260912T152232874343Z/historical_commands5/authority_013_emx_command.json",
+        "sha256": "c143f9fa201b6a875152d96f5508ed88991dd6580296a5d85a4b1fabe0727f21",
+        "bytes": 1246
+      },
+      "source": {
+        "path": "/volumes/research-localdata/ywang3652/mars56_s4p_million_campaign_outputs_20260705/mars56_s4p_million_20260705_1256/status/strict_portgate_recovery_20260718/fresh_emx_closure_real_emx_112_v3_20260719/parallel_shards/shard_021/evaluations/c22c891aadd9eeb9/emx/emx_command.json",
+        "sha256": "c143f9fa201b6a875152d96f5508ed88991dd6580296a5d85a4b1fabe0727f21",
+        "bytes": 1246
+      },
+      "read_status": "STABLE_OBSERVED_SHA_NO_PRIOR_EXPECTATION",
+      "gds_argument": "/volumes/research-localdata/ywang3652/mars56_s4p_million_campaign_outputs_20260705/mars56_s4p_million_20260705_1256/status/strict_portgate_recovery_20260718/fresh_emx_closure_real_emx_112_v3_20260719/parallel_shards/shard_021/evaluations/c22c891aadd9eeb9/streamout/transformer_layout_cadpins.gds",
+      "touchstone_argument": "/volumes/research-localdata/ywang3652/mars56_s4p_million_campaign_outputs_20260705/mars56_s4p_million_20260705_1256/status/strict_portgate_recovery_20260718/fresh_emx_closure_real_emx_112_v3_20260719/parallel_shards/shard_021/evaluations/c22c891aadd9eeb9/emx/emx.s4p",
+      "common_arguments_match_current_preflight_except_gds_output_and_stepsize": true,
+      "port_arguments": [
+        "--port=P001=P001:P001_G",
+        "--port=P002=P002:P002_G",
+        "--port=P003=P003:P003_G",
+        "--port=P004=P004:P004_G"
+      ],
+      "process_path": "/volumes/research-localdata/PDKs/TSMC65_05_12_26/RC_IRCX_CRN65G+_1P9M+UT-ALRDL_6X1Z1U_MiM_typical.proc",
+      "historical_process_sha256": "UNKNOWN",
+      "historical_wrapper_sha256": "UNKNOWN",
+      "sweep_hz": [
+        5000000000,
+        60000000000,
+        500000000
+      ]
+    },
+    {
+      "command": {
+        "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/storage_claim_wait_v1/budget_walk_v1/strict112_five_artifacts_20260912T152232874343Z/historical_commands5/authority_015_emx_command.json",
+        "sha256": "6863b06770c5f4554e1031b10860454d164fcc83e358cab4156b6ab0e3f331db",
+        "bytes": 1246
+      },
+      "source": {
+        "path": "/volumes/research-localdata/ywang3652/mars56_s4p_million_campaign_outputs_20260705/mars56_s4p_million_20260705_1256/status/strict_portgate_recovery_20260718/fresh_emx_closure_real_emx_112_v3_20260719/parallel_shards/shard_044/evaluations/34e8a314b619998b/emx/emx_command.json",
+        "sha256": "6863b06770c5f4554e1031b10860454d164fcc83e358cab4156b6ab0e3f331db",
+        "bytes": 1246
+      },
+      "read_status": "STABLE_OBSERVED_SHA_NO_PRIOR_EXPECTATION",
+      "gds_argument": "/volumes/research-localdata/ywang3652/mars56_s4p_million_campaign_outputs_20260705/mars56_s4p_million_20260705_1256/status/strict_portgate_recovery_20260718/fresh_emx_closure_real_emx_112_v3_20260719/parallel_shards/shard_044/evaluations/34e8a314b619998b/streamout/transformer_layout_cadpins.gds",
+      "touchstone_argument": "/volumes/research-localdata/ywang3652/mars56_s4p_million_campaign_outputs_20260705/mars56_s4p_million_20260705_1256/status/strict_portgate_recovery_20260718/fresh_emx_closure_real_emx_112_v3_20260719/parallel_shards/shard_044/evaluations/34e8a314b619998b/emx/emx.s4p",
+      "common_arguments_match_current_preflight_except_gds_output_and_stepsize": true,
+      "port_arguments": [
+        "--port=P001=P001:P001_G",
+        "--port=P002=P002:P002_G",
+        "--port=P003=P003:P003_G",
+        "--port=P004=P004:P004_G"
+      ],
+      "process_path": "/volumes/research-localdata/PDKs/TSMC65_05_12_26/RC_IRCX_CRN65G+_1P9M+UT-ALRDL_6X1Z1U_MiM_typical.proc",
+      "historical_process_sha256": "UNKNOWN",
+      "historical_wrapper_sha256": "UNKNOWN",
+      "sweep_hz": [
+        5000000000,
+        60000000000,
+        500000000
+      ]
+    }
+  ],
+  "findings": {
+    "command_common_args_equal": true,
+    "historical_frequency_points": 111,
+    "current_frequency_points": 56,
+    "start_hz": 5000000000,
+    "end_hz": 60000000000,
+    "historical_step_hz": 500000000,
+    "current_step_hz": 1000000000,
+    "fifteen_ghz_exact_index_historical": 20,
+    "fifteen_ghz_exact_index_current": 10,
+    "interpolation_performed": false,
+    "physical_port_geometry_identity": "NOT_PROVEN_BY_SAME_COMMAND_NAMES",
+    "process_byte_identity": "UNPROVEN_HISTORICAL_EXECUTION_TIME_HASH_ABSENT",
+    "historical_source_not_automatically_p215": true,
+    "original_benchmark_split": "UNKNOWN_KEEP_QUARANTINED",
+    "formal_submissions": 0
+  },
+  "next_minimum_evidence": "Combine actual per-member GDS/DRC checks with historical process-byte provenance and physical terminal mapping. Do not certify from matching path or port argument strings; do not rerun EMX merely to register historical rows."
+}

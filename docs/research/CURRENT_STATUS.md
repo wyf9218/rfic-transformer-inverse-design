@@ -1,5 +1,15 @@
 # 当前研究和生产状态
 
+## 2026-09-12 M35：97新EMX、52正式入账，当前资源等待
+
+15:19:37 UTC相对15:02:38：新102终态=97fresh+5解析失败；strict64、范围strict唯一52全部正式（30train/10validation/12test），fresh入账+52/history0/补登0/pending0，下界7100。[接收证据](production_increment_m35_20260912/LANDING_RECEIPT.json)。
+
+实际EMX **0/48**，不是已跑满48。独立健康检查1/5；最新60秒资源样本扣4CPU保留仅1.823851CPU当量，低于一个双CPU任务；此前检查链重置原因UNKNOWN。当前许可证并不短缺。batch6为182/256终态，9EMX等待；原owner/metadata仍在，原接续父仅被单installer预约为T。普通程序负责等待、提取、提交和接续；计时runtime仍待本批自然收尾后切换，尚未证明安装完成。[现场](production_increment_m35_20260912/NATIVE_COMPACT.json)。
+
+30新train资格使4095→4125，163/512覆盖格不变、欠填1905→1903，高K>.8新增0；未重训或声称补样算法优势。[覆盖图源](production_increment_m35_20260912/COVERAGE_AFTER.csv)。历史5成员实际工件绑定/结构均通过；1/2/11网格通过但缺资格证据，13/15各8离格标签失败，历史新增正式0。[逐项核验](production_increment_m35_20260912/HISTORY_FIVE_SUMMARY.json)、[实际命令对照](production_increment_m35_20260912/COMMON_EXECUTION_COMPARISON.json)。111点与56点分开；相同工艺路径不证明历史字节一致，相同端口名不证明实际物理端点一致。
+
+不重复旧物理/训练/QA或论文包，不以短窗外推稳定小时产量。[SHA256SUMS](production_increment_m35_20260912/SHA256SUMS)。以下为历史截面。
+
 ## 2026-09-12 M34：交接已预约，66新EMX、33正式入账
 
 15:02:38 UTC相对14:56，新73终态=66fresh＋6解析＋1执行失败；41strict、33范围strict唯一全正式（21train/8validation/4test），fresh正式＋33/history0/补登0/pending0，下界7048。实际10独立EMX×2CPU；batch6为80/256终态，13等待EMX。RAM保守预约诊断额外25，不是已授予25，且不足直接补满所需38；不能由此独自解释等待。[新结果](production_increment_m34_20260912/LANDING_RECEIPT.json)、[现场](production_increment_m34_20260912/NATIVE_COMPACT.json)。
