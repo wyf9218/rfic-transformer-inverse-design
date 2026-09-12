@@ -1,0 +1,87 @@
+{
+  "schema": "eucap15_incremental_delivery_manifest.v1",
+  "milestone": "M10",
+  "created_utc": "2026-09-12 08:09:02 UTC",
+  "parent_commit": "fda2b5c34c3038f4db8ca77ded966621c285cb20",
+  "observed_native_utc": "2026-09-12T07:57:53.628242+00:00",
+  "files": [
+    {
+      "path": "qualification.py",
+      "sha256": "4a88a302973030606962cb3c97c8568253ba2d19f21537a067f0418ce3ceaa26"
+    },
+    {
+      "path": "consume_saved93.py",
+      "sha256": "65f2ac4d9b583be513b32ba22000d19bd542212f005f47360c3476775f429cf3"
+    },
+    {
+      "path": "test_qualification.py",
+      "sha256": "a4ebf2f0344d2e9cffa24325db2eb36f04f5131f82c0aa25f64268173f454d20"
+    },
+    {
+      "path": "QUALIFICATION_INTERFACE.md",
+      "sha256": "fbbd946113b4d50e45d09e0064ea6e6a77089a8e88ac23cf8b5146fc992d7309"
+    },
+    {
+      "path": "QUALIFICATION_TEST_RECEIPT.json",
+      "sha256": "0bf56f49e81c8f7773867d020ff81d928aa66771f819c26da536f7c2fece7e49"
+    },
+    {
+      "path": "ACTUAL93_RECEIPT.json",
+      "sha256": "3cab54310c9e4a97151573b2060b5559dcd2edd63b12a037c324a8e0862b78a9"
+    },
+    {
+      "path": "SNAPSHOT_M10.json",
+      "sha256": "3d273266a9ead755dc61d051eeff6a4df671ef175943545f4647ad055f58b309"
+    },
+    {
+      "path": "historical_existing_gds.py",
+      "sha256": "bfc264310aec15010d11111ab70220a0038029db13f82945d807078c8d497e2c"
+    },
+    {
+      "path": "test_loader.py",
+      "sha256": "8cc6988511e611ca09214724c4ad04bb9a6338b6903857cd5b966d79cdce830c"
+    },
+    {
+      "path": "HISTORICAL_GDS_INTERFACE.md",
+      "sha256": "c139a5fff233cd9aa21293317c18034b1c7d96d5431c07e6c65a817319b2da7d"
+    },
+    {
+      "path": "HISTORICAL_GDS_TEST_RECEIPT.json",
+      "sha256": "ee0939f8cf93bfbf7595586acdcc4a419c7252a7cebb0f272a43b12f85704ea3"
+    },
+    {
+      "path": "QUALIFICATION_INITIAL_FIXTURE_FAILURE.json",
+      "sha256": "7b4e94b33eef708431e3df4f4e6bd5e862b71ce27c0c1715519ad7c378b3c2df"
+    },
+    {
+      "path": "README.md",
+      "sha256": "7a7cb27dcea4a31171967e0dac23d95781f2e87e0d9e4e9fc75e1330c55ac4b0"
+    }
+  ],
+  "source_copies_byte_equal": 12,
+  "new_sha_entries": 13,
+  "actual_increment": {
+    "new_emx": 0,
+    "new_strict_range_unique": 0,
+    "fresh_formal": 0,
+    "history_formal": 394,
+    "formal_lower_bound": 5094,
+    "read_only_geometry_bindings": 93,
+    "historical93_formal": 0
+  },
+  "execution_boundary": {
+    "existing_owner_modified": false,
+    "new_controller": false,
+    "historical_calibre_started": 0,
+    "historical_drc_installed": false,
+    "prior_fullqa_rerun": false,
+    "old_model_training_rerun": false
+  },
+  "failure_evidence_preserved": [
+    "Qualification initial synthetic fixture setup: invalid geometry field names; original failure receipt retained.",
+    "Two central state apply_patch verification failures caused no writes, then corrected hunk ordering succeeded.",
+    "Incorrect public CURRENT_STATUS path lookup failed before mutation; actual docs/research/CURRENT_STATUS.md updated."
+  ],
+  "full100k_complete": false,
+  "final10k_complete": false
+}

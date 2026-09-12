@@ -1,0 +1,41 @@
+{
+  "schema": "eucap15_historical111_readonly_readiness_targeted_tests.v1",
+  "status": "FOCUSED_SOFTWARE_CHECKS_PASSED_PHYSICAL_QUALIFICATION_UNAVAILABLE",
+  "qualification_source_sha256": "4a88a302973030606962cb3c97c8568253ba2d19f21537a067f0418ce3ceaa26",
+  "test_source_sha256": "a4ebf2f0344d2e9cffa24325db2eb36f04f5131f82c0aa25f64268173f454d20",
+  "failed_initial_attempt": {
+    "path": "TEST_ATTEMPT_1_FAILURE.json",
+    "sha256": "7b4e94b33eef708431e3df4f4e6bd5e862b71ce27c0c1715519ad7c378b3c2df",
+    "reason": "Synthetic fixture names differed from unchanged real geometry helper names; no actual source member was processed."
+  },
+  "passed_runs": [
+    {
+      "command": "python -B -m unittest -v test_qualification",
+      "tests_run": 3,
+      "tests_passed": 3,
+      "elapsed_seconds": 0.040,
+      "stage": "After correcting synthetic field names and adding CSV parsing cache, before direct-CSV-pin compatibility branch."
+    },
+    {
+      "command": "python -B -m unittest -v test_qualification.Historical111Readiness.test_direct_original_csv_uses_manifest_ordinal_and_cached_parse",
+      "tests_run": 1,
+      "tests_passed": 1,
+      "elapsed_seconds": 0.027,
+      "stage": "Final source, only newly added direct-CSV branch fixture; preceding three fixtures not rerun."
+    }
+  ],
+  "coverage": [
+    "111-point response cannot be declared56; original saved all111 CSV is not read or rehashed.",
+    "Missing actual DRC and full actual GDS returns missing_evidence, not formal PASS; Q outside10..20 does not become a core exclusion.",
+    "Unknown remains unassigned; preserved validation remains validation; requested train conflicting with real split evidence is rejected.",
+    "Direct original CSV uses bound source ordinal and exact original field order; incorrect order fails and parsed rows are cached."
+  ],
+  "real_historical_members_assessed_by_this_implementation_task": 0,
+  "native_actions": 0,
+  "physical_qa_reruns": 0,
+  "label_reextractions": 0,
+  "formal_writes": 0,
+  "old_tests_rerun": 0,
+  "deployment": "NOT_INSTALLED_BY_RESEARCH_SUBTASK",
+  "remaining_blocker": "Actual owner historical111 full-GDS/DRC/deck/process/port/execution compatibility receipt and its observed schema binding are not available to this adapter; no positive formal qualification path is enabled."
+}

@@ -1,0 +1,49 @@
+{
+  "schema": "eucap15_historical_existing_gds_adapter_candidate.v1",
+  "utc": "2026-09-12T08:06:38Z",
+  "status": "LOCAL_LOADER_READY_PHYSICAL_CORE_NOT_RUN_NOT_DEPLOYED",
+  "source": {
+    "path": "reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/historical_existing_gds_adapter_v1/historical_existing_gds.py",
+    "sha256": "bfc264310aec15010d11111ab70220a0038029db13f82945d807078c8d497e2c"
+  },
+  "test_source": {
+    "path": "reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/historical_existing_gds_adapter_v1/test_loader.py",
+    "sha256": "8cc6988511e611ca09214724c4ad04bb9a6338b6903857cd5b966d79cdce830c"
+  },
+  "existing_physical_core_sha256": "6251d5976600a382abdc967140fcc424c603154525d5115c54d4b9146fd8da23",
+  "existing_foundry_core_sha256": "18345730dab23fbdf4a88dfab227622a889ca043122089652f68db6a38eb04c3",
+  "reuse": "Identical _audit_candidate code object and _physical_checks function; private function globals override only _candidate_inputs. No shared module monkeypatch.",
+  "tests": {
+    "unique_new_test_methods": 3,
+    "initial_exit": 0,
+    "initial_output": "test_missing_source_exact_failure_and_no_clobber_without_backend (__main__.LoaderTests.test_missing_source_exact_failure_and_no_clobber_without_backend) ... ok\ntest_preserves_original_geometry_s4p_merged_identity_without_body_read (__main__.LoaderTests.test_preserves_original_geometry_s4p_merged_identity_without_body_read) ... ok\ntest_wrong_original_geometry_command_topcell_and_s4p_bindings_rejected (__main__.LoaderTests.test_wrong_original_geometry_command_topcell_and_s4p_bindings_rejected) ... ok\n\n----------------------------------------------------------------------\nRan 3 tests in 0.020s\n\nOK\n",
+    "post_delta_reason": "Restored original audit_request end-of-run runtime/core pin revalidation in the new wrapper.",
+    "post_delta_affected_test_count": 1,
+    "post_delta_exit": 0,
+    "post_delta_output": "test_preserves_original_geometry_s4p_merged_identity_without_body_read (__main__.LoaderTests.test_preserves_original_geometry_s4p_merged_identity_without_body_read) ... ok\n\n----------------------------------------------------------------------\nRan 1 test in 0.006s\n\nOK\n",
+    "old_suite_runs": 0,
+    "physical_core_executions": 0,
+    "synthetic_runtime_authority_substitution": "Unit input fixtures only; actual source core file and function identities remain unchanged."
+  },
+  "historical_input_evidence": {
+    "summary_schema_read": true,
+    "merged_evaluation": "000000__shard_000__04db4f3dd1a9a370",
+    "original_evaluation_directory_tail": "04db4f3dd1a9a370",
+    "original_source_row_index": 97567,
+    "command_shape": "JSON argv array; [1]GDS/[2]TRANSFORMER/[3]process/-s S4P",
+    "actual_missing": "layout/foundry_layout_source_audit.json absent per unique native owner's received receipt; no replacement or PASS synthesized.",
+    "summary_skipped_true": "Preserved and not independently used as a rejection. Existing complete physical predicates remain unchanged."
+  },
+  "response_boundary": "Only prior exact S4P verification receipt plus current lstat; no S4P body, numeric read, extraction, or new current-copy SHA claim.",
+  "actions": {
+    "cadence": 0,
+    "gds_generation": 0,
+    "calibre": 0,
+    "emx": 0,
+    "ssh": 0,
+    "active_code_edits": 0,
+    "formal_accepted_added": 0
+  },
+  "output_boundary": "Current existing-GDS audit only; historical geometry stays historical. Existing response is not this-round fresh EMX; Calibre input only if actual unchanged checks pass.",
+  "remaining_blocker": "First historical source layout construction audit is missing. Its original PRE_CADENCE PASS and pre/post grid relative-area-change evidence cannot be reconstructed as historical facts from current GDS alone."
+}

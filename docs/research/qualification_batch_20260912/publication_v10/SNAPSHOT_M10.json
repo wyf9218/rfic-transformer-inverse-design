@@ -1,0 +1,156 @@
+{
+  "schema": "eucap15_increment_m10.v1",
+  "observed_utc": "2026-09-12T07:57:53.628242+00:00",
+  "baseline_utc": "2026-09-12T07:31:08.734578+00:00",
+  "observation": {
+    "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/samebatch_hotpath_v1/joint_cut_20260912T075752879627Z/OBSERVATION.json",
+    "sha256": "c5389af1355fbccdd7005def531d27b358000b91a06186bc30454b15a35d265f"
+  },
+  "native": {
+    "requested": 48,
+    "admitted": 0,
+    "executor": 48,
+    "actual": 0,
+    "owner_pid": 1039340,
+    "owner_start_ticks": 399883569,
+    "release": {
+      "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/RELEASE.json",
+      "sha256": "a0834643c375703bbd1dea3c7e778b31a6321b42abba3f33e504bf192ea27a81",
+      "bytes": 60463
+    },
+    "resource": {
+      "pin": {
+        "bytes": 19514,
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/fixed48/RESOURCE_20260912T075701503576Z.json",
+        "sha256": "1f58f4e552f75f983722a051594707a6d8da942c60c55b1e9bff9572a1e60804"
+      },
+      "utc": "2026-09-12T07:57:01.503524+00:00",
+      "status": "WAIT",
+      "checks": {
+        "cpu": false,
+        "iowait": true,
+        "isolation": true,
+        "memory": true,
+        "oom": true,
+        "sample": true,
+        "storage": true,
+        "swap": true
+      },
+      "normalized_load1": 1.1852391560872395,
+      "normalized_load5": 1.168108622233073,
+      "memory_fraction": 0.6998234060000896,
+      "free_disk_bytes": 490680102912,
+      "free_license_slots": {
+        "cadence": 3600,
+        "calibre": 85,
+        "emx": 297
+      },
+      "idle_cpu_equivalents": 7.659729688886881,
+      "swap_deltas": {
+        "oom_kill": 0,
+        "pswpin": 1,
+        "pswpout": 0
+      },
+      "age_seconds": 52.124909
+    },
+    "healthy_check_streak": 0,
+    "required_checks": 5,
+    "retained_result_counts": {
+      "FRESH_EMX_EXTRACTED": 9,
+      "ANALYTIC_FAIL_NOT_DISPATCHED": 7,
+      "CANDIDATE_FAILURE_RETAINED_NO_SUBSTITUTION": 5
+    },
+    "closed": 21,
+    "without_terminal": 235,
+    "deadline_utc": "2026-09-12T15:30:49.723123+00:00",
+    "original_plan": {
+      "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/start_ledger/PLAN.json",
+      "sha256": "fd90b07106fb7020e1e6520deaac932647feb3e5f686b5d41ffa91fffe9871c0",
+      "bytes": 133724
+    },
+    "original_budget": {
+      "emx_starts": 256,
+      "hours": 12,
+      "increment_bytes": 5368709120
+    },
+    "automatic_continuation_installed": true,
+    "standby_pid": 1145095,
+    "metadata_pid": 1145088,
+    "continuation_failure": null,
+    "successor_launch_observed": false
+  },
+  "window": {
+    "new_emx_completed": 0,
+    "new_strict_in_range_unique": 0,
+    "fresh_formal_added": 0,
+    "history_formal_added": 394,
+    "formal_union_observed": 5094,
+    "frequency_references": 285264,
+    "only_increment_sequences_checked": [
+      4701,
+      5094
+    ],
+    "prior_prefix_reaudited": false,
+    "formal_head": {
+      "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/qualified15_single_member_v1/records/005094.json",
+      "sha256": "8805f08181c6e0ac1ffe2f5240329360d402cfec72a9a921205e057bb41cbf57",
+      "bytes": 35869
+    }
+  },
+  "source_core": {
+    "original_batch_cumulative_verified": 4,
+    "original_batch_formal": 4,
+    "physical_release_subset_from_owner_reader": 0,
+    "scope_note": "Owner confirmed reader current_core=only a083 release; original9 fresh/all-results cumulative remains4. Scope correction is not a new+4."
+  },
+  "current_blocker": {
+    "name": "CPU_NORMALIZED_LOAD_ENGINEERING_GUARD",
+    "normalized_load1": 1.1852391560872395,
+    "normalized_load5": 1.168108622233073,
+    "limit": 1.1,
+    "idle_cpu_equivalents": 7.659729688886881,
+    "partial_capacity_supported": true,
+    "all48_required": false,
+    "school_numeric_policy_established": false,
+    "threshold_changed": false
+  },
+  "disk": {
+    "free_bytes": 490134073344,
+    "quota": "UNKNOWN",
+    "cleanup": false
+  },
+  "historical93": {
+    "readiness": {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/samebatch_hotpath_v1/training_source93_readiness_20260912T075008875033Z/READINESS_RECEIPT.json",
+      "sha256": "cbe64d27937e1174fb503a11aef81d451a95b786e219d0caeecf10345c3d9e4a"
+    },
+    "read_only_source_geometry_binding": {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/historical111_qualification_v1/actual93_v1/RECEIPT.json",
+      "sha256": "3cab54310c9e4a97151573b2060b5559dcd2edd63b12a037c324a8e0862b78a9"
+    },
+    "conditional_core": 93,
+    "geometry_bound": 93,
+    "unknown_split": 93,
+    "formal_added": 0,
+    "full_current_qualification": "MISSING_EVIDENCE_NOT_PHYSICS_FAIL",
+    "calibre_started": 0,
+    "first_member_missing_inputs": {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/samebatch_hotpath_v1/training_first_missing3_20260912T075948Z/RECEIPT.json",
+      "sha256": "288c7e65b2cdf542ebc4f0e6b5d64bec2ea9cbccd696adbd6dab958122812a35",
+      "source_row_index": 97567,
+      "missing": [
+        "layout/foundry_layout_source_audit.json"
+      ],
+      "received": [
+        "power_line_8port_geometry.json",
+        "transformer_layout.gds"
+      ],
+      "not_extrapolated_to_other92": true
+    },
+    "deployment": "NOT_INSTALLED_NO_EXTERNAL_DRC_QUEUE_IN_ACTIVE_OWNER",
+    "solver_repeated": false,
+    "all111_rehashed": false
+  },
+  "overall100k_complete": false,
+  "final10k_complete": false
+}

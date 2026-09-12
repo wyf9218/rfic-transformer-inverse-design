@@ -1,103 +1,21 @@
-# Current Evidence Status
+# Current15GHz research/production status
 
-## M9 — observed2026-09-12 07:31:08UTC: formal4700; no admissible CPU slot
+Latest actual native observation:2026-09-12 07:57:53.628242UTC.
+[New M10 evidence and code](qualification_batch_20260912/publication_v10/README.md); [prior M9](qualification_batch_20260912/publication_v9/README.md).
 
-Window07:16:02→07:31:08: **newEMX0, newstrict/range unique0, freshformal0, historyformal+236**. Observed formal4700/head44d6a694; only new4465..4700 inspected. Requested/admitted/executor/actualEMX remains **48/0/48/0**; current owner and automatic continuation are alive, original budgets unchanged.
-
-Actual limits support partial concurrency, but measured idleCPU2.430 is below the4CPU reserve; removing the load gate alone would still not admit a2CPU solver. The1.10 load thresholds are project engineering policy, not established numeric school limits. Kernel affinity/cpuset0..191 and no observed cgroup quota do not grant exclusive192CPU use. No runtime change, oldQA or native rerun. [Actual evidence and interpretation](qualification_batch_20260912/publication_v9/README.md). Older snapshots below retain their original cutoffs.
-
-### M9 offline increment after the native cutoff
-
-Three later original fresh interfaces were received at07:36:50:2core are originaltest/validation, so qualifiedtrain gain0; the third fails half-SRF andK range. The distinct historical training-source100 then passed actual required GDS grid/edges100/100 and original111-point extraction100/100; conditional strict100, full-range/Q10–20 support93, formaladded0. Current Calibre/process/port/execution/split/union evidence remains incomplete. [Actual source100 data and limits](qualification_batch_20260912/publication_v9/TRAINING_SOURCE100_STATUS.json). These are not new EMX solves, new training rows or full-P215 estimates.
-
-## M8 — observed2026-09-12 07:16:02UTC: formal4464; actual first100 historical diagnosis closed
-
-Actual requested/admitted/executor/native EMX remains **48/0/48/0**. Current owner1039340 and installed continuation1145095 are alive. The latest ordinary resource check fails only CPU (normalized load1/5=1.303070/1.350690>1.10);292EMX licenses are free. Existing budgets and235candidates without terminal are unchanged.
-
-Window07:00:09→07:16:02: **newEMX0, newstrict/range unique0, freshformal+1, historyformal+276**. Formal ledger4464; only new4188..4464 inspected. Fresh+1 is delayed publication of already completed TRAIN002, not a new solve. Ordinary retry80 succeeded at07:03:43 as sequence4250, preserving validation; all4previous core results are now formal, hold0. Retry worker exited normally; do not restart it. [Exact snapshot](p215_first100_actual_20260912/SNAPSHOT_M8.json).
-
-[Actual first100 P215 results and source table](p215_first100_actual_20260912/README.md):114original files transported,100original GDS cells checked,100full111-point responses re-extracted. All100fail current required grid;90also fail canonical-edge checks. Conditional current-mapping strict1/core1, but **current-qualified0/formally added0** because actual GDS fails. Updated exclusive classes A0/B0/C100/D0; previous header-only B100 remains dated history. These are existing physical-response diagnostics, not100new EMX results or whole-P215 estimates. No old tests/training/native experiments repeated. Ordinary production is independent of this publication.
-
-## M7 — observed2026-09-12 07:00:09UTC: CPU wait, historical formal+389
-
-Actual requested/admitted/executor/native EMX is **48/0/48/0**. Same owner1039340, standby1145095 and metadata1145088 remain alive; automatic continuation is installed, no successor launch yet. This is not48running. Only CPU failed the latest normal resource check: normalized load1/5=1.276517/1.203415 exceeds the existing1.10 gate. Swap now passes;298EMX licenses are free. The original256 budget/PLAN/deadline remain unchanged;235candidates have no terminal, not235running.
-
-Window06:39:33→07:00:09: **newEMX0, newstrict-in-range unique0, freshformal0, historyformal+389**. Observed formal ledger4187, head9fa050d3; only new3799..4187 inspected. [Actual snapshot](qualification_batch_20260912/SNAPSHOT_M7.json).
-
-TRAIN002 prepared-only retry is installed in the existing ordinary worker; its latest attempt46 is still75/Busy/added0, not formally accepted. P215 original first100 rows now have actual scoped artifacts; all100 remain evidence-incomplete (response headers only, currentCalibre/version/SRF closure missing), with14shared multi-topcell GDS identities. No physical qualification inferred from oldok=true. Incremental ledger cache is a locally tested, **undeployed** future metadata candidate. [New source increment](qualification_batch_20260912/publication_v7/SOURCE_MAP.md). No old training/physical experiments/full QA repeated; historical sections below retain their dated evidence.
-
-## Same-batch hotpath repair active; actual CPU/swap wait — M6 cutoff2026-09-12 06:39:33UTC
-
-The single native owner is now1039340/start399883569, releasea0834643. The actual same-budget48→48 handoff preserved21closed results and2partial candidates; the256/12h/5GiB budget and originalPLAN were not reset. The dispatch/resource lock repair is active. Requested/admitted/executor/actual EMX concurrency is **48/0/48/0**, not48running. Current resource evidence has normalized load1/5=1.34182/1.13033, idleCPU1.7387 and swapout66; these real CPU/swap failures—not the repaired lock—prevent admission.
-
-Window06:18:26→06:39:33: **newEMX0, newstrict/core0, freshformal0, historicalformal+457**. The bounded observed ledger is3798/212688frequency references; it is not3798fresh results, a re-audited whole union, or100K complete. [Exact field snapshot and source identities](qualification_batch_20260912/SNAPSHOT_M6.json).
-
-Standby1145095 and metadata worker1145088 are actually installed and alive. The explicit same-batch resume binds the newowner; it does not wait for the retired parent or fabricate an old batch terminal. First metadata call was honestly BUSY/75; ordinary retry6 closed successfully with added0. Automatic next-batch continuation is installed but no successor native launch has occurred. The final family consumer preserves frozen child validation/test and records its actual callback. [Incremental sources](qualification_batch_20260912/publication_v6/SOURCE_MAP.md). Historical snapshots below retain their original cutoffs.
-
-
-## Fixed48 deployed; CPU resource wait — M5 cutoff2026-09-12 05:41:43UTC
-
-Native owner2799696 is alive after safe same-budget handoff: requested48 EMX, executor48, pipeline64, **actual native0**. Shared CPU normalized load1/5=1.17678/1.20299 exceeds1.10; memory/storage and299free EMX licenses are not the current blocker. Ordinary resource checks continue. [Exact deployment snapshot and source pins](qualification_batch_20260912/SNAPSHOT_M5.json).
-
-Latest short window05:34:45→05:41:43: fresh completed0, newstrict/core0, fresh formal0, historical formal+47. Formal observed union2068; current256 cumulative9fresh/4source-core/3proven formal fresh. The fourth core's formal outcome is not yet received. Both metadata workers are alive after idempotent BusyStudy repair; newprofile CLI passed without reconsuming old15. Across-batch automatic continuation is **NOT_INSTALLED** at this cutoff; successor569e and input factory are ready only. [Actual source increment and deployment boundaries](qualification_batch_20260912/publication_v5/SOURCE_MAP.md). Earlier sections remain dated snapshots, not current process status.
-
-## Reviewed943 / observed986 and continuing native work — M4 cutoff2026-09-12 04:59:15UTC
-
-[Actual M4 increment](qualification_batch_20260912/INCREMENT_M4.md): the exact cursor publisher appended293 historical members,650→943; full transported readback and all293 new records were independently reviewed. Verified split943=573train+185validation+185test. A later04:59:15 live ledger observation is986; its additional43 record bodies are not included in this incremental review or assigned the943 split. Source21135 is fully audited:6329 qualified,4705 out-of-range,10101 physical-invalid; at detailed943 cut5425 audit-qualified remain to append. These are bounded source/ledger counts, not100K complete or new simulations.
-
-The original256 batch has6fresh,2core and2formal additions, plus1original analytic failure and3retained wrapper failure objects. Two wrapper failures were pre-dispatch resource waits, not native physical failures. At04:59:15 the original owner2776362 remains, DOE008 is actually in-flight EMX PID1224211(1job×2CPU), and ordinary same-publisher metadata continuation1245823 is running. Neither an in-flight result nor later05:02 results are backfilled into this freeze.
-
-Two core points add no occupied/sparse-support cells on the frozen159/163-cell baselines. The distinct04:29 six-solver cost window contains593.66s native wall and1201.79s CPU;2.0349source-core/hour and42.2227MiB/core are early whole-run amortizations, not steady production forecasts. Latest field free disk493967306752B is not a quota guarantee.
-
-DOE006 is traced to a−7.5nm grid-rounding cross-center mismatch. The isolated opt-in lineage draft passes8port checks without changing polygons/endpoints and rejects5targeted negative fixtures; NOT_INSTALLED and no DRC/EMX validation. The separately reviewed resource-wait predicate fix has7saved synthetic tests and static GO, but remains undeployed. [Frozen snapshot](qualification_batch_20260912/SNAPSHOT_M4.json), [source map](qualification_batch_20260912/publication_v4/SOURCE_MAP.md), and [manifest](qualification_batch_20260912/M4_MANIFEST.json) preserve exact boundaries. Later continuous-production authorization is a separate handoff; automatic qualification and successor deployment are not yet proven. Older sections below are dated snapshots, not current liveness.
-
-## Formal union649 and separately timestamped new256 results — M3, 2026-09-12
-
-[Actual increment](qualification_batch_20260912/INCREMENT_0430.md): source rows1–2000 yielded611 qualified,445 out-of-range and944 physically invalid records; duplicate/missing/incompatible are0 within those processed partitions. The formal union is649=397train+125validation+127test: prior37 plus611 historical members and1new256 train member actually appended at04:31:05UTC. Replay added0. It remains a bounded lower bound, not complete100K/P215 certification; source2001+ execution is NOT_INSTALLED.
-
-The saved04:29:47UTC capture and completed incremental research reception contain6fresh+1original analytic failure,2strict/core-qualified,1formally added. These are dated observations, not current liveness. Targets/Q_proxy/errors remain null. Callback compatibility and incremental record649 readback passed; eligible DOE004 is still awaiting formal admission. Actual frozen source/label binding is20,973 rows:18,973 not processed after the first2,000; the remaining162 through nominal21,135 lack frozen source/label binding and are not a ready queue.
-
-The separate04:12:13UTC cost capture has3solvers:251.49s native wall,504.72s CPU. Approximately1.45source-core/hour and70.62MiB per source-core are early whole-run amortizations over one qualified numerator, not stable production forecasts. [Snapshot](qualification_batch_20260912/SNAPSHOT_0430.json) and [actual source copies](qualification_batch_20260912/publication_v3/SOURCE_MAP.md) retain these boundaries. Older entries below remain historical snapshots.
-
-## Actual formal union341 and recovered native execution — 2026-09-12 04:02 UTC
-
-[New actual increment](qualification_batch_20260912/INCREMENT_0402.md): six old controlled64 members and304 audited historical members were formally appended and read back. The bounded certified union is341=209train+66validation+66test; source splits and the old37 prefix are unchanged. This is not341 new simulations or a complete100K census.
-
-The same-budget corrected owner was alive at04:02:46. Two actual native births/two fresh results were observed, plus one original analytic failure not dispatched. Neither fresh result is core-qualified. The first failed the preserved half-SRF criterion despite in-range response values. Remaining253 have no closed result in this snapshot, not a claim of253 active/pending jobs. Exact missing artifact transport is pending for the research-side consumer; original native evidence is preserved.
-
-[Snapshot](qualification_batch_20260912/SNAPSHOT_0402.json) records counts/budget/resource/receipt identities; [executed publisher sources](qualification_batch_20260912/publication_v2/SOURCE_MAP.md) are byte-identical. Original256/12h/5GiB budget and closed old64/32 are unchanged. All older status sections below are historical snapshots, not current liveness.
-
-## New qualification and production preparation — 2026-09-12 03:25 UTC
-
-[Actual new increment](qualification_batch_20260912/README.md):11 holdout members were formally committed with original splits; the verified bounded ledger is31=20train+3validation+8test. Separately,1000 historical rows were processed:304 audit-qualified,220 out-of-range,476 physically invalid,0duplicate/missing/incompatible. These304 are not yet formal commits at this snapshot; full100K total remains UNKNOWN.
-
-New256 geometry proposals are frozen(192DOE+64train-neighborhood),238 locally eligible/18 original failures. Actual new native start has not yet been received. Separate256/12h/5GiB budget integration uses the sole owner and stricter1solver×2CPU admission; the old64/32 budget stays closed. Endpoint policy is explicitly wired and cache-isolated but has no new physical validation. All earlier current/running statements below are dated history, not current production liveness.
-
-## Qualified train partition and cost supplement — 2026-09-11 22:05 UTC
-
-[Actual qualification, cost and paper increment](20260911_qualified20_cost_paper.md): nineteen new formal qualification commits were read back; the separate ledger now contains twenty unique train geometries. The three validation and eight test members remain untouched. Old broadband21135 and frozen6329 membership are unchanged; full100K qualification remains unclosed, not21135+20 or6700+20.
-
-At22:05:01 the original controlled64 owner was absent, related native processes were empty and the three checked locks had no holders. The original32-start budget stays closed; no new solver, candidate, model fit or cleanup was performed. Earlier alive snapshots below are historical.
-
-[Native solver cost evidence](controlled64_costs_20260911/README.md) now records1103.26s directed versus1262.35s DOE across16 starts each. All64 proposals and missing-cost nulls remain visible. Full pipeline/storage cost is unknown; there is no new occupied-cell gain or general sampling-advantage claim, and firstK4 remains NOT_REACHED.
-
-[Updated discussion draft](paper_development_results_20260911/README.md) retains40/128 physical attainment, conditional40/48, and the separate1253/1259SELF_PROXY holdout. No AI scientific figures or FINAL-model claims are added. Research space available was392333971456B at22:01:56; quota remains UNKNOWN for that mount, and controlled64 du was248311808B at22:05:01.
-
-## Latest 15 GHz postbudget closure — 2026-09-11 18:34 UTC scene
-
-[Closed64 and first qualified increment](20260911_postbudget_closure.md) supersedes the08:24 alive/first-result snapshot below.
-Original owner exited; both arms ended at16 actual starts before the original deadline,64 terminal/0 pending.
-Directed/DOE: strict2/10, core1/5, eligible train1/4, new occupied cells0/0; m16 reached, primary firstK4 NOT_REACHED.
-No new solver/restart/budget;13 budget-unstarted and all original failures remain in64.
-Separately, one old120 member was formally committed/read back; remaining30 are unprocessed and full100K union remains UNKNOWN.
-Research quota UNKNOWN. Paper text now retains40/128 versus conditional40/48, separate from1253/1259SELF_PROXY.
-The prior sections are dated history and do not authorize old multi-frequency work or imply current liveness.
-
-## Current 15 GHz increment — 2026-09-11
-
-[New verified results and code](20260911_heldout_and_last2.md): MARS owner access restored;
-original128 now128 terminal/0pending,48strict and40joint hits; fixed selected6329-model
-holdout evaluated once on1259 rows (inverse SELF_PROXY only, not fresh EMX or FINAL).
+- Requested/admitted/executor/actualEMX:48/0/48/0.
+- Window07:31:08→07:57:53UTC:newEMX0/newstrict-rangeunique0/freshformal0/historyformal+394.
+- Formal certified union lower bound5094; full100K and final independent10K not complete.
+- Owner1039340,standby1145095,metadata1145088 alive; automatic continuation installed, successor native launch not observed.
+- Direct blocker: engineering normalized-load guard1.10; measured1.185239/1.168109, healthy streak0/5.
+- Original256 budget/21terminal/9fresh/4core/4formal preserved;235without terminal are not235running.
+- Scope note: a083-only core0 is not the original256 cumulativecore4.
+- Actual93 historical source/geometry/label bindings complete; all93 still missing physical qualification,formal0.
+- Historical111 source grid and unknown split retained; no56/fresh/oldaccepted impersonation.
+- First97567 missing originalsource-audit file; directGDS and power-line metadata received; no fabricated PASS.
+- Historical fullGDS input adapter is development code; native historicalDRC integration NOT_INSTALLED.
+- CPU/resource waiting does not stop ordinary history certification or installed production continuation.
+- No new training,old128/64 rerun,oldphysicalQA,re-extraction,fullpool scan,cleanup orAIpaper figures.
 [First real controlled64 result](20260911_controlled64_first_real.md) is now verified:
 1 actual DOE EMX start/complete at the08:24:57 snapshot; strict-valid but K_abs0.1711<0.2,
 so0 new qualified in-range samples. Original14 analytical failures remain in64; no advantage claim.

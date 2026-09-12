@@ -1,0 +1,13 @@
+{
+  "status": "FAIL_SYNTHETIC_FIXTURE_SETUP",
+  "qualification_source_sha256": "6760ccc05a063595dc0ef49b05ba476ec44eaf63a273ae54a2dbd8969f9629c7",
+  "test_source_sha256": "d9d5a85eabce0a029fd81ee6ec3359533be0c7699bfc66f47d034c29ab2d5ba4",
+  "tests_attempted": 3,
+  "errors": 3,
+  "elapsed_seconds": 0.069,
+  "error": "KeyError: missing geometry field: primary_outer_width_um",
+  "reason": "Synthetic fixture used f0..f9 instead of the unchanged canonical helper's real named geometry fields. Failure was in setUp before qualification evaluation.",
+  "actual_historical_members_processed": 0,
+  "native_actions": 0,
+  "old_tests_reexecuted": 0
+}
