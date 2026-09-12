@@ -1,0 +1,274 @@
+{
+  "schema": "eucap15_production_snapshot_m17.v1",
+  "observed_utc": "2026-09-12T10:15:49.581127+00:00",
+  "window_start_utc": "2026-09-12T09:51:28.868205+00:00",
+  "observation": {
+    "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/storage_claim_wait_v1/successor_boundary_20260912T101548856601Z/OBSERVATION.json",
+    "sha256": "2cd3a014db82c356eced7947f3d0ce52c06f357c4beff0bd8cb88004ce2dcd7d"
+  },
+  "requested_native_concurrency": 48,
+  "executor_capacity": 48,
+  "actual_native_emx": 9,
+  "cpu_per_solver": 2,
+  "native_processes": [
+    {
+      "pid": 1646186,
+      "start_ticks": 401197164,
+      "state": "R",
+      "cpu_per_solver": 2
+    },
+    {
+      "pid": 1647929,
+      "start_ticks": 401197380,
+      "state": "R",
+      "cpu_per_solver": 2
+    },
+    {
+      "pid": 1682888,
+      "start_ticks": 401202647,
+      "state": "R",
+      "cpu_per_solver": 2
+    },
+    {
+      "pid": 1688777,
+      "start_ticks": 401203404,
+      "state": "R",
+      "cpu_per_solver": 2
+    },
+    {
+      "pid": 1710851,
+      "start_ticks": 401206327,
+      "state": "R",
+      "cpu_per_solver": 2
+    },
+    {
+      "pid": 1714145,
+      "start_ticks": 401206842,
+      "state": "R",
+      "cpu_per_solver": 2
+    },
+    {
+      "pid": 1715539,
+      "start_ticks": 401207048,
+      "state": "R",
+      "cpu_per_solver": 2
+    },
+    {
+      "pid": 1717263,
+      "start_ticks": 401207306,
+      "state": "R",
+      "cpu_per_solver": 2
+    },
+    {
+      "pid": 1719963,
+      "start_ticks": 401207686,
+      "state": "R",
+      "cpu_per_solver": 2
+    }
+  ],
+  "active_permits": {
+    "calibre": 1,
+    "emx": 9,
+    "cadence": 3
+  },
+  "resource": {
+    "pin": {
+      "bytes": 19534,
+      "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_endpoint_v2_claimwait_20260912T093632216029Z/batches/eucap15_production_doe_neighborhood_successor_20260912_v1/owner/fixed48/RESOURCE_20260912T101459526112Z.json",
+      "sha256": "080720c274b0fff223bde9a2a1fd214fdc11ea015f6e34ee33d733732f1f05b2"
+    },
+    "utc": "2026-09-12T10:14:59.526072+00:00",
+    "status": "PASS",
+    "failed_checks": [],
+    "idle_cpu_equivalents": 35.536275940266734,
+    "normalized_load1": 0.8719558715820312,
+    "normalized_load5": 0.8702570597330729,
+    "available_memory_bytes": 454570758144,
+    "free_disk_bytes": 475595636736,
+    "free_license_slots": {
+      "cadence": 3600,
+      "calibre": 85,
+      "emx": 285
+    }
+  },
+  "resource_scope": "PASS gates do not mean48 active. Snapshot idle35.536CPU equivalents before systemreserve4 and pending reservations; not enough headroom to add39 solvers/78CPU to observed9. This is a snapshot, not a long-term allocation guarantee.",
+  "old_original256": {
+    "terminal": 256,
+    "fresh": 201,
+    "failures": 37,
+    "analytic": 18,
+    "core_formal": 94,
+    "core_pending": 0,
+    "owner_exited": true,
+    "transition": {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/landing_increment_m17_v3/BATCH_TRANSITION.json",
+      "sha256": "52d9db5a74f048fd669e3a88c808b47fd2646a1e3c4084fe8dfb6b5bd8653eba"
+    }
+  },
+  "successor": {
+    "release": {
+      "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_endpoint_v2_claimwait_20260912T093632216029Z/batches/eucap15_production_doe_neighborhood_successor_20260912_v1/owner/RELEASE.json",
+      "sha256": "d0670399062e9c10b50d71e532a692c80b75f9fee35f20790d43b7624fc8c6e6",
+      "bytes": 17713
+    },
+    "config": {
+      "bytes": 167847,
+      "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_endpoint_v2_claimwait_20260912T093632216029Z/batches/eucap15_production_doe_neighborhood_successor_20260912_v1/owner/CONFIG.json",
+      "sha256": "b2a9bd58abf363cf4d075b5f5db7e194a574d32466539ff99e54f4103241577e"
+    },
+    "owner": {
+      "pid": 755564,
+      "start_ticks": 401073475,
+      "state": "S"
+    },
+    "policy": {
+      "candidate_pipeline_capacity": 64,
+      "candidate_projected_peak_bytes": 67108864,
+      "cpu_per_solver": 2,
+      "cpu_reservation": {
+        "cadence": 2,
+        "calibre": 2,
+        "emx": 2
+      },
+      "five_independent_health_checks": 5,
+      "maximum_snapshot_age_seconds": 90,
+      "memory_reservation_bytes": {
+        "cadence": 8589934592,
+        "calibre": 8589934592,
+        "emx": 8589934592
+      },
+      "minimum_available_memory_fraction": 0.2,
+      "normalized_load1_max": 1.1,
+      "normalized_load5_max": 1.1,
+      "requested_emx": 48,
+      "reservation_basis": "CONSERVATIVE_CONFIGURED_PROJECTION_NOT_ASSERTED_HARD_PEAK_BOUND",
+      "system_cpu_reserve": 4,
+      "tool_executor_capacity": {
+        "cadence": 8,
+        "calibre": 8,
+        "emx": 48
+      }
+    },
+    "plan": {
+      "pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_endpoint_v2_claimwait_20260912T093632216029Z/batches/eucap15_production_doe_neighborhood_successor_20260912_v1/start_ledger/PLAN.json",
+        "sha256": "c8401b3bfffc54f459cdd7be654356dc61be8d0fce4be2ef8027382b319e178b",
+        "bytes": 141478
+      },
+      "candidate_count": 256,
+      "deadline_utc": "2026-09-12T21:58:57.947036+00:00"
+    },
+    "terminal": 75,
+    "fresh": 66,
+    "analytic": 9,
+    "candidate_failures": 0,
+    "core_candidate_unique": 30,
+    "core_formal": 29,
+    "core_pending": 1,
+    "without_observed_terminal": 181,
+    "metadata": {
+      "pid": 1656171,
+      "ppid": 1,
+      "state": "S",
+      "start_ticks": 401198513,
+      "uid": 2259579,
+      "argv": [
+        "/volumes/research-localdata/ywang3652/rfic-transformer-inverse-design-mars56-s4p-20260702/.venv/bin/python",
+        "-B",
+        "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_fixed48_20260912T060818729473Z/publication_tools/metadata_worker.py",
+        "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/metadata_endpoint_v2_closure_20260912T101116460567Z/DEPLOYMENT.json"
+      ]
+    },
+    "standby": {
+      "pid": 52934,
+      "start_ticks": 400972689,
+      "state": "S"
+    },
+    "continuation_failure": null
+  },
+  "window": {
+    "new_fresh_emx": 69,
+    "old_batch_tail_fresh": 3,
+    "successor_fresh": 66,
+    "new_strict_range_candidate_unique": 31,
+    "newly_observed_core_formal": 30,
+    "new_core_pending": 1,
+    "fresh_formal_added": 31,
+    "prior_cohort_formal_backfill": 1,
+    "historical_formal_added": 0
+  },
+  "formal_union_lower_bound": 6489,
+  "formal_head": {
+    "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/qualified15_single_member_v1/records/006489.json",
+    "sha256": "5ce438b7884ff1b113a3450d7fa23aa60e033674e89ed80ec4d319cb9f703def",
+    "bytes": 179109
+  },
+  "referenced_frequency_rows": 363384,
+  "automatic_batch_continuation": {
+    "actual_transition_proven": true,
+    "future_same_program_continues": true,
+    "old_budgets_reset": false,
+    "healthy_native_owner_restarted": false
+  },
+  "metadata_repair": {
+    "registration_then_exact_five_source_support": true,
+    "old_evidence_holds_retained": 18,
+    "old_metadata_only_drained": true,
+    "healthy_native_signals": 0,
+    "install": {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/storage_claim_wait_v1/successor_metadata_anchor_repair_v1/CLOSURE_INSTALL_RECEIPT.json",
+      "sha256": "7ef33a370e681f27ebde5ae5041747c38917be6c11e9af67f5d6d17c36274bc6"
+    },
+    "actual_callback": {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/storage_claim_wait_v1/successor_metadata_anchor_repair_v1/CLOSURE_ACTUAL_CALLBACK.json",
+      "sha256": "80aa24581895c4175dccd2a5fee336363be8f2859d739daa1786c693298b86db",
+      "formal_added": 28,
+      "software_errors": 0
+    },
+    "later_automatic_formal_additions": 1,
+    "receiver": {
+      "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/metadata_endpoint_v2_closure_20260912T101116460567Z/consume_endpoint_v2.py",
+      "sha256": "b8f3adf8447475783b2404e914d90de299be7db29e743a16be28366c40ead43a",
+      "bytes": 14426
+    },
+    "family_entry": {
+      "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/metadata_endpoint_v2_closure_20260912T101116460567Z/family_entry.py",
+      "sha256": "7354a6f4aebc2e570a4832d08363f1d0ac806581ff8f26538abb1cff4630ca19",
+      "bytes": 12382
+    },
+    "future_publication_reload": {
+      "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/metadata_endpoint_v2_closure_20260912T101116460567Z/RELOAD_RECEIPT.json",
+      "sha256": "ff60d7a08fcee5ee554550904ba4ce00da473bce39e0db504cdc5e5f41d265ba",
+      "bytes": 982
+    },
+    "legacy_six_source_branch_preserved": true,
+    "per_source_byte_checks_preserved": true,
+    "fresh_result_56_label_and_physical_qualification_checks_preserved": true
+  },
+  "storage": {
+    "pin": {
+      "bytes": 14735,
+      "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_endpoint_v2_claimwait_20260912T093632216029Z/batches/eucap15_production_doe_neighborhood_successor_20260912_v1/owner/fixed48/STORAGE_20260912T101548659023Z.json",
+      "sha256": "f434aeac5238d14f7bbb209107512c1f8efa3e477ab715d105c431c08f315a93"
+    },
+    "utc": "2026-09-12T10:15:48.658925+00:00",
+    "allocated": 693141504,
+    "reserved": 3737186304,
+    "ceiling": 5368709120,
+    "claims": 58,
+    "quota": "UNKNOWN",
+    "cleanup_performed": false
+  },
+  "research": {
+    "first_m16_new22_landing_projection": {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/landing_increment_m17_v3/RECEIPT.json",
+      "sha256": "13573987e39ba2bf45bcc78a9042be74c360bfb27dc8be2238f5575b1ac63b21"
+    },
+    "formal_train": 5,
+    "distinct_frozen_baseline_cells": 4,
+    "baseline_empty_or_underfilled_landings": 0,
+    "scope": "Frozen3801 baseline descriptive only; no cumulative coverage or causal improvement claim."
+  },
+  "blocker": "Shared CPU headroom and per-tool admission prevent filling48 at the observed cut; actual9, not requested48. Metadata's deterministic source-version failures have been repaired and actual formal adds read back.",
+  "goal_complete": false
+}

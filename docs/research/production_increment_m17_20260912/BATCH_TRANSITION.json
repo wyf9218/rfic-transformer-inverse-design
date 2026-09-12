@@ -1,0 +1,138 @@
+{
+  "schema": "eucap15_automatic_batch_transition_m17.v1",
+  "old_batch_observed_utc": "2026-09-12T09:57:22.971177+00:00",
+  "new_batch_observed_utc": "2026-09-12T09:59:21.717734+00:00",
+  "sources": {
+    "old_cut": {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/samebatch_hotpath_v1/joint_cut_20260912T095722466902Z/OBSERVATION.json",
+      "sha256": "d56c1e19683924f0838a5cbb1303d287bc666c6e3cd87b8621c3caddff6f926a"
+    },
+    "successor_cut": {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/storage_claim_wait_v1/successor_boundary_20260912T095921035401Z/OBSERVATION.json",
+      "sha256": "981183a60f015275474914297caf79ed9af8a9f9cc3dd69f1df4e84c6306bd04"
+    }
+  },
+  "old_batch": {
+    "original_candidates": 256,
+    "terminal": 256,
+    "fresh": 201,
+    "candidate_failures": 37,
+    "analytic_failures": 18,
+    "core_unique_formally_committed": 94,
+    "core_pending": 0,
+    "batch_terminal": {
+      "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/claimwait_20260912T093250847503Z/owner/BATCH_RECEIPT.json",
+      "sha256": "a89829be479d633d8e452a2ee0224d22ef7478f47d151e5c9e8e10f68e45e36d",
+      "bytes": 99974
+    },
+    "terminal_utc": "2026-09-12T09:52:45.639671+00:00",
+    "status": "ALL_NEW256_ACCOUNTED_WITHIN_BUDGET_NOT_PRODUCTION_ACCEPTANCE",
+    "process4140036_exited": true,
+    "metadata_acceptance_is_separate": true
+  },
+  "old_batch_increment": {
+    "baseline_utc": "2026-09-12T09:51:28.868205+00:00",
+    "new_terminal": 3,
+    "new_fresh": 3,
+    "new_core": 1,
+    "new_core_formal": 1,
+    "prior_core_formal_backfill": 1,
+    "fresh_formal": 2,
+    "historical_formal": 0,
+    "received": {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/landing_increment_m17_v3/RECEIVED_OLD_BATCH_LAST3.json",
+      "sha256": "1cf6a7f4caff7547e23509b2c233835cd08e08dc48c1bafce5c8fc7418bb7646"
+    }
+  },
+  "formal_union_lower_bound": 6460,
+  "formal_head": {
+    "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/qualified15_single_member_v1/records/006460.json",
+    "sha256": "2b4aa1c127ee96afe4ae271dad671f57a41bae2262ed091aedecab0922dbaa28",
+    "bytes": 567451
+  },
+  "successor": {
+    "automatic_owner_launch": true,
+    "release": {
+      "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_endpoint_v2_claimwait_20260912T093632216029Z/batches/eucap15_production_doe_neighborhood_successor_20260912_v1/owner/RELEASE.json",
+      "sha256": "d0670399062e9c10b50d71e532a692c80b75f9fee35f20790d43b7624fc8c6e6",
+      "bytes": 17713
+    },
+    "start": {
+      "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_endpoint_v2_claimwait_20260912T093632216029Z/batches/eucap15_production_doe_neighborhood_successor_20260912_v1/owner/START_RECEIPT.json",
+      "sha256": "ace888313b2d246cb71c41d1ae87e62da0908a76707fe1585d23d872204779ea",
+      "bytes": 1509
+    },
+    "owner": {
+      "pid": 755564,
+      "start_ticks": 401073475,
+      "ppid": 52934,
+      "alive": true
+    },
+    "policy": {
+      "candidate_pipeline_capacity": 64,
+      "candidate_projected_peak_bytes": 67108864,
+      "cpu_per_solver": 2,
+      "cpu_reservation": {
+        "cadence": 2,
+        "calibre": 2,
+        "emx": 2
+      },
+      "five_independent_health_checks": 5,
+      "maximum_snapshot_age_seconds": 90,
+      "memory_reservation_bytes": {
+        "cadence": 8589934592,
+        "calibre": 8589934592,
+        "emx": 8589934592
+      },
+      "minimum_available_memory_fraction": 0.2,
+      "normalized_load1_max": 1.1,
+      "normalized_load5_max": 1.1,
+      "requested_emx": 48,
+      "reservation_basis": "CONSERVATIVE_CONFIGURED_PROJECTION_NOT_ASSERTED_HARD_PEAK_BOUND",
+      "system_cpu_reserve": 4,
+      "tool_executor_capacity": {
+        "cadence": 8,
+        "calibre": 8,
+        "emx": 48
+      }
+    },
+    "config": {
+      "bytes": 167847,
+      "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_endpoint_v2_claimwait_20260912T093632216029Z/batches/eucap15_production_doe_neighborhood_successor_20260912_v1/owner/CONFIG.json",
+      "sha256": "b2a9bd58abf363cf4d075b5f5db7e194a574d32466539ff99e54f4103241577e"
+    },
+    "repo": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_endpoint_v2_20260912T090023519751Z/physical_repo",
+    "plan": {
+      "pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_endpoint_v2_claimwait_20260912T093632216029Z/batches/eucap15_production_doe_neighborhood_successor_20260912_v1/start_ledger/PLAN.json",
+        "sha256": "c8401b3bfffc54f459cdd7be654356dc61be8d0fce4be2ef8027382b319e178b",
+        "bytes": 141478
+      },
+      "candidate_count": 256,
+      "deadline_utc": "2026-09-12T21:58:57.947036+00:00"
+    },
+    "healthy_check_streak": 5,
+    "active_permits": {
+      "calibre": 3,
+      "cadence": 8
+    },
+    "actual_native_emx": 0,
+    "result_counts": {
+      "ANALYTIC_FAIL_NOT_DISPATCHED": 6
+    },
+    "source_core": 0,
+    "formally_committed": 0,
+    "metadata_worker_alive": false,
+    "standby_alive": true,
+    "standby_pid": 52934,
+    "continuation_failure": null
+  },
+  "scientific_scope": "Same15GHz contract and new independent256/12h/5GiB successor, not a reset of old256. Endpointv2 new geometry code remains distinct; oldresults immutable. Source new_result_counts19 is recovery-release cumulative, not new-window3.",
+  "read_actions": {
+    "native_launches": 0,
+    "process_signals": 0,
+    "old_result_bodies_read": 0,
+    "old_ledger_prefix_reaudit": false
+  },
+  "completion": "FULL100K_AND_FINAL10000_INCOMPLETE"
+}

@@ -1,0 +1,112 @@
+{
+  "schema": "eucap15_m17_publication_manifest.v1",
+  "utc": "2026-09-12 10:21:05 UTC",
+  "scope": "Actual automatic successor, real metadata recovery, new result receipt, first prior22 landing projection; no old experiments or full QA repeated.",
+  "files": [
+    {
+      "path": "SNAPSHOT.json",
+      "sha256": "7ed5e0fa6b956eec3b3c0c3c0946d390ecf47166c73e67ba0dc24923f71f3f20"
+    },
+    {
+      "path": "BATCH_TRANSITION.json",
+      "sha256": "52d9db5a74f048fd669e3a88c808b47fd2646a1e3c4084fe8dfb6b5bd8653eba"
+    },
+    {
+      "path": "METADATA_ANCHOR_STEP.json",
+      "sha256": "7b9012b079dbfa345d410e2c4acbc8d3f711a9d370858c5f3c9788c9de490eec"
+    },
+    {
+      "path": "METADATA_CLOSURE_INSTALL.json",
+      "sha256": "b8e0957ad3c328e75d272dd21de2d7cd15dbcea1f474fc146a801020fc6bedb0"
+    },
+    {
+      "path": "RECEIVED_OLD_BATCH_LAST3.json",
+      "sha256": "1cf6a7f4caff7547e23509b2c233835cd08e08dc48c1bafce5c8fc7418bb7646"
+    },
+    {
+      "path": "RECEIVED_SUCCESSOR_NEW69.json",
+      "sha256": "078d803af8d8ac94a819f9b5b20401b52e6f74beeea36f5c846980b2f0a43431"
+    },
+    {
+      "path": "ACTUAL_LANDINGS.json",
+      "sha256": "4a07e20db3a72bee7d5b44736484d2c4d33cb8beb8d8b2592acfd778a35e8fac"
+    },
+    {
+      "path": "LANDING_RECEIPT.json",
+      "sha256": "13573987e39ba2bf45bcc78a9042be74c360bfb27dc8be2238f5575b1ac63b21"
+    },
+    {
+      "path": "FIGURE_SOURCE_NOTE.md",
+      "sha256": "ced7af200e4aed169961334249b3fb8952b9f99ed919978a66feb43fbc7e9ec8"
+    },
+    {
+      "path": "metadata_sources/consume_endpoint_v2.py",
+      "sha256": "b8f3adf8447475783b2404e914d90de299be7db29e743a16be28366c40ead43a"
+    },
+    {
+      "path": "metadata_sources/family_entry.py",
+      "sha256": "7354a6f4aebc2e570a4832d08363f1d0ac806581ff8f26538abb1cff4630ca19"
+    },
+    {
+      "path": "metadata_sources/test_endpoint_closure.py",
+      "sha256": "c6ec98ebd50dd6a2f58d4f0216d8f5caf2f512ea1227546a71a2ac36582914d4"
+    },
+    {
+      "path": "metadata_sources/test_anchor.py",
+      "sha256": "3290494eece2c7656f7c4ed1c9762ba198e57aa6725542aaffb7ba35a0980ef9"
+    },
+    {
+      "path": "metadata_sources/deploy_metadata_closure.py",
+      "sha256": "9385454892d89dc241e971b419e08a04612a4cf91a66a1f1d30d058fc511a96e"
+    },
+    {
+      "path": "metadata_sources/deploy_metadata_repair.py",
+      "sha256": "21d381d79f911f5ff3686f1cbc118e6cddd53a52ecb84232819e90b6e13ac945"
+    }
+  ],
+  "raw_install_source": {
+    "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/storage_claim_wait_v1/successor_metadata_anchor_repair_v1/CLOSURE_INSTALL_RECEIPT.json",
+    "sha256": "7ef33a370e681f27ebde5ae5041747c38917be6c11e9af67f5d6d17c36274bc6",
+    "public_file": "METADATA_CLOSURE_INSTALL.json",
+    "public_serialization": "JSON parsed and reserialized; identical values, separate public SHA"
+  },
+  "actual_callback_source": {
+    "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/storage_claim_wait_v1/successor_metadata_anchor_repair_v1/CLOSURE_ACTUAL_CALLBACK.json",
+    "sha256": "80aa24581895c4175dccd2a5fee336363be8f2859d739daa1786c693298b86db"
+  },
+  "previous_commit": "a57a0311aca28ae669ca0691511a9eda552c82e4",
+  "source_copies": [
+    {
+      "src": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/storage_claim_wait_v1/successor_metadata_anchor_repair_v1/closure_sources/consume_endpoint_v2.py",
+      "dst": "/Users/wyf/Documents/模拟变压器AI反向建模/github_worktrees/eucap15-mlp-capacity-20260909/docs/research/production_increment_m17_20260912/metadata_sources/consume_endpoint_v2.py"
+    },
+    {
+      "src": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/storage_claim_wait_v1/successor_metadata_anchor_repair_v1/closure_sources/family_entry.py",
+      "dst": "/Users/wyf/Documents/模拟变压器AI反向建模/github_worktrees/eucap15-mlp-capacity-20260909/docs/research/production_increment_m17_20260912/metadata_sources/family_entry.py"
+    },
+    {
+      "src": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/storage_claim_wait_v1/successor_metadata_anchor_repair_v1/test_endpoint_closure.py",
+      "dst": "/Users/wyf/Documents/模拟变压器AI反向建模/github_worktrees/eucap15-mlp-capacity-20260909/docs/research/production_increment_m17_20260912/metadata_sources/test_endpoint_closure.py"
+    },
+    {
+      "src": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/storage_claim_wait_v1/successor_metadata_anchor_repair_v1/test_anchor.py",
+      "dst": "/Users/wyf/Documents/模拟变压器AI反向建模/github_worktrees/eucap15-mlp-capacity-20260909/docs/research/production_increment_m17_20260912/metadata_sources/test_anchor.py"
+    },
+    {
+      "src": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/storage_claim_wait_v1/successor_metadata_anchor_repair_v1/deploy_metadata_closure.py",
+      "dst": "/Users/wyf/Documents/模拟变压器AI反向建模/github_worktrees/eucap15-mlp-capacity-20260909/docs/research/production_increment_m17_20260912/metadata_sources/deploy_metadata_closure.py"
+    },
+    {
+      "src": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/storage_claim_wait_v1/successor_metadata_anchor_repair_v1/deploy_metadata_repair.py",
+      "dst": "/Users/wyf/Documents/模拟变压器AI反向建模/github_worktrees/eucap15-mlp-capacity-20260909/docs/research/production_increment_m17_20260912/metadata_sources/deploy_metadata_repair.py"
+    }
+  ],
+  "native_controller_restarted": false,
+  "native_signals": 0,
+  "distinct_anchor_tests": 5,
+  "distinct_closure_tests": 6,
+  "local_and_remote_are_not_distinct_test_cases": true,
+  "old_experiments_repeated": 0,
+  "generated_paper_figures": 0,
+  "new_user_approval_gates": 0
+}

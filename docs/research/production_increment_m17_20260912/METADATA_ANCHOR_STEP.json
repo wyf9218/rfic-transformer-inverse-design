@@ -1,0 +1,44 @@
+{
+  "schema": "eucap15_successor_metadata_anchor_step.v1",
+  "install": {
+    "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/storage_claim_wait_v1/successor_metadata_anchor_repair_v1/INSTALL_RECEIPT.json",
+    "sha256": "49c93ea6bee3021ec2311bde3808addb03f2725c7d9c539284324a741d05ba7e"
+  },
+  "first_callback": {
+    "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/storage_claim_wait_v1/successor_metadata_anchor_repair_v1/FIRST_ACTUAL_CALLBACK.json",
+    "sha256": "c939f0a34bb8ee39fc0ca6decf6cbd1fea63b3ddd483dd6d42e795864ae654af"
+  },
+  "utc": "2026-09-12T10:05:03.372046+00:00",
+  "installed_family_entry_sha256": "81ccf73d04fa1c948b27c66db68f8190493d1263bc6128e83049e35c1b116c5b",
+  "endpoint_upgrade_sha256": "5ab6cf17dca566e4bd0a0bca905b76d09a1d9e2d1fe5d2acebfcab91aecba638",
+  "trusted_registration_sha256": "27f3f0822db9654f692764efa4616a018db176a5b953a32859644d90ac8faa4a",
+  "registration_check_passed": true,
+  "qualification_path_restored": false,
+  "callback_exit_code": 0,
+  "formally_added": 0,
+  "software_evidence_holds": 18,
+  "hold_error": "EXACT_SOURCE6_CLOSURE_REQUIRED",
+  "original_analytic_failures": 7,
+  "no_closed_result_observed": 231,
+  "no_closed_result_is_not_site_pending": true,
+  "physical_qa_calls": 0,
+  "extraction_calls": 0,
+  "native_actions": 0,
+  "metadata_worker_started": {
+    "pid": 1263699,
+    "ppid": 1256030,
+    "state": "R",
+    "start_ticks": 401143269,
+    "uid": 2259579,
+    "argv": [
+      "/volumes/research-localdata/ywang3652/rfic-transformer-inverse-design-mars56-s4p-20260702/.venv/bin/python",
+      "-B",
+      "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_fixed48_20260912T060818729473Z/publication_tools/metadata_worker.py",
+      "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/metadata_endpoint_v2_anchor_20260912T100453213472Z/DEPLOYMENT.json"
+    ]
+  },
+  "native_owner_untouched": true,
+  "standby_untouched": true,
+  "next_step": "Unique native owner developing exact endpoint-v2 five-source closure support; retain legacy six-source rule and per-source/fresh-result/56point verification. Retain these18 holds and re-receive existing terminals in new metadata identity without EMX rerun.",
+  "status": "REGISTRATION_ANCHOR_FIXED_ADDITIONAL_RECEIVER_INCOMPATIBILITY_CONFIRMED"
+}
