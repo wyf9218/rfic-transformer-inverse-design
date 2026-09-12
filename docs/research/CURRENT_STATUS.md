@@ -1,5 +1,14 @@
 # Current Evidence Status
 
+## Same-batch hotpath repair active; actual CPU/swap wait — M6 cutoff2026-09-12 06:39:33UTC
+
+The single native owner is now1039340/start399883569, releasea0834643. The actual same-budget48→48 handoff preserved21closed results and2partial candidates; the256/12h/5GiB budget and originalPLAN were not reset. The dispatch/resource lock repair is active. Requested/admitted/executor/actual EMX concurrency is **48/0/48/0**, not48running. Current resource evidence has normalized load1/5=1.34182/1.13033, idleCPU1.7387 and swapout66; these real CPU/swap failures—not the repaired lock—prevent admission.
+
+Window06:18:26→06:39:33: **newEMX0, newstrict/core0, freshformal0, historicalformal+457**. The bounded observed ledger is3798/212688frequency references; it is not3798fresh results, a re-audited whole union, or100K complete. [Exact field snapshot and source identities](qualification_batch_20260912/SNAPSHOT_M6.json).
+
+Standby1145095 and metadata worker1145088 are actually installed and alive. The explicit same-batch resume binds the newowner; it does not wait for the retired parent or fabricate an old batch terminal. First metadata call was honestly BUSY/75; ordinary retry6 closed successfully with added0. Automatic next-batch continuation is installed but no successor native launch has occurred. The final family consumer preserves frozen child validation/test and records its actual callback. [Incremental sources](qualification_batch_20260912/publication_v6/SOURCE_MAP.md). Historical snapshots below retain their original cutoffs.
+
+
 ## Fixed48 deployed; CPU resource wait — M5 cutoff2026-09-12 05:41:43UTC
 
 Native owner2799696 is alive after safe same-budget handoff: requested48 EMX, executor48, pipeline64, **actual native0**. Shared CPU normalized load1/5=1.17678/1.20299 exceeds1.10; memory/storage and299free EMX licenses are not the current blocker. Ordinary resource checks continue. [Exact deployment snapshot and source pins](qualification_batch_20260912/SNAPSHOT_M5.json).

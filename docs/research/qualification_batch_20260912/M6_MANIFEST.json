@@ -1,0 +1,112 @@
+{
+  "schema": "eucap15_incremental_publication_manifest.v1",
+  "milestone": "M6",
+  "evidence_cutoff": "2026-09-12T06:39:33.073279+00:00",
+  "parent_commit": "0272a5ef0f37a3928c00c4ffbe98d7115fd22456",
+  "files": [
+    {
+      "path": "docs/research/qualification_batch_20260912/publication_v6/hotpath_candidate/fixed48_runtime.py",
+      "sha256": "ab763b0d3595682d34112ace7f674caf2a069165a5f809a0f562c5ca8a7fdb55"
+    },
+    {
+      "path": "docs/research/qualification_batch_20260912/publication_v6/hotpath_candidate/test_hotpath.py",
+      "sha256": "16c3a223701b949a091bc16e4f0777f3434f5b3794a861317d527d92b5606bd6"
+    },
+    {
+      "path": "docs/research/qualification_batch_20260912/publication_v6/family_split_v2/production256_publication.py",
+      "sha256": "97a2b62cd213d85e09b327af4e0bc21cd160973aa3a54cd91af7684567f03201"
+    },
+    {
+      "path": "docs/research/qualification_batch_20260912/publication_v6/family_split_v2/backfill_one.py",
+      "sha256": "6d3311547da022b857a756b6341095d76472a705f711ab25c8a00f620f7b5368"
+    },
+    {
+      "path": "docs/research/qualification_batch_20260912/publication_v6/successor_v2/successor_entry.py",
+      "sha256": "d5ca6452e05ea651ad7906472f361266ff28f6f9b8ad5e0c9a316c0ed3b34b0d"
+    },
+    {
+      "path": "docs/research/qualification_batch_20260912/publication_v6/family_consumer_v3/family_entry.py",
+      "sha256": "53989217a7112fe433b729bada3f96ac1953da658fd617c3b1845b4e5ec24b9b"
+    },
+    {
+      "path": "docs/research/qualification_batch_20260912/publication_v6/family_consumer_v3/test_family_entry.py",
+      "sha256": "bc7ecd4ae529d17d39fe63f9ed8809ee06d5e720dd009f789197df7a204f21d1"
+    },
+    {
+      "path": "docs/research/qualification_batch_20260912/publication_v6/family_consumer_v4/family_entry.py",
+      "sha256": "7614220e5fa6ad4b7f03251037e23607926452ead9bd3ecb0bd7b12a308d0b9d"
+    },
+    {
+      "path": "docs/research/qualification_batch_20260912/publication_v6/family_consumer_v4/test_successor_recovery_scope.py",
+      "sha256": "f9b25da5afe37397c9cd04821b59e28534975cacaef744698b55943017a09281"
+    },
+    {
+      "path": "docs/research/qualification_batch_20260912/publication_v6/SOURCE_MAP.md",
+      "sha256": "abfc2c4b64d2e99d3f562dc9b03c81f8d03fc3f0cd73a83c5a5b1441f09bd956"
+    },
+    {
+      "path": "docs/research/qualification_batch_20260912/SNAPSHOT_M6.json",
+      "sha256": "84a548a9f22c4c403c6299a5b2612ae85be9182772c5e5edff9b7a3480449439"
+    },
+    {
+      "path": "docs/research/CURRENT_STATUS.md",
+      "sha256": "ec4ca54ed160072b38ee97d342df27301a0086a4ca484716010b992d3eeaf06a"
+    }
+  ],
+  "source_copies": [
+    {
+      "source": "reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/fixed48_dispatch_hotpath_v1/fixed48_runtime.py",
+      "path": "docs/research/qualification_batch_20260912/publication_v6/hotpath_candidate/fixed48_runtime.py",
+      "sha256": "ab763b0d3595682d34112ace7f674caf2a069165a5f809a0f562c5ca8a7fdb55"
+    },
+    {
+      "source": "reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/fixed48_dispatch_hotpath_v1/test_hotpath.py",
+      "path": "docs/research/qualification_batch_20260912/publication_v6/hotpath_candidate/test_hotpath.py",
+      "sha256": "16c3a223701b949a091bc16e4f0777f3434f5b3794a861317d527d92b5606bd6"
+    },
+    {
+      "source": "reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/production256_family_split_v2/production256_publication.py",
+      "path": "docs/research/qualification_batch_20260912/publication_v6/family_split_v2/production256_publication.py",
+      "sha256": "97a2b62cd213d85e09b327af4e0bc21cd160973aa3a54cd91af7684567f03201"
+    },
+    {
+      "source": "reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/production256_family_split_v2/backfill_one.py",
+      "path": "docs/research/qualification_batch_20260912/publication_v6/family_split_v2/backfill_one.py",
+      "sha256": "6d3311547da022b857a756b6341095d76472a705f711ab25c8a00f620f7b5368"
+    },
+    {
+      "source": "reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/native_candidate_publication_successor_v2/successor_entry.py",
+      "path": "docs/research/qualification_batch_20260912/publication_v6/successor_v2/successor_entry.py",
+      "sha256": "d5ca6452e05ea651ad7906472f361266ff28f6f9b8ad5e0c9a316c0ed3b34b0d"
+    },
+    {
+      "source": "reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/native_candidate_publication_family_v3/family_entry.py",
+      "path": "docs/research/qualification_batch_20260912/publication_v6/family_consumer_v3/family_entry.py",
+      "sha256": "53989217a7112fe433b729bada3f96ac1953da658fd617c3b1845b4e5ec24b9b"
+    },
+    {
+      "source": "reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/native_candidate_publication_family_v3/test_family_entry.py",
+      "path": "docs/research/qualification_batch_20260912/publication_v6/family_consumer_v3/test_family_entry.py",
+      "sha256": "bc7ecd4ae529d17d39fe63f9ed8809ee06d5e720dd009f789197df7a204f21d1"
+    },
+    {
+      "source": "reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/native_candidate_publication_family_v4/family_entry.py",
+      "path": "docs/research/qualification_batch_20260912/publication_v6/family_consumer_v4/family_entry.py",
+      "sha256": "7614220e5fa6ad4b7f03251037e23607926452ead9bd3ecb0bd7b12a308d0b9d"
+    },
+    {
+      "source": "reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/native_candidate_publication_family_v4/test_successor_recovery_scope.py",
+      "path": "docs/research/qualification_batch_20260912/publication_v6/family_consumer_v4/test_successor_recovery_scope.py",
+      "sha256": "f9b25da5afe37397c9cd04821b59e28534975cacaef744698b55943017a09281"
+    }
+  ],
+  "physical_output_claims": "Only separately dated SNAPSHOT_M6 observations; publication itself starts no native work.",
+  "new_targeted_evidence": {
+    "hotpath_receipt": "7a3364b3c92e37c9a57da44de49df39c22a9cf4a5231c17e6a449694c2cb49e2",
+    "family_rule_receipt": "dda7f8e655d234dcf20179517179f1287ec815582f40f117a669a4689de9aaea",
+    "family_loader_candidate_receipt": "c061eb0cdcf3d5e6f6893d7beccea979e59ac75073730a2684a3a4d04ecad51f",
+    "family_successor_scope_receipt": "a9fe9f843c7d2a8b66e80185e4184e7c722446aee032c519902418caf18fa646",
+    "owner_samebatch_targeted_receipt": "e840116b876f3c4529f28906b5f5e5250846b6892f751825f5460a96c5a7604e"
+  },
+  "old_tests_repeated": 0
+}
