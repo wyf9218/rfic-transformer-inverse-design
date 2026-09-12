@@ -1,0 +1,79 @@
+{
+  "schema": "eucap15.public_milestone_manifest.v2",
+  "created_utc": "2026-09-12 04:11:52 UTC",
+  "parent_commit": "bb615e19d913003c318775504986a20fdbfa736c",
+  "scope": "FORMAL341_READBACK_NESTED_CADENCE_FIX_AND_NATIVE2_OWNER_RESULT_SNAPSHOT",
+  "files": [
+    {
+      "path": "docs/research/CURRENT_STATUS.md",
+      "bytes": 24746,
+      "sha256": "840957e7d59db46331ee30c978c391f1164217e76df1cf03e314f406314d2fd4"
+    },
+    {
+      "path": "rfic_transformer_inverse_design/execution/evaluator.py",
+      "bytes": 25116,
+      "sha256": "840058395057a5efc9ef6927d3104a4a37ba6978cbd9131cc23ac1607f8f5654"
+    },
+    {
+      "path": "rfic_transformer_inverse_design/execution/zeus_cadence.py",
+      "bytes": 62162,
+      "sha256": "3879d9cbeeb3e46844a3363f94e6e74ecfb2bb6d868fb3df6794064a6cee510f"
+    },
+    {
+      "path": "docs/research/EUCAP15_NESTED_CADENCE_POLICY_FIX_20260912.md",
+      "bytes": 4593,
+      "sha256": "13a0f6d79ce75a8534caf09909a2fc8f4d26c5045524c4d4ed1f7ffe1a8ab683"
+    },
+    {
+      "path": "docs/research/qualification_batch_20260912/INCREMENT_0402.md",
+      "bytes": 3910,
+      "sha256": "52e44e14d8716c344d4ea0662a0dc368a499cf514293215ea798463915a063bd"
+    },
+    {
+      "path": "docs/research/qualification_batch_20260912/SNAPSHOT_0402.json",
+      "bytes": 4487,
+      "sha256": "df9846fb1e11e5fb930d5e2260593ac614bf139e2f56a1fedb3de220e029f684"
+    },
+    {
+      "path": "docs/research/qualification_batch_20260912/publication_v2/history_publication.py",
+      "bytes": 14035,
+      "sha256": "2fabb94c0171183d41cbb0e441c72e9d629c709077c0d327521685a48ce9d2c5"
+    },
+    {
+      "path": "docs/research/qualification_batch_20260912/publication_v2/controlled6_publication.py",
+      "bytes": 13820,
+      "sha256": "b74bba0ac7aa656e0f198ce5a91a643ace1b986384496e82bd897e2a4cbec56a"
+    },
+    {
+      "path": "docs/research/qualification_batch_20260912/publication_v2/history_qualification_v2.py",
+      "bytes": 13075,
+      "sha256": "6e6ba71e7f35e5d78dbb0a194c08489389343c2e0c86b9584f793947e5fddf76"
+    },
+    {
+      "path": "docs/research/qualification_batch_20260912/publication_v2/SOURCE_MAP.md",
+      "bytes": 6208,
+      "sha256": "18a02fcb50266769ddadedbeedc8f63ffa50987a72218940c862ed7be39de55b"
+    },
+    {
+      "path": "tests/test_eucap15_endpoint_cache_consumer.py",
+      "bytes": 7157,
+      "sha256": "6c30ae309a492e27a876e19cd81881bb132faf93dadb5cb82155182394b6073c"
+    }
+  ],
+  "review_receipts": {
+    "qualification341": "a1b3e2269765a44e076455d5caef289cd083cd08cca3ddaa700d2fcf1921dcdb",
+    "nested_tests": "8ebf98b5f3fe60682b37e6c40df52f715539d712a186084d5c64291277fb37e3",
+    "controlled6_readback": "b301f4f33495cee4539588bd8df2ef4abbdc8bea01d797e01bfacf07d20e827a",
+    "history304_readback": "69f0c6cea4c4c8e405a7cc8031ccdc1da1553dcaa3ff00a4f7ae52d36cf8b1b2",
+    "native_observation": "e02a2d77702af078d7a23569445fbe162cfc074867d279edf6e607d2b81a038e"
+  },
+  "earlier_manifest_resolution": {
+    "commit": "bb615e19d913003c318775504986a20fdbfa736c",
+    "path": "docs/research/qualification_batch_20260912/MANIFEST.json",
+    "sha256": "e083429d435be3b34060c899b378de8495ebdb5484d71083ec3497c25e9b8b31",
+    "note": "Earlier source pins resolve at this commit, not at later HEAD."
+  },
+  "raw_private_artifacts_published": false,
+  "new_tests_run_for_packaging": 0,
+  "goal_complete": false
+}

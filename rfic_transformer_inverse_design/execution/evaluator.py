@@ -330,6 +330,13 @@ class TransformerEmxEvaluator:
                         cache_key=key,
                     )
                 else:
+                    # The round-trip performs its own export. It must use the
+                    # same policy/cache identity as this outer evaluator.
+                    # Omit the default kwarg to preserve legacy call adapters.
+                    endpoint_kwargs = (
+                        {"port_endpoint_policy": self.port_endpoint_policy}
+                        if self.port_endpoint_policy != "legacy" else {}
+                    )
                     roundtrip_payload = run_transformer_zeus_cadence_roundtrip(
                         run_config=self.run_config,
                         geometry=geometry,
@@ -339,6 +346,7 @@ class TransformerEmxEvaluator:
                         pdk_cds_lib=self.run_config.emx.cadence_pdk_cds_lib,
                         tech_lib_name=self.run_config.emx.cadence_tech_lib,
                         layer_map_path=self.run_config.emx.cadence_layer_map,
+                        **endpoint_kwargs,
                     )
                 roundtrip_result = result_from_roundtrip_payload(
                     payload=roundtrip_payload,

@@ -1,0 +1,126 @@
+{
+  "schema": "eucap15.public_increment_snapshot.v2",
+  "observation_cutoff_utc": "2026-09-12T04:02:46.013652+00:00",
+  "qualification": {
+    "first1000": {
+      "processed": 1000,
+      "qualified": 304,
+      "out_of_range": 220,
+      "physical_invalid": 476,
+      "duplicate": 0,
+      "missing_evidence": 0,
+      "incompatible": 0
+    },
+    "formal_events": [
+      {
+        "utc": "2026-09-12T03:09:21.394893+00:00",
+        "source": "original31_holdout",
+        "before": 20,
+        "added": 11,
+        "after": 31,
+        "splits": {
+          "train": 0,
+          "validation": 3,
+          "test": 8
+        },
+        "receipt_sha256": "b9c7b425f1ae4e0065bab46626ce8134dce832123e74b2f7d457da3440d2af7f"
+      },
+      {
+        "utc": "2026-09-12T03:55:10.091842+00:00",
+        "source": "original_controlled64_core6",
+        "before": 31,
+        "added": 6,
+        "after": 37,
+        "splits": {
+          "train": 5,
+          "validation": 0,
+          "test": 1
+        },
+        "receipt_sha256": "b301f4f33495cee4539588bd8df2ef4abbdc8bea01d797e01bfacf07d20e827a"
+      },
+      {
+        "utc": "2026-09-12T03:56:24.565505+00:00",
+        "source": "historical_first1000_qualified304",
+        "before": 37,
+        "added": 304,
+        "after": 341,
+        "splits": {
+          "train": 184,
+          "validation": 63,
+          "test": 57
+        },
+        "receipt_sha256": "69f0c6cea4c4c8e405a7cc8031ccdc1da1553dcaa3ff00a4f7ae52d36cf8b1b2"
+      }
+    ],
+    "formal_union": 341,
+    "union_splits": {
+      "train": 209,
+      "validation": 66,
+      "test": 66
+    },
+    "three_identity_namespace_unique_counts": {
+      "canonical_9dp": 341,
+      "production_1e6": 341,
+      "nominal_grid_5nm": 341
+    },
+    "readback_review_sha256": "a1b3e2269765a44e076455d5caef289cd083cd08cca3ddaa700d2fcf1921dcdb",
+    "historical_reuse_new_solver_actions": 0,
+    "new_training_updates": 0,
+    "full100k_qualified_total": null,
+    "whole_P215_certified": false,
+    "new_training_membership_changed": false,
+    "not_additive_with_old21135_or6700": true
+  },
+  "production256": {
+    "manifest_sha256": "f50721383ef51e5c2c3fa0b7dac67c421d8a9c3e9434600ffaa464c0ef25ebfb",
+    "plan_sha256": "fd90b07106fb7020e1e6520deaac932647feb3e5f686b5d41ffa91fffe9871c0",
+    "recovery_release_sha256": "3d10ca46115b420e0c235ba6df4ddbcc6f84e020670cde66118ceb5e75021257",
+    "original_proposals": 256,
+    "doe": 192,
+    "train_neighborhood": 64,
+    "analytic_pass": 238,
+    "original_analytic_fail": 18,
+    "observed_native_starts": 2,
+    "observed_fresh_completed": 2,
+    "observed_core_qualified": 0,
+    "observed_formal_added": 0,
+    "closed_results": 3,
+    "observed_analytic_not_dispatched": 1,
+    "not_observed_closed": 253,
+    "not_observed_closed_is_not_field_pending_count": true,
+    "status_source": "NATIVE_OWNER_CLOSED_RESULT_AND_BIRTH_METADATA",
+    "research_physical_consumer": "MISSING_EXACT_ARTIFACT_TRANSPORT_PENDING",
+    "observation_sha256": "e02a2d77702af078d7a23569445fbe162cfc074867d279edf6e607d2b81a038e",
+    "active_owner_pid_at_capture": 2776362,
+    "active_owner_start_ticks": 398895226,
+    "owner_alive_at_capture": true,
+    "instantaneous_native_count": 0,
+    "actual_start_budget": 256,
+    "window_seconds": 43200,
+    "allocated_bytes_cap": 5368709120,
+    "window_start_utc": "2026-09-12T03:30:49.723123+00:00",
+    "window_deadline_utc": "2026-09-12T15:30:49.723123+00:00",
+    "budget_reset": false,
+    "old_controlled64_restarted": false,
+    "concurrency": 1,
+    "cpu_per_solver": 2,
+    "target": null,
+    "q_proxy": null,
+    "target_errors": null
+  },
+  "resource": {
+    "mount_free_bytes": 493760962560,
+    "capture_utc": "2026-09-12T04:02:46.013652+00:00",
+    "research_quota_bytes": null,
+    "deleted_bytes": 0,
+    "task_storage_increment_from_mount_free": null,
+    "storage_bytes_per_qualified": null
+  },
+  "limitations": [
+    "341 is a bounded formally certified union, not full historical certification or341 fresh solves.",
+    "New generation is geometryDOE/train-neighborhood production, not inverse target requests or the final independent10K validation.",
+    "Two completed fresh solves do not imply two strict/core-qualified samples.",
+    "No population accuracy, sampling advantage, causal endpoint performance or complete100K storage forecast is claimed.",
+    "Old failures, previous cache-policy software failures and original32-start controlled64 are preserved."
+  ]
+}

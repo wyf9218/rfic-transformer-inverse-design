@@ -1,5 +1,13 @@
 # Current Evidence Status
 
+## Actual formal union341 and recovered native execution — 2026-09-12 04:02 UTC
+
+[New actual increment](qualification_batch_20260912/INCREMENT_0402.md): six old controlled64 members and304 audited historical members were formally appended and read back. The bounded certified union is341=209train+66validation+66test; source splits and the old37 prefix are unchanged. This is not341 new simulations or a complete100K census.
+
+The same-budget corrected owner was alive at04:02:46. Two actual native births/two fresh results were observed, plus one original analytic failure not dispatched. Neither fresh result is core-qualified. The first failed the preserved half-SRF criterion despite in-range response values. Remaining253 have no closed result in this snapshot, not a claim of253 active/pending jobs. Exact missing artifact transport is pending for the research-side consumer; original native evidence is preserved.
+
+[Snapshot](qualification_batch_20260912/SNAPSHOT_0402.json) records counts/budget/resource/receipt identities; [executed publisher sources](qualification_batch_20260912/publication_v2/SOURCE_MAP.md) are byte-identical. Original256/12h/5GiB budget and closed old64/32 are unchanged. All older status sections below are historical snapshots, not current liveness.
+
 ## New qualification and production preparation — 2026-09-12 03:25 UTC
 
 [Actual new increment](qualification_batch_20260912/README.md):11 holdout members were formally committed with original splits; the verified bounded ledger is31=20train+3validation+8test. Separately,1000 historical rows were processed:304 audit-qualified,220 out-of-range,476 physically invalid,0duplicate/missing/incompatible. These304 are not yet formal commits at this snapshot; full100K total remains UNKNOWN.

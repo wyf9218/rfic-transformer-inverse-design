@@ -988,12 +988,16 @@ def run_transformer_zeus_cadence_roundtrip(
     pdk_cds_lib: str = DEFAULT_PDK_CDS_LIB,
     tech_lib_name: str = DEFAULT_TECH_LIB,
     layer_map_path: str = DEFAULT_LAYER_MAP,
+    port_endpoint_policy: str = "legacy",
 ) -> dict[str, object]:
     """Run export -> strmin -> dbCreatePin -> strmout -> EMX inside one run directory."""
 
     from .evaluator import TransformerEmxEvaluator
 
-    evaluator = TransformerEmxEvaluator(run_config=run_config, root_dir=Path(root_dir))
+    evaluator = TransformerEmxEvaluator(
+        run_config=run_config, root_dir=Path(root_dir),
+        port_endpoint_policy=port_endpoint_policy,
+    )
     export_result = evaluator.export_only(geometry)
     payload = export_result.summary_dict()
     payload["ok"] = False
