@@ -1,0 +1,121 @@
+{
+  "schema": "eucap15_terminal_face_new_six_local_trace.v2",
+  "reconstruction_source_status": "EXACT_NATIVE_CONFIG_SOURCE_PINS_VERIFIED",
+  "old_failures_modified": false,
+  "old_tests_rerun": 0,
+  "cadence_runs": 0,
+  "calibre_runs": 0,
+  "emx_runs": 0,
+  "gds_written": 0,
+  "physical_validation": "NOT_RUN",
+  "results": [
+    {
+      "request_id": "eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-027",
+      "geometry_sha256": "e8fd2ee025b5f97107429d81dadcda5fa37a99ee60b7872328e6e655c8ea4385",
+      "original_error": "P002: expected one full-width terminal face, got 0",
+      "lineage_status": "LOCAL_CONSTRUCTION_PASS_NOT_PHYSICAL",
+      "rebound_ports": [
+        {
+          "port_id": "P002",
+          "metadata_shift_um": 0.007500000000000284,
+          "face_width_um": 10.575000000000001,
+          "original_match_tolerance_unchanged": true
+        }
+      ],
+      "polygon_changed": 0,
+      "port_changed": 0,
+      "labels_checked": 8,
+      "labels_inside": 8
+    },
+    {
+      "request_id": "eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-043",
+      "geometry_sha256": "41753215b45feb62b2657c9bdf769f2ce53e3b16998fa9ff557f4476f57c7b07",
+      "original_error": "P002: expected one full-width terminal face, got 0",
+      "lineage_status": "LOCAL_CONSTRUCTION_PASS_NOT_PHYSICAL",
+      "rebound_ports": [
+        {
+          "port_id": "P002",
+          "metadata_shift_um": 0.007500000000000284,
+          "face_width_um": 6.315,
+          "original_match_tolerance_unchanged": true
+        }
+      ],
+      "polygon_changed": 0,
+      "port_changed": 0,
+      "labels_checked": 8,
+      "labels_inside": 8
+    },
+    {
+      "request_id": "eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-080",
+      "geometry_sha256": "dd570f49cbd790a4adf82eb80cc445d20b0f91ddf1b27d59c2fbc38310e7804d",
+      "original_error": "P002: expected one full-width terminal face, got 0",
+      "lineage_status": "LOCAL_CONSTRUCTION_PASS_NOT_PHYSICAL",
+      "rebound_ports": [
+        {
+          "port_id": "P002",
+          "metadata_shift_um": 0.007500000000000284,
+          "face_width_um": 5.095,
+          "original_match_tolerance_unchanged": true
+        }
+      ],
+      "polygon_changed": 0,
+      "port_changed": 0,
+      "labels_checked": 8,
+      "labels_inside": 8
+    },
+    {
+      "request_id": "eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-082",
+      "geometry_sha256": "2befb63bd18a5b2cfca19ea948d8737371a417a7f3b615ccad5dda0202948d60",
+      "original_error": "P004: expected one full-width terminal face, got 0",
+      "lineage_status": "LOCAL_CONSTRUCTION_PASS_NOT_PHYSICAL",
+      "rebound_ports": [
+        {
+          "port_id": "P004",
+          "metadata_shift_um": -0.007500000000000284,
+          "face_width_um": 9.73,
+          "original_match_tolerance_unchanged": true
+        }
+      ],
+      "polygon_changed": 0,
+      "port_changed": 0,
+      "labels_checked": 8,
+      "labels_inside": 8
+    },
+    {
+      "request_id": "eucap15_production_doe_neighborhood_20260912_v1-TRAIN_NEIGHBORHOOD-012",
+      "geometry_sha256": "2f38b4e5d548adea75ced0243c41f32d3ff80e1c6801b79f0f9351acb4ad2445",
+      "original_error": "P004: expected one full-width terminal face, got 0",
+      "lineage_status": "LOCAL_CONSTRUCTION_PASS_NOT_PHYSICAL",
+      "rebound_ports": [
+        {
+          "port_id": "P004",
+          "metadata_shift_um": -0.007500000000000284,
+          "face_width_um": 8.45,
+          "original_match_tolerance_unchanged": true
+        }
+      ],
+      "polygon_changed": 0,
+      "port_changed": 0,
+      "labels_checked": 8,
+      "labels_inside": 8
+    },
+    {
+      "request_id": "eucap15_production_doe_neighborhood_20260912_v1-TRAIN_NEIGHBORHOOD-020",
+      "geometry_sha256": "14987e62e3f21243d2acb40f6acc8933a6c167b8ebd0ec0cae1fd6813e34ca98",
+      "original_error": "P004: expected one full-width terminal face, got 0",
+      "lineage_status": "LOCAL_CONSTRUCTION_PASS_NOT_PHYSICAL",
+      "rebound_ports": [
+        {
+          "port_id": "P004",
+          "metadata_shift_um": -0.007500000000000284,
+          "face_width_um": 3.56,
+          "original_match_tolerance_unchanged": true
+        }
+      ],
+      "polygon_changed": 0,
+      "port_changed": 0,
+      "labels_checked": 8,
+      "labels_inside": 8
+    }
+  ]
+}

@@ -1,0 +1,181 @@
+{
+  "schema": "eucap15_terminal_lineage_v2_new_entry_checks.v1",
+  "status": "SIX_NEW_LOCAL_CASES_AND_THREE_GUARDS_PASS_NOT_PHYSICAL",
+  "cases": [
+    {
+      "request_id": "eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-027",
+      "status": "V2_LOCAL_ENTRY_PASS",
+      "rebound": [
+        {
+          "port_id": "P002",
+          "polygon_index": 0,
+          "edge_index": 12,
+          "nominal_cross_center_um": -35.68,
+          "canonical_face_center_um": -35.6725,
+          "metadata_shift_um": 0.007500000000000284,
+          "face_width_um": 10.575000000000001,
+          "polygon_mutation": false,
+          "original_match_tolerance_unchanged": true,
+          "source": "SAME_RAW_FACE_TO_SAME_CANONICALIZED_EDGE_NOT_NEAREST_FACE"
+        }
+      ],
+      "all8_original_label_guards": true,
+      "polygon_coordinates_changed": false,
+      "labels_changed": false,
+      "original_failure_remains": true
+    },
+    {
+      "request_id": "eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-043",
+      "status": "V2_LOCAL_ENTRY_PASS",
+      "rebound": [
+        {
+          "port_id": "P002",
+          "polygon_index": 0,
+          "edge_index": 12,
+          "nominal_cross_center_um": -14.58,
+          "canonical_face_center_um": -14.5725,
+          "metadata_shift_um": 0.007500000000000284,
+          "face_width_um": 6.315,
+          "polygon_mutation": false,
+          "original_match_tolerance_unchanged": true,
+          "source": "SAME_RAW_FACE_TO_SAME_CANONICALIZED_EDGE_NOT_NEAREST_FACE"
+        }
+      ],
+      "all8_original_label_guards": true,
+      "polygon_coordinates_changed": false,
+      "labels_changed": false,
+      "original_failure_remains": true
+    },
+    {
+      "request_id": "eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-080",
+      "status": "V2_LOCAL_ENTRY_PASS",
+      "rebound": [
+        {
+          "port_id": "P002",
+          "polygon_index": 0,
+          "edge_index": 12,
+          "nominal_cross_center_um": -15.040000000000001,
+          "canonical_face_center_um": -15.0325,
+          "metadata_shift_um": 0.007500000000000284,
+          "face_width_um": 5.095,
+          "polygon_mutation": false,
+          "original_match_tolerance_unchanged": true,
+          "source": "SAME_RAW_FACE_TO_SAME_CANONICALIZED_EDGE_NOT_NEAREST_FACE"
+        }
+      ],
+      "all8_original_label_guards": true,
+      "polygon_coordinates_changed": false,
+      "labels_changed": false,
+      "original_failure_remains": true
+    },
+    {
+      "request_id": "eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-082",
+      "status": "V2_LOCAL_ENTRY_PASS",
+      "rebound": [
+        {
+          "port_id": "P004",
+          "polygon_index": 2,
+          "edge_index": 12,
+          "nominal_cross_center_um": -43.7775,
+          "canonical_face_center_um": -43.785000000000004,
+          "metadata_shift_um": -0.007500000000000284,
+          "face_width_um": 9.73,
+          "polygon_mutation": false,
+          "original_match_tolerance_unchanged": true,
+          "source": "SAME_RAW_FACE_TO_SAME_CANONICALIZED_EDGE_NOT_NEAREST_FACE"
+        }
+      ],
+      "all8_original_label_guards": true,
+      "polygon_coordinates_changed": false,
+      "labels_changed": false,
+      "original_failure_remains": true
+    },
+    {
+      "request_id": "eucap15_production_doe_neighborhood_20260912_v1-TRAIN_NEIGHBORHOOD-012",
+      "status": "V2_LOCAL_ENTRY_PASS",
+      "rebound": [
+        {
+          "port_id": "P004",
+          "polygon_index": 2,
+          "edge_index": 12,
+          "nominal_cross_center_um": -31.1025,
+          "canonical_face_center_um": -31.11,
+          "metadata_shift_um": -0.007500000000000284,
+          "face_width_um": 8.45,
+          "polygon_mutation": false,
+          "original_match_tolerance_unchanged": true,
+          "source": "SAME_RAW_FACE_TO_SAME_CANONICALIZED_EDGE_NOT_NEAREST_FACE"
+        }
+      ],
+      "all8_original_label_guards": true,
+      "polygon_coordinates_changed": false,
+      "labels_changed": false,
+      "original_failure_remains": true
+    },
+    {
+      "request_id": "eucap15_production_doe_neighborhood_20260912_v1-TRAIN_NEIGHBORHOOD-020",
+      "status": "V2_LOCAL_ENTRY_PASS",
+      "rebound": [
+        {
+          "port_id": "P004",
+          "polygon_index": 2,
+          "edge_index": 12,
+          "nominal_cross_center_um": -12.3025,
+          "canonical_face_center_um": -12.31,
+          "metadata_shift_um": -0.007500000000000284,
+          "face_width_um": 3.56,
+          "polygon_mutation": false,
+          "original_match_tolerance_unchanged": true,
+          "source": "SAME_RAW_FACE_TO_SAME_CANONICALIZED_EDGE_NOT_NEAREST_FACE"
+        }
+      ],
+      "all8_original_label_guards": true,
+      "polygon_coordinates_changed": false,
+      "labels_changed": false,
+      "original_failure_remains": true
+    }
+  ],
+  "negative_fixtures": [
+    {
+      "fixture": "new_DOE027_missing_exact_raw_face",
+      "status": "EXPECTED_REJECTION",
+      "error": "P002: unique exact pre-grid lineage unavailable"
+    },
+    {
+      "fixture": "new_DOE027_wrong_width_same_axial_adjacency",
+      "status": "EXPECTED_REJECTION",
+      "error": "canonicalized face not exact intended width"
+    },
+    {
+      "fixture": "new_DOE027_label_outside_own_conductor",
+      "status": "EXPECTED_REJECTION",
+      "error": "label outside lineage conductor"
+    }
+  ],
+  "sources": [
+    {
+      "path": "/Users/wyf/Documents/\u6a21\u62df\u53d8\u538b\u5668AI\u53cd\u5411\u5efa\u6a21/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/terminal_face_delta_v2/check_entry.py",
+      "sha256": "6cc9d2eceef651103e211153f15cd91199192526b8b0c6c01a9962f8a0230bd8",
+      "bytes": 4368
+    },
+    {
+      "path": "/Users/wyf/Documents/\u6a21\u62df\u53d8\u538b\u5668AI\u53cd\u5411\u5efa\u6a21/github_worktrees/eucap15-mlp-capacity-20260909/rfic_transformer_inverse_design/layout/port_endpoint_lineage.py",
+      "sha256": "5df35c288c531d1418d83eba4a087f89eb8673d510f3eca4956e363a05dbb3bd",
+      "bytes": 7962
+    }
+  ],
+  "input": {
+    "path": "/Users/wyf/Documents/\u6a21\u62df\u53d8\u538b\u5668AI\u53cd\u5411\u5efa\u6a21/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/terminal_face_delta_v2/capture_run_v2/REPLAY.json",
+    "sha256": "7088341440eb8afe73e84150448f3761aa710296917e8b7843b9d8b1a9ccf52b",
+    "bytes": 86669
+  },
+  "native_actions": 0,
+  "gds_written": 0,
+  "cadence_runs": 0,
+  "calibre_runs": 0,
+  "emx_runs": 0,
+  "candidate_reconstruction_reruns": 0,
+  "old_cases_or_suites_rerun": 0,
+  "deployment": "NOT_INSTALLED",
+  "original_failed_outcomes_replaced": 0
+}

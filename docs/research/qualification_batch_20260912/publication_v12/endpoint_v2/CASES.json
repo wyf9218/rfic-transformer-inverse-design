@@ -1,0 +1,281 @@
+{
+  "schema": "eucap15_cadence_failure_cases.v1",
+  "observed_utc": "2026-09-12T08:21:28.492173+00:00",
+  "source": {
+    "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/samebatch_hotpath_v1/joint_cut_20260912T082127636243Z/NEW_TERMINAL_RESULTS.json",
+    "sha256": "db9dfb98513662a78edffc961e5d888629e1c35c55c1fbda619b8ba233a947e4"
+  },
+  "scope": "Six new immutable candidate failures; no candidate replacement, native retry or geometry modification.",
+  "rows": [
+    {
+      "request_id": "eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-027",
+      "result_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-027/RESULT.json",
+        "sha256": "f1afabf12f8e1cfc4ef39919016dbd2c5ace5ff6d984988d1bdc31418c0fab80",
+        "bytes": 5896
+      },
+      "geometry_sha256": "e8fd2ee025b5f97107429d81dadcda5fa37a99ee60b7872328e6e655c8ea4385",
+      "geometry": [
+        327.145,
+        401.59000000000003,
+        170.275,
+        347.97,
+        10.575000000000001,
+        71.36,
+        65.375,
+        65.43,
+        237.145,
+        154.5
+      ],
+      "geometry_fields": [
+        "primary_outer_width_um",
+        "primary_outer_height_um",
+        "secondary_outer_width_um",
+        "secondary_outer_height_um",
+        "line_width_um",
+        "primary_terminal_y_span_um",
+        "secondary_terminal_y_span_um",
+        "offset_um",
+        "primary_feed_extension_um",
+        "secondary_feed_extension_um"
+      ],
+      "assigned_development_split": "train",
+      "source": "GEOMETRY_DOE",
+      "analytic_pass": true,
+      "automatic_retry_allowed": false,
+      "stage_evidence": [
+        {
+          "bytes": 3853,
+          "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-027/cadence_PROCESS.json",
+          "sha256": "a03d7dfd2bb93eaf571ce7b05e8a3864820bb35a031ec2b95509d365e6cdda21"
+        }
+      ],
+      "error": "STAGE_EXECUTION_FAILED: cadence; /volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-027/cadence_20260912T082054768450Z.log"
+    },
+    {
+      "request_id": "eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-043",
+      "result_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-043/RESULT.json",
+        "sha256": "e9985c0c0e922f79cb00aa1d5d70a5e03684115b715dadcbe5f59b0e502fa2bf",
+        "bytes": 5892
+      },
+      "geometry_sha256": "41753215b45feb62b2657c9bdf769f2ce53e3b16998fa9ff557f4476f57c7b07",
+      "geometry": [
+        443.26,
+        487.09000000000003,
+        204.035,
+        265.88,
+        6.315,
+        29.16,
+        81.88,
+        89.135,
+        268.72,
+        227.14000000000001
+      ],
+      "geometry_fields": [
+        "primary_outer_width_um",
+        "primary_outer_height_um",
+        "secondary_outer_width_um",
+        "secondary_outer_height_um",
+        "line_width_um",
+        "primary_terminal_y_span_um",
+        "secondary_terminal_y_span_um",
+        "offset_um",
+        "primary_feed_extension_um",
+        "secondary_feed_extension_um"
+      ],
+      "assigned_development_split": "train",
+      "source": "GEOMETRY_DOE",
+      "analytic_pass": true,
+      "automatic_retry_allowed": false,
+      "stage_evidence": [
+        {
+          "bytes": 3853,
+          "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-043/cadence_PROCESS.json",
+          "sha256": "c7e7dcc562c78806a1be5d2d2e919e3e336a8eb21e96e8f30337b69252645b30"
+        }
+      ],
+      "error": "STAGE_EXECUTION_FAILED: cadence; /volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-043/cadence_20260912T081523674432Z.log"
+    },
+    {
+      "request_id": "eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-080",
+      "result_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-080/RESULT.json",
+        "sha256": "dbfe169583c1d269eac90a5672957b163fc9d73856db6c47030191f5de4cb1ae",
+        "bytes": 5890
+      },
+      "geometry_sha256": "dd570f49cbd790a4adf82eb80cc445d20b0f91ddf1b27d59c2fbc38310e7804d",
+      "geometry": [
+        322.34000000000003,
+        329.97,
+        337.93,
+        172.185,
+        5.095,
+        30.080000000000002,
+        77.99,
+        11.55,
+        201.615,
+        203.815
+      ],
+      "geometry_fields": [
+        "primary_outer_width_um",
+        "primary_outer_height_um",
+        "secondary_outer_width_um",
+        "secondary_outer_height_um",
+        "line_width_um",
+        "primary_terminal_y_span_um",
+        "secondary_terminal_y_span_um",
+        "offset_um",
+        "primary_feed_extension_um",
+        "secondary_feed_extension_um"
+      ],
+      "assigned_development_split": "train",
+      "source": "GEOMETRY_DOE",
+      "analytic_pass": true,
+      "automatic_retry_allowed": false,
+      "stage_evidence": [
+        {
+          "bytes": 3853,
+          "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-080/cadence_PROCESS.json",
+          "sha256": "c5e23f166656a25e76b25dec5fa0b687b3d8e076e570d3aff645141dd910db8f"
+        }
+      ],
+      "error": "STAGE_EXECUTION_FAILED: cadence; /volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-080/cadence_20260912T081935403111Z.log"
+    },
+    {
+      "request_id": "eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-082",
+      "result_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-082/RESULT.json",
+        "sha256": "ffc5a1b1cc1d7c15e79638e3047507af605a9b11685dcdbf5005e986ce39a653",
+        "bytes": 5894
+      },
+      "geometry_sha256": "2befb63bd18a5b2cfca19ea948d8737371a417a7f3b615ccad5dda0202948d60",
+      "geometry": [
+        366.28000000000003,
+        470.54,
+        300.475,
+        382.87,
+        9.73,
+        30.51,
+        87.555,
+        -69.94,
+        142.915,
+        237.28
+      ],
+      "geometry_fields": [
+        "primary_outer_width_um",
+        "primary_outer_height_um",
+        "secondary_outer_width_um",
+        "secondary_outer_height_um",
+        "line_width_um",
+        "primary_terminal_y_span_um",
+        "secondary_terminal_y_span_um",
+        "offset_um",
+        "primary_feed_extension_um",
+        "secondary_feed_extension_um"
+      ],
+      "assigned_development_split": "validation",
+      "source": "GEOMETRY_DOE",
+      "analytic_pass": true,
+      "automatic_retry_allowed": false,
+      "stage_evidence": [
+        {
+          "bytes": 3853,
+          "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-082/cadence_PROCESS.json",
+          "sha256": "e7ac83d3c83d5ba7c495d3b3a3767fa59b45cdd0a7f02b78da66148c60c6759c"
+        }
+      ],
+      "error": "STAGE_EXECUTION_FAILED: cadence; /volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-082/cadence_20260912T082037852791Z.log"
+    },
+    {
+      "request_id": "eucap15_production_doe_neighborhood_20260912_v1-TRAIN_NEIGHBORHOOD-012",
+      "result_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/eucap15_production_doe_neighborhood_20260912_v1-TRAIN_NEIGHBORHOOD-012/RESULT.json",
+        "sha256": "747c969499144216f587814a8cdf917da6b981eb77ad9412db35130eb5286865",
+        "bytes": 7726
+      },
+      "geometry_sha256": "2f38b4e5d548adea75ced0243c41f32d3ff80e1c6801b79f0f9351acb4ad2445",
+      "geometry": [
+        232.395,
+        328.495,
+        315.455,
+        470.355,
+        8.45,
+        68.64,
+        62.205,
+        11.615,
+        305.245,
+        178.565
+      ],
+      "geometry_fields": [
+        "primary_outer_width_um",
+        "primary_outer_height_um",
+        "secondary_outer_width_um",
+        "secondary_outer_height_um",
+        "line_width_um",
+        "primary_terminal_y_span_um",
+        "secondary_terminal_y_span_um",
+        "offset_um",
+        "primary_feed_extension_um",
+        "secondary_feed_extension_um"
+      ],
+      "assigned_development_split": "train",
+      "source": "TRAIN_NEIGHBORHOOD",
+      "analytic_pass": true,
+      "automatic_retry_allowed": false,
+      "stage_evidence": [
+        {
+          "bytes": 3889,
+          "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/eucap15_production_doe_neighborhood_20260912_v1-TRAIN_NEIGHBORHOOD-012/cadence_PROCESS.json",
+          "sha256": "2f45fb3e626e85bc7e6b429e019d9f871da5e54108ced1f19324f7e5708ff272"
+        }
+      ],
+      "error": "STAGE_EXECUTION_FAILED: cadence; /volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/eucap15_production_doe_neighborhood_20260912_v1-TRAIN_NEIGHBORHOOD-012/cadence_20260912T081650858204Z.log"
+    },
+    {
+      "request_id": "eucap15_production_doe_neighborhood_20260912_v1-TRAIN_NEIGHBORHOOD-020",
+      "result_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/eucap15_production_doe_neighborhood_20260912_v1-TRAIN_NEIGHBORHOOD-020/RESULT.json",
+        "sha256": "398ed19297b923e6dea29ccc46b9141a9a389fa78aadab0e4896075f3c3d3779",
+        "bytes": 7732
+      },
+      "geometry_sha256": "14987e62e3f21243d2acb40f6acc8933a6c167b8ebd0ec0cae1fd6813e34ca98",
+      "geometry": [
+        445.86,
+        172.3,
+        360.745,
+        228.845,
+        3.56,
+        73.325,
+        24.605,
+        13.095,
+        147.615,
+        203.665
+      ],
+      "geometry_fields": [
+        "primary_outer_width_um",
+        "primary_outer_height_um",
+        "secondary_outer_width_um",
+        "secondary_outer_height_um",
+        "line_width_um",
+        "primary_terminal_y_span_um",
+        "secondary_terminal_y_span_um",
+        "offset_um",
+        "primary_feed_extension_um",
+        "secondary_feed_extension_um"
+      ],
+      "assigned_development_split": "validation",
+      "source": "TRAIN_NEIGHBORHOOD",
+      "analytic_pass": true,
+      "automatic_retry_allowed": false,
+      "stage_evidence": [
+        {
+          "bytes": 3889,
+          "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/eucap15_production_doe_neighborhood_20260912_v1-TRAIN_NEIGHBORHOOD-020/cadence_PROCESS.json",
+          "sha256": "5716acc7c3d3a9ee29ff7b57f276338e6621af1fbec5fe44e5b4887ef91e2f51"
+        }
+      ],
+      "error": "STAGE_EXECUTION_FAILED: cadence; /volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/eucap15_production_doe_neighborhood_20260912_v1-TRAIN_NEIGHBORHOOD-020/cadence_20260912T081320598781Z.log"
+    }
+  ]
+}

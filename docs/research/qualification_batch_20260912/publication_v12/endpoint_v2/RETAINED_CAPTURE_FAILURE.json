@@ -1,0 +1,10 @@
+{
+  "status": "FAIL_BEFORE_ANY_CASE_CONSTRUCTION",
+  "source_sha256": "d85a9cc5743505528c62bfa21e439024ca9d6b3b61198690133410710dd9f1e2",
+  "error": "ValueError: geometry field order drift",
+  "reason": "Capture driver compared shared10D candidate fields directly with the existing optimizer adapter's separate primary/secondary width fields. Existing native _geometry_from_rows explicitly maps both widths from the shared line_width_um; replay must use that same mapping.",
+  "cases_constructed": 0,
+  "gds_written": 0,
+  "native_actions": 0,
+  "old_tests_rerun": 0
+}

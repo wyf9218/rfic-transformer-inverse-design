@@ -2378,7 +2378,7 @@ def export_transformer_layout(
     transformer = geometry.transformer_spec()
     power_line_8port_enabled = bool(run_config.emx.power_line_8port.enabled)
     power_line_signal_only_s4p = _power_line_signal_only_s4p(run_config)
-    if port_endpoint_policy not in ("legacy", "shared_port_edges_20260912_v1"):
+    if port_endpoint_policy not in ("legacy", "shared_port_edges_20260912_v1", "shared_port_edges_lineage_20260912_v2"):
         raise ValueError("unknown port endpoint construction policy")
     if port_endpoint_policy != "legacy" and not (
         power_line_8port_enabled and power_line_signal_only_s4p
@@ -3424,12 +3424,17 @@ def export_transformer_layout(
     }
     foundry_bridge_connections = None
     if foundry_layout_enabled:
+        lineage_before = None
+        if port_endpoint_policy == "shared_port_edges_lineage_20260912_v2":
+            from .port_endpoint_lineage import snapshot_polygons
+
+            lineage_before = snapshot_polygons(cell)
         grid_audit = _canonicalize_cell_to_foundry_grid(
             cell=cell,
             grid_um=manufacturing_grid_um,
         )
         endpoint_construction = None
-        if port_endpoint_policy == "shared_port_edges_20260912_v1":
+        if port_endpoint_policy in ("shared_port_edges_20260912_v1", "shared_port_edges_lineage_20260912_v2"):
             from .port_endpoint_construction import construct_shared_port_edges
 
             # The frame has already selected its manufacturing-grid edges.
@@ -3456,8 +3461,16 @@ def export_transformer_layout(
                     nominal_terminal_um=item["terminal_x_um" if horizontal else "terminal_y_um"],
                     cross_center_um=item["terminal_y_um" if horizontal else "terminal_x_um"],
                     width_um=power_line_shared_line_width_um))
-            endpoint_construction = construct_shared_port_edges(
-                cell=cell, ports=ports, grid_um=manufacturing_grid_um, require_port_labels=True)
+            if port_endpoint_policy == "shared_port_edges_lineage_20260912_v2":
+                from .port_endpoint_lineage import construct_shared_port_edges_with_lineage
+
+                endpoint_construction = construct_shared_port_edges_with_lineage(
+                    cell=cell, ports=ports, before=lineage_before,
+                    grid_um=manufacturing_grid_um, require_port_labels=True)
+                ports = endpoint_construction["resolved_ports"]
+            else:
+                endpoint_construction = construct_shared_port_edges(
+                    cell=cell, ports=ports, grid_um=manufacturing_grid_um, require_port_labels=True)
             # New-version provenance only; historical audits and the default
             # exporter remain unchanged. The downstream actual-GDS gate stays
             # authoritative and its exact 10 um / 5 nm rules are unchanged.
@@ -3465,6 +3478,10 @@ def export_transformer_layout(
                 item = evidence[port["port_id"]]
                 axis_key = "terminal_x_um" if record["axis"] == 0 else "terminal_y_um"
                 item[axis_key] = record["endpoint_after_grid_units"] * manufacturing_grid_um
+                if port_endpoint_policy == "shared_port_edges_lineage_20260912_v2":
+                    cross_key = "terminal_y_um" if record["axis"] == 0 else "terminal_x_um"
+                    item[cross_key] = port["cross_center_um"]
+                    item["cross_center_evidence_class"] = "PRE_CADENCE_SAME_EDGE_LINEAGE_NOT_ACTUAL_GDS_MEASUREMENT"
                 item["measured_overlap_um"] = POWER_LINE_8PORT_PORT_GROUND_OVERLAP_UM
                 item["overlap_evidence_class"] = "PRE_CADENCE_CONSTRUCTION_DERIVED_NOT_ACTUAL_GDS_MEASUREMENT"
         if power_line_8port_enabled:

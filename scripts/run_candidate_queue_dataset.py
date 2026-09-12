@@ -284,7 +284,7 @@ def _parse_args(argv: list[str] | None) -> argparse.Namespace:
     parser.add_argument("--candidate-csv", required=True)
     parser.add_argument("--out-dir", required=True)
     parser.add_argument("--config")
-    parser.add_argument("--port-endpoint-policy", choices=("legacy", "shared_port_edges_20260912_v1"), default="legacy")
+    parser.add_argument("--port-endpoint-policy", choices=("legacy", "shared_port_edges_20260912_v1", "shared_port_edges_lineage_20260912_v2"), default="legacy")
     parser.add_argument("--max-count", type=int)
     parser.add_argument("--batch-size", type=int, default=10)
     parser.add_argument("--z-load-ohm", type=float, default=50.0)

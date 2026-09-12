@@ -1,0 +1,169 @@
+{
+  "schema": "eucap15_terminal_face_v2_actual_export_wiring_check.v1",
+  "status": "PASS",
+  "deployment": "DEVELOPMENT_NOT_DEPLOYED",
+  "request_id": "eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-027",
+  "source_pins": [
+    {
+      "path": "/Users/wyf/Documents/\u6a21\u62df\u53d8\u538b\u5668AI\u53cd\u5411\u5efa\u6a21/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/terminal_face_delta_v2/check_export_wiring.py",
+      "sha256": "e6f595e7f79f6d183ded7e10dba1302917899e0fc4ef096e742ee1659e1e91f1",
+      "bytes": 9009
+    },
+    {
+      "path": "/Users/wyf/Documents/\u6a21\u62df\u53d8\u538b\u5668AI\u53cd\u5411\u5efa\u6a21/github_worktrees/eucap15-mlp-capacity-20260909/rfic_transformer_inverse_design/layout/export.py",
+      "sha256": "7030d03fe08806ff1a8b5e3a34dddc8471c135659fe7d9c783613e1058f0e8e7",
+      "bytes": 161017
+    },
+    {
+      "path": "/Users/wyf/Documents/\u6a21\u62df\u53d8\u538b\u5668AI\u53cd\u5411\u5efa\u6a21/github_worktrees/eucap15-mlp-capacity-20260909/rfic_transformer_inverse_design/layout/port_endpoint_lineage.py",
+      "sha256": "7d0e0a67aed3364cc4cbcdf2ea2bc6121863eb4184d48cc50f0ec8abd9536061",
+      "bytes": 7956
+    },
+    {
+      "path": "/Users/wyf/Documents/\u6a21\u62df\u53d8\u538b\u5668AI\u53cd\u5411\u5efa\u6a21/github_worktrees/eucap15-mlp-capacity-20260909/rfic_transformer_inverse_design/execution/evaluator.py",
+      "sha256": "3bf7f1d11f74b85e007f5bf964bec8f19379d708ab5bc850b90c122b08ac30a9",
+      "bytes": 25157
+    },
+    {
+      "path": "/Users/wyf/Documents/\u6a21\u62df\u53d8\u538b\u5668AI\u53cd\u5411\u5efa\u6a21/github_worktrees/eucap15-mlp-capacity-20260909/scripts/run_candidate_queue_dataset.py",
+      "sha256": "3c908101249cbdb7e7644352e696ab102f75c5269fce5fc8121c7dbb6e8b884c",
+      "bytes": 41975
+    },
+    {
+      "path": "/Users/wyf/Documents/\u6a21\u62df\u53d8\u538b\u5668AI\u53cd\u5411\u5efa\u6a21/github_worktrees/eucap15-mlp-capacity-20260909/scripts/run_candidate_queue_dataset_parallel.py",
+      "sha256": "0b0341ecec11d6049e9a3de95899ed3cb576e30b4783b9a467de66bf837f3020",
+      "bytes": 43278
+    }
+  ],
+  "original_source_replay": {
+    "path": "/Users/wyf/Documents/\u6a21\u62df\u53d8\u538b\u5668AI\u53cd\u5411\u5efa\u6a21/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/terminal_face_delta_v2/capture_run_v2/REPLAY.json",
+    "sha256": "7088341440eb8afe73e84150448f3761aa710296917e8b7843b9d8b1a9ccf52b",
+    "bytes": 86669
+  },
+  "same_call_before_sha256": "ca653568c438fa9bf1e872e42aa606cf998486071469e9755e72065bc245e643",
+  "same_call_after_sha256": "441bb353bf3348d37917b83e2586854dc86fbd6632f2f9b3d86a1a00b3ad4e16",
+  "same_call_lineage_verified": true,
+  "cli_acceptance": [
+    {
+      "source": {
+        "path": "/Users/wyf/Documents/\u6a21\u62df\u53d8\u538b\u5668AI\u53cd\u5411\u5efa\u6a21/github_worktrees/eucap15-mlp-capacity-20260909/scripts/run_candidate_queue_dataset.py",
+        "sha256": "3c908101249cbdb7e7644352e696ab102f75c5269fce5fc8121c7dbb6e8b884c",
+        "bytes": 41975
+      },
+      "v2_accepted": true,
+      "default": "legacy",
+      "main_executed": false
+    },
+    {
+      "source": {
+        "path": "/Users/wyf/Documents/\u6a21\u62df\u53d8\u538b\u5668AI\u53cd\u5411\u5efa\u6a21/github_worktrees/eucap15-mlp-capacity-20260909/scripts/run_candidate_queue_dataset_parallel.py",
+        "sha256": "0b0341ecec11d6049e9a3de95899ed3cb576e30b4783b9a467de66bf837f3020",
+        "bytes": 43278
+      },
+      "v2_accepted": true,
+      "default": "legacy",
+      "main_executed": false
+    }
+  ],
+  "evaluator_v2_constructor_accepted": true,
+  "rebound": {
+    "policy": "lineage_cross_binding_20260912_v2",
+    "rebound_ports": [
+      {
+        "port_id": "P002",
+        "polygon_index": 0,
+        "edge_index": 12,
+        "nominal_cross_center_um": -35.68,
+        "canonical_face_center_um": -35.6725,
+        "metadata_shift_um": 0.007500000000000284,
+        "face_width_um": 10.575000000000001,
+        "polygon_mutation": false,
+        "original_match_tolerance_unchanged": true,
+        "source": "SAME_RAW_FACE_TO_SAME_CANONICALIZED_EDGE_NOT_NEAREST_FACE"
+      }
+    ],
+    "polygon_mutation": false,
+    "cadence_executed": false,
+    "calibre_executed": false,
+    "emx_executed": false
+  },
+  "written_metadata": {
+    "internal_signal_label": "P002",
+    "side": "left",
+    "terminal_x_um": -410.72,
+    "terminal_y_um": -35.6725,
+    "measured_overlap_um": 10.0,
+    "cross_center_evidence_class": "PRE_CADENCE_SAME_EDGE_LINEAGE_NOT_ACTUAL_GDS_MEASUREMENT",
+    "overlap_evidence_class": "PRE_CADENCE_CONSTRUCTION_DERIVED_NOT_ACTUAL_GDS_MEASUREMENT"
+  },
+  "label_containment_checks": [
+    {
+      "port_id": "P001",
+      "label_layer": 126,
+      "label_datatype": 0,
+      "endpoint_inset_grid_units": 50,
+      "inside_planned_conductor": true
+    },
+    {
+      "port_id": "P002",
+      "label_layer": 126,
+      "label_datatype": 0,
+      "endpoint_inset_grid_units": 50,
+      "inside_planned_conductor": true
+    },
+    {
+      "port_id": "P003",
+      "label_layer": 139,
+      "label_datatype": 0,
+      "endpoint_inset_grid_units": 50,
+      "inside_planned_conductor": true
+    },
+    {
+      "port_id": "P004",
+      "label_layer": 139,
+      "label_datatype": 0,
+      "endpoint_inset_grid_units": 50,
+      "inside_planned_conductor": true
+    },
+    {
+      "port_id": "P007",
+      "label_layer": 135,
+      "label_datatype": 0,
+      "endpoint_inset_grid_units": 50,
+      "inside_planned_conductor": true
+    },
+    {
+      "port_id": "P008",
+      "label_layer": 135,
+      "label_datatype": 0,
+      "endpoint_inset_grid_units": 50,
+      "inside_planned_conductor": true
+    },
+    {
+      "port_id": "P005",
+      "label_layer": 135,
+      "label_datatype": 0,
+      "endpoint_inset_grid_units": 50,
+      "inside_planned_conductor": true
+    },
+    {
+      "port_id": "P006",
+      "label_layer": 135,
+      "label_datatype": 0,
+      "endpoint_inset_grid_units": 50,
+      "inside_planned_conductor": true
+    }
+  ],
+  "polygon_coordinates_changed": 0,
+  "labels_changed": 0,
+  "gds_written": 0,
+  "cadence_runs": 0,
+  "calibre_runs": 0,
+  "emx_runs": 0,
+  "physical_validation": "NOT_RUN",
+  "stopped_before_downstream_bridge_audit_and_gds": true,
+  "old_failure_results_modified": false,
+  "old_suites_rerun": 0,
+  "new_version_export_constructions": 1,
+  "six_case_suite_rerun": false
+}

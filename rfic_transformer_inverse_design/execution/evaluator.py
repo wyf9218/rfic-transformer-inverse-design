@@ -187,7 +187,7 @@ class TransformerEmxEvaluator:
     """Evaluate transformer geometries through the existing EMX backend."""
 
     def __init__(self, run_config: TransformerRunConfig, root_dir: Path, *, port_endpoint_policy: str = "legacy"):
-        if port_endpoint_policy not in ("legacy", "shared_port_edges_20260912_v1"):
+        if port_endpoint_policy not in ("legacy", "shared_port_edges_20260912_v1", "shared_port_edges_lineage_20260912_v2"):
             raise ValueError("unknown port endpoint construction policy")
         self.port_endpoint_policy = port_endpoint_policy
         self.run_config = run_config

@@ -1,0 +1,13 @@
+{
+  "status": "NEW_NEGATIVE_WIDTH_FIXTURE_EXPOSED_EXISTING_HELPER_EARLY_RETURN_GAP",
+  "entry_source_sha256": "c5b4b196b8f7ca611d800e0150b64620b2a973f2b018c04f83e839aefe2653bd",
+  "check_source_sha256": "6cc9d2eceef651103e211153f15cd91199192526b8b0c6c01a9962f8a0230bd8",
+  "new_cached_cases_entry_passed_before_failure": 6,
+  "negative_raw_lineage_guard_passed": 1,
+  "failed_fixture": "new_DOE027_wrong_width_same_axial_adjacency",
+  "observed": "One-grid altered width moved the endpoint into the old coordinate matching window. Existing lineage helper's len(old_matches)==1 branch skipped exact width validation.",
+  "required_minimal_fix": "Only new v2 validates exact intended integer-grid width on the already-matched branch, as it already does on fallback. No old default/tolerance/source/result edits.",
+  "native_actions": 0,
+  "gds_written": 0,
+  "original_failures_modified": false
+}

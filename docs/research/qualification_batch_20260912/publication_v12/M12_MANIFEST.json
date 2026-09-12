@@ -1,0 +1,106 @@
+{
+  "schema": "eucap15_increment_publication_m12.v1",
+  "observed_utc": "2026-09-12T08:31:50.342478+00:00",
+  "baseline_utc": "2026-09-12T08:21:28.492173+00:00",
+  "files": [
+    {
+      "sha256": "52c66d9b9379b396d81f1d80d7bb2d240fd366b0cb5e1e071011580b7e5b5632",
+      "path": "SNAPSHOT.json"
+    },
+    {
+      "sha256": "0efdb72f1dd544f97112a2b54ef90449ce3a6f88a8992de45774c7594eb7bf00",
+      "path": "RECEIVED_NEW24.json"
+    },
+    {
+      "sha256": "d1db48ee5d4bcfba386d597ae91d21206d9547d07575b621b375fbfdc41719c2",
+      "path": "endpoint_v2/HANDOFF.md"
+    },
+    {
+      "sha256": "033a661ac52fc81df5968c3cc8c0ff190b04c459ad883b779edac3c472da22bc",
+      "path": "endpoint_v2/CHECK.json"
+    },
+    {
+      "sha256": "710de5962000309608b98ea0f4a5566bb36d83848187278a565f13a42be93351",
+      "path": "endpoint_v2/EXPORT_WIRING_RECEIPT.json"
+    },
+    {
+      "sha256": "289e5e96fdf58888f5f1b83b410eab5a2928f5c0301d97db5ef7ef52ac4a2d39",
+      "path": "endpoint_v2/SOURCE_POLICY_LABEL_TRANSITION.json"
+    },
+    {
+      "sha256": "6aaebb45f09ce66126b4a7be8817efd82a2e8dabd5c1b922fd7ec1be1156a097",
+      "path": "endpoint_v2/RETAINED_CAPTURE_FAILURE.json"
+    },
+    {
+      "sha256": "f9d6139ffe85aec9bd1d9c84092c64626353d2e4c6b21799a0af95787ec5ce98",
+      "path": "endpoint_v2/RETAINED_WIDTH_GUARD_FAILURE.json"
+    },
+    {
+      "sha256": "c99494171ac969675f17144a2b4576d578c48e4f430ad89890717186c582d18b",
+      "path": "endpoint_v2/capture_six.py"
+    },
+    {
+      "sha256": "6cc9d2eceef651103e211153f15cd91199192526b8b0c6c01a9962f8a0230bd8",
+      "path": "endpoint_v2/check_entry.py"
+    },
+    {
+      "sha256": "e6f595e7f79f6d183ded7e10dba1302917899e0fc4ef096e742ee1659e1e91f1",
+      "path": "endpoint_v2/check_export_wiring.py"
+    },
+    {
+      "sha256": "dcf9f8ff184a939d7b052d6f3f6f627f8ce74e22462c4b2ca0d2a0014781df60",
+      "path": "endpoint_v2/CASES.json"
+    },
+    {
+      "sha256": "8142921b6842296527f1a9c13da8dc710a52f1494323e10e9f4f4e1b31bdaa48",
+      "path": "endpoint_v2/REPLAY_SUMMARY.json"
+    },
+    {
+      "sha256": "789107c280b2cad48257ea30e2a937597649e0d4020fa1ce86cb90a55196da02",
+      "path": "README.md"
+    }
+  ],
+  "code": [
+    {
+      "path": "rfic_transformer_inverse_design/layout/port_endpoint_lineage.py",
+      "sha256": "7d0e0a67aed3364cc4cbcdf2ea2bc6121863eb4184d48cc50f0ec8abd9536061"
+    },
+    {
+      "path": "rfic_transformer_inverse_design/layout/export.py",
+      "sha256": "7030d03fe08806ff1a8b5e3a34dddc8471c135659fe7d9c783613e1058f0e8e7"
+    },
+    {
+      "path": "rfic_transformer_inverse_design/execution/evaluator.py",
+      "sha256": "3bf7f1d11f74b85e007f5bf964bec8f19379d708ab5bc850b90c122b08ac30a9"
+    },
+    {
+      "path": "scripts/run_candidate_queue_dataset.py",
+      "sha256": "3c908101249cbdb7e7644352e696ab102f75c5269fce5fc8121c7dbb6e8b884c"
+    },
+    {
+      "path": "scripts/run_candidate_queue_dataset_parallel.py",
+      "sha256": "0b0341ecec11d6049e9a3de95899ed3cb576e30b4783b9a467de66bf837f3020"
+    }
+  ],
+  "scope": "New24 received results, actual formal increment and five-file explicit terminal-face v2 development implementation. Native deployment separate; no old physical run or full QA repeated.",
+  "source_observation": {
+    "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/samebatch_hotpath_v1/joint_cut_20260912T083149806972Z/OBSERVATION.json",
+    "sha256": "2c0a00835b6508dd5b80074c3104115dae34db75e1fb296c3ba2797a937c7ae1"
+  },
+  "source_payload": {
+    "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/samebatch_hotpath_v1/joint_cut_20260912T083149806972Z/NEW_TERMINAL_RESULTS.json",
+    "sha256": "e4aed8df0b3ee28383ab8cc5a41204e549fe201fc4f3a7c7b6673e17c15a0a56"
+  },
+  "public_copy_normalization": [
+    {
+      "path": "endpoint_v2/CHECK.json",
+      "original_sha256": "4c805c37c26f485110d233bc639cf65ee38641578deec54b485334913b0e1824",
+      "change": "One terminal LF added by apply_patch; JSON body unchanged."
+    },
+    {
+      "path": "endpoint_v2/EXPORT_WIRING_RECEIPT.json",
+      "original_sha256": "10ebf30ac51b471e50804c0756b62559e3cd15867181fa67f3dda5ead8fcfb6d",
+      "change": "One terminal LF added by apply_patch; JSON body unchanged."
+    }
+  ]
+}
