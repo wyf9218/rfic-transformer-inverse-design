@@ -1,0 +1,3154 @@
+{
+  "schema": "eucap15_received_new96_m13.v1",
+  "observed_utc": "2026-09-12T09:05:27.301344+00:00",
+  "baseline_utc": "2026-09-12T08:31:50.342478+00:00",
+  "source": {
+    "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/samebatch_hotpath_v1/joint_cut_20260912T090526283300Z/NEW_TERMINAL_RESULTS.json",
+    "sha256": "937d2ee965326a47eb28a8fe8c08717105fef9986c935c7b80ec107b5d3c6ebb"
+  },
+  "feature_order": [
+    "Lp_nH",
+    "Ls_nH",
+    "Qmin",
+    "K_abs"
+  ],
+  "new_terminal": 96,
+  "new_emx_completed": 77,
+  "new_strict_range_unique": 34,
+  "fresh_formal_this_increment": 31,
+  "new_core_without_formal": 3,
+  "notes": [
+    "Only new96 payloads consumed; native owner verified only new5665..6246 formal records.",
+    "Canonical parameter-geometry identity kept separately from candidate identity; neither alone proves actual GDS.",
+    "Original RESULT accepted flag retained; formal commit joined separately.",
+    "Split,seed,recipe,family/exclusion flags preserved; no candidate repair, re-extraction, native call, sampling change or training."
+  ],
+  "rows": [
+    {
+      "request_id": "eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-013",
+      "geometry_sha256": "1e942efa695d99e1dd2e3904e1a8e0ead683f29a8859cee660e6235f524d0312",
+      "candidate_geometry_identity_sha256": "1e942efa695d99e1dd2e3904e1a8e0ead683f29a8859cee660e6235f524d0312",
+      "source": "GEOMETRY_DOE",
+      "arm": "GEOMETRY_DOE_PRODUCTION",
+      "status": "FRESH_EMX_EXTRACTED",
+      "strict": false,
+      "core15_eligible": false,
+      "actual_response": [
+        1.4580959807505984,
+        1.2806372900784422,
+        13.428485004688538,
+        0.3565964355533438
+      ],
+      "assigned_development_split": "train",
+      "original_result_accepted_flag": false,
+      "result_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-013/RESULT.json",
+        "sha256": "48fac5049ac9597dcd1c471f3b0b815d39147a3813dcbb7a9a888ec55c16080a",
+        "bytes": 9176
+      },
+      "recipe_sha256": "9de9dc38074df0dc1441dafeb9b8b6b1038e71ec40ffa653a1880854b6a51d42",
+      "sampling_seed": 2026091201,
+      "target_cell": null,
+      "predicted_cell": null,
+      "family_warning": "NO_FAMILY_INDEPENDENCE_CLAIM",
+      "final_independent_test_eligible": false,
+      "formal_records": []
+    },
+    {
+      "request_id": "eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-019",
+      "geometry_sha256": "9c0155b7461c679bc935eaef031fe01525eb67cfb57aaa4342f6dfbe3d4fd5cb",
+      "candidate_geometry_identity_sha256": "9c0155b7461c679bc935eaef031fe01525eb67cfb57aaa4342f6dfbe3d4fd5cb",
+      "source": "GEOMETRY_DOE",
+      "arm": "GEOMETRY_DOE_PRODUCTION",
+      "status": "FRESH_EMX_EXTRACTED",
+      "strict": true,
+      "core15_eligible": false,
+      "actual_response": [
+        1.178635932222348,
+        1.1977054336994442,
+        15.690982459852394,
+        0.18000469425488952
+      ],
+      "assigned_development_split": "validation",
+      "original_result_accepted_flag": false,
+      "result_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-019/RESULT.json",
+        "sha256": "418e69f16f758d02823e83bac950e2d0e20b70f934766a728353dc6e82ba7bde",
+        "bytes": 9171
+      },
+      "recipe_sha256": "9de9dc38074df0dc1441dafeb9b8b6b1038e71ec40ffa653a1880854b6a51d42",
+      "sampling_seed": 2026091201,
+      "target_cell": null,
+      "predicted_cell": null,
+      "family_warning": "NO_FAMILY_INDEPENDENCE_CLAIM",
+      "final_independent_test_eligible": false,
+      "formal_records": []
+    },
+    {
+      "request_id": "eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-021",
+      "geometry_sha256": "0bf5525f121dcb64966980aac712cf6b16ba4421072b1f5823f9b0a0de761f77",
+      "candidate_geometry_identity_sha256": "0bf5525f121dcb64966980aac712cf6b16ba4421072b1f5823f9b0a0de761f77",
+      "source": "GEOMETRY_DOE",
+      "arm": "GEOMETRY_DOE_PRODUCTION",
+      "status": "FRESH_EMX_EXTRACTED",
+      "strict": true,
+      "core15_eligible": true,
+      "actual_response": [
+        1.1751140563381124,
+        1.530554977431892,
+        13.190019627328798,
+        0.23287708441710855
+      ],
+      "assigned_development_split": "validation",
+      "original_result_accepted_flag": false,
+      "result_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-021/RESULT.json",
+        "sha256": "cec89fc803ed22a2240b61221c19c9be2718c6def5d59a1f8ce41242b068a874",
+        "bytes": 9146
+      },
+      "recipe_sha256": "9de9dc38074df0dc1441dafeb9b8b6b1038e71ec40ffa653a1880854b6a51d42",
+      "sampling_seed": 2026091201,
+      "target_cell": null,
+      "predicted_cell": null,
+      "family_warning": "NO_FAMILY_INDEPENDENCE_CLAIM",
+      "final_independent_test_eligible": false,
+      "formal_records": [
+        {
+          "pin": {
+            "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/qualified15_single_member_v1/records/005964.json",
+            "sha256": "6a49c573ae8004908cbf11d8a14ae1ea3019bc5ee0c6852abe2bca1e447e10c2",
+            "bytes": 158706
+          },
+          "schema": "eucap15_production256_qualified_increment.v1",
+          "request_id": "eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-021",
+          "utc": "2026-09-12T08:44:45.564217+00:00"
+        }
+      ]
+    },
+    {
+      "request_id": "eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-023",
+      "geometry_sha256": "7acd54d18203392daba6c32933a6214b598b5f55f2171d49e6945848ee461e4e",
+      "candidate_geometry_identity_sha256": "7acd54d18203392daba6c32933a6214b598b5f55f2171d49e6945848ee461e4e",
+      "source": "GEOMETRY_DOE",
+      "arm": "GEOMETRY_DOE_PRODUCTION",
+      "status": "FRESH_EMX_EXTRACTED",
+      "strict": false,
+      "core15_eligible": false,
+      "actual_response": [
+        1.1126408713429328,
+        2.111693589031387,
+        8.0569788778308,
+        0.13609757572807035
+      ],
+      "assigned_development_split": "train",
+      "original_result_accepted_flag": false,
+      "result_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-023/RESULT.json",
+        "sha256": "33c6b4822d9743a2e8371ec23c101bbddeebab430c49c8e3502fe617351d738b",
+        "bytes": 9136
+      },
+      "recipe_sha256": "9de9dc38074df0dc1441dafeb9b8b6b1038e71ec40ffa653a1880854b6a51d42",
+      "sampling_seed": 2026091201,
+      "target_cell": null,
+      "predicted_cell": null,
+      "family_warning": "NO_FAMILY_INDEPENDENCE_CLAIM",
+      "final_independent_test_eligible": false,
+      "formal_records": []
+    },
+    {
+      "request_id": "eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-025",
+      "geometry_sha256": "1e78118b967fd61a9c591ae89f9e9861d6386969bd0fe62dbc2066b5ccb072ee",
+      "candidate_geometry_identity_sha256": "1e78118b967fd61a9c591ae89f9e9861d6386969bd0fe62dbc2066b5ccb072ee",
+      "source": "GEOMETRY_DOE",
+      "arm": "GEOMETRY_DOE_PRODUCTION",
+      "status": "FRESH_EMX_EXTRACTED",
+      "strict": true,
+      "core15_eligible": true,
+      "actual_response": [
+        1.2313006358716336,
+        1.340020851210823,
+        12.856231676444702,
+        0.3500261437507633
+      ],
+      "assigned_development_split": "validation",
+      "original_result_accepted_flag": false,
+      "result_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-025/RESULT.json",
+        "sha256": "f9c9e7db53e9de3ef6670f7270341537a653bdfdd6391d4e81fef495c310f0d1",
+        "bytes": 9159
+      },
+      "recipe_sha256": "9de9dc38074df0dc1441dafeb9b8b6b1038e71ec40ffa653a1880854b6a51d42",
+      "sampling_seed": 2026091201,
+      "target_cell": null,
+      "predicted_cell": null,
+      "family_warning": "NO_FAMILY_INDEPENDENCE_CLAIM",
+      "final_independent_test_eligible": false,
+      "formal_records": [
+        {
+          "pin": {
+            "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/qualified15_single_member_v1/records/006137.json",
+            "sha256": "b5230a415f773e316e9fedd4302d633da30e0ae624f201ed0a9b50dc3a78f469",
+            "bytes": 158747
+          },
+          "schema": "eucap15_production256_qualified_increment.v1",
+          "request_id": "eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-025",
+          "utc": "2026-09-12T08:56:35.807132+00:00"
+        }
+      ]
+    },
+    {
+      "request_id": "eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-029",
+      "geometry_sha256": "199fe7b9649a26bb3483737c12c8caeb5b89fb902be5b91a228f0ae920c39e9b",
+      "candidate_geometry_identity_sha256": "199fe7b9649a26bb3483737c12c8caeb5b89fb902be5b91a228f0ae920c39e9b",
+      "source": "GEOMETRY_DOE",
+      "arm": "GEOMETRY_DOE_PRODUCTION",
+      "status": "CANDIDATE_FAILURE_RETAINED_NO_SUBSTITUTION",
+      "strict": null,
+      "core15_eligible": null,
+      "actual_response": null,
+      "assigned_development_split": "test",
+      "original_result_accepted_flag": false,
+      "result_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-029/RESULT.json",
+        "sha256": "2b1d0b00e858b7e00ac14852d17fc3bd53f6fa9c0f88bbdbf75be7c2da9a7331",
+        "bytes": 5894
+      },
+      "recipe_sha256": "9de9dc38074df0dc1441dafeb9b8b6b1038e71ec40ffa653a1880854b6a51d42",
+      "sampling_seed": 2026091201,
+      "target_cell": null,
+      "predicted_cell": null,
+      "family_warning": "NO_FAMILY_INDEPENDENCE_CLAIM",
+      "final_independent_test_eligible": false,
+      "formal_records": []
+    },
+    {
+      "request_id": "eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-031",
+      "geometry_sha256": "4e49850c8d9545ed48772870058f89419e0fea50e2c7260ecd463e5d98407f3d",
+      "candidate_geometry_identity_sha256": "4e49850c8d9545ed48772870058f89419e0fea50e2c7260ecd463e5d98407f3d",
+      "source": "GEOMETRY_DOE",
+      "arm": "GEOMETRY_DOE_PRODUCTION",
+      "status": "FRESH_EMX_EXTRACTED",
+      "strict": true,
+      "core15_eligible": true,
+      "actual_response": [
+        1.6633960185446297,
+        1.7971091292389867,
+        12.880364035141561,
+        0.23667617586854334
+      ],
+      "assigned_development_split": "train",
+      "original_result_accepted_flag": false,
+      "result_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-031/RESULT.json",
+        "sha256": "e0184514d84c0af63a9d5af140e08f02e97d72d5dd41d1ea93b4598d9b975cd9",
+        "bytes": 9211
+      },
+      "recipe_sha256": "9de9dc38074df0dc1441dafeb9b8b6b1038e71ec40ffa653a1880854b6a51d42",
+      "sampling_seed": 2026091201,
+      "target_cell": null,
+      "predicted_cell": null,
+      "family_warning": "NO_FAMILY_INDEPENDENCE_CLAIM",
+      "final_independent_test_eligible": false,
+      "formal_records": [
+        {
+          "pin": {
+            "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/qualified15_single_member_v1/records/005745.json",
+            "sha256": "f998740fdde5f4336113b47a9c7b926b072560a402912773f688a849bb97dfa3",
+            "bytes": 158905
+          },
+          "schema": "eucap15_production256_qualified_increment.v1",
+          "request_id": "eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-031",
+          "utc": "2026-09-12T08:35:10.578532+00:00"
+        }
+      ]
+    },
+    {
+      "request_id": "eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-033",
+      "geometry_sha256": "b1789c88aac411ffdbaa7908a98b857cbc22395c5bc42245855bbca90e1ab65b",
+      "candidate_geometry_identity_sha256": "b1789c88aac411ffdbaa7908a98b857cbc22395c5bc42245855bbca90e1ab65b",
+      "source": "GEOMETRY_DOE",
+      "arm": "GEOMETRY_DOE_PRODUCTION",
+      "status": "FRESH_EMX_EXTRACTED",
+      "strict": false,
+      "core15_eligible": false,
+      "actual_response": [
+        2.799294726395576,
+        1.9933690951086072,
+        8.767622556454176,
+        0.3292818104523887
+      ],
+      "assigned_development_split": "train",
+      "original_result_accepted_flag": false,
+      "result_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-033/RESULT.json",
+        "sha256": "56c8d3df1e386350eb77e4b87028d3ccdab993a747d32cbabddc288166be23e3",
+        "bytes": 9158
+      },
+      "recipe_sha256": "9de9dc38074df0dc1441dafeb9b8b6b1038e71ec40ffa653a1880854b6a51d42",
+      "sampling_seed": 2026091201,
+      "target_cell": null,
+      "predicted_cell": null,
+      "family_warning": "NO_FAMILY_INDEPENDENCE_CLAIM",
+      "final_independent_test_eligible": false,
+      "formal_records": []
+    },
+    {
+      "request_id": "eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-038",
+      "geometry_sha256": "5bf79f84ffc639120aa2867d158bef948ca02306938d8881c0e9358a0e79d950",
+      "candidate_geometry_identity_sha256": "5bf79f84ffc639120aa2867d158bef948ca02306938d8881c0e9358a0e79d950",
+      "source": "GEOMETRY_DOE",
+      "arm": "GEOMETRY_DOE_PRODUCTION",
+      "status": "FRESH_EMX_EXTRACTED",
+      "strict": true,
+      "core15_eligible": false,
+      "actual_response": [
+        1.463880097040866,
+        0.8025905770408623,
+        12.880799807497567,
+        0.12194612460800353
+      ],
+      "assigned_development_split": "train",
+      "original_result_accepted_flag": false,
+      "result_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-038/RESULT.json",
+        "sha256": "7b4e7e959945589df882c02603d02affb9af57cfc71b89c99cb064c4325e5ac2",
+        "bytes": 9136
+      },
+      "recipe_sha256": "9de9dc38074df0dc1441dafeb9b8b6b1038e71ec40ffa653a1880854b6a51d42",
+      "sampling_seed": 2026091201,
+      "target_cell": null,
+      "predicted_cell": null,
+      "family_warning": "NO_FAMILY_INDEPENDENCE_CLAIM",
+      "final_independent_test_eligible": false,
+      "formal_records": []
+    },
+    {
+      "request_id": "eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-042",
+      "geometry_sha256": "8ab3cb61a6eb71391565f0b18ea94317aeea227ee7ef6eb3c61449d3d3ed5dfe",
+      "candidate_geometry_identity_sha256": "8ab3cb61a6eb71391565f0b18ea94317aeea227ee7ef6eb3c61449d3d3ed5dfe",
+      "source": "GEOMETRY_DOE",
+      "arm": "GEOMETRY_DOE_PRODUCTION",
+      "status": "FRESH_EMX_EXTRACTED",
+      "strict": true,
+      "core15_eligible": true,
+      "actual_response": [
+        1.143518979934037,
+        1.0685193468697634,
+        14.309981002445475,
+        0.42598997367498864
+      ],
+      "assigned_development_split": "train",
+      "original_result_accepted_flag": false,
+      "result_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-042/RESULT.json",
+        "sha256": "1cef498ec4b35fb420ea4b66b18ee2b0fd5c13f210e9d45a6b2ae23245593aa1",
+        "bytes": 9168
+      },
+      "recipe_sha256": "9de9dc38074df0dc1441dafeb9b8b6b1038e71ec40ffa653a1880854b6a51d42",
+      "sampling_seed": 2026091201,
+      "target_cell": null,
+      "predicted_cell": null,
+      "family_warning": "NO_FAMILY_INDEPENDENCE_CLAIM",
+      "final_independent_test_eligible": false,
+      "formal_records": [
+        {
+          "pin": {
+            "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/qualified15_single_member_v1/records/005795.json",
+            "sha256": "55f49621c403301dcd45bae7516a6a7e68adf5eb227ba4c606957962ca1a0bb6",
+            "bytes": 158772
+          },
+          "schema": "eucap15_production256_qualified_increment.v1",
+          "request_id": "eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-042",
+          "utc": "2026-09-12T08:37:24.050102+00:00"
+        }
+      ]
+    },
+    {
+      "request_id": "eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-044",
+      "geometry_sha256": "1bd9a635e0cd49f13ad90c95a232e4c3b5fd59f3b722826e57dbe15cb2db78d8",
+      "candidate_geometry_identity_sha256": "1bd9a635e0cd49f13ad90c95a232e4c3b5fd59f3b722826e57dbe15cb2db78d8",
+      "source": "GEOMETRY_DOE",
+      "arm": "GEOMETRY_DOE_PRODUCTION",
+      "status": "CANDIDATE_FAILURE_RETAINED_NO_SUBSTITUTION",
+      "strict": null,
+      "core15_eligible": null,
+      "actual_response": null,
+      "assigned_development_split": "train",
+      "original_result_accepted_flag": false,
+      "result_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-044/RESULT.json",
+        "sha256": "96663132670945091ee61b7747ee7de868e1aed6084736eab4c4b76be140c7af",
+        "bytes": 5926
+      },
+      "recipe_sha256": "9de9dc38074df0dc1441dafeb9b8b6b1038e71ec40ffa653a1880854b6a51d42",
+      "sampling_seed": 2026091201,
+      "target_cell": null,
+      "predicted_cell": null,
+      "family_warning": "NO_FAMILY_INDEPENDENCE_CLAIM",
+      "final_independent_test_eligible": false,
+      "formal_records": []
+    },
+    {
+      "request_id": "eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-049",
+      "geometry_sha256": "eb8e90c0b0c67c2cb3899a975ed69453bf2a3180f2d7caebcaf716a37e5a5b0e",
+      "candidate_geometry_identity_sha256": "eb8e90c0b0c67c2cb3899a975ed69453bf2a3180f2d7caebcaf716a37e5a5b0e",
+      "source": "GEOMETRY_DOE",
+      "arm": "GEOMETRY_DOE_PRODUCTION",
+      "status": "FRESH_EMX_EXTRACTED",
+      "strict": false,
+      "core15_eligible": false,
+      "actual_response": [
+        1.3573398322227173,
+        1.2810598829665023,
+        12.262220220545306,
+        0.5361364378477473
+      ],
+      "assigned_development_split": "train",
+      "original_result_accepted_flag": false,
+      "result_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-049/RESULT.json",
+        "sha256": "19fb0b1e041bd8eaa8fffa398e710c660d3e2d0ee048652349aa4b4f76f520dc",
+        "bytes": 9181
+      },
+      "recipe_sha256": "9de9dc38074df0dc1441dafeb9b8b6b1038e71ec40ffa653a1880854b6a51d42",
+      "sampling_seed": 2026091201,
+      "target_cell": null,
+      "predicted_cell": null,
+      "family_warning": "NO_FAMILY_INDEPENDENCE_CLAIM",
+      "final_independent_test_eligible": false,
+      "formal_records": []
+    },
+    {
+      "request_id": "eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-051",
+      "geometry_sha256": "7505562f96e5bed4323ac47fcd981eea58b6f9271480624a120f9ef7f53f26ea",
+      "candidate_geometry_identity_sha256": "7505562f96e5bed4323ac47fcd981eea58b6f9271480624a120f9ef7f53f26ea",
+      "source": "GEOMETRY_DOE",
+      "arm": "GEOMETRY_DOE_PRODUCTION",
+      "status": "CANDIDATE_FAILURE_RETAINED_NO_SUBSTITUTION",
+      "strict": null,
+      "core15_eligible": null,
+      "actual_response": null,
+      "assigned_development_split": "train",
+      "original_result_accepted_flag": false,
+      "result_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-051/RESULT.json",
+        "sha256": "72522ed4f731be211e97ef680228d5358cc007d8ad101ef0a348492c3982bde6",
+        "bytes": 5870
+      },
+      "recipe_sha256": "9de9dc38074df0dc1441dafeb9b8b6b1038e71ec40ffa653a1880854b6a51d42",
+      "sampling_seed": 2026091201,
+      "target_cell": null,
+      "predicted_cell": null,
+      "family_warning": "NO_FAMILY_INDEPENDENCE_CLAIM",
+      "final_independent_test_eligible": false,
+      "formal_records": []
+    },
+    {
+      "request_id": "eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-052",
+      "geometry_sha256": "9f43eb79d9cdb983e24c9da1bc8ee4d3bab913cebd39086105234cec5cec0e57",
+      "candidate_geometry_identity_sha256": "9f43eb79d9cdb983e24c9da1bc8ee4d3bab913cebd39086105234cec5cec0e57",
+      "source": "GEOMETRY_DOE",
+      "arm": "GEOMETRY_DOE_PRODUCTION",
+      "status": "FRESH_EMX_EXTRACTED",
+      "strict": true,
+      "core15_eligible": false,
+      "actual_response": [
+        1.2173268977227039,
+        0.5796963903140542,
+        14.516258392231324,
+        0.16934996057233512
+      ],
+      "assigned_development_split": "train",
+      "original_result_accepted_flag": false,
+      "result_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-052/RESULT.json",
+        "sha256": "2e489b122a68c1cef14666379baa7ab05b71439c6e8d559ae4d75ae99bf51e3b",
+        "bytes": 9137
+      },
+      "recipe_sha256": "9de9dc38074df0dc1441dafeb9b8b6b1038e71ec40ffa653a1880854b6a51d42",
+      "sampling_seed": 2026091201,
+      "target_cell": null,
+      "predicted_cell": null,
+      "family_warning": "NO_FAMILY_INDEPENDENCE_CLAIM",
+      "final_independent_test_eligible": false,
+      "formal_records": []
+    },
+    {
+      "request_id": "eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-055",
+      "geometry_sha256": "eac6ae2fb324a8243fe35682cd35d5c5ae0a54d3d3b2935a09668ce7b655fb17",
+      "candidate_geometry_identity_sha256": "eac6ae2fb324a8243fe35682cd35d5c5ae0a54d3d3b2935a09668ce7b655fb17",
+      "source": "GEOMETRY_DOE",
+      "arm": "GEOMETRY_DOE_PRODUCTION",
+      "status": "FRESH_EMX_EXTRACTED",
+      "strict": false,
+      "core15_eligible": false,
+      "actual_response": [
+        1.1710170770430708,
+        2.139044352554293,
+        9.213521726323597,
+        0.16351840507698465
+      ],
+      "assigned_development_split": "test",
+      "original_result_accepted_flag": false,
+      "result_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-055/RESULT.json",
+        "sha256": "b3ef81ad050c8c7394d39c5446b6d67a77745e7bbbbab2daa94ea93d20fce4b0",
+        "bytes": 9153
+      },
+      "recipe_sha256": "9de9dc38074df0dc1441dafeb9b8b6b1038e71ec40ffa653a1880854b6a51d42",
+      "sampling_seed": 2026091201,
+      "target_cell": null,
+      "predicted_cell": null,
+      "family_warning": "NO_FAMILY_INDEPENDENCE_CLAIM",
+      "final_independent_test_eligible": false,
+      "formal_records": []
+    },
+    {
+      "request_id": "eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-064",
+      "geometry_sha256": "bdfa54c5e31a6560b4219dcfbc7e7442b88123a2806d4dec884a739c6bb1ae36",
+      "candidate_geometry_identity_sha256": "bdfa54c5e31a6560b4219dcfbc7e7442b88123a2806d4dec884a739c6bb1ae36",
+      "source": "GEOMETRY_DOE",
+      "arm": "GEOMETRY_DOE_PRODUCTION",
+      "status": "FRESH_EMX_EXTRACTED",
+      "strict": true,
+      "core15_eligible": true,
+      "actual_response": [
+        1.1962696334328136,
+        1.507529532566723,
+        11.80266632645667,
+        0.313318641552311
+      ],
+      "assigned_development_split": "train",
+      "original_result_accepted_flag": false,
+      "result_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-064/RESULT.json",
+        "sha256": "b2c41afc7353f99441b4c96661e2027012a4a62bc137fc5068030d0f2a3613c6",
+        "bytes": 9147
+      },
+      "recipe_sha256": "9de9dc38074df0dc1441dafeb9b8b6b1038e71ec40ffa653a1880854b6a51d42",
+      "sampling_seed": 2026091201,
+      "target_cell": null,
+      "predicted_cell": null,
+      "family_warning": "NO_FAMILY_INDEPENDENCE_CLAIM",
+      "final_independent_test_eligible": false,
+      "formal_records": [
+        {
+          "pin": {
+            "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/qualified15_single_member_v1/records/006138.json",
+            "sha256": "55aba6d5c4a505247f25db45b24c082769b9f62ba83a6262639d6856cef0f835",
+            "bytes": 158707
+          },
+          "schema": "eucap15_production256_qualified_increment.v1",
+          "request_id": "eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-064",
+          "utc": "2026-09-12T08:56:42.163300+00:00"
+        }
+      ]
+    },
+    {
+      "request_id": "eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-065",
+      "geometry_sha256": "42e59e60eedba6fed80c95e0158964f55557a5da9dc23fe09a63de1e19f36adc",
+      "candidate_geometry_identity_sha256": "42e59e60eedba6fed80c95e0158964f55557a5da9dc23fe09a63de1e19f36adc",
+      "source": "GEOMETRY_DOE",
+      "arm": "GEOMETRY_DOE_PRODUCTION",
+      "status": "FRESH_EMX_EXTRACTED",
+      "strict": true,
+      "core15_eligible": false,
+      "actual_response": [
+        1.8237852328247377,
+        0.978364592583933,
+        10.726906261157742,
+        0.16958059061653508
+      ],
+      "assigned_development_split": "train",
+      "original_result_accepted_flag": false,
+      "result_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-065/RESULT.json",
+        "sha256": "5640b3db191ae4b500f1d2235ae8fac48338c2249220034e94f11e3634697a82",
+        "bytes": 9150
+      },
+      "recipe_sha256": "9de9dc38074df0dc1441dafeb9b8b6b1038e71ec40ffa653a1880854b6a51d42",
+      "sampling_seed": 2026091201,
+      "target_cell": null,
+      "predicted_cell": null,
+      "family_warning": "NO_FAMILY_INDEPENDENCE_CLAIM",
+      "final_independent_test_eligible": false,
+      "formal_records": []
+    },
+    {
+      "request_id": "eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-068",
+      "geometry_sha256": "2fb046ee96ff35e5413a4108af0e8e14870805ba1bbfe3a6c0d5ee081be0bc4b",
+      "candidate_geometry_identity_sha256": "2fb046ee96ff35e5413a4108af0e8e14870805ba1bbfe3a6c0d5ee081be0bc4b",
+      "source": "GEOMETRY_DOE",
+      "arm": "GEOMETRY_DOE_PRODUCTION",
+      "status": "FRESH_EMX_EXTRACTED",
+      "strict": false,
+      "core15_eligible": false,
+      "actual_response": [
+        1.4648379217315708,
+        1.3475904080509173,
+        12.816258235986416,
+        0.27013309740076985
+      ],
+      "assigned_development_split": "train",
+      "original_result_accepted_flag": false,
+      "result_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-068/RESULT.json",
+        "sha256": "e91b12b5fd6d35222ef8916c43722ef3fc834142ff0a8f6084b71b36da295c1d",
+        "bytes": 9155
+      },
+      "recipe_sha256": "9de9dc38074df0dc1441dafeb9b8b6b1038e71ec40ffa653a1880854b6a51d42",
+      "sampling_seed": 2026091201,
+      "target_cell": null,
+      "predicted_cell": null,
+      "family_warning": "NO_FAMILY_INDEPENDENCE_CLAIM",
+      "final_independent_test_eligible": false,
+      "formal_records": []
+    },
+    {
+      "request_id": "eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-084",
+      "geometry_sha256": "fe3388e3cdc7f553be4efe61e7b1a30d0f24ef18b08d65fde9ea373dd6546738",
+      "candidate_geometry_identity_sha256": "fe3388e3cdc7f553be4efe61e7b1a30d0f24ef18b08d65fde9ea373dd6546738",
+      "source": "GEOMETRY_DOE",
+      "arm": "GEOMETRY_DOE_PRODUCTION",
+      "status": "FRESH_EMX_EXTRACTED",
+      "strict": false,
+      "core15_eligible": false,
+      "actual_response": [
+        1.230368785187952,
+        1.448024266232714,
+        12.566037416187804,
+        0.260643550573377
+      ],
+      "assigned_development_split": "train",
+      "original_result_accepted_flag": false,
+      "result_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-084/RESULT.json",
+        "sha256": "d36e7e7fe6edc0cbff40c7f4564bb2dd9fb707a3fcc97f81d90d14196a76113f",
+        "bytes": 9193
+      },
+      "recipe_sha256": "9de9dc38074df0dc1441dafeb9b8b6b1038e71ec40ffa653a1880854b6a51d42",
+      "sampling_seed": 2026091201,
+      "target_cell": null,
+      "predicted_cell": null,
+      "family_warning": "NO_FAMILY_INDEPENDENCE_CLAIM",
+      "final_independent_test_eligible": false,
+      "formal_records": []
+    },
+    {
+      "request_id": "eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-091",
+      "geometry_sha256": "b24f9b140033984755c3210a4388e1382d6666d3613e157165cc331bb23814c4",
+      "candidate_geometry_identity_sha256": "b24f9b140033984755c3210a4388e1382d6666d3613e157165cc331bb23814c4",
+      "source": "GEOMETRY_DOE",
+      "arm": "GEOMETRY_DOE_PRODUCTION",
+      "status": "FRESH_EMX_EXTRACTED",
+      "strict": true,
+      "core15_eligible": false,
+      "actual_response": [
+        1.3221489813309424,
+        1.9605601662720493,
+        11.0987784177153,
+        0.13810542238200288
+      ],
+      "assigned_development_split": "train",
+      "original_result_accepted_flag": false,
+      "result_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-091/RESULT.json",
+        "sha256": "02467b0508cdaf69985eb34417ec6826a74e5baaa9747f025dde025aeb130e24",
+        "bytes": 9158
+      },
+      "recipe_sha256": "9de9dc38074df0dc1441dafeb9b8b6b1038e71ec40ffa653a1880854b6a51d42",
+      "sampling_seed": 2026091201,
+      "target_cell": null,
+      "predicted_cell": null,
+      "family_warning": "NO_FAMILY_INDEPENDENCE_CLAIM",
+      "final_independent_test_eligible": false,
+      "formal_records": []
+    },
+    {
+      "request_id": "eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-092",
+      "geometry_sha256": "43ffde50918d2fb4b207cd14d407d5b163ff1c8529e590bb4de4703daae97a16",
+      "candidate_geometry_identity_sha256": "43ffde50918d2fb4b207cd14d407d5b163ff1c8529e590bb4de4703daae97a16",
+      "source": "GEOMETRY_DOE",
+      "arm": "GEOMETRY_DOE_PRODUCTION",
+      "status": "FRESH_EMX_EXTRACTED",
+      "strict": true,
+      "core15_eligible": true,
+      "actual_response": [
+        1.367902261798774,
+        0.9333837415150493,
+        13.796802420116437,
+        0.22875429562741664
+      ],
+      "assigned_development_split": "validation",
+      "original_result_accepted_flag": false,
+      "result_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-092/RESULT.json",
+        "sha256": "de0ba3eb65fc7570b956ce337e0905b627f0b8a6390b7e496d93dbfd2967ecd2",
+        "bytes": 9181
+      },
+      "recipe_sha256": "9de9dc38074df0dc1441dafeb9b8b6b1038e71ec40ffa653a1880854b6a51d42",
+      "sampling_seed": 2026091201,
+      "target_cell": null,
+      "predicted_cell": null,
+      "family_warning": "NO_FAMILY_INDEPENDENCE_CLAIM",
+      "final_independent_test_eligible": false,
+      "formal_records": [
+        {
+          "pin": {
+            "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/qualified15_single_member_v1/records/006210.json",
+            "sha256": "5e9788d4383525d41a1c045d4af2b71aaf7a9560c5e29d9b87c6207ae2f9ce39",
+            "bytes": 158808
+          },
+          "schema": "eucap15_production256_qualified_increment.v1",
+          "request_id": "eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-092",
+          "utc": "2026-09-12T09:02:02.418105+00:00"
+        }
+      ]
+    },
+    {
+      "request_id": "eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-096",
+      "geometry_sha256": "78ecc1d67975d0dc84a47a147ec7a5196ec9289af26ff46f4dcd0463f0e500bd",
+      "candidate_geometry_identity_sha256": "78ecc1d67975d0dc84a47a147ec7a5196ec9289af26ff46f4dcd0463f0e500bd",
+      "source": "GEOMETRY_DOE",
+      "arm": "GEOMETRY_DOE_PRODUCTION",
+      "status": "FRESH_EMX_EXTRACTED",
+      "strict": true,
+      "core15_eligible": false,
+      "actual_response": [
+        0.9482896559385917,
+        1.0139791182463977,
+        16.521313120998443,
+        0.19251319768287328
+      ],
+      "assigned_development_split": "validation",
+      "original_result_accepted_flag": false,
+      "result_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-096/RESULT.json",
+        "sha256": "2b16cfd1b32f230e126038f0518774ca7f924441f9d2a010dab5c1701f20707e",
+        "bytes": 9143
+      },
+      "recipe_sha256": "9de9dc38074df0dc1441dafeb9b8b6b1038e71ec40ffa653a1880854b6a51d42",
+      "sampling_seed": 2026091201,
+      "target_cell": null,
+      "predicted_cell": null,
+      "family_warning": "NO_FAMILY_INDEPENDENCE_CLAIM",
+      "final_independent_test_eligible": false,
+      "formal_records": []
+    },
+    {
+      "request_id": "eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-099",
+      "geometry_sha256": "b08ae409899cea03a51ec928afb6fa1531c10651e4317c4afd98429e27b3ec31",
+      "candidate_geometry_identity_sha256": "b08ae409899cea03a51ec928afb6fa1531c10651e4317c4afd98429e27b3ec31",
+      "source": "GEOMETRY_DOE",
+      "arm": "GEOMETRY_DOE_PRODUCTION",
+      "status": "FRESH_EMX_EXTRACTED",
+      "strict": false,
+      "core15_eligible": false,
+      "actual_response": [
+        1.6440774417831268,
+        1.8562508453374722,
+        9.982240087508229,
+        0.35336869006338395
+      ],
+      "assigned_development_split": "train",
+      "original_result_accepted_flag": false,
+      "result_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-099/RESULT.json",
+        "sha256": "728b8cc98abfde413a74dd46de9e02e015525b0c02f300551a7c247659dd43cc",
+        "bytes": 9154
+      },
+      "recipe_sha256": "9de9dc38074df0dc1441dafeb9b8b6b1038e71ec40ffa653a1880854b6a51d42",
+      "sampling_seed": 2026091201,
+      "target_cell": null,
+      "predicted_cell": null,
+      "family_warning": "NO_FAMILY_INDEPENDENCE_CLAIM",
+      "final_independent_test_eligible": false,
+      "formal_records": []
+    },
+    {
+      "request_id": "eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-100",
+      "geometry_sha256": "83a9709d7372f1ff0deb594543ee358b0e1461bb3a755678e98954a86f12f90a",
+      "candidate_geometry_identity_sha256": "83a9709d7372f1ff0deb594543ee358b0e1461bb3a755678e98954a86f12f90a",
+      "source": "GEOMETRY_DOE",
+      "arm": "GEOMETRY_DOE_PRODUCTION",
+      "status": "FRESH_EMX_EXTRACTED",
+      "strict": true,
+      "core15_eligible": false,
+      "actual_response": [
+        1.5256729234226596,
+        0.9302893611308535,
+        13.400407884014644,
+        0.15402980170048414
+      ],
+      "assigned_development_split": "train",
+      "original_result_accepted_flag": false,
+      "result_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-100/RESULT.json",
+        "sha256": "2fface0170e0234cb37f64fdd272d9963f6df32084ad7a67677ccaf43f17a33c",
+        "bytes": 9148
+      },
+      "recipe_sha256": "9de9dc38074df0dc1441dafeb9b8b6b1038e71ec40ffa653a1880854b6a51d42",
+      "sampling_seed": 2026091201,
+      "target_cell": null,
+      "predicted_cell": null,
+      "family_warning": "NO_FAMILY_INDEPENDENCE_CLAIM",
+      "final_independent_test_eligible": false,
+      "formal_records": []
+    },
+    {
+      "request_id": "eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-101",
+      "geometry_sha256": "983114661ed389d04f555c02e1948032b25d616245f49a4226ff594a1b239c77",
+      "candidate_geometry_identity_sha256": "983114661ed389d04f555c02e1948032b25d616245f49a4226ff594a1b239c77",
+      "source": "GEOMETRY_DOE",
+      "arm": "GEOMETRY_DOE_PRODUCTION",
+      "status": "FRESH_EMX_EXTRACTED",
+      "strict": false,
+      "core15_eligible": false,
+      "actual_response": [
+        2.0794399395807623,
+        2.1622304146045668,
+        8.025614640759514,
+        0.5455040844213215
+      ],
+      "assigned_development_split": "validation",
+      "original_result_accepted_flag": false,
+      "result_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-101/RESULT.json",
+        "sha256": "f933ccfe15c1118d8e521323c22dc077da4cfeb1bcaa1e392823b7ffb5c12e40",
+        "bytes": 9186
+      },
+      "recipe_sha256": "9de9dc38074df0dc1441dafeb9b8b6b1038e71ec40ffa653a1880854b6a51d42",
+      "sampling_seed": 2026091201,
+      "target_cell": null,
+      "predicted_cell": null,
+      "family_warning": "NO_FAMILY_INDEPENDENCE_CLAIM",
+      "final_independent_test_eligible": false,
+      "formal_records": []
+    },
+    {
+      "request_id": "eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-103",
+      "geometry_sha256": "87f141afe3d7b83e7d47b5623d330b55f623d8a623bd2b2d7251efcb650f52bc",
+      "candidate_geometry_identity_sha256": "87f141afe3d7b83e7d47b5623d330b55f623d8a623bd2b2d7251efcb650f52bc",
+      "source": "GEOMETRY_DOE",
+      "arm": "GEOMETRY_DOE_PRODUCTION",
+      "status": "FRESH_EMX_EXTRACTED",
+      "strict": false,
+      "core15_eligible": false,
+      "actual_response": [
+        1.9638599365045346,
+        2.3645195183851135,
+        7.922167058221178,
+        0.6972794840190844
+      ],
+      "assigned_development_split": "train",
+      "original_result_accepted_flag": false,
+      "result_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-103/RESULT.json",
+        "sha256": "45d25b19622d0263c8f183f4b28e82a77944871722edf2288b0e7d4477d8ffa5",
+        "bytes": 9159
+      },
+      "recipe_sha256": "9de9dc38074df0dc1441dafeb9b8b6b1038e71ec40ffa653a1880854b6a51d42",
+      "sampling_seed": 2026091201,
+      "target_cell": null,
+      "predicted_cell": null,
+      "family_warning": "NO_FAMILY_INDEPENDENCE_CLAIM",
+      "final_independent_test_eligible": false,
+      "formal_records": []
+    },
+    {
+      "request_id": "eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-105",
+      "geometry_sha256": "6c10f362d9f9e7bb1104d249c88388c008d7e2056eee8b1b3e1948fab242ab0c",
+      "candidate_geometry_identity_sha256": "6c10f362d9f9e7bb1104d249c88388c008d7e2056eee8b1b3e1948fab242ab0c",
+      "source": "GEOMETRY_DOE",
+      "arm": "GEOMETRY_DOE_PRODUCTION",
+      "status": "FRESH_EMX_EXTRACTED",
+      "strict": true,
+      "core15_eligible": false,
+      "actual_response": [
+        1.1810337268349451,
+        1.4905045986593588,
+        13.94061476621537,
+        0.16841752872434368
+      ],
+      "assigned_development_split": "validation",
+      "original_result_accepted_flag": false,
+      "result_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-105/RESULT.json",
+        "sha256": "dce0ab9c7980f9f0645252be35d28655d066866d35ade7055554731116045191",
+        "bytes": 9161
+      },
+      "recipe_sha256": "9de9dc38074df0dc1441dafeb9b8b6b1038e71ec40ffa653a1880854b6a51d42",
+      "sampling_seed": 2026091201,
+      "target_cell": null,
+      "predicted_cell": null,
+      "family_warning": "NO_FAMILY_INDEPENDENCE_CLAIM",
+      "final_independent_test_eligible": false,
+      "formal_records": []
+    },
+    {
+      "request_id": "eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-106",
+      "geometry_sha256": "19d02d34768bea0778c688e26788ee2b8827d3d89b0e8db488f64175b366b6b3",
+      "candidate_geometry_identity_sha256": "19d02d34768bea0778c688e26788ee2b8827d3d89b0e8db488f64175b366b6b3",
+      "source": "GEOMETRY_DOE",
+      "arm": "GEOMETRY_DOE_PRODUCTION",
+      "status": "FRESH_EMX_EXTRACTED",
+      "strict": true,
+      "core15_eligible": false,
+      "actual_response": [
+        0.8425167348202763,
+        0.850553330916644,
+        19.14651251441721,
+        0.17495425619062713
+      ],
+      "assigned_development_split": "train",
+      "original_result_accepted_flag": false,
+      "result_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-106/RESULT.json",
+        "sha256": "ea1a9902f94acd2f59de28581339eb80c99ebf09d7088d7e939d0d83507cc58b",
+        "bytes": 9140
+      },
+      "recipe_sha256": "9de9dc38074df0dc1441dafeb9b8b6b1038e71ec40ffa653a1880854b6a51d42",
+      "sampling_seed": 2026091201,
+      "target_cell": null,
+      "predicted_cell": null,
+      "family_warning": "NO_FAMILY_INDEPENDENCE_CLAIM",
+      "final_independent_test_eligible": false,
+      "formal_records": []
+    },
+    {
+      "request_id": "eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-107",
+      "geometry_sha256": "f5739e8da33f141f3d7a29e3d80968fffb5d04a45fd0cb2f43d84a9fa0388ea1",
+      "candidate_geometry_identity_sha256": "f5739e8da33f141f3d7a29e3d80968fffb5d04a45fd0cb2f43d84a9fa0388ea1",
+      "source": "GEOMETRY_DOE",
+      "arm": "GEOMETRY_DOE_PRODUCTION",
+      "status": "FRESH_EMX_EXTRACTED",
+      "strict": true,
+      "core15_eligible": true,
+      "actual_response": [
+        1.0783576680142863,
+        1.3269126326690375,
+        14.905363213955349,
+        0.2324816064957779
+      ],
+      "assigned_development_split": "train",
+      "original_result_accepted_flag": false,
+      "result_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-107/RESULT.json",
+        "sha256": "e52fa1a6c02e9a47f5ae263c0b5859b5f990eb594de458dc4c6791cef7fe9dc7",
+        "bytes": 9164
+      },
+      "recipe_sha256": "9de9dc38074df0dc1441dafeb9b8b6b1038e71ec40ffa653a1880854b6a51d42",
+      "sampling_seed": 2026091201,
+      "target_cell": null,
+      "predicted_cell": null,
+      "family_warning": "NO_FAMILY_INDEPENDENCE_CLAIM",
+      "final_independent_test_eligible": false,
+      "formal_records": [
+        {
+          "pin": {
+            "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/qualified15_single_member_v1/records/005747.json",
+            "sha256": "9cfbad24e9efb3466f71691ca1c742eb47eeaad50dfc878a62671b37d31538d3",
+            "bytes": 158760
+          },
+          "schema": "eucap15_production256_qualified_increment.v1",
+          "request_id": "eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-107",
+          "utc": "2026-09-12T08:35:16.150821+00:00"
+        }
+      ]
+    },
+    {
+      "request_id": "eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-109",
+      "geometry_sha256": "dc79e99a2c10cf9e5e9d61a5f82bda35c214c27ae0a974e9a4b695f97f51fcf7",
+      "candidate_geometry_identity_sha256": "dc79e99a2c10cf9e5e9d61a5f82bda35c214c27ae0a974e9a4b695f97f51fcf7",
+      "source": "GEOMETRY_DOE",
+      "arm": "GEOMETRY_DOE_PRODUCTION",
+      "status": "ANALYTIC_FAIL_NOT_DISPATCHED",
+      "strict": null,
+      "core15_eligible": null,
+      "actual_response": null,
+      "assigned_development_split": "train",
+      "original_result_accepted_flag": false,
+      "result_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-109/RESULT.json",
+        "sha256": "68c37ca51e6677fcff6b289661fd918aa40d73f8be86fed2d2bfcbb9650097ad",
+        "bytes": 5147
+      },
+      "recipe_sha256": "9de9dc38074df0dc1441dafeb9b8b6b1038e71ec40ffa653a1880854b6a51d42",
+      "sampling_seed": 2026091201,
+      "target_cell": null,
+      "predicted_cell": null,
+      "family_warning": "NO_FAMILY_INDEPENDENCE_CLAIM",
+      "final_independent_test_eligible": false,
+      "formal_records": []
+    },
+    {
+      "request_id": "eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-110",
+      "geometry_sha256": "b16a9ee59e95ef394b5f92885fbde84e41f918d0d865d138b253169fc1f521eb",
+      "candidate_geometry_identity_sha256": "b16a9ee59e95ef394b5f92885fbde84e41f918d0d865d138b253169fc1f521eb",
+      "source": "GEOMETRY_DOE",
+      "arm": "GEOMETRY_DOE_PRODUCTION",
+      "status": "FRESH_EMX_EXTRACTED",
+      "strict": false,
+      "core15_eligible": false,
+      "actual_response": [
+        1.1734609922761845,
+        1.8583466942653486,
+        9.334252185447422,
+        0.2306227627425379
+      ],
+      "assigned_development_split": "test",
+      "original_result_accepted_flag": false,
+      "result_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-110/RESULT.json",
+        "sha256": "031814d3fbb54823dd0dd4caf73258dd33f7de6db6dcf1dde5f930c050ff0598",
+        "bytes": 9161
+      },
+      "recipe_sha256": "9de9dc38074df0dc1441dafeb9b8b6b1038e71ec40ffa653a1880854b6a51d42",
+      "sampling_seed": 2026091201,
+      "target_cell": null,
+      "predicted_cell": null,
+      "family_warning": "NO_FAMILY_INDEPENDENCE_CLAIM",
+      "final_independent_test_eligible": false,
+      "formal_records": []
+    },
+    {
+      "request_id": "eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-112",
+      "geometry_sha256": "2a3073348ef33646ecbf329fb0f89bb0213f97fcb6a6e6dda987396bca1d91b7",
+      "candidate_geometry_identity_sha256": "2a3073348ef33646ecbf329fb0f89bb0213f97fcb6a6e6dda987396bca1d91b7",
+      "source": "GEOMETRY_DOE",
+      "arm": "GEOMETRY_DOE_PRODUCTION",
+      "status": "FRESH_EMX_EXTRACTED",
+      "strict": false,
+      "core15_eligible": false,
+      "actual_response": [
+        1.4522827590633027,
+        1.5677340411794325,
+        11.620989609875366,
+        0.4006596118987433
+      ],
+      "assigned_development_split": "validation",
+      "original_result_accepted_flag": false,
+      "result_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-112/RESULT.json",
+        "sha256": "6928a2415deb9ef55d41e67b4b2329ea3263825088998ea03e8bad3b42742181",
+        "bytes": 9166
+      },
+      "recipe_sha256": "9de9dc38074df0dc1441dafeb9b8b6b1038e71ec40ffa653a1880854b6a51d42",
+      "sampling_seed": 2026091201,
+      "target_cell": null,
+      "predicted_cell": null,
+      "family_warning": "NO_FAMILY_INDEPENDENCE_CLAIM",
+      "final_independent_test_eligible": false,
+      "formal_records": []
+    },
+    {
+      "request_id": "eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-113",
+      "geometry_sha256": "26cf33622c560b97903c82dcaa4595358a6459229886a22e2573ce0b59396d96",
+      "candidate_geometry_identity_sha256": "26cf33622c560b97903c82dcaa4595358a6459229886a22e2573ce0b59396d96",
+      "source": "GEOMETRY_DOE",
+      "arm": "GEOMETRY_DOE_PRODUCTION",
+      "status": "FRESH_EMX_EXTRACTED",
+      "strict": false,
+      "core15_eligible": false,
+      "actual_response": [
+        1.384367803621287,
+        1.784123863326789,
+        9.412409885380344,
+        0.5498553705107844
+      ],
+      "assigned_development_split": "validation",
+      "original_result_accepted_flag": false,
+      "result_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-113/RESULT.json",
+        "sha256": "42ef8a5a0fc7475c1d5a7613f5f6b7e760a9000c45e71bf1c6ee9a9a7512bf52",
+        "bytes": 9181
+      },
+      "recipe_sha256": "9de9dc38074df0dc1441dafeb9b8b6b1038e71ec40ffa653a1880854b6a51d42",
+      "sampling_seed": 2026091201,
+      "target_cell": null,
+      "predicted_cell": null,
+      "family_warning": "NO_FAMILY_INDEPENDENCE_CLAIM",
+      "final_independent_test_eligible": false,
+      "formal_records": []
+    },
+    {
+      "request_id": "eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-114",
+      "geometry_sha256": "21d9cf41cc3d82bca6caa47a6b61288ba59db82ad7647b17f93477284fb9b996",
+      "candidate_geometry_identity_sha256": "21d9cf41cc3d82bca6caa47a6b61288ba59db82ad7647b17f93477284fb9b996",
+      "source": "GEOMETRY_DOE",
+      "arm": "GEOMETRY_DOE_PRODUCTION",
+      "status": "FRESH_EMX_EXTRACTED",
+      "strict": false,
+      "core15_eligible": false,
+      "actual_response": [
+        2.289280075153822,
+        1.8594167496421168,
+        9.325963211447242,
+        0.4936978861988992
+      ],
+      "assigned_development_split": "train",
+      "original_result_accepted_flag": false,
+      "result_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-114/RESULT.json",
+        "sha256": "c41359259ea5719db543aa59259ac4368a42814bd2c296b2bda3db85f279cca3",
+        "bytes": 9178
+      },
+      "recipe_sha256": "9de9dc38074df0dc1441dafeb9b8b6b1038e71ec40ffa653a1880854b6a51d42",
+      "sampling_seed": 2026091201,
+      "target_cell": null,
+      "predicted_cell": null,
+      "family_warning": "NO_FAMILY_INDEPENDENCE_CLAIM",
+      "final_independent_test_eligible": false,
+      "formal_records": []
+    },
+    {
+      "request_id": "eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-115",
+      "geometry_sha256": "003c4c10d164fff4997cdb3ec9c10dbb34f77981f625f8c87f22830f89b7ee66",
+      "candidate_geometry_identity_sha256": "003c4c10d164fff4997cdb3ec9c10dbb34f77981f625f8c87f22830f89b7ee66",
+      "source": "GEOMETRY_DOE",
+      "arm": "GEOMETRY_DOE_PRODUCTION",
+      "status": "CANDIDATE_FAILURE_RETAINED_NO_SUBSTITUTION",
+      "strict": null,
+      "core15_eligible": null,
+      "actual_response": null,
+      "assigned_development_split": "train",
+      "original_result_accepted_flag": false,
+      "result_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-115/RESULT.json",
+        "sha256": "d86e785722910d7d4e25faf08d079148c1bc8e6b2cfd35b5762d50e45ebd43bd",
+        "bytes": 5893
+      },
+      "recipe_sha256": "9de9dc38074df0dc1441dafeb9b8b6b1038e71ec40ffa653a1880854b6a51d42",
+      "sampling_seed": 2026091201,
+      "target_cell": null,
+      "predicted_cell": null,
+      "family_warning": "NO_FAMILY_INDEPENDENCE_CLAIM",
+      "final_independent_test_eligible": false,
+      "formal_records": []
+    },
+    {
+      "request_id": "eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-116",
+      "geometry_sha256": "9b2e8bb445fe897536a89a9ee10e3754303c5b457aa4cbf9d2b6ce8fbd7572bb",
+      "candidate_geometry_identity_sha256": "9b2e8bb445fe897536a89a9ee10e3754303c5b457aa4cbf9d2b6ce8fbd7572bb",
+      "source": "GEOMETRY_DOE",
+      "arm": "GEOMETRY_DOE_PRODUCTION",
+      "status": "FRESH_EMX_EXTRACTED",
+      "strict": false,
+      "core15_eligible": false,
+      "actual_response": [
+        1.496812555266671,
+        1.6413087826233321,
+        9.600375072872104,
+        0.4158567474867397
+      ],
+      "assigned_development_split": "train",
+      "original_result_accepted_flag": false,
+      "result_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-116/RESULT.json",
+        "sha256": "5bc8d311e5613bbe722679f7550416b59e2391c58ffd8152df97a154e926df82",
+        "bytes": 9156
+      },
+      "recipe_sha256": "9de9dc38074df0dc1441dafeb9b8b6b1038e71ec40ffa653a1880854b6a51d42",
+      "sampling_seed": 2026091201,
+      "target_cell": null,
+      "predicted_cell": null,
+      "family_warning": "NO_FAMILY_INDEPENDENCE_CLAIM",
+      "final_independent_test_eligible": false,
+      "formal_records": []
+    },
+    {
+      "request_id": "eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-117",
+      "geometry_sha256": "e9de398622a827e1c64efad59f6875b9a0608ad4e460ef5676d19bd207770aaa",
+      "candidate_geometry_identity_sha256": "e9de398622a827e1c64efad59f6875b9a0608ad4e460ef5676d19bd207770aaa",
+      "source": "GEOMETRY_DOE",
+      "arm": "GEOMETRY_DOE_PRODUCTION",
+      "status": "FRESH_EMX_EXTRACTED",
+      "strict": false,
+      "core15_eligible": false,
+      "actual_response": [
+        1.4614405729469144,
+        1.6432559333754,
+        11.493728778832155,
+        0.2935234649163363
+      ],
+      "assigned_development_split": "test",
+      "original_result_accepted_flag": false,
+      "result_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-117/RESULT.json",
+        "sha256": "68e43461e063e6b618e1d9ab1b2a0b21e3e3c4fd6b48ccff9fe01fd8740ecdef",
+        "bytes": 9148
+      },
+      "recipe_sha256": "9de9dc38074df0dc1441dafeb9b8b6b1038e71ec40ffa653a1880854b6a51d42",
+      "sampling_seed": 2026091201,
+      "target_cell": null,
+      "predicted_cell": null,
+      "family_warning": "NO_FAMILY_INDEPENDENCE_CLAIM",
+      "final_independent_test_eligible": false,
+      "formal_records": []
+    },
+    {
+      "request_id": "eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-118",
+      "geometry_sha256": "44497ec063866c268a811f484699e7029b7d10ce819ace5bd24ce3b86e5cf6c6",
+      "candidate_geometry_identity_sha256": "44497ec063866c268a811f484699e7029b7d10ce819ace5bd24ce3b86e5cf6c6",
+      "source": "GEOMETRY_DOE",
+      "arm": "GEOMETRY_DOE_PRODUCTION",
+      "status": "FRESH_EMX_EXTRACTED",
+      "strict": true,
+      "core15_eligible": true,
+      "actual_response": [
+        1.9872917482806947,
+        1.82169906482775,
+        12.276444007666177,
+        0.32282877945295096
+      ],
+      "assigned_development_split": "test",
+      "original_result_accepted_flag": false,
+      "result_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-118/RESULT.json",
+        "sha256": "edbbe9b98a2dd49deccddd28d6d3f2954907ad9fb8aa50659ffab46726ff8843",
+        "bytes": 9200
+      },
+      "recipe_sha256": "9de9dc38074df0dc1441dafeb9b8b6b1038e71ec40ffa653a1880854b6a51d42",
+      "sampling_seed": 2026091201,
+      "target_cell": null,
+      "predicted_cell": null,
+      "family_warning": "NO_FAMILY_INDEPENDENCE_CLAIM",
+      "final_independent_test_eligible": false,
+      "formal_records": [
+        {
+          "pin": {
+            "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/qualified15_single_member_v1/records/006139.json",
+            "sha256": "882907abb6803b86c516efcdbf44326da790421e342f2c74cb85a7c6f3c101a2",
+            "bytes": 158846
+          },
+          "schema": "eucap15_production256_qualified_increment.v1",
+          "request_id": "eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-118",
+          "utc": "2026-09-12T08:56:48.610561+00:00"
+        }
+      ]
+    },
+    {
+      "request_id": "eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-120",
+      "geometry_sha256": "81d522968f809df5edbc797c71a3fb719034aeee90f344d8d2979e39605076b9",
+      "candidate_geometry_identity_sha256": "81d522968f809df5edbc797c71a3fb719034aeee90f344d8d2979e39605076b9",
+      "source": "GEOMETRY_DOE",
+      "arm": "GEOMETRY_DOE_PRODUCTION",
+      "status": "CANDIDATE_FAILURE_RETAINED_NO_SUBSTITUTION",
+      "strict": null,
+      "core15_eligible": null,
+      "actual_response": null,
+      "assigned_development_split": "validation",
+      "original_result_accepted_flag": false,
+      "result_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-120/RESULT.json",
+        "sha256": "ca4283f405b4bcb5a83a66107b54da9b4f581b33a7f7c8d51110a36326926355",
+        "bytes": 5924
+      },
+      "recipe_sha256": "9de9dc38074df0dc1441dafeb9b8b6b1038e71ec40ffa653a1880854b6a51d42",
+      "sampling_seed": 2026091201,
+      "target_cell": null,
+      "predicted_cell": null,
+      "family_warning": "NO_FAMILY_INDEPENDENCE_CLAIM",
+      "final_independent_test_eligible": false,
+      "formal_records": []
+    },
+    {
+      "request_id": "eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-122",
+      "geometry_sha256": "51f6b817794cfd2f5d46d9b2fef07d9e19703fa435a4c45c317e70aa3882e97f",
+      "candidate_geometry_identity_sha256": "51f6b817794cfd2f5d46d9b2fef07d9e19703fa435a4c45c317e70aa3882e97f",
+      "source": "GEOMETRY_DOE",
+      "arm": "GEOMETRY_DOE_PRODUCTION",
+      "status": "FRESH_EMX_EXTRACTED",
+      "strict": true,
+      "core15_eligible": false,
+      "actual_response": [
+        1.4644100497055992,
+        0.8979448797420304,
+        12.088017538855908,
+        0.14734541304492116
+      ],
+      "assigned_development_split": "test",
+      "original_result_accepted_flag": false,
+      "result_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-122/RESULT.json",
+        "sha256": "2b4062455b301f9508ff88c73ff0c45a5e7d7e2958e0569bca8dbb92b3f0f29d",
+        "bytes": 9146
+      },
+      "recipe_sha256": "9de9dc38074df0dc1441dafeb9b8b6b1038e71ec40ffa653a1880854b6a51d42",
+      "sampling_seed": 2026091201,
+      "target_cell": null,
+      "predicted_cell": null,
+      "family_warning": "NO_FAMILY_INDEPENDENCE_CLAIM",
+      "final_independent_test_eligible": false,
+      "formal_records": []
+    },
+    {
+      "request_id": "eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-123",
+      "geometry_sha256": "d02c2984b2f075aa2604fd80cd52998b976600b51e9fbabb344164b66fe51b8f",
+      "candidate_geometry_identity_sha256": "d02c2984b2f075aa2604fd80cd52998b976600b51e9fbabb344164b66fe51b8f",
+      "source": "GEOMETRY_DOE",
+      "arm": "GEOMETRY_DOE_PRODUCTION",
+      "status": "FRESH_EMX_EXTRACTED",
+      "strict": false,
+      "core15_eligible": false,
+      "actual_response": [
+        2.0919240760561744,
+        2.8362183843027844,
+        4.516004982087912,
+        0.6206003789717377
+      ],
+      "assigned_development_split": "test",
+      "original_result_accepted_flag": false,
+      "result_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-123/RESULT.json",
+        "sha256": "9e639e4ccce1ecad7d0bb18a1daf9cab72f04996edc7b023b84957e7f85055aa",
+        "bytes": 9137
+      },
+      "recipe_sha256": "9de9dc38074df0dc1441dafeb9b8b6b1038e71ec40ffa653a1880854b6a51d42",
+      "sampling_seed": 2026091201,
+      "target_cell": null,
+      "predicted_cell": null,
+      "family_warning": "NO_FAMILY_INDEPENDENCE_CLAIM",
+      "final_independent_test_eligible": false,
+      "formal_records": []
+    },
+    {
+      "request_id": "eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-125",
+      "geometry_sha256": "bb11c1f8d1b3ef6e5eaa1da39ebe15e27501585bd8dfecaadc0465fbb089c266",
+      "candidate_geometry_identity_sha256": "bb11c1f8d1b3ef6e5eaa1da39ebe15e27501585bd8dfecaadc0465fbb089c266",
+      "source": "GEOMETRY_DOE",
+      "arm": "GEOMETRY_DOE_PRODUCTION",
+      "status": "CANDIDATE_FAILURE_RETAINED_NO_SUBSTITUTION",
+      "strict": null,
+      "core15_eligible": null,
+      "actual_response": null,
+      "assigned_development_split": "train",
+      "original_result_accepted_flag": false,
+      "result_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-125/RESULT.json",
+        "sha256": "8a3224f1b81a7b2b3722d4849becfd11100bcb44ad366e2ff564997b04750dd9",
+        "bytes": 5890
+      },
+      "recipe_sha256": "9de9dc38074df0dc1441dafeb9b8b6b1038e71ec40ffa653a1880854b6a51d42",
+      "sampling_seed": 2026091201,
+      "target_cell": null,
+      "predicted_cell": null,
+      "family_warning": "NO_FAMILY_INDEPENDENCE_CLAIM",
+      "final_independent_test_eligible": false,
+      "formal_records": []
+    },
+    {
+      "request_id": "eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-126",
+      "geometry_sha256": "2c446db066bbfb983dcf1425e3cb278bb906a2517797041bc18f0cae6749acee",
+      "candidate_geometry_identity_sha256": "2c446db066bbfb983dcf1425e3cb278bb906a2517797041bc18f0cae6749acee",
+      "source": "GEOMETRY_DOE",
+      "arm": "GEOMETRY_DOE_PRODUCTION",
+      "status": "CANDIDATE_FAILURE_RETAINED_NO_SUBSTITUTION",
+      "strict": null,
+      "core15_eligible": null,
+      "actual_response": null,
+      "assigned_development_split": "validation",
+      "original_result_accepted_flag": false,
+      "result_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-126/RESULT.json",
+        "sha256": "99a0db8438b096a9d0b8e643b72faa984c6acd0bc0221cf4f4b66149d175233d",
+        "bytes": 5879
+      },
+      "recipe_sha256": "9de9dc38074df0dc1441dafeb9b8b6b1038e71ec40ffa653a1880854b6a51d42",
+      "sampling_seed": 2026091201,
+      "target_cell": null,
+      "predicted_cell": null,
+      "family_warning": "NO_FAMILY_INDEPENDENCE_CLAIM",
+      "final_independent_test_eligible": false,
+      "formal_records": []
+    },
+    {
+      "request_id": "eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-127",
+      "geometry_sha256": "2a212a5061ba6335441356cb46c58f17692f2773f1e331f00c6b2946490eb1e6",
+      "candidate_geometry_identity_sha256": "2a212a5061ba6335441356cb46c58f17692f2773f1e331f00c6b2946490eb1e6",
+      "source": "GEOMETRY_DOE",
+      "arm": "GEOMETRY_DOE_PRODUCTION",
+      "status": "FRESH_EMX_EXTRACTED",
+      "strict": false,
+      "core15_eligible": false,
+      "actual_response": [
+        1.179448059089865,
+        2.509895732613222,
+        6.2342848391199635,
+        0.18583686024311374
+      ],
+      "assigned_development_split": "train",
+      "original_result_accepted_flag": false,
+      "result_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-127/RESULT.json",
+        "sha256": "2cf3e17796dd62b71a74a5006406a92448f1948c7becf432972561a96cc2889f",
+        "bytes": 9167
+      },
+      "recipe_sha256": "9de9dc38074df0dc1441dafeb9b8b6b1038e71ec40ffa653a1880854b6a51d42",
+      "sampling_seed": 2026091201,
+      "target_cell": null,
+      "predicted_cell": null,
+      "family_warning": "NO_FAMILY_INDEPENDENCE_CLAIM",
+      "final_independent_test_eligible": false,
+      "formal_records": []
+    },
+    {
+      "request_id": "eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-128",
+      "geometry_sha256": "805fc2239d1a62ff5264eac341a298a4618eea817086879b0d373b7383c3de37",
+      "candidate_geometry_identity_sha256": "805fc2239d1a62ff5264eac341a298a4618eea817086879b0d373b7383c3de37",
+      "source": "GEOMETRY_DOE",
+      "arm": "GEOMETRY_DOE_PRODUCTION",
+      "status": "FRESH_EMX_EXTRACTED",
+      "strict": true,
+      "core15_eligible": false,
+      "actual_response": [
+        1.5234088232583207,
+        1.5945692668319007,
+        14.006708546486907,
+        0.16848834643533853
+      ],
+      "assigned_development_split": "train",
+      "original_result_accepted_flag": false,
+      "result_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-128/RESULT.json",
+        "sha256": "f97e5e0ef0d4a2a6911c1866a54df3f5a448975e973b1d5b2c031b38c9851ea4",
+        "bytes": 9159
+      },
+      "recipe_sha256": "9de9dc38074df0dc1441dafeb9b8b6b1038e71ec40ffa653a1880854b6a51d42",
+      "sampling_seed": 2026091201,
+      "target_cell": null,
+      "predicted_cell": null,
+      "family_warning": "NO_FAMILY_INDEPENDENCE_CLAIM",
+      "final_independent_test_eligible": false,
+      "formal_records": []
+    },
+    {
+      "request_id": "eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-129",
+      "geometry_sha256": "a4a28750a3de0644316a7af021c94604f92f3cefb7dce6dd4b367c370790904f",
+      "candidate_geometry_identity_sha256": "a4a28750a3de0644316a7af021c94604f92f3cefb7dce6dd4b367c370790904f",
+      "source": "GEOMETRY_DOE",
+      "arm": "GEOMETRY_DOE_PRODUCTION",
+      "status": "FRESH_EMX_EXTRACTED",
+      "strict": false,
+      "core15_eligible": false,
+      "actual_response": [
+        1.6137536240108281,
+        2.1036071064633166,
+        9.888397397515556,
+        0.2999096901012444
+      ],
+      "assigned_development_split": "test",
+      "original_result_accepted_flag": false,
+      "result_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-129/RESULT.json",
+        "sha256": "f07ce6949885103614b757b518492cc19084738ab3abef96eef2f74f5751eef0",
+        "bytes": 9176
+      },
+      "recipe_sha256": "9de9dc38074df0dc1441dafeb9b8b6b1038e71ec40ffa653a1880854b6a51d42",
+      "sampling_seed": 2026091201,
+      "target_cell": null,
+      "predicted_cell": null,
+      "family_warning": "NO_FAMILY_INDEPENDENCE_CLAIM",
+      "final_independent_test_eligible": false,
+      "formal_records": []
+    },
+    {
+      "request_id": "eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-130",
+      "geometry_sha256": "e16c8b80f9904a5096bd437a46c509bcd932dbf686e6bb1f3c249685e434726a",
+      "candidate_geometry_identity_sha256": "e16c8b80f9904a5096bd437a46c509bcd932dbf686e6bb1f3c249685e434726a",
+      "source": "GEOMETRY_DOE",
+      "arm": "GEOMETRY_DOE_PRODUCTION",
+      "status": "FRESH_EMX_EXTRACTED",
+      "strict": true,
+      "core15_eligible": false,
+      "actual_response": [
+        1.9092297125245434,
+        1.0394265081807323,
+        11.414856127540004,
+        0.15880988034797497
+      ],
+      "assigned_development_split": "train",
+      "original_result_accepted_flag": false,
+      "result_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-130/RESULT.json",
+        "sha256": "490959a2467f3e69cbb41a300b748bb077ded0baa5dcb2407bcec2e63c322e14",
+        "bytes": 9169
+      },
+      "recipe_sha256": "9de9dc38074df0dc1441dafeb9b8b6b1038e71ec40ffa653a1880854b6a51d42",
+      "sampling_seed": 2026091201,
+      "target_cell": null,
+      "predicted_cell": null,
+      "family_warning": "NO_FAMILY_INDEPENDENCE_CLAIM",
+      "final_independent_test_eligible": false,
+      "formal_records": []
+    },
+    {
+      "request_id": "eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-131",
+      "geometry_sha256": "922da149d5148bde733930a29b3ff5b9ae466d538557b9fdf05e943ab914fd9d",
+      "candidate_geometry_identity_sha256": "922da149d5148bde733930a29b3ff5b9ae466d538557b9fdf05e943ab914fd9d",
+      "source": "GEOMETRY_DOE",
+      "arm": "GEOMETRY_DOE_PRODUCTION",
+      "status": "FRESH_EMX_EXTRACTED",
+      "strict": true,
+      "core15_eligible": true,
+      "actual_response": [
+        1.1157268802393177,
+        1.1404468979524975,
+        15.858899589947828,
+        0.2924526598601029
+      ],
+      "assigned_development_split": "validation",
+      "original_result_accepted_flag": false,
+      "result_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-131/RESULT.json",
+        "sha256": "a7495f42a8e1011c89454e28472743b04db2fc7016047fdc6e14c3261054e457",
+        "bytes": 9168
+      },
+      "recipe_sha256": "9de9dc38074df0dc1441dafeb9b8b6b1038e71ec40ffa653a1880854b6a51d42",
+      "sampling_seed": 2026091201,
+      "target_cell": null,
+      "predicted_cell": null,
+      "family_warning": "NO_FAMILY_INDEPENDENCE_CLAIM",
+      "final_independent_test_eligible": false,
+      "formal_records": [
+        {
+          "pin": {
+            "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/qualified15_single_member_v1/records/005968.json",
+            "sha256": "d669189f7316e4e186a61bc224cf2af55794b3e5cbce1e94b918c80cb4c2d522",
+            "bytes": 158752
+          },
+          "schema": "eucap15_production256_qualified_increment.v1",
+          "request_id": "eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-131",
+          "utc": "2026-09-12T08:44:59.261412+00:00"
+        }
+      ]
+    },
+    {
+      "request_id": "eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-133",
+      "geometry_sha256": "841346400f0eabf5f2f3fcce8dbfce634b12c057c7e53d34a1e15f028aa996e9",
+      "candidate_geometry_identity_sha256": "841346400f0eabf5f2f3fcce8dbfce634b12c057c7e53d34a1e15f028aa996e9",
+      "source": "GEOMETRY_DOE",
+      "arm": "GEOMETRY_DOE_PRODUCTION",
+      "status": "ANALYTIC_FAIL_NOT_DISPATCHED",
+      "strict": null,
+      "core15_eligible": null,
+      "actual_response": null,
+      "assigned_development_split": "train",
+      "original_result_accepted_flag": false,
+      "result_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-133/RESULT.json",
+        "sha256": "a9386771e44f95f86599ed899e4d1d623aa6d3604de2eac9f92766897bc80bc5",
+        "bytes": 5188
+      },
+      "recipe_sha256": "9de9dc38074df0dc1441dafeb9b8b6b1038e71ec40ffa653a1880854b6a51d42",
+      "sampling_seed": 2026091201,
+      "target_cell": null,
+      "predicted_cell": null,
+      "family_warning": "NO_FAMILY_INDEPENDENCE_CLAIM",
+      "final_independent_test_eligible": false,
+      "formal_records": []
+    },
+    {
+      "request_id": "eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-134",
+      "geometry_sha256": "473e337e1f2c3adcececfcfe57d38e4ba1658c17389e2627060a92b64d82fb64",
+      "candidate_geometry_identity_sha256": "473e337e1f2c3adcececfcfe57d38e4ba1658c17389e2627060a92b64d82fb64",
+      "source": "GEOMETRY_DOE",
+      "arm": "GEOMETRY_DOE_PRODUCTION",
+      "status": "FRESH_EMX_EXTRACTED",
+      "strict": true,
+      "core15_eligible": true,
+      "actual_response": [
+        1.7276847854333934,
+        1.453110501925545,
+        12.706328468577244,
+        0.2660322597604577
+      ],
+      "assigned_development_split": "train",
+      "original_result_accepted_flag": false,
+      "result_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-134/RESULT.json",
+        "sha256": "d7bd08a940a7b49c3b3bb4ae58477c17303c17788b3eb4bb72259c33dc009c25",
+        "bytes": 9167
+      },
+      "recipe_sha256": "9de9dc38074df0dc1441dafeb9b8b6b1038e71ec40ffa653a1880854b6a51d42",
+      "sampling_seed": 2026091201,
+      "target_cell": null,
+      "predicted_cell": null,
+      "family_warning": "NO_FAMILY_INDEPENDENCE_CLAIM",
+      "final_independent_test_eligible": false,
+      "formal_records": [
+        {
+          "pin": {
+            "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/qualified15_single_member_v1/records/005970.json",
+            "sha256": "b3389e9923c2cdcc3da8b11299632a1e8ca49b102b0af68bffb9c5566356df00",
+            "bytes": 158750
+          },
+          "schema": "eucap15_production256_qualified_increment.v1",
+          "request_id": "eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-134",
+          "utc": "2026-09-12T08:45:05.715537+00:00"
+        }
+      ]
+    },
+    {
+      "request_id": "eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-138",
+      "geometry_sha256": "4d49264c08d0bd88e681c8bd922dd1f1b281d51640c4d5a431ada3131b81c3c8",
+      "candidate_geometry_identity_sha256": "4d49264c08d0bd88e681c8bd922dd1f1b281d51640c4d5a431ada3131b81c3c8",
+      "source": "GEOMETRY_DOE",
+      "arm": "GEOMETRY_DOE_PRODUCTION",
+      "status": "FRESH_EMX_EXTRACTED",
+      "strict": true,
+      "core15_eligible": false,
+      "actual_response": [
+        0.9687514889215821,
+        1.6478074847386015,
+        11.350809136299077,
+        0.17300197876381945
+      ],
+      "assigned_development_split": "validation",
+      "original_result_accepted_flag": false,
+      "result_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-138/RESULT.json",
+        "sha256": "c82028de9f97f62a7a47dea110a0bc13d079df428557fcdebe1424d94add4678",
+        "bytes": 9140
+      },
+      "recipe_sha256": "9de9dc38074df0dc1441dafeb9b8b6b1038e71ec40ffa653a1880854b6a51d42",
+      "sampling_seed": 2026091201,
+      "target_cell": null,
+      "predicted_cell": null,
+      "family_warning": "NO_FAMILY_INDEPENDENCE_CLAIM",
+      "final_independent_test_eligible": false,
+      "formal_records": []
+    },
+    {
+      "request_id": "eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-139",
+      "geometry_sha256": "8947b5c69903c146e6088bbb6ba9910661f1f84e5ede29341b77a7b1dc18f67b",
+      "candidate_geometry_identity_sha256": "8947b5c69903c146e6088bbb6ba9910661f1f84e5ede29341b77a7b1dc18f67b",
+      "source": "GEOMETRY_DOE",
+      "arm": "GEOMETRY_DOE_PRODUCTION",
+      "status": "ANALYTIC_FAIL_NOT_DISPATCHED",
+      "strict": null,
+      "core15_eligible": null,
+      "actual_response": null,
+      "assigned_development_split": "validation",
+      "original_result_accepted_flag": false,
+      "result_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-139/RESULT.json",
+        "sha256": "47934b01a7222671a69d5209309fd7141b31710a257e0b9606a6109c228f6747",
+        "bytes": 5178
+      },
+      "recipe_sha256": "9de9dc38074df0dc1441dafeb9b8b6b1038e71ec40ffa653a1880854b6a51d42",
+      "sampling_seed": 2026091201,
+      "target_cell": null,
+      "predicted_cell": null,
+      "family_warning": "NO_FAMILY_INDEPENDENCE_CLAIM",
+      "final_independent_test_eligible": false,
+      "formal_records": []
+    },
+    {
+      "request_id": "eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-140",
+      "geometry_sha256": "73be9df3c9a6d88ce5b07eb82368780783938bee46244ff3ce9da71d25d3fb96",
+      "candidate_geometry_identity_sha256": "73be9df3c9a6d88ce5b07eb82368780783938bee46244ff3ce9da71d25d3fb96",
+      "source": "GEOMETRY_DOE",
+      "arm": "GEOMETRY_DOE_PRODUCTION",
+      "status": "FRESH_EMX_EXTRACTED",
+      "strict": false,
+      "core15_eligible": false,
+      "actual_response": [
+        1.9560289930164076,
+        2.342959360392826,
+        6.661558036572317,
+        0.5958243200113985
+      ],
+      "assigned_development_split": "test",
+      "original_result_accepted_flag": false,
+      "result_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-140/RESULT.json",
+        "sha256": "59425b0053b6b4014edd0b305699aca16ad6179be38ecad532ad4886e939afd6",
+        "bytes": 9172
+      },
+      "recipe_sha256": "9de9dc38074df0dc1441dafeb9b8b6b1038e71ec40ffa653a1880854b6a51d42",
+      "sampling_seed": 2026091201,
+      "target_cell": null,
+      "predicted_cell": null,
+      "family_warning": "NO_FAMILY_INDEPENDENCE_CLAIM",
+      "final_independent_test_eligible": false,
+      "formal_records": []
+    },
+    {
+      "request_id": "eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-142",
+      "geometry_sha256": "45be5608b22196f0330c8589909966a6c1a1d9ca5dc088c798d0eb0fa8d512de",
+      "candidate_geometry_identity_sha256": "45be5608b22196f0330c8589909966a6c1a1d9ca5dc088c798d0eb0fa8d512de",
+      "source": "GEOMETRY_DOE",
+      "arm": "GEOMETRY_DOE_PRODUCTION",
+      "status": "FRESH_EMX_EXTRACTED",
+      "strict": false,
+      "core15_eligible": false,
+      "actual_response": [
+        1.6806549746960067,
+        1.7036448102824913,
+        11.343850052442132,
+        0.3763898192912254
+      ],
+      "assigned_development_split": "train",
+      "original_result_accepted_flag": false,
+      "result_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-142/RESULT.json",
+        "sha256": "0859493ba23a07261b6c17277810ecc5995130609546b7961910708479478737",
+        "bytes": 9141
+      },
+      "recipe_sha256": "9de9dc38074df0dc1441dafeb9b8b6b1038e71ec40ffa653a1880854b6a51d42",
+      "sampling_seed": 2026091201,
+      "target_cell": null,
+      "predicted_cell": null,
+      "family_warning": "NO_FAMILY_INDEPENDENCE_CLAIM",
+      "final_independent_test_eligible": false,
+      "formal_records": []
+    },
+    {
+      "request_id": "eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-143",
+      "geometry_sha256": "3a0382cd9ab5e788ddf6d6f9c17d897f65752e73289acbecf7800ddd4acc1bb2",
+      "candidate_geometry_identity_sha256": "3a0382cd9ab5e788ddf6d6f9c17d897f65752e73289acbecf7800ddd4acc1bb2",
+      "source": "GEOMETRY_DOE",
+      "arm": "GEOMETRY_DOE_PRODUCTION",
+      "status": "ANALYTIC_FAIL_NOT_DISPATCHED",
+      "strict": null,
+      "core15_eligible": null,
+      "actual_response": null,
+      "assigned_development_split": "train",
+      "original_result_accepted_flag": false,
+      "result_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-143/RESULT.json",
+        "sha256": "8a17a9b370ce62933b5e412de9da9f7d6de5710638811c4e11c5749e174ed40b",
+        "bytes": 5200
+      },
+      "recipe_sha256": "9de9dc38074df0dc1441dafeb9b8b6b1038e71ec40ffa653a1880854b6a51d42",
+      "sampling_seed": 2026091201,
+      "target_cell": null,
+      "predicted_cell": null,
+      "family_warning": "NO_FAMILY_INDEPENDENCE_CLAIM",
+      "final_independent_test_eligible": false,
+      "formal_records": []
+    },
+    {
+      "request_id": "eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-147",
+      "geometry_sha256": "70fe6bfa675258f7bc214660de9d952c1972f831a977bd0806345087d69e047e",
+      "candidate_geometry_identity_sha256": "70fe6bfa675258f7bc214660de9d952c1972f831a977bd0806345087d69e047e",
+      "source": "GEOMETRY_DOE",
+      "arm": "GEOMETRY_DOE_PRODUCTION",
+      "status": "FRESH_EMX_EXTRACTED",
+      "strict": false,
+      "core15_eligible": false,
+      "actual_response": [
+        2.0816083206593796,
+        1.4225621497552872,
+        10.059390222368037,
+        0.3760226824344215
+      ],
+      "assigned_development_split": "train",
+      "original_result_accepted_flag": false,
+      "result_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-147/RESULT.json",
+        "sha256": "430a8ac54eed90adf61c6004132ae20ef8578f632edcc304dbad7d49a2fafde0",
+        "bytes": 9159
+      },
+      "recipe_sha256": "9de9dc38074df0dc1441dafeb9b8b6b1038e71ec40ffa653a1880854b6a51d42",
+      "sampling_seed": 2026091201,
+      "target_cell": null,
+      "predicted_cell": null,
+      "family_warning": "NO_FAMILY_INDEPENDENCE_CLAIM",
+      "final_independent_test_eligible": false,
+      "formal_records": []
+    },
+    {
+      "request_id": "eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-148",
+      "geometry_sha256": "afabbd76eb4c27b2a66f8aa02d293a49e834bd87491285b04cd2cc3256e4319b",
+      "candidate_geometry_identity_sha256": "afabbd76eb4c27b2a66f8aa02d293a49e834bd87491285b04cd2cc3256e4319b",
+      "source": "GEOMETRY_DOE",
+      "arm": "GEOMETRY_DOE_PRODUCTION",
+      "status": "FRESH_EMX_EXTRACTED",
+      "strict": true,
+      "core15_eligible": true,
+      "actual_response": [
+        1.2544653507535057,
+        1.1747676084811114,
+        15.786536569484879,
+        0.2706208226823012
+      ],
+      "assigned_development_split": "validation",
+      "original_result_accepted_flag": false,
+      "result_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-148/RESULT.json",
+        "sha256": "434e1389615d76c368df439fd87c14d992484cea86f2c80d3b12b1e2a94dba5a",
+        "bytes": 9162
+      },
+      "recipe_sha256": "9de9dc38074df0dc1441dafeb9b8b6b1038e71ec40ffa653a1880854b6a51d42",
+      "sampling_seed": 2026091201,
+      "target_cell": null,
+      "predicted_cell": null,
+      "family_warning": "NO_FAMILY_INDEPENDENCE_CLAIM",
+      "final_independent_test_eligible": false,
+      "formal_records": [
+        {
+          "pin": {
+            "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/qualified15_single_member_v1/records/006017.json",
+            "sha256": "36896296325f92e5e7a6aa1e1162a08873b90d1afad2974c908924bc81b5f45f",
+            "bytes": 158742
+          },
+          "schema": "eucap15_production256_qualified_increment.v1",
+          "request_id": "eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-148",
+          "utc": "2026-09-12T08:47:58.904992+00:00"
+        }
+      ]
+    },
+    {
+      "request_id": "eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-149",
+      "geometry_sha256": "59b0cb189b2de3ace1706dd3dcbda731b1eb80688b270e6df1572021390a383f",
+      "candidate_geometry_identity_sha256": "59b0cb189b2de3ace1706dd3dcbda731b1eb80688b270e6df1572021390a383f",
+      "source": "GEOMETRY_DOE",
+      "arm": "GEOMETRY_DOE_PRODUCTION",
+      "status": "FRESH_EMX_EXTRACTED",
+      "strict": true,
+      "core15_eligible": false,
+      "actual_response": [
+        1.6929526686184755,
+        1.113837493821097,
+        13.025254987538332,
+        0.16474237038352024
+      ],
+      "assigned_development_split": "validation",
+      "original_result_accepted_flag": false,
+      "result_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-149/RESULT.json",
+        "sha256": "225316491b371760c08bd661e9078e756b60f57e406adda3b266b04fd196dd7e",
+        "bytes": 9175
+      },
+      "recipe_sha256": "9de9dc38074df0dc1441dafeb9b8b6b1038e71ec40ffa653a1880854b6a51d42",
+      "sampling_seed": 2026091201,
+      "target_cell": null,
+      "predicted_cell": null,
+      "family_warning": "NO_FAMILY_INDEPENDENCE_CLAIM",
+      "final_independent_test_eligible": false,
+      "formal_records": []
+    },
+    {
+      "request_id": "eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-153",
+      "geometry_sha256": "8d2547330d576a25b94ae7c4126571c942a7c4302f9a7648c8d24e74047afd00",
+      "candidate_geometry_identity_sha256": "8d2547330d576a25b94ae7c4126571c942a7c4302f9a7648c8d24e74047afd00",
+      "source": "GEOMETRY_DOE",
+      "arm": "GEOMETRY_DOE_PRODUCTION",
+      "status": "FRESH_EMX_EXTRACTED",
+      "strict": true,
+      "core15_eligible": false,
+      "actual_response": [
+        1.4802272923280866,
+        0.9919018213946076,
+        12.36060568380199,
+        0.13415731792541186
+      ],
+      "assigned_development_split": "validation",
+      "original_result_accepted_flag": false,
+      "result_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-153/RESULT.json",
+        "sha256": "942dd9fb4ac69367f0ecf427ed5aff3ecfc003dfc3372149c1c166e78d29dcb2",
+        "bytes": 9179
+      },
+      "recipe_sha256": "9de9dc38074df0dc1441dafeb9b8b6b1038e71ec40ffa653a1880854b6a51d42",
+      "sampling_seed": 2026091201,
+      "target_cell": null,
+      "predicted_cell": null,
+      "family_warning": "NO_FAMILY_INDEPENDENCE_CLAIM",
+      "final_independent_test_eligible": false,
+      "formal_records": []
+    },
+    {
+      "request_id": "eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-154",
+      "geometry_sha256": "2ea646466491c7b33d9c86962f16c163132e878b41bd9d5c6207d1abc42fad77",
+      "candidate_geometry_identity_sha256": "2ea646466491c7b33d9c86962f16c163132e878b41bd9d5c6207d1abc42fad77",
+      "source": "GEOMETRY_DOE",
+      "arm": "GEOMETRY_DOE_PRODUCTION",
+      "status": "FRESH_EMX_EXTRACTED",
+      "strict": true,
+      "core15_eligible": false,
+      "actual_response": [
+        1.5003066188985696,
+        0.9434809637806911,
+        13.284293423813583,
+        0.1793381596480161
+      ],
+      "assigned_development_split": "train",
+      "original_result_accepted_flag": false,
+      "result_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-154/RESULT.json",
+        "sha256": "f4e18942a3cb6640433373a84558a46f836384db7c9e9c5232f03fdb12f9270b",
+        "bytes": 9159
+      },
+      "recipe_sha256": "9de9dc38074df0dc1441dafeb9b8b6b1038e71ec40ffa653a1880854b6a51d42",
+      "sampling_seed": 2026091201,
+      "target_cell": null,
+      "predicted_cell": null,
+      "family_warning": "NO_FAMILY_INDEPENDENCE_CLAIM",
+      "final_independent_test_eligible": false,
+      "formal_records": []
+    },
+    {
+      "request_id": "eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-155",
+      "geometry_sha256": "09926c149b8707c8272953a8d24a9573949e9784ab7a62a1287085f017fe9994",
+      "candidate_geometry_identity_sha256": "09926c149b8707c8272953a8d24a9573949e9784ab7a62a1287085f017fe9994",
+      "source": "GEOMETRY_DOE",
+      "arm": "GEOMETRY_DOE_PRODUCTION",
+      "status": "FRESH_EMX_EXTRACTED",
+      "strict": true,
+      "core15_eligible": true,
+      "actual_response": [
+        1.4268190586755476,
+        1.0839361565350745,
+        13.327650354538608,
+        0.3766834266001706
+      ],
+      "assigned_development_split": "train",
+      "original_result_accepted_flag": false,
+      "result_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-155/RESULT.json",
+        "sha256": "64ec63150c26f7f614c739c1393c8eaeaf7a47ec6f0670b0076fdb0f6bcbcc90",
+        "bytes": 9157
+      },
+      "recipe_sha256": "9de9dc38074df0dc1441dafeb9b8b6b1038e71ec40ffa653a1880854b6a51d42",
+      "sampling_seed": 2026091201,
+      "target_cell": null,
+      "predicted_cell": null,
+      "family_warning": "NO_FAMILY_INDEPENDENCE_CLAIM",
+      "final_independent_test_eligible": false,
+      "formal_records": [
+        {
+          "pin": {
+            "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/qualified15_single_member_v1/records/006140.json",
+            "sha256": "5ac800af74fd7c1180e247034fbd3cd52ca724823ae4f337c781c1370e738c17",
+            "bytes": 158727
+          },
+          "schema": "eucap15_production256_qualified_increment.v1",
+          "request_id": "eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-155",
+          "utc": "2026-09-12T08:56:54.623444+00:00"
+        }
+      ]
+    },
+    {
+      "request_id": "eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-156",
+      "geometry_sha256": "07bd4990ade9fd86114bfedae8fb57ad50cd2bf149f4b72149ea5e789df3aa27",
+      "candidate_geometry_identity_sha256": "07bd4990ade9fd86114bfedae8fb57ad50cd2bf149f4b72149ea5e789df3aa27",
+      "source": "GEOMETRY_DOE",
+      "arm": "GEOMETRY_DOE_PRODUCTION",
+      "status": "CANDIDATE_FAILURE_RETAINED_NO_SUBSTITUTION",
+      "strict": null,
+      "core15_eligible": null,
+      "actual_response": null,
+      "assigned_development_split": "train",
+      "original_result_accepted_flag": false,
+      "result_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-156/RESULT.json",
+        "sha256": "6f2fd9793d18d1f778830e613995507e16d5a61ce51338b25628448502dc5428",
+        "bytes": 5900
+      },
+      "recipe_sha256": "9de9dc38074df0dc1441dafeb9b8b6b1038e71ec40ffa653a1880854b6a51d42",
+      "sampling_seed": 2026091201,
+      "target_cell": null,
+      "predicted_cell": null,
+      "family_warning": "NO_FAMILY_INDEPENDENCE_CLAIM",
+      "final_independent_test_eligible": false,
+      "formal_records": []
+    },
+    {
+      "request_id": "eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-157",
+      "geometry_sha256": "f707e0b326153a8e32cff1162e2016ecab9fd3e0a5d14198a1d49763b88e81e6",
+      "candidate_geometry_identity_sha256": "f707e0b326153a8e32cff1162e2016ecab9fd3e0a5d14198a1d49763b88e81e6",
+      "source": "GEOMETRY_DOE",
+      "arm": "GEOMETRY_DOE_PRODUCTION",
+      "status": "FRESH_EMX_EXTRACTED",
+      "strict": false,
+      "core15_eligible": false,
+      "actual_response": [
+        1.8290313589216678,
+        1.9459397853032057,
+        11.91722906293064,
+        0.2779637028798166
+      ],
+      "assigned_development_split": "train",
+      "original_result_accepted_flag": false,
+      "result_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-157/RESULT.json",
+        "sha256": "7f7dfbf448700026dfd753a5cb402536e88b8b88b859e2ce8bda129b1aebfa74",
+        "bytes": 9144
+      },
+      "recipe_sha256": "9de9dc38074df0dc1441dafeb9b8b6b1038e71ec40ffa653a1880854b6a51d42",
+      "sampling_seed": 2026091201,
+      "target_cell": null,
+      "predicted_cell": null,
+      "family_warning": "NO_FAMILY_INDEPENDENCE_CLAIM",
+      "final_independent_test_eligible": false,
+      "formal_records": []
+    },
+    {
+      "request_id": "eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-159",
+      "geometry_sha256": "61d3498d993b36fbc0db64b475f0525b3fd5c731c08c493408c8ecdea7a26ddf",
+      "candidate_geometry_identity_sha256": "61d3498d993b36fbc0db64b475f0525b3fd5c731c08c493408c8ecdea7a26ddf",
+      "source": "GEOMETRY_DOE",
+      "arm": "GEOMETRY_DOE_PRODUCTION",
+      "status": "FRESH_EMX_EXTRACTED",
+      "strict": true,
+      "core15_eligible": true,
+      "actual_response": [
+        1.1369121128947053,
+        1.4713565987473798,
+        13.65292276078544,
+        0.20689797940667906
+      ],
+      "assigned_development_split": "train",
+      "original_result_accepted_flag": false,
+      "result_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-159/RESULT.json",
+        "sha256": "6c91e670fd5f1baec3cffc2828d3ec156d5ad3cc5ff834b58da71705a499e1f6",
+        "bytes": 9170
+      },
+      "recipe_sha256": "9de9dc38074df0dc1441dafeb9b8b6b1038e71ec40ffa653a1880854b6a51d42",
+      "sampling_seed": 2026091201,
+      "target_cell": null,
+      "predicted_cell": null,
+      "family_warning": "NO_FAMILY_INDEPENDENCE_CLAIM",
+      "final_independent_test_eligible": false,
+      "formal_records": [
+        {
+          "pin": {
+            "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/qualified15_single_member_v1/records/006211.json",
+            "sha256": "69f5598344ac42ab57f382d63fc4d8801ec683cd191bdbaf704143da624c7a51",
+            "bytes": 158764
+          },
+          "schema": "eucap15_production256_qualified_increment.v1",
+          "request_id": "eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-159",
+          "utc": "2026-09-12T09:02:09.501111+00:00"
+        }
+      ]
+    },
+    {
+      "request_id": "eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-160",
+      "geometry_sha256": "f1eb877a6e8f9feb0a967f2b8828a83f0f9ba51ec38d001bbc234f12f0d32354",
+      "candidate_geometry_identity_sha256": "f1eb877a6e8f9feb0a967f2b8828a83f0f9ba51ec38d001bbc234f12f0d32354",
+      "source": "GEOMETRY_DOE",
+      "arm": "GEOMETRY_DOE_PRODUCTION",
+      "status": "FRESH_EMX_EXTRACTED",
+      "strict": false,
+      "core15_eligible": false,
+      "actual_response": [
+        1.7946493800224586,
+        2.0882031242173325,
+        9.106450973223572,
+        0.4249633846148775
+      ],
+      "assigned_development_split": "test",
+      "original_result_accepted_flag": false,
+      "result_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-160/RESULT.json",
+        "sha256": "2271b88b07d00163ac007fd1f0ffd09b7cb5d57a7340889cc9586337449d83f2",
+        "bytes": 9159
+      },
+      "recipe_sha256": "9de9dc38074df0dc1441dafeb9b8b6b1038e71ec40ffa653a1880854b6a51d42",
+      "sampling_seed": 2026091201,
+      "target_cell": null,
+      "predicted_cell": null,
+      "family_warning": "NO_FAMILY_INDEPENDENCE_CLAIM",
+      "final_independent_test_eligible": false,
+      "formal_records": []
+    },
+    {
+      "request_id": "eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-161",
+      "geometry_sha256": "781c90feafae583df06cca36c5ad16f10f5d94df7147dae7837d09ebecd2917d",
+      "candidate_geometry_identity_sha256": "781c90feafae583df06cca36c5ad16f10f5d94df7147dae7837d09ebecd2917d",
+      "source": "GEOMETRY_DOE",
+      "arm": "GEOMETRY_DOE_PRODUCTION",
+      "status": "FRESH_EMX_EXTRACTED",
+      "strict": true,
+      "core15_eligible": false,
+      "actual_response": [
+        1.719470379998695,
+        1.3461509594380217,
+        13.607260851612347,
+        0.1371837583073251
+      ],
+      "assigned_development_split": "validation",
+      "original_result_accepted_flag": false,
+      "result_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-161/RESULT.json",
+        "sha256": "be6ce97ca13682bc6854a805956abdf451a701a4f4d2bd4a81e6f0982e133243",
+        "bytes": 9133
+      },
+      "recipe_sha256": "9de9dc38074df0dc1441dafeb9b8b6b1038e71ec40ffa653a1880854b6a51d42",
+      "sampling_seed": 2026091201,
+      "target_cell": null,
+      "predicted_cell": null,
+      "family_warning": "NO_FAMILY_INDEPENDENCE_CLAIM",
+      "final_independent_test_eligible": false,
+      "formal_records": []
+    },
+    {
+      "request_id": "eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-162",
+      "geometry_sha256": "7370fc44506570dffbea07440727d8a602a5b82802871b0b3808a93351543d3b",
+      "candidate_geometry_identity_sha256": "7370fc44506570dffbea07440727d8a602a5b82802871b0b3808a93351543d3b",
+      "source": "GEOMETRY_DOE",
+      "arm": "GEOMETRY_DOE_PRODUCTION",
+      "status": "FRESH_EMX_EXTRACTED",
+      "strict": false,
+      "core15_eligible": false,
+      "actual_response": [
+        1.1743083969955874,
+        1.712243704950782,
+        12.189406226623689,
+        0.23708103918560394
+      ],
+      "assigned_development_split": "train",
+      "original_result_accepted_flag": false,
+      "result_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-162/RESULT.json",
+        "sha256": "8df156a6a879fe7c5a456b3ca66f758e201209d4a4775b144c4d94fb1089aecf",
+        "bytes": 9146
+      },
+      "recipe_sha256": "9de9dc38074df0dc1441dafeb9b8b6b1038e71ec40ffa653a1880854b6a51d42",
+      "sampling_seed": 2026091201,
+      "target_cell": null,
+      "predicted_cell": null,
+      "family_warning": "NO_FAMILY_INDEPENDENCE_CLAIM",
+      "final_independent_test_eligible": false,
+      "formal_records": []
+    },
+    {
+      "request_id": "eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-163",
+      "geometry_sha256": "3c72d242de259a285d57cb0e0c883d85dc01e7dc6694878d3f60db4350d39a83",
+      "candidate_geometry_identity_sha256": "3c72d242de259a285d57cb0e0c883d85dc01e7dc6694878d3f60db4350d39a83",
+      "source": "GEOMETRY_DOE",
+      "arm": "GEOMETRY_DOE_PRODUCTION",
+      "status": "FRESH_EMX_EXTRACTED",
+      "strict": true,
+      "core15_eligible": true,
+      "actual_response": [
+        1.2017054601503798,
+        1.4238503482529952,
+        13.05282362423759,
+        0.35557614005374244
+      ],
+      "assigned_development_split": "train",
+      "original_result_accepted_flag": false,
+      "result_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-163/RESULT.json",
+        "sha256": "4a48cfa34ecc1fddf8e1c6d10868a479e694af261ad6a68c6e83c4861c140539",
+        "bytes": 9166
+      },
+      "recipe_sha256": "9de9dc38074df0dc1441dafeb9b8b6b1038e71ec40ffa653a1880854b6a51d42",
+      "sampling_seed": 2026091201,
+      "target_cell": null,
+      "predicted_cell": null,
+      "family_warning": "NO_FAMILY_INDEPENDENCE_CLAIM",
+      "final_independent_test_eligible": false,
+      "formal_records": [
+        {
+          "pin": {
+            "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/qualified15_single_member_v1/records/006212.json",
+            "sha256": "3a79f7b08059a04939ce292646c54ae4be56a9f2ae399ca3220b69565303235c",
+            "bytes": 158758
+          },
+          "schema": "eucap15_production256_qualified_increment.v1",
+          "request_id": "eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-163",
+          "utc": "2026-09-12T09:02:16.583365+00:00"
+        }
+      ]
+    },
+    {
+      "request_id": "eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-166",
+      "geometry_sha256": "d47fe4f4ab9ce6735e97ab2b613d4d865c03bd3231c59ab57cb8d7c2709b2c01",
+      "candidate_geometry_identity_sha256": "d47fe4f4ab9ce6735e97ab2b613d4d865c03bd3231c59ab57cb8d7c2709b2c01",
+      "source": "GEOMETRY_DOE",
+      "arm": "GEOMETRY_DOE_PRODUCTION",
+      "status": "FRESH_EMX_EXTRACTED",
+      "strict": true,
+      "core15_eligible": false,
+      "actual_response": [
+        1.3718348269391913,
+        0.9365596383614601,
+        14.361612217501431,
+        0.17483903184670196
+      ],
+      "assigned_development_split": "train",
+      "original_result_accepted_flag": false,
+      "result_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-166/RESULT.json",
+        "sha256": "59ed5d48abf866e1a0d1865457277b6b0da3fb2b99f504551ff6a7b50b69cd48",
+        "bytes": 9173
+      },
+      "recipe_sha256": "9de9dc38074df0dc1441dafeb9b8b6b1038e71ec40ffa653a1880854b6a51d42",
+      "sampling_seed": 2026091201,
+      "target_cell": null,
+      "predicted_cell": null,
+      "family_warning": "NO_FAMILY_INDEPENDENCE_CLAIM",
+      "final_independent_test_eligible": false,
+      "formal_records": []
+    },
+    {
+      "request_id": "eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-167",
+      "geometry_sha256": "94af2af94e2f9389b9d5496118b96309b7c898ef4a00dd246ee39a8ca4d8980f",
+      "candidate_geometry_identity_sha256": "94af2af94e2f9389b9d5496118b96309b7c898ef4a00dd246ee39a8ca4d8980f",
+      "source": "GEOMETRY_DOE",
+      "arm": "GEOMETRY_DOE_PRODUCTION",
+      "status": "FRESH_EMX_EXTRACTED",
+      "strict": true,
+      "core15_eligible": true,
+      "actual_response": [
+        1.1780155496666485,
+        1.2122944062538186,
+        13.7439122813268,
+        0.47239645931512564
+      ],
+      "assigned_development_split": "train",
+      "original_result_accepted_flag": false,
+      "result_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-167/RESULT.json",
+        "sha256": "024f1279168cb3eaf01de3f5443b9545f8360732583686b082962e8e1dc92730",
+        "bytes": 9141
+      },
+      "recipe_sha256": "9de9dc38074df0dc1441dafeb9b8b6b1038e71ec40ffa653a1880854b6a51d42",
+      "sampling_seed": 2026091201,
+      "target_cell": null,
+      "predicted_cell": null,
+      "family_warning": "NO_FAMILY_INDEPENDENCE_CLAIM",
+      "final_independent_test_eligible": false,
+      "formal_records": []
+    },
+    {
+      "request_id": "eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-168",
+      "geometry_sha256": "45fadfc6ce8596262dd057e358af48b8135dba3b58bc007defeba2d2edcbf131",
+      "candidate_geometry_identity_sha256": "45fadfc6ce8596262dd057e358af48b8135dba3b58bc007defeba2d2edcbf131",
+      "source": "GEOMETRY_DOE",
+      "arm": "GEOMETRY_DOE_PRODUCTION",
+      "status": "FRESH_EMX_EXTRACTED",
+      "strict": true,
+      "core15_eligible": true,
+      "actual_response": [
+        1.0568549686968483,
+        1.229638030343442,
+        14.370390207971607,
+        0.30895172994632375
+      ],
+      "assigned_development_split": "train",
+      "original_result_accepted_flag": false,
+      "result_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-168/RESULT.json",
+        "sha256": "2c3fea63bb8f759244bad0ca17b4bce4398f97eff9e1d3f86d3da734bf0b53b0",
+        "bytes": 9163
+      },
+      "recipe_sha256": "9de9dc38074df0dc1441dafeb9b8b6b1038e71ec40ffa653a1880854b6a51d42",
+      "sampling_seed": 2026091201,
+      "target_cell": null,
+      "predicted_cell": null,
+      "family_warning": "NO_FAMILY_INDEPENDENCE_CLAIM",
+      "final_independent_test_eligible": false,
+      "formal_records": []
+    },
+    {
+      "request_id": "eucap15_production_doe_neighborhood_20260912_v1-TRAIN_NEIGHBORHOOD-004",
+      "geometry_sha256": "e25b0a60fafdb6164c3f611525858b36237a05935b286a7b7b207a2093cde165",
+      "candidate_geometry_identity_sha256": "e25b0a60fafdb6164c3f611525858b36237a05935b286a7b7b207a2093cde165",
+      "source": "TRAIN_NEIGHBORHOOD",
+      "arm": "TRAIN_NEIGHBORHOOD_PRODUCTION",
+      "status": "CANDIDATE_FAILURE_RETAINED_NO_SUBSTITUTION",
+      "strict": null,
+      "core15_eligible": null,
+      "actual_response": null,
+      "assigned_development_split": "train",
+      "original_result_accepted_flag": false,
+      "result_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/eucap15_production_doe_neighborhood_20260912_v1-TRAIN_NEIGHBORHOOD-004/RESULT.json",
+        "sha256": "c04cb9776bb71df1e8dc411dacaee74df1771d2b58e1f6192c1e99acc55f5cc7",
+        "bytes": 7751
+      },
+      "recipe_sha256": "9de9dc38074df0dc1441dafeb9b8b6b1038e71ec40ffa653a1880854b6a51d42",
+      "sampling_seed": 2026091202,
+      "target_cell": null,
+      "predicted_cell": null,
+      "family_warning": "NEIGHBOR_CHILD_OF_TRAIN_NOT_INDEPENDENT_FINAL_TEST",
+      "final_independent_test_eligible": false,
+      "formal_records": []
+    },
+    {
+      "request_id": "eucap15_production_doe_neighborhood_20260912_v1-TRAIN_NEIGHBORHOOD-005",
+      "geometry_sha256": "fa92d89edd5a71dd9e49d966daa12b9ba2635d6471b40ffab948e11915ac120a",
+      "candidate_geometry_identity_sha256": "fa92d89edd5a71dd9e49d966daa12b9ba2635d6471b40ffab948e11915ac120a",
+      "source": "TRAIN_NEIGHBORHOOD",
+      "arm": "TRAIN_NEIGHBORHOOD_PRODUCTION",
+      "status": "CANDIDATE_FAILURE_RETAINED_NO_SUBSTITUTION",
+      "strict": null,
+      "core15_eligible": null,
+      "actual_response": null,
+      "assigned_development_split": "train",
+      "original_result_accepted_flag": false,
+      "result_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/eucap15_production_doe_neighborhood_20260912_v1-TRAIN_NEIGHBORHOOD-005/RESULT.json",
+        "sha256": "f2919ccb76ed12e7f8ba4a6eda6c79e1b4e28996c4dc168ba7f377c94335306a",
+        "bytes": 7727
+      },
+      "recipe_sha256": "9de9dc38074df0dc1441dafeb9b8b6b1038e71ec40ffa653a1880854b6a51d42",
+      "sampling_seed": 2026091202,
+      "target_cell": null,
+      "predicted_cell": null,
+      "family_warning": "NEIGHBOR_CHILD_OF_TRAIN_NOT_INDEPENDENT_FINAL_TEST",
+      "final_independent_test_eligible": false,
+      "formal_records": []
+    },
+    {
+      "request_id": "eucap15_production_doe_neighborhood_20260912_v1-TRAIN_NEIGHBORHOOD-006",
+      "geometry_sha256": "e604a91a7e61381e81c2531531b820bbdb26a0810cc48fa3158601d5b80b6983",
+      "candidate_geometry_identity_sha256": "e604a91a7e61381e81c2531531b820bbdb26a0810cc48fa3158601d5b80b6983",
+      "source": "TRAIN_NEIGHBORHOOD",
+      "arm": "TRAIN_NEIGHBORHOOD_PRODUCTION",
+      "status": "FRESH_EMX_EXTRACTED",
+      "strict": true,
+      "core15_eligible": true,
+      "actual_response": [
+        1.1675593075911765,
+        1.6916850423435936,
+        11.669892215260118,
+        0.20829800277171664
+      ],
+      "assigned_development_split": "validation",
+      "original_result_accepted_flag": false,
+      "result_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/eucap15_production_doe_neighborhood_20260912_v1-TRAIN_NEIGHBORHOOD-006/RESULT.json",
+        "sha256": "ae78391b90f4769031477fb531a9505e4bff826a5b18c044fb9d32ea224460d7",
+        "bytes": 11035
+      },
+      "recipe_sha256": "9de9dc38074df0dc1441dafeb9b8b6b1038e71ec40ffa653a1880854b6a51d42",
+      "sampling_seed": 2026091202,
+      "target_cell": null,
+      "predicted_cell": null,
+      "family_warning": "NEIGHBOR_CHILD_OF_TRAIN_NOT_INDEPENDENT_FINAL_TEST",
+      "final_independent_test_eligible": false,
+      "formal_records": [
+        {
+          "pin": {
+            "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/qualified15_single_member_v1/records/005991.json",
+            "sha256": "22747afd8f1d6fbdaac38ec456d72e875f3d41b6df2d617d25d85baa2a5beb87",
+            "bytes": 161120
+          },
+          "schema": "eucap15_production256_qualified_increment.v1",
+          "request_id": "eucap15_production_doe_neighborhood_20260912_v1-TRAIN_NEIGHBORHOOD-006",
+          "utc": "2026-09-12T08:46:13.418792+00:00"
+        }
+      ]
+    },
+    {
+      "request_id": "eucap15_production_doe_neighborhood_20260912_v1-TRAIN_NEIGHBORHOOD-007",
+      "geometry_sha256": "4e20b14fedf878eadccb8ad29199b3e21b8018d55e4e0da7b629b93be248cd2d",
+      "candidate_geometry_identity_sha256": "4e20b14fedf878eadccb8ad29199b3e21b8018d55e4e0da7b629b93be248cd2d",
+      "source": "TRAIN_NEIGHBORHOOD",
+      "arm": "TRAIN_NEIGHBORHOOD_PRODUCTION",
+      "status": "FRESH_EMX_EXTRACTED",
+      "strict": true,
+      "core15_eligible": true,
+      "actual_response": [
+        1.1851317472005138,
+        1.1757852884333084,
+        13.62816638513502,
+        0.2769266973340159
+      ],
+      "assigned_development_split": "validation",
+      "original_result_accepted_flag": false,
+      "result_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/eucap15_production_doe_neighborhood_20260912_v1-TRAIN_NEIGHBORHOOD-007/RESULT.json",
+        "sha256": "3276068e51c66c06ca0fc6c6508b5e3947f6ee86e41b9c7a66c7f7acd55a49e1",
+        "bytes": 11043
+      },
+      "recipe_sha256": "9de9dc38074df0dc1441dafeb9b8b6b1038e71ec40ffa653a1880854b6a51d42",
+      "sampling_seed": 2026091202,
+      "target_cell": null,
+      "predicted_cell": null,
+      "family_warning": "NEIGHBOR_CHILD_OF_TRAIN_NOT_INDEPENDENT_FINAL_TEST",
+      "final_independent_test_eligible": false,
+      "formal_records": [
+        {
+          "pin": {
+            "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/qualified15_single_member_v1/records/005744.json",
+            "sha256": "dcd9fa0dfe9b72b5a18ff55a3b3a8feefb6a8a93248dc093c88c3dcb133a7020",
+            "bytes": 161124
+          },
+          "schema": "eucap15_production256_qualified_increment.v1",
+          "request_id": "eucap15_production_doe_neighborhood_20260912_v1-TRAIN_NEIGHBORHOOD-007",
+          "utc": "2026-09-12T08:35:08.019142+00:00"
+        }
+      ]
+    },
+    {
+      "request_id": "eucap15_production_doe_neighborhood_20260912_v1-TRAIN_NEIGHBORHOOD-010",
+      "geometry_sha256": "ab2e74d12f585f0d0381819f2993ce703b19a40db375cbb762ee4c743ba5d3c5",
+      "candidate_geometry_identity_sha256": "ab2e74d12f585f0d0381819f2993ce703b19a40db375cbb762ee4c743ba5d3c5",
+      "source": "TRAIN_NEIGHBORHOOD",
+      "arm": "TRAIN_NEIGHBORHOOD_PRODUCTION",
+      "status": "FRESH_EMX_EXTRACTED",
+      "strict": true,
+      "core15_eligible": true,
+      "actual_response": [
+        1.0082792049151021,
+        1.3231820525786446,
+        12.554842594029155,
+        0.20999902406809476
+      ],
+      "assigned_development_split": "validation",
+      "original_result_accepted_flag": false,
+      "result_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/eucap15_production_doe_neighborhood_20260912_v1-TRAIN_NEIGHBORHOOD-010/RESULT.json",
+        "sha256": "8d4ed6d6b31aebc6c3cf34e878a8bab805321ab9c1ea8c3863c7e7b143350268",
+        "bytes": 11050
+      },
+      "recipe_sha256": "9de9dc38074df0dc1441dafeb9b8b6b1038e71ec40ffa653a1880854b6a51d42",
+      "sampling_seed": 2026091202,
+      "target_cell": null,
+      "predicted_cell": null,
+      "family_warning": "NEIGHBOR_CHILD_OF_TRAIN_NOT_INDEPENDENT_FINAL_TEST",
+      "final_independent_test_eligible": false,
+      "formal_records": [
+        {
+          "pin": {
+            "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/qualified15_single_member_v1/records/005965.json",
+            "sha256": "74c1f2aab5cbe571a15db3bec1945c81460779486dd425362d6c5b29c4d3498a",
+            "bytes": 161122
+          },
+          "schema": "eucap15_production256_qualified_increment.v1",
+          "request_id": "eucap15_production_doe_neighborhood_20260912_v1-TRAIN_NEIGHBORHOOD-010",
+          "utc": "2026-09-12T08:44:48.863937+00:00"
+        }
+      ]
+    },
+    {
+      "request_id": "eucap15_production_doe_neighborhood_20260912_v1-TRAIN_NEIGHBORHOOD-013",
+      "geometry_sha256": "69eb15a6192ce7876f043ce6764c553ee9af5eaaa80417f3b0c22b4ce6b697ce",
+      "candidate_geometry_identity_sha256": "69eb15a6192ce7876f043ce6764c553ee9af5eaaa80417f3b0c22b4ce6b697ce",
+      "source": "TRAIN_NEIGHBORHOOD",
+      "arm": "TRAIN_NEIGHBORHOOD_PRODUCTION",
+      "status": "FRESH_EMX_EXTRACTED",
+      "strict": true,
+      "core15_eligible": true,
+      "actual_response": [
+        0.9050107899104569,
+        1.3460695359663375,
+        13.125698690704422,
+        0.21234997802949507
+      ],
+      "assigned_development_split": "train",
+      "original_result_accepted_flag": false,
+      "result_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/eucap15_production_doe_neighborhood_20260912_v1-TRAIN_NEIGHBORHOOD-013/RESULT.json",
+        "sha256": "e44be5729477e85ee9a234f1933469dd118117fa39d7b9a36746917d0a0af548",
+        "bytes": 11050
+      },
+      "recipe_sha256": "9de9dc38074df0dc1441dafeb9b8b6b1038e71ec40ffa653a1880854b6a51d42",
+      "sampling_seed": 2026091202,
+      "target_cell": null,
+      "predicted_cell": null,
+      "family_warning": "NEIGHBOR_CHILD_OF_TRAIN_NOT_INDEPENDENT_FINAL_TEST",
+      "final_independent_test_eligible": false,
+      "formal_records": [
+        {
+          "pin": {
+            "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/qualified15_single_member_v1/records/005820.json",
+            "sha256": "7c86010dd3ccee12a6d013a94563d31823f448ee7db7b00b4cd05ddaea74981a",
+            "bytes": 161150
+          },
+          "schema": "eucap15_production256_qualified_increment.v1",
+          "request_id": "eucap15_production_doe_neighborhood_20260912_v1-TRAIN_NEIGHBORHOOD-013",
+          "utc": "2026-09-12T08:38:34.710429+00:00"
+        }
+      ]
+    },
+    {
+      "request_id": "eucap15_production_doe_neighborhood_20260912_v1-TRAIN_NEIGHBORHOOD-017",
+      "geometry_sha256": "3ade5bf37975c57e6552e6f2788298c59d0807b84e5a3ece8c91b06ddde2af77",
+      "candidate_geometry_identity_sha256": "3ade5bf37975c57e6552e6f2788298c59d0807b84e5a3ece8c91b06ddde2af77",
+      "source": "TRAIN_NEIGHBORHOOD",
+      "arm": "TRAIN_NEIGHBORHOOD_PRODUCTION",
+      "status": "FRESH_EMX_EXTRACTED",
+      "strict": true,
+      "core15_eligible": true,
+      "actual_response": [
+        1.703683687395319,
+        1.4435360780274757,
+        12.321929492566657,
+        0.2415034089529718
+      ],
+      "assigned_development_split": "train",
+      "original_result_accepted_flag": false,
+      "result_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/eucap15_production_doe_neighborhood_20260912_v1-TRAIN_NEIGHBORHOOD-017/RESULT.json",
+        "sha256": "f7b32ad248909ec1427cb683a1bbd54fd653eb68e07c1163962ee052d3c25c2f",
+        "bytes": 11035
+      },
+      "recipe_sha256": "9de9dc38074df0dc1441dafeb9b8b6b1038e71ec40ffa653a1880854b6a51d42",
+      "sampling_seed": 2026091202,
+      "target_cell": null,
+      "predicted_cell": null,
+      "family_warning": "NEIGHBOR_CHILD_OF_TRAIN_NOT_INDEPENDENT_FINAL_TEST",
+      "final_independent_test_eligible": false,
+      "formal_records": [
+        {
+          "pin": {
+            "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/qualified15_single_member_v1/records/005966.json",
+            "sha256": "26a234626add16f1b291e8cf2d8384394050b6fc7f505b296e81b56d401c9468",
+            "bytes": 161109
+          },
+          "schema": "eucap15_production256_qualified_increment.v1",
+          "request_id": "eucap15_production_doe_neighborhood_20260912_v1-TRAIN_NEIGHBORHOOD-017",
+          "utc": "2026-09-12T08:44:52.167840+00:00"
+        }
+      ]
+    },
+    {
+      "request_id": "eucap15_production_doe_neighborhood_20260912_v1-TRAIN_NEIGHBORHOOD-018",
+      "geometry_sha256": "2207888cea256ddf3ec4d82df0b3d511cd09fa7eef64aa2a253c55e780e2930e",
+      "candidate_geometry_identity_sha256": "2207888cea256ddf3ec4d82df0b3d511cd09fa7eef64aa2a253c55e780e2930e",
+      "source": "TRAIN_NEIGHBORHOOD",
+      "arm": "TRAIN_NEIGHBORHOOD_PRODUCTION",
+      "status": "FRESH_EMX_EXTRACTED",
+      "strict": true,
+      "core15_eligible": true,
+      "actual_response": [
+        0.7587401432454858,
+        1.0000635408787166,
+        14.168814961531773,
+        0.21881106908307676
+      ],
+      "assigned_development_split": "train",
+      "original_result_accepted_flag": false,
+      "result_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/eucap15_production_doe_neighborhood_20260912_v1-TRAIN_NEIGHBORHOOD-018/RESULT.json",
+        "sha256": "7bf99264165b4f4e24a03279925cab7b8dacd69a2ae6aaf4e0d5f15df7de1fa6",
+        "bytes": 11050
+      },
+      "recipe_sha256": "9de9dc38074df0dc1441dafeb9b8b6b1038e71ec40ffa653a1880854b6a51d42",
+      "sampling_seed": 2026091202,
+      "target_cell": null,
+      "predicted_cell": null,
+      "family_warning": "NEIGHBOR_CHILD_OF_TRAIN_NOT_INDEPENDENT_FINAL_TEST",
+      "final_independent_test_eligible": false,
+      "formal_records": [
+        {
+          "pin": {
+            "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/qualified15_single_member_v1/records/006209.json",
+            "sha256": "062f514a3fa7452973b523ae96212ead1279e3bd5668f695d1f415db933db89f",
+            "bytes": 161140
+          },
+          "schema": "eucap15_production256_qualified_increment.v1",
+          "request_id": "eucap15_production_doe_neighborhood_20260912_v1-TRAIN_NEIGHBORHOOD-018",
+          "utc": "2026-09-12T09:01:55.774612+00:00"
+        }
+      ]
+    },
+    {
+      "request_id": "eucap15_production_doe_neighborhood_20260912_v1-TRAIN_NEIGHBORHOOD-019",
+      "geometry_sha256": "745aa76aa0de82cd6f568b271334923d5dd467ecea18768d82814529acac52c3",
+      "candidate_geometry_identity_sha256": "745aa76aa0de82cd6f568b271334923d5dd467ecea18768d82814529acac52c3",
+      "source": "TRAIN_NEIGHBORHOOD",
+      "arm": "TRAIN_NEIGHBORHOOD_PRODUCTION",
+      "status": "FRESH_EMX_EXTRACTED",
+      "strict": true,
+      "core15_eligible": true,
+      "actual_response": [
+        0.8586292238550364,
+        1.0128209495227587,
+        16.024191931790153,
+        0.4149279400267848
+      ],
+      "assigned_development_split": "test",
+      "original_result_accepted_flag": false,
+      "result_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/eucap15_production_doe_neighborhood_20260912_v1-TRAIN_NEIGHBORHOOD-019/RESULT.json",
+        "sha256": "9e50d6009ae74cec66d9f624e681e067a9f03dec78bfbf1b960561a6032489b6",
+        "bytes": 11030
+      },
+      "recipe_sha256": "9de9dc38074df0dc1441dafeb9b8b6b1038e71ec40ffa653a1880854b6a51d42",
+      "sampling_seed": 2026091202,
+      "target_cell": null,
+      "predicted_cell": null,
+      "family_warning": "NEIGHBOR_CHILD_OF_TRAIN_NOT_INDEPENDENT_FINAL_TEST",
+      "final_independent_test_eligible": false,
+      "formal_records": [
+        {
+          "pin": {
+            "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/qualified15_single_member_v1/records/005746.json",
+            "sha256": "28eaf3803a9578afd2e1a8bd890e2d6325d12d0744cfb208f5cdc206d81a824c",
+            "bytes": 161108
+          },
+          "schema": "eucap15_production256_qualified_increment.v1",
+          "request_id": "eucap15_production_doe_neighborhood_20260912_v1-TRAIN_NEIGHBORHOOD-019",
+          "utc": "2026-09-12T08:35:13.311569+00:00"
+        }
+      ]
+    },
+    {
+      "request_id": "eucap15_production_doe_neighborhood_20260912_v1-TRAIN_NEIGHBORHOOD-023",
+      "geometry_sha256": "127e69896d1c9b6e641f3a1c90f92dd0b14000eb1bc3aa4b197892f17c6c86b7",
+      "candidate_geometry_identity_sha256": "127e69896d1c9b6e641f3a1c90f92dd0b14000eb1bc3aa4b197892f17c6c86b7",
+      "source": "TRAIN_NEIGHBORHOOD",
+      "arm": "TRAIN_NEIGHBORHOOD_PRODUCTION",
+      "status": "CANDIDATE_FAILURE_RETAINED_NO_SUBSTITUTION",
+      "strict": null,
+      "core15_eligible": null,
+      "actual_response": null,
+      "assigned_development_split": "train",
+      "original_result_accepted_flag": false,
+      "result_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/eucap15_production_doe_neighborhood_20260912_v1-TRAIN_NEIGHBORHOOD-023/RESULT.json",
+        "sha256": "f49f6bfe67df467e0f70348a75525b42e2cf6416d079074759f6765c04f5a2c8",
+        "bytes": 7761
+      },
+      "recipe_sha256": "9de9dc38074df0dc1441dafeb9b8b6b1038e71ec40ffa653a1880854b6a51d42",
+      "sampling_seed": 2026091202,
+      "target_cell": null,
+      "predicted_cell": null,
+      "family_warning": "NEIGHBOR_CHILD_OF_TRAIN_NOT_INDEPENDENT_FINAL_TEST",
+      "final_independent_test_eligible": false,
+      "formal_records": []
+    },
+    {
+      "request_id": "eucap15_production_doe_neighborhood_20260912_v1-TRAIN_NEIGHBORHOOD-026",
+      "geometry_sha256": "ada4bdff9493cdc211c67e52d77816ae705d50731b4a803233864330c022601b",
+      "candidate_geometry_identity_sha256": "ada4bdff9493cdc211c67e52d77816ae705d50731b4a803233864330c022601b",
+      "source": "TRAIN_NEIGHBORHOOD",
+      "arm": "TRAIN_NEIGHBORHOOD_PRODUCTION",
+      "status": "CANDIDATE_FAILURE_RETAINED_NO_SUBSTITUTION",
+      "strict": null,
+      "core15_eligible": null,
+      "actual_response": null,
+      "assigned_development_split": "validation",
+      "original_result_accepted_flag": false,
+      "result_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/eucap15_production_doe_neighborhood_20260912_v1-TRAIN_NEIGHBORHOOD-026/RESULT.json",
+        "sha256": "d4cd120854273976160f7d81a5778cbf0b00590d4a8149462f2fef531c9fb82c",
+        "bytes": 7737
+      },
+      "recipe_sha256": "9de9dc38074df0dc1441dafeb9b8b6b1038e71ec40ffa653a1880854b6a51d42",
+      "sampling_seed": 2026091202,
+      "target_cell": null,
+      "predicted_cell": null,
+      "family_warning": "NEIGHBOR_CHILD_OF_TRAIN_NOT_INDEPENDENT_FINAL_TEST",
+      "final_independent_test_eligible": false,
+      "formal_records": []
+    },
+    {
+      "request_id": "eucap15_production_doe_neighborhood_20260912_v1-TRAIN_NEIGHBORHOOD-032",
+      "geometry_sha256": "c74723a492fd357459e5e50e3372b46762f3abc989504c0cc04c014a4116e6b4",
+      "candidate_geometry_identity_sha256": "c74723a492fd357459e5e50e3372b46762f3abc989504c0cc04c014a4116e6b4",
+      "source": "TRAIN_NEIGHBORHOOD",
+      "arm": "TRAIN_NEIGHBORHOOD_PRODUCTION",
+      "status": "FRESH_EMX_EXTRACTED",
+      "strict": true,
+      "core15_eligible": true,
+      "actual_response": [
+        0.683468942675735,
+        0.6588417707057644,
+        16.82540306788208,
+        0.294917387228754
+      ],
+      "assigned_development_split": "train",
+      "original_result_accepted_flag": false,
+      "result_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/eucap15_production_doe_neighborhood_20260912_v1-TRAIN_NEIGHBORHOOD-032/RESULT.json",
+        "sha256": "5f816d81d1fb616fb54d5877a0ccb289ebfafff94de3d1b20743984b987ef29d",
+        "bytes": 11011
+      },
+      "recipe_sha256": "9de9dc38074df0dc1441dafeb9b8b6b1038e71ec40ffa653a1880854b6a51d42",
+      "sampling_seed": 2026091202,
+      "target_cell": null,
+      "predicted_cell": null,
+      "family_warning": "NEIGHBOR_CHILD_OF_TRAIN_NOT_INDEPENDENT_FINAL_TEST",
+      "final_independent_test_eligible": false,
+      "formal_records": [
+        {
+          "pin": {
+            "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/qualified15_single_member_v1/records/005693.json",
+            "sha256": "d3c20e4753ca62a03b973286b23b805946922ff40bcc7ed0a9586f0362402cb7",
+            "bytes": 161052
+          },
+          "schema": "eucap15_production256_qualified_increment.v1",
+          "request_id": "eucap15_production_doe_neighborhood_20260912_v1-TRAIN_NEIGHBORHOOD-032",
+          "utc": "2026-09-12T08:33:03.596061+00:00"
+        }
+      ]
+    },
+    {
+      "request_id": "eucap15_production_doe_neighborhood_20260912_v1-TRAIN_NEIGHBORHOOD-033",
+      "geometry_sha256": "13e432390e8b250a786bd30b0d351c1848ed57ca8192aad4a3b213d9a6a98bfb",
+      "candidate_geometry_identity_sha256": "13e432390e8b250a786bd30b0d351c1848ed57ca8192aad4a3b213d9a6a98bfb",
+      "source": "TRAIN_NEIGHBORHOOD",
+      "arm": "TRAIN_NEIGHBORHOOD_PRODUCTION",
+      "status": "CANDIDATE_FAILURE_RETAINED_NO_SUBSTITUTION",
+      "strict": null,
+      "core15_eligible": null,
+      "actual_response": null,
+      "assigned_development_split": "validation",
+      "original_result_accepted_flag": false,
+      "result_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/eucap15_production_doe_neighborhood_20260912_v1-TRAIN_NEIGHBORHOOD-033/RESULT.json",
+        "sha256": "e0a93f3df8303be60b786c224bd1c8634c6d608eceff9acc9f87af8664b00af2",
+        "bytes": 7734
+      },
+      "recipe_sha256": "9de9dc38074df0dc1441dafeb9b8b6b1038e71ec40ffa653a1880854b6a51d42",
+      "sampling_seed": 2026091202,
+      "target_cell": null,
+      "predicted_cell": null,
+      "family_warning": "NEIGHBOR_CHILD_OF_TRAIN_NOT_INDEPENDENT_FINAL_TEST",
+      "final_independent_test_eligible": false,
+      "formal_records": []
+    },
+    {
+      "request_id": "eucap15_production_doe_neighborhood_20260912_v1-TRAIN_NEIGHBORHOOD-035",
+      "geometry_sha256": "c0e7f95202952e2314c5bb1297594d6d3f044d76306b9ad5742793935cd136b6",
+      "candidate_geometry_identity_sha256": "c0e7f95202952e2314c5bb1297594d6d3f044d76306b9ad5742793935cd136b6",
+      "source": "TRAIN_NEIGHBORHOOD",
+      "arm": "TRAIN_NEIGHBORHOOD_PRODUCTION",
+      "status": "FRESH_EMX_EXTRACTED",
+      "strict": true,
+      "core15_eligible": true,
+      "actual_response": [
+        0.9037700823403136,
+        1.522640651602039,
+        12.238582663285074,
+        0.26769156946805767
+      ],
+      "assigned_development_split": "train",
+      "original_result_accepted_flag": false,
+      "result_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/eucap15_production_doe_neighborhood_20260912_v1-TRAIN_NEIGHBORHOOD-035/RESULT.json",
+        "sha256": "e946b5d4d30d59a000b83ed45ec8199755d762f8514fc6e11f5002e6a38c9310",
+        "bytes": 11034
+      },
+      "recipe_sha256": "9de9dc38074df0dc1441dafeb9b8b6b1038e71ec40ffa653a1880854b6a51d42",
+      "sampling_seed": 2026091202,
+      "target_cell": null,
+      "predicted_cell": null,
+      "family_warning": "NEIGHBOR_CHILD_OF_TRAIN_NOT_INDEPENDENT_FINAL_TEST",
+      "final_independent_test_eligible": false,
+      "formal_records": [
+        {
+          "pin": {
+            "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/qualified15_single_member_v1/records/005748.json",
+            "sha256": "df1b3d4547e74e388ea334f3f3053c160e55b504014df8119dc570083192b248",
+            "bytes": 161083
+          },
+          "schema": "eucap15_production256_qualified_increment.v1",
+          "request_id": "eucap15_production_doe_neighborhood_20260912_v1-TRAIN_NEIGHBORHOOD-035",
+          "utc": "2026-09-12T08:35:18.691286+00:00"
+        }
+      ]
+    },
+    {
+      "request_id": "eucap15_production_doe_neighborhood_20260912_v1-TRAIN_NEIGHBORHOOD-037",
+      "geometry_sha256": "2b882b3bf364fa1f37412dca28acd6d51f90c317a8a6e9f590416818e5de30f1",
+      "candidate_geometry_identity_sha256": "2b882b3bf364fa1f37412dca28acd6d51f90c317a8a6e9f590416818e5de30f1",
+      "source": "TRAIN_NEIGHBORHOOD",
+      "arm": "TRAIN_NEIGHBORHOOD_PRODUCTION",
+      "status": "FRESH_EMX_EXTRACTED",
+      "strict": true,
+      "core15_eligible": true,
+      "actual_response": [
+        1.778509092041546,
+        1.7514556622878368,
+        12.510068731012455,
+        0.24245959382098084
+      ],
+      "assigned_development_split": "validation",
+      "original_result_accepted_flag": false,
+      "result_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/eucap15_production_doe_neighborhood_20260912_v1-TRAIN_NEIGHBORHOOD-037/RESULT.json",
+        "sha256": "fa10bbfdc243c25e7933661a56a8a89b451451854c08a51343c0c48495ed4664",
+        "bytes": 11057
+      },
+      "recipe_sha256": "9de9dc38074df0dc1441dafeb9b8b6b1038e71ec40ffa653a1880854b6a51d42",
+      "sampling_seed": 2026091202,
+      "target_cell": null,
+      "predicted_cell": null,
+      "family_warning": "NEIGHBOR_CHILD_OF_TRAIN_NOT_INDEPENDENT_FINAL_TEST",
+      "final_independent_test_eligible": false,
+      "formal_records": [
+        {
+          "pin": {
+            "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/qualified15_single_member_v1/records/005796.json",
+            "sha256": "c8707a6f0a9fd8d1c46841be6617de865dd42e866057181c432d5631075b5c85",
+            "bytes": 161170
+          },
+          "schema": "eucap15_production256_qualified_increment.v1",
+          "request_id": "eucap15_production_doe_neighborhood_20260912_v1-TRAIN_NEIGHBORHOOD-037",
+          "utc": "2026-09-12T08:37:27.807636+00:00"
+        }
+      ]
+    },
+    {
+      "request_id": "eucap15_production_doe_neighborhood_20260912_v1-TRAIN_NEIGHBORHOOD-038",
+      "geometry_sha256": "84495255edeff7dbc1a059058de3d27f7df5c635031ea753d34c63d720bdb04a",
+      "candidate_geometry_identity_sha256": "84495255edeff7dbc1a059058de3d27f7df5c635031ea753d34c63d720bdb04a",
+      "source": "TRAIN_NEIGHBORHOOD",
+      "arm": "TRAIN_NEIGHBORHOOD_PRODUCTION",
+      "status": "FRESH_EMX_EXTRACTED",
+      "strict": true,
+      "core15_eligible": true,
+      "actual_response": [
+        1.370352689494488,
+        1.688128431446172,
+        13.179568184632954,
+        0.23507179976865356
+      ],
+      "assigned_development_split": "train",
+      "original_result_accepted_flag": false,
+      "result_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/eucap15_production_doe_neighborhood_20260912_v1-TRAIN_NEIGHBORHOOD-038/RESULT.json",
+        "sha256": "0155534884e47d04af8efb0046669d60f8362f7954a98351b38c50c180ad4d42",
+        "bytes": 11044
+      },
+      "recipe_sha256": "9de9dc38074df0dc1441dafeb9b8b6b1038e71ec40ffa653a1880854b6a51d42",
+      "sampling_seed": 2026091202,
+      "target_cell": null,
+      "predicted_cell": null,
+      "family_warning": "NEIGHBOR_CHILD_OF_TRAIN_NOT_INDEPENDENT_FINAL_TEST",
+      "final_independent_test_eligible": false,
+      "formal_records": [
+        {
+          "pin": {
+            "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/qualified15_single_member_v1/records/005797.json",
+            "sha256": "285d390baf1a4165742eed0e6830ed0611695c67c681e8a05debd01f13941782",
+            "bytes": 161117
+          },
+          "schema": "eucap15_production256_qualified_increment.v1",
+          "request_id": "eucap15_production_doe_neighborhood_20260912_v1-TRAIN_NEIGHBORHOOD-038",
+          "utc": "2026-09-12T08:37:31.032235+00:00"
+        }
+      ]
+    },
+    {
+      "request_id": "eucap15_production_doe_neighborhood_20260912_v1-TRAIN_NEIGHBORHOOD-039",
+      "geometry_sha256": "6a8dc9a998494f2f3b790829c4342003784276f9dfc3b341cbb83d7487d3cddf",
+      "candidate_geometry_identity_sha256": "6a8dc9a998494f2f3b790829c4342003784276f9dfc3b341cbb83d7487d3cddf",
+      "source": "TRAIN_NEIGHBORHOOD",
+      "arm": "TRAIN_NEIGHBORHOOD_PRODUCTION",
+      "status": "FRESH_EMX_EXTRACTED",
+      "strict": true,
+      "core15_eligible": true,
+      "actual_response": [
+        0.8970733555745046,
+        0.8575334879404964,
+        17.07946909191977,
+        0.31479342315631764
+      ],
+      "assigned_development_split": "train",
+      "original_result_accepted_flag": false,
+      "result_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/eucap15_production_doe_neighborhood_20260912_v1-TRAIN_NEIGHBORHOOD-039/RESULT.json",
+        "sha256": "ee727275b0b281b8c9516bcbfd89ee834762c4b1cb39985656700e847a2e1935",
+        "bytes": 11060
+      },
+      "recipe_sha256": "9de9dc38074df0dc1441dafeb9b8b6b1038e71ec40ffa653a1880854b6a51d42",
+      "sampling_seed": 2026091202,
+      "target_cell": null,
+      "predicted_cell": null,
+      "family_warning": "NEIGHBOR_CHILD_OF_TRAIN_NOT_INDEPENDENT_FINAL_TEST",
+      "final_independent_test_eligible": false,
+      "formal_records": [
+        {
+          "pin": {
+            "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/qualified15_single_member_v1/records/005821.json",
+            "sha256": "49c360a5f1c5eb75f4d00f1f4e3541005ed081784ef4f45948599c6f67e92282",
+            "bytes": 161159
+          },
+          "schema": "eucap15_production256_qualified_increment.v1",
+          "request_id": "eucap15_production_doe_neighborhood_20260912_v1-TRAIN_NEIGHBORHOOD-039",
+          "utc": "2026-09-12T08:38:37.627334+00:00"
+        }
+      ]
+    },
+    {
+      "request_id": "eucap15_production_doe_neighborhood_20260912_v1-TRAIN_NEIGHBORHOOD-040",
+      "geometry_sha256": "3e0d8b993b965e0ee8652f61b0e3aa4f1c60cb9756d32ab83adf40340f5df891",
+      "candidate_geometry_identity_sha256": "3e0d8b993b965e0ee8652f61b0e3aa4f1c60cb9756d32ab83adf40340f5df891",
+      "source": "TRAIN_NEIGHBORHOOD",
+      "arm": "TRAIN_NEIGHBORHOOD_PRODUCTION",
+      "status": "FRESH_EMX_EXTRACTED",
+      "strict": true,
+      "core15_eligible": true,
+      "actual_response": [
+        1.1655236038235413,
+        1.7226464523762672,
+        11.734754142822045,
+        0.277225255639044
+      ],
+      "assigned_development_split": "train",
+      "original_result_accepted_flag": false,
+      "result_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/eucap15_production_doe_neighborhood_20260912_v1-TRAIN_NEIGHBORHOOD-040/RESULT.json",
+        "sha256": "3b9b0524eb9ea6378f6a84f500ea538c8bbe8d757d0751ab3fec1da3e4cc1453",
+        "bytes": 10992
+      },
+      "recipe_sha256": "9de9dc38074df0dc1441dafeb9b8b6b1038e71ec40ffa653a1880854b6a51d42",
+      "sampling_seed": 2026091202,
+      "target_cell": null,
+      "predicted_cell": null,
+      "family_warning": "NEIGHBOR_CHILD_OF_TRAIN_NOT_INDEPENDENT_FINAL_TEST",
+      "final_independent_test_eligible": false,
+      "formal_records": [
+        {
+          "pin": {
+            "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/qualified15_single_member_v1/records/005861.json",
+            "sha256": "76a5b79a8346505922986b19b9b62c54618c4d6d16421aabda55fb12882e3887",
+            "bytes": 161033
+          },
+          "schema": "eucap15_production256_qualified_increment.v1",
+          "request_id": "eucap15_production_doe_neighborhood_20260912_v1-TRAIN_NEIGHBORHOOD-040",
+          "utc": "2026-09-12T08:40:17.267310+00:00"
+        }
+      ]
+    },
+    {
+      "request_id": "eucap15_production_doe_neighborhood_20260912_v1-TRAIN_NEIGHBORHOOD-042",
+      "geometry_sha256": "a610a28b5d3151480c03388e3cc3fadc294dd46f53797acf808dc3386964a28d",
+      "candidate_geometry_identity_sha256": "a610a28b5d3151480c03388e3cc3fadc294dd46f53797acf808dc3386964a28d",
+      "source": "TRAIN_NEIGHBORHOOD",
+      "arm": "TRAIN_NEIGHBORHOOD_PRODUCTION",
+      "status": "FRESH_EMX_EXTRACTED",
+      "strict": true,
+      "core15_eligible": true,
+      "actual_response": [
+        0.8761241213845294,
+        0.662789764497457,
+        15.261420424432382,
+        0.23768487915316883
+      ],
+      "assigned_development_split": "train",
+      "original_result_accepted_flag": false,
+      "result_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/eucap15_production_doe_neighborhood_20260912_v1-TRAIN_NEIGHBORHOOD-042/RESULT.json",
+        "sha256": "fa845dd12a1a0e1c6e731fec70f1effa49696b9e8ee1e3ca8af9072013b2d74d",
+        "bytes": 11023
+      },
+      "recipe_sha256": "9de9dc38074df0dc1441dafeb9b8b6b1038e71ec40ffa653a1880854b6a51d42",
+      "sampling_seed": 2026091202,
+      "target_cell": null,
+      "predicted_cell": null,
+      "family_warning": "NEIGHBOR_CHILD_OF_TRAIN_NOT_INDEPENDENT_FINAL_TEST",
+      "final_independent_test_eligible": false,
+      "formal_records": [
+        {
+          "pin": {
+            "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/qualified15_single_member_v1/records/005967.json",
+            "sha256": "0c21a69b8a2dc935ad8a8b70c3cb82b28f28f4ee824eccaaf2a5adb4b36e2858",
+            "bytes": 161094
+          },
+          "schema": "eucap15_production256_qualified_increment.v1",
+          "request_id": "eucap15_production_doe_neighborhood_20260912_v1-TRAIN_NEIGHBORHOOD-042",
+          "utc": "2026-09-12T08:44:55.754919+00:00"
+        }
+      ]
+    },
+    {
+      "request_id": "eucap15_production_doe_neighborhood_20260912_v1-TRAIN_NEIGHBORHOOD-043",
+      "geometry_sha256": "b35bae9abea6d841653cc6c982319fae0016260b2ad16c74782488761886bd64",
+      "candidate_geometry_identity_sha256": "b35bae9abea6d841653cc6c982319fae0016260b2ad16c74782488761886bd64",
+      "source": "TRAIN_NEIGHBORHOOD",
+      "arm": "TRAIN_NEIGHBORHOOD_PRODUCTION",
+      "status": "FRESH_EMX_EXTRACTED",
+      "strict": true,
+      "core15_eligible": true,
+      "actual_response": [
+        1.2102792925346908,
+        1.247785437608965,
+        13.33839099630241,
+        0.3237030572507048
+      ],
+      "assigned_development_split": "test",
+      "original_result_accepted_flag": false,
+      "result_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/eucap15_production_doe_neighborhood_20260912_v1-TRAIN_NEIGHBORHOOD-043/RESULT.json",
+        "sha256": "51b357305285be0bde97d29dd4faaf09c5d4f83590459e64ddd3e1bae7a1be2c",
+        "bytes": 11037
+      },
+      "recipe_sha256": "9de9dc38074df0dc1441dafeb9b8b6b1038e71ec40ffa653a1880854b6a51d42",
+      "sampling_seed": 2026091202,
+      "target_cell": null,
+      "predicted_cell": null,
+      "family_warning": "NEIGHBOR_CHILD_OF_TRAIN_NOT_INDEPENDENT_FINAL_TEST",
+      "final_independent_test_eligible": false,
+      "formal_records": [
+        {
+          "pin": {
+            "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/qualified15_single_member_v1/records/005969.json",
+            "sha256": "f4ab55f59f23dfd2f1f9bbec7d168a10f509293cb5c16130ee36f9e7c3c50a06",
+            "bytes": 161098
+          },
+          "schema": "eucap15_production256_qualified_increment.v1",
+          "request_id": "eucap15_production_doe_neighborhood_20260912_v1-TRAIN_NEIGHBORHOOD-043",
+          "utc": "2026-09-12T08:45:02.499076+00:00"
+        }
+      ]
+    },
+    {
+      "request_id": "eucap15_production_doe_neighborhood_20260912_v1-TRAIN_NEIGHBORHOOD-047",
+      "geometry_sha256": "ab008b8f3720b8391b7f2ee0cd895d775fbfdabe8417a54b46283235e0814908",
+      "candidate_geometry_identity_sha256": "ab008b8f3720b8391b7f2ee0cd895d775fbfdabe8417a54b46283235e0814908",
+      "source": "TRAIN_NEIGHBORHOOD",
+      "arm": "TRAIN_NEIGHBORHOOD_PRODUCTION",
+      "status": "FRESH_EMX_EXTRACTED",
+      "strict": true,
+      "core15_eligible": true,
+      "actual_response": [
+        1.5048452519623554,
+        1.2736948772145185,
+        14.077743179281867,
+        0.23290954793794802
+      ],
+      "assigned_development_split": "validation",
+      "original_result_accepted_flag": false,
+      "result_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/eucap15_production_doe_neighborhood_20260912_v1-TRAIN_NEIGHBORHOOD-047/RESULT.json",
+        "sha256": "141dbe9b6fc92e726eab9727aa231e21605951e757a70750a84966200584ace3",
+        "bytes": 11046
+      },
+      "recipe_sha256": "9de9dc38074df0dc1441dafeb9b8b6b1038e71ec40ffa653a1880854b6a51d42",
+      "sampling_seed": 2026091202,
+      "target_cell": null,
+      "predicted_cell": null,
+      "family_warning": "NEIGHBOR_CHILD_OF_TRAIN_NOT_INDEPENDENT_FINAL_TEST",
+      "final_independent_test_eligible": false,
+      "formal_records": [
+        {
+          "pin": {
+            "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/qualified15_single_member_v1/records/005971.json",
+            "sha256": "8472451c5d79e40317e73e48ffee54eb1dc80553b7bfca2339c87bd8a00ac936",
+            "bytes": 161131
+          },
+          "schema": "eucap15_production256_qualified_increment.v1",
+          "request_id": "eucap15_production_doe_neighborhood_20260912_v1-TRAIN_NEIGHBORHOOD-047",
+          "utc": "2026-09-12T08:45:09.352427+00:00"
+        }
+      ]
+    },
+    {
+      "request_id": "eucap15_production_doe_neighborhood_20260912_v1-TRAIN_NEIGHBORHOOD-048",
+      "geometry_sha256": "cc8c17c2d0c2fb75a5c4d86f96150e3e683ee4fc2d92018d21d687e3144b9b3c",
+      "candidate_geometry_identity_sha256": "cc8c17c2d0c2fb75a5c4d86f96150e3e683ee4fc2d92018d21d687e3144b9b3c",
+      "source": "TRAIN_NEIGHBORHOOD",
+      "arm": "TRAIN_NEIGHBORHOOD_PRODUCTION",
+      "status": "FRESH_EMX_EXTRACTED",
+      "strict": true,
+      "core15_eligible": true,
+      "actual_response": [
+        1.6471853425240712,
+        1.2558174216528508,
+        12.22349357143867,
+        0.3231603272464039
+      ],
+      "assigned_development_split": "train",
+      "original_result_accepted_flag": false,
+      "result_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/eucap15_production_doe_neighborhood_20260912_v1-TRAIN_NEIGHBORHOOD-048/RESULT.json",
+        "sha256": "e380dace96e9c251a28a95091c64c6411baf7d45303330531597ab1973bb9d59",
+        "bytes": 11021
+      },
+      "recipe_sha256": "9de9dc38074df0dc1441dafeb9b8b6b1038e71ec40ffa653a1880854b6a51d42",
+      "sampling_seed": 2026091202,
+      "target_cell": null,
+      "predicted_cell": null,
+      "family_warning": "NEIGHBOR_CHILD_OF_TRAIN_NOT_INDEPENDENT_FINAL_TEST",
+      "final_independent_test_eligible": false,
+      "formal_records": [
+        {
+          "pin": {
+            "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/qualified15_single_member_v1/records/005992.json",
+            "sha256": "851d1fcb956a93f791f1b7843d8aeed1711facc0b4c6a0445d8183871688b869",
+            "bytes": 161058
+          },
+          "schema": "eucap15_production256_qualified_increment.v1",
+          "request_id": "eucap15_production_doe_neighborhood_20260912_v1-TRAIN_NEIGHBORHOOD-048",
+          "utc": "2026-09-12T08:46:18.007512+00:00"
+        }
+      ]
+    },
+    {
+      "request_id": "eucap15_production_doe_neighborhood_20260912_v1-TRAIN_NEIGHBORHOOD-052",
+      "geometry_sha256": "395ab1ae88317758d29233b3cf4b8ba733c52328c83318579d5ca86b47ad321c",
+      "candidate_geometry_identity_sha256": "395ab1ae88317758d29233b3cf4b8ba733c52328c83318579d5ca86b47ad321c",
+      "source": "TRAIN_NEIGHBORHOOD",
+      "arm": "TRAIN_NEIGHBORHOOD_PRODUCTION",
+      "status": "CANDIDATE_FAILURE_RETAINED_NO_SUBSTITUTION",
+      "strict": null,
+      "core15_eligible": null,
+      "actual_response": null,
+      "assigned_development_split": "test",
+      "original_result_accepted_flag": false,
+      "result_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/eucap15_production_doe_neighborhood_20260912_v1-TRAIN_NEIGHBORHOOD-052/RESULT.json",
+        "sha256": "8dd12d7ab8c4cbf326dd8bcad6d5e29ab2893be81d4502d26c9ce515897b4366",
+        "bytes": 7744
+      },
+      "recipe_sha256": "9de9dc38074df0dc1441dafeb9b8b6b1038e71ec40ffa653a1880854b6a51d42",
+      "sampling_seed": 2026091202,
+      "target_cell": null,
+      "predicted_cell": null,
+      "family_warning": "NEIGHBOR_CHILD_OF_TRAIN_NOT_INDEPENDENT_FINAL_TEST",
+      "final_independent_test_eligible": false,
+      "formal_records": []
+    },
+    {
+      "request_id": "eucap15_production_doe_neighborhood_20260912_v1-TRAIN_NEIGHBORHOOD-054",
+      "geometry_sha256": "65c68bb95d164d3699e887b754e02987968b1572383b069c0fc4a969aa79ac57",
+      "candidate_geometry_identity_sha256": "65c68bb95d164d3699e887b754e02987968b1572383b069c0fc4a969aa79ac57",
+      "source": "TRAIN_NEIGHBORHOOD",
+      "arm": "TRAIN_NEIGHBORHOOD_PRODUCTION",
+      "status": "CANDIDATE_FAILURE_RETAINED_NO_SUBSTITUTION",
+      "strict": null,
+      "core15_eligible": null,
+      "actual_response": null,
+      "assigned_development_split": "train",
+      "original_result_accepted_flag": false,
+      "result_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/eucap15_production_doe_neighborhood_20260912_v1-TRAIN_NEIGHBORHOOD-054/RESULT.json",
+        "sha256": "cca5886b4a4dad12d0be2983d00916affa8550871b9f2cf71083f5d9c6917392",
+        "bytes": 7767
+      },
+      "recipe_sha256": "9de9dc38074df0dc1441dafeb9b8b6b1038e71ec40ffa653a1880854b6a51d42",
+      "sampling_seed": 2026091202,
+      "target_cell": null,
+      "predicted_cell": null,
+      "family_warning": "NEIGHBOR_CHILD_OF_TRAIN_NOT_INDEPENDENT_FINAL_TEST",
+      "final_independent_test_eligible": false,
+      "formal_records": []
+    },
+    {
+      "request_id": "eucap15_production_doe_neighborhood_20260912_v1-TRAIN_NEIGHBORHOOD-055",
+      "geometry_sha256": "24d0e32360de93abc3561ac94c259065e4ef776f589c4c7b0720612f650d46a4",
+      "candidate_geometry_identity_sha256": "24d0e32360de93abc3561ac94c259065e4ef776f589c4c7b0720612f650d46a4",
+      "source": "TRAIN_NEIGHBORHOOD",
+      "arm": "TRAIN_NEIGHBORHOOD_PRODUCTION",
+      "status": "FRESH_EMX_EXTRACTED",
+      "strict": true,
+      "core15_eligible": true,
+      "actual_response": [
+        1.7337199911516026,
+        1.0511707128417154,
+        11.79544312146662,
+        0.2674123705472821
+      ],
+      "assigned_development_split": "test",
+      "original_result_accepted_flag": false,
+      "result_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/eucap15_production_doe_neighborhood_20260912_v1-TRAIN_NEIGHBORHOOD-055/RESULT.json",
+        "sha256": "a6b9555d0c49f089b7f95fc4c53528d43b486c69d65d4fbc63b175555367d838",
+        "bytes": 11031
+      },
+      "recipe_sha256": "9de9dc38074df0dc1441dafeb9b8b6b1038e71ec40ffa653a1880854b6a51d42",
+      "sampling_seed": 2026091202,
+      "target_cell": null,
+      "predicted_cell": null,
+      "family_warning": "NEIGHBOR_CHILD_OF_TRAIN_NOT_INDEPENDENT_FINAL_TEST",
+      "final_independent_test_eligible": false,
+      "formal_records": []
+    }
+  ]
+}

@@ -1,0 +1,53 @@
+{
+  "schema": "eucap15_actual_landing_m13_receipt.v1",
+  "status": "REAL_RECEIVED_ROWS_PROJECTED_NO_NEW_NATIVE_EXECUTION",
+  "executed_utc": "2026-09-12T09:02:43.885831+00:00",
+  "source_rows": 24,
+  "fresh_completed_in_source": 20,
+  "core_in_source": 7,
+  "train_comparison_rows": 5,
+  "original_test_excluded_from_train": 2,
+  "observed_new_baseline_empty_cells": 0,
+  "new_native_executions": 0,
+  "new_physical_result_observation": false,
+  "baseline_not_mutated": true,
+  "model_not_updated": true,
+  "old_tests_rerun": 0,
+  "figure_generated": false,
+  "analysis_path": "Existing eucap15_acquisition.actual_landing and validate_coverage; scoped source/grain/join checks, no new analytical framework.",
+  "source_pins": [
+    {
+      "path": "docs/research/eucap15_abc_increment_20260910/COVERAGE_BEFORE.csv",
+      "sha256": "8774136cb90164549b465135d41d206371b8616a86d0b3cf5595848971a948e9"
+    },
+    {
+      "path": "docs/research/qualification_batch_20260912/publication_v12/RECEIVED_NEW24.json",
+      "sha256": "0efdb72f1dd544f97112a2b54ef90449ce3a6f88a8992de45774c7594eb7bf00"
+    },
+    {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/github_worktrees/eucap15-mlp-capacity-20260909/research/broadband56_nn/eucap15_acquisition.py",
+      "sha256": "d55eedd5955a6654966fd3dd0ad32074cae4376ef2709ffdbbcfe8edee431f0a"
+    }
+  ],
+  "files": [
+    {
+      "path": "ACTUAL_LANDINGS.json",
+      "sha256": "8530b8acbd0f5d24a77e5ee31f456c4115209ec6b7cc9266b9d84c265e0f43cb"
+    },
+    {
+      "path": "FIGURE_SOURCE_NOTE.md",
+      "sha256": "97e233a5c30585537fbccd651ccece4fad3e4161661cd002700614712ff494f7"
+    }
+  ],
+  "code": {
+    "path": "research/broadband56_nn/eucap15_received_landing_increment.py",
+    "sha256": "f6326707e81ddc47c7b73ebabd65d593c39c3414427e5ab953949745f9bf8ff4"
+  },
+  "scope_caveats": [
+    "Five train rows are compared only with unchanged 3801 reference, not the full current admitted pool.",
+    "Original source/split/RESULT flags/formal pins and all failures retained.",
+    "No re-extraction, fresh EMX, native admission, target generation, model update or sampling decision.",
+    "Validation/test never contributes to train occupancy; no fabricated DOE target error.",
+    "No same-budget superiority or final100K support inference; missing target/predicted cells are not reconstructed."
+  ]
+}

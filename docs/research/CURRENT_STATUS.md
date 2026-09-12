@@ -1,23 +1,21 @@
 # Current15GHz research/production status
 
-Latest actual native observation:2026-09-12 08:31:50.342478UTC.
-[New M12 production increment and explicit endpoint fix](qualification_batch_20260912/publication_v12/README.md); [prior M11](qualification_batch_20260912/publication_v11/README.md).
+Latest actual native observation:2026-09-12 09:05:27.301344UTC.
+[M13 actual successor installation and new77EMX](production_landing_m13_20260912/README.md); [prior M12](qualification_batch_20260912/publication_v12/README.md).
 
-- Requested48 / persisted active permits6 / executor48 / actual nativeEMX6.
-- Window08:21:28→08:31:50UTC:newEMX20,strict-range distinct candidate geometries7;all7 formal.
-- Fresh formal+12(new-window7+prior-window5);history formal+215;certified union lower bound5664.
-- Original splits kept; geometry-unique and formally-admitted remain separate fields.
-- Original owner1039340,standby1145095,metadata1145088 alive;automatic continuation installed.
-- At this cut:57 waitingCadence/1 waitingCalibre/6activeEMX/nootherEMX-ready;currentupstream1/1.
-- ResourcePASS/streak6;unchanged policy replay allows34additionalEMX,no actual permit issued by replay.
-- Existing successor8/8/48;explicit endpointv2 safe-boundary integration pending,not native validated.
-- Original256:75terminal=50fresh+14candidate failures+11analytic;181withoutterminal are not181running.
-- Original logical core23/formal23;no eligible uncommitted at cut.
-- Six prior failures exactly reproduced:terminal-face metadata cross-center+/-7.5nm;new explicit v2 implementation and6/3/1 scoped checks pass.
-- Zero polygon/endpoint/label mutation in these tests;zero native/GDS;old failures andv1 unchanged.
-- Capacity48 is not actual48;this observed upstream shortage is not a stable hourly throughput claim.
-- No old128/64/15training,fullQA,fullpoolscan,cleanup orAIpaper figures.
-- Full100K/final independent10K incomplete.Historical93 qualification remains unadmitted.
+- Requested48/executor48;actual nativeEMX0 at one instant,persistedEMXpermit1(notnativecount).
+- Window08:31:50→09:05:27UTC:new77fresh,15candidatefailure,4analytic;96newterminal.
+- New34strict/range candidate-unique:31formal/3notformal;original20train/10val/4test unchanged.
+- Fresh formal+31,history formal+551;certifiedunionlowerbound6246,nottrainingrows orfull100K.
+- Originala083owner1039340/metadata1145088 alive;resourcePASS18/5.Instant0doesnotproveproductionstopped.
+- Actualnewstandby2839662 installed09:02:31,replacing onlyquiescentoldwaiter,nohealthyowner/solver signals.
+- NewautomaticnextbatchCadence8/Calibre8/EMX48,endpointv2;waits originalbatchterminal+ownerexit.
+- Currentimmutableupstream1/1;nextnativev2success/actual48notyetobserved.
+- Current256:171terminal=127fresh+29candidatefail+15analytic;85withoutterminalarenot85running.
+- Logicalcore57/formal54;3newpendingformal.Deadline15:30:49 and256/12h/5GiBunchanged.
+- Availablefilesystem479216136192B;projectedunreservedbatchbudget57069568B;quotaUNKNOWN.
+- EarlierM12five-trainlandingdiagnostic:noempty/sparsecelladdition againstfrozen3801;notcumulativecoverage.
+- Noold15training/128/64/6failure/fullQA/fullpool/AIpaperfigure repeated.Full100K/final10Kincomplete.
 [First real controlled64 result](20260911_controlled64_first_real.md) is now verified:
 1 actual DOE EMX start/complete at the08:24:57 snapshot; strict-valid but K_abs0.1711<0.2,
 so0 new qualified in-range samples. Original14 analytical failures remain in64; no advantage claim.

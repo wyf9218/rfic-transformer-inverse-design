@@ -1,0 +1,220 @@
+{
+  "schema": "eucap15_increment_m13.v1",
+  "observed_utc": "2026-09-12T09:05:27.301344+00:00",
+  "baseline_utc": "2026-09-12T08:31:50.342478+00:00",
+  "source": {
+    "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/samebatch_hotpath_v1/joint_cut_20260912T090526283300Z/OBSERVATION.json",
+    "sha256": "29299569161cbb9d1e3e275ac3665415525df85e4b6043d24134e774cc370dd5"
+  },
+  "new_payload": {
+    "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/samebatch_hotpath_v1/joint_cut_20260912T090526283300Z/NEW_TERMINAL_RESULTS.json",
+    "sha256": "937d2ee965326a47eb28a8fe8c08717105fef9986c935c7b80ec107b5d3c6ebb"
+  },
+  "native": {
+    "requested": 48,
+    "executor": 48,
+    "actual": 0,
+    "persisted_active_permits": {
+      "emx": 1,
+      "cadence": 1
+    },
+    "owner": {
+      "pid": 1039340,
+      "start_ticks": 399883569,
+      "state": "S"
+    },
+    "standby": {
+      "pid": 2839662,
+      "start_ticks": 400767727,
+      "state": "S"
+    },
+    "metadata": {
+      "pid": 1145088,
+      "start_ticks": 399899304,
+      "state": "S"
+    },
+    "resource": {
+      "pin": {
+        "bytes": 19503,
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/fixed48/RESOURCE_20260912T090432713244Z.json",
+        "sha256": "5cd939edf9377c120433e535def821d2424d715097396060c16a89562737c925"
+      },
+      "utc": "2026-09-12T09:04:32.713172+00:00",
+      "status": "PASS",
+      "checks": {
+        "cpu": true,
+        "iowait": true,
+        "isolation": true,
+        "memory": true,
+        "oom": true,
+        "sample": true,
+        "storage": true,
+        "swap": true
+      },
+      "normalized_load1": 0.8879140218098959,
+      "normalized_load5": 0.8056208292643229,
+      "memory_fraction": 0.7493083683275731,
+      "free_disk_bytes": 479526014976,
+      "free_license_slots": {
+        "cadence": 3600,
+        "calibre": 85,
+        "emx": 291
+      },
+      "idle_cpu_equivalents": 22.836175133832768,
+      "swap_deltas": {
+        "oom_kill": 0,
+        "pswpin": 12,
+        "pswpout": 0
+      },
+      "age_seconds": 54.588479
+    },
+    "healthy_check_streak": 18,
+    "required_checks": 5,
+    "automatic_continuation_installed": true,
+    "next_capacity": {
+      "cadence": 8,
+      "calibre": 8,
+      "emx": 48
+    },
+    "next_policy": "shared_port_edges_lineage_20260912_v2",
+    "current_upstream_capacity": {
+      "cadence": 1,
+      "calibre": 1
+    },
+    "last_continuation_event": {
+      "utc": "2026-09-12T09:02:28.547741+00:00",
+      "pid": 2839662,
+      "status": "WAITING_FOR_CURRENT_BATCH_TERMINAL_AND_OWNER_EXIT",
+      "release": {
+        "bytes": 60463,
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/RELEASE.json",
+        "sha256": "a0834643c375703bbd1dea3c7e778b31a6321b42abba3f33e504bf192ea27a81"
+      },
+      "expected_process": {
+        "pid": 1039340,
+        "start_ticks": 399883569
+      },
+      "production_locks_held": false
+    },
+    "continuation_failure": null,
+    "note": "Zero native executable matches is a single instantaneous cut; oneCadence/oneEMX permit are not active native processes. New77 completed in window and same owner healthy; do not infer stopped production or current queue stages from prior08:31 pipeline snapshot."
+  },
+  "window": {
+    "new_terminal": 96,
+    "new_emx_completed": 77,
+    "new_candidate_failures": 15,
+    "new_analytic_not_dispatched": 4,
+    "new_strict_range_unique": 34,
+    "new_core_split": {
+      "train": 20,
+      "validation": 10,
+      "test": 4
+    },
+    "fresh_formal_added": 31,
+    "history_formal_added": 551,
+    "fresh_formal_from_new_results": 31,
+    "new_eligible_without_formal": 3,
+    "formal_union_lower_bound": 6246,
+    "referenced_frequency_rows": 349776,
+    "only_new_ledger_sequences": [
+      5665,
+      6246
+    ],
+    "formal_head": {
+      "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/qualified15_single_member_v1/records/006246.json",
+      "sha256": "72c7e38139c9dc24c5b3f5f16a4a33b4690ed0f8ca24cdbd737c22687a231f7c",
+      "bytes": 36137
+    },
+    "prior_prefix_reaudited": false,
+    "old_result_bodies_read": 0
+  },
+  "original_batch": {
+    "requests": 256,
+    "terminal": 171,
+    "fresh_completed": 127,
+    "candidate_failures": 29,
+    "analytic_not_dispatched": 15,
+    "without_terminal": 85,
+    "strict_range_core": 57,
+    "formally_committed_core": 54,
+    "eligible_without_formal": 3,
+    "release_a083_core": 53,
+    "prior_other_release_core": 4,
+    "plan": {
+      "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/start_ledger/PLAN.json",
+      "sha256": "fd90b07106fb7020e1e6520deaac932647feb3e5f686b5d41ffa91fffe9871c0",
+      "bytes": 133724
+    },
+    "release": {
+      "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/RELEASE.json",
+      "sha256": "a0834643c375703bbd1dea3c7e778b31a6321b42abba3f33e504bf192ea27a81",
+      "bytes": 60463
+    },
+    "deadline_utc": "2026-09-12T15:30:49.723123+00:00",
+    "budget_reset": false
+  },
+  "storage": {
+    "pin": {
+      "bytes": 13828,
+      "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/fixed48/STORAGE_20260912T090525525698Z.json",
+      "sha256": "99f5dd66144135d2ba3c123a5ae1ec3691da34540f151b68cca60dd0f892b16a"
+    },
+    "utc": "2026-09-12T09:05:25.525606+00:00",
+    "ceiling_bytes": 5368709120,
+    "total_allocated_bytes": 1324793856,
+    "remaining_projected_bytes": 3986845696,
+    "claim_count": 60,
+    "projected_unreserved_headroom_bytes": 57069568,
+    "current_disk_free_bytes": 479216136192,
+    "quota": "UNKNOWN",
+    "cleanup": false,
+    "scope": "Budget reservation headroom is not free filesystem capacity or measured complete sample cost."
+  },
+  "pending_formal": [
+    {
+      "request_id": "eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-167",
+      "geometry_sha256": "94af2af94e2f9389b9d5496118b96309b7c898ef4a00dd246ee39a8ca4d8980f",
+      "split": "train",
+      "result_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-167/RESULT.json",
+        "sha256": "024f1279168cb3eaf01de3f5443b9545f8360732583686b082962e8e1dc92730",
+        "bytes": 9141
+      }
+    },
+    {
+      "request_id": "eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-168",
+      "geometry_sha256": "45fadfc6ce8596262dd057e358af48b8135dba3b58bc007defeba2d2edcbf131",
+      "split": "train",
+      "result_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-168/RESULT.json",
+        "sha256": "2c3fea63bb8f759244bad0ca17b4bce4398f97eff9e1d3f86d3da734bf0b53b0",
+        "bytes": 9163
+      }
+    },
+    {
+      "request_id": "eucap15_production_doe_neighborhood_20260912_v1-TRAIN_NEIGHBORHOOD-055",
+      "geometry_sha256": "24d0e32360de93abc3561ac94c259065e4ef776f589c4c7b0720612f650d46a4",
+      "split": "test",
+      "result_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/eucap15_production_doe_neighborhood_20260912_v1-TRAIN_NEIGHBORHOOD-055/RESULT.json",
+        "sha256": "a6b9555d0c49f089b7f95fc4c53528d43b486c69d65d4fbc63b175555367d838",
+        "bytes": 11031
+      }
+    }
+  ],
+  "native_install_receipt": {
+    "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/endpoint_v2_successor_v1/install_20260912T090227419411Z/INSTALL_RECEIPT.json",
+    "sha256": "f8b80632ba1fac0d1ab85bcf629f010bfde7bb310a5b4e629827babf938ccc40"
+  },
+  "offline_landing": {
+    "source_observation_utc": "2026-09-12T08:31:50.342478+00:00",
+    "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/landing_increment_m13_v1/ACTUAL_LANDINGS.json",
+    "sha256": "8530b8acbd0f5d24a77e5ee31f456c4115209ec6b7cc9266b9d84c265e0f43cb",
+    "new_baseline_empty_cells": 0,
+    "native_new_runs": 0,
+    "note": "Earlier five new train landings only; not34-current-core or cumulative pool."
+  },
+  "blocker": "Current immutable batch upstream remainsCadence1/Calibre1; installed8/8/48 version waits for existing batch terminal and owner exit. Current batch has only57069568B unreserved projected headroom, distinct from available filesystem space.",
+  "overall100k_complete": false,
+  "final10k_complete": false
+}

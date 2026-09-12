@@ -1,0 +1,85 @@
+{
+  "schema": "eucap15_endpoint_v2_actual_successor_install_m13.v1",
+  "observed_utc": "2026-09-12T09:02:31.279251+00:00",
+  "status": "ENDPOINT_V2_SUCCESSOR_INSTALLED_AUTOMATIC_AT_EXISTING_BATCH_END",
+  "source": {
+    "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/endpoint_v2_successor_v1/install_20260912T090227419411Z/INSTALL_RECEIPT.json",
+    "sha256": "f8b80632ba1fac0d1ab85bcf629f010bfde7bb310a5b4e629827babf938ccc40"
+  },
+  "preflight": {
+    "bytes": 3547,
+    "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_endpoint_v2_20260912T090023519751Z/WIRING_PREFLIGHT.json",
+    "sha256": "00aeef52a72c88c8b8b1d78678d849c4b81c6922ee78716adddc7573ba034d38"
+  },
+  "preflight_local_sha256": "00aeef52a72c88c8b8b1d78678d849c4b81c6922ee78716adddc7573ba034d38",
+  "deployment": {
+    "bytes": 26764,
+    "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_endpoint_v2_20260912T090023519751Z/DEPLOYMENT.json",
+    "sha256": "b4de425891bd248e965fcb803508d94c13b28cd0d80e36cc75e25e96da743306"
+  },
+  "replacement": {
+    "bytes": 1916,
+    "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_endpoint_v2_20260912T090023519751Z/WAITING_CONTINUATION_REPLACED.json",
+    "sha256": "e93a016f1ce096b6063aa72ce3f429db07bd95a4f77e8cc7858dbf5ab40757ff"
+  },
+  "current_owner": {
+    "pid": 1039340,
+    "start_ticks": 399883569,
+    "state": "R"
+  },
+  "new_standby": {
+    "pid": 2839662,
+    "start_ticks": 400767727,
+    "state": "S"
+  },
+  "next_policy": "shared_port_edges_lineage_20260912_v2",
+  "next_tool_capacity": {
+    "cadence": 8,
+    "calibre": 8,
+    "emx": 48
+  },
+  "last_continuation_event": {
+    "expected_process": {
+      "pid": 1039340,
+      "start_ticks": 399883569
+    },
+    "pid": 2839662,
+    "production_locks_held": false,
+    "release": {
+      "bytes": 60463,
+      "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/RELEASE.json",
+      "sha256": "a0834643c375703bbd1dea3c7e778b31a6321b42abba3f33e504bf192ea27a81"
+    },
+    "status": "WAITING_FOR_CURRENT_BATCH_TERMINAL_AND_OWNER_EXIT",
+    "utc": "2026-09-12T09:02:28.547741+00:00"
+  },
+  "current_release": {
+    "bytes": 60463,
+    "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/RELEASE.json",
+    "sha256": "a0834643c375703bbd1dea3c7e778b31a6321b42abba3f33e504bf192ea27a81"
+  },
+  "current_original_plan": {
+    "bytes": 133724,
+    "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/start_ledger/PLAN.json",
+    "sha256": "fd90b07106fb7020e1e6520deaac932647feb3e5f686b5d41ffa91fffe9871c0"
+  },
+  "first_successor_manifest": {
+    "bytes": 2651,
+    "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/production256_successor_20260912_v1/run_v1/MANIFEST.json",
+    "sha256": "569e1abda082a070db657d83f90327fe4815bd8a25b290fb6f5cc2230faf9740"
+  },
+  "first_successor_registration": {
+    "bytes": 8675,
+    "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_endpoint_v2_20260912T090023519751Z/batch_registry/569e1abda082a070db657d83f90327fe4815bd8a25b290fb6f5cc2230faf9740.json",
+    "sha256": "d5ab16a321b4e37d76c5b07d655dd919315cacee9017be0aeaa76b76f27457f5"
+  },
+  "current_batch_restarted": false,
+  "current_batch_budget_reset": false,
+  "healthy_solver_signals": 0,
+  "owner_signals": 0,
+  "native_processes_launched_by_installer": 0,
+  "old_six_failed_candidates_replayed": false,
+  "nn_training_started": false,
+  "actual_next_native_execution": "NOT_OBSERVED_IN_INSTALL_RECEIPT",
+  "caveat": "This proves installation of the automatic successor, not48 active EMX or a successful nativev2 candidate. Current owner and its original budget retained."
+}
