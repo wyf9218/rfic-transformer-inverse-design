@@ -1,16 +1,14 @@
 # Current 15 GHz research/production status
 
-Latest production observation: **2026-09-12 11:15:44.864023 UTC**.
-[M20 actual native execution and incremental output](production_increment_m20_20260912/SNAPSHOT.json).
+Latest production observation: **2026-09-12 11:34:31.323430 UTC**.
+[M21 actual production and incremental results](production_increment_m21_20260912/SNAPSHOT.json).
 
-- Same batch000002 owner and installed runtime 0ad043b6: **15 actual independent EMX × 2 CPU**. Requested/executor 48 is not actual 48.
-- Window 11:07:31–11:15:44: **49 new fresh EMX**, 6 analytical failures, 34 strict-valid, 23 strict and in range.
-- **20 fresh formal admissions** (13 train / 4 validation / 3 test), historical admissions 0. Certified unique lower bound **6589**.
-- Three in-range candidates remain pending formal admission; not counted as admitted training data.
-- No ready-for-EMX waiting category at this cut. Earlier stages are still supplying candidates. The non-atomic resource reconstruction permits up to 24 additional EMX under the configured reservation; not an actual grant or a stable capacity limit.
-- Ordinary native/metadata/continuation programs operate without per-sample AI intervention. Automatic next-batch transition is already evidenced.
-- [Minimum budget-scan change](production_increment_m20_20260912/native_budget_walk/STATUS_20260912T112524Z.md): staged/tested on MARS, six new tests passed. One finite installer (516965/start401625264) launched at 11:25:24, waiting for the supported safe boundary. **Not yet verified as runtime-deployed**; do not launch another.
-- [First complete landing outputs and paper delta](production_increment_m20_20260912/README.md): 13 newly admitted training geometries occupy 11 cells; 0 empty / 1 underfilled landing against frozen3801, 0 high-K >0.8. No causal sampler or stable-throughput claim.
+- **16 independent EMX × 2 CPU**; requested/executor 48. The fresh resource snapshot allows two additional 2-CPU tools, limited by current CPU headroom. This is not proof of 48-way execution or a permanent cap.
+- Window 11:15:44–11:34:31: **69 new fresh EMX**, 8 analytical failures, 41 strict-valid, **31 strict and in range**.
+- **34 fresh formal admissions**: 31 new results plus three prior pending backfills. Historical admissions 0; certified unique lower bound **6623**. Current eligible pending formal 0.
+- Current batch: 132 terminal / 124 without terminal; actual stages remain separate from queued candidates.
+- Sole owner, metadata, standby and finite installer are each observed alive by exact process identity. Automatic processing/continuation continues. Staged budget-walk repair is **still awaiting the supported boundary, not runtime-deployed**.
+- [Complete first incremental landing receipt and 17+2 train source rows](production_increment_m21_20260912/README.md). New17 occupy17cells: zero frozen3801-empty landings, one underfilled landing, zero K>0.8. No cumulative coverage, sampler superiority or stable hourly-throughput claim.
 - Full 100K qualification, FINAL model and independent 10000-request validation remain incomplete. No old training/physical cohorts or AI paper figures were regenerated.
 
 All sections below are preserved, dated historical releases; their running/current wording and old scopes do not override this 15 GHz snapshot or authorize restarting old tasks.

@@ -1,0 +1,45 @@
+{
+  "schema": "eucap15_incremental_delivery_manifest.v1",
+  "milestone": "M21",
+  "baseline_git": "f2cc6646d2bfb8d7adb1d31a5eff6cd34ab1c8a1",
+  "observed_utc": "2026-09-12T11:34:31.323430+00:00",
+  "files": [
+    {
+      "path": "docs/research/CURRENT_STATUS.md",
+      "sha256": "f55fbe4939c8f5262d95889bfa26ca4931aa03369d485d31d1f5ba3bef0312be"
+    },
+    {
+      "path": "docs/research/production_increment_m21_20260912/SNAPSHOT.json",
+      "sha256": "362e117bac626e5a6944036bb4e69a806ef1a0a4967886e4f4312d08544bd7ab"
+    },
+    {
+      "path": "docs/research/production_increment_m21_20260912/README.md",
+      "sha256": "6d425e02c3eca9c2f592724f40ee94feabf6920d865da9b921f805366ea8bcd3"
+    },
+    {
+      "path": "docs/research/production_increment_m21_20260912/LANDING_RECEIPT.json",
+      "sha256": "1e692c7fdaefc8469c3d291e8ed16abd67c691a864305db99e3d7d01a0435c45"
+    },
+    {
+      "path": "docs/research/production_increment_m21_20260912/TRAIN_SOURCE_ROWS.json",
+      "sha256": "cc0fa0822b067b31c1393f9f58d68dd0ddeaea44d57cb9779a6d734d09b1f089"
+    }
+  ],
+  "source_receipt": {
+    "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/storage_claim_wait_v1/budget_walk_v1/increment_20260912T113430689860Z/OBSERVATION.json",
+    "sha256": "f63fd355b4097acf20596f4822a8be371d7016d4edd03995431aa39a5c051345",
+    "bytes": 1054345
+  },
+  "code_changes": 0,
+  "software_tests_run": 0,
+  "old_experiments_rerun": 0,
+  "new_fresh_emx": 69,
+  "new_strict_range_unique": 31,
+  "new_fresh_formal": 34,
+  "new_history_formal": 0,
+  "formal_union_lower_bound": 6623,
+  "prior_formal_backfills": 3,
+  "actual_native_emx": 16,
+  "full_goal_complete": false,
+  "not_a_production_gate": true
+}
