@@ -1,0 +1,125 @@
+{
+  "schema": "eucap15_strict112_actual_identity_supplement.v1",
+  "utc": "2026-09-12T14:44:47.188318+00:00",
+  "candidate_id_sha256": "0237778524f43c8c89534835d13e934586c5b84a43c0de2cd357af4ddd2619d5",
+  "status": "NEW_TWO_ARTIFACT_IDENTITY_BINDING_CLOSED_NOT_ELIGIBILITY",
+  "inputs": [
+    {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/storage_claim_wait_v1/budget_walk_v1/strict112_two_20260912T144123255352Z/RECEIPT.json",
+      "sha256": "8863ebf0a9c571c53d3def5a55263695c058c4eb4c56c99ed32d352c8b41ba70",
+      "bytes": 3721
+    },
+    {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/storage_claim_wait_v1/budget_walk_v1/strict112_two_20260912T144123255352Z/selected_actual_drc_gds.gds",
+      "sha256": "6fdfe91660d9a8be6cc579cbc01d35d516e8eed050d8b33685bfa8f97323d276",
+      "bytes": 22528
+    },
+    {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/storage_claim_wait_v1/budget_walk_v1/strict112_two_20260912T144123255352Z/selected_geometry_audit.json",
+      "sha256": "c2e0f0568c1482ad50a3bf3d7a69d00a70cb7ab226bd63b2ed6a216b8ea37848",
+      "bytes": 7569
+    },
+    {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/history_strict112_member_m31_v1/RECEIPT.json",
+      "sha256": "51f6840950aa425592ac24f13f35aed9d86af0890ed3925ad141411e9fef90c0",
+      "bytes": 6527
+    },
+    {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/history_strict112_member_m31_v1/ACTUAL_GDS_BINDING.json",
+      "sha256": "4812514fea916cdb191f26bf91af5a66b51e1c7c0ea7ae747ed6ca580c639982",
+      "bytes": 6493
+    },
+    {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/history_strict112_member_m31_v1/MEMBER_DISPOSITION.json",
+      "sha256": "8febb068183e513efc3fe624769412fbeafb6eaa337fa83b384104ce7c9bde4e",
+      "bytes": 7745
+    }
+  ],
+  "checks": {
+    "candidate_exact": true,
+    "original_geometry_hash_exact": true,
+    "actual_drc_gds_raw_sha_exact": true,
+    "original_drc_gds_path_exact": true,
+    "actual_drc_normalized_equals_audit": true,
+    "actual_drc_normalized_equals_prior_actual_emx": true,
+    "normalization_algorithm_exact": true,
+    "ten_geometry_field_set_exact": true,
+    "ten_source_geometry_values_exact": true,
+    "panel_index_equals_original_source_ordinal": true
+  },
+  "actual_drc_gds_normalized_sha256": "d86453201fc940247bc2d7001883a0e7da2f9a305ba5eb6062f7fad3c48230c7",
+  "implementation": {
+    "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/history_strict112_member_m31_v1/SUPPLEMENT_IDENTITY_M32.py",
+    "sha256": "85d135efccd8300c65443f9a488b20d12651b18913b802d9681c250f15321c20",
+    "bytes": 6588
+  },
+  "normalized_helper": {
+    "path": "/Users/wyf/Documents/模拟变压器AI反向建模/github_worktrees/eucap15-mlp-capacity-20260909/rfic_transformer_inverse_design/campaigns/broadband56_gds_identity.py",
+    "sha256": "172a59c825ae01fd8b25ed033cec32864943f427a35986af48d872ca319c876e",
+    "bytes": 35721
+  },
+  "argv": [
+    "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/history_strict112_member_m31_v1/SUPPLEMENT_IDENTITY_M32.py"
+  ],
+  "source_geometry_encoding": "Source CSV geom__ float strings decoded to finite floats equal original audit geometry_um JSON floats in all10 fields; original field values retained without grid quantization.",
+  "original_candidate_geometry_identity_sha256": "74b7e64eb685dca344796886709afbef5266c91fcb1813d902eff80236364c6f",
+  "current_canonical9_geometry_sha256": "dd49ed74b3484ef61b8c826d3b74ae2527ab9ed907ee0698f0a958258ab71493",
+  "geometry_hash_encoding_compatibility": "ORIGINAL_HASH_AGREES_ACROSS_SOURCE_RECORDS_BUT_SERIALIZATION_NOT_PROVEN_EQUAL_TO_CURRENT9DP",
+  "raw_emx_and_drc_sha_differ": true,
+  "byte_normalization_interpretation": "Only BGNLIB/BGNSTR timestamps are normalized; actual DRC GDS now matches prior actual EMX normalized identity. No GDS geometry or labels were repaired.",
+  "resolved": [
+    "ACTUAL_DRC_GDS_BYTES_TO_PRIOR_EMX_NORMALIZED_IDENTITY",
+    "ACTUAL_GEOMETRY_AUDIT_CANDIDATE_GEOMETRY_AND_DRC_GDS_BINDING",
+    "TEN_SOURCE_GEOMETRY_FIELD_VALUES_MATCH_ORIGINAL_AUDIT"
+  ],
+  "still_unresolved": [
+    "EXECUTED_PROCESS_BYTES_AND_CURRENT_COMPATIBILITY",
+    "FULL_BOUND_CURRENT_PHYSICAL_PORT_MAPPING",
+    "ORIGINAL_HASH_SERIALIZATION_DEFINITION",
+    "ORIGINAL_SPLIT_AND_CROSS_SOURCE_UNIQUENESS"
+  ],
+  "retained_negative": {
+    "conditional_mapping": "CONDITIONAL_ON_CURRENT_PORT_MAPPING_NOT_PHYSICAL_QUALIFICATION",
+    "strict_valid": false,
+    "strict_failure_reasons": [
+      "below_half_srf"
+    ],
+    "current15_core_range": false,
+    "outside_range_fields": [
+      "ls_nh"
+    ],
+    "q10_20_intersection": false,
+    "q_intersection_is_not_full100k_gate": true,
+    "gds_grid": {
+      "schema": "rfic_transformer_foundry_grid_canonicalization.v1",
+      "overall_status": "FAIL",
+      "grid_um": 0.005,
+      "polygon_count": 308,
+      "label_count": 24,
+      "off_grid_vertex_count": 0,
+      "off_grid_label_count": 8,
+      "noncanonical_edge_count": 0,
+      "edge_kind_counts": {
+        "H": 634,
+        "V": 634,
+        "D": 16,
+        "OTHER": 0
+      },
+      "max_grid_error_um": 0.0019999999999988916,
+      "max_orientation_error_um": 0.0
+    }
+  },
+  "original_geometry_stage_foundry_drc_executed": false,
+  "geometry_stage_false_does_not_erase_later_calibre_record": true,
+  "historical_geometry_audit_pass_does_not_override_current_label_grid_failure": true,
+  "benchmark_arm": "multiseed_portfolio",
+  "pair_id_sha256": "fd1fb77a2e38fca1b050d034ef3dc7582eae97c1528ed07f872c5c6c19ba7d2a",
+  "original_split": "UNKNOWN",
+  "new_s4p_extractions": 0,
+  "old_emx_gds_grid_reexecuted": false,
+  "new_drc_gds_normalizations": 1,
+  "source_artifacts_modified": false,
+  "fresh_emx": 0,
+  "formal_added": 0,
+  "next_action": "No further evidence request for this rejected member; retain its benchmark reservation and all original negatives."
+}

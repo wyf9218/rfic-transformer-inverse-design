@@ -1,5 +1,15 @@
 # 当前研究和生产状态
 
+## 2026-09-12 M32：151新增EMX、78条fresh入账；17历史成员首次实际筛查
+
+14:40:22 UTC相对14:22:35：151fresh＋17解析，92strict、72范围内strict唯一全部正式（39train/20validation/13test）；另旧6pending补登（4train/2test），fresh正式＋78、history＋0、pending0，认证并集下界6982。现场9个独立EMX×2CPU，申请/容量48；当前资源允许额外32份内存预约工具是诊断值，不是实际运行32。CPU已非本cut瓶颈，6个EMX仍等待准入，具体等待时延未证明。batch5为189/256终态，原owner和continuation健康；计时安装器尚未生效。见[实际截面](production_increment_m32_20260912/SNAPSHOT.json)及[原生证据投影](production_increment_m32_20260912/NATIVE_COMPACT.json)。
+
+43条新接收train资格使并集4012→4055；163/512占格不变，欠填1907→1905，1格跨过5样本；高K>0.8新增0，不作采样优越性或新训练结论。[覆盖图源](production_increment_m32_20260912/COVERAGE_AFTER.csv)。第4批233fresh/106正式，准入至最后本批正式3229.397361秒；2.048GiB是临近终态样本而非最终全成本，[成本来源](production_increment_m32_20260912/CLOSED_BATCH4_COST.json)。未外推稳定小时产量。
+
+历史strict112原序0..16已实际提取，保留1887原频率行，无新EMX。首成员半SRF/Ls范围失败且8个标签离5nm网格；其DRC/EMX actual GDS仅时间戳归一化后相同，原10项几何已绑定，不能翻转负结果。[首成员处置](production_increment_m32_20260912/HISTORY_FIRST_DISPOSITION.json)。后继16中只有原序1/2/11/13/15通过条件数值strict＋范围筛查，11个半SRF失败；这5仍缺当前工艺/物理端口、逐项GDS/DRC、原split与全历史唯一证据，正式0，不进train。[逐项真实表](production_increment_m32_20260912/HISTORY_NEXT16_ROWS.csv)、[5个后续补证候选](production_increment_m32_20260912/HISTORY_NEXT5_EVIDENCE_CANDIDATES.json)。剩95成员未处理，不外推全112或P215。
+
+第5批metadata启动14:15:10而准入14:20:29。随后源码核验确认每批重新累计5次60秒健康样本，软件采样下界300秒、没有现成预热继承接口；不是已修复能力，也不能解释整批并发不足48。未降低检查门槛或修改健康运行包；首五逐次完整时间证据仍UNKNOWN。快照保留原观察时刻状态。只增量保存[SHA256SUMS](production_increment_m32_20260912/SHA256SUMS)，无旧训练/旧物理/旧QA/论文重复。以下为历史截面。
+
 ## 2026-09-12 M31：46新增EMX，20条fresh正式入账，实际自动接续第5批
 
 14:22:35 UTC相对14:09:26：53新终态=46fresh＋6解析失败＋1保留执行失败；36strict有效，25范围内strict候选。19个新结果已确认唯一正式（14train/4validation/1test），另M30 DOE156/test补登1，故本窗fresh正式＋20、history＋0、认证下界6904。6个新候选仍待正式合并，不计已认证唯一。

@@ -1,0 +1,551 @@
+{
+  "schema": "eucap15_production_and_historical_increment_m32.v1",
+  "status": "PROGRESS",
+  "goal_status": "ACTIVE",
+  "observed_utc": "2026-09-12T14:40:22.246339+00:00",
+  "baseline_utc": "2026-09-12T14:22:35.261671+00:00",
+  "observation": {
+    "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/storage_claim_wait_v1/budget_walk_v1/increment_20260912T144021896369Z/OBSERVATION.json",
+    "sha256": "285342a83037ab7f188e3d6947f4d381d458e609b46b3a12306e76e5f7627060",
+    "bytes": 1977306
+  },
+  "native_compact": {
+    "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/landing_increment_m32_new168_v1/NATIVE_COMPACT.json",
+    "sha256": "0d66b32013b6c3e0a9aaf3940e6023f000552796622c0fc5c479864b24240726",
+    "bytes": 33604
+  },
+  "window": {
+    "received_terminal": 168,
+    "emx_completed": 151,
+    "strict_in_range": 72,
+    "formal_admitted": 72,
+    "pending_formal": 0,
+    "formal_train": 39,
+    "formal_validation": 20,
+    "formal_test": 13,
+    "pending_formal_train": 0,
+    "pending_formal_validation": 0,
+    "pending_formal_test": 0,
+    "strict_valid": 92,
+    "analytic_not_dispatched": 17,
+    "prior_formal_backfill": 6,
+    "prior_formal_backfill_train": 4,
+    "prior_formal_backfill_test": 2,
+    "history_formal": 0,
+    "ledger_window_fresh_formal": 78,
+    "new_confirmed_unique": 72,
+    "new_formal_by_split": {
+      "train": 39,
+      "validation": 20,
+      "test": 13
+    },
+    "prior_backfill_by_split": {
+      "train": 4,
+      "validation": 0,
+      "test": 2
+    },
+    "prior_backfill_not_new_emx": true,
+    "fresh_formal_total": 78,
+    "historical_formal_total": 0
+  },
+  "formal_union_lower_bound": 6982,
+  "formal_head": {
+    "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/qualified15_single_member_v1/records/006982.json",
+    "sha256": "779b55ea7b35d4dd486de067c027d8a90ec032575b7c07f0051fa240185292c3",
+    "bytes": 187576
+  },
+  "referenced_frequency_rows": 390992,
+  "native": {
+    "requested": 48,
+    "executor": 48,
+    "actual_emx": 9,
+    "cpu_per_solver": 2,
+    "owner": {
+      "pid": 3581696,
+      "ppid": 1041957,
+      "state": "S",
+      "start_ticks": 402643948,
+      "uid": 2259579,
+      "argv": [
+        "/volumes/research-localdata/ywang3652/rfic-transformer-inverse-design-mars56-s4p-20260702/.venv/bin/python",
+        "-B",
+        "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_registry_recovery_20260912T131535395596Z/runtime/run_fixed48_native.py",
+        "--release",
+        "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_registry_recovery_20260912T131535395596Z/batches/eucap15_continuous_doe_neighborhood_20260912_batch000005/owner/RELEASE.json"
+      ]
+    },
+    "metadata": {
+      "pid": 3581701,
+      "ppid": 1041957,
+      "state": "S",
+      "start_ticks": 402643949,
+      "uid": 2259579,
+      "argv": [
+        "/volumes/research-localdata/ywang3652/rfic-transformer-inverse-design-mars56-s4p-20260702/.venv/bin/python",
+        "-B",
+        "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_fixed48_20260912T060818729473Z/publication_tools/metadata_worker.py",
+        "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_registry_recovery_20260912T131535395596Z/publication_workers/575a2e097dbab5c64ee2d86ebe7160e1a29aa47ddff764fce9c6bcfa5ca006bc/DEPLOYMENT.json"
+      ]
+    },
+    "continuation": {
+      "pid": 1041957,
+      "ppid": 1,
+      "state": "S",
+      "start_ticks": 402286569,
+      "uid": 2259579,
+      "argv": [
+        "/volumes/research-localdata/ywang3652/rfic-transformer-inverse-design-mars56-s4p-20260702/.venv/bin/python",
+        "-B",
+        "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_registry_recovery_20260912T131535395596Z/runtime/continue_batches.py",
+        "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_registry_recovery_20260912T131535395596Z"
+      ]
+    },
+    "release": {
+      "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_registry_recovery_20260912T131535395596Z/batches/eucap15_continuous_doe_neighborhood_20260912_batch000005/owner/RELEASE.json",
+      "sha256": "575a2e097dbab5c64ee2d86ebe7160e1a29aa47ddff764fce9c6bcfa5ca006bc",
+      "bytes": 17600
+    },
+    "runtime": {
+      "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_registry_recovery_20260912T131535395596Z/runtime/fixed48_runtime.py",
+      "sha256": "23eddf702afb6c3f5ee64ac9c415c56376199857dd6fe915f67856a456f8b99f",
+      "bytes": 15770
+    },
+    "permit_counts": {
+      "emx": 9
+    },
+    "stage_counts": {
+      "TERMINAL_AT_CUT": 189,
+      "EMX_PERMITTED": 9,
+      "EMX_WAITING_ADMISSION": 6,
+      "CALIBRE_WAITING_ADMISSION": 3,
+      "CADENCE_WAITING_ADMISSION": 9,
+      "NO_TOOL_INTENT": 40
+    },
+    "policy": {
+      "candidate_pipeline_capacity": 64,
+      "candidate_projected_peak_bytes": 67108864,
+      "cpu_per_solver": 2,
+      "cpu_reservation": {
+        "cadence": 2,
+        "calibre": 2,
+        "emx": 2
+      },
+      "five_independent_health_checks": 5,
+      "maximum_snapshot_age_seconds": 90,
+      "memory_reservation_bytes": {
+        "cadence": 8589934592,
+        "calibre": 8589934592,
+        "emx": 8589934592
+      },
+      "minimum_available_memory_fraction": 0.2,
+      "normalized_load1_max": 1.1,
+      "normalized_load5_max": 1.1,
+      "requested_emx": 48,
+      "reservation_basis": "CONSERVATIVE_CONFIGURED_PROJECTION_NOT_ASSERTED_HARD_PEAK_BOUND",
+      "system_cpu_reserve": 4,
+      "tool_executor_capacity": {
+        "cadence": 8,
+        "calibre": 8,
+        "emx": 48
+      }
+    }
+  },
+  "batch": {
+    "index": 5,
+    "terminal": 189,
+    "remaining_not_terminal": 67,
+    "fresh_cumulative": 166,
+    "analytic_fail_cumulative": 23,
+    "deadline_utc": "2026-09-13T02:20:29.249738+00:00",
+    "admitted_at_utc": "2026-09-12T14:20:29.249738+00:00",
+    "previous_budget_reset": false
+  },
+  "resource": {
+    "pin": {
+      "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_registry_recovery_20260912T131535395596Z/batches/eucap15_continuous_doe_neighborhood_20260912_batch000005/owner/fixed48/RESOURCE_20260912T143942584525Z.json",
+      "sha256": "0755e91ed296e78465343c3042cdcd1e5ee5a4136ea61c5b273caad94d1fa2e7",
+      "bytes": 19526
+    },
+    "value": {
+      "available_memory_bytes": 475183595520,
+      "binding": {
+        "owner": {
+          "pid": 3581696,
+          "start_ticks": 402643948,
+          "uid": 2259579
+        },
+        "release": {
+          "bytes": 17600,
+          "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_registry_recovery_20260912T131535395596Z/batches/eucap15_continuous_doe_neighborhood_20260912_batch000005/owner/RELEASE.json",
+          "sha256": "575a2e097dbab5c64ee2d86ebe7160e1a29aa47ddff764fce9c6bcfa5ca006bc"
+        }
+      },
+      "checks": {
+        "cpu": true,
+        "iowait": true,
+        "isolation": true,
+        "memory": true,
+        "oom": true,
+        "sample": true,
+        "storage": true,
+        "swap": true
+      },
+      "cpu_sample_valid": true,
+      "failed_checks": [],
+      "free_disk_bytes": 439875903488,
+      "free_license_slots": {
+        "cadence": 3600,
+        "calibre": 85,
+        "emx": 290
+      },
+      "idle_cpu_equivalents": 129.1359804616033,
+      "interval_seconds": 60.00218830211088,
+      "iowait_percent": 0.0013906332161435133,
+      "load": [
+        65.29931640625,
+        68.35009765625,
+        87.3818359375
+      ],
+      "logical_cpus": 192,
+      "memory_fraction": 0.7825033902779335,
+      "normalized_load1": 0.34010060628255206,
+      "normalized_load5": 0.35599009195963544,
+      "started_utc": "2026-09-12T14:38:41.369952+00:00",
+      "status": "PASS",
+      "swap_deltas": {
+        "oom_kill": 0,
+        "pswpin": 16,
+        "pswpout": 0
+      },
+      "total_memory_bytes": 607260749824,
+      "utc": "2026-09-12T14:39:42.584497+00:00"
+    },
+    "capacity_diagnostic": {
+      "reflected_permits": {
+        "cadence": 0,
+        "calibre": 0,
+        "emx": 0
+      },
+      "pending_permits": {
+        "cadence": 0,
+        "calibre": 0,
+        "emx": 9
+      },
+      "cpu_after_reservations": 107.13598046160331,
+      "memory_after_reservations_bytes": 276422034227.2,
+      "idle_cpu_measured": 129.1359804616033,
+      "memory_available_measured": 475183595520,
+      "per_tool": {
+        "cadence": {
+          "executor": 8,
+          "licenses": 3600,
+          "cpu": 53,
+          "memory": 32
+        },
+        "calibre": {
+          "executor": 8,
+          "licenses": 85,
+          "cpu": 53,
+          "memory": 32
+        },
+        "emx": {
+          "executor": 39,
+          "licenses": 281,
+          "cpu": 53,
+          "memory": 32
+        }
+      }
+    },
+    "limits_replay": {
+      "additional": {
+        "cadence": 8,
+        "calibre": 8,
+        "emx": 32
+      },
+      "reason": "PARTIAL_OR_FULL_CAPACITY_AVAILABLE",
+      "healthy_check_streak": 24,
+      "observed_utc": "2026-09-12T14:39:42.584497+00:00"
+    },
+    "additional_is_not_admitted": true,
+    "quota": "UNKNOWN"
+  },
+  "storage": {
+    "pin": {
+      "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_registry_recovery_20260912T131535395596Z/batches/eucap15_continuous_doe_neighborhood_20260912_batch000005/owner/fixed48/STORAGE_20260912T144021945520Z.json",
+      "sha256": "6a9ae53734341140e44d8dd27b1dd4da98ff35ead5cca686196c6b171a34c059",
+      "bytes": 10628
+    },
+    "value": {
+      "binding": {
+        "owner": {
+          "pid": 3581696,
+          "start_ticks": 402643948,
+          "uid": 2259579
+        },
+        "release": {
+          "bytes": 17600,
+          "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_registry_recovery_20260912T131535395596Z/batches/eucap15_continuous_doe_neighborhood_20260912_batch000005/owner/RELEASE.json",
+          "sha256": "575a2e097dbab5c64ee2d86ebe7160e1a29aa47ddff764fce9c6bcfa5ca006bc"
+        }
+      },
+      "budget_root": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_registry_recovery_20260912T131535395596Z/batches/eucap15_continuous_doe_neighborhood_20260912_batch000005",
+      "ceiling_bytes": 5368709120,
+      "remaining_projected_bytes": 2585698304,
+      "reservations_are_estimates_not_hard_peak_bounds": true,
+      "schema": "eucap15_fixed48_inflight_storage.v1",
+      "total_allocated_bytes": 1554010112,
+      "utc": "2026-09-12T14:40:21.945451+00:00"
+    },
+    "claim_count": 41
+  },
+  "continuation": {
+    "status": "INSTALLED_AND_PREVIOUS_BATCH4_TO_BATCH5_ACTUALLY_OBSERVED",
+    "current_process": {
+      "pid": 1041957,
+      "ppid": 1,
+      "state": "S",
+      "start_ticks": 402286569,
+      "uid": 2259579,
+      "argv": [
+        "/volumes/research-localdata/ywang3652/rfic-transformer-inverse-design-mars56-s4p-20260702/.venv/bin/python",
+        "-B",
+        "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_registry_recovery_20260912T131535395596Z/runtime/continue_batches.py",
+        "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_registry_recovery_20260912T131535395596Z"
+      ]
+    },
+    "current_state": {
+      "utc": "2026-09-12T14:15:10.504664+00:00",
+      "pid": 1041957,
+      "status": "WAITING_FOR_CURRENT_BATCH_TERMINAL_AND_OWNER_EXIT",
+      "release": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_registry_recovery_20260912T131535395596Z/batches/eucap15_continuous_doe_neighborhood_20260912_batch000005/owner/RELEASE.json",
+        "sha256": "575a2e097dbab5c64ee2d86ebe7160e1a29aa47ddff764fce9c6bcfa5ca006bc",
+        "bytes": 17600
+      },
+      "expected_process": {
+        "pid": 3581696,
+        "start_ticks": 402643948
+      },
+      "production_locks_held": false
+    },
+    "no_health_restart": true,
+    "old_budgets_preserved": true
+  },
+  "timing_change": {
+    "status": "WAITING_FOR_SUPPORTED_BOUNDARY",
+    "installer_live": {
+      "pid": 3297923,
+      "ppid": 1,
+      "state": "S",
+      "start_ticks": 402602726,
+      "uid": 2259579,
+      "argv": [
+        "/volumes/research-localdata/ywang3652/rfic-transformer-inverse-design-mars56-s4p-20260702/.venv/bin/python",
+        "-B",
+        "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_admission_timing_20260912T140817241525Z/install_at_boundary.py",
+        "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_admission_timing_20260912T140817241525Z"
+      ]
+    },
+    "install_receipt": null,
+    "failure_receipt": null,
+    "first_admission_timing": null,
+    "active_runtime_unchanged": true,
+    "no_new_installer": true
+  },
+  "warmup_gap": {
+    "status": "SOURCE_CHECK_REQUESTED_NOT_A_CONFIRMED_CAUSE",
+    "source_metadata_start_utc": "2026-09-12T14:15:10.497982+00:00",
+    "next_admission_utc": "2026-09-12T14:20:29.249738+00:00",
+    "prior_batch4_terminal_utc": "2026-09-12T14:14:20.955027+00:00",
+    "question": "Does each successor reset the five independent 60-second health observations, creating a repeat startup gap? Sole owner checks existing source and evidence; no fabricated owner/release rebinding or threshold reduction.",
+    "production_gate": false,
+    "healthy_chain_preserved": true
+  },
+  "landing": {
+    "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/landing_increment_m32_new168_v1/RECEIPT.json",
+    "sha256": "98f766fa29f817f0714caca6f9d942105cda4c93ce8a5448622705b98ba31ae2",
+    "bytes": 25349
+  },
+  "received_training_eligible_union": {
+    "receipt": {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/train_coverage_received_m32_v1/RECEIPT.json",
+      "sha256": "271aabaa81728ae94296de0c3c44558c161f074d64c5fbcf2377c4789b9ab61c",
+      "bytes": 7470
+    },
+    "before": 4012,
+    "after": 4055,
+    "newly_completed_train": 39,
+    "prior_pending_train_backfill": 4,
+    "newly_consumed": 43,
+    "not_new_gradient_training": true,
+    "occupied_before": 163,
+    "occupied_after": 163,
+    "total_cells": 512,
+    "deficit_before": 1907,
+    "deficit_after": 1905,
+    "one_cell_reached_5": true,
+    "q10_20_new": 43,
+    "high_k_gt_0_8_new": 0,
+    "no_controlled_sampling_advantage_claim": true,
+    "scope": "RECEIVED_SOURCE_UNION_NOT_FULL_PRODUCTION",
+    "checkpoint": {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/train_coverage_received_m32_v1/CHECKPOINT.json",
+      "sha256": "29495ff623dc635396efea1cf719339db16dd2cc11c56adf6fab9429705208ba",
+      "bytes": 302043
+    },
+    "coverage": {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/train_coverage_received_m32_v1/COVERAGE_AFTER.csv",
+      "sha256": "cc0e8323d1d5c05eca52aa497a1427ffd6bc7ee1788ab4cb1830aef3750db656",
+      "bytes": 51726
+    }
+  },
+  "history": {
+    "source": "ISOLATED_STRICT112_P215_MEMBERSHIP_UNPROVEN",
+    "source_rows": 112,
+    "actual_new_members_extracted_this_turn": 17,
+    "original_ordinals_completed": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16
+    ],
+    "unprocessed_source_members": 95,
+    "total_retained_original_frequency_rows": 1887,
+    "first_member": {
+      "receipt": {
+        "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/history_strict112_member_m31_v1/RECEIPT.json",
+        "sha256": "51f6840950aa425592ac24f13f35aed9d86af0890ed3925ad141411e9fef90c0",
+        "bytes": 6527
+      },
+      "disposition": {
+        "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/history_strict112_member_m31_v1/MEMBER_DISPOSITION.json",
+        "sha256": "8febb068183e513efc3fe624769412fbeafb6eaa337fa83b384104ce7c9bde4e",
+        "bytes": 7745
+      },
+      "identity_supplement": {
+        "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/history_strict112_member_m31_v1/IDENTITY_SUPPLEMENT_M32.json",
+        "sha256": "8728bbcf4039397f4331b0dfd7af0fb9e0adbda0d51d5c5149ad44dc4c7c2d44",
+        "bytes": 6505
+      },
+      "conditional_strict": false,
+      "range": false,
+      "reason": [
+        "BELOW_HALF_SRF_FALSE",
+        "LS_ABOVE_2NH",
+        "ACTUAL_GDS_EIGHT_LABELS_OFF_5NM_GRID"
+      ],
+      "source_qmin": 7.403579321726214,
+      "q_intersection_not_full100k_gate": true,
+      "raw_drc_and_emx_different_but_actual_timestamp_normalized_equal": true,
+      "ten_geometry_values_bound": true,
+      "current_process_and_physical_port_binding": "UNKNOWN",
+      "formal_added": 0
+    },
+    "next16": {
+      "summary": {
+        "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/history_strict112_next16_m32_v1/BATCH_SUMMARY.json",
+        "sha256": "73ef29a1efde6f418c5afb8686b015108b357303507bc2503c126dbb33b93341",
+        "bytes": 26411
+      },
+      "rows": {
+        "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/history_strict112_next16_m32_v1/BATCH_ROWS.csv",
+        "sha256": "c90d209acc47450400d0ce122583205013962a84aef8f2d211db76e45543a787",
+        "bytes": 21132
+      },
+      "next_evidence_candidates": {
+        "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/history_strict112_next16_m32_v1/NEXT_EVIDENCE_CANDIDATES.json",
+        "sha256": "7fccb9a864baf54669a8e8d56615f1d0c9ab3eb1a06dedcde57678c0f766e97f",
+        "bytes": 11515
+      },
+      "counts": {
+        "descriptor_valid": 16,
+        "strict_valid": 5,
+        "below_half_srf": 5,
+        "core_range": 8,
+        "q10_20_intersection": 6,
+        "conditional_strict_and_core": 5,
+        "received": 16,
+        "extraction_complete": 16,
+        "extraction_fail": 0,
+        "retained_frequency_rows": 1776,
+        "formal_added": 0
+      },
+      "strict_failure_reason_counts": {
+        "below_half_srf": 11
+      },
+      "range_failure_reason_counts": {
+        "lp_nh_NONFINITE_OR_OUTSIDE_0.5_2": 7,
+        "ls_nh_NONFINITE_OR_OUTSIDE_0.5_2": 5,
+        "k_abs_NONFINITE_OR_OUTSIDE_0.2_0.85": 1
+      },
+      "conditional_pass_ordinals": [
+        1,
+        2,
+        11,
+        13,
+        15
+      ],
+      "range_reasons_can_overlap": true
+    },
+    "conditional_numeric_pass_total": 5,
+    "conditional_numeric_failure_total": 12,
+    "fully_certified_added": 0,
+    "current_fully_certifiable_count": "UNKNOWN_PENDING_PROCESS_PORT_GDS_DRC_SPLIT_AND_GLOBAL_UNIQUENESS_FOR_FIVE",
+    "benchmark_arms_and_pairs_preserved": true,
+    "split": "UNKNOWN_NOT_ASSIGNED_TRAIN",
+    "no_fresh_emx_or_training": true,
+    "next_safe_action": "Only the five numerical survivors need next member-bound artifacts/common process evidence; do not repeat the17 numerical extractions or request more for12 failed members."
+  },
+  "closed_batch4_cost": {
+    "receipt": {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/closed_batch4_cost_m32_v1/RECEIPT.json",
+      "sha256": "e35eae76423cb9f6bc96be99ba7307a59b1ec6509ecb1359b74d4c51d07bce3e",
+      "bytes": 6479
+    },
+    "data": {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/closed_batch4_cost_m32_v1/COST.json",
+      "sha256": "643e433b10f72f449095460d03837cda29ada0e0cba5a3edbddafa94ff2dfd60",
+      "bytes": 6715
+    },
+    "counts": {
+      "terminal": 256,
+      "fresh": 233,
+      "analytic_fail_not_dispatched": 21,
+      "retained_pre_native_rejection": 1,
+      "candidate_execution_failure": 1,
+      "formal": 106
+    },
+    "formal_submission_elapsed_seconds": 3229.397361,
+    "storage_sample_bytes": 2199232512,
+    "storage_sample_status": "PRETERMINAL_NOT_FINAL",
+    "stable_hourly_rate_claim": false
+  },
+  "remaining_production_issue": "Actual native9 is below requested48; current resource replay allows32 additional shared memory-reserved tools, not32 already admitted, with6 EMX waiting. CPU is not the limiting resource at this cut. Exact admission delay and successor warmup cause remain unproven; existing production continues.",
+  "no_repeat": {
+    "training": 0,
+    "old_physics": 0,
+    "old_qa": 0,
+    "full_pool_scan": 0,
+    "paper_repackaging": 0,
+    "ai_figures": 0
+  },
+  "publication_diagnostic": {
+    "source_read_attempt": "TRUNCATED_TOOL_OUTPUT_BEFORE_WRITES",
+    "source_unchanged": true,
+    "remediation": "Read only bounded groups of new publication files; no experiment or test repeated."
+  },
+  "next_safe_action": "Existing single owner continues production and ordinary timing-boundary wait. Only later terminal/formal deltas need intake. Reuse the finished17 historical extraction results; proceed with member-bound qualification evidence for the five numerical survivors. Receive the already assigned limited successor-warmup source check; do not duplicate it."
+}

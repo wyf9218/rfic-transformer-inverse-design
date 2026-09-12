@@ -1,0 +1,112 @@
+{
+  "schema": "eucap15_strict112_single_actual_member.v1",
+  "completed_utc": "2026-09-12T14:41:28.446915+00:00",
+  "status": "INELIGIBLE_CURRENT15_STRICT_AND_RANGE",
+  "candidate_id_sha256": "0237778524f43c8c89534835d13e934586c5b84a43c0de2cd357af4ddd2619d5",
+  "scope": "ONLY_ONE_MEMBER_NOT_OTHER111",
+  "inputs": [
+    {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/storage_claim_wait_v1/budget_walk_v1/strict112_member_20260912T143339435987Z/RECEIPT.json",
+      "bytes": 7056,
+      "sha256": "fc0c5a8c3d6241260453b585d6b05700c2adae4bc07beb066d14b58799cef1c6"
+    },
+    {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/storage_claim_wait_v1/budget_walk_v1/strict112_member_20260912T143339435987Z/selected_emx_input_gds.gds",
+      "sha256": "839e720483fa3ad1b7f518a4653c6224e5088bd8525b75cafbfb92c2e7cae9fb",
+      "bytes": 22528
+    },
+    {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/storage_claim_wait_v1/budget_walk_v1/strict112_member_20260912T143339435987Z/selected_drc_summary.json",
+      "sha256": "068601fa23de8025afeaed72149b2854db2448c3e46bd6402bb1a11571c944f4",
+      "bytes": 5757
+    },
+    {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/storage_claim_wait_v1/budget_walk_v1/strict112_member_20260912T143339435987Z/selected_historical_s4p.s4p",
+      "sha256": "b19227b3e6ad3fc554b7a46e7d4fb4ed9d5438c7bda742ab1452d8066eb2d9c4",
+      "bytes": 50632
+    },
+    {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/storage_claim_wait_v1/budget_walk_v1/strict112_member_20260912T143339435987Z/source_csv_for_selected_10d_geometry.selected_row.json",
+      "sha256": "fa10b77cc722027a944d6bb69c24b41d8bd450b233c262296d0c56187fda217b",
+      "bytes": 24838
+    },
+    {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/storage_claim_wait_v1/budget_walk_v1/strict112_member_20260912T143339435987Z/gds_index_for_selected_actual_geometry_binding.selected_row.json",
+      "sha256": "b39611f607d1f44c723e27f654a7a7b627323f037fb6454d3981d40b6ca68eb6",
+      "bytes": 3672
+    },
+    {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/history_strict112_actual_index_m31_v1/SELECTED_MEMBER.json",
+      "bytes": 4722,
+      "sha256": "b7f393ba2ab6f72757b32ea92c3febac75c9f38559ef808d88a9eaa74ea4fd56"
+    },
+    {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/history_strict112_member_m31_v1/extraction111_v1/RECEIPT.json",
+      "bytes": 7545,
+      "sha256": "2bd99acd22e08b698be20b8ab37543111d9208d7cefc3fe4583267966f439066"
+    },
+    {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/history_strict112_member_m31_v1/extraction111_v1/TARGET15.json",
+      "bytes": 3416,
+      "sha256": "b6589d4a935d4ed703e0cc29ac1c8937dbcbad0291197e938874ee21a41bac2c"
+    }
+  ],
+  "implementation": {
+    "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/history_strict112_member_m31_v1/VERIFY_MEMBER.py",
+    "bytes": 11853,
+    "sha256": "18833b31f5990f9dcd3d484430378555f336bc94a396ddc9d141f37c6cbed96c"
+  },
+  "reused_sources": [
+    {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/github_worktrees/eucap15-mlp-capacity-20260909/rfic_transformer_inverse_design/campaigns/broadband56_gds_identity.py",
+      "bytes": 35721,
+      "sha256": "172a59c825ae01fd8b25ed033cec32864943f427a35986af48d872ca319c876e"
+    },
+    {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/github_worktrees/eucap15-mlp-capacity-20260909/rfic_transformer_inverse_design/campaigns/broadband56_balanced200k.py",
+      "bytes": 27464,
+      "sha256": "bd82390aa822a6426ad505e99675694be2fc49e017b25c76b7c93fc78121d424"
+    },
+    {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/github_worktrees/eucap15-mlp-capacity-20260909/rfic_transformer_inverse_design/layout/foundry_audit.py",
+      "bytes": 39567,
+      "sha256": "18345730dab23fbdf4a88dfab227622a889ca043122089652f68db6a38eb04c3"
+    }
+  ],
+  "argv": [
+    "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/history_strict112_member_m31_v1/VERIFY_MEMBER.py"
+  ],
+  "cwd": "/Users/wyf/Documents/模拟变压器AI反向建模",
+  "benchmark_arm": "multiseed_portfolio",
+  "pair_id_sha256": "fd1fb77a2e38fca1b050d034ef3dc7582eae97c1528ed07f872c5c6c19ba7d2a",
+  "extraction_invocations_new": 1,
+  "existing_extraction_reexecuted": false,
+  "gds_actual_read": true,
+  "formal_submissions": 0,
+  "geometry_namespace_binding": "DIFFERENT_NAMESPACE_NOT_SUBSTITUTED",
+  "current15_eligible": false,
+  "current100k_added": 0,
+  "fresh_emx": 0,
+  "ssh": 0,
+  "training": 0,
+  "tests": 0,
+  "next_legal_action": "Preserve the physical negative and benchmark reservation. Any received exact DRC GDS/geometry audit may close identity only, never reverse the half-SRF/range failure or add this member to100K.",
+  "unresolved_identity": [
+    "EXECUTED_PROCESS_CONTENT_SHA_AND_CURRENT_COMPATIBILITY",
+    "FULL_BOUND_CURRENT_PORT_MAPPING_AND_POWER_FRAME",
+    "ACTUAL_DRC_GDS_AND_GEOMETRY_AUDIT_BYTES",
+    "ORIGINAL_SPLIT_AND_CROSS_SOURCE_UNIQUENESS"
+  ],
+  "artifacts": [
+    {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/history_strict112_member_m31_v1/ACTUAL_GDS_BINDING.json",
+      "bytes": 6493,
+      "sha256": "4812514fea916cdb191f26bf91af5a66b51e1c7c0ea7ae747ed6ca580c639982"
+    },
+    {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/history_strict112_member_m31_v1/MEMBER_DISPOSITION.json",
+      "bytes": 7745,
+      "sha256": "8febb068183e513efc3fe624769412fbeafb6eaa337fa83b384104ce7c9bde4e"
+    }
+  ]
+}

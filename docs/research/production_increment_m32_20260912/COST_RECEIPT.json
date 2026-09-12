@@ -1,0 +1,113 @@
+{
+  "schema": "eucap15_closed_batch_cost_derivation_receipt.v1",
+  "status": "COMPLETE_WITH_EXPLICIT_STORAGE_LIMIT",
+  "work_package": "M32_CLOSED_BATCH4_COST_ONLY",
+  "batch": "eucap15_continuous_doe_neighborhood_20260912_batch000004",
+  "observation_utc": "2026-09-12T14:22:35.261671+00:00",
+  "counts": {
+    "terminal": 256,
+    "fresh": 233,
+    "analytic_fail_not_dispatched": 21,
+    "retained_pre_native_rejection": 1,
+    "candidate_execution_failure": 1,
+    "formal": 106
+  },
+  "command": {
+    "argv": [
+      "ruby",
+      "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/closed_batch4_cost_m32_v1/SOURCE.rb",
+      "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/storage_claim_wait_v1/budget_walk_v1/increment_20260912T142234843746Z/OBSERVATION.json",
+      "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/production_runtime_m29_20260912_v1/SNAPSHOT.json",
+      "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/production_runtime_m30_20260912_v1/SNAPSHOT.json"
+    ],
+    "cwd": "/Users/wyf/Documents/模拟变压器AI反向建模",
+    "exit_code": 0,
+    "tool_chunk_id": "a67e7b",
+    "execution_count": 1
+  },
+  "reused_implementation": {
+    "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/closed_batch3_cost_m29_v1/SOURCE.rb",
+    "sha256": "b84ceac897cfec3bca90be91a2eb829921c8c599ab0e2551b7e76b8af23e737f",
+    "adaptation": "Batch identity and exact pinned cumulative sources, mixed failure categories, previous pending test formal backfill, strict preterminal-storage classification; no framework introduced."
+  },
+  "inputs": {
+    "received_observation": {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/storage_claim_wait_v1/budget_walk_v1/increment_20260912T142234843746Z/OBSERVATION.json",
+      "sha256": "adae9d180af1df250a5248ef86fc9bf4fa35f9fc823b4156d2caef7521ed9051",
+      "bytes": 1224452
+    },
+    "reused_m29_counts": {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/production_runtime_m29_20260912_v1/SNAPSHOT.json",
+      "sha256": "a1370c0ccd81491ea6598ae2ef72d855fa70ce9fd64e86bc73c176a4248dd16f",
+      "bytes": 11227
+    },
+    "reused_m30_counts": {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/production_runtime_m30_20260912_v1/SNAPSHOT.json",
+      "sha256": "375999c3166f6ea38f90f11cae0bf089312322d4f6db3ff6263f9bcda10b79fa",
+      "bytes": 17755
+    },
+    "release": {
+      "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_registry_recovery_20260912T131535395596Z/batches/eucap15_continuous_doe_neighborhood_20260912_batch000004/owner/RELEASE.json",
+      "sha256": "dd9b0808f2f2764913f54172d24a28f0de822d108fa9886a5115625b5ea46ccd",
+      "bytes": 17594
+    },
+    "plan": {
+      "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_registry_recovery_20260912T131535395596Z/batches/eucap15_continuous_doe_neighborhood_20260912_batch000004/start_ledger/PLAN.json",
+      "sha256": "ae56c7daf86464ce061750d37d16cfaacb0cc3320d65eaec1f0187dd6afb7de4",
+      "bytes": 140708
+    },
+    "native_batch_terminal": {
+      "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_registry_recovery_20260912T131535395596Z/batches/eucap15_continuous_doe_neighborhood_20260912_batch000004/owner/BATCH_RECEIPT.json",
+      "sha256": "d118226b703b52dea569f121e85641cb473d6713c06ee7e012b4f54f0ffb83f2",
+      "bytes": 109277
+    },
+    "last_observed_batch_formal_member": {
+      "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/qualified15_single_member_v1/records/006902.json",
+      "sha256": "176b4116751793d0b6aec584346c69f7e2860d54be01bf08ba732a78e31a86e7",
+      "bytes": 186855
+    },
+    "storage": {
+      "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_registry_recovery_20260912T131535395596Z/batches/eucap15_continuous_doe_neighborhood_20260912_batch000004/owner/fixed48/STORAGE_20260912T141420878529Z.json",
+      "sha256": "190b3caa8125bff5f3a39fa1aa6e15e8a6a266ea496210e0d3f11fa4f4ac9842",
+      "bytes": 998
+    }
+  },
+  "actual_delta": {
+    "formal_submission_elapsed_seconds": 3229.397361,
+    "physical_terminal_elapsed_seconds": 3192.431191,
+    "storage_sample_bytes": 2199232512,
+    "storage_sample_utc": "2026-09-12T14:14:20.878481+00:00"
+  },
+  "limits": [
+    "Existing storage sample is 0.076546 seconds before terminal and 37.042716 seconds before final observed formal submit; never claimed final total footprint.",
+    "Formal106 is separate-ledger evidence; terminal production_accepted_added=0 is not adopted as formal count.",
+    "One retained execution failure has actual_native_starts null; no invented start count or physics cause.",
+    "No stable hourly rate, full100K extrapolation, old64 controlled comparison, or current concurrency inference."
+  ],
+  "missing_final_cost": [
+    "post-closure batch allocated storage",
+    "pre-admission factory and shared/formal-ledger costs"
+  ],
+  "actions": {
+    "ssh": 0,
+    "native": 0,
+    "individual_result_bodies_reprocessed": 0,
+    "qualification_rerun": 0,
+    "tests": 0,
+    "training": 0,
+    "new_du": 0,
+    "central_state_or_git_writes": 0
+  },
+  "artifacts": [
+    {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/closed_batch4_cost_m32_v1/SOURCE.rb",
+      "sha256": "d79835d76bebc23e1320d8b10b6561470c5a360466460060a2b036c5a5a14a78",
+      "bytes": 7379
+    },
+    {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/closed_batch4_cost_m32_v1/COST.json",
+      "sha256": "643e433b10f72f449095460d03837cda29ada0e0cba5a3edbddafa94ff2dfd60",
+      "bytes": 6715
+    }
+  ]
+}
