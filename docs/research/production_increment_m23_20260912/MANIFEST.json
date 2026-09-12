@@ -1,0 +1,91 @@
+{
+  "schema": "eucap15_m23_changed_artifacts_manifest.v1",
+  "utc": "2026-09-12 12:10:15 UTC",
+  "scope": "M23_NEW27_RESULTS_M22_TRAIN25_RESUME_AND_TWO_HISTORICAL_S4P_ONLY",
+  "no_production_gate": true,
+  "production_source": {
+    "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/storage_claim_wait_v1/budget_walk_v1/increment_20260912T115911884829Z/OBSERVATION.json",
+    "sha256": "59472ac8304f9498fd280271553ee64d773cb9aa4feae6147f40967681061108",
+    "bytes": 620543
+  },
+  "production_observed_utc": "2026-09-12T11:59:12.528673+00:00",
+  "files": [
+    {
+      "path": "docs/research/production_increment_m23_20260912/README.md",
+      "sha256": "0afcc5fda46293d707feb8274f542350a98ae545b210e4732921700bc2a5f462"
+    },
+    {
+      "path": "docs/research/production_increment_m23_20260912/SNAPSHOT.json",
+      "sha256": "11a91a27031690ed4025d734ca508f9e969174bb900871c429d6fdbee0a49cbe"
+    },
+    {
+      "path": "docs/research/production_increment_m23_20260912/LANDING_RECEIPT.json",
+      "sha256": "cc79af52b6497d9c19e02be04a43749af4f68e8dbdd8593a9e18c6f23836638a"
+    },
+    {
+      "path": "docs/research/production_increment_m23_20260912/TRAIN_SOURCE_ROWS.json",
+      "sha256": "c3066e1fed5f59525c8528526f01f8ff4fd819cc84f76a595ab29ed5dad27fb9"
+    },
+    {
+      "path": "docs/research/production_increment_m23_20260912/TRAIN_COVERAGE_RECEIPT.json",
+      "sha256": "1450d42bc6219d4073c935ca01d49ba3733939a5be98eede5ffaa9676e01db21"
+    },
+    {
+      "path": "docs/research/production_increment_m23_20260912/TRAIN_RECEIVED_UNION_COVERAGE.csv",
+      "sha256": "5f43d5b8b7d13e870fc56c5ad356f3b378ded8e2a4d1f84d4f811d93229f50da"
+    },
+    {
+      "path": "docs/research/production_increment_m23_20260912/RESUME_TARGETED_TESTS.json",
+      "sha256": "39781400999d47ab17454686afc0bfc4adb7ac25a518697e50656c5ddd3d3dda"
+    },
+    {
+      "path": "docs/research/production_increment_m23_20260912/SCOUT14_TWO_DIAGNOSTICS.json",
+      "sha256": "3ae919bd4f5b8bcc66c24354254914c03e03da30b0bbbf3d4b05e2e74b6d5345"
+    },
+    {
+      "path": "docs/research/CURRENT_STATUS.md",
+      "sha256": "a2bcde25449c011d78b1975fbcd87501f00bcbd458d504230fd90d278a08c1d2"
+    },
+    {
+      "path": "research/broadband56_nn/eucap15_train_coverage_received.py",
+      "sha256": "ba11ac8af8180fe866365044918017e453e9a1e17b21434a4995d0c883eb5f99"
+    },
+    {
+      "path": "research/broadband56_nn/test_train_coverage_received_resume.py",
+      "sha256": "375294e583fcbbe98012d867d69f10da25f08678eecc8268041733e77ac93367"
+    }
+  ],
+  "private_complete_artifacts": [
+    {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/landing_increment_m23_new27_v1/ACTUAL_LANDINGS.json",
+      "sha256": "e6669061e76cb86f2937244ca21b519e02f11d0b289bcac090e8855d70adb6af",
+      "bytes": 366924
+    },
+    {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/train_coverage_received_m23_v1/RECEIPT.json",
+      "sha256": "1450d42bc6219d4073c935ca01d49ba3733939a5be98eede5ffaa9676e01db21"
+    },
+    {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/train_coverage_received_m23_v1/CHECKPOINT.json",
+      "sha256": "1b7bd7803e72c901dad7cfc8cfc9340013195d9e19f2263cf0d82e7fe0b68ecf"
+    },
+    {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/scout14_two_current_extraction_m23_v1/SUMMARY.json",
+      "sha256": "3ae919bd4f5b8bcc66c24354254914c03e03da30b0bbbf3d4b05e2e74b6d5345"
+    },
+    {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/train_coverage_received_m23_v1/BASELINE_CHECKPOINT.json",
+      "sha256": "39fa3990122690cbf79ae1891c325348ec202ba576a5f336fac5f5489e46b4f1"
+    },
+    {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/train_coverage_received_m23_inputs_v1/GEOMETRY25.json",
+      "sha256": "335d932ac0618402ea5204f001a6e3238112d81bc83e714a32e8cfdbabb43d6f"
+    }
+  ],
+  "reused_extractor": {
+    "path": "docs/research/p215_first100_actual_20260912/code/extract_historical111.py",
+    "sha256": "d53d4549477f34091bda2faf6e92b1844100eca84f2a87a260c44d4684db6410",
+    "unchanged": true
+  },
+  "boundary": "Only received train union, not complete production coverage; two historical rows fail current-mapping half-SRF and contribute zero certified members; staged runtime is not deployed at this cut."
+}

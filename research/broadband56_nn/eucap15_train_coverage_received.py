@@ -10,6 +10,7 @@ import hashlib
 import io
 import json
 import os
+import re
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
@@ -19,6 +20,8 @@ from rfic_transformer_inverse_design.campaigns import broadband56_balanced200k a
 
 SCOPE = "RECEIVED_SOURCE_UNION_NOT_FULL_PRODUCTION"
 FIELDS = list(campaign.GEOMETRY_FIELDS)
+PRE_RESUME_IMPLEMENTATION = dict(sha256="53db2077f90a5caac85ebc41620f1129c5000ead8da9e996b0da9761d4f87857",
+                                 published_commit="9918a63de716652a146b80caba90315d01ac965e")
 
 
 def require(ok, message):
@@ -68,42 +71,68 @@ def geometry_identity(row):
     return identity, None
 
 
+def resume_state(checkpoint, coverage_pin, received_pin):
+    """Accept a frozen prior identity/count binding; reject a repeated source."""
+    require(checkpoint["scope"] == SCOPE and checkpoint["full_production_cursor"] is None,
+            "Only a received-source-union checkpoint may resume")
+    require(checkpoint["original_split_unchanged"] is True, "Prior split identity is not fixed")
+    require(checkpoint["coverage"] == coverage_pin, "Checkpoint/coverage pin mismatch")
+    identities = [coverage._hash(value) for value in checkpoint["geometry_hashes"]]
+    require(len(identities) == len(set(identities)) == checkpoint["unique_train"], "Prior identity count differs")
+    consumed = set(checkpoint.get("consumed_source_sha256s", []))
+    consumed.add(checkpoint["received_source"]["sha256"])
+    consumed = {coverage._hash(value) for value in consumed}
+    require(received_pin["sha256"] not in consumed, "RECEIVED_SOURCE_ALREADY_CONSUMED")
+    return set(identities), consumed
+
+
 def run(args):
     paths = {}
     documents = {}
-    for name in ("coverage", "splits", "members", "received", "geometry"):
+    resuming = bool(args.checkpoint)
+    names = ("coverage", "received", "geometry", "checkpoint") if resuming else (
+        "coverage", "splits", "members", "received", "geometry")
+    for name in names:
+        require(getattr(args, name) and getattr(args, name + "_sha"), "Missing input pair: " + name)
         raw, paths[name] = checked(getattr(args, name), getattr(args, name + "_sha"))
         documents[name] = raw if name == "coverage" else json.loads(raw)
     before = coverage.validate_coverage(csv.DictReader(io.StringIO(documents["coverage"].decode())))
-    split_doc, members, received = (documents[name] for name in ("splits", "members", "received"))
-    require(split_doc["seed"] == 17 and split_doc["counts"]["train"] == 3801, "Frozen split differs")
-    baseline = {coverage._hash(h) for h, split in split_doc["by_geometry_sha256"].items() if split == "train"}
-    require(len(baseline) == 3801, "Frozen train identity count differs")
-    require(len(members) == 20, "Existing research increment must have twenty train members")
-    member_ids = []
-    for row in members:
-        require(row["split"] == "train", "Non-train member prohibited")
-        identity, reason = geometry_identity(row)
-        require(reason is None, "Existing twenty identity binding failed: " + str(reason))
-        require(identity not in baseline and identity not in member_ids, "Existing twenty overlap")
-        member_ids.append(identity)
-    baseline.update(member_ids)
-    require(len(baseline) == sum(row[coverage.COUNTS[0]] for row in before) == 3821,
-            "Saved coverage count and identity count differ")
-    require(sum(row[coverage.COUNTS[0]] > 0 for row in before) == 163, "Saved occupancy differs")
-    require(received["schema"] == "eucap15_new77_compact_train_sources.v1", "Wrong received source")
+    received = documents["received"]
+    if resuming:
+        require(not args.splits and not args.members, "Do not mix resume with original baseline inputs")
+        baseline, consumed = resume_state(documents["checkpoint"], paths["coverage"], paths["received"])
+    else:
+        split_doc, members = (documents[name] for name in ("splits", "members"))
+        require(split_doc["seed"] == 17 and split_doc["counts"]["train"] == 3801, "Frozen split differs")
+        baseline = {coverage._hash(h) for h, split in split_doc["by_geometry_sha256"].items() if split == "train"}
+        require(len(baseline) == 3801, "Frozen train identity count differs")
+        require(len(members) == 20, "Existing research increment must have twenty train members")
+        member_ids = []
+        for row in members:
+            require(row["split"] == "train", "Non-train member prohibited")
+            identity, reason = geometry_identity(row)
+            require(reason is None, "Existing twenty identity binding failed: " + str(reason))
+            require(identity not in baseline and identity not in member_ids, "Existing twenty overlap")
+            member_ids.append(identity)
+        baseline.update(member_ids)
+        require(len(baseline) == 3821 and sum(row[coverage.COUNTS[0]] > 0 for row in before) == 163,
+                "Saved initial identity/occupancy differs")
+        consumed = set()
+    require(len(baseline) == sum(row[coverage.COUNTS[0]] for row in before), "Saved coverage/identity count differs")
+    require(re.fullmatch(r"eucap15_new[1-9][0-9]*_compact_train_sources\.v1", received["schema"]),
+            "Wrong received source schema")
     require(received["feature_order"] == ["Lp_nH", "Ls_nH", "Qmin", "K_abs"], "Feature order differs")
     geometry_doc = documents["geometry"]
     require(geometry_doc["schema"] == "eucap15_train_geometry_metadata_projection.v1", "Wrong geometry source")
     require(geometry_doc["source"] == {key: received["source_output"][key] for key in ("path", "sha256", "bytes")},
             "Geometry and received data do not reference the same saved output")
     geometry_rows = {row["request_id"]: row for row in geometry_doc["rows"]}
-    require(len(geometry_rows) == len(geometry_doc["rows"]) == 19, "Geometry metadata cohort differs")
-    groups = (("CURRENT_NEW_FORMAL_TRAIN", received["current_formal_train_rows"], 17),
-              ("PRIOR_FORMAL_BACKFILL_TRAIN", received["prior_formal_backfill_train_rows"], 2))
+    groups = (("CURRENT_NEW_FORMAL_TRAIN", received["current_formal_train_rows"]),
+              ("PRIOR_FORMAL_BACKFILL_TRAIN", received["prior_formal_backfill_train_rows"]))
+    require(len(geometry_rows) == len(geometry_doc["rows"]) == sum(len(rows) for _, rows in groups) > 0,
+            "Geometry metadata cohort differs")
     accepted, disposition, request_ids = [], [], set()
-    for group, rows, expected in groups:
-        require(len(rows) == expected, "Received cohort count differs")
+    for group, rows in groups:
         for row in rows:
             request = row["request_id"]
             require(request not in request_ids, "Repeated received request")
@@ -116,6 +145,11 @@ def run(args):
             require(supplement is not None, "Missing train-only geometry join")
             for field in ("request_id", "geometry_sha256", "assigned_development_split", "result_pin", "formal_records"):
                 require(supplement[field] == row[field], "Geometry metadata join differs: " + field)
+            if resuming:
+                require(supplement["source"] == row["source"], "Candidate source differs")
+            for field in ("geometry", "geometry_fields", "geometry_units"):
+                if field in row:
+                    require(supplement[field] == row[field], "Compact geometry differs: " + field)
             require(supplement["formally_admitted_in_received_source"] is True and
                     supplement["valid_for_strict_comparison"] is True and supplement["core15_eligible"] is True,
                     "Received source strict/formal qualification flags differ")
@@ -142,8 +176,8 @@ def run(args):
     inputs = dict(paths, implementation=pin(__file__), coverage_implementation=pin(coverage.__file__),
                   geometry_implementation=pin(campaign.__file__))
     baseline_document = dict(schema="eucap15_saved_train_coverage_checkpoint.v1", scope=SCOPE,
-        source_pins={key: paths[key] for key in ("coverage", "splits", "members")},
-        original_train=3801, prior_added_train=20, unique_train=3821, occupied_cells=163,
+        source_pins={key: paths[key] for key in (("coverage", "checkpoint") if resuming else ("coverage", "splits", "members"))},
+        original_train=3801, unique_train=len(baseline), occupied_cells=gain["occupied_before"],
         identity_algorithm="campaign.canonical_geometry_sha256 ordered named10D float format .9f compact JSON SHA256",
         geometry_fields=FIELDS, geometry_units="um", geometry_hashes=sorted(baseline),
         original_data_or_model_modified=False, full_production_cursor=None)
@@ -163,12 +197,16 @@ def run(args):
         baseline_checkpoint=pin(out / "BASELINE_CHECKPOINT.json"), received_source=paths["received"],
         attempted_request_ids=sorted(request_ids), admitted_request_ids=[r["request_id"] for r in accepted],
         held_request_ids=[r["request_id"] for r in disposition if r["status"] == "HOLD"],
+        consumed_source_sha256s=sorted(consumed | {paths["received"]["sha256"]}),
+        parent_checkpoint=paths.get("checkpoint"),
+        cumulative_received_source_count=len(consumed | {paths["received"]["sha256"]}),
+        geometry_identity_algorithm="canonical_geometry_sha256_9dp_named_ordered_fields",
         full_production_cursor=None, original_split_unchanged=True))
     require(len(next_ids) == sum(r[coverage.COUNTS[0]] for r in gain["after_coverage"]), "Output identity/count mismatch")
     summary = dict(schema="eucap15_received_train_coverage_receipt.v1", scope=SCOPE,
         status="COMPLETE_WITH_ROW_HOLDS" if any(r["status"] == "HOLD" for r in disposition) else "COMPLETE",
         completed_utc=datetime.now(timezone.utc).isoformat(), command=sys.argv, inputs=inputs,
-        baseline_unique=3821, source_rows=len(disposition), bound_rows=len(accepted),
+        baseline_unique=len(baseline), source_rows=len(disposition), bound_rows=len(accepted),
         held_rows=sum(r["status"] == "HOLD" for r in disposition), counts=gain["counts"],
         occupied_before=gain["occupied_before"], occupied_after=gain["occupied_after"],
         newly_occupied=gain["newly_occupied_cells"], sparse_crossed_5=gain["sparse_crossed_5"],
@@ -177,6 +215,8 @@ def run(args):
         unique_train_after=len(next_ids), native_calls=0, training_calls=0, baseline_labels_recounted=0,
         physical_revalidation="REUSED_SOURCE_CALLER_EVIDENCE_NOT_REEXECUTED", val_test_labels_read=False,
         new_sampling_or_formal_admission=False, source_receipts_modified=False,
+        resumed_existing_checkpoint=resuming, previous_implementation=PRE_RESUME_IMPLEMENTATION,
+        consumed_source_sha256s=sorted(consumed | {paths["received"]["sha256"]}),
         artifacts=[pin(path) for path in sorted(out.iterdir())])
     write_json(out / "RECEIPT.json", summary)
     with (out / "SHA256SUMS").open("x", encoding="utf-8") as stream:
@@ -189,9 +229,10 @@ def run(args):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    for name in ("coverage", "splits", "members", "received", "geometry"):
-        parser.add_argument("--" + name, required=True)
-        parser.add_argument("--" + name + "-sha", required=True)
+    for name in ("coverage", "splits", "members", "received", "geometry", "checkpoint"):
+        required = name in ("coverage", "received", "geometry")
+        parser.add_argument("--" + name, required=required)
+        parser.add_argument("--" + name + "-sha", required=required)
     parser.add_argument("--out", required=True)
     print(json.dumps(run(parser.parse_args()), sort_keys=True))
 

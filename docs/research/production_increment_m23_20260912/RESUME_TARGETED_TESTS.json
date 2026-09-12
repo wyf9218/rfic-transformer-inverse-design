@@ -1,0 +1,38 @@
+{
+  "schema": "eucap15_train_coverage_resume_targeted_tests.v1",
+  "scope": "NEW_RESUME_PATH_ONLY_SYNTHETIC_NO_PHYSICAL_REPLAY",
+  "status": "PASS",
+  "actual_exit_code": 0,
+  "actual_tests_run": 4,
+  "failures": 0,
+  "old_tests_reexecuted": 0,
+  "actual_test_names": [
+    "test_original_checkpoint_migrates_consumed_identity_without_replay",
+    "test_repeated_source_rejected_from_old_or_new_checkpoint",
+    "test_coverage_binding_mismatch_rejected",
+    "test_duplicate_checkpoint_identity_rejected"
+  ],
+  "command": [
+    "/Users/wyf/Documents/模拟变压器AI反向建模/reports/broadband56_nn_v2_20260907T212216Z/environment/bin/python",
+    "-B",
+    "-m",
+    "unittest",
+    "research.broadband56_nn.test_train_coverage_received_resume",
+    "-v"
+  ],
+  "working_directory": "/Users/wyf/Documents/模拟变压器AI反向建模/github_worktrees/eucap15-mlp-capacity-20260909",
+  "environment": {"PYTHONDONTWRITEBYTECODE": "1"},
+  "implementation_sha256": "ba11ac8af8180fe866365044918017e453e9a1e17b21434a4995d0c883eb5f99",
+  "test_source_sha256": "375294e583fcbbe98012d867d69f10da25f08678eecc8268041733e77ac93367",
+  "real_data_run": {
+    "execution_count": 1,
+    "exit_code": 0,
+    "completed_utc": "2026-09-12T12:01:05.089473+00:00",
+    "wall_time_seconds": 0.279622542,
+    "new_train_rows": 25,
+    "old_coverage_or_M21_recalculated": false,
+    "receipt": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/train_coverage_received_m23_v1/RECEIPT.json",
+    "receipt_sha256": "1450d42bc6219d4073c935ca01d49ba3733939a5be98eede5ffaa9676e01db21",
+    "new_output_sha256_readback_passed": 5
+  }
+}
