@@ -1,5 +1,15 @@
 # Current Evidence Status
 
+## Reviewed943 / observed986 and continuing native work — M4 cutoff2026-09-12 04:59:15UTC
+
+[Actual M4 increment](qualification_batch_20260912/INCREMENT_M4.md): the exact cursor publisher appended293 historical members,650→943; full transported readback and all293 new records were independently reviewed. Verified split943=573train+185validation+185test. A later04:59:15 live ledger observation is986; its additional43 record bodies are not included in this incremental review or assigned the943 split. Source21135 is fully audited:6329 qualified,4705 out-of-range,10101 physical-invalid; at detailed943 cut5425 audit-qualified remain to append. These are bounded source/ledger counts, not100K complete or new simulations.
+
+The original256 batch has6fresh,2core and2formal additions, plus1original analytic failure and3retained wrapper failure objects. Two wrapper failures were pre-dispatch resource waits, not native physical failures. At04:59:15 the original owner2776362 remains, DOE008 is actually in-flight EMX PID1224211(1job×2CPU), and ordinary same-publisher metadata continuation1245823 is running. Neither an in-flight result nor later05:02 results are backfilled into this freeze.
+
+Two core points add no occupied/sparse-support cells on the frozen159/163-cell baselines. The distinct04:29 six-solver cost window contains593.66s native wall and1201.79s CPU;2.0349source-core/hour and42.2227MiB/core are early whole-run amortizations, not steady production forecasts. Latest field free disk493967306752B is not a quota guarantee.
+
+DOE006 is traced to a−7.5nm grid-rounding cross-center mismatch. The isolated opt-in lineage draft passes8port checks without changing polygons/endpoints and rejects5targeted negative fixtures; NOT_INSTALLED and no DRC/EMX validation. The separately reviewed resource-wait predicate fix has7saved synthetic tests and static GO, but remains undeployed. [Frozen snapshot](qualification_batch_20260912/SNAPSHOT_M4.json), [source map](qualification_batch_20260912/publication_v4/SOURCE_MAP.md), and [manifest](qualification_batch_20260912/M4_MANIFEST.json) preserve exact boundaries. Later continuous-production authorization is a separate handoff; automatic qualification and successor deployment are not yet proven. Older sections below are dated snapshots, not current liveness.
+
 ## Formal union649 and separately timestamped new256 results — M3, 2026-09-12
 
 [Actual increment](qualification_batch_20260912/INCREMENT_0430.md): source rows1–2000 yielded611 qualified,445 out-of-range and944 physically invalid records; duplicate/missing/incompatible are0 within those processed partitions. The formal union is649=397train+125validation+127test: prior37 plus611 historical members and1new256 train member actually appended at04:31:05UTC. Replay added0. It remains a bounded lower bound, not complete100K/P215 certification; source2001+ execution is NOT_INSTALLED.

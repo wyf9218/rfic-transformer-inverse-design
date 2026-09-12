@@ -1,0 +1,135 @@
+{
+  "schema": "eucap15.public_m4_manifest.v1",
+  "status": "FROZEN_045915_FIELD_CUTOFF_WITH_LATER_READBACK_REVIEW",
+  "baseline_commit": "bb27eebe3774f74073f6b6d3218a4999a952a13d",
+  "field_evidence_cutoff_utc": "2026-09-12T04:59:15.665752+00:00",
+  "freeze_utc": "2026-09-12T05:04:36Z",
+  "root_confirmed_cutoff": true,
+  "files": [
+    {
+      "path": "SNAPSHOT_M4.json",
+      "sha256": "f8623bb0d0c1c1be829c0677a044540475cbc7badb7da56cbc668db65b41ef8c",
+      "bytes": 21847
+    },
+    {
+      "path": "INCREMENT_M4.md",
+      "sha256": "0641692d7c230edb212954bce423ddd31f2a9c3da9c89f5a45d25e13cecb70a4",
+      "bytes": 4834
+    },
+    {
+      "path": "publication_v4/SOURCE_MAP.md",
+      "sha256": "804ce1487fa7872fedf6daaf278707494122651788cb3c879fa950b1fcac7af1",
+      "bytes": 3638
+    },
+    {
+      "path": "publication_v4/failure_receive.py",
+      "sha256": "d6599ae889f8b406603a7ce15853a63c8a119d7672de0f0d1a85abf1786bffd6",
+      "bytes": 7341
+    },
+    {
+      "path": "publication_v4/history_publication.py",
+      "sha256": "885f794ada737faad7deed9c4cef3bc56ac92d7e7a631fd98c5381eb3b5a2811",
+      "bytes": 29455
+    },
+    {
+      "path": "publication_v4/lineage_cross_binding_v1.py",
+      "sha256": "01c0ae7c2eac2fca55baf0de58824c034625d84dcaceb9a8bb8772c6d49aa2b1",
+      "bytes": 5620
+    },
+    {
+      "path": "publication_v4/replay_lineage_v1.py",
+      "sha256": "2baa53cd03ddd466f06d27a43f54dc644969d0dc90f20183d0914500e65ffe2d",
+      "bytes": 4466
+    },
+    {
+      "path": "publication_v4/targeted_width_guard_v1.py",
+      "sha256": "8399450535da1712bcf66586d57512dc7286fd46fdd154fca1658fd92b2536c5",
+      "bytes": 2104
+    },
+    {
+      "path": "../CURRENT_STATUS.md",
+      "sha256": "bef1a465c961ee26fc57a03f283ec1a287bf0f75eacad5674219522c06a75c02",
+      "bytes": 28676
+    }
+  ],
+  "source_copies": {
+    "byte_identical": true,
+    "files": [
+      {
+        "path": "publication_v4/failure_receive.py",
+        "sha256": "d6599ae889f8b406603a7ce15853a63c8a119d7672de0f0d1a85abf1786bffd6",
+        "bytes": 7341
+      },
+      {
+        "path": "publication_v4/history_publication.py",
+        "sha256": "885f794ada737faad7deed9c4cef3bc56ac92d7e7a631fd98c5381eb3b5a2811",
+        "bytes": 29455
+      },
+      {
+        "path": "publication_v4/lineage_cross_binding_v1.py",
+        "sha256": "01c0ae7c2eac2fca55baf0de58824c034625d84dcaceb9a8bb8772c6d49aa2b1",
+        "bytes": 5620
+      },
+      {
+        "path": "publication_v4/replay_lineage_v1.py",
+        "sha256": "2baa53cd03ddd466f06d27a43f54dc644969d0dc90f20183d0914500e65ffe2d",
+        "bytes": 4466
+      },
+      {
+        "path": "publication_v4/targeted_width_guard_v1.py",
+        "sha256": "8399450535da1712bcf66586d57512dc7286fd46fdd154fca1658fd92b2536c5",
+        "bytes": 2104
+      }
+    ],
+    "private_inputs_PDK_geometry_or_original_receipt_bodies_copied": false
+  },
+  "checks": {
+    "old_current_status_tail_preserved": true,
+    "summary_count_consistency": true,
+    "new_training_or_software_tests": 0,
+    "public_source_private_path_or_secret_marker_scan": "NO_MATCH",
+    "old_M3_snapshot_files_unchanged": true,
+    "all_included_source_copies_hash_equal_original": true
+  },
+  "scope": {
+    "fully_transported_and_reviewed_formal_union": 943,
+    "later_remote_observed_ledger": 986,
+    "additional_observed_record_bodies_not_reviewed": 43,
+    "fresh_results_at_field_cutoff": 6,
+    "source_core": 2,
+    "inflight_at_field_cutoff": "GEOMETRY_DOE-008",
+    "later_0502_physical_results_not_included": true,
+    "cost_population": "Six completed solvers at04:29:47 only",
+    "central_memory_or_goal_state_modified_by_publication": false,
+    "commit_or_push_performed": false
+  },
+  "independent_review": {
+    "artifact": "qualification_cursor_increment_review_v1/run_through003000_v1/REVIEW.json",
+    "sha256": "6082c3f17d4b585eaddf0522886646c1989213c1672277ad039bc9860c033a77",
+    "status": "GO_SCOPED_NEW_FORMAL_CURSOR_DELTA",
+    "new_records_reviewed": 293,
+    "old_record_files_reread": 0,
+    "replay_scope": "Owner wrapper added0 assertion only; no separately transported FIRST_READBACK or independent new replay."
+  },
+  "post_cutoff_handoff_sources": [
+    {
+      "workspace_relative_private_artifact": "reports/eucap15ghz_20260908T220300Z/continuous_production_20260912_v1/USER_AUTHORIZATION.json",
+      "sha256": "a1ba80c38f9efbd995648035de288648c91130c1f0e7b20989063cf2e07f5857",
+      "bytes": 3583,
+      "record_saved_utc": "2026-09-12 05:02:44 UTC",
+      "content_published": false,
+      "original_message_timestamp_or_id_not_invented": true,
+      "acceptance": "OWNER_ACCEPTED_CONTINUOUS_PRODUCTION_SCOPE",
+      "automatic_qualification_deployment": "NOT_PROVEN",
+      "successor_deployment": "NOT_PROVEN",
+      "physical_evidence_at_045915": false
+    }
+  ],
+  "limitations": [
+    "Public code copies are inspectable source snapshots, not self-contained native installers.",
+    "Physical endpoint fix validation and deployment remain NOT_RUN/NOT_INSTALLED.",
+    "Resource-wait predicate has static GO and synthetic tests, not live deployment.",
+    "Historical audit count6329 is not added again to the qualified ledger.",
+    "Observed986 does not inherit reviewed943 split counts or claim complete100K certification."
+  ]
+}

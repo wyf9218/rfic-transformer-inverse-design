@@ -1,0 +1,534 @@
+{
+  "schema": "eucap15.public_increment_snapshot.v4",
+  "milestone": "M4",
+  "release_state": "FROZEN_AT_ROOT_CONFIRMED_045915_FIELD_CUTOFF",
+  "prepared_utc": "2026-09-12T04:56:27Z",
+  "baseline_commit": "bb27eebe3774f74073f6b6d3218a4999a952a13d",
+  "evidence_cutoffs": {
+    "formal_publication_utc": "2026-09-12T04:58:17.604894+00:00",
+    "formal_increment_review_utc": "2026-09-12T05:01:00.315471+00:00",
+    "historical_cursor_closed_utc": "2026-09-12T04:46:37.799348+00:00",
+    "cost_capture_utc": "2026-09-12T04:29:47.957118+00:00",
+    "failure_metadata_received_utc": "2026-09-12T04:56:06.411545+00:00",
+    "owner_resource_report_utc": "2026-09-12T04:52:00Z",
+    "owner_resource_time_precision": "minute reported by owner, not a source-capture timestamp",
+    "owner_field_capture_utc": "2026-09-12T04:59:15.665752+00:00",
+    "physical_and_live_cutoff_utc": "2026-09-12T04:59:15.665752+00:00",
+    "later_0502_physical_results_excluded": true
+  },
+  "qualification": {
+    "formal_union": 943,
+    "formal_splits": {
+      "train": 573,
+      "validation": 185,
+      "test": 185
+    },
+    "certified_lower_bound_toward_100k": 943,
+    "union_components": {
+      "prior_nonhistorical_partition": 37,
+      "historical_first3000": 904,
+      "production256": 2
+    },
+    "latest_formal_event": {
+      "source_range": [
+        2001,
+        3000
+      ],
+      "before": 650,
+      "added": 293,
+      "after": 943,
+      "new_splits": {
+        "train": 175,
+        "validation": 60,
+        "test": 58
+      },
+      "holds": 0,
+      "old_prefix_unchanged": true,
+      "readback_receipt_sha256": "9d1022d87928ea2e2502562d1b15b235be61caa28d6abc28bfbf4b5697cc7614",
+      "release_sha256": "18dbe316cc47e51e843ce2180c0fc29915e48b3f609419fdc279e125d752372f",
+      "readback_source_owner_exit_status": "EXIT_0",
+      "research_increment_review": "GO_SCOPED_NEW_FORMAL_CURSOR_DELTA",
+      "pending_qualified_append_after_event": 5425,
+      "research_increment_review_sha256": "6082c3f17d4b585eaddf0522886646c1989213c1672277ad039bc9860c033a77",
+      "new_records_independently_reviewed": 293,
+      "old_record_files_reread": 0,
+      "replay_scope": "Executed owner wrapper asserts first exact replay added0; separate FIRST_READBACK not transported, no independent reviewer replay execution."
+    },
+    "historical_audit": {
+      "scope": "old21135 source, eight source partitions; not all P215",
+      "processed_rows": 21135,
+      "qualified": 6329,
+      "out_of_range": 4705,
+      "physical_invalid": 10101,
+      "duplicate": 0,
+      "missing_evidence": 0,
+      "incompatible": 0,
+      "unprocessed_in_this_source": 0,
+      "latest_cursor_rows": 19135,
+      "latest_cursor_classifications": {
+        "duplicate": 0,
+        "incompatible": 0,
+        "missing_evidence": 0,
+        "out_of_range": 4260,
+        "physical_invalid": 9157,
+        "qualified": 5718
+      },
+      "latest_cursor_sequence_range": [
+        2001,
+        21135
+      ],
+      "pending_qualified_append": 5425,
+      "counts_definition": "Qualification audit classifications; pending rows are not formally accepted until dynamic ledger deduplication, append and readback.",
+      "source_manifest_sha256": "dea1af9cd00d343eb1bf2bff7781e4772bafff659c660145b544432a6091f6bc",
+      "latest_cursor_sha256": "3291bc74a50ca3dc15284d2d3292cfe34d0a7ee5cc87c59620602b22ad20dbc2",
+      "tail_162_binding": "Exact existing 15 GHz rows selected from original 56-point evidence; no interpolation or new EMX.",
+      "newly_audited_qualified_since_source2000": 5718,
+      "first_new_cursor_formally_appended": 293,
+      "pending_qualified_append_count_scope": "5425 remaining at detailed943 readback; do not treat as exact remaining after live986 observation."
+    },
+    "full100k_qualified_total": null,
+    "full_P215_certified": false,
+    "current6329_training_membership_changed": false,
+    "new_training_updates": 0,
+    "old_broadband_added": 0,
+    "latest_production256_formal_event": {
+      "before": 649,
+      "added": 1,
+      "after": 650,
+      "original_split": "train",
+      "replay_added": 0,
+      "old_prefix_unchanged": true,
+      "readback_receipt_sha256": "66112d844eabb937734058d5cc521582ced4f64f11ae953071e7b9830fafef4b",
+      "record650_sha256": "45988d8727c18fd5b1ebf9839c33bd4c6ec6e196f4580234f4e063a6c2e854b3",
+      "review_sha256": "feb26f2474b879680d1c8a90dd33422f602137a32369425353a33473f7258bdc"
+    },
+    "formal_union_count_scope": "943 fully transported readback; later live ledger count986 is separately observed, with43 record bodies not incrementally reviewed here.",
+    "observed_later_ledger": {
+      "count": 986,
+      "utc": "2026-09-12T04:59:15.665752+00:00",
+      "latest_sequence": 986,
+      "latest_record_sha256": "d5be6a6724ca3ed355a4880b46cee35a4995eeb42c79053798f4e59e74e389bc",
+      "full_transport_verified_through": 943,
+      "additional_observed_not_fully_reviewed": 43,
+      "split_counts_for_observed986": null,
+      "not_added_to_verified_lower_bound": true,
+      "source_live_sha256": "1cbd357f8ff7971553b670c29795657b6c52e073a20c266977e858f217346349"
+    }
+  },
+  "production256": {
+    "original_proposals": 256,
+    "geometry_doe": 192,
+    "train_neighborhood": 64,
+    "original_analytic_fail": 18,
+    "received_original_analytic": 1,
+    "received_fresh": 6,
+    "received_core_eligible": 2,
+    "formally_added": 2,
+    "received_failure_metadata": 3,
+    "received_unique_objects": 10,
+    "fresh_source_counts": {
+      "GEOMETRY_DOE": 5,
+      "TRAIN_NEIGHBORHOOD": 1
+    },
+    "formal_source_counts": {
+      "GEOMETRY_DOE": 1,
+      "TRAIN_NEIGHBORHOOD": 1
+    },
+    "new_failure_objects": [
+      {
+        "request": "GEOMETRY_DOE-006",
+        "class": "LAYOUT_ENDPOINT_CONSTRUCTION_FALSE_NEGATIVE",
+        "source_stage": "cadence",
+        "physical_response": null,
+        "result_sha256": "d785a058de043dbf05c4bcd776f8d5f5fe0a7746f479e822dc0769960a4ce737",
+        "current_cadence_stage_emx_starts": 0,
+        "all_attempts_native_starts": null
+      },
+      {
+        "request": "TRAIN_NEIGHBORHOOD-001",
+        "class": "RESOURCE_WAIT_PRE_DISPATCH_NOT_PHYSICAL_FAILURE",
+        "source_wrapper_stage": "emx",
+        "reason": "RESOURCE_WAIT_REQUIRED_NO_DISPATCH",
+        "recorded_failed_resource_check": "swap",
+        "native_starts_in_failed_dispatch_hook": 0,
+        "all_attempts_native_starts": null,
+        "result_sha256": "add7d5777484d5b63507da838ca5278d78afabfeb359d6aa75685e078a338c00"
+      },
+      {
+        "request": "GEOMETRY_DOE-007",
+        "class": "RESOURCE_WAIT_PRE_DISPATCH_NOT_PHYSICAL_FAILURE",
+        "source_wrapper_stage": "emx",
+        "reason": "RESOURCE_WAIT_REQUIRED_NO_DISPATCH",
+        "recorded_failed_resource_check": "swap",
+        "native_starts_in_failed_dispatch_hook": 0,
+        "all_attempts_native_starts": null,
+        "result_sha256": "d32ebd243a73142fc7dc3efd67ec5f03573662ff06f39f0bbf2e6b8fccc2be2b",
+        "receipt_sha256": "10cda72ae546aca701a3b6438adf1617ad63febbc4792b6e511054d52d765d56",
+        "diagnosis_sha256": "d3a7f416ea03d9c4ac7af6f1b1c69a6dc23c2e97295977ac1c0ed06232859d36"
+      }
+    ],
+    "old_failure_objects_preserved": true,
+    "unobserved_candidates_not_labeled_pending": true,
+    "target": null,
+    "q_proxy": null,
+    "target_error": null,
+    "joint_hit": null,
+    "owner_report": {
+      "at_reported_minute": "2026-09-12T04:52Z",
+      "condition": "CPU_RESOURCE_WAIT",
+      "evidence_level": "OWNER_REPORTED_NOT_REQUERIED_BY_PUBLICATION_TASK",
+      "source_receipt_sha256": null,
+      "superseded_by_live_capture": true
+    },
+    "budget": {
+      "actual_start_cap": 256,
+      "window_seconds": 43200,
+      "storage_cap_bytes": 5368709120,
+      "original_admitted_utc": "2026-09-12T03:30:49.723123+00:00",
+      "original_deadline_utc": "2026-09-12T15:30:49.723123+00:00",
+      "reset": false,
+      "old64_budget_untouched": true
+    },
+    "failure_receiver_initial_increment_error": {
+      "status": "FAIL_RETAINED",
+      "cause": "Missing existing atomic_primitives import path before candidate consumption; new run_v3 used correct pinned runtime path without source changes.",
+      "receipt_sha256": "27ea0b1a6501aa18ee58c81513559fc8b10e2e5cf60fa7c74e4e501cfc5bc1ee"
+    },
+    "owner_live_snapshot": {
+      "utc": "2026-09-12T04:59:15.665752+00:00",
+      "source_sha256": "1cbd357f8ff7971553b670c29795657b6c52e073a20c266977e858f217346349",
+      "owner_pid": 2776362,
+      "owner_start_ticks": 398895226,
+      "owner_restarted": false,
+      "active_candidate": "GEOMETRY_DOE-008",
+      "actual_emx_pid": 1224211,
+      "actual_emx_start_ticks": 399301459,
+      "observed_emx_state": "R",
+      "actual_native_concurrency": 1,
+      "cpu_per_job": 2,
+      "active_candidate_fresh_completed": false,
+      "current_cpu_wait_claim": false,
+      "free_disk_bytes": 493967306752,
+      "quota_bytes": null,
+      "live_state_after_capture": "NOT_REQUERIED"
+    }
+  },
+  "coverage": {
+    "scope": "Composition of two actual-EM single-point contributions, not a new training cohort",
+    "source_summary_sha256": "bb171fed73b209428e71b88feac5781090820c451e897ec43aa6d9d8929dcf6f",
+    "source_receipt_status_retained": "SOURCE_CORE_PENDING_FORMAL; later formal appends are separate events",
+    "formal_members_now": 2,
+    "newly_occupied_cells": 0,
+    "underfilled_cells_crossed_threshold": 0,
+    "filled_deficit": 0,
+    "high_k_gt0p8_gain": 0,
+    "high_q_ge18_gain": 0,
+    "q10_to20_density_increment": 2,
+    "baselines": [
+      {
+        "baseline": "FROZEN3801_TRAIN",
+        "scope": "TWO_RECEIVED_SINGLE_POINT_CONTRIBUTIONS_NOT_A_NEW_COHORT",
+        "source_core_points": 2,
+        "current_model_or_training_pool_updated": false,
+        "constituent_cells": [
+          {
+            "request_id": "eucap15_production_doe_neighborhood_20260912_v1-TRAIN_NEIGHBORHOOD-000",
+            "cell": [
+              5,
+              4,
+              0
+            ],
+            "original_count": 86,
+            "potential_count": 87
+          },
+          {
+            "request_id": "eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-004",
+            "cell": [
+              5,
+              5,
+              0
+            ],
+            "original_count": 59,
+            "potential_count": 60
+          }
+        ],
+        "occupied_before": 159,
+        "potential_occupied_after": 159,
+        "newly_occupied_cells": 0,
+        "sparse_crossed_5": 0,
+        "filled_deficit": 0,
+        "potential_q10_20_density_increment": 2,
+        "potential_q12_14_density_increment": 2,
+        "potential_high_q_ge18_count_increment": 0,
+        "potential_high_k_gt0p8_count_increment": 0,
+        "formal_accepted_union_count": null,
+        "cohort_training_count": null
+      },
+      {
+        "baseline": "FROZEN3801_PLUS_PREVIOUS20_RESEARCH_TRAIN",
+        "scope": "TWO_RECEIVED_SINGLE_POINT_CONTRIBUTIONS_NOT_A_NEW_COHORT",
+        "source_core_points": 2,
+        "current_model_or_training_pool_updated": false,
+        "constituent_cells": [
+          {
+            "request_id": "eucap15_production_doe_neighborhood_20260912_v1-TRAIN_NEIGHBORHOOD-000",
+            "cell": [
+              5,
+              4,
+              0
+            ],
+            "original_count": 86,
+            "potential_count": 87
+          },
+          {
+            "request_id": "eucap15_production_doe_neighborhood_20260912_v1-GEOMETRY_DOE-004",
+            "cell": [
+              5,
+              5,
+              0
+            ],
+            "original_count": 61,
+            "potential_count": 62
+          }
+        ],
+        "occupied_before": 163,
+        "potential_occupied_after": 163,
+        "newly_occupied_cells": 0,
+        "sparse_crossed_5": 0,
+        "filled_deficit": 0,
+        "potential_q10_20_density_increment": 2,
+        "potential_q12_14_density_increment": 2,
+        "potential_high_q_ge18_count_increment": 0,
+        "potential_high_k_gt0p8_count_increment": 0,
+        "formal_accepted_union_count": null,
+        "cohort_training_count": null
+      }
+    ],
+    "current_model_or_training_pool_updated": false,
+    "algorithm_advantage_claim": false
+  },
+  "cost_0429": {
+    "source_summary_sha256": "58705ade3f2ef1e50ec941cf08eea1b5d3dfc2737585a81e3625784c94b71612",
+    "cutoff_utc": "2026-09-12T04:29:47.957118+00:00",
+    "native": {
+      "wall_seconds_sum": 593.66,
+      "cpu_seconds_sum": 1201.79,
+      "observed_solver_count": 6,
+      "newly_read_solver_count": 3,
+      "reused_solver_count": 3,
+      "reused_native_wall_seconds": 251.49,
+      "reused_native_cpu_seconds": 504.72,
+      "added_native_wall_seconds": 342.17,
+      "added_native_cpu_seconds": 697.07,
+      "retained_noncore_solver_count": 4,
+      "complete_native_wall_fields": true,
+      "complete_native_cpu_fields": true,
+      "definition": "Saved0412 aggregate plus only DOE003/004/005 exact solver stderr Wall-clock/CPU fields, each real solver counted once.",
+      "total_pipeline_CPU_seconds": null,
+      "total_pipeline_stage_wall_seconds": null,
+      "includes_inflight_solver_cost": false,
+      "includes_earlier_software_failed_attempt_cost": false
+    },
+    "end_to_end": {
+      "elapsed_seconds": 3538.233995,
+      "elapsed_hours": 0.982842776388889,
+      "numerator_source_strict_core15": 2,
+      "source_strict_core15_per_hour": 2.0349134653543457,
+      "includes_early_software_failures_pause_resource_wait": true,
+      "exclusions_from_time_denominator": [],
+      "formally_appended_at_cutoff": 0,
+      "formally_accepted_per_hour": null,
+      "extrapolated_100k_time": null,
+      "rate_scope": "INTERIM original admission to04:29capture; immature two-source-core throughput, not stable or formalproduction throughput."
+    },
+    "storage": {
+      "observed_budget_root_allocated_bytes": 88547328,
+      "allocated_bytes_at": "2026-09-12T04:29:47.957118+00:00",
+      "numerator_scope": "Whole original study budget root including old failures, recovery, logs, temporary and in-flight files.",
+      "denominator_source_strict_core15": 2,
+      "allocated_bytes_per_source_strict_core15": 44273664,
+      "allocated_MiB_per_source_strict_core15": 42.22265625,
+      "denominator_formally_appended_in_capture": 0,
+      "allocated_bytes_per_formally_appended": null,
+      "cap_bytes": 5368709120,
+      "cap_remaining_at_cutoff_bytes": 5280161792,
+      "quota_bytes": null,
+      "single_sample_retained_bytes": null,
+      "steady_state_per_sample_bytes": null,
+      "mount_free_change_attributed_to_study": false,
+      "extrapolated_100k_storage": null
+    },
+    "later_formal_650_not_backfilled_into_cost_window": true,
+    "do_not_mix_with_0412_population": true
+  },
+  "software": {
+    "history_cursor_publication": {
+      "sha256": "885f794ada737faad7deed9c4cef3bc56ac92d7e7a631fd98c5381eb3b5a2811",
+      "state": "ACTUAL_NATIVE_FIRST_293_APPENDED_READBACK_RECEIVED",
+      "targeted_tests": 8,
+      "test_run_count": 1,
+      "test_receipt_sha256": "e0d4ee052d954070822e0eb75aa55700687195db2c9c07043d4c5bea127fc60e",
+      "formal_appends_by_this_version": 293,
+      "deployed_release_sha256": "18dbe316cc47e51e843ce2180c0fc29915e48b3f609419fdc279e125d752372f",
+      "next_continuation_state": "ACTUAL_BACKGROUND_METADATA_CONTINUATION_RUNNING_AT_045915",
+      "continuation": {
+        "pid": 1245823,
+        "start_ticks": 399304935,
+        "ppid": 1,
+        "sid": 1245823,
+        "run_lock_observed": true,
+        "same_publisher_release": true,
+        "entry_sha256": "036320c66e137b90bc895f1a047fac62bec865ca0c5e9048766613de8605e590",
+        "launch_receipt_sha256": "1080a14baee94065065dc63f503715a80b9efd5a1563d732c0e89954eb2688ca",
+        "next_range": [
+          3001,
+          21135
+        ],
+        "first_completed_block": [
+          3001,
+          3100
+        ],
+        "first_block_added": 28,
+        "first_block_holds": 0,
+        "terminal_at_live_capture": null,
+        "is_native_simulator_controller": false,
+        "is_AI_polling": false,
+        "repeated_submission": false
+      }
+    },
+    "doe006_endpoint": {
+      "state": "ISOLATED_OPT_IN_DRAFT_NOT_INSTALLED",
+      "diagnosis": "Sequential edge-length grid rounding shifts the real full-width P004 face transversely by -7.5 nm while nominal-center matching stays unchanged.",
+      "fix": "Bind only the missed P004 metadata to its exact pre/post-canonicalization edge; retain original endpoint constructor and tolerances.",
+      "distinct_real_cases_reconstructed": 1,
+      "local_ports_passed": 8,
+      "changed_polygons": 0,
+      "changed_endpoints": 0,
+      "changed_labels": 0,
+      "targeted_negative_fixtures": 5,
+      "physical_validation": "NOT_RUN",
+      "cadence_runs": 0,
+      "calibre_runs": 0,
+      "emx_runs": 0,
+      "old_failure_preserved": true,
+      "receipt_sha256": "df545d83b8886c5ebedec6e7f43f5614ca1302b428602cd891d01dbf19bf71c0",
+      "source_sha256": "01c0ae7c2eac2fca55baf0de58824c034625d84dcaceb9a8bb8772c6d49aa2b1",
+      "geometry_evidence_class": "NEW_LOCAL_RECONSTRUCTION_FROM_EXACT_CONFIG_GEOMETRY_SOURCE; NOT_HISTORICAL_SAVED_POLYGONS"
+    },
+    "resource_wait_fix": {
+      "state": "STATIC_REVIEW_GO_NOT_DEPLOYED",
+      "review_sha256": "bfbe3e41e9c045ae2c9862794c6d3f28ee9750db79d341e90133de0ad4996ee3",
+      "review_utc": "2026-09-12T04:56:33.542149+00:00",
+      "patched_source_sha256": "1de1ea9f8032adac2ec3f6a46a7d1649f509fa964468de8ff988e2170e88ad86",
+      "change": "Exact two-spelling exception predicate in the EMX-stage wrapper; original deadlines, resource checks and budget remain unchanged.",
+      "saved_targeted_tests": 7,
+      "test_resource_decisions": "SYNTHETIC",
+      "test_subprocess": "MOCKED",
+      "saved_test_receipt_sha256": "0111d41b9a96be87caa60ec535c43df16e5933c151d0e5a19a17a3dbb146b225",
+      "tests_rerun_for_review_or_publication": 0,
+      "current_live_resource_availability_proven": false,
+      "actual_native_deployment_proven": false,
+      "existing_closed_failures_reopened": false
+    }
+  },
+  "source_evidence": [
+    {
+      "artifact": "formal_review",
+      "sha256": "feb26f2474b879680d1c8a90dd33422f602137a32369425353a33473f7258bdc",
+      "bytes": 12835
+    },
+    {
+      "artifact": "failure_receipt",
+      "sha256": "58ba2f287b667a5e6bc831b2d58400a1dc7463d5937434910d502f7a4a66803f",
+      "bytes": 2256
+    },
+    {
+      "artifact": "failure_diagnosis",
+      "sha256": "420574c8a59f78e4667fbfdca2d33192c6c620832467eb629599c20e14dea69d",
+      "bytes": 10535
+    },
+    {
+      "artifact": "coverage",
+      "sha256": "bb171fed73b209428e71b88feac5781090820c451e897ec43aa6d9d8929dcf6f",
+      "bytes": 10255
+    },
+    {
+      "artifact": "cost",
+      "sha256": "58705ade3f2ef1e50ec941cf08eea1b5d3dfc2737585a81e3625784c94b71612",
+      "bytes": 30160
+    },
+    {
+      "artifact": "cursor",
+      "sha256": "3291bc74a50ca3dc15284d2d3292cfe34d0a7ee5cc87c59620602b22ad20dbc2",
+      "bytes": 1689
+    },
+    {
+      "artifact": "cursor_receipt",
+      "sha256": "6badc0fb70a8dc1942d5dc10df0319b235880c7a99b68a5be650a062e156ffdf",
+      "bytes": 9226
+    },
+    {
+      "artifact": "history_test",
+      "sha256": "e0d4ee052d954070822e0eb75aa55700687195db2c9c07043d4c5bea127fc60e",
+      "bytes": 4209
+    },
+    {
+      "artifact": "endpoint",
+      "sha256": "df545d83b8886c5ebedec6e7f43f5614ca1302b428602cd891d01dbf19bf71c0",
+      "bytes": 3383
+    },
+    {
+      "artifact": "new_failure_delta_DOE007",
+      "sha256": "10cda72ae546aca701a3b6438adf1617ad63febbc4792b6e511054d52d765d56"
+    },
+    {
+      "artifact": "new_failure_diagnosis_DOE007",
+      "sha256": "d3a7f416ea03d9c4ac7af6f1b1c69a6dc23c2e97295977ac1c0ed06232859d36"
+    },
+    {
+      "artifact": "resource_wait_static_review",
+      "sha256": "bfbe3e41e9c045ae2c9862794c6d3f28ee9750db79d341e90133de0ad4996ee3"
+    },
+    {
+      "artifact": "history_cursor_first293_actual_readback",
+      "sha256": "9d1022d87928ea2e2502562d1b15b235be61caa28d6abc28bfbf4b5697cc7614",
+      "bytes": 79881
+    },
+    {
+      "artifact": "history_cursor_actual_publication_release",
+      "sha256": "18dbe316cc47e51e843ce2180c0fc29915e48b3f609419fdc279e125d752372f",
+      "bytes": 2222
+    },
+    {
+      "artifact": "live_qualification_and_native_owner_045915",
+      "sha256": "1cbd357f8ff7971553b670c29795657b6c52e073a20c266977e858f217346349"
+    },
+    {
+      "artifact": "first293_independent_increment_review",
+      "sha256": "6082c3f17d4b585eaddf0522886646c1989213c1672277ad039bc9860c033a77"
+    }
+  ],
+  "remaining_blocker": "Only943 formal records have the complete transported readback at this cutoff;43 additional records observed in the live986 ledger await incremental record review while the same ordinary publisher continues. The resource-WAIT predicate fix remains undeployed because the active owner has a healthy in-flight solver and no compatible drain/restore boundary has been established.",
+  "publication_actions": {
+    "source_copies_byte_identical": true,
+    "private_geometry_or_PDK_or_INPUTS_published": false,
+    "new_simulations": 0,
+    "new_tests": 0,
+    "new_training": 0,
+    "ledger_writes": 0,
+    "M3_files_changed": false,
+    "central_state_changed": false,
+    "commit_or_push": false
+  },
+  "frozen_utc": "2026-09-12T05:04:36Z",
+  "post_cutoff_handoff": {
+    "type": "CONTINUOUS_PRODUCTION_AUTHORIZATION_ACCEPTED_BY_OWNER",
+    "record_saved_utc": "2026-09-12 05:02:44 UTC",
+    "original_message_timestamp_or_id": "NOT_ASSUMED",
+    "source_pin_reference": "M4_MANIFEST.json post_cutoff_handoff_sources",
+    "automatic_qualification_deployment": "NOT_PROVEN",
+    "successor_batch_deployment": "NOT_PROVEN",
+    "not_part_of_045915_physical_evidence": true,
+    "not_a_claim_current_batch_completed": true
+  }
+}
