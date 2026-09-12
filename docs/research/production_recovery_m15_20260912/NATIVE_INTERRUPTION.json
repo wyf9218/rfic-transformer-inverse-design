@@ -1,0 +1,122 @@
+{
+  "schema": "eucap15_native_interruption_m15.v1",
+  "observed_utc": "2026-09-12T09:26:59.805667+00:00",
+  "diagnosed_utc": "2026-09-12T09:28:29.892624+00:00",
+  "observation": {
+    "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/samebatch_hotpath_v1/joint_cut_20260912T092659131678Z/OBSERVATION.json",
+    "sha256": "998ab6bdd35258d77ebbad6b957c5eb62b614f1219f278ea04fd43e0192dfe6f"
+  },
+  "diagnosis": {
+    "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/samebatch_hotpath_v1/terminal_gap_20260912T092829377288Z/OBSERVATION.json",
+    "sha256": "92cf686866c4975418725c273debe1974b298979c16d712d1fcb17621245292e"
+  },
+  "observed_owner": null,
+  "observed_standby": null,
+  "observed_metadata": null,
+  "actual_native_emx": 0,
+  "locks": [
+    {
+      "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/OWNER.lock",
+      "device_inode": "fd:03:9535105857",
+      "matching": []
+    },
+    {
+      "path": "/volumes/research-localdata/ywang3652/broadband56_real_emx_balanced200k_tsmc65_v2.lock",
+      "device_inode": "fd:03:7254681317",
+      "matching": []
+    },
+    {
+      "path": "/tmp/frequency5to20_research_physical_uid2259579.lock",
+      "device_inode": "00:26:22573228",
+      "matching": []
+    }
+  ],
+  "root_error": "controlled_metadata.MetadataError: PROJECTED_INFLIGHT_STORAGE_UNAVAILABLE",
+  "owner_exit_utc": "2026-09-12T09:26:10.309922+00:00",
+  "continuation_failure": {
+    "child_signals": 0,
+    "error": "[Errno 2] No such file or directory: '/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/BATCH_RECEIPT.json'",
+    "error_type": "FileNotFoundError",
+    "status": "CONTINUATION_STOPPED_PRESERVE_NATIVE_CHILDREN",
+    "utc": "2026-09-12T09:26:28.578641+00:00"
+  },
+  "missing_batch_receipt": true,
+  "original_batch": {
+    "terminal": 231,
+    "without_terminal": 25,
+    "fresh_completed": 182,
+    "logical_core": 86,
+    "logical_formal": 86,
+    "original_budget_reset": false,
+    "deadline_utc": "2026-09-12T15:30:49.723123+00:00"
+  },
+  "formal_window": {
+    "count": 6452,
+    "previous": 6409,
+    "fresh_added": 15,
+    "historical_added": 28,
+    "fresh_current_cohort": 10,
+    "earlier_pending_backfill": 5
+  },
+  "storage": {
+    "free_bytes": 476979519488,
+    "allocated_bytes": 1981779968,
+    "reserved_bytes": 0,
+    "claims": 0,
+    "budget_ceiling_bytes": 5368709120,
+    "quota": "UNKNOWN"
+  },
+  "evidence_files": [
+    {
+      "exists": true,
+      "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/OWNER.stdout.log",
+      "pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/OWNER.stdout.log",
+        "bytes": 1355854,
+        "sha256": "0681f0c5e9f3b14d8e86be456ffe2cf9cd9fbe5122369cabe5cc8a2c9b370910"
+      }
+    },
+    {
+      "exists": true,
+      "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/OWNER_EVENTS.jsonl",
+      "pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/OWNER_EVENTS.jsonl",
+        "bytes": 1353045,
+        "sha256": "f5ed83179d0dad1614b615065d2e3e5f5f4abe5ad96fae8fe7ab47a89f7c5ff7"
+      }
+    },
+    {
+      "exists": false,
+      "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/BATCH_RECEIPT.json",
+      "pin": null
+    },
+    {
+      "exists": true,
+      "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_endpoint_v2_20260912T090023519751Z/CONTINUATION.log",
+      "pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_endpoint_v2_20260912T090023519751Z/CONTINUATION.log",
+        "bytes": 1921,
+        "sha256": "d918474310eccf2dbdd2a1dba949d27604fe0c80e6b0137fa27a30948b7465ab"
+      }
+    },
+    {
+      "exists": true,
+      "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_endpoint_v2_20260912T090023519751Z/CONTINUATION_FAILURE.json",
+      "pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_endpoint_v2_20260912T090023519751Z/CONTINUATION_FAILURE.json",
+        "bytes": 412,
+        "sha256": "8b06ffecd481dca94b61b208829cfeef746d6008f17eee43cea011ae4dd01581"
+      }
+    },
+    {
+      "exists": true,
+      "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_endpoint_v2_20260912T090023519751Z/CONTINUATION_EVENTS.jsonl",
+      "pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_endpoint_v2_20260912T090023519751Z/CONTINUATION_EVENTS.jsonl",
+        "bytes": 522,
+        "sha256": "61486e76bac57aac02a83d3a1afcfedd451678a9cf54c070a5df154d33cf9142"
+      }
+    }
+  ],
+  "scope": "Actual stopped state before recovery; recovery/next live observation must be recorded separately. No invented terminal receipt, old result changes or native restart by research."
+}

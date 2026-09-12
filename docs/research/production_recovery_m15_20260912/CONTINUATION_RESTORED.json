@@ -1,0 +1,101 @@
+{
+  "schema": "eucap15_recovery_continuation_installed_m15.v1",
+  "receipt": {
+    "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_endpoint_v2_claimwait_20260912T093632216029Z/INSTALL_RECEIPT.json",
+    "sha256": "dfac643bb9159d78489d406a7275007ef37b27ba970f97f7a47cf45887a8cdcf",
+    "bytes": 4561
+  },
+  "status": "RECOVERED_SAME_BATCH_AND_ENDPOINT_V2_STANDBY_INSTALLED",
+  "utc": "2026-09-12T09:36:40.901236+00:00",
+  "current_owner": {
+    "pid": 4140036,
+    "ppid": 1,
+    "state": "S",
+    "start_ticks": 400956660,
+    "uid": 2259579,
+    "argv": [
+      "/volumes/research-localdata/ywang3652/rfic-transformer-inverse-design-mars56-s4p-20260702/.venv/bin/python",
+      "-B",
+      "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/claimwait_20260912T093250847503Z/runtime/run_fixed48_native.py",
+      "--release",
+      "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/claimwait_20260912T093250847503Z/owner/RELEASE.json"
+    ]
+  },
+  "current_release": {
+    "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/claimwait_20260912T093250847503Z/owner/RELEASE.json",
+    "sha256": "56565e6fdcbef4eaff0e6aecb35b99bc8f73787dac88ca5e91ecc3f2cfbe6150",
+    "bytes": 207275
+  },
+  "standby": {
+    "pid": 52934,
+    "ppid": 49205,
+    "state": "S",
+    "start_ticks": 400972689,
+    "uid": 2259579,
+    "argv": [
+      "/volumes/research-localdata/ywang3652/rfic-transformer-inverse-design-mars56-s4p-20260702/.venv/bin/python",
+      "-B",
+      "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_endpoint_v2_claimwait_20260912T093632216029Z/runtime/continue_batches.py",
+      "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_endpoint_v2_claimwait_20260912T093632216029Z"
+    ]
+  },
+  "metadata": {
+    "pid": 52932,
+    "ppid": 49205,
+    "state": "R",
+    "start_ticks": 400972689,
+    "uid": 2259579,
+    "argv": [
+      "/volumes/research-localdata/ywang3652/rfic-transformer-inverse-design-mars56-s4p-20260702/.venv/bin/python",
+      "-B",
+      "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_fixed48_20260912T060818729473Z/publication_tools/metadata_worker.py",
+      "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_endpoint_v2_claimwait_20260912T093632216029Z/current_publication/DEPLOYMENT.json"
+    ]
+  },
+  "first_metadata": {
+    "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_endpoint_v2_claimwait_20260912T093632216029Z/FIRST_METADATA_CALL.json",
+    "sha256": "ff7083670793f42636a72ec04c41e4a66a23a284ea18499b21768718006a6850",
+    "bytes": 2238
+  },
+  "metadata_returncode": 0,
+  "resume": {
+    "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_endpoint_v2_claimwait_20260912T093632216029Z/SAME_BATCH_RESUME.json",
+    "sha256": "160a7b2deeefa2876184be2f63ca3199a3ffd93c5202abba92a23b5e68aa2b41",
+    "bytes": 2323
+  },
+  "deployment": {
+    "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_endpoint_v2_claimwait_20260912T093632216029Z/DEPLOYMENT.json",
+    "sha256": "219afb6aba2b598845fe5fc29e56330ec2a62d54192727481d2f211b2dc6471a",
+    "bytes": 27459
+  },
+  "preflight": {
+    "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_endpoint_v2_claimwait_20260912T093632216029Z/PREFLIGHT.json",
+    "sha256": "0acbaf4a38c3ffb02e59c0e4ca49c2f63c73d43a96ca6a7ee165bf89eadaf5c8",
+    "bytes": 1306
+  },
+  "publication": {
+    "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_endpoint_v2_claimwait_20260912T093632216029Z/PUBLICATION.json",
+    "sha256": "0046490791fdc2eb622a6b9b789c3d8ab00af7dac73a9ce330297684ed2e82f9",
+    "bytes": 6151
+  },
+  "first_successor_manifest": {
+    "bytes": 2651,
+    "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/production256_successor_20260912_v1/run_v1/MANIFEST.json",
+    "sha256": "569e1abda082a070db657d83f90327fe4815bd8a25b290fb6f5cc2230faf9740"
+  },
+  "endpoint_upgrade": {
+    "bytes": 288482,
+    "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_endpoint_v2_20260912T090023519751Z/ENDPOINT_UPGRADE.json",
+    "sha256": "5ab6cf17dca566e4bd0a0bca905b76d09a1d9e2d1fe5d2acebfcab91aecba638"
+  },
+  "old_batch_budget_reset": false,
+  "old_endpoint_policy_unchanged": true,
+  "new_native_processes_started_by_this_install": 0,
+  "operator_capture": {
+    "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/storage_claim_wait_v1/continuation_20260912T093632216029Z/RECEIPT.json",
+    "sha256": "49291c1ef6dce1125634745aa91c6070f85050db58c3c0fa2952adeee1a6bcb8"
+  },
+  "stdout_sha256": "3b60f4fca00d16d12aad953d58fd509b103ee6ca5a7344d8cf7622d46c699760",
+  "new_continuation_source_sha256": "f562ec0fe3464fafc26e183a69a3c8445ce4eb68d6cb3cafd4a89f3b9e6a48a9",
+  "scope": "Dead standby and metadata reattached to same recovered batch using bound prior-resume ancestry; full48 and successor native execution require later live evidence."
+}

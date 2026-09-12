@@ -1,0 +1,32 @@
+{
+  "schema": "eucap15_feature_order_binding_m15.v1",
+  "source": {
+    "path": "/Users/wyf/Documents/模拟变压器AI反向建模/github_worktrees/eucap15-mlp-capacity-20260909/docs/research/production_landing_m14_20260912/RECEIVED_NEW35.json",
+    "sha256": "8c99759d760654691e1dacb4235a92aa66e493427657fc7da7c1a55a86b554e3"
+  },
+  "feature_order": [
+    "Lp_nH",
+    "Ls_nH",
+    "Qmin",
+    "K_abs"
+  ],
+  "feature_order_source": {
+    "path": "/Users/wyf/Documents/模拟变压器AI反向建模/github_worktrees/eucap15-mlp-capacity-20260909/docs/research/production_landing_m13_20260912/RECEIVED_NEW96.json",
+    "sha256": "b0ba0fb780760e3d3ddce82bd3bc8d566f15930a45d5a21a4749bc42dae3eb6d"
+  },
+  "exact_result_serialization_identity": {
+    "schema": "eucap15_production256_result.v1",
+    "manifest": "f50721383ef51e5c2c3fa0b7dac67c421d8a9c3e9434600ffaa464c0ef25ebfb",
+    "intent": "9de9dc38074df0dc1441dafeb9b8b6b1038e71ec40ffa653a1880854b6a51d42",
+    "execution_release": "a0834643c375703bbd1dea3c7e778b31a6321b42abba3f33e504bf192ea27a81",
+    "original_release": "3c5e7402fc5497e64c4196934b28360f610e0ea44ee55e4ece8920cda77aa6a4"
+  },
+  "checks": {
+    "earlier77_and_current31_physical_results_same_schema_manifest_intent_and_execution_release": true,
+    "original_source_unmodified": true,
+    "rows_and_backfilled_prior_rows_copied_without_change": true,
+    "new_simulation": false,
+    "new_feature_extraction": false
+  },
+  "scope": "Add omitted feature-order metadata from the existing frozen contract with matching exact source identity, not inferred from numerical values. Does not add physical evidence or formal admission."
+}

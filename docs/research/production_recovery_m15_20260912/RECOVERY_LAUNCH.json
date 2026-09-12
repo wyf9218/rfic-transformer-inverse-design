@@ -1,0 +1,95 @@
+{
+  "schema": "eucap15_actual_recovery_launch_m15.v1",
+  "utc": "2026-09-12T09:34:00.606598+00:00",
+  "status": "SAME_BATCH_RECOVERED_WAITING_FOR_FRESH_ADMISSION",
+  "operator_capture": {
+    "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/storage_claim_wait_v1/launch_20260912T093356208268Z/RECEIPT.json",
+    "sha256": "819b506cd3e65266cfcbb3a22b600829108d855c716cd492b200a9e43179bbb1"
+  },
+  "stdout": {
+    "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/storage_claim_wait_v1/launch_20260912T093356208268Z/STDOUT.txt",
+    "sha256": "43709477dcfdfae25cdfb209ce7ceffdfdce92025773dcce0f48c07f1793b6ce"
+  },
+  "deployment": {
+    "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/claimwait_20260912T093250847503Z/DEPLOYMENT_RECEIPT.json",
+    "sha256": "54486e9d2554d6fc82b9769059375a183e076ce5157b17c84ea019f431b76381",
+    "bytes": 3008
+  },
+  "process": {
+    "pid": 4140036,
+    "ppid": 4139264,
+    "state": "S",
+    "start_ticks": 400956660,
+    "uid": 2259579,
+    "argv": [
+      "/volumes/research-localdata/ywang3652/rfic-transformer-inverse-design-mars56-s4p-20260702/.venv/bin/python",
+      "-B",
+      "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/claimwait_20260912T093250847503Z/runtime/run_fixed48_native.py",
+      "--release",
+      "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/claimwait_20260912T093250847503Z/owner/RELEASE.json"
+    ]
+  },
+  "release": {
+    "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/claimwait_20260912T093250847503Z/owner/RELEASE.json",
+    "sha256": "56565e6fdcbef4eaff0e6aecb35b99bc8f73787dac88ca5e91ecc3f2cfbe6150",
+    "bytes": 207275
+  },
+  "start": {
+    "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/claimwait_20260912T093250847503Z/owner/START_RECEIPT.json",
+    "sha256": "7dcdad89bc31ec02eb9d34202fcd2ad9521a71f2901a6f3172b5a1ff77cd6f6e",
+    "bytes": 1812
+  },
+  "preflight": {
+    "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/claimwait_20260912T093250847503Z/RUNTIME_PREFLIGHT.json",
+    "sha256": "84d091e896afdefc39f6a6c1548c229a53ab2602146b9282f7e0e99b8ab824f6",
+    "bytes": 52048
+  },
+  "tests": {
+    "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/claimwait_20260912T093250847503Z/TEST_RECEIPT.json",
+    "sha256": "44f9f766b1329946cb48f900220ebfbbf521a21449a8d718f37773d90c89e37c",
+    "bytes": 1325
+  },
+  "handoff": {
+    "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/claimwait_20260912T093250847503Z/handoff/RECEIPT.json",
+    "sha256": "68c7a3d95f28ab8f4679fb6c9e8122a18d815afe3d21a16e86b73a57fab59fa0",
+    "bytes": 1078
+  },
+  "original_plan": {
+    "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/start_ledger/PLAN.json",
+    "sha256": "fd90b07106fb7020e1e6520deaac932647feb3e5f686b5d41ffa91fffe9871c0",
+    "bytes": 133724
+  },
+  "closed_preserved": 231,
+  "unstarted_remaining": 25,
+  "adopted_candidates": 0,
+  "native_at_launch": 0,
+  "resource_wait": "No pre-existing native jobs; sampler must collect five independent new healthy checks.",
+  "standby_at_launch": "NOT_YET_REATTACHED",
+  "metadata_at_launch": "NOT_YET_REATTACHED",
+  "changed_installed_sources": [
+    {
+      "bytes": 14480,
+      "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/claimwait_20260912T093250847503Z/runtime/fixed48_runtime.py",
+      "sha256": "b3beef930af5cfd328205c19f3ce58383feefb3168c1163406f135adcd6f1dc5"
+    },
+    {
+      "bytes": 6579,
+      "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/claimwait_20260912T093250847503Z/runtime/prepare_fixed48.py",
+      "sha256": "1e3b24cceea67b3941ffdddc7c561a772d09e9cf50b54f76f7cb8687ceb60025"
+    }
+  ],
+  "capacity": {
+    "current_cadence": 1,
+    "current_calibre": 1,
+    "current_emx": 48,
+    "next_cadence": 8,
+    "next_calibre": 8,
+    "next_emx": 48
+  },
+  "same_batch_capacity_limit": {
+    "validate": "fixed48_amendment.validate:SAME48_POLICY_AND_SCOPE_REQUIRED",
+    "prepare": "prepare_fixed48.prepare:SAME48_POLICY_MUST_NOT_CHANGE",
+    "reason": "Existing same48 recovery branch compares the entire fixed48_policy; restoring the proven path immediately avoids delaying recovery to expand that interface."
+  },
+  "scope": "Actual dead-parent recovery, not a new batch budget and not proof of new physical completion or full48. Old owner/standby failure evidence is retained; subsequent live cut required for current native concurrency."
+}

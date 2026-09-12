@@ -1,20 +1,21 @@
 # Current15GHz research/production status
 
-Latest actual native observation: 2026-09-12 09:18:23.778838 UTC.
-[M14 new production evidence](production_landing_m14_20260912/SNAPSHOT.json); [prior M13 installation](production_landing_m13_20260912/README.md).
+Latest live observation:2026-09-12 09:40:31.630234 UTC.
+[M15 recovery and actual output evidence](production_recovery_m15_20260912/SNAPSHOT.json).
 
-- Requested48 / executor48 / actual native EMX5, each2CPU; resourcePASS, not full48 proof.
-- Window09:05:27–09:18:23:31 new EMX completions,4 candidate failures,35 terminal.
-- New19 strict/range candidate-unique:14 formal and5 pending; original splits preserved.
-- Fresh formal+17 includes3 prior pending; historical formal+146; certified lower bound6409.
-- Same original owner1039340 and metadata1145088 alive; no process restarted/signalled.
-- Installed standby2839662 waits original batch terminal and owner exit automatically.
-- Current upstream1/1; next8/8/48 installed but first successor native execution not yet observed.
-- Original256:206 terminal,50 without terminal; logicalcore76/formal71/pending5.
-- Original256/12h/5GiB budget retained; diskfree477596786688B, quotaUNKNOWN.
-- New offline projection of earlier received96:18 formal TRAIN rows,17 cells,0 baseline-empty cells.
-- Not cumulative coverage or algorithm superiority; no old experiments or figures regenerated.
-- Full100K and final independent10K remain incomplete.
+- Requested48/executor48; actual native EMX0. Recovered owner4140036, metadata52932 and standby52934 alive.
+- Resources6/5 PASS;8 storage claims but no active tool permits/native tools. Exact pre-tool step under targeted diagnosis.
+- Since09:18:23:new24 EMX completions,10 strict/range candidate-unique; all10 formally admitted.
+- Fresh formal+15 includes5 prior pending; history formal+28; certified lower bound6452.
+- Original256:231 terminal/182fresh/34fail/15analytic; logicalcore86/formal86;25 verified unstarted.
+- Previous owner exited on a storage-reservation race; dead-parent recovery deployed09:34, no old solver/candidate rerun.
+- Storage claim now waits outside dispatch lock; budget/deadline/identity/fault checks retained.
+- Automatic standby and publication restored09:36; current1/1/48, next8/8/48 at original batch completion.
+- Post-recovery new physical results0 and formal adds0 at this cut; no claim that PID or config equals actual solving.
+- Diskfree477324648448B; quotaUNKNOWN; original256/12h/5GiB budget unchanged.
+- First earlier35+3backfill landing projection completed, with new9 and prior2 train separately counted.
+- No cumulative coverage/sampling superiority claim, old experiment rerun or generated paper figure.
+- Full100K/final independent10K remain incomplete.
 [First real controlled64 result](20260911_controlled64_first_real.md) is now verified:
 1 actual DOE EMX start/complete at the08:24:57 snapshot; strict-valid but K_abs0.1711<0.2,
 so0 new qualified in-range samples. Original14 analytical failures remain in64; no advantage claim.

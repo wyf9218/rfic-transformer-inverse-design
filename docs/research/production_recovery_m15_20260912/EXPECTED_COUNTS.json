@@ -1,0 +1,16 @@
+{
+  "new_cohort": {
+    "received_terminal": 35,
+    "emx_completed": 31,
+    "strict_in_range": 19,
+    "formal_admitted": 14,
+    "pending_formal": 5,
+    "formal_train": 9
+  },
+  "backfill": {
+    "formal_admitted": 3,
+    "formal_train": 2,
+    "formal_validation": 0,
+    "formal_test": 1
+  }
+}

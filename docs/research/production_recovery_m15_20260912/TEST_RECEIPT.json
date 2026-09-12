@@ -1,0 +1,91 @@
+{
+  "schema": "eucap15_received_landing_backfill_tests.v3",
+  "utc": "2026-09-12T09:30:09Z",
+  "status": "PASS_NEW_FOCUSED_TESTS_ONLY",
+  "action": "Extend the existing read-only landing reader to validate and account for prior pending rows now formally joined, separately from new terminal cohorts and cumulative coverage.",
+  "code": {
+    "path": "research/broadband56_nn/eucap15_received_landing_increment.py",
+    "sha256": "99462bab7afee5074643626fae8614f3ad71b916f3430dfff58b19828b4ce1ae"
+  },
+  "tests": {
+    "path": "tests/test_eucap15_received_landing_backfill.py",
+    "sha256": "5db88cf983c9a90f76a741151e6ab6331cf668abc5168d190a4bb53777852052",
+    "passed": 3,
+    "failed": 0,
+    "skipped": 0,
+    "reported_seconds": 0.24,
+    "cases": [
+      "test_prior_formal_train_backfills_have_separate_unchanged_baseline_diagnostics",
+      "test_identity_and_pin_reuse_across_new_and_backfill_cohorts_are_rejected",
+      "test_backfills_require_strict_range_exact_join_and_complete_count_envelopes"
+    ],
+    "command": "PYTHONDONTWRITEBYTECODE=1 /Users/wyf/Documents/模拟变压器AI反向建模/reports/broadband56_nn_v2_20260907T212216Z/environment/bin/python -B -m pytest -q -p no:cacheprovider tests/test_eucap15_received_landing_backfill.py --basetemp=/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/landing_increment_m15_v3/pytest_v1 --junitxml=/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/landing_increment_m15_v3/TEST_RESULTS.xml",
+    "result_file": "TEST_RESULTS.xml",
+    "result_sha256": "fda20cc19a16f7b9fa6e8fca8af8b2c33f5e4dc13fc48533ca51bb014a17b852",
+    "fixture_evidence": "pytest_v1: each synthetic invocation writes a distinct exclusive-create file, preserving rejection cases."
+  },
+  "unchanged_reference_inputs": [
+    {
+      "path": "docs/research/eucap15_abc_increment_20260910/COVERAGE_BEFORE.csv",
+      "sha256": "8774136cb90164549b465135d41d206371b8616a86d0b3cf5595848971a948e9"
+    },
+    {
+      "path": "research/broadband56_nn/eucap15_acquisition.py",
+      "sha256": "d55eedd5955a6654966fd3dd0ad32074cae4376ef2709ffdbbcfe8edee431f0a"
+    },
+    {
+      "path": "docs/research/production_landing_m14_20260912/RECEIVED_NEW35.json",
+      "sha256": "8c99759d760654691e1dacb4235a92aa66e493427657fc7da7c1a55a86b554e3",
+      "usage": "Schema inspection only; actual35 not executed by this subtask."
+    }
+  ],
+  "checks": {
+    "git_diff_check": "PASS",
+    "cli_help_with_expected_backfill_counts": "PASS",
+    "current_source_counts_and_train_diagnostic_meanings_unchanged": true,
+    "backfills_excluded_from_new_terminal_emx_and_eligibility_counts": true,
+    "shared_cross_cohort_request_geometry_result_formal_pin_uniqueness": true,
+    "backfills_require_finite_strict_in_range_actuals_and_one_exact_formal_join": true,
+    "original_status_split_flags_formal_pins_target_and_predicted_cells_preserved": true,
+    "nonempty_backfills_require_complete_separate_caller_count_envelope": true,
+    "received_backfill_and_formal_window_counts_checked_when_present": true,
+    "old24_runs": 0,
+    "old96_runs": 0,
+    "actual35_runs_by_this_subtask": 0,
+    "old_tests_or_full_qa_runs": 0,
+    "new_native_or_training_runs": 0,
+    "figure_generation": false,
+    "central_memory_mutation": false,
+    "commit_or_push": false
+  },
+  "root_invocation": {
+    "status": "ARGUMENTS_AND_INPUT_SHA_VERIFIED_NOT_EXECUTED_BY_THIS_SUBTASK",
+    "workdir": "/Users/wyf/Documents/模拟变压器AI反向建模/github_worktrees/eucap15-mlp-capacity-20260909",
+    "python": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/broadband56_nn_v2_20260907T212216Z/environment/bin/python",
+    "module": "research.broadband56_nn.eucap15_received_landing_increment",
+    "baseline": "docs/research/eucap15_abc_increment_20260910/COVERAGE_BEFORE.csv",
+    "received": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/landing_increment_m15_v3/RECEIVED_BOUND35.json",
+    "received_sha256": "0accf3be49c7894fba4a0d6f67d1fad47cc6b61bf481ad3ac29a8467512d4530",
+    "expected_counts": {
+      "received_terminal": 35,
+      "emx_completed": 31,
+      "strict_in_range": 19,
+      "formal_admitted": 14,
+      "pending_formal": 5,
+      "formal_train": 9
+    },
+    "expected_backfill_counts": {
+      "formal_admitted": 3,
+      "formal_train": 2,
+      "formal_validation": 0,
+      "formal_test": 1
+    },
+    "caller_verified_sources": true
+  },
+  "limitations": [
+    "Synthetic tests and static review validate internal accounting only; physical source and formal ledger authenticity remain explicitly caller-verified.",
+    "Backfilled rows are previously observed physical results, not new solves, new eligible geometries, independent final-test additions or cumulative coverage gains.",
+    "Only the existing reader and one new test file changed in the research worktree."
+  ],
+  "next_legal_entry": "Root may execute its single new actual35 projection from RECEIVED_BOUND35.json using both exact count envelopes; keep original35, old96 and old24 outputs unchanged."
+}

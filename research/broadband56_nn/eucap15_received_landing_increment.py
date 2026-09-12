@@ -1,4 +1,4 @@
-"""Project new received terminals onto the unchanged 512-cell train reference.
+"""Project new terminals and separate prior formal backfills onto a train reference.
 Read-only inputs. No admission, sampling, model, simulator, or cumulative union update.
 
 Pins bind the received cut; they do not verify its underlying physical evidence.
@@ -21,6 +21,7 @@ M12_COUNTS = dict(received_terminal=24, emx_completed=20, strict_in_range=7,
 SPLITS = ("train", "validation", "test")
 COUNT_KEYS = (*M12_COUNTS, "formal_validation", "formal_test",
               *("pending_formal_" + split for split in SPLITS))
+BACKFILL_COUNT_KEYS = ("formal_admitted", *("formal_" + split for split in SPLITS))
 DOC_COUNTS = dict(new_terminal="received_terminal", new_emx_completed="emx_completed",
                   new_strict_range_unique="strict_in_range",
                   fresh_formal_this_increment="formal_admitted",
@@ -57,8 +58,22 @@ def read(path, sha):
     require(hashlib.sha256(raw).hexdigest() == sha, "SHA-256 mismatch: " + str(path))
     return raw
 
+def train_landing_diagnostics(train_rows):
+    """Describe one cohort against the frozen baseline, without updating coverage."""
+    return dict(
+        distinct_train_landing_cells=len({tuple(r["actual_cell"]) for r in train_rows}),
+        train_landings_in_baseline_empty_cells=sum(r["train_cell_was_empty"] for r in train_rows),
+        distinct_baseline_empty_cells_observed=sorted({tuple(r["actual_cell"]) for r in train_rows
+                                                     if r["train_cell_was_empty"]}),
+        train_landings_in_baseline_underfilled_cells=sum(r["frozen3801_train_cell_count"] < 5
+                                                       for r in train_rows),
+        train_k_above_point8=sum(r["actual_response"][3] > .8 for r in train_rows),
+        train_q10_20=sum(10 <= r["actual_response"][2] <= 20 for r in train_rows),
+        train_max_k=max((r["actual_response"][3] for r in train_rows), default=None),
+        train_max_q=max((r["actual_response"][2] for r in train_rows), default=None))
+
 def run(base_path, received_path, *, received_sha256=PIN_RECEIVED,
-        expected_counts=None, caller_verified_sources=False):
+        expected_counts=None, expected_backfill_counts=None, caller_verified_sources=False):
     legacy = received_sha256 == PIN_RECEIVED and expected_counts is None
     require(legacy or caller_verified_sources is True,
             "Caller must have verified physical sources and formal record joins")
@@ -71,10 +86,16 @@ def run(base_path, received_path, *, received_sha256=PIN_RECEIVED,
     require(doc["feature_order"] == ["Lp_nH", "Ls_nH", "Qmin", "K_abs"], "Feature order mismatch")
     rows = doc["rows"]
     require(isinstance(rows, list), "Received rows must be a list")
-    output, train_cells, groups = [], [], {}
+    backfill_rows = doc.get("backfilled_prior_rows", [])
+    require(isinstance(backfill_rows, list), "Backfilled prior rows must be a list")
+    require(not backfill_rows or expected_backfill_counts is not None,
+            "Backfilled prior rows require an explicit backfill count envelope")
+    output, backfill_output, groups = [], [], {}
     identities, result_pins, formal_pins = set(), set(), set()
     totals = Counter({key: 0 for key in COUNT_KEYS})
-    for r in rows:
+    backfill_totals = Counter({key: 0 for key in BACKFILL_COUNT_KEYS})
+    for index, r in enumerate(rows + backfill_rows):
+        is_backfill = index >= len(rows)
         require(isinstance(r, dict), "Received row must be an object")
         for key in ("request_id", "source", "status"):
             require(isinstance(r.get(key), str) and bool(r[key].strip()), "Invalid " + key)
@@ -112,11 +133,11 @@ def run(base_path, received_path, *, received_sha256=PIN_RECEIVED,
                 if key in record:
                     require(key in r and record[key] == r[key], "Formal source row mismatch: " + key)
         admitted = eligible and len(formal) == 1
+        require(not is_backfill or (fresh and admitted),
+                "Backfilled prior row must have a strict in-range actual response and one exact formal join")
         pending = eligible and not admitted
         train = admitted and split == "train"
         nbase = base[cell[0]*64 + cell[1]*8 + cell[2]][c.COUNTS[0]] if train else None
-        if train:
-            train_cells.append(tuple(cell))
         item = dict(r, actual_cell=list(cell) if cell is not None else None,
                     train_reference_comparison_eligible=train,
                     frozen3801_train_cell_count=nbase,
@@ -130,6 +151,11 @@ def run(base_path, received_path, *, received_sha256=PIN_RECEIVED,
                         any(item[key] is not None for key in ("target_cell", "predicted_cell")) else
                         "NOT_IN_RECEIVED_CUT_NOT_INFERRED")
         item.setdefault("requested_target_error", None)
+        if is_backfill:
+            backfill_output.append(item)
+            backfill_totals.update(dict(formal_admitted=1,
+                                       **{"formal_" + name: int(split == name) for name in SPLITS}))
+            continue
         output.append(item)
         counts = dict(received_terminal=1, emx_completed=int(fresh), strict_in_range=int(eligible),
                       formal_admitted=int(admitted), pending_formal=int(pending))
@@ -141,11 +167,18 @@ def run(base_path, received_path, *, received_sha256=PIN_RECEIVED,
     check_counts(expected_counts, totals, "Caller envelope", required=M12_COUNTS)
     check_counts({key: doc[name] for name, key in DOC_COUNTS.items() if name in doc},
                  totals, "Received envelope", required=("received_terminal",))
+    if expected_backfill_counts is not None:
+        check_counts(expected_backfill_counts, backfill_totals, "Caller backfill envelope",
+                     required=BACKFILL_COUNT_KEYS)
+    check_counts({key: doc[key] for key in ("prior_pending_formal_backfill", "ledger_window_fresh_formal")
+                  if key in doc},
+                 dict(prior_pending_formal_backfill=backfill_totals["formal_admitted"],
+                      ledger_window_fresh_formal=totals["formal_admitted"] + backfill_totals["formal_admitted"]),
+                 "Received formal window envelope")
     train_rows = [r for r in output if r["train_reference_comparison_eligible"]]
-    empty = sorted({tuple(r["actual_cell"]) for r in train_rows if r["train_cell_was_empty"]})
-    low = [r for r in train_rows if r["frozen3801_train_cell_count"] < 5]
+    backfill_train_rows = [r for r in backfill_output if r["train_reference_comparison_eligible"]]
     return dict(schema="eucap15_actual_landing_increment_m13.v1" if legacy else
-                       "eucap15_actual_landing_increment.v2",
+                       "eucap15_actual_landing_increment.v3",
         generated_utc=datetime.now(timezone.utc).isoformat(),
         observation_utc=doc["observed_utc"], baseline_observation_utc=doc["baseline_utc"],
         input_pins=[dict(path=str(base_path),sha256=PIN_BASE),
@@ -157,19 +190,20 @@ def run(base_path, received_path, *, received_sha256=PIN_RECEIVED,
         source_counts=dict(totals), expected_source_counts=expected_counts,
         source_reliance="CALLER_VERIFIED_PHYSICAL_SOURCES_AND_FORMAL_JOINS_NOT_REVERIFIED_HERE",
         by_source={k:dict(v) for k,v in groups.items()},
-        eligible_new_train_rows=len(train_rows), distinct_train_landing_cells=len(set(train_cells)),
-        train_landings_in_baseline_empty_cells=sum(r["train_cell_was_empty"] for r in train_rows),
-        distinct_baseline_empty_cells_observed=empty,
-        train_landings_in_baseline_underfilled_cells=len(low),
-        train_k_above_point8=sum(r["actual_response"][3] > .8 for r in train_rows),
-        train_q10_20=sum(10 <= r["actual_response"][2] <= 20 for r in train_rows),
-        train_max_k=max((r["actual_response"][3] for r in train_rows),default=None),
-        train_max_q=max((r["actual_response"][2] for r in train_rows),default=None),
+        eligible_new_train_rows=len(train_rows), **train_landing_diagnostics(train_rows),
+        backfill_counts=dict(backfill_totals), expected_backfill_counts=expected_backfill_counts,
+        backfilled_prior_rows=backfill_output,
+        backfill_train_landing_diagnostics=dict(
+            scope="PRIOR_FORMAL_BACKFILLS_ONLY_NOT_NEW_TERMINALS_EMX_ELIGIBILITY_OR_CUMULATIVE_COVERAGE",
+            baseline_train_rows=3801, baseline_cells=512,
+            eligible_backfilled_train_rows=len(backfill_train_rows),
+            **train_landing_diagnostics(backfill_train_rows)),
         cumulative_coverage_gain=None, cumulative_union_geometry_count=None,
         scope_caveats=[
             ("Five" if legacy else str(len(train_rows))) +
             " train rows are compared only with unchanged 3801 reference, not the full current admitted pool.",
             "Original source/split/RESULT flags/formal pins and all failures retained.",
+            "Prior formal backfills are separate: they add no new terminal, EMX or eligible geometry counts.",
             "No re-extraction, fresh EMX, native admission, target generation, model update or sampling decision.",
             "Validation/test/pending-formal never contributes to train occupancy; no fabricated DOE target error.",
             "Received pin and status strings do not prove physical truth or admission; caller verification is required.",
@@ -183,10 +217,14 @@ if __name__ == "__main__":
     p.add_argument("--expected-counts", type=json.loads,
                    help="JSON count envelope: received_terminal, emx_completed, strict_in_range, "
                         "formal_admitted, pending_formal, formal_train; other source_counts optional")
+    p.add_argument("--expected-backfill-counts", type=json.loads,
+                   help="Required for nonempty backfilled_prior_rows: formal_admitted, formal_train, "
+                        "formal_validation, formal_test; separate from new-terminal counts")
     p.add_argument("--caller-verified-sources", action="store_true",
                    help="Acknowledge existing caller verification of physical sources and formal joins")
     a=p.parse_args()
     print(json.dumps(run(a.baseline,a.received,received_sha256=a.received_sha256,
                          expected_counts=a.expected_counts,
+                         expected_backfill_counts=a.expected_backfill_counts,
                          caller_verified_sources=a.caller_verified_sources),
                      ensure_ascii=False,allow_nan=False,indent=2))

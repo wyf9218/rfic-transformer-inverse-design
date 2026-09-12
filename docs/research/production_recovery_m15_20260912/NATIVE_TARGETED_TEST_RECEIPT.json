@@ -1,0 +1,24 @@
+{
+  "evidence_class": "SYNTHETIC_STORAGE_RACE_REAL_PRODUCER_CONSUMER_NO_NATIVE",
+  "native_calls": 0,
+  "new_manager": {
+    "bytes": 14480,
+    "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/claimwait_20260912T093250847503Z/runtime/fixed48_runtime.py",
+    "sha256": "b3beef930af5cfd328205c19f3ce58383feefb3168c1163406f135adcd6f1dc5"
+  },
+  "old_manager": {
+    "bytes": 14217,
+    "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/runtime/fixed48_runtime.py",
+    "sha256": "5b23892a0cf357eb871d8c66c3b02924a89ab8309572912db644d61415dbbf96"
+  },
+  "returncode": 0,
+  "source": {
+    "bytes": 4907,
+    "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/claimwait_20260912T093250847503Z/test_storage_claim_wait.py",
+    "sha256": "60ef1795438a52ff1c3533f7c13ab0d7fa640a1703b72b0820bfbbb38005479f"
+  },
+  "status": "PASS",
+  "stderr": "......\n----------------------------------------------------------------------\nRan 6 tests in 0.007s\n\nOK\n",
+  "stdout": "",
+  "utc": "2026-09-12T09:32:51.378879+00:00"
+}

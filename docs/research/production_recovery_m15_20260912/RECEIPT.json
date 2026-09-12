@@ -1,0 +1,76 @@
+{
+  "schema": "eucap15_landing_increment_m15.v1",
+  "status": "PASS_FIRST_REAL35_WITH_SEPARATE_FORMAL_BACKFILL",
+  "utc": "2026-09-12T09:31:03.926367+00:00",
+  "input": {
+    "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/landing_increment_m15_v3/RECEIVED_BOUND35.json",
+    "sha256": "0accf3be49c7894fba4a0d6f67d1fad47cc6b61bf481ad3ac29a8467512d4530"
+  },
+  "source_binding": {
+    "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/landing_increment_m15_v3/SOURCE_BINDING.json",
+    "sha256": "66ccc2f8356ebeaafeb0cf6284b7aec60dac2e69f9b4f0ce2ce6865e20af644a"
+  },
+  "code": {
+    "path": "research/broadband56_nn/eucap15_received_landing_increment.py",
+    "sha256": "99462bab7afee5074643626fae8614f3ad71b916f3430dfff58b19828b4ce1ae"
+  },
+  "tests": {
+    "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/landing_increment_m15_v3/TEST_RECEIPT.json",
+    "sha256": "79776480138a542a2c8f618b4cbcbd972d96be24554ed2b40501cb4b1b3852d1",
+    "new_tests": 3,
+    "old_suite_runs": 0
+  },
+  "command": "'/Users/wyf/Documents/模拟变压器AI反向建模/reports/broadband56_nn_v2_20260907T212216Z/environment/bin/python' -B -m research.broadband56_nn.eucap15_received_landing_increment --baseline docs/research/eucap15_abc_increment_20260910/COVERAGE_BEFORE.csv --received '/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/landing_increment_m15_v3/RECEIVED_BOUND35.json' --received-sha256 0accf3be49c7894fba4a0d6f67d1fad47cc6b61bf481ad3ac29a8467512d4530 --expected-counts '{\"received_terminal\":35,\"emx_completed\":31,\"strict_in_range\":19,\"formal_admitted\":14,\"pending_formal\":5,\"formal_train\":9}' --expected-backfill-counts '{\"formal_admitted\":3,\"formal_train\":2,\"formal_validation\":0,\"formal_test\":1}' --caller-verified-sources",
+  "workdir": "/Users/wyf/Documents/模拟变压器AI反向建模/github_worktrees/eucap15-mlp-capacity-20260909",
+  "exit_code": 0,
+  "actual35_executions": 1,
+  "old96_or24_executions": 0,
+  "output": {
+    "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/landing_increment_m15_v3/ACTUAL_LANDINGS.json",
+    "sha256": "715e7a706d872a654e102651680a3da60fd6373838161919dcef077431fb555e"
+  },
+  "current_cohort": {
+    "received_terminal": 35,
+    "emx_completed": 31,
+    "strict_in_range": 19,
+    "formal_admitted": 14,
+    "pending_formal": 5,
+    "formal_train": 9,
+    "formal_validation": 1,
+    "formal_test": 4,
+    "pending_formal_train": 4,
+    "pending_formal_validation": 1,
+    "pending_formal_test": 0
+  },
+  "prior_formal_backfills": {
+    "formal_admitted": 3,
+    "formal_train": 2,
+    "formal_validation": 0,
+    "formal_test": 1
+  },
+  "train_coverage": {
+    "source_cut_utc": "2026-09-12T09:18:23.778838+00:00",
+    "new9_train_distinct_cells": 9,
+    "new9_baseline_empty_cells": 0,
+    "new9_rows_in_underfilled_cells": 1,
+    "prior2_train_distinct_cells": 2,
+    "prior2_baseline_empty_cells": 0,
+    "prior2_underfilled_rows": 0,
+    "baseline_train": 3801,
+    "baseline_cells": 512,
+    "cumulative_pool_gain": null
+  },
+  "production_observation_separate": {
+    "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/landing_increment_m15_v3/RECEIVED_NEW25.json",
+    "sha256": "665d61e8598764c2cc1ef692e3c10a41dc48c28158c5911af81756ed8c44783c",
+    "observation_utc": "2026-09-12T09:26:59.805667+00:00",
+    "new_emx24_not_part_of_this35_projection": true
+  },
+  "limitations": [
+    "Only formally joined original TRAIN rows enter each cohort's landing diagnostics.",
+    "Backfill3 counts zero new physical solves or newly eligible geometries. Current9 and prior2 train remain separated, no cumulative union coverage claimed.",
+    "Original published35 lacked feature_order; prepared binding adds existing frozen metadata using exact shared schema/manifest/intent/execution-release identity, without altering original rows.",
+    "No inference targets, proxy values, models, native configuration, production ledger or source split changed by this reader.",
+    "An additional private static-review file was produced by the coding subtask; it is not a new gate or basis for physical qualification and is not required for dispatch. No further review chain requested."
+  ]
+}

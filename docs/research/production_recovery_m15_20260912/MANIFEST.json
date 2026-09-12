@@ -1,0 +1,125 @@
+{
+  "schema": "eucap15_recovery_m15_manifest.v1",
+  "utc": "2026-09-12 09:43:50 UTC",
+  "scope": "Actual existing-batch storage-race recovery and automatic-standby restoration, one new25 reception, one earlier35+3 formal-backfill projection. Full48 and100K not achieved.",
+  "files": [
+    {
+      "sha256": "3170c418f3c72f65535084e052672df9007ab6dbf501af9f062bc78cffca6d22",
+      "path": "docs/research/production_recovery_m15_20260912/FIGURE_SOURCE_NOTE.md"
+    },
+    {
+      "sha256": "1c824cc8ad4a6dab30ec08901c01253b582fd9dee38fbacd530c6929954880b0",
+      "path": "docs/research/production_recovery_m15_20260912/RECEIPT.json"
+    },
+    {
+      "sha256": "f562ec0fe3464fafc26e183a69a3c8445ce4eb68d6cb3cafd4a89f3b9e6a48a9",
+      "path": "docs/research/production_recovery_m15_20260912/native_recovery_sources/continue_batches.py"
+    },
+    {
+      "sha256": "8472d8ae25fb665c9bcbb955e898d6fc91e7921518118ef572612a7d1bffec36",
+      "path": "docs/research/production_recovery_m15_20260912/native_recovery_sources/prepare_dead_recovery.py"
+    },
+    {
+      "sha256": "1e3b24cceea67b3941ffdddc7c561a772d09e9cf50b54f76f7cb8687ceb60025",
+      "path": "docs/research/production_recovery_m15_20260912/native_recovery_sources/prepare_fixed48.py"
+    },
+    {
+      "sha256": "de8aa29d9e029d48211e8bafcd12fbaa83bc012a61755df5171d1d14f6f4a1a1",
+      "path": "docs/research/production_recovery_m15_20260912/native_recovery_sources/restore_continuation.py"
+    },
+    {
+      "sha256": "60ef1795438a52ff1c3533f7c13ab0d7fa640a1703b72b0820bfbbb38005479f",
+      "path": "docs/research/production_recovery_m15_20260912/native_recovery_sources/test_storage_claim_wait.py"
+    },
+    {
+      "sha256": "b3beef930af5cfd328205c19f3ce58383feefb3168c1163406f135adcd6f1dc5",
+      "path": "docs/research/production_recovery_m15_20260912/native_recovery_sources/fixed48_runtime.py"
+    },
+    {
+      "sha256": "af901d04c24c077aec6567fce286c253ab52490759fab50a50454b2f83638de7",
+      "path": "docs/research/production_recovery_m15_20260912/native_recovery_sources/launch_prepared.py"
+    },
+    {
+      "sha256": "6d321734ebd48bf0701d3745aa00dfac9709d2a40983231bb1cbaba72b7958f3",
+      "path": "docs/research/production_recovery_m15_20260912/CONTINUATION_RESTORED.json"
+    },
+    {
+      "sha256": "0acbaf4a38c3ffb02e59c0e4ca49c2f63c73d43a96ca6a7ee165bf89eadaf5c8",
+      "path": "docs/research/production_recovery_m15_20260912/CONTINUATION_PREFLIGHT.json"
+    },
+    {
+      "sha256": "66ccc2f8356ebeaafeb0cf6284b7aec60dac2e69f9b4f0ce2ce6865e20af644a",
+      "path": "docs/research/production_recovery_m15_20260912/SOURCE_BINDING.json"
+    },
+    {
+      "sha256": "715e7a706d872a654e102651680a3da60fd6373838161919dcef077431fb555e",
+      "path": "docs/research/production_recovery_m15_20260912/ACTUAL_LANDINGS.json"
+    },
+    {
+      "sha256": "44b3240302ce2e70623061588579411defb4676695a3c9dc331d08abfce2c9af",
+      "path": "docs/research/production_recovery_m15_20260912/EXPECTED_COUNTS.json"
+    },
+    {
+      "sha256": "12083abe07792d8846dbecaaed7b62298a6be1b1627fc814deb593a93abcc68b",
+      "path": "docs/research/production_recovery_m15_20260912/SNAPSHOT.json"
+    },
+    {
+      "sha256": "69cd206d3c9366c53f0b60cba3d3b941df6ea23811dcb0f91529f8ac7291ea6c",
+      "path": "docs/research/production_recovery_m15_20260912/TEST_RESULTS.xml"
+    },
+    {
+      "sha256": "0accf3be49c7894fba4a0d6f67d1fad47cc6b61bf481ad3ac29a8467512d4530",
+      "path": "docs/research/production_recovery_m15_20260912/RECEIVED_BOUND35.json"
+    },
+    {
+      "sha256": "79776480138a542a2c8f618b4cbcbd972d96be24554ed2b40501cb4b1b3852d1",
+      "path": "docs/research/production_recovery_m15_20260912/TEST_RECEIPT.json"
+    },
+    {
+      "sha256": "665d61e8598764c2cc1ef692e3c10a41dc48c28158c5911af81756ed8c44783c",
+      "path": "docs/research/production_recovery_m15_20260912/RECEIVED_NEW25.json"
+    },
+    {
+      "sha256": "de3d456176041ad0b65b8c5043cf747cfe9bafcf2d00991ac3342cf8042635e7",
+      "path": "docs/research/production_recovery_m15_20260912/NATIVE_INTERRUPTION.json"
+    },
+    {
+      "sha256": "44f9f766b1329946cb48f900220ebfbbf521a21449a8d718f37773d90c89e37c",
+      "path": "docs/research/production_recovery_m15_20260912/NATIVE_TARGETED_TEST_RECEIPT.json"
+    },
+    {
+      "sha256": "5e1d428654c978fd892bb52b790861314d281c3cd089febee251e7b82b0177ca",
+      "path": "docs/research/production_recovery_m15_20260912/RECOVERY_LAUNCH.json"
+    },
+    {
+      "sha256": "f8ce4fb03913ef48ba3f87d093ba8f68a404ae0b582a65d5962d00d5daf4302d",
+      "path": "docs/research/CURRENT_STATUS.md"
+    },
+    {
+      "sha256": "99462bab7afee5074643626fae8614f3ad71b916f3430dfff58b19828b4ce1ae",
+      "path": "research/broadband56_nn/eucap15_received_landing_increment.py"
+    },
+    {
+      "sha256": "5db88cf983c9a90f76a741151e6ab6331cf668abc5168d190a4bb53777852052",
+      "path": "tests/test_eucap15_received_landing_backfill.py"
+    }
+  ],
+  "source_observations": [
+    {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/samebatch_hotpath_v1/joint_cut_20260912T092659131678Z/OBSERVATION.json",
+      "sha256": "998ab6bdd35258d77ebbad6b957c5eb62b614f1219f278ea04fd43e0192dfe6f"
+    },
+    {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/samebatch_hotpath_v1/joint_cut_20260912T094031068137Z/OBSERVATION.json",
+      "sha256": "47a6a0e1f6f52aad47cc4845bfe74b581689b3469213bb01ff2df006fd95b697"
+    }
+  ],
+  "native_source_copies": "7 new or recovery-relevant implementation/test/operator source copies; not a second installed controller.",
+  "normalization": {
+    "test_xml_original_sha256": "fda20cc19a16f7b9fa6e8fca8af8b2c33f5e4dc13fc48533ca51bb014a17b852",
+    "public_test_xml_sha256": "69cd206d3c9366c53f0b60cba3d3b941df6ea23811dcb0f91529f8ac7291ea6c",
+    "difference": "One final LF added for Git; original evidence retained."
+  },
+  "new_user_gates": 0,
+  "old_experiments_repeated": 0
+}
