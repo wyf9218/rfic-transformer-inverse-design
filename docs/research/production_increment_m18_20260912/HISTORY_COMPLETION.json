@@ -1,0 +1,89 @@
+{
+  "schema": "eucap15_existing_history_partition_completion_received.v1",
+  "observed_utc": "2026-09-12T10:27:01.086413+00:00",
+  "source": {
+    "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/history_cursor_publication_20260912T045512077337Z/READBACK_THROUGH_021135_20260912T054009180794Z.json",
+    "sha256": "36c41d8b947fde5049a346e758328a87b62ad289c67489b77ea82c5d2c333417",
+    "bytes": 1186786
+  },
+  "status": "COMPLETED_METADATA_ONLY",
+  "terminal": {
+    "pin": {
+      "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/metadata_resume_fixed48_20260912T054006591386Z/history/TERMINAL.json",
+      "sha256": "c5909e582fd38fc3d3f16f10bde191cd00e14153e025943f9fba7f1adaba3a23",
+      "bytes": 425
+    },
+    "value": {
+      "status": "COMPLETED_METADATA_ONLY",
+      "utc": "2026-09-12T09:22:03.240746+00:00",
+      "receipt": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/history_cursor_publication_20260912T045512077337Z/READBACK_THROUGH_021135_20260912T054009180794Z.json",
+        "sha256": "36c41d8b947fde5049a346e758328a87b62ad289c67489b77ea82c5d2c333417",
+        "bytes": 1186786
+      },
+      "native_actions": 0
+    }
+  },
+  "source_range": {
+    "first": 2001,
+    "last": 21135
+  },
+  "processed_row_range_size": 19135,
+  "completed_blocks": 192,
+  "expected_blocks": 192,
+  "missing_blocks": [],
+  "holds": [],
+  "new_commits_this_historical_worker_execution": 4348,
+  "new_split_counts": {
+    "test": 874,
+    "train": 2608,
+    "validation": 866
+  },
+  "worker_ledger_before": 2021,
+  "worker_ledger_after": 6444,
+  "parallel_other_commits": 75,
+  "warning": "4423 ledger growth over the historical execution includes 75 parallel fresh publications; only 4348 is attributable to this historical worker. These are prior completed publications, not M18 incremental additions.",
+  "observed_worker": null,
+  "discovered_workers": [],
+  "locks": [
+    {
+      "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/history_cursor_publication_20260912T045512077337Z/RUN.lock",
+      "inode": 16652063748,
+      "holders": []
+    },
+    {
+      "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/qualified15_single_member_v1/WRITE.lock",
+      "inode": 18661184059,
+      "holders": []
+    }
+  ],
+  "last_completed": {
+    "pin": {
+      "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/history_cursor_publication_20260912T045512077337Z/READBACK_021101_021135.json",
+      "sha256": "7a71792ac740f2a487bf94fc0b9a3985a5d68a1935dd40a9b3b0f97daa626467",
+      "bytes": 10393
+    },
+    "source_range": {
+      "first": 21101,
+      "last": 21135
+    },
+    "utc": "2026-09-12T09:21:57.736180+00:00",
+    "new_commits": 8
+  },
+  "audit_release": {
+    "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/history_cursor_20260912T044413005876Z/RELEASE.json",
+    "sha256": "af3e5ed12569f762a619ba1b21b729abeb8a24555fbe935eab7d537064ba96e3",
+    "bytes": 3295
+  },
+  "publication_release": {
+    "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/history_cursor_publication_20260912T045512077337Z/RELEASE.json",
+    "sha256": "18dbe316cc47e51e843ce2180c0fc29915e48b3f609419fdc279e125d752372f",
+    "bytes": 2222
+  },
+  "old_prefix_unchanged": true,
+  "old_blocks_reaudited": false,
+  "old_outcome_bodies_read": false,
+  "process_signals": 0,
+  "next_partition_status": "NO_EVIDENCE_COMPLETE_NEXT_PARTITION_ENTRY_YET",
+  "full_p215_processed_count": "UNKNOWN_FROM_THIS_PARTITION_RECEIPT"
+}

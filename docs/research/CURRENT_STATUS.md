@@ -1,19 +1,20 @@
 # Current15GHz research/production status
 
-Latest observation2026-09-12 10:15:49.581127 UTC.
-[M17 actual automatic successor and qualification recovery](production_increment_m17_20260912/SNAPSHOT.json).
+Latest observation2026-09-12 10:27:01.086413 UTC.
+[M18 actual production increment](production_increment_m18_20260912/SNAPSHOT.json).
 
-- Requested48/executor48; actual9 EMX ×2CPU. Resource snapshot idle35.536CPUeq, not enough to fill48.
-- Since09:51:28:new69EMX (oldlast3+successor66),31strict/range candidates;30newcoreformal/1pending.
-- Fresh formal+31 includes1priorbackfill;history formal+0;certified union lower bound6489.
-- Original256 fully closed201fresh/37fail/18analytic;core94/formal94.
-- Ordinary standby automatically started successor755564; currentCadence8/Calibre8/EMX48 policy.
-- Successor75terminal/66fresh/30core/29formal;181without observed terminal.
-- Metadata exactregistry+five-source compatibility repaired; real28formal then ordinary+1.
-- Metadata1656171/native755564/standby52934 alive; original budgets and all failures retained.
-- First prior22 landing projection complete;5train in4alreadyfilledcells,zero baselineempty/underfilled gain.
-- No claim of cumulative coverage/sampling superiority; no old experiments rerun or AIpaperfigure.
-- Full100K/FINAL model/independent10000 request validation remain incomplete.
+- Requested48/executor48; actual9 EMX ×2CPU;15permits are not15native.
+- Window10:15:49→10:27:01:new39EMX,15strict/range unique,all15formal.
+- Freshformal+16 includes1prior validation backfill;historyformal+0;certified lower bound6505.
+- Successor116terminal/105fresh/45core/45formal/pending0;140without observed terminal.
+- Native755564/metadata1656171/standby52934 alive; automatic successor transition proved.
+- Cadence8/Calibre8/EMX48,pipeline64; independent256/12h/5GiB preserved.
+- IdleCPU63.8587 before system/pending reservations cannot add39solvers/78CPU.
+- History2001..21135 completed192/192 blocks;4348previous historical commits,not M18 additions.
+- First100 disposition and second-source93 readiness already completed; no repeat.
+- Prior69 first projection:19train/19cells/0empty/4underfilled landings;highK>.8=0.
+- No cumulative coverage/sampling-superiority claim; no old experiments or AIpaperfigures.
+- Full100K/FINAL/independent10000-request validation incomplete.
 [First real controlled64 result](20260911_controlled64_first_real.md) is now verified:
 1 actual DOE EMX start/complete at the08:24:57 snapshot; strict-valid but K_abs0.1711<0.2,
 so0 new qualified in-range samples. Original14 analytical failures remain in64; no advantage claim.

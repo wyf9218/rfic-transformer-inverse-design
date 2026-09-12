@@ -1,0 +1,59 @@
+{
+  "schema": "eucap15_incremental_publication_manifest_m18.v1",
+  "recorded_utc": "2026-09-12 10:32:07 UTC",
+  "observation": {
+    "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/storage_claim_wait_v1/successor_boundary_20260912T102700154596Z/OBSERVATION.json",
+    "sha256": "d5571db6d888c137d6f5623ce056842fea3f5db937fed09c512e9cea67336845"
+  },
+  "files": [
+    {
+      "path": "SNAPSHOT.json",
+      "sha256": "570b16902150bed94e124d1dd80650bf1a0dd0ef4cfc018cbfa429dcbf7e4e4e"
+    },
+    {
+      "path": "HISTORY_COMPLETION.json",
+      "sha256": "9c58d3c010cdd6da4a004ddde4e30e752dff2693d1f75203dc563443e2577dff"
+    },
+    {
+      "path": "RECEIVED_NEW41.json",
+      "sha256": "c02163b365a34ead57285d3ebb710dab70c83b0a874fc9f563eccba776e83ccc"
+    },
+    {
+      "path": "LANDING_TRAIN19.json",
+      "sha256": "d5274a7479e82db05383c9829013075fc9e61df718fdeb1ff0bb95c9ce7ac931"
+    },
+    {
+      "path": "LANDING_RECEIPT.json",
+      "sha256": "84fa58d9f358f455ff04c8fc2711f00b59b2fc205e0369a57d605b0862bc25de"
+    },
+    {
+      "path": "FIGURE_SOURCE_NOTE.md",
+      "sha256": "f3feff4d74fd6e38f872c5b5fec80a8176b58bba7e292eab6a9ebe4f5a441221"
+    }
+  ],
+  "source_references": [
+    {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/landing_increment_m18_v3/ACTUAL_LANDINGS.json",
+      "sha256": "f7f7a8c8222047d2fef50f940f6caf95d0a330e92f04776d55a51addc309d80c"
+    },
+    {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/landing_increment_m18_v3/RECEIPT.json",
+      "sha256": "84fa58d9f358f455ff04c8fc2711f00b59b2fc205e0369a57d605b0862bc25de"
+    },
+    {
+      "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/metadata_resume_fixed48_20260912T054006591386Z/history/TERMINAL.json",
+      "sha256": "c5909e582fd38fc3d3f16f10bde191cd00e14153e025943f9fba7f1adaba3a23",
+      "bytes": 425
+    },
+    {
+      "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/history_cursor_publication_20260912T045512077337Z/READBACK_THROUGH_021135_20260912T054009180794Z.json",
+      "sha256": "36c41d8b947fde5049a346e758328a87b62ad289c67489b77ea82c5d2c333417",
+      "bytes": 1186786
+    }
+  ],
+  "evidence_scope": "New41 result bodies and16new formal headers only. Old M17 pending backfill copied from previously received payload. Training19 projection is prior69, not current41.",
+  "historical_completion_not_new_increment": true,
+  "old_tests_repeated": 0,
+  "new_native_actions_by_research": 0,
+  "goal_complete": false
+}
