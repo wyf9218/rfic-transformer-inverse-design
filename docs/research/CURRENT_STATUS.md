@@ -1,5 +1,13 @@
 # Current Evidence Status
 
+## Formal union649 and separately timestamped new256 results — M3, 2026-09-12
+
+[Actual increment](qualification_batch_20260912/INCREMENT_0430.md): source rows1–2000 yielded611 qualified,445 out-of-range and944 physically invalid records; duplicate/missing/incompatible are0 within those processed partitions. The formal union is649=397train+125validation+127test: prior37 plus611 historical members and1new256 train member actually appended at04:31:05UTC. Replay added0. It remains a bounded lower bound, not complete100K/P215 certification; source2001+ execution is NOT_INSTALLED.
+
+The saved04:29:47UTC capture and completed incremental research reception contain6fresh+1original analytic failure,2strict/core-qualified,1formally added. These are dated observations, not current liveness. Targets/Q_proxy/errors remain null. Callback compatibility and incremental record649 readback passed; eligible DOE004 is still awaiting formal admission. Actual frozen source/label binding is20,973 rows:18,973 not processed after the first2,000; the remaining162 through nominal21,135 lack frozen source/label binding and are not a ready queue.
+
+The separate04:12:13UTC cost capture has3solvers:251.49s native wall,504.72s CPU. Approximately1.45source-core/hour and70.62MiB per source-core are early whole-run amortizations over one qualified numerator, not stable production forecasts. [Snapshot](qualification_batch_20260912/SNAPSHOT_0430.json) and [actual source copies](qualification_batch_20260912/publication_v3/SOURCE_MAP.md) retain these boundaries. Older entries below remain historical snapshots.
+
 ## Actual formal union341 and recovered native execution — 2026-09-12 04:02 UTC
 
 [New actual increment](qualification_batch_20260912/INCREMENT_0402.md): six old controlled64 members and304 audited historical members were formally appended and read back. The bounded certified union is341=209train+66validation+66test; source splits and the old37 prefix are unchanged. This is not341 new simulations or a complete100K census.

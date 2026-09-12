@@ -1,0 +1,226 @@
+{
+  "schema": "eucap15.public_increment_snapshot.v3",
+  "milestone_label": "M3 snapshot file 0430; independently timestamped evidence includes 04:31 publication",
+  "evidence_cutoffs": {
+    "formal_publication_utc": "2026-09-12T04:16:01.216419+00:00",
+    "formal_increment_review_utc": "2026-09-12T04:19:48Z",
+    "owner_field_capture_utc": "2026-09-12T04:29:47.957118+00:00",
+    "research_last_receive_utc": "2026-09-12T04:32:52.964251+00:00",
+    "cost_capture_utc": "2026-09-12T04:12:13.069553+00:00",
+    "production256_formal_publication_utc": "2026-09-12T04:31:05.237821+00:00",
+    "later_owner_field_capture_utc": "2026-09-12T04:29:47.957118+00:00",
+    "previous_owner_field_capture_utc": "2026-09-12T04:16:53.905436+00:00",
+    "summary_saved_utc": "2026-09-12 04:36:22 UTC"
+  },
+  "qualification": {
+    "historical_first2000": {
+      "processed": 2000,
+      "qualified": 611,
+      "out_of_range": 445,
+      "physical_invalid": 944,
+      "duplicate": 0,
+      "missing_evidence": 0,
+      "incompatible": 0,
+      "scope": "Two completed partitions of the same old21135 source; not all P215.",
+      "partitions": [
+        {
+          "first": 1,
+          "last": 1000,
+          "qualified": 304,
+          "out_of_range": 220,
+          "physical_invalid": 476
+        },
+        {
+          "first": 1001,
+          "last": 2000,
+          "qualified": 307,
+          "out_of_range": 225,
+          "physical_invalid": 468
+        }
+      ]
+    },
+    "formal_union": 649,
+    "union_components": {
+      "prior_nonhistorical_partition": 37,
+      "historical_first2000_qualified": 611,
+      "production256_fresh_formal": 1
+    },
+    "union_splits": {
+      "train": 397,
+      "validation": 125,
+      "test": 127
+    },
+    "certified_lower_bound_toward_100k": 649,
+    "full100k_qualified_total": null,
+    "full_P215_certified": false,
+    "old_broadband_added": 0,
+    "new_training_updates": 0,
+    "new_training_membership_changed": false,
+    "next_source_range_start": 2001,
+    "next_partition_status": "NOT_INSTALLED",
+    "readback_limit": "307 new record pins and continuity were checked against prior verified341. Full tool stdout was truncated; compact receipt preserves completed assertions; no second full recheck or claim of retained full stdout.",
+    "historical_saved_metadata_review_sha256": "f670d528382ffb942c64e0eab686af4b9db135a80e7da930f031abf2fa27c123",
+    "new256_formal_event": {
+      "before": 648,
+      "added": 1,
+      "after": 649,
+      "split": "train",
+      "replay_added": 0,
+      "old_prefix_unchanged": true,
+      "receipt_sha256": "3f966b57f291ad3d806f77ccd5cc6ff4c798a0cfafac35230869303dac143de8",
+      "record_sha256": "562b65e7c912e068acb48183523b0f53765b79a6f71a9827cfe318f3926a2cf7",
+      "research_increment_review": "PASS_INCREMENTAL_RECORD649_SOURCE_BYTES_AND_EVIDENCE",
+      "research_increment_review_sha256": "bb236405769b2c04cc7ff2ed1f1db9e22f81b8b5e9c102ce867172f750ca2371"
+    },
+    "current_source_coverage": {
+      "historical_source_label": "old21135 (legacy source label, not frozen mapped count)",
+      "current_frozen_mapped_and_label_rows": 20973,
+      "mapped_source_partitions": 7,
+      "first_sequence": 1,
+      "last_sequence": 20973,
+      "processed": 2000,
+      "unprocessed_with_frozen_sequence_and_label_binding": 18973,
+      "tail_missing_source_or_label_binding": 162,
+      "tail_sequence": {
+        "first": 20974,
+        "last": 21135
+      },
+      "source_observation_sha256": "8110319a1fa09a139919fbf3e17dbb1a9dbbf11602a7c4dfbd184e466f9e634e",
+      "qualification_not_implied_by_binding": true
+    },
+    "latest_historical_formal_event": {
+      "before": 341,
+      "added": 307,
+      "after": 648,
+      "new_splits": {
+        "train": 187,
+        "validation": 59,
+        "test": 61
+      },
+      "old_prefix_unchanged": true,
+      "receipt_sha256": "61ad99b1841f0fdaf9a407c4941f299a6759bf12c4a35e0e86b9dd760a2eabe5",
+      "increment_review_sha256": "3018e7d05ac6aea1cd2c214dafda56ca755e3326ac0439b6aa938cd8e0d6a640"
+    }
+  },
+  "production256": {
+    "original_proposals": 256,
+    "geometry_doe": 192,
+    "train_neighborhood": 64,
+    "analytic_pass": 238,
+    "original_analytic_fail": 18,
+    "manifest_sha256": "f50721383ef51e5c2c3fa0b7dac67c421d8a9c3e9434600ffaa464c0ef25ebfb",
+    "plan_sha256": "fd90b07106fb7020e1e6520deaac932647feb3e5f686b5d41ffa91fffe9871c0",
+    "recovery_release_sha256": "3d10ca46115b420e0c235ba6df4ddbcc6f84e020670cde66118ceb5e75021257",
+    "received_unique": 7,
+    "received_fresh": 6,
+    "received_original_analytic": 1,
+    "received_core_eligible": 2,
+    "formal_added": 1,
+    "received_fresh_by_source": {
+      "GEOMETRY_DOE": 5,
+      "TRAIN_NEIGHBORHOOD": 1
+    },
+    "received_core_by_source": {
+      "GEOMETRY_DOE": 1,
+      "TRAIN_NEIGHBORHOOD": 1
+    },
+    "research_receiver": "PASS_ORIGINAL_FROZEN_CHAIN_BYTE_BOUND_NO_PHYSICAL_QA_RERUN",
+    "cache_union_sha256": "9e0168f12585740279100db941a500a712e0f7d30cf4021d72651c2a646e5833",
+    "last_delta_receipt_sha256": "eddd47bbec16ebb0e6bf890019bd34286479e1e1d6a6e27649025c5635b48941",
+    "field_transport_sha256": "ffa4abff2c1cf9809db3fc075c94cb9bf386f3f8817bca73b53ec3dcba6a5d64",
+    "owner_pid_at_capture": 2776362,
+    "owner_start_ticks": 398895226,
+    "owner_observed_at_capture": true,
+    "current_liveness": "NOT_REQUERIED",
+    "not_observed_closed_status": "NOT_INFERRED_AS_PENDING",
+    "next_wrapper_is_not_native_start": true,
+    "qualification_callback": "ACTUAL_OWNER_FIRST_APPEND_ZERO_COUNT_REPLAY_AND_RESEARCH_INCREMENT_READBACK_PASSED",
+    "original_actual_start_cap": 256,
+    "window_seconds": 43200,
+    "allocated_storage_cap_bytes": 5368709120,
+    "concurrency": 1,
+    "cpu_per_solver": 2,
+    "budget_reset": false,
+    "budget_root_allocated_bytes_at_field_capture": 88547328,
+    "target": null,
+    "q_proxy": null,
+    "target_errors": null,
+    "joint_hit": null,
+    "owner_later_snapshot": {
+      "capture_identifier": "recovery256_delta_20260912T042946908405Z",
+      "source_fresh": 6,
+      "source_core_eligible": 2,
+      "transport_sha256": "ffa4abff2c1cf9809db3fc075c94cb9bf386f3f8817bca73b53ec3dcba6a5d64",
+      "budget_root_allocated_bytes": 88547328,
+      "research_new004_005_reception": "PASS_TWO_NEW_NO_HOLD_NO_PREVIOUS_CLOSED_SOURCE_CONSUMPTION",
+      "is_current_liveness": false
+    },
+    "callback_compatibility_review_sha256": "c4ddd0e5887e2a6632ff2137654aa61e47a6ea4167556726bf5b2b26363a74d2",
+    "callback_preparation_receipt_sha256": "11e870cc9c9b9770f9d35c68c2208cbd756d41d4a850ee7f2c09f3314ec8ffa0",
+    "callback_evidence_sha256": "acd45fa9de2cbb192c524b1d75c2feb31c98bed58a52bd5d7a60da3a8b314308",
+    "callback_test_receipt_sha256": "65a3e3ac423baec6320f9ad270b44225f29ea8918e7b1a93fcb6a77fcbe1da04",
+    "callback_first_run_tests_passed": 8,
+    "callback_tests_rerun_for_publication": 0,
+    "prior_cache_union_received_unique": 5,
+    "not_yet_formally_added_core_request": "GEOMETRY_DOE-004; original train split",
+    "previous_cache_union_sha256": "e0fbba40ab350ee21c00ac56e62ce2b834f0e1838ad8b33b95415fa81783ec6c",
+    "previous_field_transport_sha256": "05d05b3f542e89f42a0947ea88edab607f911148cd7ca5b769177b0b1403b525",
+    "budget_root_allocated_bytes_at_previous_field_capture": 80576512,
+    "last_receiver_execution_sha256": "f6b757d05ea488f9c3d145b54953083b281f7993103cbf520ac03793d8a096a9"
+  },
+  "cost_0412": {
+    "source_summary_sha256": "04d744821c697e037dbe257a84b984171964c468323b8422fe9ca8597c965240",
+    "source_cutoff_utc": "2026-09-12T04:12:13.069553+00:00",
+    "completed_solvers": 3,
+    "source_core_eligible": 1,
+    "invalid_completed_solvers_retained": 2,
+    "native_wall_seconds_sum": 251.49,
+    "native_cpu_seconds_sum": 504.72,
+    "wall_definition": "Sum of three completed native stderr Wall-clock time fields, not end-to-end pipeline time.",
+    "end_to_end_elapsed_seconds": 2483.34643,
+    "source_core_per_hour": 1.4496567842932813,
+    "whole_budget_root_allocated_bytes": 74047488,
+    "whole_root_MiB_per_source_core": 70.6171875,
+    "formal_appends_in_this_cost_capture": 0,
+    "formal_accepted_per_hour": null,
+    "single_sample_retained_bytes": null,
+    "steady_state_bytes_per_sample": null,
+    "quota_bytes": null,
+    "full100k_time_forecast": null,
+    "full100k_storage_forecast": null,
+    "early_amortized_only": true,
+    "do_not_combine_with_0416_four_solver_population": true,
+    "do_not_combine_with_later_four_or_six_solver_populations": true
+  },
+  "scope": [
+    "Historical rows, formally certified unique geometry, source-core fresh results and model training exposure are different counts.",
+    "Geometry DOE/neighborhood proposals have no target or Q_proxy; no inverse-design hit rate is defined.",
+    "No final100K dataset, independent final10000-request test, sampling advantage or production-scale capacity is claimed.",
+    "Old M1/M2 snapshots, original128/64 results and failed receiver v1 remain unchanged.",
+    "This publication step copies source and aggregates only; other owners' new actions are separately timestamped evidence, not actions executed by this publication step."
+  ],
+  "first_core_coverage": {
+    "scope": "Single TRAIN_NEIGHBORHOOD-000 result, retained source-core-pending-formal snapshot; later formal append is separately recorded.",
+    "summary_sha256": "5e55c0d0d653271e3194356ca6925301b176de1f2112ab3decc0fe00f38aaf65",
+    "receipt_sha256": "e0696e51f7e8aeaff93e73da713a5fbd4ce181c56b356a81ea676a753cbb6ad4",
+    "actual_em_cell": [
+      5,
+      4,
+      0
+    ],
+    "cell_count_before_both_baselines": 86,
+    "potential_cell_count_after_single_member": 87,
+    "new_occupied_cells": 0,
+    "underfilled_cell_improvement": 0,
+    "existing_occupied_cell_counts": [
+      159,
+      163
+    ],
+    "high_k_count_gain": 0,
+    "target_cell": null,
+    "predicted_cell": null,
+    "current_model_changed": false,
+    "current_training_pool_changed": false,
+    "formal_event_does_not_implicitly_update_training_pool": true
+  }
+}

@@ -1,0 +1,83 @@
+{
+  "schema": "eucap15_public_milestone_manifest.v3",
+  "milestone": "M3",
+  "created_utc": "2026-09-12 04:37:30 UTC",
+  "parent_commit": "0602525947a0506f752c5f1e7d7ab25c651836b7",
+  "publication_scope": "Frozen incremental source/evidence delivery, not full100K goal completion",
+  "artifacts": [
+    {
+      "path": "docs/research/CURRENT_STATUS.md",
+      "sha256": "6be17d6551dd850b58c4af8e6ed1c5a6a427c7105dd95aa5852ffee3b5aab639"
+    },
+    {
+      "path": "docs/research/qualification_batch_20260912/INCREMENT_0430.md",
+      "sha256": "a9b5d614ce784cb8bce75d7f8ab57af4cb4ec0d58b6aa36feae25bc46665eaf8"
+    },
+    {
+      "path": "docs/research/qualification_batch_20260912/SNAPSHOT_0430.json",
+      "sha256": "d2eb22f82efaaa94a0b9e0e2cd1aa3177d988bb760337927be2a76c483bb419e"
+    },
+    {
+      "path": "docs/research/qualification_batch_20260912/publication_v3/history_publication.py",
+      "sha256": "9a9f5611b6da69fb43413f4d855881aebadad7542c6874eb288c0b7bd357c36a"
+    },
+    {
+      "path": "docs/research/qualification_batch_20260912/publication_v3/consume_spec_v2.py",
+      "sha256": "0b53d6078b8648f34ca7d46652676844118bc73466921a58237259485dc4d196"
+    },
+    {
+      "path": "docs/research/qualification_batch_20260912/publication_v3/production256_publication.py",
+      "sha256": "8d10bc0e8fa57c272c42a3c97a7e75a58d2efc21e1aafe29e7b1f562bd472905"
+    },
+    {
+      "path": "docs/research/qualification_batch_20260912/publication_v3/prepare_callback.py",
+      "sha256": "79c9e93139eb968fffaee1d9387a7a2e37635b031b7f14ca9f0e9f5fd919fcc1"
+    },
+    {
+      "path": "docs/research/qualification_batch_20260912/publication_v3/test_production256_publication.py",
+      "sha256": "6e7339943479b71ef1ff0fa143cf27c7b53f58380b6539aa0eb30ac0b38aedd8"
+    },
+    {
+      "path": "docs/research/qualification_batch_20260912/publication_v3/SOURCE_MAP.md",
+      "sha256": "cf1ef8b17ac35e2566b979bfa3bdd1d77bd0c3fe4a0a68a1efb3b41b95466f75"
+    },
+    {
+      "path": "docs/research/qualification_batch_20260912/publication_v3/README.md",
+      "sha256": "1b4a72385df829fba4206a3f352f8dc7460a67228c085aa5f368857d707fd5d7"
+    }
+  ],
+  "scientific_evidence": {
+    "formal_union": 649,
+    "formal_counts": {
+      "train": 397,
+      "validation": 125,
+      "test": 127
+    },
+    "formal_record649_sha256": "562b65e7c912e068acb48183523b0f53765b79a6f71a9827cfe318f3926a2cf7",
+    "native_readback649_sha256": "3f966b57f291ad3d806f77ccd5cc6ff4c798a0cfafac35230869303dac143de8",
+    "increment649_review_sha256": "bb236405769b2c04cc7ff2ed1f1db9e22f81b8b5e9c102ce867172f750ca2371",
+    "research_cache_union_sha256": "9e0168f12585740279100db941a500a712e0f7d30cf4021d72651c2a646e5833",
+    "new_receiver_delta_sha256": "eddd47bbec16ebb0e6bf890019bd34286479e1e1d6a6e27649025c5635b48941",
+    "latest_native_transport_sha256": "ffa4abff2c1cf9809db3fc075c94cb9bf386f3f8817bca73b53ec3dcba6a5d64",
+    "historical_frozen_mapping_sha256": "8110319a1fa09a139919fbf3e17dbb1a9dbbf11602a7c4dfbd184e466f9e634e",
+    "first_core_coverage_receipt_sha256": "e0696e51f7e8aeaff93e73da713a5fbd4ce181c56b356a81ea676a753cbb6ad4",
+    "earlier_three_solver_cost_summary_sha256": "04d744821c697e037dbe257a84b984171964c468323b8422fe9ca8597c965240"
+  },
+  "retained_scientific_limits": [
+    "Future owner results are not included without their next incremental receipt.",
+    "Frozen source/label count20973 is not a certified geometry count.",
+    "DOE and neighborhood proposals have no target/Q_proxy; no inverse-design hit rate.",
+    "Formal admission does not change frozen6329 model/training membership.",
+    "Original128,old64,budgets,oldM1/M2 outputs retained."
+  ],
+  "publication_actions": {
+    "source_files_byte_identical": 5,
+    "old_tests_rerun": 0,
+    "old_physical_qa_rerun": 0,
+    "new_training": 0,
+    "paper_repackaging": 0,
+    "ai_scientific_figures": 0,
+    "raw_geometry_or_pdk_included": false
+  },
+  "goal_complete": false
+}
