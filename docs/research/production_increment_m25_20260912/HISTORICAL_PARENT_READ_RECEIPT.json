@@ -1,0 +1,293 @@
+{
+  "utc": "2026-09-12T12:48:35.137962+00:00",
+  "path": "/volumes/research-localdata/ywang3652/mars56_s4p_million_campaign_outputs_20260705/mars56_s4p_million_20260705_1256/status/accepted_1m_campaign_controller_20260710/rounds/round_001_checkpoint_02/real_emx/dataset/parallel_candidate_queue_dataset_summary.json",
+  "reference": {
+    "action": "NOT_REQUESTED_IN_M24. Preserve this exact reference for a future useful source/artifact binding lookup. Current production installer missed-boundary repair takes priority. Do not read the7.24MB summary or new100 rows for this task.",
+    "path": "/volumes/research-localdata/ywang3652/mars56_s4p_million_campaign_outputs_20260705/mars56_s4p_million_20260705_1256/status/accepted_1m_campaign_controller_20260710/rounds/round_001_checkpoint_02/real_emx/dataset/parallel_candidate_queue_dataset_summary.json",
+    "historical_declared_sha256": "4b9c050fee5e2234ceec625ff7bf7175a06753de9cf8d2c59baf53a9d91c27ef",
+    "historical_reported_bytes": 7240557,
+    "pointer_authority": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/samebatch_hotpath_v1/training_source_parent_20260912T103458Z/PARENT_EVIDENCE_READBACK.md",
+    "full_pin_rehash_required": false,
+    "on_no_new_artifact_binding_reference": "Stop this history lookup. Do not read another100 rows, repeat the known93 missing-path checks, or start a new simulation.",
+    "native_or_qualification_actions": 0
+  },
+  "source_files_read": 1,
+  "directory_scans": 0,
+  "followed_pins": 0,
+  "native_actions": 0,
+  "resource_probes": 0,
+  "formal_added": 0,
+  "before": {
+    "dev": 64771,
+    "ino": 25644330126,
+    "size": 7240557,
+    "mtime_ns": 1786650197505302038,
+    "ctime_ns": 1786650197505302038,
+    "nlink": 1
+  },
+  "resolved_path": "/volumes/research-localdata/ywang3652/mars56_s4p_million_campaign_outputs_20260705/mars56_s4p_million_20260705_1256/status/accepted_1m_campaign_controller_20260710/rounds/round_001_checkpoint_02/real_emx/dataset/parallel_candidate_queue_dataset_summary.json",
+  "opened": {
+    "dev": 64771,
+    "ino": 25644330126,
+    "size": 7240557,
+    "mtime_ns": 1786650197505302038,
+    "ctime_ns": 1786650197505302038,
+    "nlink": 1
+  },
+  "closed": {
+    "dev": 64771,
+    "ino": 25644330126,
+    "size": 7240557,
+    "mtime_ns": 1786650197505302038,
+    "ctime_ns": 1786650197505302038,
+    "nlink": 1
+  },
+  "after": {
+    "dev": 64771,
+    "ino": 25644330126,
+    "size": 7240557,
+    "mtime_ns": 1786650197505302038,
+    "ctime_ns": 1786650197505302038,
+    "nlink": 1
+  },
+  "actual_pin": {
+    "path": "/volumes/research-localdata/ywang3652/mars56_s4p_million_campaign_outputs_20260705/mars56_s4p_million_20260705_1256/status/accepted_1m_campaign_controller_20260710/rounds/round_001_checkpoint_02/real_emx/dataset/parallel_candidate_queue_dataset_summary.json",
+    "sha256": "4b9c050fee5e2234ceec625ff7bf7175a06753de9cf8d2c59baf53a9d91c27ef",
+    "bytes": 7240557
+  },
+  "stable": true,
+  "declared_identity_match": true,
+  "status": "ONE_HISTORICAL_SUMMARY_READ_NOT_QUALIFICATION",
+  "top_schema": {
+    "generated_utc": {
+      "type": "str",
+      "length": 25,
+      "value": "2026-08-13T19:43:17+00:00",
+      "child_keys": null
+    },
+    "overall_status": {
+      "type": "str",
+      "length": 4,
+      "value": "PASS",
+      "child_keys": null
+    },
+    "decision": {
+      "type": "str",
+      "length": 38,
+      "value": "PARALLEL_CANDIDATE_QUEUE_DATASET_READY",
+      "child_keys": null
+    },
+    "candidate_csv": {
+      "type": "str",
+      "length": 196,
+      "value": "/volumes/research-localdata/ywang3652/klt1_stage_20260806/accepted_1m_resume_gates_20260809/queue_build_checkpoint2_round1_v13_20260809/queue_authorized_v13/mars56_grounded_s4p_candidate_queue.csv",
+      "child_keys": null
+    },
+    "out_dir": {
+      "type": "str",
+      "length": 211,
+      "value": "/volumes/research-localdata/ywang3652/mars56_s4p_million_campaign_outputs_20260705/mars56_s4p_million_20260705_1256/status/accepted_1m_campaign_controller_20260710/rounds/round_001_checkpoint_02/real_emx/dataset",
+      "child_keys": null
+    },
+    "jobs_requested": {
+      "type": "int",
+      "length": null,
+      "value": 48,
+      "child_keys": null
+    },
+    "scheduling_mode": {
+      "type": "str",
+      "length": 20,
+      "value": "dynamic_chunk_shards",
+      "child_keys": null
+    },
+    "chunk_size": {
+      "type": "int",
+      "length": null,
+      "value": 64,
+      "child_keys": null
+    },
+    "input_row_count": {
+      "type": "int",
+      "length": null,
+      "value": 120000,
+      "child_keys": null
+    },
+    "expected_count": {
+      "type": "int",
+      "length": null,
+      "value": 120000,
+      "child_keys": null
+    },
+    "expected_jobs": {
+      "type": "int",
+      "length": null,
+      "value": 48,
+      "child_keys": null
+    },
+    "shard_count": {
+      "type": "int",
+      "length": null,
+      "value": 1875,
+      "child_keys": null
+    },
+    "merged_dataset_rows_csv": {
+      "type": "str",
+      "length": 228,
+      "value": "/volumes/research-localdata/ywang3652/mars56_s4p_million_campaign_outputs_20260705/mars56_s4p_million_20260705_1256/status/accepted_1m_campaign_controller_20260710/rounds/round_001_checkpoint_02/real_emx/dataset/dataset_rows.csv",
+      "child_keys": null
+    },
+    "merged_row_count": {
+      "type": "int",
+      "length": null,
+      "value": 120000,
+      "child_keys": null
+    },
+    "pass_shard_count": {
+      "type": "int",
+      "length": null,
+      "value": 1875,
+      "child_keys": null
+    },
+    "fail_shard_count": {
+      "type": "int",
+      "length": null,
+      "value": 0,
+      "child_keys": null
+    },
+    "resume_completed": {
+      "type": "bool",
+      "length": null,
+      "value": true,
+      "child_keys": null
+    },
+    "reused_shard_count": {
+      "type": "int",
+      "length": null,
+      "value": 0,
+      "child_keys": null
+    },
+    "pending_shard_count": {
+      "type": "int",
+      "length": null,
+      "value": 1875,
+      "child_keys": null
+    },
+    "elapsed_seconds": {
+      "type": "float",
+      "length": null,
+      "value": 283177.2143724258,
+      "child_keys": null
+    },
+    "active_worker_elapsed_seconds_sum": {
+      "type": "float",
+      "length": null,
+      "value": 13485389.875813995,
+      "child_keys": null
+    },
+    "parallel_efficiency": {
+      "type": "float",
+      "length": null,
+      "value": 0.9921194508372438,
+      "child_keys": null
+    },
+    "seconds_per_row_effective": {
+      "type": "float",
+      "length": null,
+      "value": 2.359810119770215,
+      "child_keys": null
+    },
+    "rows_per_second_effective": {
+      "type": "float",
+      "length": null,
+      "value": 0.4237629085586659,
+      "child_keys": null
+    },
+    "run_emx": {
+      "type": "bool",
+      "length": null,
+      "value": true,
+      "child_keys": null
+    },
+    "create_only": {
+      "type": "bool",
+      "length": null,
+      "value": false,
+      "child_keys": null
+    },
+    "cadence_streamout_only": {
+      "type": "bool",
+      "length": null,
+      "value": false,
+      "child_keys": null
+    },
+    "touchstone_output_contract": {
+      "type": "dict",
+      "length": 21,
+      "value": null,
+      "child_keys": [
+        "checked",
+        "ok_row_count",
+        "missing_touchstone_path_row_count",
+        "resolved_path_count",
+        "existing_file_count",
+        "nonzero_file_count",
+        "expected_extension",
+        "extension_match_count",
+        "expected_ports",
+        "sampled_count",
+        "parsed_count",
+        "parse_error_count",
+        "port_error_count",
+        "frequency_error_count",
+        "expected_frequency",
+        "example_missing_files",
+        "example_zero_files",
+        "example_wrong_extensions",
+        "example_parse_errors",
+        "example_port_errors",
+        "example_frequency_errors"
+      ]
+    },
+    "cadence_streamout_output_contract": {
+      "type": "dict",
+      "length": 4,
+      "value": null,
+      "child_keys": [
+        "checked",
+        "reason",
+        "expected_count",
+        "valid_candidate_bound_gds_count"
+      ]
+    },
+    "shards": {
+      "type": "list",
+      "length": 1875,
+      "value": null,
+      "child_keys": null
+    },
+    "checks": {
+      "type": "list",
+      "length": 17,
+      "value": null,
+      "child_keys": null
+    },
+    "limitations": {
+      "type": "list",
+      "length": 4,
+      "value": null,
+      "child_keys": null
+    }
+  },
+  "local_copy": {
+    "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/storage_claim_wait_v1/budget_walk_v1/historical_parallel_summary_20260912T124834507176Z/parallel_candidate_queue_dataset_summary.json",
+    "sha256": "4b9c050fee5e2234ceec625ff7bf7175a06753de9cf8d2c59baf53a9d91c27ef",
+    "bytes": 7240557
+  },
+  "read_request": {
+    "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/history_next_partition_m24_v1/OWNER_READ_REQUEST.json",
+    "sha256": "0ff18338cf37d7716ad5e66126299d7767cd606950cef01825c5a7a4542b0534",
+    "bytes": 7584
+  },
+  "scope_authority": "Root coordinator subsequent explicit one-file read; M24 deferral superseded only for this path"
+}

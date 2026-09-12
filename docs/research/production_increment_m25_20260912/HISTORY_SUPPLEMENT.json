@@ -1,0 +1,40 @@
+{
+  "schema": "eucap15_m25_history_source_supplement.v1",
+  "observed_utc": "2026-09-12T12:51:49.573092Z",
+  "source_files_received": 2,
+  "new_certified": 0,
+  "new_formal": 0,
+  "parent_receipt": {
+    "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/storage_claim_wait_v1/budget_walk_v1/historical_parallel_summary_20260912T124834507176Z/RECEIPT.json",
+    "sha256": "1c9618228d54ecea074fd5a54e5cca90d1fd522d41b77d46d3b81f50b2f0ff72"
+  },
+  "shard_receipt": {
+    "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/storage_claim_wait_v1/budget_walk_v1/historical_shard000_20260912T125148969345Z/RECEIPT.json",
+    "sha256": "823987868a661b3f99f5ee0e2d2176f83d364785d7f8b59a471e8f1fc4e4dc72"
+  },
+  "shard_source": {
+    "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/storage_claim_wait_v1/budget_walk_v1/historical_shard000_20260912T125148969345Z/candidate_queue_dataset_summary.json",
+    "sha256": "bdf8d44a35d2b86d16ab220dd501b65b7401ef650dafa7688fcd1740737957b3",
+    "bytes": 15487,
+    "not_declared_by_parent_sha": true
+  },
+  "new_binding": {
+    "config_sha256": "996ebad95e407b5f959b3807e1a2b90fad5599c54a7b6745fcd24ce82c4708e0",
+    "candidate_csv_sha256": "494f5723e7ebc6945573295da1d9e2a8ab6275110b61f81442e83dde5000fdad",
+    "dataset_csv_sha256": "45e87bb1a7e07aeb1b21a1eeaaa765eb0d5ac13d8c097a81e02af7a4632043fa",
+    "field_count": 11,
+    "independent_primary_secondary_widths": true,
+    "source_rows_declared": 64,
+    "manifest_and_ground_clearance_paths_present": true
+  },
+  "status": "NEW_EXECUTION_CONFIG_AND_PARTITION_PINS_NOT_CURRENT_QUALIFICATION",
+  "remaining": [
+    "Actual config bytes not yet compared with historical SHA",
+    "Historical proc identity absent",
+    "Per-geometry GDS/DRC/deck not yet bound",
+    "11D geometry not automatically current shared-width10D",
+    "Current split/range/dedup not established for this partition"
+  ],
+  "next_request": "Five exact newly bound config/candidateCSV/datasetCSV/manifest/groundclearance files; <=8MiB each, <=16MiB total; no recursive references or native action. In progress, not a production prerequisite.",
+  "current_production_status_not_inferred_from_history": true
+}

@@ -1,0 +1,354 @@
+{
+  "utc": "2026-09-12T12:51:49.573092+00:00",
+  "source_path": "/volumes/research-localdata/ywang3652/mars56_s4p_million_campaign_outputs_20260705/mars56_s4p_million_20260705_1256/status/accepted_1m_campaign_controller_20260710/rounds/round_001_checkpoint_02/real_emx/dataset/parallel_shards/shard_000/candidate_queue_dataset_summary.json",
+  "max_bytes": 8388608,
+  "source_body_reads": 1,
+  "directory_scans": 0,
+  "followed_child_pins": 0,
+  "native_actions": 0,
+  "resource_probes": 0,
+  "formal_added": 0,
+  "before": {
+    "dev": 64771,
+    "ino": 139534459,
+    "size": 15487,
+    "mtime_ns": 1786374217841346649,
+    "ctime_ns": 1786374217841346649,
+    "nlink": 1
+  },
+  "resolved_path": "/volumes/research-localdata/ywang3652/mars56_s4p_million_campaign_outputs_20260705/mars56_s4p_million_20260705_1256/status/accepted_1m_campaign_controller_20260710/rounds/round_001_checkpoint_02/real_emx/dataset/parallel_shards/shard_000/candidate_queue_dataset_summary.json",
+  "opened": {
+    "dev": 64771,
+    "ino": 139534459,
+    "size": 15487,
+    "mtime_ns": 1786374217841346649,
+    "ctime_ns": 1786374217841346649,
+    "nlink": 1
+  },
+  "closed": {
+    "dev": 64771,
+    "ino": 139534459,
+    "size": 15487,
+    "mtime_ns": 1786374217841346649,
+    "ctime_ns": 1786374217841346649,
+    "nlink": 1
+  },
+  "after": {
+    "dev": 64771,
+    "ino": 139534459,
+    "size": 15487,
+    "mtime_ns": 1786374217841346649,
+    "ctime_ns": 1786374217841346649,
+    "nlink": 1
+  },
+  "actual_pin": {
+    "path": "/volumes/research-localdata/ywang3652/mars56_s4p_million_campaign_outputs_20260705/mars56_s4p_million_20260705_1256/status/accepted_1m_campaign_controller_20260710/rounds/round_001_checkpoint_02/real_emx/dataset/parallel_shards/shard_000/candidate_queue_dataset_summary.json",
+    "sha256": "bdf8d44a35d2b86d16ab220dd501b65b7401ef650dafa7688fcd1740737957b3",
+    "bytes": 15487
+  },
+  "stable": true,
+  "status": "ONE_HISTORICAL_SHARD_SUMMARY_READ_NOT_QUALIFICATION",
+  "top_schema": {
+    "generated_utc": {
+      "type": "str",
+      "length": 25,
+      "value": "2026-08-10T15:03:37+00:00",
+      "child_keys": null
+    },
+    "overall_status": {
+      "type": "str",
+      "length": 4,
+      "value": "PASS",
+      "child_keys": null
+    },
+    "decision": {
+      "type": "str",
+      "length": 29,
+      "value": "CANDIDATE_QUEUE_DATASET_READY",
+      "child_keys": null
+    },
+    "candidate_csv": {
+      "type": "str",
+      "length": 263,
+      "value": "/volumes/research-localdata/ywang3652/mars56_s4p_million_campaign_outputs_20260705/mars56_s4p_million_20260705_1256/status/accepted_1m_campaign_controller_20260710/rounds/round_001_checkpoint_02/real_emx/dataset/parallel_shards/shard_000/candidate_queue_shard.csv",
+      "child_keys": null
+    },
+    "candidate_source": {
+      "type": "dict",
+      "length": 4,
+      "value": null,
+      "child_keys": [
+        "path",
+        "exists",
+        "size_bytes",
+        "sha256"
+      ]
+    },
+    "config_source": {
+      "type": "dict",
+      "length": 4,
+      "value": null,
+      "child_keys": [
+        "path",
+        "exists",
+        "size_bytes",
+        "sha256"
+      ]
+    },
+    "current_foundry_identity_contract": {
+      "type": "dict",
+      "length": 0,
+      "value": null,
+      "child_keys": []
+    },
+    "out_dir": {
+      "type": "str",
+      "length": 237,
+      "value": "/volumes/research-localdata/ywang3652/mars56_s4p_million_campaign_outputs_20260705/mars56_s4p_million_20260705_1256/status/accepted_1m_campaign_controller_20260710/rounds/round_001_checkpoint_02/real_emx/dataset/parallel_shards/shard_000",
+      "child_keys": null
+    },
+    "dataset_rows_csv": {
+      "type": "str",
+      "length": 254,
+      "value": "/volumes/research-localdata/ywang3652/mars56_s4p_million_campaign_outputs_20260705/mars56_s4p_million_20260705_1256/status/accepted_1m_campaign_controller_20260710/rounds/round_001_checkpoint_02/real_emx/dataset/parallel_shards/shard_000/dataset_rows.csv",
+      "child_keys": null
+    },
+    "dataset_rows_source": {
+      "type": "dict",
+      "length": 4,
+      "value": null,
+      "child_keys": [
+        "path",
+        "exists",
+        "size_bytes",
+        "sha256"
+      ]
+    },
+    "dataset_manifest": {
+      "type": "str",
+      "length": 259,
+      "value": "/volumes/research-localdata/ywang3652/mars56_s4p_million_campaign_outputs_20260705/mars56_s4p_million_20260705_1256/status/accepted_1m_campaign_controller_20260710/rounds/round_001_checkpoint_02/real_emx/dataset/parallel_shards/shard_000/dataset_manifest.json",
+      "child_keys": null
+    },
+    "ground_clearance_audit": {
+      "type": "str",
+      "length": 274,
+      "value": "/volumes/research-localdata/ywang3652/mars56_s4p_million_campaign_outputs_20260705/mars56_s4p_million_20260705_1256/status/accepted_1m_campaign_controller_20260710/rounds/round_001_checkpoint_02/real_emx/dataset/parallel_shards/shard_000/final500_ground_clearance_audit.json",
+      "child_keys": null
+    },
+    "input_row_count": {
+      "type": "int",
+      "length": null,
+      "value": 64,
+      "child_keys": null
+    },
+    "selected_row_count": {
+      "type": "int",
+      "length": null,
+      "value": 64,
+      "child_keys": null
+    },
+    "geometry_count": {
+      "type": "int",
+      "length": null,
+      "value": 64,
+      "child_keys": null
+    },
+    "result_count": {
+      "type": "int",
+      "length": null,
+      "value": 64,
+      "child_keys": null
+    },
+    "ok_count": {
+      "type": "int",
+      "length": null,
+      "value": 64,
+      "child_keys": null
+    },
+    "fail_count": {
+      "type": "int",
+      "length": null,
+      "value": 0,
+      "child_keys": null
+    },
+    "run_emx": {
+      "type": "bool",
+      "length": null,
+      "value": true,
+      "child_keys": null
+    },
+    "create_only": {
+      "type": "bool",
+      "length": null,
+      "value": false,
+      "child_keys": null
+    },
+    "cadence_streamout_only": {
+      "type": "bool",
+      "length": null,
+      "value": false,
+      "child_keys": null
+    },
+    "port_mode": {
+      "type": "str",
+      "length": 28,
+      "value": "single_ended_shield_grounded",
+      "child_keys": null
+    },
+    "cadence_pin_purpose": {
+      "type": "int",
+      "length": null,
+      "value": 51,
+      "child_keys": null
+    },
+    "target_frequency": {
+      "type": "dict",
+      "length": 8,
+      "value": null,
+      "child_keys": [
+        "f0_hz",
+        "start_hz",
+        "stop_hz",
+        "step_hz",
+        "points",
+        "step_min_hz",
+        "step_max_hz",
+        "explicit_sweep"
+      ]
+    },
+    "field_order": {
+      "type": "list",
+      "length": 11,
+      "value": null,
+      "child_keys": null
+    },
+    "manifest_summary": {
+      "type": "dict",
+      "length": 6,
+      "value": null,
+      "child_keys": [
+        "requested_count",
+        "ok_count",
+        "fail_count",
+        "zin_coverage",
+        "sparameter_quality",
+        "geometry_quality"
+      ]
+    },
+    "touchstone_output_contract": {
+      "type": "dict",
+      "length": 21,
+      "value": null,
+      "child_keys": [
+        "checked",
+        "ok_row_count",
+        "missing_touchstone_path_row_count",
+        "resolved_path_count",
+        "existing_file_count",
+        "nonzero_file_count",
+        "expected_extension",
+        "extension_match_count",
+        "expected_ports",
+        "sampled_count",
+        "parsed_count",
+        "parse_error_count",
+        "port_error_count",
+        "frequency_error_count",
+        "expected_frequency",
+        "example_missing_files",
+        "example_zero_files",
+        "example_wrong_extensions",
+        "example_parse_errors",
+        "example_port_errors",
+        "example_frequency_errors"
+      ]
+    },
+    "configured_touchstone_contract": {
+      "type": "dict",
+      "length": 7,
+      "value": null,
+      "child_keys": [
+        "checked",
+        "reason",
+        "touchstone_mode",
+        "extension",
+        "port_count",
+        "port_labels",
+        "cadence_pin_labels"
+      ]
+    },
+    "cadence_streamout_output_contract": {
+      "type": "dict",
+      "length": 4,
+      "value": null,
+      "child_keys": [
+        "checked",
+        "reason",
+        "expected_ports",
+        "result_count"
+      ]
+    },
+    "checks": {
+      "type": "list",
+      "length": 22,
+      "value": null,
+      "child_keys": null
+    },
+    "arguments": {
+      "type": "dict",
+      "length": 29,
+      "value": null,
+      "child_keys": [
+        "candidate_csv",
+        "out_dir",
+        "config",
+        "expected_config_sha256",
+        "max_count",
+        "batch_size",
+        "z_load_ohm",
+        "uniformity_bins",
+        "create_only",
+        "cadence_streamout_only",
+        "fail_on_error",
+        "allow_outside_target_bin",
+        "allow_authorized_pairwise_target_rows",
+        "force_port_mode",
+        "force_cadence_pin_purpose",
+        "force_wideband_5_50_0p1",
+        "force_wideband_5_60_0p5",
+        "force_wideband_5_60_1p0",
+        "expected_port_mode",
+        "expected_pin_purpose",
+        "expected_frequency_start_ghz",
+        "expected_frequency_stop_ghz",
+        "expected_frequency_step_ghz",
+        "expected_frequency_points",
+        "frequency_tolerance_hz",
+        "expected_touchstone_extension",
+        "expected_ports",
+        "max_touchstone_checks",
+        "no_fail_exit"
+      ]
+    },
+    "limitations": {
+      "type": "list",
+      "length": 5,
+      "value": null,
+      "child_keys": null
+    }
+  },
+  "local_copy": {
+    "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/storage_claim_wait_v1/budget_walk_v1/historical_shard000_20260912T125148969345Z/candidate_queue_dataset_summary.json",
+    "sha256": "bdf8d44a35d2b86d16ab220dd501b65b7401ef650dafa7688fcd1740737957b3",
+    "bytes": 15487
+  },
+  "parent_source": {
+    "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/storage_claim_wait_v1/budget_walk_v1/historical_parallel_summary_20260912T124834507176Z/parallel_candidate_queue_dataset_summary.json",
+    "sha256": "4b9c050fee5e2234ceec625ff7bf7175a06753de9cf8d2c59baf53a9d91c27ef",
+    "bytes": 7240557
+  },
+  "parent_json_pointer": "/shards/0/summary_path",
+  "declared_child_sha256": null,
+  "scope_authority": "Coordinator explicit first-shard-only follow, 8MiB limit"
+}

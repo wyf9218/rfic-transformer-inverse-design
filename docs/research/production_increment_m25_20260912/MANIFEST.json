@@ -1,0 +1,85 @@
+{
+  "schema": "eucap15_m25_increment_manifest.v1",
+  "observation_utc": "2026-09-12T12:44:41.975935+00:00",
+  "baseline_utc": "2026-09-12T12:29:42.606254+00:00",
+  "source_git": "d0605ac3c7fc6629c071fcacc43721ed7e8101ef",
+  "files": [
+    {
+      "path": "docs/research/production_increment_m25_20260912/FINAL_SNAPSHOT.json",
+      "sha256": "424647832210929a50684eeb4fd5ddef7ce44343ff863fa45bd70a115fe04e58"
+    },
+    {
+      "path": "docs/research/production_increment_m25_20260912/HISTORICAL_PARENT_READ_RECEIPT.json",
+      "sha256": "1c9618228d54ecea074fd5a54e5cca90d1fd522d41b77d46d3b81f50b2f0ff72"
+    },
+    {
+      "path": "docs/research/production_increment_m25_20260912/HISTORICAL_SHARD000_READ_RECEIPT.json",
+      "sha256": "823987868a661b3f99f5ee0e2d2176f83d364785d7f8b59a471e8f1fc4e4dc72"
+    },
+    {
+      "path": "docs/research/production_increment_m25_20260912/HISTORY_SUPPLEMENT.json",
+      "sha256": "4888d59a1ba67d1e2e0b281f63f14741d28cfe9d5c682a4df90d7d8c58de4851"
+    },
+    {
+      "path": "docs/research/production_increment_m25_20260912/LANDING_RECEIPT.json",
+      "sha256": "e4582ccc04f0b756d80deb09b829863825540affac49f7622452492dac95eb0d"
+    },
+    {
+      "path": "docs/research/production_increment_m25_20260912/README.md",
+      "sha256": "25eda44fabc7c84eb186daaa1e01dc4612c4606860ff7142ab2fda4b928bffe0"
+    },
+    {
+      "path": "docs/research/production_increment_m25_20260912/SNAPSHOT.json",
+      "sha256": "ae87624be84c1a153058c1fd0567b16c86e6b4ec32cdbf20b94031d5494e175c"
+    },
+    {
+      "path": "docs/research/production_increment_m25_20260912/TRAIN_COVERAGE_RECEIPT.json",
+      "sha256": "c5214bb1c799113140a7147a6504c3c18ed0d855f912a6c4e0f6cbd2f6d003b2"
+    },
+    {
+      "path": "docs/research/production_increment_m25_20260912/TRAIN_SOURCE_ROWS.json",
+      "sha256": "7f9b08a524e14eb6c8cee5f49c9f55f8245a5d60b2123f07573f3ec094235ad9"
+    },
+    {
+      "path": "docs/research/CURRENT_STATUS.md",
+      "sha256": "8e15f042fbc596fc32b66a241c8abaf3b0baa41c2ffec2e8a443cc1152f6ff50"
+    }
+  ],
+  "private_evidence": [
+    {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/storage_claim_wait_v1/budget_walk_v1/increment_20260912T124441238583Z/OBSERVATION.json",
+      "sha256": "e082ca572958635f038a13c7993e2d832c644812f29454f7f43565212569e0fd",
+      "bytes": 975765
+    },
+    {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/landing_increment_m25_new65_v1/ACTUAL_LANDINGS.json",
+      "sha256": "f8a6f02753f9e760f3b77a6d7129a20c5cdd5e6440d6f65705cf71849f6be36a",
+      "bytes": 881532,
+      "status": "WRITTEN"
+    },
+    {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/train_coverage_received_m25_v1/CHECKPOINT.json",
+      "sha256": "66bb6438790c4d42f37d683114501184b5bf65a2b910262a1b0b3fd5b156bf35",
+      "bytes": 287808
+    },
+    {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/train_coverage_received_m25_v1/COVERAGE_AFTER.csv",
+      "sha256": "1d25e09dea8761ddd305b1952d9ae910469ec2bab56bb06c3a46f1b3244cd79a",
+      "bytes": 51719
+    },
+    {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/storage_claim_wait_v1/budget_walk_v1/historical_parallel_summary_20260912T124834507176Z/parallel_candidate_queue_dataset_summary.json",
+      "sha256": "4b9c050fee5e2234ceec625ff7bf7175a06753de9cf8d2c59baf53a9d91c27ef",
+      "bytes": 7240557
+    },
+    {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/storage_claim_wait_v1/budget_walk_v1/historical_shard000_20260912T125148969345Z/candidate_queue_dataset_summary.json",
+      "sha256": "bdf8d44a35d2b86d16ab220dd501b65b7401ef650dafa7688fcd1740737957b3",
+      "bytes": 15487,
+      "not_declared_by_parent_sha": true
+    }
+  ],
+  "scope": "New65 first landing,18 unique train resume, two historical source reads; no old physical/evaluation/QA reruns.",
+  "production_waits_for_publication": false,
+  "goal_status": "ACTIVE"
+}
