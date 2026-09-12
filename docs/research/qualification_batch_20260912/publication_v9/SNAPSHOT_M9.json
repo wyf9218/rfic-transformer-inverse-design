@@ -1,0 +1,146 @@
+{
+  "schema": "eucap15_increment_m9.v1",
+  "observed_utc": "2026-09-12T07:31:08.734578+00:00",
+  "baseline_utc": "2026-09-12T07:16:02.825079+00:00",
+  "native": {
+    "requested": 48,
+    "admitted": 0,
+    "executor": 48,
+    "actual": 0,
+    "owner_pid": 1039340,
+    "owner_start_ticks": 399883569,
+    "release": {
+      "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/RELEASE.json",
+      "sha256": "a0834643c375703bbd1dea3c7e778b31a6321b42abba3f33e504bf192ea27a81",
+      "bytes": 60463
+    },
+    "resource": {
+      "pin": {
+        "bytes": 19517,
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/fixed48/RESOURCE_20260912T073025769139Z.json",
+        "sha256": "7017eb0733f5cc9b18bf04cbddf943842a6ad90c3ff21538fc18f4214a491687"
+      },
+      "utc": "2026-09-12T07:30:25.769086+00:00",
+      "status": "WAIT",
+      "checks": {
+        "cpu": false,
+        "iowait": true,
+        "isolation": true,
+        "memory": true,
+        "oom": true,
+        "sample": true,
+        "storage": true,
+        "swap": true
+      },
+      "normalized_load1": 1.4925206502278645,
+      "normalized_load5": 1.3923085530598958,
+      "memory_fraction": 0.4855840518417546,
+      "free_disk_bytes": 491021332480,
+      "free_license_slots": {
+        "cadence": 3600,
+        "calibre": 85,
+        "emx": 300
+      },
+      "idle_cpu_equivalents": 2.4303839677799477,
+      "swap_deltas": {
+        "oom_kill": 0,
+        "pswpin": 9,
+        "pswpout": 0
+      },
+      "age_seconds": 42.96563
+    },
+    "healthy_checks": 0,
+    "required_checks": 5,
+    "retained_result_counts": {
+      "FRESH_EMX_EXTRACTED": 9,
+      "ANALYTIC_FAIL_NOT_DISPATCHED": 7,
+      "CANDIDATE_FAILURE_RETAINED_NO_SUBSTITUTION": 5
+    },
+    "closed": 21,
+    "without_terminal": 235,
+    "deadline_utc": "2026-09-12T15:30:49.723123+00:00",
+    "original_plan": {
+      "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/start_ledger/PLAN.json",
+      "sha256": "fd90b07106fb7020e1e6520deaac932647feb3e5f686b5d41ffa91fffe9871c0",
+      "bytes": 133724
+    },
+    "original_budget": {
+      "emx_starts": 256,
+      "hours": 12,
+      "increment_bytes": 5368709120
+    },
+    "automatic_continuation_installed": true,
+    "standby_pid": 1145095,
+    "metadata_pid": 1145088,
+    "continuation_failure": null,
+    "successor_launch_observed": false
+  },
+  "window": {
+    "new_emx_completed": 0,
+    "new_strict_in_range_unique": 0,
+    "fresh_formal_added": 0,
+    "history_formal_added": 236,
+    "formal_union_observed": 4700,
+    "frequency_references": 263200,
+    "only_increment_sequences_checked": [
+      4465,
+      4700
+    ],
+    "prior_prefix_reaudited": false,
+    "formal_head": {
+      "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/qualified15_single_member_v1/records/004700.json",
+      "sha256": "44d6a694349006c88d81f99521993af9d88e8c01e87872be86037866f9721831",
+      "bytes": 35877
+    }
+  },
+  "admission_diagnosis": {
+    "partial_admission_supported": true,
+    "no_all48_requirement": true,
+    "observed_idle_cpu_equivalents": 2.4303839677799477,
+    "reserve_cpu": 4,
+    "cpu_per_emx": 2,
+    "optimistic_additional_cpu_slots": 0,
+    "load_gate1_and5": 1.1,
+    "load_threshold_provenance": "Project engineering configuration, not established numeric school policy",
+    "kernel_observation_utc": "2026-09-12T07:25:33.994071+00:00",
+    "affinity_cpuset": "0..191",
+    "observed_cgroup_cpu_quota": "max at inspected ancestors",
+    "observed_scheduler_job_grant": null,
+    "school_admin_policy_verified": false,
+    "no_exclusive_host_entitlement_claim": true,
+    "code_or_threshold_changes": 0
+  },
+  "disk": {
+    "observed_free_bytes": 492001136640,
+    "quota": "UNKNOWN",
+    "cleanup": false
+  },
+  "evidence": [
+    {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/samebatch_hotpath_v1/joint_cut_20260912T073107993530Z/OBSERVATION.json",
+      "sha256": "b4b0957cfe7b53945b4054a3dfc178b82aa175759fd314431990e85967d5c333"
+    },
+    {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/fixed48_partial_admission_diagnosis_v1/DIAGNOSIS.json",
+      "sha256": "8c16e9d28c1d8f67317d215388a904d7ab8385f4561b866f36bb9b02359eea80"
+    },
+    {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/fixed48_partial_admission_diagnosis_v1/NATIVE_CONSTRAINTS.json",
+      "sha256": "fa370e533b0d1541c3110b99d35c937c14dcb2c657d4af940c05114b18d13646"
+    }
+  ],
+  "source_core_cumulative": 4,
+  "source_core_formal": 4,
+  "train002_retry": "SUCCESS_TERMINAL_DO_NOT_RESTART",
+  "physical_results_reception": "Later3 original fresh interfaces requested from sole owner; no new solver or physical QA",
+  "p215_previous_first100": "COMPLETE_C100_QUALIFIED0_NO_REPEAT",
+  "overall100k_complete": false,
+  "final10k_complete": false,
+  "actions": {
+    "native": 0,
+    "tests": 0,
+    "retraining": 0,
+    "cleanup": 0,
+    "full_pool_scan": 0
+  }
+}

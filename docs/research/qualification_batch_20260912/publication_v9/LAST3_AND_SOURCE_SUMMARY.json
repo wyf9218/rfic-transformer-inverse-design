@@ -1,0 +1,29 @@
+{
+  "schema": "eucap15_last3_and_next_source_readonly_reception.v1",
+  "utc": "2026-09-12T07:36:50.906721+00:00",
+  "newly_received_existing_fresh_interfaces": 3,
+  "existing_core_received": 2,
+  "existing_formal_readback": 2,
+  "eligible_train_increment": 0,
+  "train_coverage_cells_added": 0,
+  "train_coverage_reason": "DOE008 is original test; TRAIN002 is original validation; DOE009 fails strict and K range.",
+  "new_solvers": 0,
+  "new_emx_completions_in_this_reception": 0,
+  "new_formal_added": 0,
+  "new_model_or_sampler_updates": 0,
+  "old_qa_or_extraction_runs": 0,
+  "new_target_errors": 0,
+  "scientific_scope": "Original production256 geometry proposals have no physical target or q_proxy; no accuracy/joint-hit score defined. Not FINAL10K.",
+  "prior_six_fresh_reconsumed": 0,
+  "new_source100": {
+    "rows": 100,
+    "raw_unique": 100,
+    "pass_joins": 100,
+    "fail_joins": 0,
+    "source": "training_csv:new_training_table",
+    "current_qualification": "NOT_EVALUATED",
+    "actual_gds_missing": "Next bounded actual command/GDS/topcell transport requested from sole owner; no classification from raw geometry floats.",
+    "full_source_hash_reverified": false,
+    "full_pool_or_21135_overlap": "UNPROVEN"
+  }
+}

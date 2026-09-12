@@ -1,0 +1,72 @@
+{
+  "schema": "eucap15_m9_public_increment_manifest.v1",
+  "created_utc": "2026-09-12 07:49:15 UTC",
+  "files": [
+    {
+      "path": "docs/research/qualification_batch_20260912/publication_v9/DIAGNOSIS.json",
+      "sha256": "8c16e9d28c1d8f67317d215388a904d7ab8385f4561b866f36bb9b02359eea80"
+    },
+    {
+      "path": "docs/research/qualification_batch_20260912/publication_v9/LAST3_AND_SOURCE_SUMMARY.json",
+      "sha256": "09238932385abec06b69c7453ee5b76c2d81b7128b65bdf71c8fecae50a2ad49"
+    },
+    {
+      "path": "docs/research/qualification_batch_20260912/publication_v9/TRAINING_SOURCE100_STATUS.json",
+      "sha256": "0a2c23fbd2ba7e894abc283c9a5c55ad725dd17f297dadca1665ad618db329ec"
+    },
+    {
+      "path": "docs/research/qualification_batch_20260912/publication_v9/LAST3_RESULTS.csv",
+      "sha256": "8e897a857768b3a77192503599cb3a4ca37ff206cdd18557f6161d6cd2374120"
+    },
+    {
+      "path": "docs/research/qualification_batch_20260912/publication_v9/README.md",
+      "sha256": "73fdebb42e53a28ca13f7c4a777d05af5c05c80de5504e7982c0470901cfef58"
+    },
+    {
+      "path": "docs/research/qualification_batch_20260912/publication_v9/build_extraction_input.py",
+      "sha256": "243ecdda9e5955a1706c5049c352648a0459eff3e86373643059295e7d01cd19"
+    },
+    {
+      "path": "docs/research/qualification_batch_20260912/publication_v9/SNAPSHOT_M9.json",
+      "sha256": "2b8db6ceec6829cb0114878a25f892b18fbdfd7f190bc660f0c969b0230a279f"
+    },
+    {
+      "path": "docs/research/qualification_batch_20260912/publication_v9/NATIVE_CONSTRAINTS.json",
+      "sha256": "fa370e533b0d1541c3110b99d35c937c14dcb2c657d4af940c05114b18d13646"
+    },
+    {
+      "path": "docs/research/qualification_batch_20260912/publication_v9/run_explicit100.py",
+      "sha256": "71ed06f10059fc5ef5165f06643b05fdca67bf978ba96ee6fcc70963446a8d93"
+    },
+    {
+      "path": "docs/research/qualification_batch_20260912/publication_v9/receive_increment.py",
+      "sha256": "f95372b9cb3dedf671763ab4d90dfa4684a8626f4eff49f6423c80c9c324057b"
+    },
+    {
+      "path": "docs/research/qualification_batch_20260912/publication_v9/SOURCE_MAP.json",
+      "sha256": "ab288b1386830d9df1a071a66a97d2f6a5309247c52db362db495b32a304cf0b"
+    },
+    {
+      "path": "docs/research/qualification_batch_20260912/publication_v9/TRAINING_SOURCE100_VALUES.csv",
+      "sha256": "349150f5bdb4323645ce1be960085200285c846db291552713ffc6e6facf98e9"
+    },
+    {
+      "path": "docs/research/qualification_batch_20260912/publication_v9/build_manifest.py",
+      "sha256": "263359e5be57ed33819c19048ff0816882cb914a86008f93233d55473f64c641"
+    }
+  ],
+  "scope": "New13public artifacts only;8source copies byte-identical; one originalCSV represented with LF instead of CRLF.",
+  "actions": {
+    "actual_last3_reception": 1,
+    "actual_new100_gds_check": 1,
+    "actual_new100_historical111_extraction": 1,
+    "old_qa_reruns": 0,
+    "new_emx": 0,
+    "new_formal_from_research": 0
+  },
+  "known_non_scientific_failures": [
+    "First newGDS metadata display exceeded tool output budget before any GDS run; saved small adapter then succeeded.",
+    "Initial CSV byte cmp saw CRLF/LF only; line-normalization comparisonPASS, source unchanged."
+  ],
+  "source_extraction_core": "Unchanged exact historical111 core from priorM8; new runner changes only scope/caveat metadata and source-ordinal uniqueness."
+}

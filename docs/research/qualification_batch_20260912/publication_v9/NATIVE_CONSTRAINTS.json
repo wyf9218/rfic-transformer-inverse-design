@@ -1,0 +1,46 @@
+{
+  "schema": "eucap15_fixed48_observed_kernel_constraints.v1",
+  "evidence_utc": "2026-09-12T07:25:33.994071+00:00",
+  "read_utc": "2026-09-12 07:27:24 UTC",
+  "native_receipt": {
+    "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/samebatch_hotpath_v1/cpu_limits_20260912T072533385372Z/OBSERVATION.json",
+    "sha256": "d2384f9fad24fb9999d1f739937efc27101ebf3baeb5c8142f32de28de1782ea"
+  },
+  "owner": {
+    "pid": 1039340,
+    "start_ticks": 399883569,
+    "ppid": 1,
+    "alive_observed": true
+  },
+  "logical_cpus": 192,
+  "affinity": "0..191",
+  "effective_cpuset": "0..191",
+  "observed_cgroup_cpu_max": "max 100000 at session/user/user.slice ancestors",
+  "cpu_throttling_observed": 0,
+  "scheduler_allocation_identity_observed": false,
+  "school_admin_numeric_policy_verified": false,
+  "not_proven": "No kernel quota observed does not establish an exclusive192 CPU entitlement or absence of school administrative limits.",
+  "original_diagnosis": {
+    "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/fixed48_partial_admission_diagnosis_v1/DIAGNOSIS.json",
+    "sha256": "8c16e9d28c1d8f67317d215388a904d7ab8385f4561b866f36bb9b02359eea80"
+  },
+  "active_runtime_binding": {
+    "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/samebatch_hotpath_v1/runtime/fixed48_runtime.py",
+    "sha256": "5b23892a0cf357eb871d8c66c3b02924a89ab8309572912db644d61415dbbf96",
+    "candidate_sha256": "ab763b0d3595682d34112ace7f674caf2a069165a5f809a0f562c5ca8a7fdb55",
+    "actual_diff": "Only existing if fits:self.owner.ensure_plan(self.last_pin) line added. Resource and partial-capacity semantics unchanged; exact local copy matches current remote pin."
+  },
+  "partial_admission_supported": true,
+  "engineering_gate": {
+    "normalized_load1_max": 1.1,
+    "normalized_load5_max": 1.1,
+    "reserve_cpu": 4,
+    "cpu_per_emx": 2
+  },
+  "current_cpu_capacity_note": "07:15 resource snapshot4.606955443265768 idle minus4 reserve is below2. Not a new07:25 utilization sample.",
+  "code_changes": 0,
+  "resource_probe_changes": 0,
+  "native_restarts": 0,
+  "new_qa": 0,
+  "decision": "No threshold modification justified by current evidence. Ordinary current-owner resource sampling continues; no second controller."
+}

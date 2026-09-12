@@ -1,5 +1,15 @@
 # Current Evidence Status
 
+## M9 — observed2026-09-12 07:31:08UTC: formal4700; no admissible CPU slot
+
+Window07:16:02→07:31:08: **newEMX0, newstrict/range unique0, freshformal0, historyformal+236**. Observed formal4700/head44d6a694; only new4465..4700 inspected. Requested/admitted/executor/actualEMX remains **48/0/48/0**; current owner and automatic continuation are alive, original budgets unchanged.
+
+Actual limits support partial concurrency, but measured idleCPU2.430 is below the4CPU reserve; removing the load gate alone would still not admit a2CPU solver. The1.10 load thresholds are project engineering policy, not established numeric school limits. Kernel affinity/cpuset0..191 and no observed cgroup quota do not grant exclusive192CPU use. No runtime change, oldQA or native rerun. [Actual evidence and interpretation](qualification_batch_20260912/publication_v9/README.md). Older snapshots below retain their original cutoffs.
+
+### M9 offline increment after the native cutoff
+
+Three later original fresh interfaces were received at07:36:50:2core are originaltest/validation, so qualifiedtrain gain0; the third fails half-SRF andK range. The distinct historical training-source100 then passed actual required GDS grid/edges100/100 and original111-point extraction100/100; conditional strict100, full-range/Q10–20 support93, formaladded0. Current Calibre/process/port/execution/split/union evidence remains incomplete. [Actual source100 data and limits](qualification_batch_20260912/publication_v9/TRAINING_SOURCE100_STATUS.json). These are not new EMX solves, new training rows or full-P215 estimates.
+
 ## M8 — observed2026-09-12 07:16:02UTC: formal4464; actual first100 historical diagnosis closed
 
 Actual requested/admitted/executor/native EMX remains **48/0/48/0**. Current owner1039340 and installed continuation1145095 are alive. The latest ordinary resource check fails only CPU (normalized load1/5=1.303070/1.350690>1.10);292EMX licenses are free. Existing budgets and235candidates without terminal are unchanged.
