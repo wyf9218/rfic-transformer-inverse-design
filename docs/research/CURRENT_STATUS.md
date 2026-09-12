@@ -1,21 +1,21 @@
 # Current15GHz research/production status
 
-Latest actual native observation:2026-09-12 07:57:53.628242UTC.
-[New M10 evidence and code](qualification_batch_20260912/publication_v10/README.md); [prior M9](qualification_batch_20260912/publication_v9/README.md).
+Latest actual native observation:2026-09-12 08:21:28.492173UTC.
+[New M11 production increment](qualification_batch_20260912/publication_v11/README.md); [prior M10](qualification_batch_20260912/publication_v10/README.md).
 
-- Requested/admitted/executor/actualEMX:48/0/48/0.
-- Window07:31:08→07:57:53UTC:newEMX0/newstrict-rangeunique0/freshformal0/historyformal+394.
-- Formal certified union lower bound5094; full100K and final independent10K not complete.
-- Owner1039340,standby1145095,metadata1145088 alive; automatic continuation installed, successor native launch not observed.
-- Direct blocker: engineering normalized-load guard1.10; measured1.185239/1.168109, healthy streak0/5.
-- Original256 budget/21terminal/9fresh/4core/4formal preserved;235without terminal are not235running.
-- Scope note: a083-only core0 is not the original256 cumulativecore4.
-- Actual93 historical source/geometry/label bindings complete; all93 still missing physical qualification,formal0.
-- Historical111 source grid and unknown split retained; no56/fresh/oldaccepted impersonation.
-- First97567 missing originalsource-audit file; directGDS and power-line metadata received; no fabricated PASS.
-- Historical fullGDS input adapter is development code; native historicalDRC integration NOT_INSTALLED.
-- CPU/resource waiting does not stop ordinary history certification or installed production continuation.
-- No new training,old128/64 rerun,oldphysicalQA,re-extraction,fullpool scan,cleanup orAIpaper figures.
+- Requested48 / persisted active permits5 / executor48 / actual nativeEMX5.
+- Window07:57:53→08:21:28UTC:newEMX21,strict-range distinct candidate geometries12.
+- Fresh formal+7;history formal+336;certified union lower bound5437;5 eligible not yet formal.
+- Twelve candidate-unique eligible rows are not twelve formally accepted rows.
+- Owner1039340,standby1145095,metadata1145088 alive; ordinary automatic continuation installed.
+- ResourcePASS/streak15; previous CPU-WAIT superseded. No restart or threshold change.
+- Current upstream1/1; existing installed successor8/8/48 at supported boundary; new successor native execution not observed.
+- Original256 now51terminal=30fresh+11candidate-failure+10analytic;205without terminal are not205running.
+- Original logical core16/formal11; a083-onlycore12; prior4 not counted again.
+- Six new candidate-specific Cadence failures retained; root causes not inspected in this cut.
+- Capacity48 is not actual48; dominant reason for not filling48 not established.
+- No old128/64/15training,oldphysicalQA,re-extraction,fullpool scan,cleanup orAIpaper figures.
+- Full100K/final independent10K incomplete. Historical93 qualification remains unchanged and not admitted.
 [First real controlled64 result](20260911_controlled64_first_real.md) is now verified:
 1 actual DOE EMX start/complete at the08:24:57 snapshot; strict-valid but K_abs0.1711<0.2,
 so0 new qualified in-range samples. Original14 analytical failures remain in64; no advantage claim.

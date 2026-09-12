@@ -1,0 +1,22 @@
+{
+  "schema": "eucap15_increment_publication_m11.v1",
+  "observed_utc": "2026-09-12T08:21:28.492173+00:00",
+  "baseline_utc": "2026-09-12T07:57:53.628242+00:00",
+  "files": [
+    {
+      "sha256": "7f1b3cdbe91b60dc6190bbcf27627219f288a548cd3d07e272851a249353a570",
+      "path": "SNAPSHOT.json"
+    },
+    {
+      "sha256": "85c4ea6d5d036deb28beda779cfd0330591945c8b7065acf98ab5dacf35addc5",
+      "path": "RECEIVED_NEW30.json"
+    },
+    {
+      "sha256": "d974e285500d478d88cfa4fad7f8c0a9803eaee422db11e8c822e08b6a49f573",
+      "path": "README.md"
+    }
+  ],
+  "scope": "New production results and incremental formal chain only; no native run or source change performed by publication.",
+  "source_observation_sha256": "388792ea2d582bea596c41962eaf487007e052770b0987f21d6debb40df24856",
+  "source_payload_sha256": "db9dfb98513662a78edffc961e5d888629e1c35c55c1fbda619b8ba233a947e4"
+}

@@ -1,0 +1,150 @@
+{
+  "schema": "eucap15_increment_m11.v1",
+  "updated_utc": "2026-09-12 08:24:37 UTC",
+  "observed_utc": "2026-09-12T08:21:28.492173+00:00",
+  "baseline_utc": "2026-09-12T07:57:53.628242+00:00",
+  "observation": {
+    "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/samebatch_hotpath_v1/joint_cut_20260912T082127636243Z/OBSERVATION.json",
+    "sha256": "388792ea2d582bea596c41962eaf487007e052770b0987f21d6debb40df24856"
+  },
+  "received_new_payload": {
+    "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/samebatch_hotpath_v1/joint_cut_20260912T082127636243Z/NEW_TERMINAL_RESULTS.json",
+    "sha256": "db9dfb98513662a78edffc961e5d888629e1c35c55c1fbda619b8ba233a947e4",
+    "rows": 30
+  },
+  "native": {
+    "requested": 48,
+    "issued_active_permits": 5,
+    "executor": 48,
+    "actual": 5,
+    "admission_scope": "persisted_active_permits_not_in_memory_maximum_or_all48_GO",
+    "owner_pid": 1039340,
+    "owner_start_ticks": 399883569,
+    "release": {
+      "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/RELEASE.json",
+      "sha256": "a0834643c375703bbd1dea3c7e778b31a6321b42abba3f33e504bf192ea27a81",
+      "bytes": 60463
+    },
+    "resource": {
+      "pin": {
+        "bytes": 19500,
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/fixed48/RESOURCE_20260912T082034860818Z.json",
+        "sha256": "de14cde64e44ca694b8d18a3c6813dee1b11284d487dc697823cf3a79a101857"
+      },
+      "utc": "2026-09-12T08:20:34.860770+00:00",
+      "status": "PASS",
+      "checks": {
+        "cpu": true,
+        "iowait": true,
+        "isolation": true,
+        "memory": true,
+        "oom": true,
+        "sample": true,
+        "storage": true,
+        "swap": true
+      },
+      "normalized_load1": 0.8163731892903646,
+      "normalized_load5": 0.7963740030924479,
+      "memory_fraction": 0.7527377371590076,
+      "free_disk_bytes": 481065160704,
+      "free_license_slots": {
+        "cadence": 3600,
+        "calibre": 85,
+        "emx": 292
+      },
+      "idle_cpu_equivalents": 45.809173288188504,
+      "swap_deltas": {
+        "oom_kill": 0,
+        "pswpin": 3,
+        "pswpout": 0
+      },
+      "age_seconds": 53.631714
+    },
+    "healthy_check_streak": 15,
+    "required_checks": 5,
+    "closed": 51,
+    "without_terminal": 205,
+    "result_counts": {
+      "FRESH_EMX_EXTRACTED": 30,
+      "CANDIDATE_FAILURE_RETAINED_NO_SUBSTITUTION": 11,
+      "ANALYTIC_FAIL_NOT_DISPATCHED": 10
+    },
+    "deadline_utc": "2026-09-12T15:30:49.723123+00:00",
+    "original_plan": {
+      "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/start_ledger/PLAN.json",
+      "sha256": "fd90b07106fb7020e1e6520deaac932647feb3e5f686b5d41ffa91fffe9871c0",
+      "bytes": 133724
+    },
+    "original_budget": {
+      "emx_starts": 256,
+      "hours": 12,
+      "increment_bytes": 5368709120
+    },
+    "automatic_continuation_installed": true,
+    "standby_pid": 1145095,
+    "metadata_pid": 1145088,
+    "continuation_failure": null,
+    "successor_launch_observed": false,
+    "upstream_capacity_current": {
+      "cadence": 1,
+      "calibre": 1
+    },
+    "upstream_capacity_existing_successor": {
+      "cadence": 8,
+      "calibre": 8
+    },
+    "threshold_changed": false,
+    "owner_restarted": false
+  },
+  "window": {
+    "new_emx_completed": 21,
+    "new_terminal": 30,
+    "new_candidate_failures": 6,
+    "new_analytic_not_dispatched": 3,
+    "new_strict_in_range_distinct_candidate_geometries": 12,
+    "uniqueness_scope": "12 distinct geometry hashes in this result increment;7 formally qualified/deduplicated/committed; other5 not counted accepted",
+    "fresh_formal_added": 7,
+    "history_formal_added": 336,
+    "formal_union_observed": 5437,
+    "frequency_references": 304472,
+    "only_increment_sequences_checked": [
+      5095,
+      5437
+    ],
+    "prior_prefix_reaudited": false,
+    "prior_result_bodies_read": 0,
+    "formal_head": {
+      "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/qualified15_single_member_v1/records/005437.json",
+      "sha256": "92ccf309195473a9a9fafc9a3ce5ee4fd140ac42483be66b84169b89759d508c",
+      "bytes": 35869
+    }
+  },
+  "source_core": {
+    "original_logical256_core_cumulative": 16,
+    "original_logical256_formal_cumulative": 11,
+    "eligible_not_formal_at_cut": 5,
+    "a083_release_core": 12,
+    "prior_original_core": 4,
+    "scope_correction_is_new_increment": false
+  },
+  "current_blocker": {
+    "global_execution_blocker": null,
+    "not_at48": true,
+    "current_upstream_capacity": "Cadence1/Calibre1; installed successor8/8 applies at supported boundary",
+    "latest_idle_cpu_equivalents": 45.809173288188504,
+    "all48_admission_not_proven": true,
+    "six_retained_cadence_candidate_failures_root_cause": "NOT_INSPECTED_IN_THIS_INCREMENT",
+    "dominant_bottleneck": "NOT_ESTABLISHED; no arbitrary threshold change or live owner modification"
+  },
+  "disk": {
+    "free_bytes": 480208678912,
+    "quota": "UNKNOWN",
+    "cleanup": false
+  },
+  "successor_unneeded_drafts": {
+    "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/fixed48_upstream_capacity_v1/NOT_SELECTED.json",
+    "status": "NOT_SELECTED_NOT_DEPLOYED_NOT_RUN"
+  },
+  "overall100k_complete": false,
+  "final10k_complete": false
+}
