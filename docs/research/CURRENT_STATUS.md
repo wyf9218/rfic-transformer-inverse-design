@@ -1,5 +1,10 @@
 # 当前研究和生产状态
 
+## 2026-09-12 M29：61新增fresh EMX、25正式入账
+
+13:44:51 UTC相对13:32：新61fresh，25范围内strict唯一全部正式，history0/pending0，下界6845。实际nativeEMX0，容量48；7Cadence许可及上游等待仍在，无EMX等待。前置供给/配额正由唯一owner检查，未声称新部署或48实跑。
+已接收train+18至3975，163/512格不变。新闭合第3批成本分析与1875历史同族判定见[production_increment_m29_20260912](production_increment_m29_20260912/README.md)；普通生产不等Git，以下皆历史截面。
+
 ## 2026-09-12 M28：53份新增EMX、23条fresh入账（含旧pending3）
 
 13:32:23 UTC相对13:23：新53fresh、20范围内strict唯一全部正式；另3旧pending补登，history0，正式并集下界6820。现场实际4独立EMX，申请/容量48；17等待任务随后由程序全部放行，不把permit计为同时原生并发。

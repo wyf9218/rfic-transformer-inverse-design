@@ -1,0 +1,90 @@
+{
+  "schema": "eucap15_closed_registered_batch_cost.v1",
+  "status": "DESCRIPTIVE_SINGLE_COMPLETED_BATCH_NOT_STEADY_STATE",
+  "batch": "eucap15_continuous_doe_neighborhood_20260912_batch000003",
+  "sources": {
+    "received_observation": {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/storage_claim_wait_v1/budget_walk_v1/increment_20260912T131203762904Z/OBSERVATION.json",
+      "sha256": "cc8b03cf51a7402218fcf1c56f7db80eff2e2e24d00fd20d5b7aaba21773ca3a",
+      "bytes": 567529
+    },
+    "reused_published_counts": {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/production_runtime_m27_20260912_v1/SNAPSHOT.json",
+      "sha256": "ac0cf36c63b2b344645320696e91002865a1b8507097c15ff4b6b0eef2dbe405",
+      "bytes": 12206
+    },
+    "release": {
+      "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_permit_release_20260912T105802513957Z/batches/eucap15_continuous_doe_neighborhood_20260912_batch000003/owner/RELEASE.json",
+      "sha256": "310fb67b880e085eaf05b8f791778a1ba7cba15d01c9c596601b42b08683bd9c",
+      "bytes": 17474
+    },
+    "plan": {
+      "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_permit_release_20260912T105802513957Z/batches/eucap15_continuous_doe_neighborhood_20260912_batch000003/start_ledger/PLAN.json",
+      "sha256": "ced407274b00ae05d0c30cfb19c042bbf2622a3aaad5303f6e96cf50e6cd45d7",
+      "bytes": 140706
+    },
+    "native_batch_terminal": {
+      "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_permit_release_20260912T105802513957Z/batches/eucap15_continuous_doe_neighborhood_20260912_batch000003/owner/BATCH_RECEIPT.json",
+      "sha256": "8817898ca91bac581241911bb756665ef7bb52fa8b85dff21eb351e136a7f03a",
+      "bytes": 108498
+    },
+    "final_formal_member": {
+      "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/qualified15_single_member_v1/records/006796.json",
+      "sha256": "2eedfb50886447b7e19d5f1c458ea73cf28c692b23d4f65d9d33e49e637bb44c",
+      "bytes": 188852
+    },
+    "storage": {
+      "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_permit_release_20260912T105802513957Z/batches/eucap15_continuous_doe_neighborhood_20260912_batch000003/owner/fixed48/STORAGE_20260912T130232689419Z.json",
+      "sha256": "8e0eacda1b04bdf8113de732cc6dd51942696c30cd8a0fa35b17264cfc554a52",
+      "bytes": 992
+    }
+  },
+  "scope": "Budget admission through final physical terminal and final formal record; candidate-factory time before admission is excluded.",
+  "start_utc": "2026-09-12T12:06:22.139375+00:00",
+  "physical_terminal_utc": "2026-09-12T13:02:32.812650+00:00",
+  "final_formal_utc": "2026-09-12T13:02:53.586128+00:00",
+  "counts": {
+    "terminal": 256,
+    "fresh": 234,
+    "analytic_fail": 22,
+    "formal": 116
+  },
+  "physical_terminal_elapsed_seconds": 3370.673275,
+  "formal_closure_elapsed_seconds": 3391.446753,
+  "last_terminal_to_last_formal_seconds": 20.773478,
+  "observed_batch_rates_not_stable_hourly": {
+    "fresh_per_hour_over_formal_window": 248.3895698067001,
+    "formally_qualified_unique_per_hour_over_formal_window": 123.13329101528724
+  },
+  "yields": {
+    "formal_per_original": 0.453125,
+    "formal_per_fresh": 0.49572649572649574
+  },
+  "storage": {
+    "observed_utc": "2026-09-12T13:02:32.689345+00:00",
+    "budget_root": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_permit_release_20260912T105802513957Z/batches/eucap15_continuous_doe_neighborhood_20260912_batch000003",
+    "allocated_bytes": 2162520064,
+    "allocated_gib": 2.0140037536621094,
+    "amortized_batch_allocated_bytes_per_formal_member": 18642414.344827585,
+    "scope": "Entire batch tree at near-terminal snapshot, including failed-candidate cost. Not an incremental before/after measurement or exact per-member footprint.",
+    "excludes": [
+      "shared source/environment/PDK",
+      "global formal ledger outside batch tree",
+      "historical pool",
+      "future archive copies"
+    ],
+    "peak_or_quota_claim": false
+  },
+  "current_native_concurrency_claim": false,
+  "stable_hourly_throughput_claim": false,
+  "full_campaign_end_to_end_cost": null,
+  "full_campaign_cost_missing": [
+    "pre-admission candidate-factory duration/cost",
+    "shared and formal-ledger allocated storage",
+    "multi-batch sustainable resource availability"
+  ],
+  "projections_to_100k": "NOT_PERFORMED",
+  "actual_physics_rerun": false,
+  "existing_qualification_repeated": false,
+  "new_tests": 0
+}

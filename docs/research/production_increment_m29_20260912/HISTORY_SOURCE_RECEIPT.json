@@ -1,0 +1,63 @@
+{
+  "schema": "eucap15_history_next_source_m29_receipt.v1",
+  "status": "COMPLETE_INDEX_SELECTION_NO_STRONGER_SOURCE_FOUND",
+  "decision_utc": "2026-09-12T13:47:44Z",
+  "scope": "BOUND_LOCAL_EXECUTION_INDEX_METADATA_NOT_QUALIFICATION",
+  "parent_receipt": {
+    "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/storage_claim_wait_v1/budget_walk_v1/historical_parallel_summary_20260912T124834507176Z/RECEIPT.json",
+    "sha256": "1c9618228d54ecea074fd5a54e5cca90d1fd522d41b77d46d3b81f50b2f0ff72",
+    "receipt_pin_checked_this_action": true
+  },
+  "index": {
+    "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/storage_claim_wait_v1/budget_walk_v1/historical_parallel_summary_20260912T124834507176Z/parallel_candidate_queue_dataset_summary.json",
+    "historical_and_received_sha256_reused": "4b9c050fee5e2234ceec625ff7bf7175a06753de9cf8d2c59baf53a9d91c27ef",
+    "size_observed": 7240557,
+    "full_rehash_repeated": false,
+    "read_action": "Existing local summary schema and exact command-family metadata only; no child artifacts or sample response arrays accessed."
+  },
+  "actual_checks": {
+    "execution_index_entries": 1875,
+    "distinct_config_paths": 1,
+    "distinct_runner_paths": 1,
+    "distinct_commands_after_two_explicit_per_shard_path_values_removed": 1,
+    "different_stronger_source_selected": false,
+    "explicit_positive_foundry_drc_execution_evidence": "NOT_PRESENT_IN_INDEX",
+    "sample_qualification_processed": 0,
+    "new_geometries_classified_or_generated": 0,
+    "formal_submitted": 0,
+    "actual_native_reads_requested": 0,
+    "source_code_lookup": "DEFERRED_BY_ROOT",
+    "current_qualified_unique_count": null,
+    "current_qualified_count_status": "UNKNOWN_NOT_ESTIMATED_FROM_INDEX_ROWS"
+  },
+  "why_this_changes_the_next_action": "Do not consume shard001 or other same-family CSV/S4P batches merely to rediscover missing source-level evidence. Move the next historical lookup to another already-known P215 source or current-flow revalidation; neither was started here.",
+  "reuse_boundaries": [
+    "120000 indexed source rows are not certified unique members or a production count.",
+    "The first-member original GDS failure and its DRC-not-executed evidence are not generalized to the other 1874 shards or 63 peer members.",
+    "Wrapper returncode0/PASS, a config filename containing drc, declared port mode, and 111-point frequency metadata do not establish physical compatibility.",
+    "The original 64-parameter revalidation candidate queue is unchanged and not dispatched."
+  ],
+  "execution": {
+    "successful_tool_chunk_id": "019372",
+    "original_invocation": "ruby -rjson -e <INDEX_QUERY.rb query body before readable formatting> <index.path>",
+    "equivalent_inspectable_command": "ruby -rjson '/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/history_next_qualified_source_m29_v1/INDEX_QUERY.rb' '/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/storage_claim_wait_v1/budget_walk_v1/historical_parallel_summary_20260912T124834507176Z/parallel_candidate_queue_dataset_summary.json'",
+    "exit_code": 0,
+    "query_file_not_executed_again_after_capture": true,
+    "prior_local_attempt_preserved": {
+      "tool_chunk_id": "6b792a",
+      "exit_code": 1,
+      "error": "NoMethodError: undefined method tally for Array in system Ruby",
+      "resolution": "Use group_by and map for the same bounded read-only aggregation.",
+      "files_modified_or_results_written_before_error": false,
+      "not_a_simulation_or_scientific_test_failure": true
+    },
+    "new_output_checks": "Both new JSON documents parsed; source-selection count and deferred empty-read-list predicates returned true.",
+    "no_old_qa_training_joins_or_physical_reexecution": true,
+    "no_ssh_ledger_production_git_or_central_state_operations": true
+  },
+  "artifacts": {
+    "SOURCE_SELECTION.json": "c5715bf91b143257cc130836c2097eea4c24c043a5281cce99a981cf90529d51",
+    "OWNER_READ_REQUEST.json": "ea5ae7da79d7f96ed01184756c4102f8722feb6e549d283a2741cb65df9fc430",
+    "INDEX_QUERY.rb": "db793e5e6bb928a63f28d9fe2ae9c30171c8b45b5582359fb165e185243b0616"
+  }
+}
