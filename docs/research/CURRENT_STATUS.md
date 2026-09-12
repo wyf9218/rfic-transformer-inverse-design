@@ -1,5 +1,13 @@
 # 当前研究和生产状态
 
+## 2026-09-12 M34：交接已预约，66新EMX、33正式入账
+
+15:02:38 UTC相对14:56，新73终态=66fresh＋6解析＋1执行失败；41strict、33范围strict唯一全正式（21train/8validation/4test），fresh正式＋33/history0/补登0/pending0，下界7048。实际10独立EMX×2CPU；batch6为80/256终态，13等待EMX。RAM保守预约诊断额外25，不是已授予25，且不足直接补满所需38；不能由此独自解释等待。[新结果](production_increment_m34_20260912/LANDING_RECEIPT.json)、[现场](production_increment_m34_20260912/NATIVE_COMPACT.json)。
+
+安全交接预约已真实生效：旧installer受控关闭，唯一延续1476207将续跑父1041957预约为T，当前owner959095/metadata959102不变，健康子进程信号0。复用既有窄接口并补齐退役前late registry检查；两项新Linux针对测试PASS，首次日志白名单失败在信号前发生并保留。[实际源码](production_increment_m34_20260912/installer_continuation.py)、[原生六收据镜像](production_increment_m34_20260912/HANDOFF_TRANSPORT.json)。该单一程序最多等3600秒自然收尾并切换，父退役前失败/超时/可处理TERM/HUP恢复原父；SIGKILL/宿主故障不受finally保证。**尚未安装计时runtime，也未证明48满并发。**
+
+新21train资格4095，163/512格与欠填1905不变，高K>0.8新增0；不重复训练、旧实验或论文包。[真实覆盖图源](production_increment_m34_20260912/COVERAGE_AFTER.csv)、[SHA256SUMS](production_increment_m34_20260912/SHA256SUMS)。下一只接同operation真实终态/补偿和首正常timing，不用AI守日志。
+
 ## 2026-09-12 M33：63新增EMX，33正式入账，自动第6批
 
 14:56:00 UTC相对14:40:22，新74终态=63fresh＋10解析失败＋1执行失败；40strict、33范围内strict唯一全正式（19train/9validation/5test），补登0/history0/pending0，账本下界7015。[新结果接收](production_increment_m33_20260912/LANDING_RECEIPT.json)。第5批自然收尾，普通程序已自动接续第6批；新批刚完成五次健康预热，截面实际EMX0、Cadence许可5/Calibre2，6条等待EMX。48是申请与执行容量，不是实际运行数；额外34仅资源诊断。[现场证据](production_increment_m33_20260912/NATIVE_COMPACT.json)。
