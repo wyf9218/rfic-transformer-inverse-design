@@ -1,0 +1,49 @@
+{
+  "schema": "eucap15_research_intake_m39.v1",
+  "status": "COMPLETE_ONCE_ONLY_OFFLINE_INTAKE",
+  "completed_utc": "2026-09-12T16:21:31.247103+00:00",
+  "remote_observation_utc": "2026-09-12T16:06:22.089693+00:00",
+  "new_remote_observation_this_turn": false,
+  "landing_receipt": {
+    "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/landing_increment_m39_new29_v1/RECEIPT.json",
+    "sha256": "7f1e3503b9a090935deb7dabdfb7f332b86a50da811e3254c62542d43d2557a0"
+  },
+  "coverage_receipt": {
+    "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/train_coverage_received_m39_v1/RECEIPT.json",
+    "sha256": "7710e368c02e73736948d1332dd74bb8a814ece79b64a672b76e9ea0478fa9a8"
+  },
+  "checkpoint": {
+    "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/train_coverage_received_m39_v1/CHECKPOINT.json",
+    "sha256": "eca6dae3ddd35c6d1e23ea07fe9305b66b39319d0914f231d5540605bdc88161"
+  },
+  "coverage_csv": {
+    "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/train_coverage_received_m39_v1/COVERAGE_AFTER.csv",
+    "sha256": "61bd5c03b20dcc1e4e020a3fa13fc2b701e684df248f407c779d2b66f9779189"
+  },
+  "counts": {
+    "received_terminal": 29,
+    "source_new_emx": 27,
+    "source_new_strict_range_unique": 13,
+    "source_fresh_formal": 14,
+    "source_prior_backfill": 1,
+    "source_history_formal": 0,
+    "formal_union_lower_bound": 7197,
+    "research_train_added": 7,
+    "research_train_union": 4178,
+    "occupied_cells": 163,
+    "new_cells": 0,
+    "deficit": 1903
+  },
+  "source_identity_note": "M39 original owner observation received once; these are not a new remote production window.",
+  "attempt01": {
+    "status": "FAIL_BEFORE_OUTPUT",
+    "record": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/landing_increment_m39_new29_v1/ATTEMPT01_FAIL.json",
+    "cause": "Incorrect prior M38 filename in local projection script",
+    "correction": "New attempt02 script; original retained"
+  },
+  "native_calls": 0,
+  "formal_writes": 0,
+  "training_calls": 0,
+  "physics_tests_rerun": 0,
+  "next_safe_action": "Resume coverage only from M39 checkpoint on genuinely new source; ordinary production and boundary installer continue. End AI waiting; no duplicate M39 intake, remote polling or nine-test rerun."
+}

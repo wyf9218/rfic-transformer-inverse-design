@@ -1,0 +1,104 @@
+{
+  "schema": "eucap15_received_increment.m39.v1",
+  "status": "PASS_INCREMENT_RECEIVED_NOT_NATIVE_ADMISSION",
+  "observed_utc": "2026-09-12T16:06:22.089693+00:00",
+  "baseline_utc": "2026-09-12T15:56:29.716024+00:00",
+  "completed_utc": "2026-09-12T16:21:19.981377+00:00",
+  "source": {
+    "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/storage_claim_wait_v1/budget_walk_v1/increment_20260912T160621518552Z/OBSERVATION.json",
+    "sha256": "8420d7e14b709933f918d907dad9fc6f903480a0129d387684a666cf831fcc19",
+    "bytes": 567182
+  },
+  "counts": {
+    "received_terminal": 29,
+    "emx_completed": 27,
+    "strict_in_range": 13,
+    "formal_admitted": 13,
+    "pending_formal": 0,
+    "formal_train": 6,
+    "formal_validation": 3,
+    "formal_test": 4,
+    "pending_formal_train": 0,
+    "pending_formal_validation": 0,
+    "pending_formal_test": 0,
+    "strict_valid": 18,
+    "analytic_not_dispatched": 2,
+    "candidate_failure_retained": 0,
+    "prior_formal_backfill": 1,
+    "prior_formal_backfill_train": 1,
+    "history_formal": 0,
+    "ledger_window_fresh_formal": 14
+  },
+  "formal_union_lower_bound": 7197,
+  "formal_head": {
+    "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/qualified15_single_member_v1/records/007197.json",
+    "sha256": "d9a612c15e8071590b87426b12389401099d5947f4ba5db6cbd05d71634a2920",
+    "bytes": 187437
+  },
+  "pending_request_ids": [],
+  "source_script": {
+    "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/landing_increment_m39_new29_v1/receive_m39_attempt02.py",
+    "sha256": "99c2f41ae77d4eca95c1599ecfaa95b5bf01d61b4cfe12a9a810c941029a30e0",
+    "bytes": 9450
+  },
+  "by_source": {
+    "GEOMETRY_DOE": {
+      "received_terminal": 21,
+      "emx_completed": 19,
+      "strict_in_range": 5,
+      "formal_admitted": 5,
+      "pending_formal": 0,
+      "formal_train": 2,
+      "formal_validation": 1,
+      "formal_test": 2,
+      "pending_formal_train": 0,
+      "pending_formal_validation": 0,
+      "pending_formal_test": 0
+    },
+    "TRAIN_NEIGHBORHOOD": {
+      "received_terminal": 8,
+      "emx_completed": 8,
+      "strict_in_range": 8,
+      "formal_admitted": 8,
+      "pending_formal": 0,
+      "formal_train": 4,
+      "formal_validation": 2,
+      "formal_test": 2,
+      "pending_formal_train": 0,
+      "pending_formal_validation": 0,
+      "pending_formal_test": 0
+    }
+  },
+  "train_descriptive": {
+    "eligible_new_train_rows": 6,
+    "train_landings_in_baseline_empty_cells": 0,
+    "train_landings_in_baseline_underfilled_cells": 0,
+    "train_k_above_point8": 0,
+    "train_q10_20": 6,
+    "train_max_k": 0.3522342283324997,
+    "train_max_q": 15.802732285117497
+  },
+  "artifacts": [
+    {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/landing_increment_m39_new29_v1/RECEIVED_NEW29_VIEW.json",
+      "sha256": "3b3b559a075738ad8435e72b79badf385d3e635343e380603c3a6064a8fd69f0",
+      "bytes": 397065
+    },
+    {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/landing_increment_m39_new29_v1/ACTUAL_LANDINGS.json",
+      "sha256": "c3d234b62c07a7c11b1033996defa069ceb9faec7d9339df2d5122def2606c68",
+      "bytes": 412517
+    },
+    {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/landing_increment_m39_new29_v1/TRAIN_SOURCE_ROWS.json",
+      "sha256": "1ed2ed70332931adfa141f57ea2751ffcca84691818c708136be516081e8626a",
+      "bytes": 27651
+    }
+  ],
+  "native_calls": 0,
+  "training_calls": 0,
+  "physical_sources_reextracted": false,
+  "formal_writes": 0,
+  "existing_completed_windows_rerun": 0,
+  "note": "Formal certification is read from sole owner ledger headers; only exact new joins here. 13 new formal and1 prior backfill are separated; no repeated EMX."
+}
