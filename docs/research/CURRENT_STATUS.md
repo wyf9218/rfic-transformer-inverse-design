@@ -1,5 +1,11 @@
 # 当前研究和生产状态
 
+## 2026-09-12 M33：63新增EMX，33正式入账，自动第6批
+
+14:56:00 UTC相对14:40:22，新74终态=63fresh＋10解析失败＋1执行失败；40strict、33范围内strict唯一全正式（19train/9validation/5test），补登0/history0/pending0，账本下界7015。[新结果接收](production_increment_m33_20260912/LANDING_RECEIPT.json)。第5批自然收尾，普通程序已自动接续第6批；新批刚完成五次健康预热，截面实际EMX0、Cadence许可5/Calibre2，6条等待EMX。48是申请与执行容量，不是实际运行数；额外34仅资源诊断。[现场证据](production_increment_m33_20260912/NATIVE_COMPACT.json)。
+
+新19train资格使4055→4074，163/512格、欠填1905不变，高K>0.8新增0；未训练、未声称采样优势。[覆盖图源](production_increment_m33_20260912/COVERAGE_AFTER.csv)。计时installer再次错过交接边界，现由唯一原生所有者复用既有reservation_handoff入口处理，接管尚待证据；不信号健康求解器，不以写报告替代部署。只记录本次新数据，[SHA256SUMS](production_increment_m33_20260912/SHA256SUMS)；无历史/训练/旧QA/论文重复。
+
 ## 2026-09-12 M32：151新增EMX、78条fresh入账；17历史成员首次实际筛查
 
 14:40:22 UTC相对14:22:35：151fresh＋17解析，92strict、72范围内strict唯一全部正式（39train/20validation/13test）；另旧6pending补登（4train/2test），fresh正式＋78、history＋0、pending0，认证并集下界6982。现场9个独立EMX×2CPU，申请/容量48；当前资源允许额外32份内存预约工具是诊断值，不是实际运行32。CPU已非本cut瓶颈，6个EMX仍等待准入，具体等待时延未证明。batch5为189/256终态，原owner和continuation健康；计时安装器尚未生效。见[实际截面](production_increment_m32_20260912/SNAPSHOT.json)及[原生证据投影](production_increment_m32_20260912/NATIVE_COMPACT.json)。
