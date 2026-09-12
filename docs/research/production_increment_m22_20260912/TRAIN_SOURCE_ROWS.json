@@ -1,0 +1,2322 @@
+{
+  "schema": "eucap15_new79_compact_train_sources.v1",
+  "generated_utc": "2026-09-12T11:54:41.167126+00:00",
+  "source_output": {
+    "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/landing_increment_m22_new79_v1/ACTUAL_LANDINGS.json",
+    "sha256": "42b7832f5a3a06c83ad84ec0c34e377678012b8177adb2799432d8f4f140062e",
+    "bytes": 1057156,
+    "status": "WRITTEN"
+  },
+  "scope": "ONLY_THIS_NEW79_WINDOW_25_FORMAL_TRAIN_NOT_CUMULATIVE_PRODUCTION",
+  "geometry_note": "All 25 original geometry/geometry_fields/geometry_units retained with RESULT and formal bindings.",
+  "target_note": "Original target_cell and predicted_cell absent/null for all 79 proposals; not reconstructed and no fabricated target errors.",
+  "feature_order": [
+    "Lp_nH",
+    "Ls_nH",
+    "Qmin",
+    "K_abs"
+  ],
+  "current_formal_train_rows": [
+    {
+      "request_id": "eucap15_continuous_doe_neighborhood_20260912_batch000002-GEOMETRY_DOE-095",
+      "source": "GEOMETRY_DOE",
+      "geometry_sha256": "5122124a18ef7972eda7e2041f9c365eef6ce64232900af019dd16cff0a16d63",
+      "geometry": [
+        237.565,
+        274.5,
+        272.42,
+        426.83,
+        4.545,
+        50.685,
+        79.11,
+        -6.6850000000000005,
+        287.865,
+        290.94
+      ],
+      "geometry_fields": [
+        "primary_outer_width_um",
+        "primary_outer_height_um",
+        "secondary_outer_width_um",
+        "secondary_outer_height_um",
+        "line_width_um",
+        "primary_terminal_y_span_um",
+        "secondary_terminal_y_span_um",
+        "offset_um",
+        "primary_feed_extension_um",
+        "secondary_feed_extension_um"
+      ],
+      "geometry_units": "um",
+      "assigned_development_split": "train",
+      "actual_response": [
+        1.2553235587711784,
+        1.6515687140762194,
+        12.228802595719047,
+        0.20849218053538138
+      ],
+      "target_cell": null,
+      "predicted_cell": null,
+      "actual_cell": [
+        4,
+        6,
+        0
+      ],
+      "target_prediction_availability": "NOT_IN_RECEIVED_CUT_NOT_INFERRED",
+      "requested_target_error": null,
+      "frozen3801_train_cell_count": 48,
+      "train_cell_was_empty": false,
+      "seed": 2026091205,
+      "recipe_sha256": "e9720b57de694b86e791247251c7f9ce85ed9e941d8b438820aab333b808a2db",
+      "result_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_permit_release_20260912T105802513957Z/batches/eucap15_continuous_doe_neighborhood_20260912_batch000002/owner/eucap15_continuous_doe_neighborhood_20260912_batch000002-GEOMETRY_DOE-095/RESULT.json",
+        "sha256": "bb2260eba94f14d809380b28fe44d330c42b4b36421465dd2f7fb9df7c8d51e2",
+        "bytes": 9899
+      },
+      "formal_records": [
+        {
+          "pin": {
+            "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/qualified15_single_member_v1/records/006627.json",
+            "sha256": "37c550d84ff17bb240c1af6b209b71ab63179c5cf50b6765379ef83c5cfffd19",
+            "bytes": 188832
+          },
+          "request_id": "eucap15_continuous_doe_neighborhood_20260912_batch000002-GEOMETRY_DOE-095",
+          "utc": "2026-09-12T11:35:27.528702+00:00",
+          "assigned_split_from_frozen_request": "train",
+          "new_result_release": {
+            "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_permit_release_20260912T105802513957Z/batches/eucap15_continuous_doe_neighborhood_20260912_batch000002/owner/RELEASE.json",
+            "sha256": "bd8ab853138f97fcf5f997e3a3ed79831f74b26e592c155697842a47ca985541",
+            "bytes": 17490
+          },
+          "record_keys": [
+            "candidate_id",
+            "candidate_id_sha256",
+            "eucap15_qualified_accepted",
+            "frequency_hz",
+            "geometry",
+            "geometry_fields",
+            "geometry_sha256",
+            "geometry_units",
+            "increment_sequence",
+            "old_broadband_production_accepted",
+            "original56",
+            "original_research_member_unchanged",
+            "physical15",
+            "production_accepted_sequence",
+            "request_id",
+            "scientific_contract_fingerprint",
+            "source",
+            "split"
+          ]
+        }
+      ]
+    },
+    {
+      "request_id": "eucap15_continuous_doe_neighborhood_20260912_batch000002-GEOMETRY_DOE-104",
+      "source": "GEOMETRY_DOE",
+      "geometry_sha256": "46dc5f6ddd37a7620e7e41c92db4ec1c76d97dce9888549b7343ff955da5444b",
+      "geometry": [
+        453.415,
+        340.15500000000003,
+        447.40000000000003,
+        225.955,
+        3.685,
+        72.235,
+        49.445,
+        -54.455,
+        219.32500000000002,
+        131.29500000000002
+      ],
+      "geometry_fields": [
+        "primary_outer_width_um",
+        "primary_outer_height_um",
+        "secondary_outer_width_um",
+        "secondary_outer_height_um",
+        "line_width_um",
+        "primary_terminal_y_span_um",
+        "secondary_terminal_y_span_um",
+        "offset_um",
+        "primary_feed_extension_um",
+        "secondary_feed_extension_um"
+      ],
+      "geometry_units": "um",
+      "assigned_development_split": "train",
+      "actual_response": [
+        1.8924032370406556,
+        1.4097942877573912,
+        11.508265416338794,
+        0.2677469448145524
+      ],
+      "target_cell": null,
+      "predicted_cell": null,
+      "actual_cell": [
+        7,
+        4,
+        0
+      ],
+      "target_prediction_availability": "NOT_IN_RECEIVED_CUT_NOT_INFERRED",
+      "requested_target_error": null,
+      "frozen3801_train_cell_count": 35,
+      "train_cell_was_empty": false,
+      "seed": 2026091205,
+      "recipe_sha256": "e9720b57de694b86e791247251c7f9ce85ed9e941d8b438820aab333b808a2db",
+      "result_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_permit_release_20260912T105802513957Z/batches/eucap15_continuous_doe_neighborhood_20260912_batch000002/owner/eucap15_continuous_doe_neighborhood_20260912_batch000002-GEOMETRY_DOE-104/RESULT.json",
+        "sha256": "4dd2ebd8e132524a49412a8868a51fca6db4bf8a7309503606c2892717e49cde",
+        "bytes": 9944
+      },
+      "formal_records": [
+        {
+          "pin": {
+            "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/qualified15_single_member_v1/records/006631.json",
+            "sha256": "d5c25ad634fcc1ecae864582fdb3297a52688e1e80c81e990213a0a7e1b53d6c",
+            "bytes": 188947
+          },
+          "request_id": "eucap15_continuous_doe_neighborhood_20260912_batch000002-GEOMETRY_DOE-104",
+          "utc": "2026-09-12T11:35:56.614115+00:00",
+          "assigned_split_from_frozen_request": "train",
+          "new_result_release": {
+            "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_permit_release_20260912T105802513957Z/batches/eucap15_continuous_doe_neighborhood_20260912_batch000002/owner/RELEASE.json",
+            "sha256": "bd8ab853138f97fcf5f997e3a3ed79831f74b26e592c155697842a47ca985541",
+            "bytes": 17490
+          },
+          "record_keys": [
+            "candidate_id",
+            "candidate_id_sha256",
+            "eucap15_qualified_accepted",
+            "frequency_hz",
+            "geometry",
+            "geometry_fields",
+            "geometry_sha256",
+            "geometry_units",
+            "increment_sequence",
+            "old_broadband_production_accepted",
+            "original56",
+            "original_research_member_unchanged",
+            "physical15",
+            "production_accepted_sequence",
+            "request_id",
+            "scientific_contract_fingerprint",
+            "source",
+            "split"
+          ]
+        }
+      ]
+    },
+    {
+      "request_id": "eucap15_continuous_doe_neighborhood_20260912_batch000002-GEOMETRY_DOE-107",
+      "source": "GEOMETRY_DOE",
+      "geometry_sha256": "12d531183044c47005a90842ca59a54038c240d9b1850c95f971c682c0dfdfa0",
+      "geometry": [
+        203.785,
+        200.71,
+        176.97,
+        186.145,
+        11.620000000000001,
+        78.46000000000001,
+        31.085,
+        67.93,
+        190.485,
+        220.43
+      ],
+      "geometry_fields": [
+        "primary_outer_width_um",
+        "primary_outer_height_um",
+        "secondary_outer_width_um",
+        "secondary_outer_height_um",
+        "line_width_um",
+        "primary_terminal_y_span_um",
+        "secondary_terminal_y_span_um",
+        "offset_um",
+        "primary_feed_extension_um",
+        "secondary_feed_extension_um"
+      ],
+      "geometry_units": "um",
+      "assigned_development_split": "train",
+      "actual_response": [
+        0.67894506187225,
+        0.5905675262593791,
+        17.785029184981223,
+        0.21513293622595797
+      ],
+      "target_cell": null,
+      "predicted_cell": null,
+      "actual_cell": [
+        0,
+        0,
+        0
+      ],
+      "target_prediction_availability": "NOT_IN_RECEIVED_CUT_NOT_INFERRED",
+      "requested_target_error": null,
+      "frozen3801_train_cell_count": 3,
+      "train_cell_was_empty": false,
+      "seed": 2026091205,
+      "recipe_sha256": "e9720b57de694b86e791247251c7f9ce85ed9e941d8b438820aab333b808a2db",
+      "result_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_permit_release_20260912T105802513957Z/batches/eucap15_continuous_doe_neighborhood_20260912_batch000002/owner/eucap15_continuous_doe_neighborhood_20260912_batch000002-GEOMETRY_DOE-107/RESULT.json",
+        "sha256": "c4d9223d0bb10fef3650ac9e8f011293b1c162f37e0f6186c01b2cdf78acb22f",
+        "bytes": 9908
+      },
+      "formal_records": [
+        {
+          "pin": {
+            "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/qualified15_single_member_v1/records/006633.json",
+            "sha256": "76ff9dd50277a553cddba5e3bdc32a94997b9b2558a095b82676f5d2be7d8871",
+            "bytes": 188860
+          },
+          "request_id": "eucap15_continuous_doe_neighborhood_20260912_batch000002-GEOMETRY_DOE-107",
+          "utc": "2026-09-12T11:36:10.740288+00:00",
+          "assigned_split_from_frozen_request": "train",
+          "new_result_release": {
+            "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_permit_release_20260912T105802513957Z/batches/eucap15_continuous_doe_neighborhood_20260912_batch000002/owner/RELEASE.json",
+            "sha256": "bd8ab853138f97fcf5f997e3a3ed79831f74b26e592c155697842a47ca985541",
+            "bytes": 17490
+          },
+          "record_keys": [
+            "candidate_id",
+            "candidate_id_sha256",
+            "eucap15_qualified_accepted",
+            "frequency_hz",
+            "geometry",
+            "geometry_fields",
+            "geometry_sha256",
+            "geometry_units",
+            "increment_sequence",
+            "old_broadband_production_accepted",
+            "original56",
+            "original_research_member_unchanged",
+            "physical15",
+            "production_accepted_sequence",
+            "request_id",
+            "scientific_contract_fingerprint",
+            "source",
+            "split"
+          ]
+        }
+      ]
+    },
+    {
+      "request_id": "eucap15_continuous_doe_neighborhood_20260912_batch000002-GEOMETRY_DOE-115",
+      "source": "GEOMETRY_DOE",
+      "geometry_sha256": "008d31f4fffeeda3e444ff8d105e31acdb463577082231639964111b2d7d5645",
+      "geometry": [
+        210.315,
+        438.295,
+        163.02,
+        438.43,
+        3.285,
+        69.875,
+        44.245,
+        -0.265,
+        143.29,
+        195.235
+      ],
+      "geometry_fields": [
+        "primary_outer_width_um",
+        "primary_outer_height_um",
+        "secondary_outer_width_um",
+        "secondary_outer_height_um",
+        "line_width_um",
+        "primary_terminal_y_span_um",
+        "secondary_terminal_y_span_um",
+        "offset_um",
+        "primary_feed_extension_um",
+        "secondary_feed_extension_um"
+      ],
+      "geometry_units": "um",
+      "assigned_development_split": "train",
+      "actual_response": [
+        1.35880366392534,
+        1.3798167587034933,
+        11.651237703610084,
+        0.42012175354940934
+      ],
+      "target_cell": null,
+      "predicted_cell": null,
+      "actual_cell": [
+        4,
+        4,
+        2
+      ],
+      "target_prediction_availability": "NOT_IN_RECEIVED_CUT_NOT_INFERRED",
+      "requested_target_error": null,
+      "frozen3801_train_cell_count": 20,
+      "train_cell_was_empty": false,
+      "seed": 2026091205,
+      "recipe_sha256": "e9720b57de694b86e791247251c7f9ce85ed9e941d8b438820aab333b808a2db",
+      "result_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_permit_release_20260912T105802513957Z/batches/eucap15_continuous_doe_neighborhood_20260912_batch000002/owner/eucap15_continuous_doe_neighborhood_20260912_batch000002-GEOMETRY_DOE-115/RESULT.json",
+        "sha256": "eb91ad2d4447885c807447cfe610d05a86f3adbd2473fe218ce080b9898e70ba",
+        "bytes": 9893
+      },
+      "formal_records": [
+        {
+          "pin": {
+            "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/qualified15_single_member_v1/records/006638.json",
+            "sha256": "0ce681d829edb0d59fdffff31ca503eecf24b930c8fa4fd86b03857c10225a27",
+            "bytes": 188801
+          },
+          "request_id": "eucap15_continuous_doe_neighborhood_20260912_batch000002-GEOMETRY_DOE-115",
+          "utc": "2026-09-12T11:42:15.965913+00:00",
+          "assigned_split_from_frozen_request": "train",
+          "new_result_release": {
+            "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_permit_release_20260912T105802513957Z/batches/eucap15_continuous_doe_neighborhood_20260912_batch000002/owner/RELEASE.json",
+            "sha256": "bd8ab853138f97fcf5f997e3a3ed79831f74b26e592c155697842a47ca985541",
+            "bytes": 17490
+          },
+          "record_keys": [
+            "candidate_id",
+            "candidate_id_sha256",
+            "eucap15_qualified_accepted",
+            "frequency_hz",
+            "geometry",
+            "geometry_fields",
+            "geometry_sha256",
+            "geometry_units",
+            "increment_sequence",
+            "old_broadband_production_accepted",
+            "original56",
+            "original_research_member_unchanged",
+            "physical15",
+            "production_accepted_sequence",
+            "request_id",
+            "scientific_contract_fingerprint",
+            "source",
+            "split"
+          ]
+        }
+      ]
+    },
+    {
+      "request_id": "eucap15_continuous_doe_neighborhood_20260912_batch000002-GEOMETRY_DOE-117",
+      "source": "GEOMETRY_DOE",
+      "geometry_sha256": "5efb83038ec3c5ea170152d0ef04ea134856ed8799377c5639668b5eabf4d89e",
+      "geometry": [
+        227.87,
+        237.205,
+        259.555,
+        356.92,
+        10.435,
+        87.18,
+        57.94,
+        60.155,
+        136.435,
+        133.92000000000002
+      ],
+      "geometry_fields": [
+        "primary_outer_width_um",
+        "primary_outer_height_um",
+        "secondary_outer_width_um",
+        "secondary_outer_height_um",
+        "line_width_um",
+        "primary_terminal_y_span_um",
+        "secondary_terminal_y_span_um",
+        "offset_um",
+        "primary_feed_extension_um",
+        "secondary_feed_extension_um"
+      ],
+      "geometry_units": "um",
+      "assigned_development_split": "train",
+      "actual_response": [
+        0.7668090274710185,
+        0.9916846862200055,
+        16.651265685112772,
+        0.20253009068758837
+      ],
+      "target_cell": null,
+      "predicted_cell": null,
+      "actual_cell": [
+        1,
+        2,
+        0
+      ],
+      "target_prediction_availability": "NOT_IN_RECEIVED_CUT_NOT_INFERRED",
+      "requested_target_error": null,
+      "frozen3801_train_cell_count": 53,
+      "train_cell_was_empty": false,
+      "seed": 2026091205,
+      "recipe_sha256": "e9720b57de694b86e791247251c7f9ce85ed9e941d8b438820aab333b808a2db",
+      "result_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_permit_release_20260912T105802513957Z/batches/eucap15_continuous_doe_neighborhood_20260912_batch000002/owner/eucap15_continuous_doe_neighborhood_20260912_batch000002-GEOMETRY_DOE-117/RESULT.json",
+        "sha256": "04c75d188f51d0444ba273019c9aeba9b9e4799a1c0cc6c82d0947fb586c400e",
+        "bytes": 9904
+      },
+      "formal_records": [
+        {
+          "pin": {
+            "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/qualified15_single_member_v1/records/006640.json",
+            "sha256": "68e0f79285dee9f9bca04205378ca2ff4ecea76087bdf878a6e98d07d4518eb3",
+            "bytes": 188836
+          },
+          "request_id": "eucap15_continuous_doe_neighborhood_20260912_batch000002-GEOMETRY_DOE-117",
+          "utc": "2026-09-12T11:42:22.645986+00:00",
+          "assigned_split_from_frozen_request": "train",
+          "new_result_release": {
+            "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_permit_release_20260912T105802513957Z/batches/eucap15_continuous_doe_neighborhood_20260912_batch000002/owner/RELEASE.json",
+            "sha256": "bd8ab853138f97fcf5f997e3a3ed79831f74b26e592c155697842a47ca985541",
+            "bytes": 17490
+          },
+          "record_keys": [
+            "candidate_id",
+            "candidate_id_sha256",
+            "eucap15_qualified_accepted",
+            "frequency_hz",
+            "geometry",
+            "geometry_fields",
+            "geometry_sha256",
+            "geometry_units",
+            "increment_sequence",
+            "old_broadband_production_accepted",
+            "original56",
+            "original_research_member_unchanged",
+            "physical15",
+            "production_accepted_sequence",
+            "request_id",
+            "scientific_contract_fingerprint",
+            "source",
+            "split"
+          ]
+        }
+      ]
+    },
+    {
+      "request_id": "eucap15_continuous_doe_neighborhood_20260912_batch000002-GEOMETRY_DOE-134",
+      "source": "GEOMETRY_DOE",
+      "geometry_sha256": "12122e7b7e70945ef44337208aa5463a44d840f6f1c45cedbce6eb3096535251",
+      "geometry": [
+        459.71000000000004,
+        335.40000000000003,
+        312.285,
+        249.93,
+        9.655,
+        29.965,
+        69.28,
+        25.57,
+        164.32,
+        128.62
+      ],
+      "geometry_fields": [
+        "primary_outer_width_um",
+        "primary_outer_height_um",
+        "secondary_outer_width_um",
+        "secondary_outer_height_um",
+        "line_width_um",
+        "primary_terminal_y_span_um",
+        "secondary_terminal_y_span_um",
+        "offset_um",
+        "primary_feed_extension_um",
+        "secondary_feed_extension_um"
+      ],
+      "geometry_units": "um",
+      "assigned_development_split": "train",
+      "actual_response": [
+        1.409572681131219,
+        0.9733625212864014,
+        13.160593147202615,
+        0.27807565475370527
+      ],
+      "target_cell": null,
+      "predicted_cell": null,
+      "actual_cell": [
+        4,
+        2,
+        0
+      ],
+      "target_prediction_availability": "NOT_IN_RECEIVED_CUT_NOT_INFERRED",
+      "requested_target_error": null,
+      "frozen3801_train_cell_count": 88,
+      "train_cell_was_empty": false,
+      "seed": 2026091205,
+      "recipe_sha256": "e9720b57de694b86e791247251c7f9ce85ed9e941d8b438820aab333b808a2db",
+      "result_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_permit_release_20260912T105802513957Z/batches/eucap15_continuous_doe_neighborhood_20260912_batch000002/owner/eucap15_continuous_doe_neighborhood_20260912_batch000002-GEOMETRY_DOE-134/RESULT.json",
+        "sha256": "4ba1c41dadca2235af3457e990aeb0f6de598986281f4adc7f31e2af9c84d9d1",
+        "bytes": 9908
+      },
+      "formal_records": [
+        {
+          "pin": {
+            "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/qualified15_single_member_v1/records/006647.json",
+            "sha256": "2c43717db0b5d11285e1f9f36eedf38902f6a3303db3e7da9abf812bdf712691",
+            "bytes": 188858
+          },
+          "request_id": "eucap15_continuous_doe_neighborhood_20260912_batch000002-GEOMETRY_DOE-134",
+          "utc": "2026-09-12T11:47:14.066427+00:00",
+          "assigned_split_from_frozen_request": "train",
+          "new_result_release": {
+            "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_permit_release_20260912T105802513957Z/batches/eucap15_continuous_doe_neighborhood_20260912_batch000002/owner/RELEASE.json",
+            "sha256": "bd8ab853138f97fcf5f997e3a3ed79831f74b26e592c155697842a47ca985541",
+            "bytes": 17490
+          },
+          "record_keys": [
+            "candidate_id",
+            "candidate_id_sha256",
+            "eucap15_qualified_accepted",
+            "frequency_hz",
+            "geometry",
+            "geometry_fields",
+            "geometry_sha256",
+            "geometry_units",
+            "increment_sequence",
+            "old_broadband_production_accepted",
+            "original56",
+            "original_research_member_unchanged",
+            "physical15",
+            "production_accepted_sequence",
+            "request_id",
+            "scientific_contract_fingerprint",
+            "source",
+            "split"
+          ]
+        }
+      ]
+    },
+    {
+      "request_id": "eucap15_continuous_doe_neighborhood_20260912_batch000002-GEOMETRY_DOE-136",
+      "source": "GEOMETRY_DOE",
+      "geometry_sha256": "8d99248c67763b55746e061fa3ae2eb9ff019a95052960dd0c37ef28cf8c226e",
+      "geometry": [
+        269.71500000000003,
+        418.40500000000003,
+        289.17,
+        343.145,
+        4.39,
+        82.43,
+        81.065,
+        68.965,
+        310.855,
+        137.525
+      ],
+      "geometry_fields": [
+        "primary_outer_width_um",
+        "primary_outer_height_um",
+        "secondary_outer_width_um",
+        "secondary_outer_height_um",
+        "line_width_um",
+        "primary_terminal_y_span_um",
+        "secondary_terminal_y_span_um",
+        "offset_um",
+        "primary_feed_extension_um",
+        "secondary_feed_extension_um"
+      ],
+      "geometry_units": "um",
+      "assigned_development_split": "train",
+      "actual_response": [
+        1.7924684324023339,
+        1.2615973482718075,
+        12.292575301031604,
+        0.20160292399107524
+      ],
+      "target_cell": null,
+      "predicted_cell": null,
+      "actual_cell": [
+        6,
+        4,
+        0
+      ],
+      "target_prediction_availability": "NOT_IN_RECEIVED_CUT_NOT_INFERRED",
+      "requested_target_error": null,
+      "frozen3801_train_cell_count": 66,
+      "train_cell_was_empty": false,
+      "seed": 2026091205,
+      "recipe_sha256": "e9720b57de694b86e791247251c7f9ce85ed9e941d8b438820aab333b808a2db",
+      "result_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_permit_release_20260912T105802513957Z/batches/eucap15_continuous_doe_neighborhood_20260912_batch000002/owner/eucap15_continuous_doe_neighborhood_20260912_batch000002-GEOMETRY_DOE-136/RESULT.json",
+        "sha256": "f98d8310c678ee0bcadc45c62389b96b8bd2242d2a28b72575d74289936f2c14",
+        "bytes": 9913
+      },
+      "formal_records": [
+        {
+          "pin": {
+            "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/qualified15_single_member_v1/records/006649.json",
+            "sha256": "cefedcfe546398277f19f63aa3f8178c03c8103a44db4d4a7f085ec58e077178",
+            "bytes": 188870
+          },
+          "request_id": "eucap15_continuous_doe_neighborhood_20260912_batch000002-GEOMETRY_DOE-136",
+          "utc": "2026-09-12T11:47:21.787681+00:00",
+          "assigned_split_from_frozen_request": "train",
+          "new_result_release": {
+            "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_permit_release_20260912T105802513957Z/batches/eucap15_continuous_doe_neighborhood_20260912_batch000002/owner/RELEASE.json",
+            "sha256": "bd8ab853138f97fcf5f997e3a3ed79831f74b26e592c155697842a47ca985541",
+            "bytes": 17490
+          },
+          "record_keys": [
+            "candidate_id",
+            "candidate_id_sha256",
+            "eucap15_qualified_accepted",
+            "frequency_hz",
+            "geometry",
+            "geometry_fields",
+            "geometry_sha256",
+            "geometry_units",
+            "increment_sequence",
+            "old_broadband_production_accepted",
+            "original56",
+            "original_research_member_unchanged",
+            "physical15",
+            "production_accepted_sequence",
+            "request_id",
+            "scientific_contract_fingerprint",
+            "source",
+            "split"
+          ]
+        }
+      ]
+    },
+    {
+      "request_id": "eucap15_continuous_doe_neighborhood_20260912_batch000002-GEOMETRY_DOE-140",
+      "source": "GEOMETRY_DOE",
+      "geometry_sha256": "4d89a53a8ed96f32a5d8a075dc78fd712fa524f77d0fb74c2b87c8f35e4db7eb",
+      "geometry": [
+        432.855,
+        328.93,
+        421.26,
+        173.26,
+        8.035,
+        71.28,
+        83.615,
+        -30.815,
+        119.22,
+        138.93
+      ],
+      "geometry_fields": [
+        "primary_outer_width_um",
+        "primary_outer_height_um",
+        "secondary_outer_width_um",
+        "secondary_outer_height_um",
+        "line_width_um",
+        "primary_terminal_y_span_um",
+        "secondary_terminal_y_span_um",
+        "offset_um",
+        "primary_feed_extension_um",
+        "secondary_feed_extension_um"
+      ],
+      "geometry_units": "um",
+      "assigned_development_split": "train",
+      "actual_response": [
+        1.3595332829633162,
+        1.0860593349111782,
+        14.086047037469635,
+        0.263237640070679
+      ],
+      "target_cell": null,
+      "predicted_cell": null,
+      "actual_cell": [
+        4,
+        3,
+        0
+      ],
+      "target_prediction_availability": "NOT_IN_RECEIVED_CUT_NOT_INFERRED",
+      "requested_target_error": null,
+      "frozen3801_train_cell_count": 111,
+      "train_cell_was_empty": false,
+      "seed": 2026091205,
+      "recipe_sha256": "e9720b57de694b86e791247251c7f9ce85ed9e941d8b438820aab333b808a2db",
+      "result_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_permit_release_20260912T105802513957Z/batches/eucap15_continuous_doe_neighborhood_20260912_batch000002/owner/eucap15_continuous_doe_neighborhood_20260912_batch000002-GEOMETRY_DOE-140/RESULT.json",
+        "sha256": "d57c5501107ca4461a9af4f64dfd7acd23f15d949cf4a0526f69d667dfadff3b",
+        "bytes": 9887
+      },
+      "formal_records": [
+        {
+          "pin": {
+            "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/qualified15_single_member_v1/records/006651.json",
+            "sha256": "be74f2e98216ebe8309a459aaf7d8a533bc06036cffbb447fff2794b77efdcd6",
+            "bytes": 188788
+          },
+          "request_id": "eucap15_continuous_doe_neighborhood_20260912_batch000002-GEOMETRY_DOE-140",
+          "utc": "2026-09-12T11:47:29.684438+00:00",
+          "assigned_split_from_frozen_request": "train",
+          "new_result_release": {
+            "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_permit_release_20260912T105802513957Z/batches/eucap15_continuous_doe_neighborhood_20260912_batch000002/owner/RELEASE.json",
+            "sha256": "bd8ab853138f97fcf5f997e3a3ed79831f74b26e592c155697842a47ca985541",
+            "bytes": 17490
+          },
+          "record_keys": [
+            "candidate_id",
+            "candidate_id_sha256",
+            "eucap15_qualified_accepted",
+            "frequency_hz",
+            "geometry",
+            "geometry_fields",
+            "geometry_sha256",
+            "geometry_units",
+            "increment_sequence",
+            "old_broadband_production_accepted",
+            "original56",
+            "original_research_member_unchanged",
+            "physical15",
+            "production_accepted_sequence",
+            "request_id",
+            "scientific_contract_fingerprint",
+            "source",
+            "split"
+          ]
+        }
+      ]
+    },
+    {
+      "request_id": "eucap15_continuous_doe_neighborhood_20260912_batch000002-GEOMETRY_DOE-143",
+      "source": "GEOMETRY_DOE",
+      "geometry_sha256": "8990a2d793d374c6aec7da477c49693e1a1be79f19a2526b5aa2bab72f3c05e2",
+      "geometry": [
+        251.60500000000002,
+        320.585,
+        361.185,
+        315.805,
+        3.89,
+        32.21,
+        67.665,
+        81.81,
+        165.39000000000001,
+        269.18
+      ],
+      "geometry_fields": [
+        "primary_outer_width_um",
+        "primary_outer_height_um",
+        "secondary_outer_width_um",
+        "secondary_outer_height_um",
+        "line_width_um",
+        "primary_terminal_y_span_um",
+        "secondary_terminal_y_span_um",
+        "offset_um",
+        "primary_feed_extension_um",
+        "secondary_feed_extension_um"
+      ],
+      "geometry_units": "um",
+      "assigned_development_split": "train",
+      "actual_response": [
+        1.2349590555061198,
+        1.6660878050426369,
+        12.61055807887458,
+        0.3203227442002365
+      ],
+      "target_cell": null,
+      "predicted_cell": null,
+      "actual_cell": [
+        3,
+        6,
+        1
+      ],
+      "target_prediction_availability": "NOT_IN_RECEIVED_CUT_NOT_INFERRED",
+      "requested_target_error": null,
+      "frozen3801_train_cell_count": 7,
+      "train_cell_was_empty": false,
+      "seed": 2026091205,
+      "recipe_sha256": "e9720b57de694b86e791247251c7f9ce85ed9e941d8b438820aab333b808a2db",
+      "result_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_permit_release_20260912T105802513957Z/batches/eucap15_continuous_doe_neighborhood_20260912_batch000002/owner/eucap15_continuous_doe_neighborhood_20260912_batch000002-GEOMETRY_DOE-143/RESULT.json",
+        "sha256": "05541e28e90520428e74df7f4a279cddd4da4826301a163fe112064a8245bdc6",
+        "bytes": 9910
+      },
+      "formal_records": [
+        {
+          "pin": {
+            "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/qualified15_single_member_v1/records/006653.json",
+            "sha256": "5609b647d6108f6c8517a5c617845c2880306aa791b97e39fded80d082e8337d",
+            "bytes": 188854
+          },
+          "request_id": "eucap15_continuous_doe_neighborhood_20260912_batch000002-GEOMETRY_DOE-143",
+          "utc": "2026-09-12T11:47:37.736907+00:00",
+          "assigned_split_from_frozen_request": "train",
+          "new_result_release": {
+            "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_permit_release_20260912T105802513957Z/batches/eucap15_continuous_doe_neighborhood_20260912_batch000002/owner/RELEASE.json",
+            "sha256": "bd8ab853138f97fcf5f997e3a3ed79831f74b26e592c155697842a47ca985541",
+            "bytes": 17490
+          },
+          "record_keys": [
+            "candidate_id",
+            "candidate_id_sha256",
+            "eucap15_qualified_accepted",
+            "frequency_hz",
+            "geometry",
+            "geometry_fields",
+            "geometry_sha256",
+            "geometry_units",
+            "increment_sequence",
+            "old_broadband_production_accepted",
+            "original56",
+            "original_research_member_unchanged",
+            "physical15",
+            "production_accepted_sequence",
+            "request_id",
+            "scientific_contract_fingerprint",
+            "source",
+            "split"
+          ]
+        }
+      ]
+    },
+    {
+      "request_id": "eucap15_continuous_doe_neighborhood_20260912_batch000002-GEOMETRY_DOE-146",
+      "source": "GEOMETRY_DOE",
+      "geometry_sha256": "b9cb284a6d4c0b1141369457a17296c9feacf12850cba26965279da25bf1dd88",
+      "geometry": [
+        371.98,
+        354.34000000000003,
+        199.74,
+        417.48,
+        6.65,
+        83.14,
+        54.34,
+        -37.95,
+        185.205,
+        169.585
+      ],
+      "geometry_fields": [
+        "primary_outer_width_um",
+        "primary_outer_height_um",
+        "secondary_outer_width_um",
+        "secondary_outer_height_um",
+        "line_width_um",
+        "primary_terminal_y_span_um",
+        "secondary_terminal_y_span_um",
+        "offset_um",
+        "primary_feed_extension_um",
+        "secondary_feed_extension_um"
+      ],
+      "geometry_units": "um",
+      "assigned_development_split": "train",
+      "actual_response": [
+        1.4737621009400765,
+        1.2397284550188692,
+        14.004611849572589,
+        0.31525041510213325
+      ],
+      "target_cell": null,
+      "predicted_cell": null,
+      "actual_cell": [
+        5,
+        3,
+        1
+      ],
+      "target_prediction_availability": "NOT_IN_RECEIVED_CUT_NOT_INFERRED",
+      "requested_target_error": null,
+      "frozen3801_train_cell_count": 50,
+      "train_cell_was_empty": false,
+      "seed": 2026091205,
+      "recipe_sha256": "e9720b57de694b86e791247251c7f9ce85ed9e941d8b438820aab333b808a2db",
+      "result_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_permit_release_20260912T105802513957Z/batches/eucap15_continuous_doe_neighborhood_20260912_batch000002/owner/eucap15_continuous_doe_neighborhood_20260912_batch000002-GEOMETRY_DOE-146/RESULT.json",
+        "sha256": "53080f1070306378b69040fb7afd5e9c5f90d9adca7d9bdc6e63da8299eeb11e",
+        "bytes": 9903
+      },
+      "formal_records": [
+        {
+          "pin": {
+            "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/qualified15_single_member_v1/records/006655.json",
+            "sha256": "e372d56b2545f99474d5c0aebc2e6ab5a5bef7856ba6a574cbd5d3785a11bc7d",
+            "bytes": 188829
+          },
+          "request_id": "eucap15_continuous_doe_neighborhood_20260912_batch000002-GEOMETRY_DOE-146",
+          "utc": "2026-09-12T11:47:45.332853+00:00",
+          "assigned_split_from_frozen_request": "train",
+          "new_result_release": {
+            "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_permit_release_20260912T105802513957Z/batches/eucap15_continuous_doe_neighborhood_20260912_batch000002/owner/RELEASE.json",
+            "sha256": "bd8ab853138f97fcf5f997e3a3ed79831f74b26e592c155697842a47ca985541",
+            "bytes": 17490
+          },
+          "record_keys": [
+            "candidate_id",
+            "candidate_id_sha256",
+            "eucap15_qualified_accepted",
+            "frequency_hz",
+            "geometry",
+            "geometry_fields",
+            "geometry_sha256",
+            "geometry_units",
+            "increment_sequence",
+            "old_broadband_production_accepted",
+            "original56",
+            "original_research_member_unchanged",
+            "physical15",
+            "production_accepted_sequence",
+            "request_id",
+            "scientific_contract_fingerprint",
+            "source",
+            "split"
+          ]
+        }
+      ]
+    },
+    {
+      "request_id": "eucap15_continuous_doe_neighborhood_20260912_batch000002-GEOMETRY_DOE-147",
+      "source": "GEOMETRY_DOE",
+      "geometry_sha256": "89d04c531a2df6ae3752552cc75563477fa6a1320bc835ed0e72893cc06aba7c",
+      "geometry": [
+        378.61,
+        323.235,
+        204.53,
+        495.90500000000003,
+        4.05,
+        51.77,
+        82.03,
+        -57.945,
+        220.595,
+        174.57
+      ],
+      "geometry_fields": [
+        "primary_outer_width_um",
+        "primary_outer_height_um",
+        "secondary_outer_width_um",
+        "secondary_outer_height_um",
+        "line_width_um",
+        "primary_terminal_y_span_um",
+        "secondary_terminal_y_span_um",
+        "offset_um",
+        "primary_feed_extension_um",
+        "secondary_feed_extension_um"
+      ],
+      "geometry_units": "um",
+      "assigned_development_split": "train",
+      "actual_response": [
+        1.6337474328075288,
+        1.5400360137463507,
+        13.073929564623317,
+        0.21904834152050895
+      ],
+      "target_cell": null,
+      "predicted_cell": null,
+      "actual_cell": [
+        6,
+        5,
+        0
+      ],
+      "target_prediction_availability": "NOT_IN_RECEIVED_CUT_NOT_INFERRED",
+      "requested_target_error": null,
+      "frozen3801_train_cell_count": 41,
+      "train_cell_was_empty": false,
+      "seed": 2026091205,
+      "recipe_sha256": "e9720b57de694b86e791247251c7f9ce85ed9e941d8b438820aab333b808a2db",
+      "result_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_permit_release_20260912T105802513957Z/batches/eucap15_continuous_doe_neighborhood_20260912_batch000002/owner/eucap15_continuous_doe_neighborhood_20260912_batch000002-GEOMETRY_DOE-147/RESULT.json",
+        "sha256": "0595172fd9a4e14091d98523dc365d5c503488133c1e6be0667f45147a20df28",
+        "bytes": 9900
+      },
+      "formal_records": [
+        {
+          "pin": {
+            "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/qualified15_single_member_v1/records/006657.json",
+            "sha256": "eff71cd1651db313f8cd23c1ef851fc8a5a14c8deb8227c013312ab8f8296099",
+            "bytes": 188828
+          },
+          "request_id": "eucap15_continuous_doe_neighborhood_20260912_batch000002-GEOMETRY_DOE-147",
+          "utc": "2026-09-12T11:47:52.106816+00:00",
+          "assigned_split_from_frozen_request": "train",
+          "new_result_release": {
+            "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_permit_release_20260912T105802513957Z/batches/eucap15_continuous_doe_neighborhood_20260912_batch000002/owner/RELEASE.json",
+            "sha256": "bd8ab853138f97fcf5f997e3a3ed79831f74b26e592c155697842a47ca985541",
+            "bytes": 17490
+          },
+          "record_keys": [
+            "candidate_id",
+            "candidate_id_sha256",
+            "eucap15_qualified_accepted",
+            "frequency_hz",
+            "geometry",
+            "geometry_fields",
+            "geometry_sha256",
+            "geometry_units",
+            "increment_sequence",
+            "old_broadband_production_accepted",
+            "original56",
+            "original_research_member_unchanged",
+            "physical15",
+            "production_accepted_sequence",
+            "request_id",
+            "scientific_contract_fingerprint",
+            "source",
+            "split"
+          ]
+        }
+      ]
+    },
+    {
+      "request_id": "eucap15_continuous_doe_neighborhood_20260912_batch000002-TRAIN_NEIGHBORHOOD-032",
+      "source": "TRAIN_NEIGHBORHOOD",
+      "geometry_sha256": "07f7755ff5db1416f03b0129d9c1ac495b758af53641c4a8f45c2c32d4f5fec3",
+      "geometry": [
+        269.92,
+        171.025,
+        235.78,
+        455.725,
+        9.975,
+        27.505,
+        84.45,
+        -24.285,
+        258.29,
+        263.3
+      ],
+      "geometry_fields": [
+        "primary_outer_width_um",
+        "primary_outer_height_um",
+        "secondary_outer_width_um",
+        "secondary_outer_height_um",
+        "line_width_um",
+        "primary_terminal_y_span_um",
+        "secondary_terminal_y_span_um",
+        "offset_um",
+        "primary_feed_extension_um",
+        "secondary_feed_extension_um"
+      ],
+      "geometry_units": "um",
+      "assigned_development_split": "train",
+      "actual_response": [
+        0.8412565177560613,
+        1.3998362617013689,
+        12.420677130720003,
+        0.21197326318022539
+      ],
+      "target_cell": null,
+      "predicted_cell": null,
+      "actual_cell": [
+        1,
+        4,
+        0
+      ],
+      "target_prediction_availability": "NOT_IN_RECEIVED_CUT_NOT_INFERRED",
+      "requested_target_error": null,
+      "frozen3801_train_cell_count": 32,
+      "train_cell_was_empty": false,
+      "seed": 2026091206,
+      "recipe_sha256": "e9720b57de694b86e791247251c7f9ce85ed9e941d8b438820aab333b808a2db",
+      "result_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_permit_release_20260912T105802513957Z/batches/eucap15_continuous_doe_neighborhood_20260912_batch000002/owner/eucap15_continuous_doe_neighborhood_20260912_batch000002-TRAIN_NEIGHBORHOOD-032/RESULT.json",
+        "sha256": "6288ac81a82b8c8934b5ecaf58bd1b09f9a331cb653e65b42119eaf0a3d48e42",
+        "bytes": 11782
+      },
+      "formal_records": [
+        {
+          "pin": {
+            "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/qualified15_single_member_v1/records/006629.json",
+            "sha256": "b328aece7dcad253fd91fd06000e1eb080d4ebeb40804e52190d548895e20f61",
+            "bytes": 191191
+          },
+          "request_id": "eucap15_continuous_doe_neighborhood_20260912_batch000002-TRAIN_NEIGHBORHOOD-032",
+          "utc": "2026-09-12T11:35:41.569198+00:00",
+          "assigned_split_from_frozen_request": "train",
+          "new_result_release": {
+            "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_permit_release_20260912T105802513957Z/batches/eucap15_continuous_doe_neighborhood_20260912_batch000002/owner/RELEASE.json",
+            "sha256": "bd8ab853138f97fcf5f997e3a3ed79831f74b26e592c155697842a47ca985541",
+            "bytes": 17490
+          },
+          "record_keys": [
+            "candidate_id",
+            "candidate_id_sha256",
+            "eucap15_qualified_accepted",
+            "frequency_hz",
+            "geometry",
+            "geometry_fields",
+            "geometry_sha256",
+            "geometry_units",
+            "increment_sequence",
+            "old_broadband_production_accepted",
+            "original56",
+            "original_research_member_unchanged",
+            "physical15",
+            "production_accepted_sequence",
+            "request_id",
+            "scientific_contract_fingerprint",
+            "source",
+            "split"
+          ]
+        }
+      ]
+    },
+    {
+      "request_id": "eucap15_continuous_doe_neighborhood_20260912_batch000002-TRAIN_NEIGHBORHOOD-034",
+      "source": "TRAIN_NEIGHBORHOOD",
+      "geometry_sha256": "0699d3ce7c03d8ee927e18704ce3f2212129e407c48b004e65714bc12db74f29",
+      "geometry": [
+        463.245,
+        203.36,
+        388.78000000000003,
+        258.895,
+        3.8000000000000003,
+        23.075,
+        46.2,
+        -38.845,
+        107.645,
+        174.315
+      ],
+      "geometry_fields": [
+        "primary_outer_width_um",
+        "primary_outer_height_um",
+        "secondary_outer_width_um",
+        "secondary_outer_height_um",
+        "line_width_um",
+        "primary_terminal_y_span_um",
+        "secondary_terminal_y_span_um",
+        "offset_um",
+        "primary_feed_extension_um",
+        "secondary_feed_extension_um"
+      ],
+      "geometry_units": "um",
+      "assigned_development_split": "train",
+      "actual_response": [
+        1.370449854199408,
+        1.3745603378299005,
+        12.882159597614379,
+        0.38963770847565043
+      ],
+      "target_cell": null,
+      "predicted_cell": null,
+      "actual_cell": [
+        4,
+        4,
+        2
+      ],
+      "target_prediction_availability": "NOT_IN_RECEIVED_CUT_NOT_INFERRED",
+      "requested_target_error": null,
+      "frozen3801_train_cell_count": 20,
+      "train_cell_was_empty": false,
+      "seed": 2026091206,
+      "recipe_sha256": "e9720b57de694b86e791247251c7f9ce85ed9e941d8b438820aab333b808a2db",
+      "result_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_permit_release_20260912T105802513957Z/batches/eucap15_continuous_doe_neighborhood_20260912_batch000002/owner/eucap15_continuous_doe_neighborhood_20260912_batch000002-TRAIN_NEIGHBORHOOD-034/RESULT.json",
+        "sha256": "73c5a350f22c047266103c7d78a124f77b23d7e6c5c1b5e1b6faf8909fefe2fb",
+        "bytes": 11798
+      },
+      "formal_records": [
+        {
+          "pin": {
+            "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/qualified15_single_member_v1/records/006632.json",
+            "sha256": "d084db355195e1f010f12ec3eb57d671f153fdb1889ba6389b82c6454589c72f",
+            "bytes": 191261
+          },
+          "request_id": "eucap15_continuous_doe_neighborhood_20260912_batch000002-TRAIN_NEIGHBORHOOD-034",
+          "utc": "2026-09-12T11:36:03.502802+00:00",
+          "assigned_split_from_frozen_request": "train",
+          "new_result_release": {
+            "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_permit_release_20260912T105802513957Z/batches/eucap15_continuous_doe_neighborhood_20260912_batch000002/owner/RELEASE.json",
+            "sha256": "bd8ab853138f97fcf5f997e3a3ed79831f74b26e592c155697842a47ca985541",
+            "bytes": 17490
+          },
+          "record_keys": [
+            "candidate_id",
+            "candidate_id_sha256",
+            "eucap15_qualified_accepted",
+            "frequency_hz",
+            "geometry",
+            "geometry_fields",
+            "geometry_sha256",
+            "geometry_units",
+            "increment_sequence",
+            "old_broadband_production_accepted",
+            "original56",
+            "original_research_member_unchanged",
+            "physical15",
+            "production_accepted_sequence",
+            "request_id",
+            "scientific_contract_fingerprint",
+            "source",
+            "split"
+          ]
+        }
+      ]
+    },
+    {
+      "request_id": "eucap15_continuous_doe_neighborhood_20260912_batch000002-TRAIN_NEIGHBORHOOD-036",
+      "source": "TRAIN_NEIGHBORHOOD",
+      "geometry_sha256": "0318f8d773db70d6de0aac798434e5a1fb635edb2fc46408c90be3a8ae948bcd",
+      "geometry": [
+        239.37,
+        179.84,
+        452.115,
+        247.69,
+        7.140000000000001,
+        28.560000000000002,
+        49.065,
+        -72.27,
+        297.1,
+        238.29
+      ],
+      "geometry_fields": [
+        "primary_outer_width_um",
+        "primary_outer_height_um",
+        "secondary_outer_width_um",
+        "secondary_outer_height_um",
+        "line_width_um",
+        "primary_terminal_y_span_um",
+        "secondary_terminal_y_span_um",
+        "offset_um",
+        "primary_feed_extension_um",
+        "secondary_feed_extension_um"
+      ],
+      "geometry_units": "um",
+      "assigned_development_split": "train",
+      "actual_response": [
+        0.9253748385844821,
+        1.4137441145980414,
+        12.563719428702466,
+        0.20885996111234886
+      ],
+      "target_cell": null,
+      "predicted_cell": null,
+      "actual_cell": [
+        2,
+        4,
+        0
+      ],
+      "target_prediction_availability": "NOT_IN_RECEIVED_CUT_NOT_INFERRED",
+      "requested_target_error": null,
+      "frozen3801_train_cell_count": 99,
+      "train_cell_was_empty": false,
+      "seed": 2026091206,
+      "recipe_sha256": "e9720b57de694b86e791247251c7f9ce85ed9e941d8b438820aab333b808a2db",
+      "result_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_permit_release_20260912T105802513957Z/batches/eucap15_continuous_doe_neighborhood_20260912_batch000002/owner/eucap15_continuous_doe_neighborhood_20260912_batch000002-TRAIN_NEIGHBORHOOD-036/RESULT.json",
+        "sha256": "8601db5bea2ca28095dd67550a741e6306ec674f7bc81b2e04bb51ea38be1f99",
+        "bytes": 11805
+      },
+      "formal_records": [
+        {
+          "pin": {
+            "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/qualified15_single_member_v1/records/006636.json",
+            "sha256": "f82187a84cf954d59482d22fca87a14cb0972e988365887b74dcfdcf98b75cf8",
+            "bytes": 191263
+          },
+          "request_id": "eucap15_continuous_doe_neighborhood_20260912_batch000002-TRAIN_NEIGHBORHOOD-036",
+          "utc": "2026-09-12T11:42:09.131703+00:00",
+          "assigned_split_from_frozen_request": "train",
+          "new_result_release": {
+            "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_permit_release_20260912T105802513957Z/batches/eucap15_continuous_doe_neighborhood_20260912_batch000002/owner/RELEASE.json",
+            "sha256": "bd8ab853138f97fcf5f997e3a3ed79831f74b26e592c155697842a47ca985541",
+            "bytes": 17490
+          },
+          "record_keys": [
+            "candidate_id",
+            "candidate_id_sha256",
+            "eucap15_qualified_accepted",
+            "frequency_hz",
+            "geometry",
+            "geometry_fields",
+            "geometry_sha256",
+            "geometry_units",
+            "increment_sequence",
+            "old_broadband_production_accepted",
+            "original56",
+            "original_research_member_unchanged",
+            "physical15",
+            "production_accepted_sequence",
+            "request_id",
+            "scientific_contract_fingerprint",
+            "source",
+            "split"
+          ]
+        }
+      ]
+    },
+    {
+      "request_id": "eucap15_continuous_doe_neighborhood_20260912_batch000002-TRAIN_NEIGHBORHOOD-037",
+      "source": "TRAIN_NEIGHBORHOOD",
+      "geometry_sha256": "64a4cff0273471d77066d052947b50c6f003ed9c4ea10e0a541766b5fb728261",
+      "geometry": [
+        459.295,
+        321.98,
+        299.335,
+        214.25,
+        7.24,
+        41.415,
+        46.45,
+        -37.705,
+        177.18,
+        268.145
+      ],
+      "geometry_fields": [
+        "primary_outer_width_um",
+        "primary_outer_height_um",
+        "secondary_outer_width_um",
+        "secondary_outer_height_um",
+        "line_width_um",
+        "primary_terminal_y_span_um",
+        "secondary_terminal_y_span_um",
+        "offset_um",
+        "primary_feed_extension_um",
+        "secondary_feed_extension_um"
+      ],
+      "geometry_units": "um",
+      "assigned_development_split": "train",
+      "actual_response": [
+        1.4915770515548745,
+        1.1317324287517292,
+        12.783741632497048,
+        0.21497718655278283
+      ],
+      "target_cell": null,
+      "predicted_cell": null,
+      "actual_cell": [
+        5,
+        3,
+        0
+      ],
+      "target_prediction_availability": "NOT_IN_RECEIVED_CUT_NOT_INFERRED",
+      "requested_target_error": null,
+      "frozen3801_train_cell_count": 86,
+      "train_cell_was_empty": false,
+      "seed": 2026091206,
+      "recipe_sha256": "e9720b57de694b86e791247251c7f9ce85ed9e941d8b438820aab333b808a2db",
+      "result_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_permit_release_20260912T105802513957Z/batches/eucap15_continuous_doe_neighborhood_20260912_batch000002/owner/eucap15_continuous_doe_neighborhood_20260912_batch000002-TRAIN_NEIGHBORHOOD-037/RESULT.json",
+        "sha256": "509e8d624e6a899f42f7631ef72a2c41311629027176b7ce70ecb669ba065922",
+        "bytes": 11776
+      },
+      "formal_records": [
+        {
+          "pin": {
+            "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/qualified15_single_member_v1/records/006642.json",
+            "sha256": "8caf4ab7ebb66fdbc7bb85bedc78057e73c3749ae042da83ea61aeccdca74025",
+            "bytes": 191190
+          },
+          "request_id": "eucap15_continuous_doe_neighborhood_20260912_batch000002-TRAIN_NEIGHBORHOOD-037",
+          "utc": "2026-09-12T11:44:07.821306+00:00",
+          "assigned_split_from_frozen_request": "train",
+          "new_result_release": {
+            "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_permit_release_20260912T105802513957Z/batches/eucap15_continuous_doe_neighborhood_20260912_batch000002/owner/RELEASE.json",
+            "sha256": "bd8ab853138f97fcf5f997e3a3ed79831f74b26e592c155697842a47ca985541",
+            "bytes": 17490
+          },
+          "record_keys": [
+            "candidate_id",
+            "candidate_id_sha256",
+            "eucap15_qualified_accepted",
+            "frequency_hz",
+            "geometry",
+            "geometry_fields",
+            "geometry_sha256",
+            "geometry_units",
+            "increment_sequence",
+            "old_broadband_production_accepted",
+            "original56",
+            "original_research_member_unchanged",
+            "physical15",
+            "production_accepted_sequence",
+            "request_id",
+            "scientific_contract_fingerprint",
+            "source",
+            "split"
+          ]
+        }
+      ]
+    },
+    {
+      "request_id": "eucap15_continuous_doe_neighborhood_20260912_batch000002-TRAIN_NEIGHBORHOOD-039",
+      "source": "TRAIN_NEIGHBORHOOD",
+      "geometry_sha256": "fbe222da41ad58fc58ee42110bc0547aeedfc036484a428dadd31648b2bf6551",
+      "geometry": [
+        214.535,
+        236.67000000000002,
+        336.625,
+        466.605,
+        10.52,
+        25.490000000000002,
+        73.45,
+        52.215,
+        122.59,
+        157.745
+      ],
+      "geometry_fields": [
+        "primary_outer_width_um",
+        "primary_outer_height_um",
+        "secondary_outer_width_um",
+        "secondary_outer_height_um",
+        "line_width_um",
+        "primary_terminal_y_span_um",
+        "secondary_terminal_y_span_um",
+        "offset_um",
+        "primary_feed_extension_um",
+        "secondary_feed_extension_um"
+      ],
+      "geometry_units": "um",
+      "assigned_development_split": "train",
+      "actual_response": [
+        0.7018508329159645,
+        1.3699094520646034,
+        11.877090043701102,
+        0.20984311548841378
+      ],
+      "target_cell": null,
+      "predicted_cell": null,
+      "actual_cell": [
+        1,
+        4,
+        0
+      ],
+      "target_prediction_availability": "NOT_IN_RECEIVED_CUT_NOT_INFERRED",
+      "requested_target_error": null,
+      "frozen3801_train_cell_count": 32,
+      "train_cell_was_empty": false,
+      "seed": 2026091206,
+      "recipe_sha256": "e9720b57de694b86e791247251c7f9ce85ed9e941d8b438820aab333b808a2db",
+      "result_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_permit_release_20260912T105802513957Z/batches/eucap15_continuous_doe_neighborhood_20260912_batch000002/owner/eucap15_continuous_doe_neighborhood_20260912_batch000002-TRAIN_NEIGHBORHOOD-039/RESULT.json",
+        "sha256": "0565cd7686147f845e3f1e015d7d68feac74db8c871a084c7be6d9f33650515e",
+        "bytes": 11803
+      },
+      "formal_records": [
+        {
+          "pin": {
+            "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/qualified15_single_member_v1/records/006641.json",
+            "sha256": "ebe8a146d63beef03540e1718e1ea4bc9600c475bd3964090b7801604837a139",
+            "bytes": 191266
+          },
+          "request_id": "eucap15_continuous_doe_neighborhood_20260912_batch000002-TRAIN_NEIGHBORHOOD-039",
+          "utc": "2026-09-12T11:42:26.073854+00:00",
+          "assigned_split_from_frozen_request": "train",
+          "new_result_release": {
+            "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_permit_release_20260912T105802513957Z/batches/eucap15_continuous_doe_neighborhood_20260912_batch000002/owner/RELEASE.json",
+            "sha256": "bd8ab853138f97fcf5f997e3a3ed79831f74b26e592c155697842a47ca985541",
+            "bytes": 17490
+          },
+          "record_keys": [
+            "candidate_id",
+            "candidate_id_sha256",
+            "eucap15_qualified_accepted",
+            "frequency_hz",
+            "geometry",
+            "geometry_fields",
+            "geometry_sha256",
+            "geometry_units",
+            "increment_sequence",
+            "old_broadband_production_accepted",
+            "original56",
+            "original_research_member_unchanged",
+            "physical15",
+            "production_accepted_sequence",
+            "request_id",
+            "scientific_contract_fingerprint",
+            "source",
+            "split"
+          ]
+        }
+      ]
+    },
+    {
+      "request_id": "eucap15_continuous_doe_neighborhood_20260912_batch000002-TRAIN_NEIGHBORHOOD-040",
+      "source": "TRAIN_NEIGHBORHOOD",
+      "geometry_sha256": "230437a4abdf2555b04493a636e0b4240a9b490a3c977884675ac046d7557ff0",
+      "geometry": [
+        358.255,
+        162.16,
+        216.69,
+        190.845,
+        11.045,
+        85.82000000000001,
+        41.235,
+        -28.84,
+        300.415,
+        267.7
+      ],
+      "geometry_fields": [
+        "primary_outer_width_um",
+        "primary_outer_height_um",
+        "secondary_outer_width_um",
+        "secondary_outer_height_um",
+        "line_width_um",
+        "primary_terminal_y_span_um",
+        "secondary_terminal_y_span_um",
+        "offset_um",
+        "primary_feed_extension_um",
+        "secondary_feed_extension_um"
+      ],
+      "geometry_units": "um",
+      "assigned_development_split": "train",
+      "actual_response": [
+        1.0832630194845012,
+        0.7750551620841808,
+        14.53365968394406,
+        0.343115686803999
+      ],
+      "target_cell": null,
+      "predicted_cell": null,
+      "actual_cell": [
+        3,
+        1,
+        1
+      ],
+      "target_prediction_availability": "NOT_IN_RECEIVED_CUT_NOT_INFERRED",
+      "requested_target_error": null,
+      "frozen3801_train_cell_count": 38,
+      "train_cell_was_empty": false,
+      "seed": 2026091206,
+      "recipe_sha256": "e9720b57de694b86e791247251c7f9ce85ed9e941d8b438820aab333b808a2db",
+      "result_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_permit_release_20260912T105802513957Z/batches/eucap15_continuous_doe_neighborhood_20260912_batch000002/owner/eucap15_continuous_doe_neighborhood_20260912_batch000002-TRAIN_NEIGHBORHOOD-040/RESULT.json",
+        "sha256": "08499d90a4073223681f176a3bc2a7001bc5dc54223eebbf8eb36f08aefff27a",
+        "bytes": 11788
+      },
+      "formal_records": [
+        {
+          "pin": {
+            "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/qualified15_single_member_v1/records/006635.json",
+            "sha256": "e9a994a330fbc3cad73cc0918082f8c52fde4add0ca99d2649f65bdc124fc372",
+            "bytes": 191212
+          },
+          "request_id": "eucap15_continuous_doe_neighborhood_20260912_batch000002-TRAIN_NEIGHBORHOOD-040",
+          "utc": "2026-09-12T11:37:01.955679+00:00",
+          "assigned_split_from_frozen_request": "train",
+          "new_result_release": {
+            "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_permit_release_20260912T105802513957Z/batches/eucap15_continuous_doe_neighborhood_20260912_batch000002/owner/RELEASE.json",
+            "sha256": "bd8ab853138f97fcf5f997e3a3ed79831f74b26e592c155697842a47ca985541",
+            "bytes": 17490
+          },
+          "record_keys": [
+            "candidate_id",
+            "candidate_id_sha256",
+            "eucap15_qualified_accepted",
+            "frequency_hz",
+            "geometry",
+            "geometry_fields",
+            "geometry_sha256",
+            "geometry_units",
+            "increment_sequence",
+            "old_broadband_production_accepted",
+            "original56",
+            "original_research_member_unchanged",
+            "physical15",
+            "production_accepted_sequence",
+            "request_id",
+            "scientific_contract_fingerprint",
+            "source",
+            "split"
+          ]
+        }
+      ]
+    },
+    {
+      "request_id": "eucap15_continuous_doe_neighborhood_20260912_batch000002-TRAIN_NEIGHBORHOOD-041",
+      "source": "TRAIN_NEIGHBORHOOD",
+      "geometry_sha256": "e06c7f8e63d7a6d22a8bbadca316f4741c3b06443c7eb1e2642a52e1e431f1bf",
+      "geometry": [
+        338.845,
+        248.415,
+        310.435,
+        388.90000000000003,
+        8.245000000000001,
+        47.085,
+        55.925000000000004,
+        18.19,
+        123.26,
+        187.45000000000002
+      ],
+      "geometry_fields": [
+        "primary_outer_width_um",
+        "primary_outer_height_um",
+        "secondary_outer_width_um",
+        "secondary_outer_height_um",
+        "line_width_um",
+        "primary_terminal_y_span_um",
+        "secondary_terminal_y_span_um",
+        "offset_um",
+        "primary_feed_extension_um",
+        "secondary_feed_extension_um"
+      ],
+      "geometry_units": "um",
+      "assigned_development_split": "train",
+      "actual_response": [
+        1.03293848736919,
+        1.386902722521625,
+        13.587536442192388,
+        0.33886551058995906
+      ],
+      "target_cell": null,
+      "predicted_cell": null,
+      "actual_cell": [
+        2,
+        4,
+        1
+      ],
+      "target_prediction_availability": "NOT_IN_RECEIVED_CUT_NOT_INFERRED",
+      "requested_target_error": null,
+      "frozen3801_train_cell_count": 46,
+      "train_cell_was_empty": false,
+      "seed": 2026091206,
+      "recipe_sha256": "e9720b57de694b86e791247251c7f9ce85ed9e941d8b438820aab333b808a2db",
+      "result_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_permit_release_20260912T105802513957Z/batches/eucap15_continuous_doe_neighborhood_20260912_batch000002/owner/eucap15_continuous_doe_neighborhood_20260912_batch000002-TRAIN_NEIGHBORHOOD-041/RESULT.json",
+        "sha256": "4608e24adb4a96ee7912d5186518d05952f2ca50c261578d72dae4fbdf97bc90",
+        "bytes": 11816
+      },
+      "formal_records": [
+        {
+          "pin": {
+            "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/qualified15_single_member_v1/records/006643.json",
+            "sha256": "031c918ae765ea07159b0bef9e2ef6806c54290b541144c106fbfaa93c449933",
+            "bytes": 191319
+          },
+          "request_id": "eucap15_continuous_doe_neighborhood_20260912_batch000002-TRAIN_NEIGHBORHOOD-041",
+          "utc": "2026-09-12T11:46:17.959636+00:00",
+          "assigned_split_from_frozen_request": "train",
+          "new_result_release": {
+            "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_permit_release_20260912T105802513957Z/batches/eucap15_continuous_doe_neighborhood_20260912_batch000002/owner/RELEASE.json",
+            "sha256": "bd8ab853138f97fcf5f997e3a3ed79831f74b26e592c155697842a47ca985541",
+            "bytes": 17490
+          },
+          "record_keys": [
+            "candidate_id",
+            "candidate_id_sha256",
+            "eucap15_qualified_accepted",
+            "frequency_hz",
+            "geometry",
+            "geometry_fields",
+            "geometry_sha256",
+            "geometry_units",
+            "increment_sequence",
+            "old_broadband_production_accepted",
+            "original56",
+            "original_research_member_unchanged",
+            "physical15",
+            "production_accepted_sequence",
+            "request_id",
+            "scientific_contract_fingerprint",
+            "source",
+            "split"
+          ]
+        }
+      ]
+    },
+    {
+      "request_id": "eucap15_continuous_doe_neighborhood_20260912_batch000002-TRAIN_NEIGHBORHOOD-042",
+      "source": "TRAIN_NEIGHBORHOOD",
+      "geometry_sha256": "35dab30245ea91aa8988afbdd845c5bd3110d19d78a143e7a4adfd8c28dd69d9",
+      "geometry": [
+        397.935,
+        225.4,
+        400.41,
+        172.79,
+        7.945,
+        63.355000000000004,
+        46.155,
+        82.01,
+        122.06,
+        136.01
+      ],
+      "geometry_fields": [
+        "primary_outer_width_um",
+        "primary_outer_height_um",
+        "secondary_outer_width_um",
+        "secondary_outer_height_um",
+        "line_width_um",
+        "primary_terminal_y_span_um",
+        "secondary_terminal_y_span_um",
+        "offset_um",
+        "primary_feed_extension_um",
+        "secondary_feed_extension_um"
+      ],
+      "geometry_units": "um",
+      "assigned_development_split": "train",
+      "actual_response": [
+        1.0748227348708785,
+        1.011644199318318,
+        15.157338415257081,
+        0.2852568316200587
+      ],
+      "target_cell": null,
+      "predicted_cell": null,
+      "actual_cell": [
+        3,
+        2,
+        1
+      ],
+      "target_prediction_availability": "NOT_IN_RECEIVED_CUT_NOT_INFERRED",
+      "requested_target_error": null,
+      "frozen3801_train_cell_count": 72,
+      "train_cell_was_empty": false,
+      "seed": 2026091206,
+      "recipe_sha256": "e9720b57de694b86e791247251c7f9ce85ed9e941d8b438820aab333b808a2db",
+      "result_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_permit_release_20260912T105802513957Z/batches/eucap15_continuous_doe_neighborhood_20260912_batch000002/owner/eucap15_continuous_doe_neighborhood_20260912_batch000002-TRAIN_NEIGHBORHOOD-042/RESULT.json",
+        "sha256": "dcf7e393c3f10b7edc4b64cdbbfe230d9e90c5e3d85f4fa0fb0b130e2719f1c6",
+        "bytes": 11775
+      },
+      "formal_records": [
+        {
+          "pin": {
+            "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/qualified15_single_member_v1/records/006644.json",
+            "sha256": "a1b7de0c23b8246b179c9473264c8b58c6c3607f2adc2b5bd02e17394fe58975",
+            "bytes": 191200
+          },
+          "request_id": "eucap15_continuous_doe_neighborhood_20260912_batch000002-TRAIN_NEIGHBORHOOD-042",
+          "utc": "2026-09-12T11:46:23.373986+00:00",
+          "assigned_split_from_frozen_request": "train",
+          "new_result_release": {
+            "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_permit_release_20260912T105802513957Z/batches/eucap15_continuous_doe_neighborhood_20260912_batch000002/owner/RELEASE.json",
+            "sha256": "bd8ab853138f97fcf5f997e3a3ed79831f74b26e592c155697842a47ca985541",
+            "bytes": 17490
+          },
+          "record_keys": [
+            "candidate_id",
+            "candidate_id_sha256",
+            "eucap15_qualified_accepted",
+            "frequency_hz",
+            "geometry",
+            "geometry_fields",
+            "geometry_sha256",
+            "geometry_units",
+            "increment_sequence",
+            "old_broadband_production_accepted",
+            "original56",
+            "original_research_member_unchanged",
+            "physical15",
+            "production_accepted_sequence",
+            "request_id",
+            "scientific_contract_fingerprint",
+            "source",
+            "split"
+          ]
+        }
+      ]
+    },
+    {
+      "request_id": "eucap15_continuous_doe_neighborhood_20260912_batch000002-TRAIN_NEIGHBORHOOD-043",
+      "source": "TRAIN_NEIGHBORHOOD",
+      "geometry_sha256": "79732c5ccf2d832c5f7fbfaaf18b201dd1fc2ccaa0943aaa6fda98285a08c5c3",
+      "geometry": [
+        190.1,
+        489.37,
+        213.305,
+        258.96500000000003,
+        7.405,
+        82.145,
+        81.705,
+        15.465,
+        213.995,
+        265.21
+      ],
+      "geometry_fields": [
+        "primary_outer_width_um",
+        "primary_outer_height_um",
+        "secondary_outer_width_um",
+        "secondary_outer_height_um",
+        "line_width_um",
+        "primary_terminal_y_span_um",
+        "secondary_terminal_y_span_um",
+        "offset_um",
+        "primary_feed_extension_um",
+        "secondary_feed_extension_um"
+      ],
+      "geometry_units": "um",
+      "assigned_development_split": "train",
+      "actual_response": [
+        1.3798344811243957,
+        1.0360712170195985,
+        14.033297318373577,
+        0.2099272781309582
+      ],
+      "target_cell": null,
+      "predicted_cell": null,
+      "actual_cell": [
+        4,
+        2,
+        0
+      ],
+      "target_prediction_availability": "NOT_IN_RECEIVED_CUT_NOT_INFERRED",
+      "requested_target_error": null,
+      "frozen3801_train_cell_count": 88,
+      "train_cell_was_empty": false,
+      "seed": 2026091206,
+      "recipe_sha256": "e9720b57de694b86e791247251c7f9ce85ed9e941d8b438820aab333b808a2db",
+      "result_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_permit_release_20260912T105802513957Z/batches/eucap15_continuous_doe_neighborhood_20260912_batch000002/owner/eucap15_continuous_doe_neighborhood_20260912_batch000002-TRAIN_NEIGHBORHOOD-043/RESULT.json",
+        "sha256": "1821a1c5820a87304021b5b266181b6dc32b3e4be1caec4f945d5d325dcaf952",
+        "bytes": 11767
+      },
+      "formal_records": [
+        {
+          "pin": {
+            "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/qualified15_single_member_v1/records/006645.json",
+            "sha256": "30678fbb2700677a7235efa399fcd66165837009f880a19972f12ee66198ea40",
+            "bytes": 191199
+          },
+          "request_id": "eucap15_continuous_doe_neighborhood_20260912_batch000002-TRAIN_NEIGHBORHOOD-043",
+          "utc": "2026-09-12T11:47:05.638938+00:00",
+          "assigned_split_from_frozen_request": "train",
+          "new_result_release": {
+            "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_permit_release_20260912T105802513957Z/batches/eucap15_continuous_doe_neighborhood_20260912_batch000002/owner/RELEASE.json",
+            "sha256": "bd8ab853138f97fcf5f997e3a3ed79831f74b26e592c155697842a47ca985541",
+            "bytes": 17490
+          },
+          "record_keys": [
+            "candidate_id",
+            "candidate_id_sha256",
+            "eucap15_qualified_accepted",
+            "frequency_hz",
+            "geometry",
+            "geometry_fields",
+            "geometry_sha256",
+            "geometry_units",
+            "increment_sequence",
+            "old_broadband_production_accepted",
+            "original56",
+            "original_research_member_unchanged",
+            "physical15",
+            "production_accepted_sequence",
+            "request_id",
+            "scientific_contract_fingerprint",
+            "source",
+            "split"
+          ]
+        }
+      ]
+    },
+    {
+      "request_id": "eucap15_continuous_doe_neighborhood_20260912_batch000002-TRAIN_NEIGHBORHOOD-046",
+      "source": "TRAIN_NEIGHBORHOOD",
+      "geometry_sha256": "c3f4ae912181022d2f37ba93666f96aaf68431a0845029587cc55af6c570c9de",
+      "geometry": [
+        221.34,
+        166.475,
+        366.875,
+        328.12,
+        11.58,
+        70.825,
+        38.800000000000004,
+        -53.43,
+        173.72,
+        134
+      ],
+      "geometry_fields": [
+        "primary_outer_width_um",
+        "primary_outer_height_um",
+        "secondary_outer_width_um",
+        "secondary_outer_height_um",
+        "line_width_um",
+        "primary_terminal_y_span_um",
+        "secondary_terminal_y_span_um",
+        "offset_um",
+        "primary_feed_extension_um",
+        "secondary_feed_extension_um"
+      ],
+      "geometry_units": "um",
+      "assigned_development_split": "train",
+      "actual_response": [
+        0.6725111514538004,
+        1.0675665733035453,
+        14.283625057836325,
+        0.20396223043138934
+      ],
+      "target_cell": null,
+      "predicted_cell": null,
+      "actual_cell": [
+        0,
+        3,
+        0
+      ],
+      "target_prediction_availability": "NOT_IN_RECEIVED_CUT_NOT_INFERRED",
+      "requested_target_error": null,
+      "frozen3801_train_cell_count": 17,
+      "train_cell_was_empty": false,
+      "seed": 2026091206,
+      "recipe_sha256": "e9720b57de694b86e791247251c7f9ce85ed9e941d8b438820aab333b808a2db",
+      "result_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_permit_release_20260912T105802513957Z/batches/eucap15_continuous_doe_neighborhood_20260912_batch000002/owner/eucap15_continuous_doe_neighborhood_20260912_batch000002-TRAIN_NEIGHBORHOOD-046/RESULT.json",
+        "sha256": "3123b66e5b55f19676f5634105311b81aea15786c350ac7ed85462c89a685c7b",
+        "bytes": 11770
+      },
+      "formal_records": [
+        {
+          "pin": {
+            "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/qualified15_single_member_v1/records/006652.json",
+            "sha256": "a0822de8a2bc6238725c776a3a7f47688005c3d9470736eafea7313ddb34eb6a",
+            "bytes": 191201
+          },
+          "request_id": "eucap15_continuous_doe_neighborhood_20260912_batch000002-TRAIN_NEIGHBORHOOD-046",
+          "utc": "2026-09-12T11:47:33.655139+00:00",
+          "assigned_split_from_frozen_request": "train",
+          "new_result_release": {
+            "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_permit_release_20260912T105802513957Z/batches/eucap15_continuous_doe_neighborhood_20260912_batch000002/owner/RELEASE.json",
+            "sha256": "bd8ab853138f97fcf5f997e3a3ed79831f74b26e592c155697842a47ca985541",
+            "bytes": 17490
+          },
+          "record_keys": [
+            "candidate_id",
+            "candidate_id_sha256",
+            "eucap15_qualified_accepted",
+            "frequency_hz",
+            "geometry",
+            "geometry_fields",
+            "geometry_sha256",
+            "geometry_units",
+            "increment_sequence",
+            "old_broadband_production_accepted",
+            "original56",
+            "original_research_member_unchanged",
+            "physical15",
+            "production_accepted_sequence",
+            "request_id",
+            "scientific_contract_fingerprint",
+            "source",
+            "split"
+          ]
+        }
+      ]
+    },
+    {
+      "request_id": "eucap15_continuous_doe_neighborhood_20260912_batch000002-TRAIN_NEIGHBORHOOD-047",
+      "source": "TRAIN_NEIGHBORHOOD",
+      "geometry_sha256": "ff95bb0ceefcdc750dec3ab0b397383d9516f9bbb81fb43ce1bd15055928731d",
+      "geometry": [
+        221.70000000000002,
+        228.01500000000001,
+        448.535,
+        304.285,
+        10.675,
+        69.295,
+        71.58500000000001,
+        -52.07,
+        225.05,
+        105.015
+      ],
+      "geometry_fields": [
+        "primary_outer_width_um",
+        "primary_outer_height_um",
+        "secondary_outer_width_um",
+        "secondary_outer_height_um",
+        "line_width_um",
+        "primary_terminal_y_span_um",
+        "secondary_terminal_y_span_um",
+        "offset_um",
+        "primary_feed_extension_um",
+        "secondary_feed_extension_um"
+      ],
+      "geometry_units": "um",
+      "assigned_development_split": "train",
+      "actual_response": [
+        0.8631011311305022,
+        1.188339473199988,
+        13.55726793721827,
+        0.23148843012800327
+      ],
+      "target_cell": null,
+      "predicted_cell": null,
+      "actual_cell": [
+        1,
+        3,
+        0
+      ],
+      "target_prediction_availability": "NOT_IN_RECEIVED_CUT_NOT_INFERRED",
+      "requested_target_error": null,
+      "frozen3801_train_cell_count": 37,
+      "train_cell_was_empty": false,
+      "seed": 2026091206,
+      "recipe_sha256": "e9720b57de694b86e791247251c7f9ce85ed9e941d8b438820aab333b808a2db",
+      "result_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_permit_release_20260912T105802513957Z/batches/eucap15_continuous_doe_neighborhood_20260912_batch000002/owner/eucap15_continuous_doe_neighborhood_20260912_batch000002-TRAIN_NEIGHBORHOOD-047/RESULT.json",
+        "sha256": "e99c575a6132208d54b67b9e4d5256714f8e58636de0a03d5117b9d9c429722f",
+        "bytes": 11819
+      },
+      "formal_records": [
+        {
+          "pin": {
+            "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/qualified15_single_member_v1/records/006654.json",
+            "sha256": "7c82753dddc76975fa09eaea13d4de61e0ac9f1f292cd045b6f74a83e232f601",
+            "bytes": 191301
+          },
+          "request_id": "eucap15_continuous_doe_neighborhood_20260912_batch000002-TRAIN_NEIGHBORHOOD-047",
+          "utc": "2026-09-12T11:47:41.468548+00:00",
+          "assigned_split_from_frozen_request": "train",
+          "new_result_release": {
+            "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_permit_release_20260912T105802513957Z/batches/eucap15_continuous_doe_neighborhood_20260912_batch000002/owner/RELEASE.json",
+            "sha256": "bd8ab853138f97fcf5f997e3a3ed79831f74b26e592c155697842a47ca985541",
+            "bytes": 17490
+          },
+          "record_keys": [
+            "candidate_id",
+            "candidate_id_sha256",
+            "eucap15_qualified_accepted",
+            "frequency_hz",
+            "geometry",
+            "geometry_fields",
+            "geometry_sha256",
+            "geometry_units",
+            "increment_sequence",
+            "old_broadband_production_accepted",
+            "original56",
+            "original_research_member_unchanged",
+            "physical15",
+            "production_accepted_sequence",
+            "request_id",
+            "scientific_contract_fingerprint",
+            "source",
+            "split"
+          ]
+        }
+      ]
+    },
+    {
+      "request_id": "eucap15_continuous_doe_neighborhood_20260912_batch000002-TRAIN_NEIGHBORHOOD-048",
+      "source": "TRAIN_NEIGHBORHOOD",
+      "geometry_sha256": "68dd35a43b5f36847734ec601e3b06a5fc89178776ef17d5a3c550ef52f73686",
+      "geometry": [
+        401.315,
+        425.86,
+        353.52,
+        232.055,
+        7.01,
+        33.705,
+        23.35,
+        50.665,
+        238.215,
+        119.72500000000001
+      ],
+      "geometry_fields": [
+        "primary_outer_width_um",
+        "primary_outer_height_um",
+        "secondary_outer_width_um",
+        "secondary_outer_height_um",
+        "line_width_um",
+        "primary_terminal_y_span_um",
+        "secondary_terminal_y_span_um",
+        "offset_um",
+        "primary_feed_extension_um",
+        "secondary_feed_extension_um"
+      ],
+      "geometry_units": "um",
+      "assigned_development_split": "train",
+      "actual_response": [
+        1.78495975793649,
+        1.0700400162004358,
+        12.218204938894457,
+        0.24321963496285937
+      ],
+      "target_cell": null,
+      "predicted_cell": null,
+      "actual_cell": [
+        6,
+        3,
+        0
+      ],
+      "target_prediction_availability": "NOT_IN_RECEIVED_CUT_NOT_INFERRED",
+      "requested_target_error": null,
+      "frozen3801_train_cell_count": 76,
+      "train_cell_was_empty": false,
+      "seed": 2026091206,
+      "recipe_sha256": "e9720b57de694b86e791247251c7f9ce85ed9e941d8b438820aab333b808a2db",
+      "result_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_permit_release_20260912T105802513957Z/batches/eucap15_continuous_doe_neighborhood_20260912_batch000002/owner/eucap15_continuous_doe_neighborhood_20260912_batch000002-TRAIN_NEIGHBORHOOD-048/RESULT.json",
+        "sha256": "d66bb59d5118b15c4dc258cd4658f51ed0f83a01580c42cb65e601f9fde7923c",
+        "bytes": 11766
+      },
+      "formal_records": [
+        {
+          "pin": {
+            "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/qualified15_single_member_v1/records/006656.json",
+            "sha256": "e39009aeace77195b57d8b2278018a7a8a37110691f33ca51fe82ea6c65ab5bc",
+            "bytes": 191197
+          },
+          "request_id": "eucap15_continuous_doe_neighborhood_20260912_batch000002-TRAIN_NEIGHBORHOOD-048",
+          "utc": "2026-09-12T11:47:48.710658+00:00",
+          "assigned_split_from_frozen_request": "train",
+          "new_result_release": {
+            "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_permit_release_20260912T105802513957Z/batches/eucap15_continuous_doe_neighborhood_20260912_batch000002/owner/RELEASE.json",
+            "sha256": "bd8ab853138f97fcf5f997e3a3ed79831f74b26e592c155697842a47ca985541",
+            "bytes": 17490
+          },
+          "record_keys": [
+            "candidate_id",
+            "candidate_id_sha256",
+            "eucap15_qualified_accepted",
+            "frequency_hz",
+            "geometry",
+            "geometry_fields",
+            "geometry_sha256",
+            "geometry_units",
+            "increment_sequence",
+            "old_broadband_production_accepted",
+            "original56",
+            "original_research_member_unchanged",
+            "physical15",
+            "production_accepted_sequence",
+            "request_id",
+            "scientific_contract_fingerprint",
+            "source",
+            "split"
+          ]
+        }
+      ]
+    },
+    {
+      "request_id": "eucap15_continuous_doe_neighborhood_20260912_batch000002-TRAIN_NEIGHBORHOOD-049",
+      "source": "TRAIN_NEIGHBORHOOD",
+      "geometry_sha256": "7b026745786900b94a4e1f507bc70050ca140f4c80a8a977df38f86354d21436",
+      "geometry": [
+        186.42000000000002,
+        474.95,
+        273.7,
+        227.09,
+        8.465,
+        29.78,
+        31.94,
+        -2.75,
+        215.305,
+        315.07
+      ],
+      "geometry_fields": [
+        "primary_outer_width_um",
+        "primary_outer_height_um",
+        "secondary_outer_width_um",
+        "secondary_outer_height_um",
+        "line_width_um",
+        "primary_terminal_y_span_um",
+        "secondary_terminal_y_span_um",
+        "offset_um",
+        "primary_feed_extension_um",
+        "secondary_feed_extension_um"
+      ],
+      "geometry_units": "um",
+      "assigned_development_split": "train",
+      "actual_response": [
+        1.3147831423637981,
+        1.0839420237534652,
+        15.566123143754224,
+        0.21163557205851927
+      ],
+      "target_cell": null,
+      "predicted_cell": null,
+      "actual_cell": [
+        4,
+        3,
+        0
+      ],
+      "target_prediction_availability": "NOT_IN_RECEIVED_CUT_NOT_INFERRED",
+      "requested_target_error": null,
+      "frozen3801_train_cell_count": 111,
+      "train_cell_was_empty": false,
+      "seed": 2026091206,
+      "recipe_sha256": "e9720b57de694b86e791247251c7f9ce85ed9e941d8b438820aab333b808a2db",
+      "result_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_permit_release_20260912T105802513957Z/batches/eucap15_continuous_doe_neighborhood_20260912_batch000002/owner/eucap15_continuous_doe_neighborhood_20260912_batch000002-TRAIN_NEIGHBORHOOD-049/RESULT.json",
+        "sha256": "e94fe5cb9fc48d66e77a92f501278fbd6ce3f07762198dfdc35c8718dadc03b7",
+        "bytes": 11790
+      },
+      "formal_records": [
+        {
+          "pin": {
+            "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/qualified15_single_member_v1/records/006658.json",
+            "sha256": "18059008733767586be19a8b47a60c55418b2407d4612d094e7bce15d7c7b425",
+            "bytes": 191215
+          },
+          "request_id": "eucap15_continuous_doe_neighborhood_20260912_batch000002-TRAIN_NEIGHBORHOOD-049",
+          "utc": "2026-09-12T11:47:55.617237+00:00",
+          "assigned_split_from_frozen_request": "train",
+          "new_result_release": {
+            "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_permit_release_20260912T105802513957Z/batches/eucap15_continuous_doe_neighborhood_20260912_batch000002/owner/RELEASE.json",
+            "sha256": "bd8ab853138f97fcf5f997e3a3ed79831f74b26e592c155697842a47ca985541",
+            "bytes": 17490
+          },
+          "record_keys": [
+            "candidate_id",
+            "candidate_id_sha256",
+            "eucap15_qualified_accepted",
+            "frequency_hz",
+            "geometry",
+            "geometry_fields",
+            "geometry_sha256",
+            "geometry_units",
+            "increment_sequence",
+            "old_broadband_production_accepted",
+            "original56",
+            "original_research_member_unchanged",
+            "physical15",
+            "production_accepted_sequence",
+            "request_id",
+            "scientific_contract_fingerprint",
+            "source",
+            "split"
+          ]
+        }
+      ]
+    },
+    {
+      "request_id": "eucap15_continuous_doe_neighborhood_20260912_batch000002-TRAIN_NEIGHBORHOOD-050",
+      "source": "TRAIN_NEIGHBORHOOD",
+      "geometry_sha256": "43f4a0a98bfffaaef5b45a6fed01f85e6d0a4f37e55169cbd6f1327869480b09",
+      "geometry": [
+        341.89,
+        166.205,
+        339.7,
+        374.96500000000003,
+        7.925,
+        74.565,
+        39.705,
+        0.315,
+        148.83,
+        113.11
+      ],
+      "geometry_fields": [
+        "primary_outer_width_um",
+        "primary_outer_height_um",
+        "secondary_outer_width_um",
+        "secondary_outer_height_um",
+        "line_width_um",
+        "primary_terminal_y_span_um",
+        "secondary_terminal_y_span_um",
+        "offset_um",
+        "primary_feed_extension_um",
+        "secondary_feed_extension_um"
+      ],
+      "geometry_units": "um",
+      "assigned_development_split": "train",
+      "actual_response": [
+        0.9386704755461341,
+        1.2160678988745959,
+        14.392774144670947,
+        0.24399908646790547
+      ],
+      "target_cell": null,
+      "predicted_cell": null,
+      "actual_cell": [
+        2,
+        3,
+        0
+      ],
+      "target_prediction_availability": "NOT_IN_RECEIVED_CUT_NOT_INFERRED",
+      "requested_target_error": null,
+      "frozen3801_train_cell_count": 79,
+      "train_cell_was_empty": false,
+      "seed": 2026091206,
+      "recipe_sha256": "e9720b57de694b86e791247251c7f9ce85ed9e941d8b438820aab333b808a2db",
+      "result_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_permit_release_20260912T105802513957Z/batches/eucap15_continuous_doe_neighborhood_20260912_batch000002/owner/eucap15_continuous_doe_neighborhood_20260912_batch000002-TRAIN_NEIGHBORHOOD-050/RESULT.json",
+        "sha256": "3013ebb80617befaa5f414ec4d724e0efd3ec36df9fc38a34c09b08011644f67",
+        "bytes": 11792
+      },
+      "formal_records": [
+        {
+          "pin": {
+            "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/qualified15_single_member_v1/records/006659.json",
+            "sha256": "6bd58467ed92e8c141e8c9f99317061b3dbe69b0314f7bb4283a0c469f13ce6a",
+            "bytes": 191223
+          },
+          "request_id": "eucap15_continuous_doe_neighborhood_20260912_batch000002-TRAIN_NEIGHBORHOOD-050",
+          "utc": "2026-09-12T11:47:59.134769+00:00",
+          "assigned_split_from_frozen_request": "train",
+          "new_result_release": {
+            "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_permit_release_20260912T105802513957Z/batches/eucap15_continuous_doe_neighborhood_20260912_batch000002/owner/RELEASE.json",
+            "sha256": "bd8ab853138f97fcf5f997e3a3ed79831f74b26e592c155697842a47ca985541",
+            "bytes": 17490
+          },
+          "record_keys": [
+            "candidate_id",
+            "candidate_id_sha256",
+            "eucap15_qualified_accepted",
+            "frequency_hz",
+            "geometry",
+            "geometry_fields",
+            "geometry_sha256",
+            "geometry_units",
+            "increment_sequence",
+            "old_broadband_production_accepted",
+            "original56",
+            "original_research_member_unchanged",
+            "physical15",
+            "production_accepted_sequence",
+            "request_id",
+            "scientific_contract_fingerprint",
+            "source",
+            "split"
+          ]
+        }
+      ]
+    }
+  ],
+  "prior_formal_backfill_train_rows": []
+}

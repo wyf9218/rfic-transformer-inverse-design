@@ -1,17 +1,16 @@
-# Current 15 GHz research/production status
+# 当前研究和生产状态
 
-Latest production observation: **2026-09-12 11:34:31.323430 UTC**.
-[M21 actual production and incremental results](production_increment_m21_20260912/SNAPSHOT.json).
+最新完整现场：2026-09-12 11:49:33.122961 UTC（不是之后持续存活保证）。
 
-- **16 independent EMX × 2 CPU**; requested/executor 48. The fresh resource snapshot allows two additional 2-CPU tools, limited by current CPU headroom. This is not proof of 48-way execution or a permanent cap.
-- Window 11:15:44–11:34:31: **69 new fresh EMX**, 8 analytical failures, 41 strict-valid, **31 strict and in range**.
-- **34 fresh formal admissions**: 31 new results plus three prior pending backfills. Historical admissions 0; certified unique lower bound **6623**. Current eligible pending formal 0.
-- Current batch: 132 terminal / 124 without terminal; actual stages remain separate from queued candidates.
-- Sole owner, metadata, standby and finite installer are each observed alive by exact process identity. Automatic processing/continuation continues. Staged budget-walk repair is **still awaiting the supported boundary, not runtime-deployed**.
-- [Complete first incremental landing receipt and 17+2 train source rows](production_increment_m21_20260912/README.md). New17 occupy17cells: zero frozen3801-empty landings, one underfilled landing, zero K>0.8. No cumulative coverage, sampler superiority or stable hourly-throughput claim.
-- Full 100K qualification, FINAL model and independent 10000-request validation remain incomplete. No old training/physical cohorts or AI paper figures were regenerated.
+- 11:34:31→11:49:33：70份新fresh EMX，36范围内strict唯一，36fresh正式/0历史正式；认证下界6659。
+- 请求48／执行器48／实际1个独立EMX×2CPU；可再准入36是只读策略重放，不是实际并发。
+- 现行生产继续自动提取/筛选/去重/提交/跨批；当前batch2尚45无终态。
+- 供给/串行派发未填满可用槽位；23eddf减扫修复仍由唯一installer等待原批自然终态/owner退出，未运行新包。
+- [本次真实增量与边界](production_increment_m22_20260912/README.md)；[现场快照](production_increment_m22_20260912/SNAPSHOT.json)。
+- 本次25train落21格（冻结3801空0/欠填1）；另M21来源并集3821→3840，覆盖163→163，不是全生产累计。
+- 100K、FINAL模型与最终独立10000请求未完成；不重训/重跑旧物理集合。
 
-All sections below are preserved, dated historical releases; their running/current wording and old scopes do not override this 15 GHz snapshot or authorize restarting old tasks.
+---
 
 ## Latest approved scientific release: 83 / 320
 

@@ -1,0 +1,303 @@
+{
+  "schema": "eucap15_historical_scout14_two_member_artifact_handoff.v1",
+  "utc": "2026-09-12 11:49:45 UTC",
+  "scope": "TWO_CURRENT_RANGE_MEMBERS_ALREADY_IDENTIFIED_BY_NATIVE_OWNER",
+  "source_transport": {
+    "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/storage_claim_wait_v1/budget_walk_v1/scout14_metadata_20260912T114454103903Z/TRANSPORT.json",
+    "sha256": "cdac4fab9d3f0d93a5ca2466ecb451061b1545038af3be0b406ec848da4161c1",
+    "bytes": 149177
+  },
+  "original_terminal": {
+    "path": "/volumes/research-localdata/ywang3652/mars56_s4p_million_campaign_outputs_20260705/mars56_s4p_million_20260705_1256/status/accepted_1m_campaign_controller_20260710/research_scouts/high_k_line_width_20260814/19_high_k_q_overlap_stage2_fresh_emx_v1_terminal_audit_v1/terminal_deep_audit_receipt.json",
+    "sha256": "2c5ff3271cc6a194cb934fa56c147363dcd619d9f48e2d35dc762089316d1900",
+    "bytes": 179397
+  },
+  "selection_receipt": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/storage_claim_wait_v1/budget_walk_v1/SCOUT14_LOOKUP_20260912T114500Z_CN.md",
+  "historical_total_rows": 14,
+  "historical_current_range_rows": 2,
+  "historical_outside_current_range_rows": 12,
+  "current_formal_qualified": null,
+  "formally_added": 0,
+  "native_actions": 0,
+  "labels_recomputed": false,
+  "current_q10_to20_support_rows": 0,
+  "q_as_pool_hard_gate": false,
+  "members": [
+    {
+      "candidate_id_sha256": "5b93827f88daec051aa760ae75469f89916e0895a0506315485843c60a8444a7",
+      "candidate_identity_is_not_current_geometry_hash": true,
+      "label_from_historical_terminal": {
+        "candidate_id_sha256": "5b93827f88daec051aa760ae75469f89916e0895a0506315485843c60a8444a7",
+        "differential_port_pairs_zero_based": [
+          [
+            0,
+            1
+          ],
+          [
+            2,
+            3
+          ]
+        ],
+        "frequency_points": 111,
+        "frequency_start_hz": 5000000000,
+        "frequency_step_hz": 500000000,
+        "frequency_stop_hz": 60000000000,
+        "ground_unused_ports": false,
+        "path": "/volumes/research-localdata/ywang3652/mars56_s4p_million_campaign_outputs_20260705/mars56_s4p_million_20260705_1256/status/accepted_1m_campaign_controller_20260710/research_scouts/high_k_line_width_20260814/19_high_k_q_overlap_stage2_fresh_emx_v1/06_fresh_real_emx/evaluations/5b93827f88daec05/emx/emx.s4p",
+        "port_count": 4,
+        "provenance": {
+          "cadence_pin_purpose": 51,
+          "emx": true,
+          "host": "mars-0002.ece.wisc.edu",
+          "marker_is_not_independent_solver_attestation": true,
+          "ports": [
+            "P001",
+            "P002",
+            "P003",
+            "P004"
+          ],
+          "process_token": "/TSMC65_05_12_26/",
+          "reference_impedance_ohm": 50,
+          "representation": "RI"
+        },
+        "recomputed_features": {
+          "k_abs_center": 0.801907286267875,
+          "lp_nh_center": 1.9754440690561774,
+          "ls_nh_center": 1.9904730273824487,
+          "physical_feature_center_freq_hz": 15000000000,
+          "q_center": 7.520754964997944,
+          "qp_center": 7.528909304673147,
+          "qs_center": 7.520754964997944
+        },
+        "scientific_boundary": "Header provenance markers are consistency evidence, not an independent cryptographic solver attestation. A real-EMX claim additionally requires hash-pinned accepted production lineage and its full-pool audit receipt.",
+        "sha256": "850178db52b1a8b5521d9a095f4b152263cfbbe142344e69062aa1cc645e836e",
+        "size_bytes": 50262
+      },
+      "geometry_artifact_binding": {
+        "candidate_id_sha256": "5b93827f88daec051aa760ae75469f89916e0895a0506315485843c60a8444a7",
+        "physical_identity_sha256": "cc8dcf7a3a6134efd66a3bbab1fc45c8cf76e7647a219c06fd8de0be79bf1685",
+        "pre_cadence_gds": {
+          "exists": true,
+          "path": "/volumes/research-localdata/ywang3652/mars56_s4p_million_campaign_outputs_20260705/mars56_s4p_million_20260705_1256/status/accepted_1m_campaign_controller_20260710/research_scouts/high_k_line_width_20260814/12_overlap_cadence_streamout_v1/evaluations/84577a77761a8fd6/layout/transformer_layout.gds",
+          "sha256": "3eb904ab8b4bbd2cefdd0a124cba27e01713b479af3708a38a9eeb6eb947a03c",
+          "size_bytes": 17946
+        },
+        "source_gds": {
+          "exists": true,
+          "path": "/volumes/research-localdata/ywang3652/mars56_s4p_million_campaign_outputs_20260705/mars56_s4p_million_20260705_1256/status/accepted_1m_campaign_controller_20260710/research_scouts/high_k_line_width_20260814/12_overlap_cadence_streamout_v1/evaluations/84577a77761a8fd6/streamout/transformer_layout_cadpins.gds",
+          "sha256": "9d29fbe0f34b5dc1632d1af6c0762dd8607e6859c3da300294cc7c3b3ee40ecc",
+          "size_bytes": 20480
+        },
+        "source_manifest": {
+          "exists": true,
+          "path": "/volumes/research-localdata/ywang3652/mars56_s4p_million_campaign_outputs_20260705/mars56_s4p_million_20260705_1256/status/accepted_1m_campaign_controller_20260710/research_scouts/high_k_line_width_20260814/12_overlap_cadence_streamout_v1/evaluations/84577a77761a8fd6/layout/transformer_layout.layout.json",
+          "sha256": "e2587d9e2d0b6c12f1ed17f3d19d03343690bb8d03444ea53db12c85d5c5fb01",
+          "size_bytes": 5323
+        }
+      },
+      "original_emx_command": {
+        "argv": [
+          "/volumes/research-localdata/ywang3652/rfic-transformer-inverse-design-mars56-s4p-drc-20260705/mars_local_bin/emx_cae_singularity",
+          "/volumes/research-localdata/ywang3652/mars56_s4p_million_campaign_outputs_20260705/mars56_s4p_million_20260705_1256/status/accepted_1m_campaign_controller_20260710/research_scouts/high_k_line_width_20260814/12_overlap_cadence_streamout_v1/evaluations/84577a77761a8fd6/streamout/transformer_layout_cadpins.gds",
+          "TRANSFORMER",
+          "/volumes/research-localdata/PDKs/TSMC65_05_12_26/RC_IRCX_CRN65G+_1P9M+UT-ALRDL_6X1Z1U_MiM_typical.proc",
+          "--touchstone",
+          "--s-impedance=50",
+          "-s",
+          "/volumes/research-localdata/ywang3652/mars56_s4p_million_campaign_outputs_20260705/mars56_s4p_million_20260705_1256/status/accepted_1m_campaign_controller_20260710/research_scouts/high_k_line_width_20260814/19_high_k_q_overlap_stage2_fresh_emx_v1/06_fresh_real_emx/evaluations/5b93827f88daec05/emx/emx.s4p",
+          "--include-command-line",
+          "--edge-width=1",
+          "--accuracy=standard",
+          "--verbose=2",
+          "--parallel=2",
+          "--simultaneous-frequencies=0",
+          "--cadence-pins=51",
+          "--port=P001=P001:P001_G",
+          "--port=P002=P002:P002_G",
+          "--port=P003=P003:P003_G",
+          "--port=P004=P004:P004_G",
+          "--sweep",
+          "5000000000",
+          "60000000000",
+          "--sweep-stepsize",
+          "500000000"
+        ],
+        "candidate_id_sha256": "5b93827f88daec051aa760ae75469f89916e0895a0506315485843c60a8444a7",
+        "exists": true,
+        "path": "/volumes/research-localdata/ywang3652/mars56_s4p_million_campaign_outputs_20260705/mars56_s4p_million_20260705_1256/status/accepted_1m_campaign_controller_20260710/research_scouts/high_k_line_width_20260814/19_high_k_q_overlap_stage2_fresh_emx_v1/06_fresh_real_emx/evaluations/5b93827f88daec05/emx/emx_command.json",
+        "sha256": "74d4cf8eacaefe58ea45ca9921d72144cf874ce31d9855a2ba0569b59b4dc5c8",
+        "size_bytes": 1298,
+        "source_gds_path_argument": "/volumes/research-localdata/ywang3652/mars56_s4p_million_campaign_outputs_20260705/mars56_s4p_million_20260705_1256/status/accepted_1m_campaign_controller_20260710/research_scouts/high_k_line_width_20260814/12_overlap_cadence_streamout_v1/evaluations/84577a77761a8fd6/streamout/transformer_layout_cadpins.gds"
+      },
+      "status": "HISTORICAL_ARTIFACT_BINDING_CLOSED_CURRENT_QUALIFICATION_PENDING",
+      "original_split": null,
+      "missing_current_qualification": [
+        "source-bound exact geometry vector and field order from pinned original layout manifest",
+        "current process/ports/GDS/DRC compatibility bound to this actual geometry",
+        "current strict label/SRF review retaining the original 111-frequency response",
+        "development/final-evaluation isolation and exact cross-source geometry deduplication",
+        "formal accepted submission and readback"
+      ],
+      "next_bounded_input": [
+        {
+          "exists": true,
+          "path": "/volumes/research-localdata/ywang3652/mars56_s4p_million_campaign_outputs_20260705/mars56_s4p_million_20260705_1256/status/accepted_1m_campaign_controller_20260710/research_scouts/high_k_line_width_20260814/12_overlap_cadence_streamout_v1/evaluations/84577a77761a8fd6/layout/transformer_layout.layout.json",
+          "sha256": "e2587d9e2d0b6c12f1ed17f3d19d03343690bb8d03444ea53db12c85d5c5fb01",
+          "size_bytes": 5323
+        },
+        {
+          "exists": true,
+          "path": "/volumes/research-localdata/ywang3652/mars56_s4p_million_campaign_outputs_20260705/mars56_s4p_million_20260705_1256/status/accepted_1m_campaign_controller_20260710/research_scouts/high_k_line_width_20260814/12_overlap_cadence_streamout_v1/evaluations/84577a77761a8fd6/streamout/transformer_layout_cadpins.gds",
+          "sha256": "9d29fbe0f34b5dc1632d1af6c0762dd8607e6859c3da300294cc7c3b3ee40ecc",
+          "size_bytes": 20480
+        },
+        {
+          "path": "/volumes/research-localdata/ywang3652/mars56_s4p_million_campaign_outputs_20260705/mars56_s4p_million_20260705_1256/status/accepted_1m_campaign_controller_20260710/research_scouts/high_k_line_width_20260814/19_high_k_q_overlap_stage2_fresh_emx_v1/06_fresh_real_emx/evaluations/5b93827f88daec05/emx/emx.s4p",
+          "sha256": "850178db52b1a8b5521d9a095f4b152263cfbbe142344e69062aa1cc645e836e",
+          "bytes": 50262
+        }
+      ]
+    },
+    {
+      "candidate_id_sha256": "bca15651a423c35b706f6573032abcd4325d935be81dc82899e8b1a6fc458af3",
+      "candidate_identity_is_not_current_geometry_hash": true,
+      "label_from_historical_terminal": {
+        "candidate_id_sha256": "bca15651a423c35b706f6573032abcd4325d935be81dc82899e8b1a6fc458af3",
+        "differential_port_pairs_zero_based": [
+          [
+            0,
+            1
+          ],
+          [
+            2,
+            3
+          ]
+        ],
+        "frequency_points": 111,
+        "frequency_start_hz": 5000000000,
+        "frequency_step_hz": 500000000,
+        "frequency_stop_hz": 60000000000,
+        "ground_unused_ports": false,
+        "path": "/volumes/research-localdata/ywang3652/mars56_s4p_million_campaign_outputs_20260705/mars56_s4p_million_20260705_1256/status/accepted_1m_campaign_controller_20260710/research_scouts/high_k_line_width_20260814/19_high_k_q_overlap_stage2_fresh_emx_v1/06_fresh_real_emx/evaluations/bca15651a423c35b/emx/emx.s4p",
+        "port_count": 4,
+        "provenance": {
+          "cadence_pin_purpose": 51,
+          "emx": true,
+          "host": "mars-0002.ece.wisc.edu",
+          "marker_is_not_independent_solver_attestation": true,
+          "ports": [
+            "P001",
+            "P002",
+            "P003",
+            "P004"
+          ],
+          "process_token": "/TSMC65_05_12_26/",
+          "reference_impedance_ohm": 50,
+          "representation": "RI"
+        },
+        "recomputed_features": {
+          "k_abs_center": 0.8034064027429935,
+          "lp_nh_center": 1.9175755019474943,
+          "ls_nh_center": 1.905229304549186,
+          "physical_feature_center_freq_hz": 15000000000,
+          "q_center": 7.938048527156734,
+          "qp_center": 7.938048527156734,
+          "qs_center": 7.984380885383479
+        },
+        "scientific_boundary": "Header provenance markers are consistency evidence, not an independent cryptographic solver attestation. A real-EMX claim additionally requires hash-pinned accepted production lineage and its full-pool audit receipt.",
+        "sha256": "d8140114c0b7d37c0ad167f564c41e9b590e96fdd0ae115fe44c50c3dacedcc0",
+        "size_bytes": 50270
+      },
+      "geometry_artifact_binding": {
+        "candidate_id_sha256": "bca15651a423c35b706f6573032abcd4325d935be81dc82899e8b1a6fc458af3",
+        "physical_identity_sha256": "7b5d8365a3de67e7e686132be27d64c3793e6201a3d6bc1b8b7bb99ab5275520",
+        "pre_cadence_gds": {
+          "exists": true,
+          "path": "/volumes/research-localdata/ywang3652/mars56_s4p_million_campaign_outputs_20260705/mars56_s4p_million_20260705_1256/status/accepted_1m_campaign_controller_20260710/research_scouts/high_k_line_width_20260814/12_overlap_cadence_streamout_v1/evaluations/983cd89c9c2b1ef9/layout/transformer_layout.gds",
+          "sha256": "2284182f7f2e4d86484adde4ad6621ed89ea36a165264019fd636c87f629e2f1",
+          "size_bytes": 17946
+        },
+        "source_gds": {
+          "exists": true,
+          "path": "/volumes/research-localdata/ywang3652/mars56_s4p_million_campaign_outputs_20260705/mars56_s4p_million_20260705_1256/status/accepted_1m_campaign_controller_20260710/research_scouts/high_k_line_width_20260814/12_overlap_cadence_streamout_v1/evaluations/983cd89c9c2b1ef9/streamout/transformer_layout_cadpins.gds",
+          "sha256": "60762bd3950bba5fb775c00710dbf0e5060acb5299ef0d7a79513768feb6c8fe",
+          "size_bytes": 20480
+        },
+        "source_manifest": {
+          "exists": true,
+          "path": "/volumes/research-localdata/ywang3652/mars56_s4p_million_campaign_outputs_20260705/mars56_s4p_million_20260705_1256/status/accepted_1m_campaign_controller_20260710/research_scouts/high_k_line_width_20260814/12_overlap_cadence_streamout_v1/evaluations/983cd89c9c2b1ef9/layout/transformer_layout.layout.json",
+          "sha256": "c7a5f1bf983e623bdd14c040080c433bcdb27d7416269f7510233604b4de92f6",
+          "size_bytes": 5323
+        }
+      },
+      "original_emx_command": {
+        "argv": [
+          "/volumes/research-localdata/ywang3652/rfic-transformer-inverse-design-mars56-s4p-drc-20260705/mars_local_bin/emx_cae_singularity",
+          "/volumes/research-localdata/ywang3652/mars56_s4p_million_campaign_outputs_20260705/mars56_s4p_million_20260705_1256/status/accepted_1m_campaign_controller_20260710/research_scouts/high_k_line_width_20260814/12_overlap_cadence_streamout_v1/evaluations/983cd89c9c2b1ef9/streamout/transformer_layout_cadpins.gds",
+          "TRANSFORMER",
+          "/volumes/research-localdata/PDKs/TSMC65_05_12_26/RC_IRCX_CRN65G+_1P9M+UT-ALRDL_6X1Z1U_MiM_typical.proc",
+          "--touchstone",
+          "--s-impedance=50",
+          "-s",
+          "/volumes/research-localdata/ywang3652/mars56_s4p_million_campaign_outputs_20260705/mars56_s4p_million_20260705_1256/status/accepted_1m_campaign_controller_20260710/research_scouts/high_k_line_width_20260814/19_high_k_q_overlap_stage2_fresh_emx_v1/06_fresh_real_emx/evaluations/bca15651a423c35b/emx/emx.s4p",
+          "--include-command-line",
+          "--edge-width=1",
+          "--accuracy=standard",
+          "--verbose=2",
+          "--parallel=2",
+          "--simultaneous-frequencies=0",
+          "--cadence-pins=51",
+          "--port=P001=P001:P001_G",
+          "--port=P002=P002:P002_G",
+          "--port=P003=P003:P003_G",
+          "--port=P004=P004:P004_G",
+          "--sweep",
+          "5000000000",
+          "60000000000",
+          "--sweep-stepsize",
+          "500000000"
+        ],
+        "candidate_id_sha256": "bca15651a423c35b706f6573032abcd4325d935be81dc82899e8b1a6fc458af3",
+        "exists": true,
+        "path": "/volumes/research-localdata/ywang3652/mars56_s4p_million_campaign_outputs_20260705/mars56_s4p_million_20260705_1256/status/accepted_1m_campaign_controller_20260710/research_scouts/high_k_line_width_20260814/19_high_k_q_overlap_stage2_fresh_emx_v1/06_fresh_real_emx/evaluations/bca15651a423c35b/emx/emx_command.json",
+        "sha256": "9a6850cd267808af76a03f55fde372ae26e6a8f07ee30da70eb7124bc37292de",
+        "size_bytes": 1298,
+        "source_gds_path_argument": "/volumes/research-localdata/ywang3652/mars56_s4p_million_campaign_outputs_20260705/mars56_s4p_million_20260705_1256/status/accepted_1m_campaign_controller_20260710/research_scouts/high_k_line_width_20260814/12_overlap_cadence_streamout_v1/evaluations/983cd89c9c2b1ef9/streamout/transformer_layout_cadpins.gds"
+      },
+      "status": "HISTORICAL_ARTIFACT_BINDING_CLOSED_CURRENT_QUALIFICATION_PENDING",
+      "original_split": null,
+      "missing_current_qualification": [
+        "source-bound exact geometry vector and field order from pinned original layout manifest",
+        "current process/ports/GDS/DRC compatibility bound to this actual geometry",
+        "current strict label/SRF review retaining the original 111-frequency response",
+        "development/final-evaluation isolation and exact cross-source geometry deduplication",
+        "formal accepted submission and readback"
+      ],
+      "next_bounded_input": [
+        {
+          "exists": true,
+          "path": "/volumes/research-localdata/ywang3652/mars56_s4p_million_campaign_outputs_20260705/mars56_s4p_million_20260705_1256/status/accepted_1m_campaign_controller_20260710/research_scouts/high_k_line_width_20260814/12_overlap_cadence_streamout_v1/evaluations/983cd89c9c2b1ef9/layout/transformer_layout.layout.json",
+          "sha256": "c7a5f1bf983e623bdd14c040080c433bcdb27d7416269f7510233604b4de92f6",
+          "size_bytes": 5323
+        },
+        {
+          "exists": true,
+          "path": "/volumes/research-localdata/ywang3652/mars56_s4p_million_campaign_outputs_20260705/mars56_s4p_million_20260705_1256/status/accepted_1m_campaign_controller_20260710/research_scouts/high_k_line_width_20260814/12_overlap_cadence_streamout_v1/evaluations/983cd89c9c2b1ef9/streamout/transformer_layout_cadpins.gds",
+          "sha256": "60762bd3950bba5fb775c00710dbf0e5060acb5299ef0d7a79513768feb6c8fe",
+          "size_bytes": 20480
+        },
+        {
+          "path": "/volumes/research-localdata/ywang3652/mars56_s4p_million_campaign_outputs_20260705/mars56_s4p_million_20260705_1256/status/accepted_1m_campaign_controller_20260710/research_scouts/high_k_line_width_20260814/19_high_k_q_overlap_stage2_fresh_emx_v1/06_fresh_real_emx/evaluations/bca15651a423c35b/emx/emx.s4p",
+          "sha256": "d8140114c0b7d37c0ad167f564c41e9b590e96fdd0ae115fe44c50c3dacedcc0",
+          "bytes": 50270
+        }
+      ]
+    }
+  ],
+  "independent_legacy_classification": {
+    "sha256": "3efdc964e103b73a06b7e3218a35b98ada99a88ccc27b6e3806b5ac00d40d465",
+    "path": null,
+    "status": "NOT_LOCATED_NOT_ASSUMED"
+  },
+  "boundary": "No new extraction, solver, full-pool scan, split reassignment or qualification claim. Original 4-port 111-point 5..60 GHz response and command are retained; not relabelled as current 56-point fresh production. Next native owner may read only the two exact referenced source records through existing qualification path; this handoff is not a production gate."
+}
