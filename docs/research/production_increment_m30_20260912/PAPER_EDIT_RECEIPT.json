@@ -1,0 +1,152 @@
+{
+  "schema": "eucap15_narrow_paper_edit.m30.v1",
+  "status": "COMPLETE_DEVELOPMENT_DISCUSSION_DRAFT_NOT_FINAL_PAPER",
+  "completed_utc": "2026-09-12T14:05:31Z",
+  "original": {
+    "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/paper_controlled32_increment_20260911_v1/document_v3/EuCAP_15GHz_Development_Results_Draft.docx",
+    "sha256": "4fecf1a3009e3925cc55219ea01812ca0371be7dd1f29c4d479033b8dd544242",
+    "bytes": 36420,
+    "unchanged": true
+  },
+  "output": {
+    "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/paper_cost_qualification_m30_v1/EuCAP_15GHz_Development_Results_Cost_Update_v2.docx",
+    "sha256": "3406aac68d00e5c2fc3f229d1b1772fc5429599019f7d8e4b277df723e8d7c35",
+    "bytes": 36651,
+    "pages": 5
+  },
+  "sources": [
+    {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/closed_batch3_cost_m29_v1/COST.json",
+      "sha256": "ceea270dcb6a8ba6d15b6205b09bf5f83a0406c8e1bea560bd73153089e223ff",
+      "reused_without_recomputation": true
+    },
+    {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/closed_batch3_cost_m29_v1/SOURCE.rb",
+      "sha256": "b84ceac897cfec3bca90be91a2eb829921c8c599ab0e2551b7e76b8af23e737f",
+      "not_rerun": true
+    },
+    {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/history_next_qualified_source_m29_v1/RECEIPT.json",
+      "sha256": "272cc6d00ba046aea6a7f227a30f61f499d6e888a33cc0b2eab9d8f8cb1cac63",
+      "use": "Historical metadata versus item-bound physical qualification distinction only; no batch-wide rejection or qualification inferred."
+    }
+  ],
+  "changes": [
+    {
+      "original_paragraph_index": 24,
+      "change": "Replace 'the full 6700-member owner ledger' with 'the full owner ledger'; no replacement live count."
+    },
+    {
+      "original_paragraph_index": 71,
+      "change": "Replace generic limitation opening sentence with explicit historical process/port/GDS/DRC identity requirement beyond numerical eligibility; all existing specific validation exclusions retained.",
+      "new_text": "Numerical strict/range eligibility does not establish historical process, port, GDS or DRC identity."
+    },
+    {
+      "insert_before_original_paragraph_index": 73,
+      "change": "Add one descriptive closed production-batch cost paragraph before References.",
+      "new_text": "Separate production batch 3 closed 256 candidates: 234 fresh EMX, 22 analytical failures and 116 formally admitted unique geometries. Admission-to-final-submission time was 3391.45 s. Near-terminal allocated storage was 2,162,520,064 bytes (2.014 GiB), including failed artifacts but excluding shared resources and the external ledger. This excludes pre-admission generation time and establishes neither peak/incremental storage, stable throughput, full-campaign cost nor the controlled-64 trial's cost."
+    }
+  ],
+  "preserved": {
+    "ooxml_parts_changed": [
+      "word/document.xml"
+    ],
+    "all_other_zip_members_byte_identical": true,
+    "original_paragraphs_changed": [
+      24,
+      71
+    ],
+    "original_paragraph25_unchanged": true,
+    "original_conclusion_paragraph72_unchanged": true,
+    "sections": 4,
+    "tables": 1,
+    "references": 3,
+    "all_model_and_trial_results_unchanged": true,
+    "retained_results": [
+      "40/128 = 31.25%",
+      "40/48 = 83.33% conditional",
+      "1253/1259 SELF_PROXY",
+      "controlled64 primary K=4 NOT_REACHED"
+    ],
+    "font_sizes_margins_and_styles_unchanged": true
+  },
+  "cost_precision": {
+    "seconds_source": 3391.446753,
+    "seconds_displayed": 3391.45,
+    "allocated_bytes": 2162520064,
+    "gib_displayed": 2.014,
+    "scope": "Admission through last formal record; near-terminal whole-batch allocated storage including failed artifacts.",
+    "not_claimed": [
+      "before-after storage increment",
+      "peak usage",
+      "stable hourly throughput",
+      "complete campaign cost",
+      "controlled64 trial cost"
+    ],
+    "excluded": [
+      "pre-admission candidate generation",
+      "shared resources",
+      "external formal ledger"
+    ]
+  },
+  "render": {
+    "command": "/Users/wyf/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3 /Users/wyf/.codex/plugins/cache/openai-primary-runtime/documents/26.909.12148/skills/documents/render_docx.py /Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/paper_cost_qualification_m30_v1/EuCAP_15GHz_Development_Results_Cost_Update_v2.docx --output_dir /Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/paper_cost_qualification_m30_v1/render_v2 --emit_pdf",
+    "exit_code": 0,
+    "png_pages": 5,
+    "visually_inspected_pages": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "status": "PASS",
+    "observations": "No clipping, overlap, broken table, missing glyphs or isolated reference page. All three references remain on page 5.",
+    "final_page_numbers": {
+      "ledger_wording": 2,
+      "qualification_boundary": 5,
+      "batch_cost": 5,
+      "references": 5
+    },
+    "intermediates_for_qa_only": true
+  },
+  "first_attempt": {
+    "status": "PAGE_LIMIT_FAIL",
+    "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/paper_cost_qualification_m30_v1/EuCAP_15GHz_Development_Results_Cost_Update.docx",
+    "sha256": "ff1858ba7b0c3bb2fcd33e91694441cc12090bdf8a7038c94476f72d41ff4386",
+    "render_directory": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/paper_cost_qualification_m30_v1/render_v1",
+    "pages": 6,
+    "cause": "Added qualification sentence shifted preceding text; longer cost paragraph pushed references 2–3 to page 6.",
+    "retained": true,
+    "resolution": "One narrow revision moved qualification to existing limitations intro and shortened only newly added cost prose; no font shrink."
+  },
+  "execution": {
+    "bundled_runtime": "/Users/wyf/.cache/codex-runtimes/codex-primary-runtime/dependencies",
+    "artifact_marker_runs": 1,
+    "marker_operation": "edit",
+    "marker_expected_output_count": 1,
+    "marker_exit_code": 0,
+    "authoring_attempts": 2,
+    "render_attempts": 2,
+    "new_simulations": 0,
+    "training_runs": 0,
+    "old_test_reruns": 0,
+    "cost_recomputation": 0,
+    "generated_paper_figures": 0,
+    "ssh": false,
+    "ledger_write": false,
+    "git": false,
+    "central_memory_write": false
+  },
+  "artifact_sha256": {
+    "edit_document.py": "b08bfbd5ba0f8111ff8cace145f18a817853c3e34208b23e41f27e6bdc881dcc",
+    "edit_document_v2.py": "4174bcbcd204bb9df47302d1089e132305ac22cbbd0377ddb0236fbe34dddf8f",
+    "EuCAP_15GHz_Development_Results_Cost_Update_v2.docx": "3406aac68d00e5c2fc3f229d1b1772fc5429599019f7d8e4b277df723e8d7c35",
+    "render_v2/EuCAP_15GHz_Development_Results_Cost_Update_v2.pdf": "c4176cc93c0bb42cd1874de67bf3023526416ba8e2e4e68e1e751a0672d41850",
+    "render_v2/page-1.png": "80f164d610d8713778d13098e54835a023a55d63b7ddb531fdef1746419b9fa0",
+    "render_v2/page-2.png": "1588bfa5216a59664cc40fd4d635f820599e4d9b864cc4c0f06e31ad1789e584",
+    "render_v2/page-3.png": "f6f80298780b2f4a9792e5dab804cd3d663967e5e24791b839b1d1e74027fbab",
+    "render_v2/page-4.png": "101f48b31bceb879635dc877ee81ec8ebbcf9d5619fb3f401fba0da9ce011734",
+    "render_v2/page-5.png": "2a4152339809b00b9bdd05e8724c94e6b584f91a6a0c4d646e177c26a6462062"
+  }
+}

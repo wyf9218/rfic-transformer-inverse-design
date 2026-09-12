@@ -1,0 +1,104 @@
+{
+  "schema": "eucap15_m30_other_historical_source_receipt.v1",
+  "utc": "2026-09-12T14:01:09.552470+00:00",
+  "status": "MINIMUM_EXACT_EVIDENCE_REQUEST_COMPLETE_NO_PHYSICAL_QUALIFICATION",
+  "source_profile": {
+    "path": "/Users/wyf/Documents/模拟变压器AI反向建模/rfic-transformer-inverse-design/configs/current_foundry_small_source_strict112_ffdf.production.v1.json",
+    "sha256": "e1148fbe7021e7e27df671f9ce6c57c919b72e4a4b20aa22b35a8fd547094099",
+    "bytes": 9447
+  },
+  "source_script": {
+    "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/history_other_source_m30_v1/BUILD_REQUEST.py",
+    "sha256": "5177e078df359bbf193fbe72f45926714c7bc2e4d12ef9ec1d4256f45b2269c9",
+    "bytes": 8973
+  },
+  "argv": [
+    "/Users/wyf/Documents/模拟变压器AI反向建模/reports/broadband56_nn_v2_20260907T212216Z/environment/bin/python",
+    "-B",
+    "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/history_other_source_m30_v1/BUILD_REQUEST.py"
+  ],
+  "cwd": "/Users/wyf/Documents/模拟变压器AI反向建模",
+  "actual_exact_path_checks": [
+    {
+      "role": "authority_csv",
+      "path": "/volumes/research-localdata/ywang3652/mars56_s4p_million_campaign_outputs_20260705/mars56_s4p_million_20260705_1256/status/strict_portgate_recovery_20260718/fresh_emx_closure_real_emx_arm_results_112_v5_20260719/tandem_portfolio_real_emx_bound_evidence.csv",
+      "expected_sha256": "391f4ece1b455de01d84c0f45c16e1bf2360773ce9613c383ac007019be2e9f8",
+      "declared_row_count": 112,
+      "declared_column_count": 21,
+      "expected_header_sha256": "20aa9352594e22bcd57d030bf94b6de3ea512ad0799fc9621613dc9b97dfc635",
+      "source_identity_authority": {
+        "path": "/Users/wyf/Documents/模拟变压器AI反向建模/rfic-transformer-inverse-design/configs/current_foundry_small_source_strict112_ffdf.production.v1.json",
+        "sha256": "e1148fbe7021e7e27df671f9ce6c57c919b72e4a4b20aa22b35a8fd547094099",
+        "bytes": 9447
+      },
+      "exact_remote_path_readable_from_this_local_host": false,
+      "local_mirror_elsewhere": "NOT_SEARCHED_NOT_CLAIMED_ABSENT"
+    },
+    {
+      "role": "historical_generation_config",
+      "path": "/volumes/research-localdata/ywang3652/mars56_s4p_million_campaign_outputs_20260705/mars56_s4p_million_20260705_1256/status/strict_portgate_recovery_20260718/fresh_emx_closure_foundry_layout_pilot2_input_20260719/mars_s4p_grounded_powerline_foundry_layout_pilot2.yaml",
+      "expected_sha256": "4bd1492ba9dc0e429de31c16e9be86ace5df706477dfeacd52f1dab19c4c04aa",
+      "declared_row_count": null,
+      "declared_column_count": null,
+      "expected_header_sha256": null,
+      "source_identity_authority": {
+        "path": "/Users/wyf/Documents/模拟变压器AI反向建模/rfic-transformer-inverse-design/configs/current_foundry_small_source_strict112_ffdf.production.v1.json",
+        "sha256": "e1148fbe7021e7e27df671f9ce6c57c919b72e4a4b20aa22b35a8fd547094099",
+        "bytes": 9447
+      },
+      "exact_remote_path_readable_from_this_local_host": false,
+      "local_mirror_elsewhere": "NOT_SEARCHED_NOT_CLAIMED_ABSENT"
+    },
+    {
+      "role": "drc_index",
+      "path": "/volumes/research-localdata/ywang3652/mars56_s4p_million_campaign_outputs_20260705/mars56_s4p_million_20260705_1256/status/strict_portgate_recovery_20260718/fresh_emx_closure_foundry_layout_calibre_112_v5_20260719/drc_index.csv",
+      "expected_sha256": "27d614de99d3ec6f14e96fb3de24b077d652a54c8924f7ef80cd492384bee3fd",
+      "declared_row_count": 112,
+      "declared_column_count": 12,
+      "expected_header_sha256": null,
+      "source_identity_authority": {
+        "path": "/Users/wyf/Documents/模拟变压器AI反向建模/rfic-transformer-inverse-design/configs/current_foundry_small_source_strict112_ffdf.production.v1.json",
+        "sha256": "e1148fbe7021e7e27df671f9ce6c57c919b72e4a4b20aa22b35a8fd547094099",
+        "bytes": 9447
+      },
+      "exact_remote_path_readable_from_this_local_host": false,
+      "local_mirror_elsewhere": "NOT_SEARCHED_NOT_CLAIMED_ABSENT"
+    },
+    {
+      "role": "drc_summary",
+      "path": "/volumes/research-localdata/ywang3652/mars56_s4p_million_campaign_outputs_20260705/mars56_s4p_million_20260705_1256/status/strict_portgate_recovery_20260718/fresh_emx_closure_foundry_layout_calibre_112_v5_20260719/tsmc65_calibre_macro_drc_batch_summary.json",
+      "expected_sha256": "0b92ffda4e8da617e3df6d9c042954957dcfa95b166a1a3946abdf1e7596b187",
+      "declared_row_count": null,
+      "declared_column_count": null,
+      "expected_header_sha256": null,
+      "source_identity_authority": {
+        "path": "/Users/wyf/Documents/模拟变压器AI反向建模/rfic-transformer-inverse-design/configs/current_foundry_small_source_strict112_ffdf.production.v1.json",
+        "sha256": "e1148fbe7021e7e27df671f9ce6c57c919b72e4a4b20aa22b35a8fd547094099",
+        "bytes": 9447
+      },
+      "exact_remote_path_readable_from_this_local_host": false,
+      "local_mirror_elsewhere": "NOT_SEARCHED_NOT_CLAIMED_ABSENT"
+    }
+  ],
+  "newly_located_drc_bound_index_sources": 1,
+  "sample_qualification_checks": 0,
+  "formal_appends": 0,
+  "current_eligible_geometries": null,
+  "read_request_sent_by_this_agent": false,
+  "native_actions": 0,
+  "research_worktree_source_changes": 0,
+  "actual_limitation": "The four explicitly pinned remote artifacts are not directly readable under their MARS absolute paths on this host; other local mirrors were not broadly searched. No real per-member eligibility can be claimed from profile assertions.",
+  "prior_read_only_output_issue": "One broad jq projection of real_emx_runtime was truncated; no result was inferred from its missing section. Subsequent lookup used explicit source paths and profile fields only.",
+  "artifacts": {
+    "SOURCE_SELECTION.json": {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/history_other_source_m30_v1/SOURCE_SELECTION.json",
+      "sha256": "5d853eeebfe2508ffc94ca92914989b8e5af350e0d961bdd67606923549006f2",
+      "bytes": 3096
+    },
+    "MINIMUM_OWNER_READ_REQUEST.json": {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/history_other_source_m30_v1/MINIMUM_OWNER_READ_REQUEST.json",
+      "sha256": "a32c7fb268a5675e7be7cc4add6b56b5e0d1314ba548c2081b3eeff9c05a9898",
+      "bytes": 5777
+    }
+  }
+}

@@ -1,5 +1,13 @@
 # 当前研究和生产状态
 
+## 2026-09-12 M30：79份新增EMX、39条fresh正式入账
+
+14:09:26 UTC相对13:44:51：新79fresh+10解析，49strict、40范围strict候选；正式确认唯一39（23train/8val/8test），history0，下界6884。DOE156/test待known-pool/full-history合并及正式提交，不能计第40个认证新增。现场3独立EMX×2CPU，申请/执行容量48；扣预约CPU13.449核，额外6为三类工具共享诊断空间，不是48已准入。
+
+普通生产/后继程序活，batch4为224/256终态。计时2模块已在MARS最终路径8专项PASS；普通安装器3297923等待全批终态和owner/metadata自然退出，尚未生效，无健康任务重启。见[本轮实际现场](production_increment_m30_20260912/SNAPSHOT.json)与[调度变更状态](production_increment_m30_20260912/NATIVE_STATUS.md)。只接以后新增，不由AI守候边界。
+
+23新train资格接收并集3975→3998（不是新训练），163/512格及欠填1907不变，高K>0.8新增0。历史strict112四文件请求未发送，旧PASS112不算新认证；[五页增量讨论稿](production_increment_m30_20260912/EuCAP_15GHz_Development_Results_Cost_Update_v2.docx)仅补已闭合batch3成本和资格边界，旧负结果不变，不是FINAL，无AI论文图。新文件身份见[SHA256SUMS](production_increment_m30_20260912/SHA256SUMS)。以下都是较早截面。
+
 ## 2026-09-12 M29：61新增fresh EMX、25正式入账
 
 13:52离线源码判断已完成：[前置供给判断](production_increment_m29_20260912/FRONTEND_JUDGMENT_CN.md)。同13:44资源仅余46.245CPU当量，可新增23个双CPU工具；无EMX就绪等待。Calibre8未饱和，Cadence8→12离线反事实不增加CPU，未部署配额改动/未重启。此判断不更新运行观察时间。
