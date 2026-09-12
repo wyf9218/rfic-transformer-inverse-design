@@ -1,0 +1,209 @@
+{
+  "schema": "eucap15_increment_m8.v1",
+  "observed_utc": "2026-09-12T07:16:02.825079+00:00",
+  "baseline_utc": "2026-09-12T07:00:09.662116+00:00",
+  "native": {
+    "requested": 48,
+    "admitted": 0,
+    "executor": 48,
+    "actual": 0,
+    "owner_pid": 1039340,
+    "owner_start_ticks": 399883569,
+    "release": {
+      "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/RELEASE.json",
+      "sha256": "a0834643c375703bbd1dea3c7e778b31a6321b42abba3f33e504bf192ea27a81",
+      "bytes": 60463
+    },
+    "resource": {
+      "pin": {
+        "bytes": 19513,
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/fixed48/RESOURCE_20260912T071504813089Z.json",
+        "sha256": "06c04e3a788afea168ee7c63bb1c124eca60eb8324772524163c92adca452f31"
+      },
+      "utc": "2026-09-12T07:15:04.813038+00:00",
+      "status": "WAIT",
+      "checks": {
+        "cpu": false,
+        "iowait": true,
+        "isolation": true,
+        "memory": true,
+        "oom": true,
+        "sample": true,
+        "storage": true,
+        "swap": true
+      },
+      "normalized_load1": 1.303070068359375,
+      "normalized_load5": 1.350690205891927,
+      "memory_fraction": 0.4694576382923226,
+      "free_disk_bytes": 492959428608,
+      "free_license_slots": {
+        "cadence": 3600,
+        "calibre": 85,
+        "emx": 292
+      },
+      "idle_cpu_equivalents": 4.606955443265768,
+      "swap_deltas": {
+        "oom_kill": 0,
+        "pswpin": 7,
+        "pswpout": 0
+      },
+      "age_seconds": 58.012231
+    },
+    "healthy_checks": 0,
+    "required_checks": 5,
+    "closed": 21,
+    "retained_result_counts": {
+      "FRESH_EMX_EXTRACTED": 9,
+      "ANALYTIC_FAIL_NOT_DISPATCHED": 7,
+      "CANDIDATE_FAILURE_RETAINED_NO_SUBSTITUTION": 5
+    },
+    "without_terminal": 235,
+    "deadline_utc": "2026-09-12T15:30:49.723123+00:00",
+    "original_plan": {
+      "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/start_ledger/PLAN.json",
+      "sha256": "fd90b07106fb7020e1e6520deaac932647feb3e5f686b5d41ffa91fffe9871c0",
+      "bytes": 133724
+    },
+    "original_budget": {
+      "emx_starts": 256,
+      "hours": 12,
+      "increment_bytes": 5368709120
+    },
+    "automatic_continuation_installed": true,
+    "standby_pid": 1145095,
+    "metadata_pid": 1145088,
+    "continuation_failure": null,
+    "successor_launch_observed": false
+  },
+  "window": {
+    "new_emx_completed": 0,
+    "new_strict_in_range_unique": 0,
+    "fresh_formal_added": 1,
+    "fresh_formal_note": "Previously completed TRAIN_NEIGHBORHOOD-002; delayed admission, not a new solve in this window",
+    "history_formal_added": 276,
+    "formal_union_observed": 4464,
+    "frequency_references": 249984,
+    "only_increment_sequences_checked": [
+      4188,
+      4464
+    ],
+    "prior_prefix_reaudited": false,
+    "formal_head": {
+      "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/qualified15_single_member_v1/records/004464.json",
+      "sha256": "d45cb1966cb1c8b397973c7faf545be874f1ceded4beeef6a10af3db221ba28e",
+      "bytes": 35865
+    }
+  },
+  "train002": {
+    "status": "PASS_CURRENT_CONTRACT_QUALIFIED_INCREMENT_COMMITTED",
+    "attempt": 80,
+    "utc": "2026-09-12T07:03:43.279458+00:00",
+    "added": 1,
+    "process_alive": false,
+    "success": {
+      "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/native_candidate_publication_train002_prepared_6cd2229e9556/SUCCESS.json",
+      "sha256": "1104ea3e810a3c05c7a68c64c836e58c1e411de025433aca1703ada1a94893c7",
+      "bytes": 1057
+    },
+    "record": {
+      "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/qualified15_single_member_v1/records/004250.json",
+      "sha256": "5faaa0b3c38e48e0472c5dd499ca807eba33824cef597d63800b09d4bbe600f6",
+      "bytes": 58675
+    },
+    "original_split": "validation",
+    "final_independent_test_eligible": false,
+    "terminal": {
+      "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/train002_prepared_resume_20260912T065321080909Z/worker/TERMINAL.json",
+      "sha256": "da3a7ab679da89377dbbf47b6dd05db13098d08b2b52efcc1af2be0e6ccf4774",
+      "bytes": 5953
+    },
+    "terminal_note": "Bound retired 3d10 owner exited; not current a083 owner",
+    "source_core_partition": {
+      "total": 4,
+      "formal": 4,
+      "held": 0
+    }
+  },
+  "disk": {
+    "observed_free_bytes": 492355362816,
+    "quota": "UNKNOWN",
+    "cleanup": false
+  },
+  "p215": {
+    "source_partition": "base_pool:accepted_pool; original ordinal0..99 only",
+    "processed_source_rows": 100,
+    "raw_pool_rows": 215785,
+    "outside_this_partition_raw_rows": 215685,
+    "transport": {
+      "gds": 14,
+      "s4p": 100,
+      "bytes": 5929917,
+      "exact_matches": 114
+    },
+    "actual_gds": {
+      "topcells_found": 100,
+      "grid_failures": 100,
+      "noncanonical_edge_failures": 90,
+      "tolerance_unchanged": true,
+      "full_calibre_executed": false
+    },
+    "actual_response": {
+      "read_success": 100,
+      "read_failure": 0,
+      "frequency_rows": 11100,
+      "frequencies_GHz": "5..60 step0.5, original111",
+      "index15_zero_based": 20,
+      "conditional_current_mapping": {
+        "descriptor": 100,
+        "strict": 1,
+        "in_Lp_Ls_K_range": 24,
+        "strict_and_in_range": 1,
+        "strict_core_and_Q10to20": 1,
+        "half_srf_failures": 99
+      }
+    },
+    "mutually_exclusive_reuse_classes": {
+      "A": 0,
+      "B": 0,
+      "C": 100,
+      "D": 0
+    },
+    "current_qualified": 0,
+    "formally_added": 0,
+    "old_header_only_triage_preserved": true,
+    "new_native_emx": 0,
+    "scope": "Historical response diagnosis only. Every GDS fails an existing necessary current condition; conditional numerical validity does not qualify it. Not full-pool, train selection, or fresh EMX."
+  },
+  "evidence": [
+    {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/samebatch_hotpath_v1/joint_cut_20260912T071601946804Z/OBSERVATION.json",
+      "sha256": "49b92b774327036931ca0f2e3584e69b9807349611125860c65ada543b253289"
+    },
+    {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/p215_first100_export_20260912_v1/physical_transport_20260912T070933933948Z/TRANSPORT_RECEIPT.json",
+      "sha256": "2eeba5f5cd0b03f870a1de8d2f25ed010c5c8751e54dc1af21386ee1bcab6277"
+    },
+    {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/p215_gds_compatibility_v1/ACTUAL_GDS_CHECKS.json",
+      "sha256": "ec2d75da44976b2c39c0bb52adeff3cb1ed975834dc567de1ddc7bdfc64f8e43"
+    },
+    {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/p215_gds_compatibility_v1/FIRST100_DISPOSITION.json",
+      "sha256": "4a1279b437112ae37176e4ff05a8025aed9c84e8c9fe9fdee062dc4426e75fb2"
+    },
+    {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/historical111_extraction_v1/actual_first100_v1/RECEIPT.json",
+      "sha256": "b28a6a5a62455a1f1ddd2d603dcda0bcdb47650c27b421a9140632c3444a47c0"
+    },
+    {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/historical111_extraction_v1/actual_first100_v1/HISTORICAL_ALL111.csv",
+      "sha256": "5d4c4de5fa29cc3ecf9f28a875e2e4d525810f708409b15fc2f47ce4daeb24fb"
+    },
+    {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/historical111_extraction_v1/actual_first100_v1/TARGET15_ROWS.json",
+      "sha256": "1c94e07a338599dd017f18ea9b31a1adb73b76e30e3fd4cb683acacaae69e23a"
+    }
+  ],
+  "next_legal": "Ordinary native owner/resource/continuation and historical publisher continue. Receive new real events; process a distinct source/version historical partition. Do not rerun this100 or TRAIN002, native old experiments or old QA.",
+  "overall100k_complete": false
+}

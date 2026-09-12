@@ -1,0 +1,64 @@
+--- /dev/fd/11	2026-09-12 02:12:11
++++ /dev/fd/12	2026-09-12 02:12:11
+@@ -1,5 +1,5 @@
+-def audit_exact56_s4p(path: Path) -> ArtifactQaResult:
+-    """Audit one exact 56-point four-port S4P and derive all feature rows."""
++def extract111_under_current_mapping(path: Path) -> ArtifactQaResult:
++    """Re-extract all111 historical rows under the current, conditional port convention."""
+ 
+     try:
+         touchstone = load_touchstone(path)
+@@ -10,12 +10,12 @@
+     s_matrix = np.asarray(touchstone.s_matrix, dtype=np.complex128)
+     checks = {
+         "port_count_exact_four": int(touchstone.num_ports) == 4,
+-        "frequency_count_exact_56": int(touchstone.num_freqs) == len(FREQUENCY_GRID_HZ),
++        "frequency_count_exact_111": int(touchstone.num_freqs) == len(FREQUENCY_GRID_HZ),
+         "frequency_vector_exact": np.array_equal(frequencies, expected_frequencies),
+         "frequency_strictly_increasing": bool(
+             frequencies.size > 1 and np.all(np.diff(frequencies) > 0.0)
+         ),
+-        "s_matrix_shape_exact": tuple(s_matrix.shape) == (56, 4, 4),
++        "s_matrix_shape_exact": tuple(s_matrix.shape) == (111, 4, 4),
+         "s_matrix_finite": bool(
+             np.isfinite(s_matrix.real).all() and np.isfinite(s_matrix.imag).all()
+         ),
+@@ -26,14 +26,14 @@
+     failed = [name for name, passed in checks.items() if not passed]
+     if failed:
+         raise Broadband56S4pQaError(
+-            "fresh-EMX S4P exact contract failed: " + ", ".join(failed)
++            "historical111 S4P exact frequency contract failed: " + ", ".join(failed)
+         )
+ 
+     try:
+         z_matrix = np.asarray(touchstone.to_z_parameters(), dtype=np.complex128)
+     except Exception as exc:  # noqa: BLE001 - preserve conversion failure.
+         raise Broadband56S4pQaError(f"S-to-Z conversion failed: {exc}") from exc
+-    if tuple(z_matrix.shape) != (56, 4, 4) or not (
++    if tuple(z_matrix.shape) != (111, 4, 4) or not (
+         np.isfinite(z_matrix.real).all() and np.isfinite(z_matrix.imag).all()
+     ):
+         raise Broadband56S4pQaError("S-to-Z conversion produced incomplete or non-finite Z")
+@@ -50,7 +50,7 @@
+             f"actual={roundtrip_error:.17g}, allowed={S_TO_Z_ROUNDTRIP_ABSOLUTE_TOLERANCE:.17g}"
+         )
+     z_diff = single_ended_to_differential_z(z_matrix)
+-    if tuple(z_diff.shape) != (56, 2, 2) or not (
++    if tuple(z_diff.shape) != (111, 2, 2) or not (
+         np.isfinite(z_diff.real).all() and np.isfinite(z_diff.imag).all()
+     ):
+         raise Broadband56S4pQaError(
+@@ -195,10 +195,10 @@
+         rows=tuple(rows),
+         summary={
+             "port_count": 4,
+-            "frequency_points": 56,
++            "frequency_points": 111,
+             "frequency_start_hz": FREQUENCY_GRID_HZ[0],
+             "frequency_stop_hz": FREQUENCY_GRID_HZ[-1],
+-            "frequency_step_hz": 1_000_000_000,
++            "frequency_step_hz": 500_000_000,
+             "s_to_z_roundtrip_max_abs_error": roundtrip_error,
+             "passivity_fail_frequency_count": passivity_failures,
+             "reciprocity_fail_frequency_count": reciprocity_failures,

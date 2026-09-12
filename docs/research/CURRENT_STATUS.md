@@ -1,5 +1,13 @@
 # Current Evidence Status
 
+## M8 — observed2026-09-12 07:16:02UTC: formal4464; actual first100 historical diagnosis closed
+
+Actual requested/admitted/executor/native EMX remains **48/0/48/0**. Current owner1039340 and installed continuation1145095 are alive. The latest ordinary resource check fails only CPU (normalized load1/5=1.303070/1.350690>1.10);292EMX licenses are free. Existing budgets and235candidates without terminal are unchanged.
+
+Window07:00:09→07:16:02: **newEMX0, newstrict/range unique0, freshformal+1, historyformal+276**. Formal ledger4464; only new4188..4464 inspected. Fresh+1 is delayed publication of already completed TRAIN002, not a new solve. Ordinary retry80 succeeded at07:03:43 as sequence4250, preserving validation; all4previous core results are now formal, hold0. Retry worker exited normally; do not restart it. [Exact snapshot](p215_first100_actual_20260912/SNAPSHOT_M8.json).
+
+[Actual first100 P215 results and source table](p215_first100_actual_20260912/README.md):114original files transported,100original GDS cells checked,100full111-point responses re-extracted. All100fail current required grid;90also fail canonical-edge checks. Conditional current-mapping strict1/core1, but **current-qualified0/formally added0** because actual GDS fails. Updated exclusive classes A0/B0/C100/D0; previous header-only B100 remains dated history. These are existing physical-response diagnostics, not100new EMX results or whole-P215 estimates. No old tests/training/native experiments repeated. Ordinary production is independent of this publication.
+
 ## M7 — observed2026-09-12 07:00:09UTC: CPU wait, historical formal+389
 
 Actual requested/admitted/executor/native EMX is **48/0/48/0**. Same owner1039340, standby1145095 and metadata1145088 remain alive; automatic continuation is installed, no successor launch yet. This is not48running. Only CPU failed the latest normal resource check: normalized load1/5=1.276517/1.203415 exceeds the existing1.10 gate. Swap now passes;298EMX licenses are free. The original256 budget/PLAN/deadline remain unchanged;235candidates have no terminal, not235running.

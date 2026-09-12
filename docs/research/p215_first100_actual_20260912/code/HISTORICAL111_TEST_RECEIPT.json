@@ -1,0 +1,29 @@
+{
+  "schema": "eucap15_historical111_extractor_targeted_test_receipt.v1",
+  "utc": "2026-09-12T07:11:40Z",
+  "status": "PASS_TOY_TARGETED_TESTS_ONLY",
+  "source": {"path": "extract_historical111.py", "sha256": "d53d4549477f34091bda2faf6e92b1844100eca84f2a87a260c44d4684db6410", "bytes": 17540},
+  "tests": {"path": "test_historical111.py", "sha256": "a788b212aa781a75e49bf4b69e8acbf557e44e20b43348901c7648995a029eff", "bytes": 4106},
+  "core_diff": {"path": "CORE_DELTA.diff", "sha256": "7a67ee53d56005124eaa6020c2946c39ee7e5927c26e6d38ee95e4dfbd0bae8b", "bytes": 3129},
+  "command": "/Users/wyf/Documents/模拟变压器AI反向建模/github_release/rfic-transformer-inverse-design/.venv/bin/python -B -m unittest -v test_historical111",
+  "execution_count": 1,
+  "tests_run": 3,
+  "tests_passed": 3,
+  "elapsed_seconds_reported_by_unittest": 0.032,
+  "test_names": [
+    "test_all111_preserved_actual15_index20_and_not_qualified_output",
+    "test_full111_srf_evidence_controls_strict15_without_spectrum_interpolation",
+    "test_illegal_grid_count_or_changed_actual15_is_rejected_not_resampled"
+  ],
+  "input_scope": "Synthetic four-port Touchstone fixtures only; temporary files removed by unittest TemporaryDirectory.",
+  "real_historical_s4p_extractions_performed_by_this_test_task": 0,
+  "simulator_calls": 0,
+  "qualification_submissions": 0,
+  "old_full_qa_reruns": 0,
+  "core_delta": "Only local frequency grid, expected shapes/count, function name, historical error text and summary frequency step changed. Projection, physical formulas, strict predicates, roundtrip thresholds and SRF helper implementation are unchanged.",
+  "original_exact56_module_globals_modified": false,
+  "retained_actual_frequencies": "111 points, 5 to 60 GHz in 0.5 GHz steps; 15 GHz is original zero-based index 20.",
+  "spectrum_interpolation_or_resampling": false,
+  "srf_estimator": "Original adjacent-reactance zero-crossing bracket estimate, including its existing linear crossing estimate; not interpolation or resampling of the response spectrum.",
+  "qualification_boundary": "Numerical labels are conditional on the current port mapping. This extractor does not establish source identity, process/port compatibility or GDS/Calibre eligibility, does not convert historical simulation into fresh EMX, and cannot add production accepted members. Independent known FAIL evidence remains FAIL; extractor UNKNOWN does not override it."
+}
