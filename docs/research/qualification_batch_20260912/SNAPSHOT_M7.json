@@ -1,0 +1,233 @@
+{
+  "schema": "eucap15_qualification_m7_actual_increment.v1",
+  "published_utc": "2026-09-12 07:02:51 UTC",
+  "parent_commit": "a38dd3a8aec2312d27664a26676e44fa2a98474b",
+  "actual_new_work": {
+    "prepared_train002_retry": {
+      "source_sha256": "49d1e305b2921d0bc392bf8415862e07f3c7bb1aa136696a35d6ca4bff738123",
+      "actual_first_attempt_utc": "2026-09-12T06:53:21.991100+00:00",
+      "returncode": 75,
+      "status": "RETRYABLE_LEDGER_BUSY",
+      "formally_added": 0,
+      "attempt_sha256": "53cc2f15eacddc3b1340d92c8c9bf077fec8c9f8a24bc08be45f58eec7a4754c",
+      "ordinary_worker_installed_utc": "2026-09-12T06:55:22.492733+00:00",
+      "worker_pid": 1833952,
+      "start_ticks": 400004949,
+      "worker_source_sha256": "4be0f40d4848d41c5675d703546e35827eb4cf944f7ba2d695b53a5d118492a6",
+      "worker_start_sha256": "79159e91ed5f92db66adac732474232246943039572e8ca193c68289ca266a85",
+      "deployment_sha256": "5275cd993aefa274ae759919d836a6b7585c20b104c2c88457eccee039da80aa",
+      "stop_rule": "Existing worker stops after success because the original frozen owner is proven dead; no worker code change, no native actions.",
+      "latest_observation": {
+        "pid": 1833952,
+        "alive_observed": true,
+        "last_attempt_utc": "2026-09-12T07:00:03.832550+00:00",
+        "attempt": 46,
+        "returncode": 75,
+        "added": 0,
+        "success": null,
+        "terminal": null
+      }
+    },
+    "p215_first100": {
+      "export_utc": "2026-09-12T06:51:30.421142+00:00",
+      "artifact_observed_utc": "2026-09-12T06:57:15.047259+00:00",
+      "source_row_range": [
+        0,
+        99
+      ],
+      "join_pass": 100,
+      "raw_geometry_unique_within_partition": 100,
+      "production_fingerprints_unique_within_partition": 100,
+      "readable_response_headers": 100,
+      "response_read_scope": "FIRST_8192_BYTES_ONLY_NOT_FULL_S4P",
+      "gds_rows_readable": 100,
+      "distinct_current_gds_sha256": 14,
+      "summary_geometry_check_skipped": 100,
+      "command_bindings_match": 100,
+      "unique_path_kinds_read": 515,
+      "read_bytes": 8853252,
+      "classification": {
+        "processed_rows": 100,
+        "A_SUFFICIENT_FOR_CURRENT_REEXTRACTION": 0,
+        "B_RAW_RESPONSE_OBSERVED_EVIDENCE_INCOMPLETE": 100,
+        "C_GEOMETRY_FOR_REVALIDATION": 0,
+        "D_UNDETERMINED": 0,
+        "p215_source_rows_outside_this_partition": 215685,
+        "current_qualified": null,
+        "formally_added": 0
+      },
+      "identity_sha256": "a956fa1f007a805f31c45341a310f06bae0f6faffa89ee1e9b3fad00347bcc61",
+      "artifact_evidence_sha256": "f7158ec18d3e5c1f263450db24b0b794b454f9730bd27530ee2197193fbdb0dd",
+      "artifact_transport_sha256": "f77b2f00adc7cd42fa63c0a0ebf88ce11edab1ca4cde59293664d9c76af86390",
+      "triage_sha256": "12b3fb6e1bb0cace7889524b01126215988520f8e10c2a92daa72b69e2774b3f",
+      "missing": [
+        "Current Calibre zero-blocking evidence/deck",
+        "Historical actual GDS/process execution identity and current version compatibility",
+        "Current versioned 111-point/SRF re-extraction and full S4P verification",
+        "Current split/holdout provenance and formal union dedup"
+      ],
+      "native_actions": 0,
+      "qualified_count": null,
+      "formally_added": 0
+    },
+    "incremental_ledger_candidate": {
+      "status": "TARGETED_TESTS_PASS_NOT_DEPLOYED",
+      "source_sha256": "1a95ac46cb1a87cd726f7f40fc5cfd08ae20dedf9b32d004677ed9609cd3ecc6",
+      "receipt_sha256": "ef131afbeaa2a74a4326a950aafa6d9847c6c2668bdd3b225cee2fee2a5255d7",
+      "new_tests_passed": 3,
+      "old_qa_reruns": 0,
+      "code_scope": "New metadata process only; original publish code/lock/evidence/atomic/readback unchanged, incremental body reads plus all-prefix lstat.",
+      "remaining_cost": "O(N) metadata and duplicate loop; no measured native throughput improvement claimed.",
+      "active_writer_modified": false
+    }
+  },
+  "boundaries": [
+    "Metadata/export/tests/commits are not physical production output.",
+    "No old 15 training groups,128/64 physical experiments,full P215 join,full-pool hashes or paper repackaging rerun.",
+    "P215 categories are first100 metadata triage, not certified historical counts; all100 remain outside formal ledger until evidence closes.",
+    "Fresh history origins remain separated; existing validation/test and train-family warnings preserved.",
+    "100K and final independent10K targets remain incomplete."
+  ],
+  "previous_production_observation": {
+    "utc": "2026-09-12T06:39:33.073279+00:00",
+    "native_emx": 0,
+    "requested": 48,
+    "admitted": 0,
+    "executor": 48,
+    "resource_gate": "CPU_AND_SWAP_NOT_ADMITTED",
+    "formal_ledger": 3798,
+    "last_window": {
+      "start": "2026-09-12T06:18:26.919910+00:00",
+      "end": "2026-09-12T06:39:33.073279+00:00",
+      "emx_completed": 0,
+      "core_qualified_unique": 0,
+      "fresh_formal": 0,
+      "history_formal": 457
+    },
+    "automatic_continuation_installed": true,
+    "current_count_not_inferred_from_old_cut": true
+  },
+  "production_observation": {
+    "utc": "2026-09-12T07:00:09.662116+00:00",
+    "evidence": {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/samebatch_hotpath_v1/joint_cut_20260912T070008657160Z/OBSERVATION.json",
+      "sha256": "5c51efca631603d6f4571f519b60722263f58bd26ec9205a659b80a695b9ed47",
+      "bytes": 177805
+    },
+    "owner": {
+      "pid": 1039340,
+      "start_ticks": 399883569,
+      "ppid": 1,
+      "alive_observed": true
+    },
+    "release": {
+      "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/RELEASE.json",
+      "sha256": "a0834643c375703bbd1dea3c7e778b31a6321b42abba3f33e504bf192ea27a81",
+      "bytes": 60463
+    },
+    "requested_emx": 48,
+    "executor_capacity": 48,
+    "native_emx_count": 0,
+    "resource_admitted": 0,
+    "total_result_counts": {
+      "FRESH_EMX_EXTRACTED": 9,
+      "ANALYTIC_FAIL_NOT_DISPATCHED": 7,
+      "CANDIDATE_FAILURE_RETAINED_NO_SUBSTITUTION": 5
+    },
+    "remaining_without_terminal": 235,
+    "new_core": 0,
+    "formal_count": 4187,
+    "formal_head": {
+      "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/qualified15_single_member_v1/records/004187.json",
+      "sha256": "9fa050d37ff24bc237e845269dd56565f338e4ffa5c7b41ddc3300e64fdbffaf",
+      "bytes": 35871
+    },
+    "formal_checkpoint": {
+      "increment_15ghz_rows": 4187,
+      "increment_accepted": 4187,
+      "last_increment_sequence": 4187,
+      "prior_commit": "9a082c16e3046acbe836078c946317ce276a2b7bbf4e0e75bef43ad4e5410751",
+      "referenced_frequency_rows": 234472
+    },
+    "formal_added_since_baseline": 389,
+    "formal_increment_schemas": {
+      "eucap15_historical_qualified_increment.v1": 389
+    },
+    "prior_prefix_reaudited": false,
+    "resource": {
+      "pin": {
+        "bytes": 19516,
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/hotpath_20260912T063044201609Z/owner/fixed48/RESOURCE_20260912T065943916633Z.json",
+        "sha256": "c95391ff4e0a9320b5132132ab3d034567e78938d49e7aef80048eed0075040c"
+      },
+      "utc": "2026-09-12T06:59:43.916582+00:00",
+      "status": "WAIT",
+      "checks": {
+        "cpu": false,
+        "iowait": true,
+        "isolation": true,
+        "memory": true,
+        "oom": true,
+        "sample": true,
+        "storage": true,
+        "swap": true
+      },
+      "normalized_load1": 1.2765172322591145,
+      "normalized_load5": 1.2034149169921875,
+      "memory_fraction": 0.47041361326710607,
+      "free_disk_bytes": 493252358144,
+      "free_license_slots": {
+        "cadence": 3600,
+        "calibre": 85,
+        "emx": 298
+      },
+      "idle_cpu_equivalents": 3.877086626483003,
+      "swap_deltas": {
+        "oom_kill": 0,
+        "pswpin": 13,
+        "pswpout": 0
+      },
+      "age_seconds": 25.745953
+    },
+    "healthy_check_streak": 0,
+    "required_checks": 5,
+    "free_disk_bytes": 493246418944,
+    "quota": "UNKNOWN",
+    "standby": {
+      "pid": 1145095,
+      "alive_observed": true
+    },
+    "metadata": {
+      "pid": 1145088,
+      "alive_observed": true
+    },
+    "train002": {
+      "pid": 1833952,
+      "alive_observed": true,
+      "last_attempt_utc": "2026-09-12T07:00:03.832550+00:00",
+      "attempt": 46,
+      "returncode": 75,
+      "added": 0,
+      "success": null,
+      "terminal": null
+    },
+    "continuation_failure": null,
+    "original_plan": {
+      "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/start_ledger/PLAN.json",
+      "sha256": "fd90b07106fb7020e1e6520deaac932647feb3e5f686b5d41ffa91fffe9871c0",
+      "bytes": 133724
+    },
+    "deadline_utc": "2026-09-12T15:30:49.723123+00:00",
+    "last_window": {
+      "start": "2026-09-12T06:39:33.073279+00:00",
+      "end": "2026-09-12T07:00:09.662116+00:00",
+      "new_fresh_emx": 0,
+      "new_strict_in_range_unique": 0,
+      "new_fresh_formal": 0,
+      "new_history_formal": 389,
+      "formal_count": 4187
+    },
+    "automatic_continuation_installed": true,
+    "successor_actual_native_started": false
+  }
+}

@@ -1,5 +1,13 @@
 # Current Evidence Status
 
+## M7 — observed2026-09-12 07:00:09UTC: CPU wait, historical formal+389
+
+Actual requested/admitted/executor/native EMX is **48/0/48/0**. Same owner1039340, standby1145095 and metadata1145088 remain alive; automatic continuation is installed, no successor launch yet. This is not48running. Only CPU failed the latest normal resource check: normalized load1/5=1.276517/1.203415 exceeds the existing1.10 gate. Swap now passes;298EMX licenses are free. The original256 budget/PLAN/deadline remain unchanged;235candidates have no terminal, not235running.
+
+Window06:39:33→07:00:09: **newEMX0, newstrict-in-range unique0, freshformal0, historyformal+389**. Observed formal ledger4187, head9fa050d3; only new3799..4187 inspected. [Actual snapshot](qualification_batch_20260912/SNAPSHOT_M7.json).
+
+TRAIN002 prepared-only retry is installed in the existing ordinary worker; its latest attempt46 is still75/Busy/added0, not formally accepted. P215 original first100 rows now have actual scoped artifacts; all100 remain evidence-incomplete (response headers only, currentCalibre/version/SRF closure missing), with14shared multi-topcell GDS identities. No physical qualification inferred from oldok=true. Incremental ledger cache is a locally tested, **undeployed** future metadata candidate. [New source increment](qualification_batch_20260912/publication_v7/SOURCE_MAP.md). No old training/physical experiments/full QA repeated; historical sections below retain their dated evidence.
+
 ## Same-batch hotpath repair active; actual CPU/swap wait — M6 cutoff2026-09-12 06:39:33UTC
 
 The single native owner is now1039340/start399883569, releasea0834643. The actual same-budget48→48 handoff preserved21closed results and2partial candidates; the256/12h/5GiB budget and originalPLAN were not reset. The dispatch/resource lock repair is active. Requested/admitted/executor/actual EMX concurrency is **48/0/48/0**, not48running. Current resource evidence has normalized load1/5=1.34182/1.13033, idleCPU1.7387 and swapout66; these real CPU/swap failures—not the repaired lock—prevent admission.
