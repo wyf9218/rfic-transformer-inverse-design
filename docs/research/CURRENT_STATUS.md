@@ -1,5 +1,11 @@
 # Current Evidence Status
 
+## Fixed48 deployed; CPU resource wait — M5 cutoff2026-09-12 05:41:43UTC
+
+Native owner2799696 is alive after safe same-budget handoff: requested48 EMX, executor48, pipeline64, **actual native0**. Shared CPU normalized load1/5=1.17678/1.20299 exceeds1.10; memory/storage and299free EMX licenses are not the current blocker. Ordinary resource checks continue. [Exact deployment snapshot and source pins](qualification_batch_20260912/SNAPSHOT_M5.json).
+
+Latest short window05:34:45→05:41:43: fresh completed0, newstrict/core0, fresh formal0, historical formal+47. Formal observed union2068; current256 cumulative9fresh/4source-core/3proven formal fresh. The fourth core's formal outcome is not yet received. Both metadata workers are alive after idempotent BusyStudy repair; newprofile CLI passed without reconsuming old15. Across-batch automatic continuation is **NOT_INSTALLED** at this cutoff; successor569e and input factory are ready only. [Actual source increment and deployment boundaries](qualification_batch_20260912/publication_v5/SOURCE_MAP.md). Earlier sections remain dated snapshots, not current process status.
+
 ## Reviewed943 / observed986 and continuing native work — M4 cutoff2026-09-12 04:59:15UTC
 
 [Actual M4 increment](qualification_batch_20260912/INCREMENT_M4.md): the exact cursor publisher appended293 historical members,650→943; full transported readback and all293 new records were independently reviewed. Verified split943=573train+185validation+185test. A later04:59:15 live ledger observation is986; its additional43 record bodies are not included in this incremental review or assigned the943 split. Source21135 is fully audited:6329 qualified,4705 out-of-range,10101 physical-invalid; at detailed943 cut5425 audit-qualified remain to append. These are bounded source/ledger counts, not100K complete or new simulations.

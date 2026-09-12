@@ -1,0 +1,194 @@
+{
+  "schema": "eucap15_fixed48_deployment_increment.v1",
+  "observed_utc": "2026-09-12T05:41:43.288345+00:00",
+  "evidence_level": "NATIVE_OWNER_SAVED_OBSERVATION_AND_CHECKPOINT_NOT_NEW_FULL_CHAIN_AUDIT",
+  "observation_sha256": "16a6a5e80dd0fd60c03db52a83a644d10863ec964fd70af9c8594351624c31bb",
+  "native": {
+    "release_sha256": "7f1bdbbefd126468fa00ea9b7ac6fcb27eb7ef120539f570cc8d667b75c910ba",
+    "owner_pid": 2799696,
+    "owner_start_ticks": 399533084,
+    "owner_alive": true,
+    "requested_emx": 48,
+    "executor_emx_capacity": 48,
+    "candidate_pipeline_capacity": 64,
+    "actual_native_emx": 0,
+    "new_owner_fresh_results": 0,
+    "resource_health_streak": 0,
+    "required_checks": 5,
+    "blocker": "CPU_LOAD_RESOURCE_WAIT_NOT_LICENSE_OR_MANUAL_APPROVAL",
+    "resource": {
+      "pin": {
+        "bytes": 19514,
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/fixed48_20260912T053459913198Z/owner/fixed48/RESOURCE_20260912T054049752632Z.json",
+        "sha256": "d6deff1ac9f6ec56ed6ea9d195e3bc7c4005b968550040e427555890f7b7f469"
+      },
+      "utc": "2026-09-12T05:40:49.752565+00:00",
+      "status": "WAIT",
+      "checks": {
+        "cpu": false,
+        "iowait": true,
+        "isolation": true,
+        "memory": true,
+        "oom": true,
+        "sample": true,
+        "storage": true,
+        "swap": true
+      },
+      "normalized_load1": 1.176775614420573,
+      "normalized_load5": 1.2029876708984375,
+      "memory_fraction": 0.7485520803571533,
+      "idle_cpu_equivalents": 5.409901918643273,
+      "free_disk_bytes": 494279045120,
+      "free_license_slots": {
+        "cadence": 3596,
+        "calibre": 85,
+        "emx": 299
+      },
+      "iowait_percent": 0.000868360838662898,
+      "swap_deltas": {
+        "oom_kill": 0,
+        "pswpin": 5,
+        "pswpout": 0
+      }
+    },
+    "old_owner_safely_stopped": true,
+    "healthy_child_signals": 0,
+    "original_plan_sha256": "fd90b07106fb7020e1e6520deaac932647feb3e5f686b5d41ffa91fffe9871c0",
+    "old_budget_reset": false
+  },
+  "counts": {
+    "formal_qualified_union_observed": 2068,
+    "referenced_frequency_rows": 115808,
+    "current256_fresh_results": 9,
+    "current256_strict_core_source_points": 4,
+    "current256_fresh_formally_committed_proven": 3,
+    "fourth_core_formal_outcome": "NOT_YET_RECEIVED_DO_NOT_ASSUME_ACCEPTED_OR_PENDING",
+    "window": {
+      "from_utc": "2026-09-12T05:34:45.424571+00:00",
+      "through_utc": "2026-09-12T05:41:43.288345+00:00",
+      "new_fresh_results": 0,
+      "new_strict_core_source_points": 0,
+      "new_unique_qualification_confirmed": 0,
+      "fresh_formal_added": 0,
+      "historical_formal_added": 47
+    }
+  },
+  "ordinary_programs": {
+    "history_pid": 2934163,
+    "history_alive": true,
+    "history_last_whole_source_readback": 6700,
+    "previous_BusyStudy_terminal_preserved": true,
+    "new_publication_pid": 2934160,
+    "new_publication_alive": true,
+    "first_new_profile_actual_cli": "PASS_CLOSED_TERMINAL_DELTA_PROCESSED_ADDED0_NO_NEW_OWNER_TERMINALS",
+    "first_profile_receipt_sha256": "77d22b438b446d38f1a7eb7b65cfe7d8c3114f4e7e3a883e9213bd3db8c40cfd",
+    "old_profile_automatic_real_added": 1,
+    "old_profile_normal_exit_after_parent_handoff": true,
+    "successor_frozen": true,
+    "successor_manifest_sha256": "569e1abda082a070db657d83f90327fe4815bd8a25b290fb6f5cc2230faf9740",
+    "automatic_batch_successor_installed": false,
+    "input_factory_ready": true,
+    "input_factory_native_installed": false
+  },
+  "scope": {
+    "target_total_unique_qualified": 100000,
+    "final_independent_inverse_requests": 10000,
+    "final_model_frozen": false,
+    "full_goal_complete": false,
+    "new_training_runs": 0,
+    "old128_or64_repeated": false,
+    "paper_figures_generated": false
+  },
+  "source_copies": [
+    {
+      "source": "reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/native_candidate_publication_v1/native_publish.py",
+      "path": "docs/research/qualification_batch_20260912/publication_v5/native_publish.py",
+      "sha256": "7e3325df307cc8c8ce4ad7c2636ceca27d9a6a16fa96495d0bcf7ae3e2dc26e4"
+    },
+    {
+      "source": "reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/native_candidate_publication_v1/test_native_publish.py",
+      "path": "docs/research/qualification_batch_20260912/publication_v5/test_native_publish.py",
+      "sha256": "e640c6e9818689a76541b78a3a85fda44785bc640ce7a54e48cd9f383a73a192"
+    },
+    {
+      "source": "reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/native_candidate_publication_fixed48_v1/profile_entry.py",
+      "path": "docs/research/qualification_batch_20260912/publication_v5/profile_entry.py",
+      "sha256": "1a86f380c3f1932d430e916f21b3ca993866cf8ec1a5070e1df40197cd59b4fc"
+    },
+    {
+      "source": "reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/native_candidate_publication_fixed48_v1/test_profile_entry.py",
+      "path": "docs/research/qualification_batch_20260912/publication_v5/test_profile_entry.py",
+      "sha256": "376ec5bfce8d3ce768f12fd3cfb02ce5a10391582721f4250b120c3d9878534b"
+    },
+    {
+      "source": "reports/eucap15ghz_20260908T220300Z/successor_factory_v1/successor_factory.py",
+      "path": "docs/research/qualification_batch_20260912/publication_v5/successor_factory.py",
+      "sha256": "1591cfaa229fb79529b4fcbc893f8283d3c937edc5bc8d907d32e0a34ae7155a"
+    },
+    {
+      "source": "reports/eucap15ghz_20260908T220300Z/successor_factory_v1/parameterized_sampler.py",
+      "path": "docs/research/qualification_batch_20260912/publication_v5/parameterized_sampler.py",
+      "sha256": "bf4a0f0a6bd514622971621684623c1eab703be367c715cb1ddc38ddd1117c27"
+    },
+    {
+      "source": "reports/eucap15ghz_20260908T220300Z/successor_factory_v1/successor_exclusions.py",
+      "path": "docs/research/qualification_batch_20260912/publication_v5/successor_exclusions.py",
+      "sha256": "a18832156ce8307fc56a3ab5d4276bbac93b70723c4bda78f26c78f9c3cdc424"
+    },
+    {
+      "source": "reports/eucap15ghz_20260908T220300Z/successor_factory_v1/test_successor_factory.py",
+      "path": "docs/research/qualification_batch_20260912/publication_v5/test_successor_factory.py",
+      "sha256": "00d7c06dec996540e12ebe437b4bfa203e7bea9604776ac1517c75d820e183cd"
+    },
+    {
+      "source": "reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/fixed48_v1/runtime/fixed48_capacity.py",
+      "path": "docs/research/qualification_batch_20260912/publication_v5/fixed48_capacity.py",
+      "sha256": "e9154715ec5c13eea95ee96f1bb015223f6e946a015005a990c5bcfcd4b2f545"
+    },
+    {
+      "source": "reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/fixed48_v1/runtime/fixed48_amendment.py",
+      "path": "docs/research/qualification_batch_20260912/publication_v5/fixed48_amendment.py",
+      "sha256": "aa6d854316335aa362b33c76d64e47a5784ba943c7eb3b03505090153f0406c5"
+    },
+    {
+      "source": "reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/fixed48_v1/runtime/fixed48_runtime.py",
+      "path": "docs/research/qualification_batch_20260912/publication_v5/fixed48_runtime.py",
+      "sha256": "3c0a19ddcfffd53fb8a2f61b77801fb997ec65bcb33d44782d15cc49fbb66441"
+    },
+    {
+      "source": "reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/fixed48_v1/runtime/run_fixed48_native.py",
+      "path": "docs/research/qualification_batch_20260912/publication_v5/run_fixed48_native.py",
+      "sha256": "6640d3bf7602747dcbbf03b3f4151206684bb9ce414243ff39b37acc796ed408"
+    },
+    {
+      "source": "reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/fixed48_v1/runtime/controlled_execution.py",
+      "path": "docs/research/qualification_batch_20260912/publication_v5/controlled_execution.py",
+      "sha256": "294279ba9dd99b9dcbf2bf6cd336e787bfe034c30f3b78865720b9b5d8ab9ac0"
+    },
+    {
+      "source": "reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/fixed48_v1/runtime/run_controlled_native.py",
+      "path": "docs/research/qualification_batch_20260912/publication_v5/run_controlled_native.py",
+      "sha256": "f155ee4e3b2728a59bba4d0be9df527d5ae637a851d0b5a94d2ec96046a5d2d0"
+    },
+    {
+      "source": "reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/fixed48_v1/runtime/research/broadband56_nn/frequency_research_emx.py",
+      "path": "docs/research/qualification_batch_20260912/publication_v5/native_frequency_research_emx.py",
+      "sha256": "c21174830736552faa17ad40adb139e6f7b9fa61fbbab7c88369a08a5467a19a"
+    },
+    {
+      "source": "reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/fixed48_v1/test_capacity.py",
+      "path": "docs/research/qualification_batch_20260912/publication_v5/test_capacity.py",
+      "sha256": "d7e3991040b9995cb97c00cb45048a6c996633807f647700ef45e7c74d3b2831"
+    },
+    {
+      "source": "reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/fixed48_v1/test_amendment.py",
+      "path": "docs/research/qualification_batch_20260912/publication_v5/test_amendment.py",
+      "sha256": "eb899ab17f3ec4e88031d3d5dc0bf692225cff7071054ffcddc1ac5bae12ccb9"
+    },
+    {
+      "source": "reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/fixed48_v1/test_runtime.py",
+      "path": "docs/research/qualification_batch_20260912/publication_v5/test_runtime.py",
+      "sha256": "1c218121e6de3ad076b3301e7ad9cf38c9c374ba711c1c549ff013d97cef9815"
+    }
+  ]
+}

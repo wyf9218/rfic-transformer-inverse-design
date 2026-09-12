@@ -1,0 +1,117 @@
+{
+  "schema": "eucap15_publication_manifest.v1",
+  "milestone": "M5",
+  "evidence_cutoff_utc": "2026-09-12T05:41:43.288345+00:00",
+  "parent_commit": "8ab3c7d509cd96c182dec26a885ff00b2519631a",
+  "native_release_sha256": "7f1bdbbefd126468fa00ea9b7ac6fcb27eb7ef120539f570cc8d667b75c910ba",
+  "source_files_copied_byte_identical": 18,
+  "physical_results_generated_by_publication": 0,
+  "tests_rerun_by_publication": 0,
+  "files": [
+    {
+      "path": "docs/research/qualification_batch_20260912/publication_v5/native_publish.py",
+      "sha256": "7e3325df307cc8c8ce4ad7c2636ceca27d9a6a16fa96495d0bcf7ae3e2dc26e4",
+      "bytes": 20107
+    },
+    {
+      "path": "docs/research/qualification_batch_20260912/publication_v5/test_native_publish.py",
+      "sha256": "e640c6e9818689a76541b78a3a85fda44785bc640ce7a54e48cd9f383a73a192",
+      "bytes": 9647
+    },
+    {
+      "path": "docs/research/qualification_batch_20260912/publication_v5/profile_entry.py",
+      "sha256": "1a86f380c3f1932d430e916f21b3ca993866cf8ec1a5070e1df40197cd59b4fc",
+      "bytes": 13992
+    },
+    {
+      "path": "docs/research/qualification_batch_20260912/publication_v5/test_profile_entry.py",
+      "sha256": "376ec5bfce8d3ce768f12fd3cfb02ce5a10391582721f4250b120c3d9878534b",
+      "bytes": 9823
+    },
+    {
+      "path": "docs/research/qualification_batch_20260912/publication_v5/successor_factory.py",
+      "sha256": "1591cfaa229fb79529b4fcbc893f8283d3c937edc5bc8d907d32e0a34ae7155a",
+      "bytes": 15719
+    },
+    {
+      "path": "docs/research/qualification_batch_20260912/publication_v5/parameterized_sampler.py",
+      "sha256": "bf4a0f0a6bd514622971621684623c1eab703be367c715cb1ddc38ddd1117c27",
+      "bytes": 16836
+    },
+    {
+      "path": "docs/research/qualification_batch_20260912/publication_v5/successor_exclusions.py",
+      "sha256": "a18832156ce8307fc56a3ab5d4276bbac93b70723c4bda78f26c78f9c3cdc424",
+      "bytes": 4297
+    },
+    {
+      "path": "docs/research/qualification_batch_20260912/publication_v5/test_successor_factory.py",
+      "sha256": "00d7c06dec996540e12ebe437b4bfa203e7bea9604776ac1517c75d820e183cd",
+      "bytes": 9884
+    },
+    {
+      "path": "docs/research/qualification_batch_20260912/publication_v5/fixed48_capacity.py",
+      "sha256": "e9154715ec5c13eea95ee96f1bb015223f6e946a015005a990c5bcfcd4b2f545",
+      "bytes": 7241
+    },
+    {
+      "path": "docs/research/qualification_batch_20260912/publication_v5/fixed48_amendment.py",
+      "sha256": "aa6d854316335aa362b33c76d64e47a5784ba943c7eb3b03505090153f0406c5",
+      "bytes": 5024
+    },
+    {
+      "path": "docs/research/qualification_batch_20260912/publication_v5/fixed48_runtime.py",
+      "sha256": "3c0a19ddcfffd53fb8a2f61b77801fb997ec65bcb33d44782d15cc49fbb66441",
+      "bytes": 11250
+    },
+    {
+      "path": "docs/research/qualification_batch_20260912/publication_v5/run_fixed48_native.py",
+      "sha256": "6640d3bf7602747dcbbf03b3f4151206684bb9ce414243ff39b37acc796ed408",
+      "bytes": 7828
+    },
+    {
+      "path": "docs/research/qualification_batch_20260912/publication_v5/controlled_execution.py",
+      "sha256": "294279ba9dd99b9dcbf2bf6cd336e787bfe034c30f3b78865720b9b5d8ab9ac0",
+      "bytes": 14467
+    },
+    {
+      "path": "docs/research/qualification_batch_20260912/publication_v5/run_controlled_native.py",
+      "sha256": "f155ee4e3b2728a59bba4d0be9df527d5ae637a851d0b5a94d2ec96046a5d2d0",
+      "bytes": 14787
+    },
+    {
+      "path": "docs/research/qualification_batch_20260912/publication_v5/native_frequency_research_emx.py",
+      "sha256": "c21174830736552faa17ad40adb139e6f7b9fa61fbbab7c88369a08a5467a19a",
+      "bytes": 43075
+    },
+    {
+      "path": "docs/research/qualification_batch_20260912/publication_v5/test_capacity.py",
+      "sha256": "d7e3991040b9995cb97c00cb45048a6c996633807f647700ef45e7c74d3b2831",
+      "bytes": 4438
+    },
+    {
+      "path": "docs/research/qualification_batch_20260912/publication_v5/test_amendment.py",
+      "sha256": "eb899ab17f3ec4e88031d3d5dc0bf692225cff7071054ffcddc1ac5bae12ccb9",
+      "bytes": 4794
+    },
+    {
+      "path": "docs/research/qualification_batch_20260912/publication_v5/test_runtime.py",
+      "sha256": "1c218121e6de3ad076b3301e7ad9cf38c9c374ba711c1c549ff013d97cef9815",
+      "bytes": 5970
+    },
+    {
+      "path": "docs/research/qualification_batch_20260912/SNAPSHOT_M5.json",
+      "sha256": "e797c78253bb74ecd036e570f76db2ed31d63146a12ccb32a67968c3c48bccf8",
+      "bytes": 9605
+    },
+    {
+      "path": "docs/research/qualification_batch_20260912/publication_v5/SOURCE_MAP.md",
+      "sha256": "7ebadc0b1261eb24f073fd0f8b1090fc8f463b30e2545fd3f7331d875324f75c",
+      "bytes": 3019
+    },
+    {
+      "path": "docs/research/CURRENT_STATUS.md",
+      "sha256": "daeed03ee6e2756140011a512bb92b3a603d9d7c1dd1921dfab5189befb20a93",
+      "bytes": 29804
+    }
+  ]
+}

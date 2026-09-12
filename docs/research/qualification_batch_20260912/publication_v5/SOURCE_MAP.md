@@ -1,0 +1,15 @@
+# M5 — actual fixed48 deployment source increment
+
+Observation: 2026-09-12 05:41:43 UTC. The new owner is installed and alive; actual EMX concurrency is **0**, not48, because shared CPU load fails the existing resource gate. EMX capacity48 and candidate pipeline64 are distinct. [Frozen counts](../SNAPSHOT_M5.json) include the exact short window: fresh0, strict/core0, fresh formal0, history formal+47. The bounded formal ledger is2068; this is not2068new simulations or a completed100K.
+
+The old parent was stopped only after zero descendants/native checks;15closed results and1partial candidate's completed pre-EMX stages were preserved. Original256/12h/5GiB and PLANfd90 were not reset. The new metadata worker is real and its first CLI passed with added0 before new-owner results. The old bridge previously addedDOE008 once. History resumed the existing6501partial block after a retained BusyStudy failure. Across-batch automatic continuation is **NOT_INSTALLED** at this cutoff; the frozen successor and input factory are not evidence of installed scheduling.
+
+## Source provenance and use
+
+All18source/test copies are byte-identical to the recorded implementation files; source paths and SHA-256 are in the snapshot and M5 manifest. New source only; no old model training, old physical QA, full-history regression or paper repackaging was run for this publication. Test files are delivered for reproducibility, not claimed as new production.
+
+- native_publish.py is the existing7e same-host bridge. profile_entry.py binds the actual7f1b release/runtime and reuses the existing plan validator/callback; old closed inputs retain their original release/state.
+- Reuse the exact7libraries declared in native_publish.py, available across earlier publication_v2/v3/v4 source snapshots. Do not assume this documentation directory is a complete runnable native installation.
+- successor_factory.py, parameterized_sampler.py and successor_exclusions.py implement input preparation only. They require the existing scientific Python environment/repository, atomic_primitives.py, and exact private contract/split/source-row/known-pool bindings. Private geometry/data/PDK files are not included. --check-inputs-only checks explicit named bindings; it does not scan the server or prepare a batch. The already-frozen569e successor must not be regenerated.
+- Native scheduling copies retain original import names except native_frequency_research_emx.py, which is an evidence copy of runtime/research/broadband56_nn/frequency_research_emx.py. They require the native owner's complete frozen runtime and lawful tool environment. The actual MARS bounded executor import was recorded by its own deployment; it is not asserted identical to an arbitrary Git checkout.
+- First-party sampler geometry/label semantics and existing physical checks remain unchanged. Scheduling capacity is not observed native concurrency, source core eligibility is not formal admission, and no stable throughput is extrapolated from this short window.
