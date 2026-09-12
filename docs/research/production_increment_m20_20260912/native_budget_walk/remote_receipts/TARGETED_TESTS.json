@@ -1,0 +1,22 @@
+{
+  "affected_prior_tests": 0,
+  "native_calls": 0,
+  "private_python": "/usr/bin/python3.12",
+  "process_signals": 0,
+  "status": "PASS",
+  "synthetic_tests_only": true,
+  "tests": [
+    {
+      "returncode": 0,
+      "source": {
+        "bytes": 6537,
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_budget_walk_20260912T112357738265Z/test_budget_snapshot.py",
+        "sha256": "178098446e79b72418be74b3aac802382d90b76d21c6ee66f9096374510a3e28"
+      },
+      "stderr": "test_all_three_callers_use_snapshot_without_repeated_precheck_walk (__main__.BudgetTests.test_all_three_callers_use_snapshot_without_repeated_precheck_walk) ... ok\ntest_exact_and_exceeded_hard_limit_still_rejected_below_still_allowed (__main__.BudgetTests.test_exact_and_exceeded_hard_limit_still_rejected_below_still_allowed) ... ok\ntest_fault_before_io_still_blocks_without_scanning (__main__.BudgetTests.test_fault_before_io_still_blocks_without_scanning) ... ok\ntest_old_two_scans_and_new_one_scan_return_same_allocation (__main__.BudgetTests.test_old_two_scans_and_new_one_scan_return_same_allocation) ... ok\ntest_resource_aging_during_full_snapshot_still_prevents_grant (__main__.BudgetTests.test_resource_aging_during_full_snapshot_still_prevents_grant) ... ok\ntest_existing_checkpoint_is_carried_through_second_handoff (__main__.ResumeTests.test_existing_checkpoint_is_carried_through_second_handoff) ... ok\n\n----------------------------------------------------------------------\nRan 6 tests in 0.036s\n\nOK\n",
+      "stdout": ""
+    }
+  ],
+  "unique_new_tests": 6,
+  "utc": "2026-09-12T11:23:58.610055+00:00"
+}

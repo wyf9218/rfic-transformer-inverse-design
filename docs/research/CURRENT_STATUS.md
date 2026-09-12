@@ -1,26 +1,19 @@
-# Current15GHz research/production status
+# Current 15 GHz research/production status
 
-Latest observation2026-09-12 11:07:31.564143 UTC.
-[M19 actual installed runtime and automatic batch transition](production_increment_m19_20260912/DEPLOYED_SNAPSHOT.json).
+Latest production observation: **2026-09-12 11:15:44.864023 UTC**.
+[M20 actual native execution and incremental output](production_increment_m20_20260912/SNAPSHOT.json).
 
-- Newbatch000002 owner3850660/metadata3850664/standby3841226 alive; source0ad043b6 bound.
-- Actualnative0 atcutoff: existing five-independent-resource-sample admission in progress, firstPASS11:06:50.
-- Requested48/executor48; installation and automatic transition proven, newsolver/48concurrency not yetproven.
-- Window11:00:59→11:07:31:oldbatch last28fresh,13strict/rangeunique;13newformal+1priorTRAIN057backfill.
-- Historyformal0;certifiedlowerbound6569. Oldsuccessor256terminal=238fresh+18analytic,109core/formal.
-- Oldowner/standby/installer exited after safehandoff; no healthy native signal or oldbatch replay.
-- M19 since10:27:01:133fresh/64core/64freshformal; do not add componentwindows again.
-- [Code, targeted tests and raw receipts](production_increment_m19_20260912/README.md) include actual installcheckpoint.
-- OBSreader5new testsPASS; outputfile1new testPASS; no oldsoftware suite or physicalcohort rerun.
-- Originalpost81 stdout truncation disclosed;18train source rows and complete summary recovered, notfullprojection.
-- 18train/17cells,0frozen3801empty/underfilled landings,0highK>.8. No cumulative samplingadvantage claim.
-- Full100K/FINAL/independent10000-request validation incomplete; no AIpaperfigures.
-1 actual DOE EMX start/complete at the08:24:57 snapshot; strict-valid but K_abs0.1711<0.2,
-so0 new qualified in-range samples. Original14 analytical failures remain in64; no advantage claim.
-Reader R/S correction passed29 new scoped tests; no native rerun or old-suite rerun.
-Priority31 lookup found0 matches only in the named index; formal qualification/100K count remain unclosed.
-The16-frequency/320-request sections below are historical and do not authorize continuation;
-the current paper scope remains15GHz/100K qualified uniques/final independent10000 requests.
+- Same batch000002 owner and installed runtime 0ad043b6: **15 actual independent EMX × 2 CPU**. Requested/executor 48 is not actual 48.
+- Window 11:07:31–11:15:44: **49 new fresh EMX**, 6 analytical failures, 34 strict-valid, 23 strict and in range.
+- **20 fresh formal admissions** (13 train / 4 validation / 3 test), historical admissions 0. Certified unique lower bound **6589**.
+- Three in-range candidates remain pending formal admission; not counted as admitted training data.
+- No ready-for-EMX waiting category at this cut. Earlier stages are still supplying candidates. The non-atomic resource reconstruction permits up to 24 additional EMX under the configured reservation; not an actual grant or a stable capacity limit.
+- Ordinary native/metadata/continuation programs operate without per-sample AI intervention. Automatic next-batch transition is already evidenced.
+- [Minimum budget-scan change](production_increment_m20_20260912/native_budget_walk/STATUS_20260912T112524Z.md): staged/tested on MARS, six new tests passed. One finite installer (516965/start401625264) launched at 11:25:24, waiting for the supported safe boundary. **Not yet verified as runtime-deployed**; do not launch another.
+- [First complete landing outputs and paper delta](production_increment_m20_20260912/README.md): 13 newly admitted training geometries occupy 11 cells; 0 empty / 1 underfilled landing against frozen3801, 0 high-K >0.8. No causal sampler or stable-throughput claim.
+- Full 100K qualification, FINAL model and independent 10000-request validation remain incomplete. No old training/physical cohorts or AI paper figures were regenerated.
+
+All sections below are preserved, dated historical releases; their running/current wording and old scopes do not override this 15 GHz snapshot or authorize restarting old tasks.
 
 ## Latest approved scientific release: 83 / 320
 

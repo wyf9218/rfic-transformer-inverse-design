@@ -1,0 +1,86 @@
+{
+  "schema": "eucap15_incremental_delivery_manifest.v1",
+  "milestone": "M20",
+  "production_observed_utc": "2026-09-12T11:15:44.864023+00:00",
+  "installer_launch_utc": "2026-09-12T11:25:24.650589+00:00",
+  "native_status": "ACTUAL_15_ON_EXISTING_RUNTIME_NEW_PATCH_STAGED_SAFE_BOUNDARY_WAIT",
+  "baseline_git": "daa3f84a15ca9b38af38487020d6403d1830bf32",
+  "files": [
+    {
+      "sha256": "252e4288c5d76a6da43ce71bc8f4692a786edb9c4bc1bd1ae4b34859779ae013",
+      "path": "docs/research/production_increment_m20_20260912/NEW55_LANDING_RECEIPT.json"
+    },
+    {
+      "sha256": "dc5f0b7b813319475eb9c03dbab421e706307d34edb3ac46e4076ef8d97125cf",
+      "path": "docs/research/production_increment_m20_20260912/NEW55_TRAIN_SOURCE.json"
+    },
+    {
+      "sha256": "f4c2734c60cc3e7b772ad497ac1e7a6ca4474bc5dcbcc68ad2b67fa8a831a6fa",
+      "path": "docs/research/production_increment_m20_20260912/PAPER_DATA_EXPANSION_DELTA.md"
+    },
+    {
+      "sha256": "780e6520080de421c4a344475bf4a29022b4a8346fcb2dbce6bf91784de82174",
+      "path": "docs/research/production_increment_m20_20260912/PRIOR_LAST28_FIRST_LANDING_RECEIPT.json"
+    },
+    {
+      "sha256": "3f224babf24ed9b8fe91a57346229d57ce1a53fcc86e80904f3ff516e01d4293",
+      "path": "docs/research/production_increment_m20_20260912/PRIOR_LAST28_TRAIN_SOURCE.json"
+    },
+    {
+      "sha256": "0661fb35e9e26a4fbf20dfafcd276262f263f0f702aa579d76be958c7f4dc1d2",
+      "path": "docs/research/production_increment_m20_20260912/README.md"
+    },
+    {
+      "sha256": "5e0db711c1c8636a271273282d1e89b6dc9d2943629a5cfce861b164d75c3862",
+      "path": "docs/research/production_increment_m20_20260912/SNAPSHOT.json"
+    },
+    {
+      "sha256": "63157e9b127df89bf68453b87a0b0c320e8c10948c374d5023b3ce64499e9307",
+      "path": "docs/research/production_increment_m20_20260912/native_budget_walk/STATUS_20260912T112524Z.md"
+    },
+    {
+      "sha256": "24abdbbb3b192d26af42467c6458c9b07f19fb5c98084221d5063f80b88f5a6f",
+      "path": "docs/research/production_increment_m20_20260912/native_budget_walk/remote_receipts/BOUNDARY_INSTALLER_START.json"
+    },
+    {
+      "sha256": "3ac4b7721270c6056a72685808ee761cf65b2696e904306fff23907c6c8241e4",
+      "path": "docs/research/production_increment_m20_20260912/native_budget_walk/remote_receipts/DETACHED_INSTALLER_LAUNCH.json"
+    },
+    {
+      "sha256": "4205702f0d7d6ac240603b908defe6539c45ae7a956dec66e65262fef5072fec",
+      "path": "docs/research/production_increment_m20_20260912/native_budget_walk/remote_receipts/STAGED.json"
+    },
+    {
+      "sha256": "e507ece7d292e399d2fdb5ac03cd7188cac8bf8c755b9e89eb7c8c1f92275502",
+      "path": "docs/research/production_increment_m20_20260912/native_budget_walk/remote_receipts/TARGETED_TESTS.json"
+    },
+    {
+      "sha256": "1584fbcf8c377e1d26caf932f1b2442416af18cf15734d3b6562a6f3a13cdbc4",
+      "path": "docs/research/production_increment_m20_20260912/native_budget_walk/runtime/continue_batches.py"
+    },
+    {
+      "sha256": "23eddf702afb6c3f5ee64ac9c415c56376199857dd6fe915f67856a456f8b99f",
+      "path": "docs/research/production_increment_m20_20260912/native_budget_walk/runtime/fixed48_runtime.py"
+    },
+    {
+      "sha256": "178098446e79b72418be74b3aac802382d90b76d21c6ee66f9096374510a3e28",
+      "path": "docs/research/production_increment_m20_20260912/native_budget_walk/test_budget_snapshot.py"
+    },
+    {
+      "sha256": "a1c90f6821d8b629ab7ba10a047942c7b41940f2785045762469dae518d00fee",
+      "path": "docs/research/CURRENT_STATUS.md"
+    }
+  ],
+  "source_receipt": {
+    "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/storage_claim_wait_v1/permit_release_v1/deployed_20260912T111544368534Z/OBSERVATION.json",
+    "sha256": "117e88c4b56f70cb798ca0e665f23edca4ee19ff426fd16ea3c36ed85410b363",
+    "bytes": 793020
+  },
+  "new_fresh_emx": 49,
+  "new_strict_range_unique": 23,
+  "new_fresh_formal": 20,
+  "new_history_formal": 0,
+  "full_goal_complete": false,
+  "no_old_tests_or_experiments_rerun": true,
+  "not_a_production_gate": true
+}
