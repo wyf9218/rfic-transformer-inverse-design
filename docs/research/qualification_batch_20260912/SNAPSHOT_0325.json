@@ -1,0 +1,252 @@
+{
+  "schema": "eucap15_increment_snapshot_20260912.v1",
+  "cutoff_utc": "2026-09-12T03:25:00Z",
+  "status": "AUDIT1000_COMPLETE_FORMAL_HISTORICAL_PUBLICATION_AND_NATIVE_PENDING",
+  "formal_holdout_increment": {
+    "processed": 11,
+    "qualified": 11,
+    "committed": 11,
+    "replay_added": 0,
+    "union31_splits": {
+      "train": 20,
+      "validation": 3,
+      "test": 8
+    },
+    "readback_sha256": "b9c7b425f1ae4e0065bab46626ce8134dce832123e74b2f7d457da3440d2af7f",
+    "review_sha256": "fd9ff2429d5bcf54d5d078403b105300ba9fc2bf46fc55297fce38746c41bb12",
+    "records": [
+      {
+        "increment_sequence": 21,
+        "geometry_sha256": "20720decfe5beae662ee46f911ab4c4cc80d35beeb0fffb86749c97afa79f60d",
+        "split": "test",
+        "production_accepted_sequence": null,
+        "qualified": true,
+        "evidence_digest": "b1703fe7602ab88a96961a47d82adaedf8dfa597fb4cc6c833b20637843d016e"
+      },
+      {
+        "increment_sequence": 22,
+        "geometry_sha256": "20a769b414a8d04e1fdb5508b5b5d3723de00b5342a8c00e035e978263866fe1",
+        "split": "validation",
+        "production_accepted_sequence": null,
+        "qualified": true,
+        "evidence_digest": "bbb717b5c7fbd50ab57bd2f24de7573b9182a9f6aec9036a09dc30511ae23cd2"
+      },
+      {
+        "increment_sequence": 23,
+        "geometry_sha256": "ceba60ed2b20d2cc777d57afc3fd8a37d9d30c925d1d2a5dcb8daf9c25eda95a",
+        "split": "test",
+        "production_accepted_sequence": null,
+        "qualified": true,
+        "evidence_digest": "66461bad50766193c3fee54f438cfe76f6387dfbf9875fafe889871d25cad7e8"
+      },
+      {
+        "increment_sequence": 24,
+        "geometry_sha256": "be4b2a8cc681142cfd6c5eddb40022d5ee900aa5287b9e6ccb26da25c8e5f6cc",
+        "split": "test",
+        "production_accepted_sequence": null,
+        "qualified": true,
+        "evidence_digest": "950de5e7347b8d87dbd78372a8c0c4ec8ed998110b16565de478ff8fd8ea03be"
+      },
+      {
+        "increment_sequence": 25,
+        "geometry_sha256": "9f4c3226fee4965a52351405b08594e9b2f3ceeb413866cd8fed401a7f833a54",
+        "split": "test",
+        "production_accepted_sequence": null,
+        "qualified": true,
+        "evidence_digest": "ba7758d73495ca5947b1c41b102f9f866a1cc8e97967cf5dd9f4f6689c8caa01"
+      },
+      {
+        "increment_sequence": 26,
+        "geometry_sha256": "52388b47b7285f0c4d048cf3717fc8f800661746c62ec5f1389ae549556f3a85",
+        "split": "test",
+        "production_accepted_sequence": null,
+        "qualified": true,
+        "evidence_digest": "f43388c37d4b8764b2711181b75fbfa664ec1968281b3d41261dad6e2b0119f0"
+      },
+      {
+        "increment_sequence": 27,
+        "geometry_sha256": "58bc69030089d37a82c18c077b0346b8d863c28c792f1d7f36b41fa54e3f652f",
+        "split": "test",
+        "production_accepted_sequence": null,
+        "qualified": true,
+        "evidence_digest": "39a8e45acc0eb12ca01a67f39374c235f07975e28ec025dc269235ee621232d8"
+      },
+      {
+        "increment_sequence": 28,
+        "geometry_sha256": "394c002a9911082895db638a9760bd56a264771582d6f8b812b3f8fd991bae15",
+        "split": "validation",
+        "production_accepted_sequence": null,
+        "qualified": true,
+        "evidence_digest": "60bbe9a67cd96de2e6065d70c6b09d707319c2cb876d1cfd9acea1c5342217d0"
+      },
+      {
+        "increment_sequence": 29,
+        "geometry_sha256": "29bc74b5467ea3fae629d14858fd864916103d016268b7b162687d7c8c01e256",
+        "split": "validation",
+        "production_accepted_sequence": null,
+        "qualified": true,
+        "evidence_digest": "a66a582af60785e60ad85e01c89cf8c740fa825a6376e87583bbf870719ea198"
+      },
+      {
+        "increment_sequence": 30,
+        "geometry_sha256": "cb2a20dc5e8331fecdc5580f5621570669a9cdb4f72e3f726b6051a7a24dc432",
+        "split": "test",
+        "production_accepted_sequence": null,
+        "qualified": true,
+        "evidence_digest": "e52286425071129f1daaf5d130073873dc10c6d6cd0ef8837a0b1cefa33a7096"
+      },
+      {
+        "increment_sequence": 31,
+        "geometry_sha256": "cf5889b090514215b40c8577e169ecd37ed5d5506479b95b1ba9a4ede45977d9",
+        "split": "test",
+        "production_accepted_sequence": null,
+        "qualified": true,
+        "evidence_digest": "aea4c92b3544a4538cb7f19a4622b0900a54d80980408fccc7311004cf1dc081"
+      }
+    ]
+  },
+  "historical1000": {
+    "processed": 1000,
+    "classifications": {
+      "qualified": 304,
+      "duplicate": 0,
+      "out_of_range": 220,
+      "physical_invalid": 476,
+      "missing_evidence": 0,
+      "incompatible": 0
+    },
+    "formal_added": 0,
+    "receipt_sha256": "ff81e81b33242bee132f1829da824d1db415dd9ceda3bbbf717fb9a4cdbd1eaa",
+    "source": "OLD21135_FIRST1000_ORIGINAL_SEQUENCE",
+    "blocks": [
+      {
+        "source_first": 1,
+        "source_last": 100,
+        "processed": 100,
+        "classifications": {
+          "out_of_range": 22,
+          "physical_invalid": 41,
+          "qualified": 37
+        },
+        "formal_added": 0
+      },
+      {
+        "source_first": 101,
+        "source_last": 200,
+        "processed": 100,
+        "classifications": {
+          "out_of_range": 19,
+          "physical_invalid": 52,
+          "qualified": 29
+        },
+        "formal_added": 0
+      },
+      {
+        "source_first": 201,
+        "source_last": 300,
+        "processed": 100,
+        "classifications": {
+          "out_of_range": 19,
+          "physical_invalid": 53,
+          "qualified": 28
+        },
+        "formal_added": 0
+      },
+      {
+        "source_first": 301,
+        "source_last": 400,
+        "processed": 100,
+        "classifications": {
+          "out_of_range": 21,
+          "physical_invalid": 53,
+          "qualified": 26
+        },
+        "formal_added": 0
+      },
+      {
+        "source_first": 401,
+        "source_last": 500,
+        "processed": 100,
+        "classifications": {
+          "out_of_range": 21,
+          "physical_invalid": 45,
+          "qualified": 34
+        },
+        "formal_added": 0
+      },
+      {
+        "source_first": 501,
+        "source_last": 600,
+        "processed": 100,
+        "classifications": {
+          "out_of_range": 24,
+          "physical_invalid": 43,
+          "qualified": 33
+        },
+        "formal_added": 0
+      },
+      {
+        "source_first": 601,
+        "source_last": 700,
+        "processed": 100,
+        "classifications": {
+          "out_of_range": 24,
+          "physical_invalid": 48,
+          "qualified": 28
+        },
+        "formal_added": 0
+      },
+      {
+        "source_first": 701,
+        "source_last": 800,
+        "processed": 100,
+        "classifications": {
+          "out_of_range": 25,
+          "physical_invalid": 48,
+          "qualified": 27
+        },
+        "formal_added": 0
+      },
+      {
+        "source_first": 801,
+        "source_last": 900,
+        "processed": 100,
+        "classifications": {
+          "out_of_range": 24,
+          "physical_invalid": 44,
+          "qualified": 32
+        },
+        "formal_added": 0
+      },
+      {
+        "source_first": 901,
+        "source_last": 1000,
+        "processed": 100,
+        "classifications": {
+          "out_of_range": 21,
+          "physical_invalid": 49,
+          "qualified": 30
+        },
+        "formal_added": 0
+      }
+    ],
+    "remaining_old21135": 20135,
+    "source_qualified_lower_bound_not_published": 304
+  },
+  "new_production_inputs": {
+    "original_proposals": 256,
+    "DOE": 192,
+    "train_neighborhood": 64,
+    "analytic_eligible": 238,
+    "analytic_failure": 18,
+    "native_release": false,
+    "starts_last_owner_observation": 0,
+    "owner_observed_utc": "2026-09-12T03:13:00Z",
+    "manifest_sha256": "f50721383ef51e5c2c3fa0b7dac67c421d8a9c3e9434600ffaa464c0ef25ebfb"
+  },
+  "full100k_qualified_total": null,
+  "formal_union_lower_bound": 31,
+  "original_controlled64_budget": "CLOSED32_UNCHANGED",
+  "newtraining": 0,
+  "real_emx_physical_accuracy_claim": false
+}

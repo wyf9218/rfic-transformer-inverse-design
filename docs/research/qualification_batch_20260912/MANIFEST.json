@@ -1,0 +1,115 @@
+{
+  "schema": "eucap15_delivery.v1",
+  "files": [
+    {
+      "path": "docs/research/CURRENT_STATUS.md",
+      "sha256": "4a2977077648ab4e476dd26e8971c422ee39d874f50ea5c5de86c38ce9728bec"
+    },
+    {
+      "path": "rfic_transformer_inverse_design/execution/evaluator.py",
+      "sha256": "3dce465d46fbc9ac84218b7d44e719cbafcd83733c73643acd36c4ace3efdbcb"
+    },
+    {
+      "path": "rfic_transformer_inverse_design/layout/export.py",
+      "sha256": "055467d5ff21bae8823551891c2f8f6df8c0e621c8e831a8c054f06b14aead23"
+    },
+    {
+      "path": "scripts/run_candidate_queue_dataset.py",
+      "sha256": "3b554546626daed08150f91db5d95983490a5e38ef39605083b2838e2899d7eb"
+    },
+    {
+      "path": "scripts/run_candidate_queue_dataset_parallel.py",
+      "sha256": "3a96f15f5f4b1ab1d67e568294ab14d381120dd57e4aeaa58db3c94d1c900330"
+    },
+    {
+      "path": "docs/research/EUCAP15_ENDPOINT_FIX_20260912.md",
+      "sha256": "2970adb799cc17b996a174b599dd176a7db344ea4a5fc747941d4bd86e3981ee"
+    },
+    {
+      "path": "docs/research/EUCAP15_ENDPOINT_WIRING_20260912.md",
+      "sha256": "93bccff9680d8c908c6ef49a9444f681a83cbf3bc8078429bdb6c04c8a6a9a98"
+    },
+    {
+      "path": "docs/research/EUCAP15_FEEDLINE_FIX_20260912.md",
+      "sha256": "efb9f551e1bb100a17f231176895a40a2f49a74d37277b7b63c907f3cb27b377"
+    },
+    {
+      "path": "docs/research/EUCAP15_PRODUCTION256_METHOD_20260912.md",
+      "sha256": "69bdeae9497daeb4dbda6e52eececb8f32ebb8eba5d0955d247cb9aadc36ad7b"
+    },
+    {
+      "path": "docs/research/PRODUCTION256_SOURCE_MAP.json",
+      "sha256": "6bf08117d341ea70f612cd26b886536b2d2605e5d6e81a17919ad1efcb329412"
+    },
+    {
+      "path": "docs/research/qualification_batch_20260912/README.md",
+      "sha256": "f5f11383bca0c766b2b06a3aa0504df6381ff548fad85b8f7ed4b5689f0c57a6"
+    },
+    {
+      "path": "docs/research/qualification_batch_20260912/SNAPSHOT_0325.json",
+      "sha256": "3a287f29636139b864a130e39a2241d6358cb730b7d66e7258d84df5b440f4fd"
+    },
+    {
+      "path": "docs/research/qualification_batch_20260912/code/README.md",
+      "sha256": "2d7ea8a5e566198aa9bb4d16ae6dc7cd2f64ddaa22d00abda20d35bda8e73588"
+    },
+    {
+      "path": "docs/research/qualification_batch_20260912/code/SOURCE_MAP.json",
+      "sha256": "1fa3288199c9c299762ef83b9f2e6d07eb7ed9c2bae809a96bad5337be3e6151"
+    },
+    {
+      "path": "docs/research/qualification_batch_20260912/code/admission.py",
+      "sha256": "75276646b91dc1783e53f79253cde018d557c484d3c4b1171b1a554f82ab0ab3"
+    },
+    {
+      "path": "docs/research/qualification_batch_20260912/code/history1000.py",
+      "sha256": "c2fa7380183dae8d58a95b6244134248619c1b24aeec821e511a6b17b0c43ea8"
+    },
+    {
+      "path": "docs/research/qualification_batch_20260912/code/run_remote_public.py",
+      "sha256": "34298f513708527c443c5e1401c197b32f6df12b59849d2d1a358d599dd00723"
+    },
+    {
+      "path": "research/broadband56_nn/eucap15_feedline_projection.py",
+      "sha256": "97d0417d67143063530fb92c45f7fa52926e9eaae6238a3001ac1e8bef219ef1"
+    },
+    {
+      "path": "research/broadband56_nn/eucap15_geometry_proposals.py",
+      "sha256": "d532383d8e2876d3d177d2869f35bd0f43c5c23d55a8f7f4c7f029a7da73031a"
+    },
+    {
+      "path": "rfic_transformer_inverse_design/layout/port_endpoint_construction.py",
+      "sha256": "df712c44abb2113d6cced55653d8da169ecae74a7061b8dec756a4f73f09c151"
+    },
+    {
+      "path": "tests/test_eucap15_endpoint_cli_wiring.py",
+      "sha256": "6453d435a174e807db148e4095e949b86298bd0713bbda45a831f0061a327193"
+    },
+    {
+      "path": "tests/test_eucap15_feedline_projection.py",
+      "sha256": "b12cca08167db9f224856a09d5d48ea4ff255234cb28f63438d540bf6593bf1c"
+    },
+    {
+      "path": "tests/test_eucap15_geometry_proposal_config.py",
+      "sha256": "0ad67e781c4ecdde12c25ad02e7a8afa54cfd36bdfd6c265b686a9d5e2cefd42"
+    },
+    {
+      "path": "tests/test_eucap15_shared_port_edges.py",
+      "sha256": "7b794d4b6e1d80079fd1ba2cc0340c8be574feeb7417eac02d223a234753976c"
+    }
+  ],
+  "goal_complete": false,
+  "created_utc": "2026-09-12T03:35:00Z",
+  "based_on_commit": "dcdec9ae931fcf4ccf46a578c0de016a2a845d0f",
+  "status": "SOURCE_AND_AUDIT_NOT_NATIVE_COMPLETION",
+  "formal_new": 11,
+  "formal_union_at_cutoff": 31,
+  "history_processed": 1000,
+  "history_audit_qualified_pending_publication": 304,
+  "prepared_proposals": 256,
+  "analytic_eligible": 238,
+  "analytic_failure": 18,
+  "old64_budget_unchanged": true,
+  "private_data_included": false,
+  "new_training": 0
+}

@@ -186,7 +186,10 @@ def _attach_signal_shield_clearance_audit(
 class TransformerEmxEvaluator:
     """Evaluate transformer geometries through the existing EMX backend."""
 
-    def __init__(self, run_config: TransformerRunConfig, root_dir: Path):
+    def __init__(self, run_config: TransformerRunConfig, root_dir: Path, *, port_endpoint_policy: str = "legacy"):
+        if port_endpoint_policy not in ("legacy", "shared_port_edges_20260912_v1"):
+            raise ValueError("unknown port endpoint construction policy")
+        self.port_endpoint_policy = port_endpoint_policy
         self.run_config = run_config
         self.root_dir = Path(root_dir)
         self.root_dir.mkdir(parents=True, exist_ok=True)
@@ -203,6 +206,8 @@ class TransformerEmxEvaluator:
             },
             "emx": asdict(self.run_config.emx),
         }
+        if self.port_endpoint_policy != "legacy":
+            payload["layout_construction_policy"] = self.port_endpoint_policy
         digest = hashlib.sha256(json.dumps(payload, sort_keys=True).encode("utf-8")).hexdigest()[:16]
         return digest
 
@@ -259,6 +264,7 @@ class TransformerEmxEvaluator:
                     run_config=export_config,
                     out_dir=layout_dir,
                     validate_geometry=False,
+                    port_endpoint_policy=self.port_endpoint_policy,
                 )
                 clearance_audit = _read_signal_shield_clearance_audit(layout_dir)
                 if clearance_audit is not None:

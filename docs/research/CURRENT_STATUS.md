@@ -1,5 +1,11 @@
 # Current Evidence Status
 
+## New qualification and production preparation — 2026-09-12 03:25 UTC
+
+[Actual new increment](qualification_batch_20260912/README.md):11 holdout members were formally committed with original splits; the verified bounded ledger is31=20train+3validation+8test. Separately,1000 historical rows were processed:304 audit-qualified,220 out-of-range,476 physically invalid,0duplicate/missing/incompatible. These304 are not yet formal commits at this snapshot; full100K total remains UNKNOWN.
+
+New256 geometry proposals are frozen(192DOE+64train-neighborhood),238 locally eligible/18 original failures. Actual new native start has not yet been received. Separate256/12h/5GiB budget integration uses the sole owner and stricter1solver×2CPU admission; the old64/32 budget stays closed. Endpoint policy is explicitly wired and cache-isolated but has no new physical validation. All earlier current/running statements below are dated history, not current production liveness.
+
 ## Qualified train partition and cost supplement — 2026-09-11 22:05 UTC
 
 [Actual qualification, cost and paper increment](20260911_qualified20_cost_paper.md): nineteen new formal qualification commits were read back; the separate ledger now contains twenty unique train geometries. The three validation and eight test members remain untouched. Old broadband21135 and frozen6329 membership are unchanged; full100K qualification remains unclosed, not21135+20 or6700+20.

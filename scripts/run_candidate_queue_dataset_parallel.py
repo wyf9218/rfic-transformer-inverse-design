@@ -192,6 +192,7 @@ def _parse_args(argv: list[str] | None) -> argparse.Namespace:
     parser.add_argument("--candidate-csv", required=True)
     parser.add_argument("--out-dir", required=True)
     parser.add_argument("--config")
+    parser.add_argument("--port-endpoint-policy", choices=("legacy", "shared_port_edges_20260912_v1"), default="legacy")
     parser.add_argument("--max-count", type=int)
     parser.add_argument("--jobs", type=int, default=8)
     parser.add_argument(
@@ -418,6 +419,8 @@ def _run_shard(index: int, row_count: int, csv_path: Path, out_dir: Path, args: 
         "--no-fail-exit",
     ]
     _append_optional_arg(command, "--config", args.config)
+    if args.port_endpoint_policy != "legacy":
+        _append_optional_arg(command, "--port-endpoint-policy", args.port_endpoint_policy)
     _append_flag(command, "--create-only", args.create_only)
     _append_flag(command, "--cadence-streamout-only", args.cadence_streamout_only)
     _append_flag(command, "--fail-on-error", args.fail_on_error)

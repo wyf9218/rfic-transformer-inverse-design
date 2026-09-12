@@ -2370,6 +2370,7 @@ def export_transformer_layout(
     out_dir: Path,
     *,
     validate_geometry: bool = True,
+    port_endpoint_policy: str = "legacy",
 ) -> TransformerLayoutExport:
     """Export the fixed octagonal transformer layout to GDS and an EMX manifest."""
     import gdstk
@@ -2377,6 +2378,13 @@ def export_transformer_layout(
     transformer = geometry.transformer_spec()
     power_line_8port_enabled = bool(run_config.emx.power_line_8port.enabled)
     power_line_signal_only_s4p = _power_line_signal_only_s4p(run_config)
+    if port_endpoint_policy not in ("legacy", "shared_port_edges_20260912_v1"):
+        raise ValueError("unknown port endpoint construction policy")
+    if port_endpoint_policy != "legacy" and not (
+        power_line_8port_enabled and power_line_signal_only_s4p
+        and run_config.emx.foundry_layout.enabled
+    ):
+        raise ValueError("shared endpoints require the foundry signal4/grounded-aux contract")
     if power_line_8port_enabled:
         transformer = transformer.with_shared_line_width(transformer.primary.trace_width_um)
     power_line_shared_line_width_um = (
@@ -3420,6 +3428,45 @@ def export_transformer_layout(
             cell=cell,
             grid_um=manufacturing_grid_um,
         )
+        endpoint_construction = None
+        if port_endpoint_policy == "shared_port_edges_20260912_v1":
+            from .port_endpoint_construction import construct_shared_port_edges
+
+            # The frame has already selected its manufacturing-grid edges.
+            # Reuse those integers for all signal and auxiliary end faces;
+            # never independently round a full polygon run or bar span.
+            inner = foundry_ground_frame_audit["snapped_inner_bbox_um"]
+            ports = []
+            evidence = port_ground_overlap_evidence_for_audit["ports"]
+            for name, item in evidence.items():
+                side = item["side"]
+                if side in ("left", "right"):
+                    pair = ((int(primary_draw_layer), int(primary_draw_datatype))
+                            if side == "left" else
+                            (int(secondary_draw_layer), int(secondary_draw_datatype)))
+                else:
+                    bars = [bar for bar in (primary_vdd_bar, secondary_vdd_bar)
+                            if name in (bar.resolved_top_port_label(), bar.resolved_bottom_port_label())]
+                    if len(bars) != 1:
+                        raise ValueError("ambiguous auxiliary endpoint object")
+                    pair = (bars[0].bar_layer, bars[0].bar_datatype)
+                horizontal = side in ("left", "right")
+                ports.append(dict(port_id=name, side=side, drawing_pair=pair,
+                    ground_inner_edge_um=inner[{"left": 0, "bottom": 1, "right": 2, "top": 3}[side]],
+                    nominal_terminal_um=item["terminal_x_um" if horizontal else "terminal_y_um"],
+                    cross_center_um=item["terminal_y_um" if horizontal else "terminal_x_um"],
+                    width_um=power_line_shared_line_width_um))
+            endpoint_construction = construct_shared_port_edges(
+                cell=cell, ports=ports, grid_um=manufacturing_grid_um, require_port_labels=True)
+            # New-version provenance only; historical audits and the default
+            # exporter remain unchanged. The downstream actual-GDS gate stays
+            # authoritative and its exact 10 um / 5 nm rules are unchanged.
+            for port, record in zip(ports, endpoint_construction["ports"]):
+                item = evidence[port["port_id"]]
+                axis_key = "terminal_x_um" if record["axis"] == 0 else "terminal_y_um"
+                item[axis_key] = record["endpoint_after_grid_units"] * manufacturing_grid_um
+                item["measured_overlap_um"] = POWER_LINE_8PORT_PORT_GROUND_OVERLAP_UM
+                item["overlap_evidence_class"] = "PRE_CADENCE_CONSTRUCTION_DERIVED_NOT_ACTUAL_GDS_MEASUREMENT"
         if power_line_8port_enabled:
             foundry_bridge_connections = _foundry_bridge_connections_audit(
                 cell=cell,
@@ -3445,6 +3492,8 @@ def export_transformer_layout(
             "automatic_emx_execution_authorized": False,
             "foundry_drc_executed": False,
         }
+        if endpoint_construction is not None:
+            foundry_layout_audit["port_endpoint_construction"] = endpoint_construction
     # This is the pre-Cadence construction evidence.  The authoritative
     # foundry_layout_audit.json is produced only after Cadence stream-out has
     # completed and is bound to those exact GDS bytes.

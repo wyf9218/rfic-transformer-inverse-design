@@ -1,0 +1,39 @@
+{
+  "schema": "eucap15_production256_public_source_map.v1",
+  "status": "PUBLIC_REFACTOR_NOT_EXECUTED_ORIGINAL_SOURCE",
+  "original_executed_private_source": {
+    "workspace_relative_path": "reports/eucap15ghz_20260908T220300Z/production256_inputs_20260912_v1/prepare.py",
+    "sha256": "93b8e00102fccd9311df347308d102f7887762774f313bd30d283cc2a54de2cf"
+  },
+  "original_frozen_intent_sha256": "9de9dc38074df0dc1441dafeb9b8b6b1038e71ec40ffa653a1880854b6a51d42",
+  "original_frozen_manifest_sha256": "f50721383ef51e5c2c3fa0b7dac67c421d8a9c3e9434600ffaa464c0ef25ebfb",
+  "original_frozen_proposals_sha256": "d0a1fda65fd3e88983688f58e30d8c40f4bdbb4dff928df9c0d48b4a87f11e38",
+  "public_source": {
+    "path": "research/broadband56_nn/eucap15_geometry_proposals.py",
+    "sha256": "d532383d8e2876d3d177d2869f35bd0f43c5c23d55a8f7f4c7f029a7da73031a"
+  },
+  "public_test": {
+    "path": "tests/test_eucap15_geometry_proposal_config.py",
+    "sha256": "0ad67e781c4ecdde12c25ad02e7a8afa54cfd36bdfd6c265b686a9d5e2cefd42"
+  },
+  "changes": [
+    "Remove all hardcoded local/private source and output roots.",
+    "Read explicit --intent --intent-sha --out CLI arguments; require a distinct public-v2 intent schema.",
+    "Supply six data/exclusion source pins through intent.inputs, not embedded paths or old intent indirection.",
+    "Validate source-pin shape/absolute path/SHA/helper requirements before output creation.",
+    "Retain sampling/record fields, source memberships, seeded order, no replacement and separate identity namespaces.",
+    "Keep neighbors function exact source text identical to private executed preparer."
+  ],
+  "validation": {
+    "new_config_tests_passed": 4,
+    "cli_help_passed": true,
+    "syntax_check_passed": true,
+    "private_path_literals": 0,
+    "kernel_source_exact_match": true,
+    "old_kernel_tests_rerun": 0,
+    "real256_preparation_rerun": false,
+    "public_preparer_full_end_to_end": "NOT_RUN"
+  },
+  "native_execution_source": false,
+  "raw_geometry_or_private_data_published": false
+}

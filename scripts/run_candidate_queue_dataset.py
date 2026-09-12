@@ -140,7 +140,10 @@ def main(argv: list[str] | None = None) -> int:
     csv_path = out_dir / "dataset_rows.csv"
     ground_clearance_audit_path = out_dir / GROUND_CLEARANCE_AUDIT_FILENAME
     if all(item["pass"] for item in checks):
-        evaluator = TransformerEmxEvaluator(run_config=run_config, root_dir=out_dir)
+        evaluator = TransformerEmxEvaluator(
+            run_config=run_config, root_dir=out_dir,
+            port_endpoint_policy=args.port_endpoint_policy,
+        )
         batch_size = max(1, int(args.batch_size))
         for start in range(0, len(geometries), batch_size):
             batch = geometries[start : start + batch_size]
@@ -281,6 +284,7 @@ def _parse_args(argv: list[str] | None) -> argparse.Namespace:
     parser.add_argument("--candidate-csv", required=True)
     parser.add_argument("--out-dir", required=True)
     parser.add_argument("--config")
+    parser.add_argument("--port-endpoint-policy", choices=("legacy", "shared_port_edges_20260912_v1"), default="legacy")
     parser.add_argument("--max-count", type=int)
     parser.add_argument("--batch-size", type=int, default=10)
     parser.add_argument("--z-load-ohm", type=float, default=50.0)

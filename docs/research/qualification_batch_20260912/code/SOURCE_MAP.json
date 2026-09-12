@@ -1,0 +1,66 @@
+{
+  "schema": "eucap15_qualification_batch_public_code.v1",
+  "status": "CODE_SNAPSHOT_ONLY_NO_NEW_QUALIFICATION_EXECUTION",
+  "records": [
+    {
+      "public_file": "admission.py",
+      "public_sha256": "75276646b91dc1783e53f79253cde018d557c484d3c4b1171b1a554f82ab0ab3",
+      "source_workspace_relative": "reports/eucap15_native_owner_20260909T062500Z/qualified15_holdout_partition_v3/admission.py",
+      "source_sha256": "75276646b91dc1783e53f79253cde018d557c484d3c4b1171b1a554f82ab0ab3",
+      "byte_identical": true,
+      "source_bytes": 15079,
+      "scope": "Original11 validation/test qualification predicates and existing increment-ledger writer. Private binding data excluded."
+    },
+    {
+      "public_file": "run_remote_public.py",
+      "public_sha256": "34298f513708527c443c5e1401c197b32f6df12b59849d2d1a358d599dd00723",
+      "source_workspace_relative": "reports/eucap15_native_owner_20260909T062500Z/qualified15_holdout_partition_v3/run_remote.py",
+      "source_sha256": "736fd52949f6f5be480da087914a965894c0a87daab45d109b969b9263db0ac8",
+      "source_bytes": 6283,
+      "byte_identical": false,
+      "executed_native_source": false,
+      "changes": [
+        "Replace hardcoded private RN root with required EUCAP15_NATIVE_OWNER_ROOT environment binding.",
+        "Replace module docstring to state public reference / non-turnkey / not original executed source."
+      ],
+      "scope": "Reference orchestration only. Original frozen release/source pins will intentionally reject this changed public runner; not a release or authorization to rerun."
+    },
+    {
+      "public_file": "history1000.py",
+      "public_sha256": "c2fa7380183dae8d58a95b6244134248619c1b24aeec821e511a6b17b0c43ea8",
+      "source_workspace_relative": "reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/history1000.py",
+      "source_sha256": "c2fa7380183dae8d58a95b6244134248619c1b24aeec821e511a6b17b0c43ea8",
+      "source_bytes": 11468,
+      "byte_identical": true,
+      "execution_binding": {
+        "wrapper_workspace_relative": "reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/history1000_20260912T032024630333Z/EXECUTED_SOURCE.py",
+        "wrapper_sha256": "0a566b6a7642f5777cc3564f25ddea0589ceb88a5955d60ebd9c4aeceac8a893",
+        "embedded_source_entry": "FILES['history1000.py']['data']",
+        "verification": "AST literal extraction + strict base64 decoding + SHA/size equality + standalone source byte equality; wrapper not executed"
+      },
+      "scope": "1000 source-chain classification in100-row blocks. Saved labels checked, not re-extracted; no accepted-ledger append."
+    }
+  ],
+  "reused_dependencies": [
+    {
+      "repository_path": "docs/research/qualification20_20260911/code/geometry_helpers.py",
+      "sha256": "b6311d77e65b514d8a186394f6352500f7e717cc02507c0190e401ccd197bf98",
+      "duplicated": false
+    },
+    {
+      "repository_path": "docs/research/qualification20_20260911/code/atomic_primitives.py",
+      "sha256": "f397cd6390a146c41b2563f10f3430590fc632c2e23fc059468a80ebe36da4ca",
+      "duplicated": false
+    }
+  ],
+  "excluded": [
+    "INPUTS.json",
+    "full native execution wrapper with embedded private INPUTS",
+    "private configuration",
+    "PDK",
+    "raw geometry",
+    "physical artifacts",
+    "unredacted runtime receipts"
+  ],
+  "verification_scope": "Source identity / public path redaction only; no tests, audit rerun, ledger writes or native calls."
+}
