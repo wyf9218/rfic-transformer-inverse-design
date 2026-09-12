@@ -1,0 +1,64 @@
+{
+  "schema": "eucap15_shard000_m26_actual_execution.v1",
+  "exit_code": 0,
+  "wall_time_seconds": 0.987593708,
+  "argv": [
+    "/Users/wyf/Documents/模拟变压器AI反向建模/reports/broadband56_nn_v2_20260907T212216Z/environment/bin/python",
+    "-B",
+    "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/history_shard000_m26_v1/SOURCE.py"
+  ],
+  "cwd": "/Users/wyf/Documents/模拟变压器AI反向建模/github_worktrees/eucap15-mlp-capacity-20260909",
+  "environment": {
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "PYTHONPATH": "/Users/wyf/Documents/模拟变压器AI反向建模/github_worktrees/eucap15-mlp-capacity-20260909"
+  },
+  "receipt": {
+    "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/history_shard000_m26_v1/RECEIPT.json",
+    "sha256": "65d4f7c823550965917fb54f7119b69470a74ee02261625483c788a6287918ec"
+  },
+  "rows": {
+    "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/history_shard000_m26_v1/ROWS.json",
+    "sha256": "cf3ec4a52cf46f13f798106f41331ac8f439886c07e4aff43199bb2b575f0490"
+  },
+  "source": {
+    "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/history_shard000_m26_v1/SOURCE.py",
+    "sha256": "79f3e39c72c4057a97d5342ee1afdd4f0fc50eb6e7e6134e15b322f209a70ffe"
+  },
+  "minimum_next_exact_member_binding": {
+    "candidate_id": "m56s4p_klt1_c2r1_v13a_00001",
+    "evaluation": "d87ff4d971f5f26f",
+    "canonical9_geometry_sha256": "a5391d2bb116e603faa879d41c29db27d79769b05f878c767c1d5ba07f69994e",
+    "work_dir": "/volumes/research-localdata/ywang3652/mars56_s4p_million_campaign_outputs_20260705/mars56_s4p_million_20260705_1256/status/accepted_1m_campaign_controller_20260710/rounds/round_001_checkpoint_02/real_emx/dataset/parallel_shards/shard_000/evaluations/d87ff4d971f5f26f",
+    "s4p_explicit_pointer": "/volumes/research-localdata/ywang3652/mars56_s4p_million_campaign_outputs_20260705/mars56_s4p_million_20260705_1256/status/accepted_1m_campaign_controller_20260710/rounds/round_001_checkpoint_02/real_emx/dataset/parallel_shards/shard_000/evaluations/d87ff4d971f5f26f/emx/emx.s4p",
+    "needed": "Original S4P byte identity and actual frequency vector; this exact evaluation's existing executed process/port/GDS/Calibre provenance. GDS/DRC filenames have not been established: use its existing evidence index or bounded local directory-name inventory, never guessed filenames.",
+    "all_members_rule": "An initial member closes only itself. Each of the other 63 rows retains the exact per-member pointers in ROWS.json and requires its own actual-artifact binding; shared source compatibility may be reused only after proven.",
+    "dispatch_or_remote_read_requested_by_this_program": false
+  },
+  "scientific_limits": {
+    "candidate_geometry_unique": 64,
+    "actual_gds_geometry_unique": null,
+    "historical_reported_range_count": 63,
+    "current_qualified_count": null,
+    "current_qualified_count_state": "UNKNOWN",
+    "strict_and_srf_proven": false,
+    "old_ground_audit_pass_count": 0,
+    "old_ground_audit_missing_or_other_count": 64,
+    "original_split": "UNKNOWN",
+    "q_target_mode_max": "HISTORICAL_CONFIG_ONLY_NOT_CURRENT_Q_SCAN_RULE",
+    "single_outside_reported_range": {
+      "candidate_id": "m56s4p_klt1_c2r1_v13a_00044",
+      "evaluation": "804c70975d3b2cac",
+      "K_abs": 0.1984961098474355
+    },
+    "source_process_name_is_not_execution_byte_identity": true
+  },
+  "actions": {
+    "new_emx": 0,
+    "training": 0,
+    "tests": 0,
+    "formal_writes": 0,
+    "ssh": 0,
+    "git": 0,
+    "central_state_writes": 0
+  }
+}

@@ -1,0 +1,84 @@
+{
+  "schema": "eucap15_m26_increment_manifest.v1",
+  "observation_utc": "2026-09-12T12:58:26.315280+00:00",
+  "baseline_utc": "2026-09-12T12:44:41.975935+00:00",
+  "source_git": "ebe18aab74bdccfa10c56263782f687deb9a8a39",
+  "files": [
+    {
+      "path": "docs/research/production_increment_m26_20260912/HISTORY_EXECUTION.json",
+      "sha256": "4ffaa0a0adc6bcd179a7240beb3f5aaa23f64719dc55b87e398ad012042255f7",
+      "bytes": 3846
+    },
+    {
+      "path": "docs/research/production_increment_m26_20260912/HISTORY_RECEIPT.json",
+      "sha256": "65d4f7c823550965917fb54f7119b69470a74ee02261625483c788a6287918ec",
+      "bytes": 12932
+    },
+    {
+      "path": "docs/research/production_increment_m26_20260912/HISTORY_SOURCE.py",
+      "sha256": "79f3e39c72c4057a97d5342ee1afdd4f0fc50eb6e7e6134e15b322f209a70ffe",
+      "bytes": 16194
+    },
+    {
+      "path": "docs/research/production_increment_m26_20260912/LANDING_RECEIPT.json",
+      "sha256": "df60592848c49f923455329ef157c5bb6f445253742dcb7fa36df05b0265b971",
+      "bytes": 13970
+    },
+    {
+      "path": "docs/research/production_increment_m26_20260912/README.md",
+      "sha256": "52e3195d3230e538b7d697a9ad1862141c5f4e163d9eb7398dbefb22a5842e3f",
+      "bytes": 1779
+    },
+    {
+      "path": "docs/research/production_increment_m26_20260912/SNAPSHOT.json",
+      "sha256": "5d4a3fd8782675d1dfddc66353a8a127df7839b3d497dc08e41a9916b1de4f88",
+      "bytes": 18797
+    },
+    {
+      "path": "docs/research/production_increment_m26_20260912/TRAIN_COVERAGE_RECEIPT.json",
+      "sha256": "000457a6c9ec5906ee993854be6f5d6f87757b7a35ee0b150b6a10d39214d966",
+      "bytes": 6589
+    },
+    {
+      "path": "docs/research/production_increment_m26_20260912/TRAIN_SOURCE_ROWS.json",
+      "sha256": "54797b184a27ac77a52857d7c663bc0339f734cb099b6bbfe695e38f1ad83037",
+      "bytes": 51465
+    },
+    {
+      "path": "docs/research/CURRENT_STATUS.md",
+      "sha256": "72254e9500b465cea2508b8c9d9ffe659f2d8d9999d4ef478d06916a7f0685df",
+      "bytes": 21097
+    }
+  ],
+  "private_evidence": [
+    {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/storage_claim_wait_v1/budget_walk_v1/increment_20260912T125825550126Z/OBSERVATION.json",
+      "sha256": "6b1bfc0fb60b6ad16672981dcdcaf31bbb579f55478f7a9e759a939838b3abad",
+      "bytes": 779766
+    },
+    {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/landing_increment_m26_new44_v1/ACTUAL_LANDINGS.json",
+      "sha256": "f200a88fed0aa3315c383c1530c2c2f4b3df2a9217813d877a621efe38fd7c8f",
+      "bytes": 611021,
+      "status": "WRITTEN"
+    },
+    {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/train_coverage_received_m26_v1/CHECKPOINT.json",
+      "sha256": "250e56b5a5747882387ba3742ba2fc12eac99163497e067e23a0a0b2555b1c49",
+      "bytes": 287952
+    },
+    {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/train_coverage_received_m26_v1/COVERAGE_AFTER.csv",
+      "sha256": "ff13ee6c38d329ab58f8f6a761a312bcb0e2990e3eafb6d1e70f094342a3f851",
+      "bytes": 51722
+    },
+    {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/history_shard000_m26_v1/ROWS.json",
+      "sha256": "cf3ec4a52cf46f13f798106f41331ac8f439886c07e4aff43199bb2b575f0490",
+      "bytes": 556460
+    }
+  ],
+  "scope": "New44 first landing,13 train-only resume,first64-row historical shard metadata binding; no old physical/training/QA reruns.",
+  "production_waits_for_publication": false,
+  "goal_status": "ACTIVE"
+}

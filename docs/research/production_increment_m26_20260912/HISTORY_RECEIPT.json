@@ -1,0 +1,274 @@
+{
+  "schema": "eucap15_historical_shard000_local_partition_receipt.v1",
+  "completed_utc": "2026-09-12T13:01:45.566849+00:00",
+  "status": "LOCAL_METADATA_JOIN_COMPLETE_QUALIFICATION_PENDING",
+  "command": [
+    "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/history_shard000_m26_v1/SOURCE.py"
+  ],
+  "cwd": "/Users/wyf/Documents/模拟变压器AI反向建模/github_worktrees/eucap15-mlp-capacity-20260909",
+  "inputs": {
+    "parent_receipt": {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/storage_claim_wait_v1/budget_walk_v1/historical_shard000_files_20260912T125517138418Z/RECEIPT.json",
+      "sha256": "820827519bf6d5edd41dda17005c7c75f6918d4afe955501f37f80e331b6f935",
+      "bytes": 13298
+    },
+    "config_source": {
+      "local": {
+        "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/storage_claim_wait_v1/budget_walk_v1/historical_shard000_files_20260912T125517138418Z/mars_current_foundry_s4p_5_60_0p5_drc_margin_v2.yaml",
+        "sha256": "996ebad95e407b5f959b3807e1a2b90fad5599c54a7b6745fcd24ce82c4708e0",
+        "bytes": 3640
+      },
+      "remote": {
+        "path": "/volumes/research-localdata/ywang3652/klt1_stage_20260806/repo_klt1_controller_20260809_v13_high_k_boundary_discovery/configs/mars_current_foundry_s4p_5_60_0p5_drc_margin_v2.yaml",
+        "sha256": "996ebad95e407b5f959b3807e1a2b90fad5599c54a7b6745fcd24ce82c4708e0",
+        "bytes": 3640
+      },
+      "historical_pin_match": true,
+      "received_status": "EXACT_HISTORICAL_PIN_MATCH_NOT_QUALIFICATION"
+    },
+    "candidate_source": {
+      "local": {
+        "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/storage_claim_wait_v1/budget_walk_v1/historical_shard000_files_20260912T125517138418Z/candidate_queue_shard.csv",
+        "sha256": "494f5723e7ebc6945573295da1d9e2a8ab6275110b61f81442e83dde5000fdad",
+        "bytes": 56639
+      },
+      "remote": {
+        "path": "/volumes/research-localdata/ywang3652/mars56_s4p_million_campaign_outputs_20260705/mars56_s4p_million_20260705_1256/status/accepted_1m_campaign_controller_20260710/rounds/round_001_checkpoint_02/real_emx/dataset/parallel_shards/shard_000/candidate_queue_shard.csv",
+        "sha256": "494f5723e7ebc6945573295da1d9e2a8ab6275110b61f81442e83dde5000fdad",
+        "bytes": 56639
+      },
+      "historical_pin_match": true,
+      "received_status": "EXACT_HISTORICAL_PIN_MATCH_NOT_QUALIFICATION"
+    },
+    "dataset_rows_source": {
+      "local": {
+        "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/storage_claim_wait_v1/budget_walk_v1/historical_shard000_files_20260912T125517138418Z/dataset_rows.csv",
+        "sha256": "45e87bb1a7e07aeb1b21a1eeaaa765eb0d5ac13d8c097a81e02af7a4632043fa",
+        "bytes": 227467
+      },
+      "remote": {
+        "path": "/volumes/research-localdata/ywang3652/mars56_s4p_million_campaign_outputs_20260705/mars56_s4p_million_20260705_1256/status/accepted_1m_campaign_controller_20260710/rounds/round_001_checkpoint_02/real_emx/dataset/parallel_shards/shard_000/dataset_rows.csv",
+        "sha256": "45e87bb1a7e07aeb1b21a1eeaaa765eb0d5ac13d8c097a81e02af7a4632043fa",
+        "bytes": 227467
+      },
+      "historical_pin_match": true,
+      "received_status": "EXACT_HISTORICAL_PIN_MATCH_NOT_QUALIFICATION"
+    },
+    "dataset_manifest": {
+      "local": {
+        "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/storage_claim_wait_v1/budget_walk_v1/historical_shard000_files_20260912T125517138418Z/dataset_manifest.json",
+        "sha256": "32cdf40bfb8ed6bdd87e11dc7c789bcd5187c72b11cc906683bd065c34e458c1",
+        "bytes": 13148
+      },
+      "remote": {
+        "path": "/volumes/research-localdata/ywang3652/mars56_s4p_million_campaign_outputs_20260705/mars56_s4p_million_20260705_1256/status/accepted_1m_campaign_controller_20260710/rounds/round_001_checkpoint_02/real_emx/dataset/parallel_shards/shard_000/dataset_manifest.json",
+        "sha256": "32cdf40bfb8ed6bdd87e11dc7c789bcd5187c72b11cc906683bd065c34e458c1",
+        "bytes": 13148
+      },
+      "historical_pin_match": null,
+      "received_status": "PATH_ONLY_REFERENCE_NEW_OBSERVED_IDENTITY_NOT_HISTORICAL_HASH_BINDING"
+    },
+    "ground_clearance_audit": {
+      "local": {
+        "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/storage_claim_wait_v1/budget_walk_v1/historical_shard000_files_20260912T125517138418Z/final500_ground_clearance_audit.json",
+        "sha256": "7810c3891b43e33149927e30ac4ba5cfa2595fffcfe727d8befcc3d3afc06622",
+        "bytes": 68745
+      },
+      "remote": {
+        "path": "/volumes/research-localdata/ywang3652/mars56_s4p_million_campaign_outputs_20260705/mars56_s4p_million_20260705_1256/status/accepted_1m_campaign_controller_20260710/rounds/round_001_checkpoint_02/real_emx/dataset/parallel_shards/shard_000/final500_ground_clearance_audit.json",
+        "sha256": "7810c3891b43e33149927e30ac4ba5cfa2595fffcfe727d8befcc3d3afc06622",
+        "bytes": 68745
+      },
+      "historical_pin_match": null,
+      "received_status": "PATH_ONLY_REFERENCE_NEW_OBSERVED_IDENTITY_NOT_HISTORICAL_HASH_BINDING"
+    }
+  },
+  "reused_functions": {
+    "historical_fingerprint": "_canonical_geometry_fingerprint",
+    "research_identity": "canonical_geometry_sha256"
+  },
+  "implementation": {
+    "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/history_shard000_m26_v1/SOURCE.py",
+    "sha256": "79f3e39c72c4057a97d5342ee1afdd4f0fc50eb6e7e6134e15b322f209a70ffe",
+    "bytes": 16194
+  },
+  "reused_implementations": [
+    {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/github_worktrees/eucap15-mlp-capacity-20260909/scripts/audit_mars56_s4p_candidate_queue_provenance.py",
+      "sha256": "e17e3b5043e94d29c1222690d9ed27e7414f57354dfadf18f381e8d5c3ae5b2d",
+      "bytes": 26394
+    },
+    {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/github_worktrees/eucap15-mlp-capacity-20260909/rfic_transformer_inverse_design/campaigns/broadband56_balanced200k.py",
+      "sha256": "bd82390aa822a6426ad505e99675694be2fc49e017b25c76b7c93fc78121d424",
+      "bytes": 27464
+    }
+  ],
+  "rows_processed": 64,
+  "candidate_rows": 64,
+  "dataset_rows": 64,
+  "ground_rows": 64,
+  "primary_keys": {
+    "candidate_csv": "candidate_id",
+    "dataset_csv": "evaluation",
+    "ground_audit": "cache_key"
+  },
+  "candidate_dataset_join": {
+    "left": "candidate_id",
+    "right": "queue__candidate_id",
+    "cardinality": "ONE_TO_ONE",
+    "matched": 64,
+    "orphans": 0
+  },
+  "candidate_dataset_geometry_conflicts": 0,
+  "exact_11d_unique_geometry": 64,
+  "historical_fingerprint_unique": 64,
+  "candidate_shared_width_equal": 64,
+  "dataset_shared_width_equal": 64,
+  "research_canonical9_unique": 64,
+  "fingerprint_matched_rows": 64,
+  "qualification_group_counts": {
+    "PENDING_SOURCE_AND_PHYSICAL_ARTIFACT_EVIDENCE": 64
+  },
+  "current_qualified_unique_count": null,
+  "current_qualified_count_status": "UNKNOWN_NOT_ZERO",
+  "certified_by_this_action": 0,
+  "formal_submissions": 0,
+  "reported_response_range_count": 63,
+  "reported_response_q10_20_intersection_count": 63,
+  "reported_response_range_counts_are_not_current_qualified_counts": true,
+  "historical_ok_rows": 64,
+  "historical_ground_counts": {
+    "candidate_count": 64,
+    "pass_count": 0,
+    "reject_count": 0,
+    "missing_or_other_count": 64
+  },
+  "source_split_fields": [],
+  "source_split_unknown_rows": 64,
+  "data_contract": {
+    "declared_historical_config_emx": {
+      "emx_binary": "/volumes/research-localdata/ywang3652/rfic-transformer-inverse-design-mars56-s4p-drc-20260705/mars_local_bin/emx_cae_singularity",
+      "emx_process_file": "/volumes/research-localdata/PDKs/TSMC65_05_12_26/RC_IRCX_CRN65G+_1P9M+UT-ALRDL_6X1Z1U_MiM_typical.proc",
+      "license_file": "5280@cadence.license.cae.wisc.edu",
+      "cdslmd_license_file": "5280@cadence.license.cae.wisc.edu",
+      "cadence_install_root": "/cae/apps/data/cadence-2025/installs/IC231",
+      "cadence_pdk_cds_lib": "/volumes/research-localdata/PDKs/TSMC65_05_12_26/MSRF_General_Purpose_Plus/PDK/CadenceOA/tn65cmsp018k3_1_0c/cds.lib",
+      "cadence_tech_lib": "tsmcN65",
+      "cadence_layer_map": "/volumes/research-localdata/PDKs/TSMC65_05_12_26/MSRF_General_Purpose_Plus/PDK/CadenceOA/tn65cmsp018k3_1_0c/tsmcN65/tsmcN65.layermap",
+      "port_mode": "single_ended_shield_grounded",
+      "cadence_pin_purpose": 51,
+      "execution_mode": "local",
+      "differential_port_pairs": "1,2:3,4",
+      "ground_unused_s8p_ports": false,
+      "power_line_8port": {
+        "enabled": true,
+        "touchstone_mode": "signal_4_grounded_aux",
+        "bridge_width_um": 10.0,
+        "vertical_length_diameter_ratio": 1.5,
+        "bridge_y_policy": "center",
+        "bridge_motion_axis": "x_only",
+        "port_ground_reference": "shield",
+        "port_map": [
+          "P001",
+          "P002",
+          "P003",
+          "P004"
+        ],
+        "role_labels": {
+          "primary_top": "P001",
+          "primary_bottom": "P002",
+          "secondary_top": "P003",
+          "secondary_bottom": "P004",
+          "left_power_top": "P005",
+          "left_power_bottom": "P006",
+          "right_power_top": "P007",
+          "right_power_bottom": "P008"
+        }
+      },
+      "extra_args": [
+        "--edge-width=1",
+        "--accuracy=standard",
+        "--verbose=2",
+        "--parallel=2",
+        "--simultaneous-frequencies=0"
+      ],
+      "foundry_layout": {
+        "enabled": true,
+        "manufacturing_grid_um": 0.005,
+        "power_line_stitch_pad_depth_um": 6.0,
+        "shield_strap_width_um": 10.0,
+        "shield_strap_pitch_um": 20.0
+      }
+    },
+    "declared_historical_manifest_port_mode": "single_ended_shield_grounded",
+    "declared_historical_manifest_port_pairs": [
+      [
+        1,
+        2
+      ],
+      [
+        3,
+        4
+      ]
+    ],
+    "declared_historical_target_frequency": {
+      "f0_hz": 15000000000.0,
+      "start_hz": 5000000000.0,
+      "stop_hz": 60000000000.0,
+      "step_hz": 500000000.0,
+      "points": 111,
+      "step_min_hz": 500000000.0,
+      "step_max_hz": 500000000.0,
+      "explicit_sweep": true
+    },
+    "current_geometry_fields_from_source": [
+      "primary_outer_width_um",
+      "primary_outer_height_um",
+      "secondary_outer_width_um",
+      "secondary_outer_height_um",
+      "line_width_um",
+      "primary_terminal_y_span_um",
+      "secondary_terminal_y_span_um",
+      "offset_um",
+      "primary_feed_extension_um",
+      "secondary_feed_extension_um"
+    ],
+    "current_process_port_compatibility": "NOT_PROVEN_BY_PROCESS_NAME_OR_CONFIG_PATH",
+    "historical_config_q_target_mode": "max",
+    "historical_q_objective_not_current_q_scan_rule": true
+  },
+  "missing_evidence_counts": {
+    "ACTUAL_S4P_BYTES_SHA_AND_CANDIDATE_EXECUTION_BINDING_NOT_READ": 64,
+    "ACTUAL_GDS_BYTES_PORT_GEOMETRY_AND_GENERATOR_BINDING_MISSING": 64,
+    "CURRENT_CALIBRE_DRC_RESULT_AND_RULEDECK_BINDING_MISSING": 64,
+    "EXECUTED_PROCESS_BYTES_AND_CURRENT_COMPATIBILITY_BINDING_MISSING": 64,
+    "EXECUTED_PORT_MODE_AND_RETURN_GROUND_BINDING_MISSING": 64,
+    "CURRENT_EXTRACTION_STRICT_AND_HALF_SRF_EVIDENCE_MISSING": 64,
+    "CROSS_SOURCE_UNIQUE_INDEX_CHECK_NOT_DONE": 64,
+    "ORIGINAL_SPLIT_NOT_DECLARED": 64,
+    "FORMAL_SUBMISSION_AND_READBACK_NOT_DONE": 64
+  },
+  "minimum_next_binding": {
+    "per_sample": "Bind the listed evaluation/work_dir to actual S4P SHA, actual GDS/port geometry and Calibre artifacts, then current strict/SRF re-extraction.",
+    "shared_source": "Verify executed process bytes, port/grounding and generator/extractor/ruledeck versions; configuration declarations alone do not close execution identity.",
+    "counting": "Preserve UNKNOWN source split, cross-source deduplicate only after compatible source proof, and use sole formal writer with readback."
+  },
+  "exclusions": {
+    "training": 0,
+    "new_emx": 0,
+    "ssh": 0,
+    "tests": 0,
+    "old93_rows_reprocessed": 0,
+    "p215_full_rescan": 0,
+    "interpolated_rows": 0,
+    "nontrain_sampling_or_model_use": false
+  },
+  "artifacts": [
+    {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/history_shard000_m26_v1/ROWS.json",
+      "sha256": "cf3ec4a52cf46f13f798106f41331ac8f439886c07e4aff43199bb2b575f0490",
+      "bytes": 556460
+    }
+  ]
+}
