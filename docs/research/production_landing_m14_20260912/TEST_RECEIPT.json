@@ -1,0 +1,63 @@
+{
+  "schema": "eucap15_received_landing_increment_tests.v2",
+  "utc": "2026-09-12T09:18:42Z",
+  "status": "PASS_NEW_FOCUSED_TESTS_ONLY",
+  "action": "Extend the existing read-only landing entry for caller-verified pinned increments; retain pending-formal rows and exclude them from TRAIN coverage.",
+  "code": {
+    "path": "research/broadband56_nn/eucap15_received_landing_increment.py",
+    "sha256": "af048515dabbed4c4ab37d7d8912bf71de34a0122bd54d34739c2549a9bb8f76"
+  },
+  "tests": {
+    "path": "tests/test_eucap15_received_landing_increment.py",
+    "sha256": "c0e0586e7ffb0fc58b11bebed9067aeecda1c26ad9c4772ac1f1297620ff5ba8",
+    "passed": 3,
+    "failed": 0,
+    "skipped": 0,
+    "reported_seconds": 0.15,
+    "cases": [
+      "test_pending_formal_and_original_holdouts_never_enter_train_coverage",
+      "test_mismatched_formal_join_and_reused_record_identity_are_rejected",
+      "test_supplied_target_and_prediction_cells_are_preserved_without_inferred_errors"
+    ],
+    "command": "PYTHONDONTWRITEBYTECODE=1 /Users/wyf/Documents/模拟变压器AI反向建模/reports/broadband56_nn_v2_20260907T212216Z/environment/bin/python -B -m pytest -q -p no:cacheprovider tests/test_eucap15_received_landing_increment.py --basetemp=/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/landing_increment_m14_v2/pytest_v1 --junitxml=/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/landing_increment_m14_v2/TEST_RESULTS.xml",
+    "result_file": "TEST_RESULTS.xml",
+    "result_sha256": "c823d079b4f72c3a019bc279587c49fab00571ec6e126fc761e5305c05d1804a"
+  },
+  "unchanged_reference_inputs": [
+    {
+      "path": "docs/research/eucap15_abc_increment_20260910/COVERAGE_BEFORE.csv",
+      "sha256": "8774136cb90164549b465135d41d206371b8616a86d0b3cf5595848971a948e9"
+    },
+    {
+      "path": "research/broadband56_nn/eucap15_acquisition.py",
+      "sha256": "d55eedd5955a6654966fd3dd0ad32074cae4376ef2709ffdbbcfe8edee431f0a"
+    }
+  ],
+  "schema_inspection_only_input": {
+    "path": "docs/research/production_landing_m13_20260912/RECEIVED_NEW96.json",
+    "sha256": "b0ba0fb780760e3d3ddce82bd3bc8d566f15930a45d5a21a4749bc42dae3eb6d",
+    "actual_run_by_this_task": false
+  },
+  "checks": {
+    "git_diff_check": "PASS",
+    "explicit_exception_integrity_checks": true,
+    "original_status_split_null_flags_cells_and_errors_preserved": true,
+    "formal_request_join_and_record_pin_uniqueness_checked": true,
+    "caller_and_received_count_envelopes_compared_to_derived_counts": true,
+    "old_default_command_retained": true,
+    "old24_runs": 0,
+    "actual96_runs": 0,
+    "old_tests_or_full_qa_runs": 0,
+    "new_native_or_training_runs": 0,
+    "figure_generation": false,
+    "central_memory_mutation": false,
+    "commit_or_push": false
+  },
+  "local_setup_note": "The root task concurrently created the requested private directory for EXPECTED_COUNTS.json and SOURCE_BINDING.json. mkdir reported File exists; no existing file was overwritten. New TEST_RESULTS.xml and pytest_v1 hold only this test run.",
+  "limitations": [
+    "Synthetic tests check projection and join/accounting behavior; no new physical truth or admission is established.",
+    "Physical RESULT/DRC/EMX and formal ledger source verification remains the caller's responsibility, explicitly labeled in output.",
+    "Neither immutable reference counts nor cumulative pool coverage is updated."
+  ],
+  "next_legal_entry": "Root may perform its one authorized new96 invocation with the pinned received SHA, its six-field EXPECTED_COUNTS.json envelope and caller_verified_sources=True; preserve old24 results."
+}

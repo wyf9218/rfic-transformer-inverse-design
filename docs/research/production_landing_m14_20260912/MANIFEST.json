@@ -1,0 +1,66 @@
+{
+  "schema": "eucap15_m14_manifest.v1",
+  "utc": "2026-09-12 09:23:55 UTC",
+  "files": [
+    {
+      "path": "docs/research/production_landing_m14_20260912/ACTUAL_LANDINGS.json",
+      "sha256": "908915e05277cc15abe6d8d66d56971c9c129b3ea096ac422dc5e34f1f8f33fe"
+    },
+    {
+      "path": "docs/research/production_landing_m14_20260912/EXPECTED_COUNTS.json",
+      "sha256": "cf1cc9af6ce5cdfadd60892ae82b7f6aab6eb1bafafbfb075bb8652a10c07d3b"
+    },
+    {
+      "path": "docs/research/production_landing_m14_20260912/FIGURE_SOURCE_NOTE.md",
+      "sha256": "8af755bf2a72af90503ef477ab8e99d10a96dfab2e06c3a43c09d392e270a96f"
+    },
+    {
+      "path": "docs/research/production_landing_m14_20260912/RECEIPT.json",
+      "sha256": "7f9c3918825b5d5821fa89f543a4bdfb0c61965664b5856a2a1f2a5ca743b080"
+    },
+    {
+      "path": "docs/research/production_landing_m14_20260912/RECEIVED_NEW35.json",
+      "sha256": "8c99759d760654691e1dacb4235a92aa66e493427657fc7da7c1a55a86b554e3"
+    },
+    {
+      "path": "docs/research/production_landing_m14_20260912/SNAPSHOT.json",
+      "sha256": "4cd892db4ab98307aadd54269a04066c7eb830e9e30e3db60a15eef3e5053b19"
+    },
+    {
+      "path": "docs/research/production_landing_m14_20260912/SOURCE_BINDING.json",
+      "sha256": "c087f33c2d46e9d1ae1e5df7bbedf6e052b0aad22d4c3a2eaa02075bae8a424b"
+    },
+    {
+      "path": "docs/research/production_landing_m14_20260912/TEST_RECEIPT.json",
+      "sha256": "7e12b80516129e90da215341b5c13c718d85a18fe206635c028863a83f6e3e5a"
+    },
+    {
+      "path": "docs/research/production_landing_m14_20260912/TEST_RESULTS.xml",
+      "sha256": "3d332f727bc711993664596d2c8866bde603677f25fc7bed729e2f2b3b8e86b4"
+    },
+    {
+      "path": "research/broadband56_nn/eucap15_received_landing_increment.py",
+      "sha256": "af048515dabbed4c4ab37d7d8912bf71de34a0122bd54d34739c2549a9bb8f76"
+    },
+    {
+      "path": "tests/test_eucap15_received_landing_increment.py",
+      "sha256": "c0e0586e7ffb0fc58b11bebed9067aeecda1c26ad9c4772ac1f1297620ff5ba8"
+    },
+    {
+      "path": "docs/research/CURRENT_STATUS.md",
+      "sha256": "d7c368855247f909e187fbfe8aec0056f56bbd1f9b8bd5e1441b1acb69260e82"
+    }
+  ],
+  "private_native_sources": [
+    {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/samebatch_hotpath_v1/joint_cut_20260912T091822669311Z/OBSERVATION.json",
+      "sha256": "0cb13d4090eec44a1ab77ad3edcdc654009f128834107d3ff740fe74bb0f0a1f"
+    },
+    {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/samebatch_hotpath_v1/joint_cut_20260912T091822669311Z/NEW_TERMINAL_RESULTS.json",
+      "sha256": "15ab392e79fd2d6b9d0a805101dd9b6c3a43ed775774ff08f3fbd6011115eba2"
+    }
+  ],
+  "copy_note": "Eight private evidence copies are byte-identical. TEST_RESULTS.xml is LF-terminated for Git; original SHA c823d079b4f72c3a019bc279587c49fab00571ec6e126fc761e5305c05d1804a remains in TEST_RECEIPT.",
+  "scope": "One new35 physical reception plus one first projection of prior96; not new native simulation, not cumulative coverage or completed100K."
+}

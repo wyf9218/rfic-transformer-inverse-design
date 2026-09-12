@@ -1,5 +1,10 @@
 """Project new received terminals onto the unchanged 512-cell train reference.
 Read-only inputs. No admission, sampling, model, simulator, or cumulative union update.
+
+Pins bind the received cut; they do not verify its underlying physical evidence.
+For another cut the caller must already have verified the RESULT/physical chain
+and the formally committed record joins. This module checks that cut's internal
+identities and counts, and never performs or grants formal admission.
 """
 import argparse, csv, hashlib, io, json, math
 from collections import Counter
@@ -10,36 +15,105 @@ from research.broadband56_nn import eucap15_acquisition as c
 PIN_BASE = "8774136cb90164549b465135d41d206371b8616a86d0b3cf5595848971a948e9"
 PIN_RECEIVED = "0efdb72f1dd544f97112a2b54ef90449ce3a6f88a8992de45774c7594eb7bf00"
 PIN_CORE = "d55eedd5955a6654966fd3dd0ad32074cae4376ef2709ffdbbcfe8edee431f0a"
+# Backward-compatible envelope for the already verified, frozen M12 cut only.
+M12_COUNTS = dict(received_terminal=24, emx_completed=20, strict_in_range=7,
+                  formal_admitted=7, pending_formal=0, formal_train=5)
+SPLITS = ("train", "validation", "test")
+COUNT_KEYS = (*M12_COUNTS, "formal_validation", "formal_test",
+              *("pending_formal_" + split for split in SPLITS))
+DOC_COUNTS = dict(new_terminal="received_terminal", new_emx_completed="emx_completed",
+                  new_strict_range_unique="strict_in_range",
+                  fresh_formal_this_increment="formal_admitted",
+                  new_core_without_formal="pending_formal")
+
+def require(condition, message):
+    if not condition:
+        raise ValueError(message)
+
+def unique_pin(pin, seen, label):
+    """Check a supplied pin's shape/uniqueness, without claiming its authenticity."""
+    require(isinstance(pin, dict), label + ": missing pin")
+    path, sha = pin.get("path"), pin.get("sha256")
+    require(isinstance(path, str) and bool(path.strip()), label + ": invalid path")
+    c._hash(sha)
+    require(type(pin.get("bytes")) is int and pin["bytes"] > 0,
+            label + ": positive byte count required")
+    for identity in (("path", path), ("sha256", sha)):
+        require(identity not in seen, label + ": duplicate record pin " + identity[0])
+        seen.add(identity)
+
+def check_counts(expected, actual, label, *, required=()):
+    require(isinstance(expected, dict) and set(required) <= expected.keys(),
+            label + ": incomplete count envelope")
+    for key, value in expected.items():
+        require(key in actual and type(value) is int and value >= 0,
+                label + ": invalid count " + key)
+        require(actual[key] == value,
+                f"{label}: {key} derived {actual[key]} != supplied {value}")
 
 def read(path, sha):
     raw = Path(path).read_bytes()
-    assert hashlib.sha256(raw).hexdigest() == sha, str(path)
+    c._hash(sha)
+    require(hashlib.sha256(raw).hexdigest() == sha, "SHA-256 mismatch: " + str(path))
     return raw
 
-def run(base_path, received_path):
+def run(base_path, received_path, *, received_sha256=PIN_RECEIVED,
+        expected_counts=None, caller_verified_sources=False):
+    legacy = received_sha256 == PIN_RECEIVED and expected_counts is None
+    require(legacy or caller_verified_sources is True,
+            "Caller must have verified physical sources and formal record joins")
+    require(legacy or expected_counts is not None, "An explicit count envelope is required")
+    expected_counts = dict(M12_COUNTS) if legacy else expected_counts
     read(c.__file__, PIN_CORE)
     base = c.validate_coverage(list(csv.DictReader(io.StringIO(read(base_path, PIN_BASE).decode()))))
-    assert sum(r[c.COUNTS[0]] for r in base) == 3801
-    doc = json.loads(read(received_path, PIN_RECEIVED))
-    assert doc["feature_order"] == ["Lp_nH", "Ls_nH", "Qmin", "K_abs"]
+    require(sum(r[c.COUNTS[0]] for r in base) == 3801, "Frozen baseline must contain 3801 train rows")
+    doc = json.loads(read(received_path, received_sha256))
+    require(doc["feature_order"] == ["Lp_nH", "Ls_nH", "Qmin", "K_abs"], "Feature order mismatch")
     rows = doc["rows"]
-    assert len(rows) == 24 == doc["new_terminal"]
-    assert len({r["request_id"] for r in rows}) == len({r["geometry_sha256"] for r in rows}) == len(rows)
+    require(isinstance(rows, list), "Received rows must be a list")
     output, train_cells, groups = [], [], {}
+    identities, result_pins, formal_pins = set(), set(), set()
+    totals = Counter({key: 0 for key in COUNT_KEYS})
     for r in rows:
-        assert r["assigned_development_split"] in ("train", "validation", "test")
+        require(isinstance(r, dict), "Received row must be an object")
+        for key in ("request_id", "source", "status"):
+            require(isinstance(r.get(key), str) and bool(r[key].strip()), "Invalid " + key)
+        c._hash(r["geometry_sha256"])
+        for key in ("request_id", "geometry_sha256"):
+            identity = (key, r[key])
+            require(identity not in identities, "Duplicate source row " + key)
+            identities.add(identity)
+        unique_pin(r.get("result_pin"), result_pins, "RESULT")
+        split = r["assigned_development_split"]
+        require(split in SPLITS, "Original split must be train, validation or test")
         actual = r["actual_response"]
         fresh = r["status"] == "FRESH_EMX_EXTRACTED"
-        assert fresh == (actual is not None)
+        require(fresh == (actual is not None), "Status/actual response mismatch")
         cell = None
         if fresh:
-            assert len(actual) == 4 and all(type(x) in (int, float) and math.isfinite(x) for x in actual)
+            require(isinstance(actual, list) and len(actual) == 4 and
+                    all(type(x) in (int, float) and math.isfinite(x) for x in actual),
+                    "Four finite actual response values required")
+            require(type(r["strict"]) is bool, "Fresh response requires explicit strict flag")
             cell = c.actual_landing([actual[j] for j in (0, 1, 3)])
         eligible = r["strict"] is True and cell is not None
-        assert r["core15_eligible"] is eligible
+        require(r["core15_eligible"] is eligible or
+                (not fresh and r["core15_eligible"] is None and r["strict"] in (False, None)),
+                "Source core eligibility disagrees with strict/range values")
         formal = r["formal_records"]
-        assert (len(formal) == 1) if eligible else (len(formal) == 0)
-        train = eligible and r["assigned_development_split"] == "train"
+        require(isinstance(formal, list) and len(formal) <= int(eligible),
+                "Formal records require an eligible row and at most one exact join")
+        for record in formal:
+            require(isinstance(record, dict) and record.get("request_id") == r["request_id"],
+                    "Formal request_id does not exactly match received row")
+            unique_pin(record.get("pin"), formal_pins, "Formal")
+            for key in ("geometry_sha256", "candidate_geometry_identity_sha256", "source",
+                        "assigned_development_split"):
+                if key in record:
+                    require(key in r and record[key] == r[key], "Formal source row mismatch: " + key)
+        admitted = eligible and len(formal) == 1
+        pending = eligible and not admitted
+        train = admitted and split == "train"
         nbase = base[cell[0]*64 + cell[1]*8 + cell[2]][c.COUNTS[0]] if train else None
         if train:
             train_cells.append(tuple(cell))
@@ -47,32 +121,41 @@ def run(base_path, received_path):
                     train_reference_comparison_eligible=train,
                     frozen3801_train_cell_count=nbase,
                     train_cell_was_empty=(nbase == 0) if train else None,
-                    target_cell=None, predicted_cell=None,
-                    target_prediction_availability="NOT_IN_RECEIVED_CUT_NOT_INFERRED",
-                    requested_target_error=None)
+                    formally_admitted_in_received_source=admitted,
+                    qualified_pending_formal=pending)
+        item.setdefault("target_cell", None)
+        item.setdefault("predicted_cell", None)
+        item.setdefault("target_prediction_availability",
+                        "SOURCE_FIELDS_PRESERVED_NOT_RECONSTRUCTED" if
+                        any(item[key] is not None for key in ("target_cell", "predicted_cell")) else
+                        "NOT_IN_RECEIVED_CUT_NOT_INFERRED")
+        item.setdefault("requested_target_error", None)
         output.append(item)
-        g = groups.setdefault(r["source"], Counter())
-        g["received_terminal"] += 1
-        g["emx_completed"] += int(fresh)
-        g["strict_in_range"] += int(eligible)
-        g["formal_train"] += int(train)
-        g["formal_validation"] += int(eligible and r["assigned_development_split"] == "validation")
-        g["formal_test"] += int(eligible and r["assigned_development_split"] == "test")
-    assert sum(r["core15_eligible"] for r in rows) == 7
-    assert sum(r["status"] == "FRESH_EMX_EXTRACTED" for r in rows) == 20
+        counts = dict(received_terminal=1, emx_completed=int(fresh), strict_in_range=int(eligible),
+                      formal_admitted=int(admitted), pending_formal=int(pending))
+        for name in SPLITS:
+            counts["formal_" + name] = int(admitted and split == name)
+            counts["pending_formal_" + name] = int(pending and split == name)
+        groups.setdefault(r["source"], Counter({key: 0 for key in COUNT_KEYS})).update(counts)
+        totals.update(counts)
+    check_counts(expected_counts, totals, "Caller envelope", required=M12_COUNTS)
+    check_counts({key: doc[name] for name, key in DOC_COUNTS.items() if name in doc},
+                 totals, "Received envelope", required=("received_terminal",))
     train_rows = [r for r in output if r["train_reference_comparison_eligible"]]
-    assert len(train_rows) == 5
     empty = sorted({tuple(r["actual_cell"]) for r in train_rows if r["train_cell_was_empty"]})
     low = [r for r in train_rows if r["frozen3801_train_cell_count"] < 5]
-    return dict(schema="eucap15_actual_landing_increment_m13.v1",
+    return dict(schema="eucap15_actual_landing_increment_m13.v1" if legacy else
+                       "eucap15_actual_landing_increment.v2",
         generated_utc=datetime.now(timezone.utc).isoformat(),
         observation_utc=doc["observed_utc"], baseline_observation_utc=doc["baseline_utc"],
         input_pins=[dict(path=str(base_path),sha256=PIN_BASE),
-                    dict(path=str(received_path),sha256=PIN_RECEIVED),
+                    dict(path=str(received_path),sha256=received_sha256),
                     dict(path=c.__file__,sha256=PIN_CORE)],
         scope="DESCRIPTIVE_INCREMENT_ONLY_NOT_CUMULATIVE_POOL_OR_ACQUISITION_SUPERIORITY",
         baseline_train_rows=3801, baseline_cells=512,
         baseline_occupied_cells=sum(r[c.COUNTS[0]] > 0 for r in base),
+        source_counts=dict(totals), expected_source_counts=expected_counts,
+        source_reliance="CALLER_VERIFIED_PHYSICAL_SOURCES_AND_FORMAL_JOINS_NOT_REVERIFIED_HERE",
         by_source={k:dict(v) for k,v in groups.items()},
         eligible_new_train_rows=len(train_rows), distinct_train_landing_cells=len(set(train_cells)),
         train_landings_in_baseline_empty_cells=sum(r["train_cell_was_empty"] for r in train_rows),
@@ -84,15 +167,26 @@ def run(base_path, received_path):
         train_max_q=max((r["actual_response"][2] for r in train_rows),default=None),
         cumulative_coverage_gain=None, cumulative_union_geometry_count=None,
         scope_caveats=[
-            "Five train rows are compared only with unchanged 3801 reference, not the full current admitted pool.",
+            ("Five" if legacy else str(len(train_rows))) +
+            " train rows are compared only with unchanged 3801 reference, not the full current admitted pool.",
             "Original source/split/RESULT flags/formal pins and all failures retained.",
             "No re-extraction, fresh EMX, native admission, target generation, model update or sampling decision.",
-            "Validation/test never contributes to train occupancy; no fabricated DOE target error.",
+            "Validation/test/pending-formal never contributes to train occupancy; no fabricated DOE target error.",
+            "Received pin and status strings do not prove physical truth or admission; caller verification is required.",
             "No same-budget superiority or final100K support inference; missing target/predicted cells are not reconstructed."
         ], rows=output)
 
 if __name__ == "__main__":
     p=argparse.ArgumentParser()
     p.add_argument("--baseline",required=True);p.add_argument("--received",required=True)
+    p.add_argument("--received-sha256", default=PIN_RECEIVED)
+    p.add_argument("--expected-counts", type=json.loads,
+                   help="JSON count envelope: received_terminal, emx_completed, strict_in_range, "
+                        "formal_admitted, pending_formal, formal_train; other source_counts optional")
+    p.add_argument("--caller-verified-sources", action="store_true",
+                   help="Acknowledge existing caller verification of physical sources and formal joins")
     a=p.parse_args()
-    print(json.dumps(run(a.baseline,a.received),ensure_ascii=False,allow_nan=False,indent=2))
+    print(json.dumps(run(a.baseline,a.received,received_sha256=a.received_sha256,
+                         expected_counts=a.expected_counts,
+                         caller_verified_sources=a.caller_verified_sources),
+                     ensure_ascii=False,allow_nan=False,indent=2))

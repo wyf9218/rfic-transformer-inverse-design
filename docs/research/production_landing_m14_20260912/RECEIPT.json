@@ -1,0 +1,66 @@
+{
+  "schema": "eucap15_landing_increment_m14.v1",
+  "utc": "2026-09-12T09:21:15.246540+00:00",
+  "status": "PASS_REAL_RECEIVED96_PROJECTION",
+  "input": {
+    "path": "/Users/wyf/Documents/模拟变压器AI反向建模/github_worktrees/eucap15-mlp-capacity-20260909/docs/research/production_landing_m13_20260912/RECEIVED_NEW96.json",
+    "sha256": "b0ba0fb780760e3d3ddce82bd3bc8d566f15930a45d5a21a4749bc42dae3eb6d"
+  },
+  "source_binding": {
+    "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/landing_increment_m14_v2/SOURCE_BINDING.json",
+    "sha256": "c087f33c2d46e9d1ae1e5df7bbedf6e052b0aad22d4c3a2eaa02075bae8a424b"
+  },
+  "script": {
+    "path": "research/broadband56_nn/eucap15_received_landing_increment.py",
+    "sha256": "af048515dabbed4c4ab37d7d8912bf71de34a0122bd54d34739c2549a9bb8f76"
+  },
+  "tests": {
+    "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/landing_increment_m14_v2/TEST_RECEIPT.json",
+    "sha256": "7e12b80516129e90da215341b5c13c718d85a18fe206635c028863a83f6e3e5a",
+    "new_focused_tests": 3,
+    "old_suite_repeated": false
+  },
+  "output": {
+    "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/landing_increment_m14_v2/ACTUAL_LANDINGS.json",
+    "sha256": "908915e05277cc15abe6d8d66d56971c9c129b3ea096ac422dc5e34f1f8f33fe"
+  },
+  "execution": {
+    "cwd": "/Users/wyf/Documents/模拟变压器AI反向建模/github_worktrees/eucap15-mlp-capacity-20260909",
+    "command": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/broadband56_nn_v2_20260907T212216Z/environment/bin/python -B -m research.broadband56_nn.eucap15_received_landing_increment --baseline docs/research/eucap15_abc_increment_20260910/COVERAGE_BEFORE.csv --received docs/research/production_landing_m13_20260912/RECEIVED_NEW96.json --received-sha256 b0ba0fb780760e3d3ddce82bd3bc8d566f15930a45d5a21a4749bc42dae3eb6d --expected-counts '{\"received_terminal\":96,\"emx_completed\":77,\"strict_in_range\":34,\"formal_admitted\":31,\"pending_formal\":3,\"formal_train\":18}' --caller-verified-sources",
+    "exit_code": 0,
+    "new96_runs": 1,
+    "old24_runs": 0
+  },
+  "counts": {
+    "received_terminal": 96,
+    "emx_completed": 77,
+    "strict_in_range": 34,
+    "formal_admitted": 31,
+    "pending_formal": 3,
+    "formal_train": 18,
+    "formal_validation": 10,
+    "formal_test": 3,
+    "pending_formal_train": 2,
+    "pending_formal_validation": 0,
+    "pending_formal_test": 1
+  },
+  "coverage": {
+    "baseline_train": 3801,
+    "baseline_cells": 512,
+    "baseline_occupied_cells": 159,
+    "formal_train_rows": 18,
+    "distinct_cells": 17,
+    "empty_baseline_cells_observed": 0,
+    "rows_in_baseline_underfilled_cells": 1,
+    "k_above_point8": 0,
+    "q10_20": 18,
+    "cumulative_gain": null
+  },
+  "limits": [
+    "Read-only projection of prior physical results, not additional native solves or formal submissions.",
+    "Only exact formally accepted TRAIN rows contribute coverage; 10 validation, 3 test, 3 pending-formal rows are retained but excluded.",
+    "Window overlaps neither the earlier M12 24-row projection nor its backfilled rows; no cumulative union coverage is inferred.",
+    "All original RESULT/null/status/split/target/predicted cells retained. Actual EM cell recomputed with existing frozen bins; no target error invented.",
+    "Current native state will be recorded separately from the 09:05:27 source observation. No native process, lock, controller, budget, sampling baseline or model modified."
+  ]
+}

@@ -1,0 +1,43 @@
+{
+  "schema": "eucap15_m14_existing_result_source_binding.v1",
+  "scope": "One new offline projection of the already received M13 cohort, not new EMX/qualification/training.",
+  "received": {
+    "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/landing_increment_m13_v1/RECEIVED_NEW96.json",
+    "sha256": "b0ba0fb780760e3d3ddce82bd3bc8d566f15930a45d5a21a4749bc42dae3eb6d"
+  },
+  "native_observation": {
+    "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/samebatch_hotpath_v1/joint_cut_20260912T090526283300Z/OBSERVATION.json",
+    "sha256": "29299569161cbb9d1e3e275ac3665415525df85e4b6043d24134e774cc370dd5"
+  },
+  "raw_new_payload": {
+    "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/samebatch_hotpath_v1/joint_cut_20260912T090526283300Z/NEW_TERMINAL_RESULTS.json",
+    "sha256": "937d2ee965326a47eb28a8fe8c08717105fef9986c935c7b80ec107b5d3c6ebb"
+  },
+  "ledger_head": {
+    "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/qualified15_single_member_v1/records/006246.json",
+    "sha256": "72c7e38139c9dc24c5b3f5f16a4a33b4690ed0f8ca24cdbd737c22687a231f7c",
+    "bytes": 36137
+  },
+  "formal_verification": "Sole native owner read new5665..6246 only; root joined31fresh formal requestIDs to exactly31 of new34 core candidates;3 remainuncommitted.",
+  "expected_counts": {
+    "received_terminal": 96,
+    "emx_completed": 77,
+    "strict_in_range": 34,
+    "formal_admitted": 31,
+    "pending_formal": 3,
+    "formal_train": 18
+  },
+  "geometry_identity_scope": "96canonical parameter-geometry identities unique within this received cohort;34candidatecore does not equal34newformallyaccepted.",
+  "baseline": {
+    "path": "/Users/wyf/Documents/模拟变压器AI反向建模/github_worktrees/eucap15-mlp-capacity-20260909/docs/research/eucap15_abc_increment_20260910/COVERAGE_BEFORE.csv",
+    "sha256": "8774136cb90164549b465135d41d206371b8616a86d0b3cf5595848971a948e9",
+    "train_rows": 3801,
+    "cells": 512
+  },
+  "constraints": [
+    "No source data, source split, original proposal target/predicted cells or model changes.",
+    "Only31formally admitted responses are eligible for split-specific counting;only18originaltrain contribute tocoverage.",
+    "Old24projection andprevious6/3/1/fullQA are not rerun.",
+    "This binding is not a production publisher or independent requalification of native artifacts."
+  ]
+}

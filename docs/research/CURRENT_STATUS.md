@@ -1,21 +1,20 @@
 # Current15GHz research/production status
 
-Latest actual native observation:2026-09-12 09:05:27.301344UTC.
-[M13 actual successor installation and new77EMX](production_landing_m13_20260912/README.md); [prior M12](qualification_batch_20260912/publication_v12/README.md).
+Latest actual native observation: 2026-09-12 09:18:23.778838 UTC.
+[M14 new production evidence](production_landing_m14_20260912/SNAPSHOT.json); [prior M13 installation](production_landing_m13_20260912/README.md).
 
-- Requested48/executor48;actual nativeEMX0 at one instant,persistedEMXpermit1(notnativecount).
-- Window08:31:50→09:05:27UTC:new77fresh,15candidatefailure,4analytic;96newterminal.
-- New34strict/range candidate-unique:31formal/3notformal;original20train/10val/4test unchanged.
-- Fresh formal+31,history formal+551;certifiedunionlowerbound6246,nottrainingrows orfull100K.
-- Originala083owner1039340/metadata1145088 alive;resourcePASS18/5.Instant0doesnotproveproductionstopped.
-- Actualnewstandby2839662 installed09:02:31,replacing onlyquiescentoldwaiter,nohealthyowner/solver signals.
-- NewautomaticnextbatchCadence8/Calibre8/EMX48,endpointv2;waits originalbatchterminal+ownerexit.
-- Currentimmutableupstream1/1;nextnativev2success/actual48notyetobserved.
-- Current256:171terminal=127fresh+29candidatefail+15analytic;85withoutterminalarenot85running.
-- Logicalcore57/formal54;3newpendingformal.Deadline15:30:49 and256/12h/5GiBunchanged.
-- Availablefilesystem479216136192B;projectedunreservedbatchbudget57069568B;quotaUNKNOWN.
-- EarlierM12five-trainlandingdiagnostic:noempty/sparsecelladdition againstfrozen3801;notcumulativecoverage.
-- Noold15training/128/64/6failure/fullQA/fullpool/AIpaperfigure repeated.Full100K/final10Kincomplete.
+- Requested48 / executor48 / actual native EMX5, each2CPU; resourcePASS, not full48 proof.
+- Window09:05:27–09:18:23:31 new EMX completions,4 candidate failures,35 terminal.
+- New19 strict/range candidate-unique:14 formal and5 pending; original splits preserved.
+- Fresh formal+17 includes3 prior pending; historical formal+146; certified lower bound6409.
+- Same original owner1039340 and metadata1145088 alive; no process restarted/signalled.
+- Installed standby2839662 waits original batch terminal and owner exit automatically.
+- Current upstream1/1; next8/8/48 installed but first successor native execution not yet observed.
+- Original256:206 terminal,50 without terminal; logicalcore76/formal71/pending5.
+- Original256/12h/5GiB budget retained; diskfree477596786688B, quotaUNKNOWN.
+- New offline projection of earlier received96:18 formal TRAIN rows,17 cells,0 baseline-empty cells.
+- Not cumulative coverage or algorithm superiority; no old experiments or figures regenerated.
+- Full100K and final independent10K remain incomplete.
 [First real controlled64 result](20260911_controlled64_first_real.md) is now verified:
 1 actual DOE EMX start/complete at the08:24:57 snapshot; strict-valid but K_abs0.1711<0.2,
 so0 new qualified in-range samples. Original14 analytical failures remain in64; no advantage claim.
