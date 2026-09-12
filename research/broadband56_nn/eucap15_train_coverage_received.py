@@ -22,6 +22,8 @@ SCOPE = "RECEIVED_SOURCE_UNION_NOT_FULL_PRODUCTION"
 FIELDS = list(campaign.GEOMETRY_FIELDS)
 PRE_RESUME_IMPLEMENTATION = dict(sha256="53db2077f90a5caac85ebc41620f1129c5000ead8da9e996b0da9761d4f87857",
                                  published_commit="9918a63de716652a146b80caba90315d01ac965e")
+PRE_EMBEDDED_IMPLEMENTATION = dict(sha256="ba11ac8af8180fe866365044918017e453e9a1e17b21434a4995d0c883eb5f99",
+                                  published_commit="4c6abad0d124eb3db0e013f55f43a787cc8bc453")
 
 
 def require(ok, message):
@@ -86,12 +88,96 @@ def resume_state(checkpoint, coverage_pin, received_pin):
     return set(identities), consumed
 
 
+def compact_groups(received):
+    """Select declared formal-train cohorts without consuming held-out labels."""
+    old_key, mixed_key = "prior_formal_backfill_train_rows", "prior_formal_backfill_rows"
+    require(not (old_key in received and mixed_key in received), "CONFLICTING_BACKFILL_KEYS")
+    schema = received["schema"]
+    if re.fullmatch(r"eucap15_new[1-9][0-9]*_compact_train_sources\.v1", schema):
+        key = old_key
+    elif schema == "eucap15_new27_compact_train_and_pending_sources.v1":
+        key = old_key
+    elif schema == "eucap15_new59_compact_train_and_backfill_sources.v1":
+        key = mixed_key
+    else:
+        raise ValueError("Wrong received source schema")
+    require(key in received, "MISSING_DECLARED_BACKFILL_KEY: " + key)
+    current, prior = received["current_formal_train_rows"], received[key]
+    require(isinstance(current, list) and isinstance(prior, list), "Cohorts must be lists")
+    require(all(row["assigned_development_split"] == "train" for row in current),
+            "Non-train current formal source prohibited")
+    selected, excluded = [], []
+    for row in prior:
+        split = row["assigned_development_split"]
+        require(split in ("train", "validation", "test"), "Unknown backfill split")
+        if key == old_key:
+            require(split == "train", "Non-train row in declared train-only backfill")
+        if split == "train":
+            selected.append(row)
+        else:
+            excluded.append(dict(request_id=row["request_id"], split=split,
+                                 reason="NON_TRAIN_BACKFILL_NOT_CONSUMED"))
+    return (("CURRENT_NEW_FORMAL_TRAIN", current), ("PRIOR_FORMAL_BACKFILL_TRAIN", selected)), excluded
+
+
+def require_pin(item, message, with_size=True):
+    require(isinstance(item, dict) and isinstance(item.get("path"), str) and
+            Path(item["path"]).is_absolute() and isinstance(item.get("sha256"), str) and
+            re.fullmatch(r"[0-9a-f]{64}", item["sha256"]) and
+            (not with_size or (type(item.get("bytes")) is int and item["bytes"] > 0)), message)
+
+
+def validate_formal_join(row):
+    """Accept original train headers or the explicit same-pin resolved wrapper."""
+    formal = row["formal_records"]
+    request = row["request_id"]
+    require(isinstance(formal, list) and len(formal) == 1 and formal[0]["request_id"] == request,
+            "Formal header join differs")
+    record = formal[0]
+    if "assigned_split_from_frozen_request" in record:
+        require("native_header" not in record and "split_resolution" not in record and
+                record["assigned_split_from_frozen_request"] == "train", "Formal header join differs")
+        return
+    require(all(field in record for field in ("native_header", "split_resolution", "split_resolution_source",
+                "assigned_development_split")), "MISSING_EXPLICIT_FORMAL_SPLIT_BINDING")
+    header, resolution = record["native_header"], record["split_resolution"]
+    require(record["assigned_development_split"] == row["assigned_development_split"] == "train" and
+            header["request_id"] == resolution["request_id"] == request and
+            header["pin"] == resolution["header_pin"] == record["pin"] and
+            header["assigned_split_from_frozen_request"] == "UNKNOWN" and
+            resolution["assigned_split_from_frozen_request"] == "train", "FORMAL_SPLIT_RESOLUTION_JOIN_DIFFERS")
+    require_pin(record["split_resolution_source"], "FORMAL_SPLIT_RESOLUTION_SOURCE_INVALID", with_size=False)
+    release = resolution["new_result_release"]
+    require_pin(release, "FORMAL_SPLIT_RESOLUTION_RELEASE_INVALID")
+    require(Path(row["result_pin"]["path"]).parent.parent == Path(release["path"]).parent,
+            "FORMAL_SPLIT_RESOLUTION_RESULT_RELEASE_DIFFERS")
+
+
+def embedded_metadata(row):
+    """Use pinned compact metadata itself; never manufacture a second source."""
+    required = ("request_id", "source", "geometry_sha256", "geometry", "geometry_fields", "geometry_units",
+                "assigned_development_split", "result_pin", "formal_records", "strict",
+                "formally_admitted_in_received_source", "valid_for_strict_comparison", "core15_eligible")
+    missing = [field for field in required if field not in row]
+    require(not missing, "EMBEDDED_METADATA_MISSING: " + ",".join(missing))
+    require(isinstance(row["source"], str) and bool(row["source"].strip()), "EMBEDDED_SOURCE_MISSING")
+    require(row["assigned_development_split"] == "train", "Non-train embedded source prohibited")
+    require(all(row[field] is True for field in ("strict", "formally_admitted_in_received_source",
+                "valid_for_strict_comparison", "core15_eligible")), "EMBEDDED_QUALIFICATION_NOT_TRUE")
+    validate_formal_join(row)
+    for item in (row["result_pin"], row["formal_records"][0]["pin"]):
+        require_pin(item, "EMBEDDED_RESULT_OR_FORMAL_PIN_INVALID")
+    return row
+
+
 def run(args):
     paths = {}
     documents = {}
     resuming = bool(args.checkpoint)
-    names = ("coverage", "received", "geometry", "checkpoint") if resuming else (
-        "coverage", "splits", "members", "received", "geometry")
+    require(bool(args.geometry) == bool(args.geometry_sha), "Missing input pair: geometry")
+    names = ("coverage", "received", "checkpoint") if resuming else ("coverage", "splits", "members", "received")
+    if args.geometry:
+        names += ("geometry",)
     for name in names:
         require(getattr(args, name) and getattr(args, name + "_sha"), "Missing input pair: " + name)
         raw, paths[name] = checked(getattr(args, name), getattr(args, name + "_sha"))
@@ -119,18 +205,18 @@ def run(args):
                 "Saved initial identity/occupancy differs")
         consumed = set()
     require(len(baseline) == sum(row[coverage.COUNTS[0]] for row in before), "Saved coverage/identity count differs")
-    require(re.fullmatch(r"eucap15_new[1-9][0-9]*_compact_train_sources\.v1", received["schema"]),
-            "Wrong received source schema")
+    groups, excluded = compact_groups(received)
     require(received["feature_order"] == ["Lp_nH", "Ls_nH", "Qmin", "K_abs"], "Feature order differs")
-    geometry_doc = documents["geometry"]
-    require(geometry_doc["schema"] == "eucap15_train_geometry_metadata_projection.v1", "Wrong geometry source")
-    require(geometry_doc["source"] == {key: received["source_output"][key] for key in ("path", "sha256", "bytes")},
-            "Geometry and received data do not reference the same saved output")
-    geometry_rows = {row["request_id"]: row for row in geometry_doc["rows"]}
-    groups = (("CURRENT_NEW_FORMAL_TRAIN", received["current_formal_train_rows"]),
-              ("PRIOR_FORMAL_BACKFILL_TRAIN", received["prior_formal_backfill_train_rows"]))
-    require(len(geometry_rows) == len(geometry_doc["rows"]) == sum(len(rows) for _, rows in groups) > 0,
-            "Geometry metadata cohort differs")
+    if args.geometry:
+        geometry_doc = documents["geometry"]
+        require(geometry_doc["schema"] == "eucap15_train_geometry_metadata_projection.v1", "Wrong geometry source")
+        require(geometry_doc["source"] == {key: received["source_output"][key] for key in ("path", "sha256", "bytes")},
+                "Geometry and received data do not reference the same saved output")
+        geometry_rows = {row["request_id"]: row for row in geometry_doc["rows"]}
+        require(len(geometry_rows) == len(geometry_doc["rows"]) == sum(len(rows) for _, rows in groups) > 0,
+                "Geometry metadata cohort differs")
+    else:
+        require(sum(len(rows) for _, rows in groups) > 0, "No formal-train rows")
     accepted, disposition, request_ids = [], [], set()
     for group, rows in groups:
         for row in rows:
@@ -138,10 +224,8 @@ def run(args):
             require(request not in request_ids, "Repeated received request")
             request_ids.add(request)
             require(row["assigned_development_split"] == "train", "Non-train source prohibited")
-            formal = row["formal_records"]
-            require(len(formal) == 1 and formal[0]["request_id"] == request and
-                    formal[0]["assigned_split_from_frozen_request"] == "train", "Formal header join differs")
-            supplement = geometry_rows.get(request)
+            validate_formal_join(row)
+            supplement = geometry_rows.get(request) if args.geometry else embedded_metadata(row)
             require(supplement is not None, "Missing train-only geometry join")
             for field in ("request_id", "geometry_sha256", "assigned_development_split", "result_pin", "formal_records"):
                 require(supplement[field] == row[field], "Geometry metadata join differs: " + field)
@@ -184,7 +268,9 @@ def run(args):
     write_json(out / "BASELINE_CHECKPOINT.json", baseline_document)
     write_json(out / "RECEIVED_INCREMENT.json", dict(scope=SCOPE, source_pin=paths["received"],
         original_source_scope=received["scope"], original_source_output=received["source_output"],
-        geometry_metadata_projection=paths["geometry"],
+        geometry_metadata_projection=paths.get("geometry"),
+        geometry_metadata_mode="EXTERNAL_PROJECTION" if args.geometry else "EMBEDDED_PINNED_COMPACT",
+        excluded_non_train_backfills=excluded,
         source_generated_utc=received["generated_utc"], rows=disposition, gain=gain))
     with (out / "COVERAGE_AFTER.csv").open("x", newline="", encoding="utf-8") as stream:
         writer = csv.DictWriter(stream, fieldnames=list(gain["after_coverage"][0]))
@@ -216,6 +302,9 @@ def run(args):
         physical_revalidation="REUSED_SOURCE_CALLER_EVIDENCE_NOT_REEXECUTED", val_test_labels_read=False,
         new_sampling_or_formal_admission=False, source_receipts_modified=False,
         resumed_existing_checkpoint=resuming, previous_implementation=PRE_RESUME_IMPLEMENTATION,
+        previous_embedded_implementation=PRE_EMBEDDED_IMPLEMENTATION,
+        geometry_metadata_mode="EXTERNAL_PROJECTION" if args.geometry else "EMBEDDED_PINNED_COMPACT",
+        received_schema=received["schema"], excluded_non_train_backfills=excluded,
         consumed_source_sha256s=sorted(consumed | {paths["received"]["sha256"]}),
         artifacts=[pin(path) for path in sorted(out.iterdir())])
     write_json(out / "RECEIPT.json", summary)
@@ -230,7 +319,7 @@ def run(args):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     for name in ("coverage", "splits", "members", "received", "geometry", "checkpoint"):
-        required = name in ("coverage", "received", "geometry")
+        required = name in ("coverage", "received")
         parser.add_argument("--" + name, required=required)
         parser.add_argument("--" + name + "-sha", required=required)
     parser.add_argument("--out", required=True)

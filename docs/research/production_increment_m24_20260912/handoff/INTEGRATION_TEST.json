@@ -1,0 +1,19 @@
+{
+  "actual_private_python": "/usr/bin/python3.12",
+  "command": [
+    "/volumes/research-localdata/ywang3652/rfic-transformer-inverse-design-mars56-s4p-20260702/.venv/bin/python",
+    "-B",
+    "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_budget_walk_20260912T112357738265Z/stage_20260912T122818211527Z/test_waiter_reservation.py",
+    "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_budget_walk_20260912T112357738265Z/runtime"
+  ],
+  "native_actions": 0,
+  "old_test_suites_repeated": 0,
+  "production_signals": 0,
+  "returncode": 0,
+  "status": "PASS",
+  "stderr": ".\n----------------------------------------------------------------------\nRan 1 test in 0.126s\n\nOK\n",
+  "stdout": "",
+  "synthetic_parent_and_child_only": true,
+  "unique_integration_tests": 1,
+  "utc": "2026-09-12T12:28:18.889071+00:00"
+}

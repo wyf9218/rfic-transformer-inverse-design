@@ -1,0 +1,161 @@
+{
+  "schema": "eucap15_m24_increment_manifest.v1",
+  "observation_utc": "2026-09-12T12:29:42.606254+00:00",
+  "baseline_utc": "2026-09-12T11:59:12.528673+00:00",
+  "source_git": "4c6abad0d124eb3db0e013f55f43a787cc8bc453",
+  "scope": "Only changed or new M24 artifacts; no full historical rehash or old tests.",
+  "files": [
+    {
+      "path": "docs/research/production_increment_m24_20260912/FINAL_SNAPSHOT.json",
+      "sha256": "eb4e53433a9f24a481089df28edb77e34351cc13cbaef2dd69c0cb4277f17465"
+    },
+    {
+      "path": "docs/research/production_increment_m24_20260912/LANDING_ADD43_RECEIPT.json",
+      "sha256": "f829a5ed7158ea2176e66106261899e474aa9083a17e40a54e111db816039dd5"
+    },
+    {
+      "path": "docs/research/production_increment_m24_20260912/LANDING_ADD48_RECEIPT.json",
+      "sha256": "0cb92b99edfc29758d9421157e1b98492fa95e67a22632829dbf27212c11a5c7"
+    },
+    {
+      "path": "docs/research/production_increment_m24_20260912/LANDING_NEW59_RECEIPT.json",
+      "sha256": "1042b9fa231abd374748005fed81d6998e7c7b09b5889ef38312f3c4ef820cf6"
+    },
+    {
+      "path": "docs/research/production_increment_m24_20260912/README.md",
+      "sha256": "314f3402c17c8d8172bf056b6012f25fcc98959a56bfbf96ecf83a5e3120c375"
+    },
+    {
+      "path": "docs/research/production_increment_m24_20260912/SNAPSHOT.json",
+      "sha256": "f6176d53ab55192c83d37517cd4adb8ff7c382c26003a9f7db3755964068f605"
+    },
+    {
+      "path": "docs/research/production_increment_m24_20260912/TRAIN_ADD43_SOURCE_ROWS.json",
+      "sha256": "03d52eb2f775a6adc5054c6e58805984d83a55696bbf7e1ec1e61f989b1d5eaf"
+    },
+    {
+      "path": "docs/research/production_increment_m24_20260912/TRAIN_ADD48_SOURCE_ROWS.json",
+      "sha256": "6a240a6b20b9ee1194ced14a447835b19b5e9a4528d28520020c1519e0f74bff"
+    },
+    {
+      "path": "docs/research/production_increment_m24_20260912/TRAIN_COVERAGE_FINAL_RECEIPT.json",
+      "sha256": "92e933bed4bd268f946f5c2b4577f50bffb0a6e659a84e7b0c2700c9710371e8"
+    },
+    {
+      "path": "docs/research/production_increment_m24_20260912/TRAIN_COVERAGE_RECEIPT.json",
+      "sha256": "b3ade3847cb691f93c53331e29035098ac2bc53b23396ad382477c753b216d20"
+    },
+    {
+      "path": "docs/research/production_increment_m24_20260912/TRAIN_EMBEDDED_FIRST_FAILURE.json",
+      "sha256": "ddc1ab0643880a0d8e38cfc8a8edbb9b2adab5f4abd14348f7ea00fa14788bf5"
+    },
+    {
+      "path": "docs/research/production_increment_m24_20260912/TRAIN_EMBEDDED_TARGETED_CHECKS.json",
+      "sha256": "9742be08ea3ddbdc96838ea15769160e86b6a7946706bc67b74e5d5e6221c17c"
+    },
+    {
+      "path": "docs/research/production_increment_m24_20260912/TRAIN_NEW59_SOURCE_ROWS.json",
+      "sha256": "b880577725c1949aba41905060fe7f473bbf9a57dd01728c22a81439779f2d5f"
+    },
+    {
+      "path": "docs/research/production_increment_m24_20260912/handoff/BOUNDARY_RESERVED.json",
+      "sha256": "e8602e4546ce058d88e93382315eb11766de677e7f6117a4d4ea5ddc175421ab"
+    },
+    {
+      "path": "docs/research/production_increment_m24_20260912/handoff/INTEGRATION_TEST.json",
+      "sha256": "c465cb8b7b2adbdb1b85fed0f5135954478860e745b326a0dd12176a41d52c5b"
+    },
+    {
+      "path": "docs/research/production_increment_m24_20260912/handoff/LAUNCH.json",
+      "sha256": "84ecf2cf7cb3de2ad33f9ba964ef9d307c8d0e5ba30ec97db32b395043080ebd"
+    },
+    {
+      "path": "docs/research/production_increment_m24_20260912/handoff/PREVIOUS_INSTALLER_TERMINAL.json",
+      "sha256": "80284b6444aa48983a14b692628886a6ab06a9a4955d106e0b50c9e093dcd7b2"
+    },
+    {
+      "path": "docs/research/production_increment_m24_20260912/handoff/SPECIFICATION.json",
+      "sha256": "d91fb6382eb14e76458b143415a42d9b78e6be6de2be6c154b05646b8d795df0"
+    },
+    {
+      "path": "docs/research/production_increment_m24_20260912/handoff/START.json",
+      "sha256": "cd069e37b2d8763163eeca98c2696d4c7eefa6c8dc7558f3f3275e40d2ed0c4d"
+    },
+    {
+      "path": "docs/research/production_increment_m24_20260912/handoff/code/deploy.py",
+      "sha256": "aa90ea72ab559a8a927c3b8d6a7bbc1a8e4867b0daa4bff7b077bd14aadf9c35"
+    },
+    {
+      "path": "docs/research/production_increment_m24_20260912/handoff/code/installer_continuation.py",
+      "sha256": "f49c982bf95b5ab48f66108f3baabb9b06ca97231f8eb0839fe11ac360b63b15"
+    },
+    {
+      "path": "docs/research/production_increment_m24_20260912/handoff/code/test_waiter_reservation.py",
+      "sha256": "f9d3fce20bcc9e80520840b3ae3fcb1f7cd40a511fe26fad5e88475c1c7991f4"
+    },
+    {
+      "path": "docs/research/production_increment_m24_20260912/handoff/code/waiter_reservation.py",
+      "sha256": "fccbd68a23416a8fdf8722b4a9162c4f794eff2651460d17390ca1b2f227e7bb"
+    },
+    {
+      "path": "docs/research/CURRENT_STATUS.md",
+      "sha256": "717df9e00e9394901245f8b00979cfe45a5e74a31084fbbd538362b13b1f70c4"
+    },
+    {
+      "path": "research/broadband56_nn/eucap15_train_coverage_received.py",
+      "sha256": "7b3c2610b4aec769839501ada546d8ae570571b678457608dc7a263f1027a9b9"
+    },
+    {
+      "path": "research/broadband56_nn/test_train_coverage_received_embedded.py",
+      "sha256": "268d967847aa0e8e1a93fc7260a8955b5fb9da2546c578a51f53e3a199d3d5c3"
+    }
+  ],
+  "private_evidence": [
+    {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/storage_claim_wait_v1/budget_walk_v1/increment_20260912T121222109949Z/OBSERVATION.json",
+      "sha256": "ebc153d86f69e8241246fc88c80f1b2e52333285199cdc5f320a658a3dc338c4",
+      "bytes": 594725
+    },
+    {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/storage_claim_wait_v1/budget_walk_v1/increment_20260912T121326534990Z/OBSERVATION.json",
+      "sha256": "c10de0635e91276537a67f1bc3fb76860bd5f33b222acb0abfc71305db5394d0",
+      "bytes": 992239
+    },
+    {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/storage_claim_wait_v1/budget_walk_v1/increment_20260912T121941426938Z/OBSERVATION.json",
+      "sha256": "607f89deb521cb74026564439c102a814364370627e73e4ffe952e9f91a0c01d"
+    },
+    {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/storage_claim_wait_v1/budget_walk_v1/increment_20260912T122942018002Z/OBSERVATION.json",
+      "sha256": "26b3d249600bab60cb8b32aced938d8cd7ef02f579e6368c55993d479afd0399",
+      "bytes": 794271
+    },
+    {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/landing_increment_m24_new59_v1/RECEIPT.json",
+      "sha256": "1042b9fa231abd374748005fed81d6998e7c7b09b5889ef38312f3c4ef820cf6"
+    },
+    {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/landing_increment_m24_add43_v1/RECEIPT.json",
+      "sha256": "f829a5ed7158ea2176e66106261899e474aa9083a17e40a54e111db816039dd5"
+    },
+    {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/landing_increment_m24_add48_v1/RECEIPT.json",
+      "sha256": "0cb92b99edfc29758d9421157e1b98492fa95e67a22632829dbf27212c11a5c7"
+    },
+    {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/train_coverage_received_m24_v1/step04_m24_add48_eleven_train/RECEIPT.json",
+      "sha256": "92e933bed4bd268f946f5c2b4577f50bffb0a6e659a84e7b0c2700c9710371e8"
+    },
+    {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/train_coverage_received_m24_v1/step04_m24_add48_eleven_train/CHECKPOINT.json",
+      "sha256": "eb814c7419209ad112d7fbf877064906e4ced0ab9d993360e67032c314daa590"
+    },
+    {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/history_next_partition_m24_v1/RECEIPT.json",
+      "sha256": "66bb534d98b3a3b04fccac351bf27261f822f64c72517f7515995fe798fee9f3"
+    }
+  ],
+  "native_evidence_bound_by_snapshot": true,
+  "goal_status": "ACTIVE_100K_AND_FINAL_INDEPENDENT10K_NOT_COMPLETE",
+  "production_waits_for_publication": false
+}

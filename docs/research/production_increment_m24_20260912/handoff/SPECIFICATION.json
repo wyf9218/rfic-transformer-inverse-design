@@ -1,0 +1,46 @@
+{
+  "authority": "STANDING_DELEGATED_RELEASE_AND_SAFE_HANDOFF_AUTHORIZATION",
+  "continuation_sha256": "1584fbcf8c377e1d26caf932f1b2442416af18cf15734d3b6562a6f3a13cdbc4",
+  "integration_test": {
+    "bytes": 896,
+    "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_budget_walk_20260912T112357738265Z/stage_20260912T122818211527Z/INTEGRATION_TEST.json",
+    "sha256": "c465cb8b7b2adbdb1b85fed0f5135954478860e745b326a0dd12176a41d52c5b"
+  },
+  "native_signals": 0,
+  "old_installer": {
+    "bytes": 7953,
+    "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_budget_walk_20260912T112357738265Z/install_at_boundary.py",
+    "sha256": "46d8481b35c77fb1a9e76a34a8037f4e15b1dd7c12dd8aafd446aefc8ea764a5"
+  },
+  "previous_start": {
+    "bytes": 1009,
+    "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_budget_walk_20260912T112357738265Z/BOUNDARY_INSTALLER_START.json",
+    "sha256": "24abdbbb3b192d26af42467c6458c9b07f19fb5c98084221d5063f80b88f5a6f"
+  },
+  "prior_staged": {
+    "bytes": 15975,
+    "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_budget_walk_20260912T112357738265Z/STAGED.json",
+    "sha256": "4205702f0d7d6ac240603b908defe6539c45ae7a956dec66e65262fef5072fec"
+  },
+  "runtime_sha256": "23eddf702afb6c3f5ee64ac9c415c56376199857dd6fe915f67856a456f8b99f",
+  "source_changes": "Finite installer continuation only; no modification of active or staged scientific runtime",
+  "sources": [
+    {
+      "bytes": 2005,
+      "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_budget_walk_20260912T112357738265Z/stage_20260912T122818211527Z/waiter_reservation.py",
+      "sha256": "fccbd68a23416a8fdf8722b4a9162c4f794eff2651460d17390ca1b2f227e7bb"
+    },
+    {
+      "bytes": 10116,
+      "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_budget_walk_20260912T112357738265Z/stage_20260912T122818211527Z/installer_continuation.py",
+      "sha256": "f49c982bf95b5ab48f66108f3baabb9b06ca97231f8eb0839fe11ac360b63b15"
+    },
+    {
+      "bytes": 4170,
+      "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_budget_walk_20260912T112357738265Z/stage_20260912T122818211527Z/test_waiter_reservation.py",
+      "sha256": "f9d3fce20bcc9e80520840b3ae3fcb1f7cd40a511fe26fad5e88475c1c7991f4"
+    }
+  ],
+  "status": "TESTED_HANDOFF_INSTALLER_CONTINUATION_NOT_DEPLOYED",
+  "utc": "2026-09-12T12:28:18.890064+00:00"
+}

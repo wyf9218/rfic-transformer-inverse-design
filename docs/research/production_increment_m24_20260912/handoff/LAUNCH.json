@@ -1,0 +1,36 @@
+{
+  "command": [
+    "/volumes/research-localdata/ywang3652/rfic-transformer-inverse-design-mars56-s4p-20260702/.venv/bin/python",
+    "-B",
+    "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_budget_walk_20260912T112357738265Z/stage_20260912T122818211527Z/installer_continuation.py",
+    "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_budget_walk_20260912T112357738265Z",
+    "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_budget_walk_20260912T112357738265Z/stage_20260912T122818211527Z"
+  ],
+  "independent_session": true,
+  "maximum_drain_seconds": 3600,
+  "previous_terminal": {
+    "bytes": 7589,
+    "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_budget_walk_20260912T112357738265Z/stage_20260912T122818211527Z/PREVIOUS_INSTALLER_TERMINAL.json",
+    "sha256": "80284b6444aa48983a14b692628886a6ab06a9a4955d106e0b50c9e093dcd7b2"
+  },
+  "process": {
+    "argv": [
+      "/volumes/research-localdata/ywang3652/rfic-transformer-inverse-design-mars56-s4p-20260702/.venv/bin/python",
+      "-B",
+      "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_budget_walk_20260912T112357738265Z/stage_20260912T122818211527Z/installer_continuation.py",
+      "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_budget_walk_20260912T112357738265Z",
+      "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_budget_walk_20260912T112357738265Z/stage_20260912T122818211527Z"
+    ],
+    "pid": 3265510,
+    "ppid": 3264968,
+    "start_ticks": 402005416,
+    "state": "R",
+    "uid": 2259579
+  },
+  "specification": {
+    "bytes": 2629,
+    "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_budget_walk_20260912T112357738265Z/stage_20260912T122818211527Z/SPECIFICATION.json",
+    "sha256": "d91fb6382eb14e76458b143415a42d9b78e6be6de2be6c154b05646b8d795df0"
+  },
+  "utc": "2026-09-12T12:28:45.168777+00:00"
+}

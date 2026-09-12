@@ -1,0 +1,30 @@
+{
+  "schema": "eucap15_embedded_coverage_failed_attempt.v1",
+  "status": "FAIL",
+  "failure_preserved": true,
+  "attempt": "step02_m24_fifteen_train",
+  "source_sha256": "b880577725c1949aba41905060fe7f473bbf9a57dd01728c22a81439779f2d5f",
+  "implementation_sha256": "cd3b95fbb8476f53234d3c5c7ab2a8576f75a52511a3fa0610b3986bb12ea695",
+  "checkpoint_sha256": "41ec9ea3caa2bb0df822cc46a431560c9d8eae5448f5c1cd596db254f435cabe",
+  "coverage_sha256": "5230892d987fca71b44ae0619720e151624e81c98e0d96e3793b657d2b24a081",
+  "exit_code": 1,
+  "wall_time_seconds": 0.433416542,
+  "completed_utc": null,
+  "stderr": "KeyError: 'assigned_split_from_frozen_request' at eucap15_train_coverage_received.py line 202, formal[0][\"assigned_split_from_frozen_request\"]",
+  "exact_command_reference": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/train_coverage_received_m24_v1/step02_m24_fifteen_train_v2/RECEIPT.json",
+  "exact_command_difference": {
+    "replace_out": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/train_coverage_received_m24_v1/step02_m24_fifteen_train"
+  },
+  "output_created": false,
+  "checkpoint_updated": false,
+  "source_marked_consumed": false,
+  "cause": "13 current train records use an explicit native_header + split_resolution wrapper, not the direct historical header schema.",
+  "resolution": "An explicit same request, formal/header SHA pin and release/result-parent binding now accepts that wrapper while preserving native_header UNKNOWN. No missing split was inferred.",
+  "successful_new_attempt": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/train_coverage_received_m24_v1/step02_m24_fifteen_train_v2/RECEIPT.json",
+  "successful_new_attempt_sha256": "bf7b67128c93870b44e687628b42a9042116dbb3a21f2e504b1b7f403f7ef254",
+  "secondary_diagnostic_failure": "The immediately following hash read targeted the absent failed output directory and returned No such file or directory; no output was written or overwritten.",
+  "other_readonly_locator_failure": "The optional worktree mirror of CURRENT_ENGINEERING_MEMORY_CN.md did not exist; root workspace memory was read instead.",
+  "native_calls": 0,
+  "training_calls": 0,
+  "production_or_model_changes": false
+}
