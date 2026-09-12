@@ -1,0 +1,43 @@
+{
+  "schema": "eucap15_observation_adapter_failed_attempt.v1",
+  "status": "FAIL_RETAINED_NOT_PHYSICAL_FAILURE",
+  "phase": "converter_before_landing_projection",
+  "observation_path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/storage_claim_wait_v1/successor_boundary_20260912T104053676985Z/OBSERVATION.json",
+  "observation_sha256": "5e0eab5c77f4907d46ec1ea3e4ce96ed42f18a362fe27cecc5a13f577b261725",
+  "command": "'/Users/wyf/Documents/模拟变压器AI反向建模/reports/broadband56_nn_v2_20260907T212216Z/environment/bin/python' '-m' 'research.broadband56_nn.eucap15_received_landing_increment' '--baseline' '/Users/wyf/Documents/模拟变压器AI反向建模/github_worktrees/eucap15-mlp-capacity-20260909/docs/research/eucap15_abc_increment_20260910/COVERAGE_BEFORE.csv' '--observation' '/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/storage_claim_wait_v1/successor_boundary_20260912T104053676985Z/OBSERVATION.json' '--observation-sha256' '5e0eab5c77f4907d46ec1ea3e4ce96ed42f18a362fe27cecc5a13f577b261725' '--expected-counts' '{\"received_terminal\":31,\"emx_completed\":27,\"strict_in_range\":11,\"formal_admitted\":11,\"pending_formal\":0,\"formal_train\":7,\"formal_validation\":3,\"formal_test\":1}' '--expected-backfill-counts' '{\"formal_admitted\":0,\"formal_train\":0,\"formal_validation\":0,\"formal_test\":0}' '--caller-verified-sources'",
+  "argv": [
+    "/Users/wyf/Documents/模拟变压器AI反向建模/reports/broadband56_nn_v2_20260907T212216Z/environment/bin/python",
+    "-m",
+    "research.broadband56_nn.eucap15_received_landing_increment",
+    "--baseline",
+    "/Users/wyf/Documents/模拟变压器AI反向建模/github_worktrees/eucap15-mlp-capacity-20260909/docs/research/eucap15_abc_increment_20260910/COVERAGE_BEFORE.csv",
+    "--observation",
+    "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/storage_claim_wait_v1/successor_boundary_20260912T104053676985Z/OBSERVATION.json",
+    "--observation-sha256",
+    "5e0eab5c77f4907d46ec1ea3e4ce96ed42f18a362fe27cecc5a13f577b261725",
+    "--expected-counts",
+    "{\"received_terminal\":31,\"emx_completed\":27,\"strict_in_range\":11,\"formal_admitted\":11,\"pending_formal\":0,\"formal_train\":7,\"formal_validation\":3,\"formal_test\":1}",
+    "--expected-backfill-counts",
+    "{\"formal_admitted\":0,\"formal_train\":0,\"formal_validation\":0,\"formal_test\":0}",
+    "--caller-verified-sources"
+  ],
+  "cwd": "/Users/wyf/Documents/模拟变压器AI反向建模/github_worktrees/eucap15-mlp-capacity-20260909",
+  "exit_code": 1,
+  "tool_run": {
+    "chunk_id": "8d1485",
+    "wall_time_seconds": 0.000006125,
+    "exit_code": 1,
+    "original_token_count": 346,
+    "output": "Traceback (most recent call last):\n  File \"<frozen runpy>\", line 198, in _run_module_as_main\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/Users/wyf/Documents/模拟变压器AI反向建模/github_worktrees/eucap15-mlp-capacity-20260909/research/broadband56_nn/eucap15_received_landing_increment.py\", line 248, in <module>\n    print(json.dumps(run(a.baseline,a.observation or a.received,\n                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/wyf/Documents/模拟变压器AI反向建模/github_worktrees/eucap15-mlp-capacity-20260909/research/broadband56_nn/eucap15_received_landing_increment.py\", line 96, in run\n    doc = adapter.convert_observation(doc,\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/wyf/Documents/模拟变压器AI反向建模/github_worktrees/eucap15-mlp-capacity-20260909/research/broadband56_nn/eucap15_received_from_observation.py\", line 123, in convert_observation\n    core = sum(row[\"core15_eligible\"] is True for row in rows)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/wyf/Documents/模拟变压器AI反向建模/github_worktrees/eucap15-mlp-capacity-20260909/research/broadband56_nn/eucap15_received_from_observation.py\", line 123, in <genexpr>\n    core = sum(row[\"core15_eligible\"] is True for row in rows)\n               ~~~^^^^^^^^^^^^^^^^^^^\nKeyError: 'core15_eligible'\n"
+  },
+  "test_command": "'/Users/wyf/Documents/模拟变压器AI反向建模/reports/broadband56_nn_v2_20260907T212216Z/environment/bin/python' -m pytest -q tests/test_eucap15_received_from_observation.py",
+  "test_result": {
+    "chunk_id": "d43ad3",
+    "wall_time_seconds": 0.101218667,
+    "exit_code": 0,
+    "original_token_count": 25,
+    "output": ".....                                                                    [100%]\n5 passed in 0.09s\n"
+  },
+  "source_sha256_lines": "ab86d1ab52894dad9537d98d11f4228efdc1ccd15c74dc9a0a8b937fa9073b85  research/broadband56_nn/eucap15_received_landing_increment.py\n091271d040e38be1522ee70c2b6ccdea8f9999af00be11fdc0a06793f1e21026  research/broadband56_nn/eucap15_received_from_observation.py\n632e82c9b34351c4cef05e958393ba0af170c39882bc002ae299ac542d1bc764  tests/test_eucap15_received_from_observation.py\n",
+  "reason": "Native analytic RESULT may omit core15_eligible; adapter accessed missing key. No landings output or completed projection, no EMX/ledger/model change."
+}

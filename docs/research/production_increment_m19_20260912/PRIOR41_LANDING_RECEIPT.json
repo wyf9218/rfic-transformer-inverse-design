@@ -1,0 +1,116 @@
+{
+  "schema": "eucap15_offline_landing_execution_receipt.v1",
+  "status": "PASS",
+  "generated_utc": "2026-09-12T10:43:48.380022+00:00",
+  "observation_utc": "2026-09-12T10:27:01.086413+00:00",
+  "baseline_observation_utc": "2026-09-12T10:15:49.581127+00:00",
+  "working_directory": "/Users/wyf/Documents/模拟变压器AI反向建模/github_worktrees/eucap15-mlp-capacity-20260909",
+  "command": "'/Users/wyf/Documents/模拟变压器AI反向建模/reports/broadband56_nn_v2_20260907T212216Z/environment/bin/python' '-B' '-m' 'research.broadband56_nn.eucap15_received_landing_increment' '--baseline' 'docs/research/eucap15_abc_increment_20260910/COVERAGE_BEFORE.csv' '--received' '/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/landing_increment_m19_v3/RECEIVED_BOUND41.json' '--received-sha256' '972155b5592bb73901b461f2f9f5357c692c5fd8f3b7612885cafbde30584ee3' '--expected-counts' '{\"received_terminal\":41,\"emx_completed\":39,\"strict_in_range\":15,\"formal_admitted\":15,\"pending_formal\":0,\"formal_train\":10,\"formal_validation\":1,\"formal_test\":4}' '--expected-backfill-counts' '{\"formal_admitted\":1,\"formal_train\":0,\"formal_validation\":1,\"formal_test\":0}' '--caller-verified-sources'",
+  "argv": [
+    "/Users/wyf/Documents/模拟变压器AI反向建模/reports/broadband56_nn_v2_20260907T212216Z/environment/bin/python",
+    "-B",
+    "-m",
+    "research.broadband56_nn.eucap15_received_landing_increment",
+    "--baseline",
+    "docs/research/eucap15_abc_increment_20260910/COVERAGE_BEFORE.csv",
+    "--received",
+    "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/landing_increment_m19_v3/RECEIVED_BOUND41.json",
+    "--received-sha256",
+    "972155b5592bb73901b461f2f9f5357c692c5fd8f3b7612885cafbde30584ee3",
+    "--expected-counts",
+    "{\"received_terminal\":41,\"emx_completed\":39,\"strict_in_range\":15,\"formal_admitted\":15,\"pending_formal\":0,\"formal_train\":10,\"formal_validation\":1,\"formal_test\":4}",
+    "--expected-backfill-counts",
+    "{\"formal_admitted\":1,\"formal_train\":0,\"formal_validation\":1,\"formal_test\":0}",
+    "--caller-verified-sources"
+  ],
+  "exit_code": 0,
+  "execution_count": 1,
+  "reader": {
+    "path": "/Users/wyf/Documents/模拟变压器AI反向建模/github_worktrees/eucap15-mlp-capacity-20260909/research/broadband56_nn/eucap15_received_landing_increment.py",
+    "sha256": "99462bab7afee5074643626fae8614f3ad71b916f3430dfff58b19828b4ce1ae"
+  },
+  "input_pins": [
+    {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/github_worktrees/eucap15-mlp-capacity-20260909/docs/research/eucap15_abc_increment_20260910/COVERAGE_BEFORE.csv",
+      "sha256": "8774136cb90164549b465135d41d206371b8616a86d0b3cf5595848971a948e9"
+    },
+    {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/landing_increment_m19_v3/RECEIVED_BOUND41.json",
+      "sha256": "972155b5592bb73901b461f2f9f5357c692c5fd8f3b7612885cafbde30584ee3"
+    },
+    {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/github_worktrees/eucap15-mlp-capacity-20260909/research/broadband56_nn/eucap15_acquisition.py",
+      "sha256": "d55eedd5955a6654966fd3dd0ad32074cae4376ef2709ffdbbcfe8edee431f0a"
+    }
+  ],
+  "adapter_receipt": {
+    "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/landing_increment_m19_v3/ADAPTER_RECEIPT.json",
+    "sha256": "6ee9d2bc75573bd4e7a5409cc4e76eeb04c714bcb22ea47c9f085a03640cf575"
+  },
+  "output": {
+    "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/landing_increment_m19_v3/ACTUAL_LANDINGS.json",
+    "sha256": "c5892279ceb0fa104482173c7eaa542d62c6df97169ea69fe85ae46808a07f6a"
+  },
+  "expected_counts": {
+    "received_terminal": 41,
+    "emx_completed": 39,
+    "strict_in_range": 15,
+    "formal_admitted": 15,
+    "pending_formal": 0,
+    "formal_train": 10,
+    "formal_validation": 1,
+    "formal_test": 4
+  },
+  "expected_backfill_counts": {
+    "formal_admitted": 1,
+    "formal_train": 0,
+    "formal_validation": 1,
+    "formal_test": 0
+  },
+  "derived_counts": {
+    "received_terminal": 41,
+    "emx_completed": 39,
+    "strict_in_range": 15,
+    "formal_admitted": 15,
+    "pending_formal": 0,
+    "formal_train": 10,
+    "formal_validation": 1,
+    "formal_test": 4,
+    "pending_formal_train": 0,
+    "pending_formal_validation": 0,
+    "pending_formal_test": 0
+  },
+  "derived_backfill_counts": {
+    "formal_admitted": 1,
+    "formal_train": 0,
+    "formal_validation": 1,
+    "formal_test": 0
+  },
+  "train_summary": {
+    "rows": 10,
+    "distinct_landing_cells": 8,
+    "baseline_empty_cell_landings": 1,
+    "baseline_underfilled_cell_landings": 1,
+    "baseline_empty_cells": [
+      [
+        4,
+        0,
+        0
+      ]
+    ],
+    "q10_20_rows": 10,
+    "k_above_point8_rows": 0,
+    "max_k": 0.34918579091498175,
+    "max_q": 15.348602794132189,
+    "baseline_train_rows": 3801,
+    "scope": "DESCRIPTIVE_INCREMENT_ONLY_NOT_CUMULATIVE_POOL_OR_ACQUISITION_SUPERIORITY"
+  },
+  "backfill_train_occupancy_included": false,
+  "source_evidence_reliance": "CALLER_VERIFIED_PHYSICAL_SOURCES_AND_FORMAL_JOINS_NOT_REVERIFIED_HERE",
+  "new_tests": 0,
+  "old_cohort_reruns": 0,
+  "native_calls": 0,
+  "model_or_sampling_changes": 0,
+  "cumulative_coverage_gain": null,
+  "caveat": "Only ten newly formal train rows are compared to the unchanged 3801 reference. DOE098 occupies a baseline-empty cell; current-pool coverage gain is not established. Prior TRAIN002 is a validation-only formal backfill, not a new EMX result or train landing."
+}

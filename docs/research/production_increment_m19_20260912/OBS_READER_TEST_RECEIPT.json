@@ -1,0 +1,23 @@
+{
+  "schema": "eucap15_observation_adapter_targeted_tests.v1",
+  "scope": "ONLY_NEW_OBS_CONVERTER_FIVE_SYNTHETIC_TESTS",
+  "command": "'/Users/wyf/Documents/模拟变压器AI反向建模/reports/broadband56_nn_v2_20260907T212216Z/environment/bin/python' -m pytest -q tests/test_eucap15_received_from_observation.py",
+  "cwd": "/Users/wyf/Documents/模拟变压器AI反向建模/github_worktrees/eucap15-mlp-capacity-20260909",
+  "initial_result": {
+    "chunk_id": "d43ad3",
+    "wall_time_seconds": 0.101218667,
+    "exit_code": 0,
+    "original_token_count": 25,
+    "output": ".....                                                                    [100%]\n5 passed in 0.09s\n"
+  },
+  "after_missing_analytic_flag_fix": {
+    "chunk_id": "e09273",
+    "wall_time_seconds": 0.045750625,
+    "exit_code": 0,
+    "original_token_count": 25,
+    "output": ".....                                                                    [100%]\n5 passed in 0.07s\n"
+  },
+  "old_test_suites_run": false,
+  "real_cohorts_as_tests_run": false,
+  "notes": "Initial five tests passed, actual OBS exposed an omitted analytic core flag; the same new test file was extended for that omission and passed again. Failed first actual attempt retained separately."
+}

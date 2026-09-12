@@ -1,0 +1,176 @@
+{
+  "schema": "eucap15_observation_converter_execution.v1",
+  "generated_utc": "2026-09-12T10:53:16.158565+00:00",
+  "status": "PASS",
+  "actual_cli_exit_code": 0,
+  "actual_cli_tool_chunk_id": "c782a5",
+  "working_directory": "/Users/wyf/Documents/模拟变压器AI反向建模/github_worktrees/eucap15-mlp-capacity-20260909",
+  "command": "'/Users/wyf/Documents/模拟变压器AI反向建模/reports/broadband56_nn_v2_20260907T212216Z/environment/bin/python' '-m' 'research.broadband56_nn.eucap15_received_landing_increment' '--baseline' '/Users/wyf/Documents/模拟变压器AI反向建模/github_worktrees/eucap15-mlp-capacity-20260909/docs/research/eucap15_abc_increment_20260910/COVERAGE_BEFORE.csv' '--observation' '/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/storage_claim_wait_v1/successor_boundary_20260912T104053676985Z/OBSERVATION.json' '--observation-sha256' '5e0eab5c77f4907d46ec1ea3e4ce96ed42f18a362fe27cecc5a13f577b261725' '--expected-counts' '{\"received_terminal\":31,\"emx_completed\":27,\"strict_in_range\":11,\"formal_admitted\":11,\"pending_formal\":0,\"formal_train\":7,\"formal_validation\":3,\"formal_test\":1}' '--expected-backfill-counts' '{\"formal_admitted\":0,\"formal_train\":0,\"formal_validation\":0,\"formal_test\":0}' '--caller-verified-sources'",
+  "argv": [
+    "/Users/wyf/Documents/模拟变压器AI反向建模/reports/broadband56_nn_v2_20260907T212216Z/environment/bin/python",
+    "-m",
+    "research.broadband56_nn.eucap15_received_landing_increment",
+    "--baseline",
+    "/Users/wyf/Documents/模拟变压器AI反向建模/github_worktrees/eucap15-mlp-capacity-20260909/docs/research/eucap15_abc_increment_20260910/COVERAGE_BEFORE.csv",
+    "--observation",
+    "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/storage_claim_wait_v1/successor_boundary_20260912T104053676985Z/OBSERVATION.json",
+    "--observation-sha256",
+    "5e0eab5c77f4907d46ec1ea3e4ce96ed42f18a362fe27cecc5a13f577b261725",
+    "--expected-counts",
+    "{\"received_terminal\":31,\"emx_completed\":27,\"strict_in_range\":11,\"formal_admitted\":11,\"pending_formal\":0,\"formal_train\":7,\"formal_validation\":3,\"formal_test\":1}",
+    "--expected-backfill-counts",
+    "{\"formal_admitted\":0,\"formal_train\":0,\"formal_validation\":0,\"formal_test\":0}",
+    "--caller-verified-sources"
+  ],
+  "observation_path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/storage_claim_wait_v1/successor_boundary_20260912T104053676985Z/OBSERVATION.json",
+  "observation_sha256": "5e0eab5c77f4907d46ec1ea3e4ce96ed42f18a362fe27cecc5a13f577b261725",
+  "observation_utc": "2026-09-12T10:40:54.335376+00:00",
+  "baseline_utc": "2026-09-12T10:27:01.086413+00:00",
+  "expected_counts": {
+    "received_terminal": 31,
+    "emx_completed": 27,
+    "strict_in_range": 11,
+    "formal_admitted": 11,
+    "pending_formal": 0,
+    "formal_train": 7,
+    "formal_validation": 3,
+    "formal_test": 1
+  },
+  "actual_counts": {
+    "received_terminal": 31,
+    "emx_completed": 27,
+    "strict_in_range": 11,
+    "formal_admitted": 11,
+    "pending_formal": 0,
+    "formal_train": 7,
+    "formal_validation": 3,
+    "formal_test": 1,
+    "pending_formal_train": 0,
+    "pending_formal_validation": 0,
+    "pending_formal_test": 0
+  },
+  "backfill_counts": {
+    "formal_admitted": 0,
+    "formal_train": 0,
+    "formal_validation": 0,
+    "formal_test": 0
+  },
+  "source_counts": {
+    "GEOMETRY_DOE": {
+      "received_terminal": 26,
+      "emx_completed": 22,
+      "strict_in_range": 6,
+      "formal_admitted": 6,
+      "pending_formal": 0,
+      "formal_train": 4,
+      "formal_validation": 2,
+      "formal_test": 0,
+      "pending_formal_train": 0,
+      "pending_formal_validation": 0,
+      "pending_formal_test": 0
+    },
+    "TRAIN_NEIGHBORHOOD": {
+      "received_terminal": 5,
+      "emx_completed": 5,
+      "strict_in_range": 5,
+      "formal_admitted": 5,
+      "pending_formal": 0,
+      "formal_train": 3,
+      "formal_validation": 1,
+      "formal_test": 1,
+      "pending_formal_train": 0,
+      "pending_formal_validation": 0,
+      "pending_formal_test": 0
+    }
+  },
+  "input_pins": [
+    {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/github_worktrees/eucap15-mlp-capacity-20260909/docs/research/eucap15_abc_increment_20260910/COVERAGE_BEFORE.csv",
+      "sha256": "8774136cb90164549b465135d41d206371b8616a86d0b3cf5595848971a948e9"
+    },
+    {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/storage_claim_wait_v1/successor_boundary_20260912T104053676985Z/OBSERVATION.json",
+      "sha256": "5e0eab5c77f4907d46ec1ea3e4ce96ed42f18a362fe27cecc5a13f577b261725"
+    },
+    {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/github_worktrees/eucap15-mlp-capacity-20260909/research/broadband56_nn/eucap15_acquisition.py",
+      "sha256": "d55eedd5955a6654966fd3dd0ad32074cae4376ef2709ffdbbcfe8edee431f0a"
+    }
+  ],
+  "artifact_and_code_pins": [
+    {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/observation_converter_m20_v2/RECEIVED_NEW31.json",
+      "sha256": "b5fcdb3ac3efc51920db7ec33a7022c3b4c2b4b5de8c4852511c01fd356694e9"
+    },
+    {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/observation_converter_m20_v2/ACTUAL_LANDINGS.json",
+      "sha256": "946ad7997d5445fb18f41c0eaaf21fc1abd755a3bba5b3e2d5a8e1b406195655"
+    },
+    {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/observation_converter_m20_v2/TEST_RECEIPT.json",
+      "sha256": "40ce55a30c68baf0b4b0f2201c21bae2b7b2dd99b175ea30d3bf9e5856b97e6a"
+    },
+    {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/observation_converter_m20_v1/FAILED_ATTEMPT.json",
+      "sha256": "54788803eabf5091f36ec6e9098f4a6468816644ede93a0d09c981586d899471"
+    },
+    {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/github_worktrees/eucap15-mlp-capacity-20260909/research/broadband56_nn/eucap15_received_landing_increment.py",
+      "sha256": "ab86d1ab52894dad9537d98d11f4228efdc1ccd15c74dc9a0a8b937fa9073b85"
+    },
+    {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/github_worktrees/eucap15-mlp-capacity-20260909/research/broadband56_nn/eucap15_received_from_observation.py",
+      "sha256": "c7765a51475e57895565fe265384b31e52f37e87239a2f5f358bddd04edf04b7"
+    },
+    {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/github_worktrees/eucap15-mlp-capacity-20260909/tests/test_eucap15_received_from_observation.py",
+      "sha256": "f4fb876d6475fdce2a000f1296194c20f30944824783c01747c14cb8bee44431"
+    }
+  ],
+  "actual_scope": "First completed projection of M19 new31; no old41/69/22/25/35/96/24 rerun.",
+  "new_train_reference_only": {
+    "formal_train": 7,
+    "distinct_cells": 7,
+    "baseline_train": 3801,
+    "baseline_occupied": 159,
+    "baseline_empty_landings": 0,
+    "baseline_underfilled_landings": 0,
+    "Q10_20": 7,
+    "K_above_0p8": 0,
+    "max_Q": 16.4351210625591,
+    "max_K": 0.4385444028836972
+  },
+  "attempts": {
+    "failed_before_projection": 1,
+    "successful_completed_projection": 1,
+    "failure_receipt": {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/observation_converter_m20_v1/FAILED_ATTEMPT.json",
+      "sha256": "54788803eabf5091f36ec6e9098f4a6468816644ede93a0d09c981586d899471"
+    },
+    "fix": "Missing analytic-only strict/core flags normalize to explicit null with source_missing_flag_fields. Raw existing fields and all actual values remain unchanged; this is source schema adaptation, not changed physics."
+  },
+  "implementation": {
+    "helper": "Pure OBS new-window-to-received converter",
+    "existing_cli": "--observation PATH --observation-sha256 SHA --expected-counts JSON --expected-backfill-counts JSON --caller-verified-sources",
+    "prior_backfill": "Only --prior-received PATH SHA pairs explicitly supplied by caller; SHA/size verified before exact formal request join.",
+    "source_authority": "Caller attestation of already-verified physical sources and committed formal headers required; hashes alone do not certify physics.",
+    "io": "Read-only inputs, stdout output; the assistant saved new no-clobber artifacts separately using apply_patch.",
+    "automatic_owner_deployment": "NOT_PERFORMED_BY_THIS_SUBTASK"
+  },
+  "negative_scope": {
+    "native_actions": 0,
+    "EMX_started": 0,
+    "model_changes": 0,
+    "sampling_changes": 0,
+    "formal_ledger_writes": 0,
+    "central_state_writes": 0,
+    "old_test_suites_run": 0,
+    "git_commits": 0,
+    "git_pushes": 0
+  },
+  "limits": [
+    "No cumulative coverage or pool-union claim.",
+    "No acquisition superiority or physical certification by adapter.",
+    "Pending/nontrain rows never contribute to train occupancy."
+  ]
+}

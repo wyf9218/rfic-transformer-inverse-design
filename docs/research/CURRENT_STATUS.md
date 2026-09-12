@@ -1,21 +1,20 @@
 # Current15GHz research/production status
 
-Latest observation2026-09-12 10:27:01.086413 UTC.
-[M18 actual production increment](production_increment_m18_20260912/SNAPSHOT.json).
+Latest observation2026-09-12 11:07:31.564143 UTC.
+[M19 actual installed runtime and automatic batch transition](production_increment_m19_20260912/DEPLOYED_SNAPSHOT.json).
 
-- Requested48/executor48; actual9 EMX ×2CPU;15permits are not15native.
-- Window10:15:49→10:27:01:new39EMX,15strict/range unique,all15formal.
-- Freshformal+16 includes1prior validation backfill;historyformal+0;certified lower bound6505.
-- Successor116terminal/105fresh/45core/45formal/pending0;140without observed terminal.
-- Native755564/metadata1656171/standby52934 alive; automatic successor transition proved.
-- Cadence8/Calibre8/EMX48,pipeline64; independent256/12h/5GiB preserved.
-- IdleCPU63.8587 before system/pending reservations cannot add39solvers/78CPU.
-- History2001..21135 completed192/192 blocks;4348previous historical commits,not M18 additions.
-- First100 disposition and second-source93 readiness already completed; no repeat.
-- Prior69 first projection:19train/19cells/0empty/4underfilled landings;highK>.8=0.
-- No cumulative coverage/sampling-superiority claim; no old experiments or AIpaperfigures.
-- Full100K/FINAL/independent10000-request validation incomplete.
-[First real controlled64 result](20260911_controlled64_first_real.md) is now verified:
+- Newbatch000002 owner3850660/metadata3850664/standby3841226 alive; source0ad043b6 bound.
+- Actualnative0 atcutoff: existing five-independent-resource-sample admission in progress, firstPASS11:06:50.
+- Requested48/executor48; installation and automatic transition proven, newsolver/48concurrency not yetproven.
+- Window11:00:59→11:07:31:oldbatch last28fresh,13strict/rangeunique;13newformal+1priorTRAIN057backfill.
+- Historyformal0;certifiedlowerbound6569. Oldsuccessor256terminal=238fresh+18analytic,109core/formal.
+- Oldowner/standby/installer exited after safehandoff; no healthy native signal or oldbatch replay.
+- M19 since10:27:01:133fresh/64core/64freshformal; do not add componentwindows again.
+- [Code, targeted tests and raw receipts](production_increment_m19_20260912/README.md) include actual installcheckpoint.
+- OBSreader5new testsPASS; outputfile1new testPASS; no oldsoftware suite or physicalcohort rerun.
+- Originalpost81 stdout truncation disclosed;18train source rows and complete summary recovered, notfullprojection.
+- 18train/17cells,0frozen3801empty/underfilled landings,0highK>.8. No cumulative samplingadvantage claim.
+- Full100K/FINAL/independent10000-request validation incomplete; no AIpaperfigures.
 1 actual DOE EMX start/complete at the08:24:57 snapshot; strict-valid but K_abs0.1711<0.2,
 so0 new qualified in-range samples. Original14 analytical failures remain in64; no advantage claim.
 Reader R/S correction passed29 new scoped tests; no native rerun or old-suite rerun.

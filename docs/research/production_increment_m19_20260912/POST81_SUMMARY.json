@@ -1,0 +1,128 @@
+{
+  "schema": "eucap15_actual_landing_increment.v3",
+  "generated_utc": "2026-09-12T11:03:44.805550+00:00",
+  "observation_utc": "2026-09-12T11:00:59.782042+00:00",
+  "baseline_observation_utc": "2026-09-12T10:40:54.335376+00:00",
+  "input_pins": [
+    {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/github_worktrees/eucap15-mlp-capacity-20260909/docs/research/eucap15_abc_increment_20260910/COVERAGE_BEFORE.csv",
+      "sha256": "8774136cb90164549b465135d41d206371b8616a86d0b3cf5595848971a948e9"
+    },
+    {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/storage_claim_wait_v1/successor_boundary_20260912T110059041585Z/OBSERVATION.json",
+      "sha256": "9420f13b024d3d080e41f3dd473d48e2acc3535056ffec883da4180b14f561f4"
+    },
+    {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/github_worktrees/eucap15-mlp-capacity-20260909/research/broadband56_nn/eucap15_acquisition.py",
+      "sha256": "d55eedd5955a6654966fd3dd0ad32074cae4376ef2709ffdbbcfe8edee431f0a"
+    }
+  ],
+  "scope": "DESCRIPTIVE_INCREMENT_ONLY_NOT_CUMULATIVE_POOL_OR_ACQUISITION_SUPERIORITY",
+  "baseline_train_rows": 3801,
+  "baseline_cells": 512,
+  "baseline_occupied_cells": 159,
+  "source_counts": {
+    "received_terminal": 81,
+    "emx_completed": 78,
+    "strict_in_range": 40,
+    "formal_admitted": 39,
+    "pending_formal": 1,
+    "formal_train": 18,
+    "formal_validation": 12,
+    "formal_test": 9,
+    "pending_formal_train": 1,
+    "pending_formal_validation": 0,
+    "pending_formal_test": 0
+  },
+  "expected_source_counts": {
+    "received_terminal": 81,
+    "emx_completed": 78,
+    "strict_in_range": 40,
+    "formal_admitted": 39,
+    "pending_formal": 1,
+    "formal_train": 18,
+    "formal_validation": 12,
+    "formal_test": 9,
+    "pending_formal_train": 1,
+    "pending_formal_validation": 0,
+    "pending_formal_test": 0
+  },
+  "source_reliance": "CALLER_VERIFIED_PHYSICAL_SOURCES_AND_FORMAL_JOINS_NOT_REVERIFIED_HERE",
+  "by_source": {
+    "GEOMETRY_DOE": {
+      "received_terminal": 58,
+      "emx_completed": 55,
+      "strict_in_range": 17,
+      "formal_admitted": 17,
+      "pending_formal": 0,
+      "formal_train": 7,
+      "formal_validation": 3,
+      "formal_test": 7,
+      "pending_formal_train": 0,
+      "pending_formal_validation": 0,
+      "pending_formal_test": 0
+    },
+    "TRAIN_NEIGHBORHOOD": {
+      "received_terminal": 23,
+      "emx_completed": 23,
+      "strict_in_range": 23,
+      "formal_admitted": 22,
+      "pending_formal": 1,
+      "formal_train": 11,
+      "formal_validation": 9,
+      "formal_test": 2,
+      "pending_formal_train": 1,
+      "pending_formal_validation": 0,
+      "pending_formal_test": 0
+    }
+  },
+  "eligible_new_train_rows": 18,
+  "distinct_train_landing_cells": 17,
+  "train_landings_in_baseline_empty_cells": 0,
+  "distinct_baseline_empty_cells_observed": [],
+  "train_landings_in_baseline_underfilled_cells": 0,
+  "train_k_above_point8": 0,
+  "train_q10_20": 18,
+  "train_max_k": 0.4749406483132556,
+  "train_max_q": 15.992487142257971,
+  "backfill_counts": {
+    "formal_admitted": 0,
+    "formal_train": 0,
+    "formal_validation": 0,
+    "formal_test": 0
+  },
+  "expected_backfill_counts": {
+    "formal_admitted": 0,
+    "formal_train": 0,
+    "formal_validation": 0,
+    "formal_test": 0
+  },
+  "backfilled_prior_rows": [],
+  "backfill_train_landing_diagnostics": {
+    "scope": "PRIOR_FORMAL_BACKFILLS_ONLY_NOT_NEW_TERMINALS_EMX_ELIGIBILITY_OR_CUMULATIVE_COVERAGE",
+    "baseline_train_rows": 3801,
+    "baseline_cells": 512,
+    "eligible_backfilled_train_rows": 0,
+    "distinct_train_landing_cells": 0,
+    "train_landings_in_baseline_empty_cells": 0,
+    "distinct_baseline_empty_cells_observed": [],
+    "train_landings_in_baseline_underfilled_cells": 0,
+    "train_k_above_point8": 0,
+    "train_q10_20": 0,
+    "train_max_k": null,
+    "train_max_q": null
+  },
+  "cumulative_coverage_gain": null,
+  "cumulative_union_geometry_count": null,
+  "scope_caveats": [
+    "18 train rows are compared only with unchanged 3801 reference, not the full current admitted pool.",
+    "Original source/split/RESULT flags/formal pins and all failures retained.",
+    "Prior formal backfills are separate: they add no new terminal, EMX or eligible geometry counts.",
+    "No re-extraction, fresh EMX, native admission, target generation, model update or sampling decision.",
+    "Validation/test/pending-formal never contributes to train occupancy; no fabricated DOE target error.",
+    "Received pin and status strings do not prove physical truth or admission; caller verification is required.",
+    "No same-budget superiority or final100K support inference; missing target/predicted cells are not reconstructed."
+  ],
+  "output_transport_status": "PARTIAL_OUTPUT_TRANSPORT",
+  "completeness": "All top-level CLI summary fields captured; full ACTUAL_LANDINGS rows not frozen."
+}

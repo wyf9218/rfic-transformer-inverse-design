@@ -1,0 +1,14 @@
+{
+  "all_threads_stopped": true,
+  "child_signals": 0,
+  "current_owner_already_dead": true,
+  "descendants": [],
+  "native": [],
+  "previous_start": {
+    "bytes": 977,
+    "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_endpoint_v2_claimwait_20260912T093632216029Z/CONTINUATION_START.json",
+    "sha256": "b3361f86fcdd3a82ff5072d26a57103180580a98808cf1052e1bbd4d402fcfcf"
+  },
+  "status": "TERMINAL_BOUNDARY_STANDBY_REPLACED_NO_CHILD_SIGNAL",
+  "utc": "2026-09-12T11:05:34.959966+00:00"
+}

@@ -1,0 +1,41 @@
+{
+  "schema": "eucap15_cli_output_transport_fix.v1",
+  "status": "PASS",
+  "recorded_utc": "2026-09-12 11:07:58 UTC",
+  "working_directory": "/Users/wyf/Documents/模拟变压器AI反向建模/github_worktrees/eucap15-mlp-capacity-20260909",
+  "code_path": "/Users/wyf/Documents/模拟变压器AI反向建模/github_worktrees/eucap15-mlp-capacity-20260909/research/broadband56_nn/eucap15_received_landing_increment.py",
+  "code_sha256_before": "ab86d1ab52894dad9537d98d11f4228efdc1ccd15c74dc9a0a8b937fa9073b85",
+  "code_sha256_after": "31ec9cdc70142e073de358e4ee1dc76288bccf97dee74ad6f21cc45119bd3a01",
+  "targeted_test_path": "/Users/wyf/Documents/模拟变压器AI反向建模/github_worktrees/eucap15-mlp-capacity-20260909/tests/test_eucap15_landing_output_file.py",
+  "targeted_test_sha256": "6c7796338ec1a45d974339ceb4ff8d8f567a4c7ae8d024faa8d142170e423576",
+  "test_command": "'/Users/wyf/Documents/模拟变压器AI反向建模/reports/broadband56_nn_v2_20260907T212216Z/environment/bin/python' -m pytest -q tests/test_eucap15_landing_output_file.py",
+  "test_result": {
+    "chunk_id": "0228eb",
+    "wall_time_seconds": 0.092016417,
+    "exit_code": 0,
+    "original_token_count": 25,
+    "output": ".                                                                        [100%]\n1 passed in 0.08s\n"
+  },
+  "behavior": {
+    "new_option": "--output PATH",
+    "file_creation": "O_WRONLY | O_CREAT | O_EXCL; full result computed and serialized before file creation",
+    "overwrite": "FileExistsError, existing file retained, no success output",
+    "success_stdout_fields": [
+      "path",
+      "sha256",
+      "bytes",
+      "status"
+    ],
+    "success_status": "WRITTEN",
+    "default": "Unchanged full JSON stdout",
+    "failure": "No success pin; any partially written file retained as failure evidence",
+    "durability": "flush and fsync before success pin"
+  },
+  "test_scope": "One new synthetic output-path test: full JSON file and pin, no overwrite, default stdout compatibility, computation failure creates no file.",
+  "post81_reruns": 0,
+  "old_projection_reruns": 0,
+  "old_test_files_run": 0,
+  "simulations_started": 0,
+  "model_or_physical_changes": 0,
+  "git_commits": 0
+}

@@ -1,0 +1,57 @@
+{
+  "schema": "eucap15_received_interface_adapter_receipt.v1",
+  "status": "PASS",
+  "generated_utc": "2026-09-12T10:43:48.380022+00:00",
+  "original_received": {
+    "path": "/Users/wyf/Documents/模拟变压器AI反向建模/github_worktrees/eucap15-mlp-capacity-20260909/docs/research/production_increment_m18_20260912/RECEIVED_NEW41.json",
+    "sha256": "c02163b365a34ead57285d3ebb710dab70c83b0a874fc9f563eccba776e83ccc"
+  },
+  "formal_header_source": {
+    "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/storage_claim_wait_v1/successor_boundary_20260912T102700154596Z/OBSERVATION.json",
+    "sha256": "d5571db6d888c137d6f5623ce056842fea3f5db937fed09c512e9cea67336845"
+  },
+  "output": {
+    "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/landing_increment_m19_v3/RECEIVED_BOUND41.json",
+    "sha256": "972155b5592bb73901b461f2f9f5357c692c5fd8f3b7612885cafbde30584ee3"
+  },
+  "transforms": [
+    {
+      "field": "feature_order[2]",
+      "from": "Q_min",
+      "to": "Qmin",
+      "meaning": "Known display-key alias only; min(Qp,Qs) values unchanged."
+    },
+    {
+      "field": "rows[*].formal_records",
+      "source": "formal_increment",
+      "join_key": "exact request_id",
+      "headers": 16,
+      "new_rows_joined": 15,
+      "empty_new_rows": 26,
+      "original_formal_record_pins_exact_match": true
+    },
+    {
+      "field": "backfilled_prior_rows[0].formal_records",
+      "source": "formal_increment",
+      "join_key": "exact request_id",
+      "request_id": "eucap15_production_doe_neighborhood_successor_20260912_v1-TRAIN_NEIGHBORHOOD-002",
+      "formal_pin": {
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/qualified15_single_member_v1/records/006490.json",
+        "sha256": "59d09cc56772306f050594548fbc7719b4a51299d99f1175d12bfafbd971ff88",
+        "bytes": 181499
+      },
+      "prior_value_preserved_as": "original_formal_records",
+      "original_split": "validation"
+    }
+  ],
+  "new_rows": 41,
+  "backfilled_prior_rows": 1,
+  "original_row_fields_preserved_except_explicit_backfill_formal_records": true,
+  "source_rows_and_responses_unchanged": true,
+  "source_file_overwritten": false,
+  "native_result_or_ledger_body_rereads": 0,
+  "source_reliance": "Existing root verification of M18 native source/physical evidence and formal identities; adapter reads only received rows and the 16 OBS formal headers.",
+  "new_tests": 0,
+  "new_native_actions": 0,
+  "new_algorithm_or_model_changes": 0
+}

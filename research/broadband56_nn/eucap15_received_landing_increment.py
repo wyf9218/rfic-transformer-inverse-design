@@ -6,7 +6,7 @@ For another cut the caller must already have verified the RESULT/physical chain
 and the formally committed record joins. This module checks that cut's internal
 identities and counts, and never performs or grants formal admission.
 """
-import argparse, csv, hashlib, io, json, math
+import argparse, csv, hashlib, io, json, math, os
 from collections import Counter
 from datetime import datetime, timezone
 from pathlib import Path
@@ -73,8 +73,9 @@ def train_landing_diagnostics(train_rows):
         train_max_q=max((r["actual_response"][2] for r in train_rows), default=None))
 
 def run(base_path, received_path, *, received_sha256=PIN_RECEIVED,
-        expected_counts=None, expected_backfill_counts=None, caller_verified_sources=False):
-    legacy = received_sha256 == PIN_RECEIVED and expected_counts is None
+        expected_counts=None, expected_backfill_counts=None, caller_verified_sources=False,
+        observation=False, prior_received=()):
+    legacy = not observation and received_sha256 == PIN_RECEIVED and expected_counts is None
     require(legacy or caller_verified_sources is True,
             "Caller must have verified physical sources and formal record joins")
     require(legacy or expected_counts is not None, "An explicit count envelope is required")
@@ -82,7 +83,20 @@ def run(base_path, received_path, *, received_sha256=PIN_RECEIVED,
     read(c.__file__, PIN_CORE)
     base = c.validate_coverage(list(csv.DictReader(io.StringIO(read(base_path, PIN_BASE).decode()))))
     require(sum(r[c.COUNTS[0]] for r in base) == 3801, "Frozen baseline must contain 3801 train rows")
-    doc = json.loads(read(received_path, received_sha256))
+    raw = read(received_path, received_sha256)
+    doc = json.loads(raw)
+    require(observation or not prior_received, "Prior received inputs require --observation")
+    adapter_pin = None
+    if observation:
+        from research.broadband56_nn import eucap15_received_from_observation as adapter
+        priors = []
+        for path, sha in prior_received:
+            prior_raw = read(path, sha)
+            priors.append(dict(pin=dict(path=str(path), sha256=sha, bytes=len(prior_raw)), raw=prior_raw))
+        doc = adapter.convert_observation(doc,
+            source_pin=dict(path=str(received_path), sha256=received_sha256, bytes=len(raw)),
+            prior_received=priors, caller_verified_sources=caller_verified_sources)
+        adapter_pin = dict(path=adapter.__file__, sha256=hashlib.sha256(Path(adapter.__file__).read_bytes()).hexdigest())
     require(doc["feature_order"] == ["Lp_nH", "Ls_nH", "Qmin", "K_abs"], "Feature order mismatch")
     rows = doc["rows"]
     require(isinstance(rows, list), "Received rows must be a list")
@@ -208,12 +222,35 @@ def run(base_path, received_path, *, received_sha256=PIN_RECEIVED,
             "Validation/test/pending-formal never contributes to train occupancy; no fabricated DOE target error.",
             "Received pin and status strings do not prove physical truth or admission; caller verification is required.",
             "No same-budget superiority or final100K support inference; missing target/predicted cells are not reconstructed."
-        ], rows=output)
+        ], rows=output, **(dict(converted_received=doc, adapter_source_pin=adapter_pin,
+                               received_source_kind="SUCCESSOR_NEW_WINDOW_OBSERVATION") if observation else {}))
 
-if __name__ == "__main__":
+def emit_output(result, output=None):
+    """Serialize before creating a new file; failed writes never emit success."""
+    serialized = json.dumps(result, ensure_ascii=False, allow_nan=False, indent=2)
+    if output is None:
+        print(serialized)
+        return
+    path = Path(output).absolute()
+    raw = (serialized + "\n").encode("utf-8")
+    fd = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
+    with os.fdopen(fd, "wb") as stream:
+        stream.write(raw)
+        stream.flush()
+        os.fsync(stream.fileno())
+    print(json.dumps(dict(path=str(path), sha256=hashlib.sha256(raw).hexdigest(),
+                          bytes=len(raw), status="WRITTEN")))
+
+
+def main(argv=None):
     p=argparse.ArgumentParser()
-    p.add_argument("--baseline",required=True);p.add_argument("--received",required=True)
+    p.add_argument("--baseline",required=True)
+    source=p.add_mutually_exclusive_group(required=True)
+    source.add_argument("--received");source.add_argument("--observation")
     p.add_argument("--received-sha256", default=PIN_RECEIVED)
+    p.add_argument("--observation-sha256", help="Required SHA-256 of the caller-verified successor OBS")
+    p.add_argument("--prior-received", nargs=2, action="append", default=[], metavar=("PATH", "SHA256"),
+                   help="Explicit pinned prior received cut for prior pending formal backfills only")
     p.add_argument("--expected-counts", type=json.loads,
                    help="JSON count envelope: received_terminal, emx_completed, strict_in_range, "
                         "formal_admitted, pending_formal, formal_train; other source_counts optional")
@@ -222,9 +259,18 @@ if __name__ == "__main__":
                         "formal_validation, formal_test; separate from new-terminal counts")
     p.add_argument("--caller-verified-sources", action="store_true",
                    help="Acknowledge existing caller verification of physical sources and formal joins")
-    a=p.parse_args()
-    print(json.dumps(run(a.baseline,a.received,received_sha256=a.received_sha256,
+    p.add_argument("--output", help="Write full JSON to a new file (no overwrite); stdout returns its pin only")
+    a=p.parse_args(argv)
+    if a.observation and not a.observation_sha256:
+        p.error("--observation requires --observation-sha256")
+    result = run(a.baseline,a.observation or a.received,
+                         received_sha256=a.observation_sha256 if a.observation else a.received_sha256,
                          expected_counts=a.expected_counts,
                          expected_backfill_counts=a.expected_backfill_counts,
-                         caller_verified_sources=a.caller_verified_sources),
-                     ensure_ascii=False,allow_nan=False,indent=2))
+                         caller_verified_sources=a.caller_verified_sources,
+                         observation=bool(a.observation), prior_received=a.prior_received)
+    emit_output(result, a.output)
+
+
+if __name__ == "__main__":
+    main()

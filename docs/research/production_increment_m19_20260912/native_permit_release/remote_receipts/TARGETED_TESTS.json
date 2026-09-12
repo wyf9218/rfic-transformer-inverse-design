@@ -1,0 +1,42 @@
+{
+  "affected_prior_tests": 12,
+  "native_calls": 0,
+  "private_python": "/usr/bin/python3.12",
+  "process_signals": 0,
+  "status": "PASS",
+  "synthetic_tests_only": true,
+  "tests": [
+    {
+      "returncode": 0,
+      "source": {
+        "bytes": 5728,
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_permit_release_20260912T105802513957Z/test_permit_release.py",
+        "sha256": "4da88553549402d69058b0b6a3ca83bcc6d2fac465d27e2a36dcf253c884e445"
+      },
+      "stderr": "test_candidate_admission_rechecks_resource_after_heavy_storage (__main__.ReleaseTests.test_candidate_admission_rechecks_resource_after_heavy_storage) ... ok\ntest_completed_release_does_not_wait_for_dispatch_and_preserves_storage (__main__.ReleaseTests.test_completed_release_does_not_wait_for_dispatch_and_preserves_storage) ... ok\ntest_concurrent_duplicate_release_is_idempotent (__main__.ReleaseTests.test_concurrent_duplicate_release_is_idempotent) ... ok\ntest_heavy_storage_check_does_not_block_new_resource_and_grant_uses_latest (__main__.ReleaseTests.test_heavy_storage_check_does_not_block_new_resource_and_grant_uses_latest) ... ok\ntest_no_tool_capacity_wait_does_not_verify_hashes_or_walk_storage (__main__.ReleaseTests.test_no_tool_capacity_wait_does_not_verify_hashes_or_walk_storage) ... ok\ntest_old_release_reproduces_block_behind_dispatch (__main__.ReleaseTests.test_old_release_reproduces_block_behind_dispatch) ... ok\ntest_reacquire_and_release_share_candidate_guard (__main__.ReleaseTests.test_reacquire_and_release_share_candidate_guard) ... ok\ntest_release_persistence_failure_retains_reservation (__main__.ReleaseTests.test_release_persistence_failure_retains_reservation) ... ok\ntest_resource_publication_finishes_while_dispatch_lock_held (__main__.ReleaseTests.test_resource_publication_finishes_while_dispatch_lock_held) ... ok\ntest_slow_permit_persistence_revokes_before_tool_start (__main__.ReleaseTests.test_slow_permit_persistence_revokes_before_tool_start) ... ok\ntest_slow_release_io_keeps_count_but_not_state_lock (__main__.ReleaseTests.test_slow_release_io_keeps_count_but_not_state_lock) ... ok\ntest_storage_walk_aging_resource_does_not_issue_permit (__main__.ReleaseTests.test_storage_walk_aging_resource_does_not_issue_permit) ... ok\n\n----------------------------------------------------------------------\nRan 12 tests in 0.248s\n\nOK\n",
+      "stdout": ""
+    },
+    {
+      "returncode": 0,
+      "source": {
+        "bytes": 4297,
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_permit_release_20260912T105802513957Z/test_continuation_checkpoint.py",
+        "sha256": "59cb828fc7e5d39e8c1143caf3af2c57f3e6b6d436c0be9a23311c2d8493795d"
+      },
+      "stderr": "test_changed_scope_is_rejected (__main__.CheckpointTests.test_changed_scope_is_rejected) ... ok\ntest_live_previous_standby_is_rejected (__main__.CheckpointTests.test_live_previous_standby_is_rejected) ... ok\ntest_partially_advanced_continuation_cannot_handoff (__main__.CheckpointTests.test_partially_advanced_continuation_cannot_handoff) ... ok\ntest_replay_preserves_current_index_prior_and_skips_first_batch (__main__.CheckpointTests.test_replay_preserves_current_index_prior_and_skips_first_batch) ... ok\ntest_tampered_index_is_rejected (__main__.CheckpointTests.test_tampered_index_is_rejected) ... ok\ntest_unclosed_batch_is_rejected (__main__.CheckpointTests.test_unclosed_batch_is_rejected) ... ok\n\n----------------------------------------------------------------------\nRan 6 tests in 0.019s\n\nOK\n",
+      "stdout": ""
+    },
+    {
+      "returncode": 0,
+      "source": {
+        "bytes": 4907,
+        "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_permit_release_20260912T105802513957Z/test_storage_claim_wait.py",
+        "sha256": "60ef1795438a52ff1c3533f7c13ab0d7fa640a1703b72b0820bfbbb38005479f"
+      },
+      "stderr": "......\n----------------------------------------------------------------------\nRan 6 tests in 0.014s\n\nOK\n",
+      "stdout": ""
+    }
+  ],
+  "unique_new_tests": 12,
+  "utc": "2026-09-12T10:58:04.409770+00:00"
+}

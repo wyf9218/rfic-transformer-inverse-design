@@ -1,0 +1,45 @@
+{
+  "checkpoint": {
+    "bytes": 2778,
+    "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_permit_release_20260912T105802513957Z/CONTINUATION_CHECKPOINT.json",
+    "sha256": "e5d04a5c7c4e915bf2c048f7064abde6bf6e941e93d5572cd742ce6bbfa10650"
+  },
+  "deployment": {
+    "bytes": 27484,
+    "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_permit_release_20260912T105802513957Z/DEPLOYMENT.json",
+    "sha256": "b0424f190432ba0fc4f9af058bddc6fd5058fdb7ef7be2d23780ecd26791a04c"
+  },
+  "healthy_native_signals": 0,
+  "next_index": 2,
+  "previous_batch_restarted": false,
+  "previous_start": {
+    "bytes": 977,
+    "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_endpoint_v2_claimwait_20260912T093632216029Z/CONTINUATION_START.json",
+    "sha256": "b3361f86fcdd3a82ff5072d26a57103180580a98808cf1052e1bbd4d402fcfcf"
+  },
+  "publication": {
+    "bytes": 6585,
+    "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_permit_release_20260912T105802513957Z/PUBLICATION.json",
+    "sha256": "6bbf9471da40021f9d025c5a37cc542db2a9e8e0f300db3e810620853a827324"
+  },
+  "runtime": {
+    "bytes": 15755,
+    "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_permit_release_20260912T105802513957Z/runtime/fixed48_runtime.py",
+    "sha256": "0ad043b6b90ce164f4954a329069f283a560fd5919dd707c8eec471f5c124161"
+  },
+  "standby": {
+    "argv": [
+      "/volumes/research-localdata/ywang3652/rfic-transformer-inverse-design-mars56-s4p-20260702/.venv/bin/python",
+      "-B",
+      "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_permit_release_20260912T105802513957Z/runtime/continue_batches.py",
+      "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_permit_release_20260912T105802513957Z"
+    ],
+    "pid": 3841226,
+    "ppid": 3567815,
+    "start_ticks": 401506408,
+    "state": "S",
+    "uid": 2259579
+  },
+  "status": "NEXT_BATCH_RUNTIME_INSTALLED_NOT_NATIVE_CONCURRENCY_PROOF",
+  "utc": "2026-09-12T11:05:38.091737+00:00"
+}

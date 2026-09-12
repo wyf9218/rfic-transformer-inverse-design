@@ -1,0 +1,369 @@
+{
+  "authorizations": [
+    {
+      "bytes": 3583,
+      "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_fixed48_20260912T060818729473Z/USER_AUTHORIZATION.json",
+      "sha256": "a1ba80c38f9efbd995648035de288648c91130c1f0e7b20989063cf2e07f5857"
+    },
+    {
+      "bytes": 3216,
+      "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_fixed48_20260912T060818729473Z/USER_FIXED48_AUTHORIZATION.json",
+      "sha256": "3079f3a21033db825e9fef76b26b230c64a830307fb503242dad275fad889584"
+    }
+  ],
+  "continuation_checkpoint": {
+    "bytes": 2778,
+    "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_permit_release_20260912T105802513957Z/CONTINUATION_CHECKPOINT.json",
+    "sha256": "e5d04a5c7c4e915bf2c048f7064abde6bf6e941e93d5572cd742ce6bbfa10650"
+  },
+  "endpoint_upgrade": {
+    "bytes": 288482,
+    "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_endpoint_v2_20260912T090023519751Z/ENDPOINT_UPGRADE.json",
+    "sha256": "5ab6cf17dca566e4bd0a0bca905b76d09a1d9e2d1fe5d2acebfcab91aecba638"
+  },
+  "factory_sources": [
+    {
+      "bytes": 1647,
+      "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_permit_release_20260912T105802513957Z/factory/atomic_primitives.py",
+      "sha256": "f397cd6390a146c41b2563f10f3430590fc632c2e23fc059468a80ebe36da4ca"
+    },
+    {
+      "bytes": 16836,
+      "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_permit_release_20260912T105802513957Z/factory/parameterized_sampler.py",
+      "sha256": "bf4a0f0a6bd514622971621684623c1eab703be367c715cb1ddc38ddd1117c27"
+    },
+    {
+      "bytes": 4297,
+      "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_permit_release_20260912T105802513957Z/factory/successor_exclusions.py",
+      "sha256": "a18832156ce8307fc56a3ab5d4276bbac93b70723c4bda78f26c78f9c3cdc424"
+    },
+    {
+      "bytes": 15719,
+      "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_permit_release_20260912T105802513957Z/factory/successor_factory.py",
+      "sha256": "1591cfaa229fb79529b4fcbc893f8283d3c937edc5bc8d907d32e0a34ae7155a"
+    }
+  ],
+  "factory_template": {
+    "batch_id": "OWNER_MUST_SET_NEW_EXPLICIT_BATCH_ID",
+    "inputs": {
+      "contract": {
+        "bytes": 1889,
+        "path": "/Users/wyf/Documents/\u6a21\u62df\u53d8\u538b\u5668AI\u53cd\u5411\u5efa\u6a21/reports/eucap15ghz_20260908T220300Z/formal6329_development_20260909_v1/trials/3x256_seed17/forward/attempt_0001/contract.json",
+        "sha256": "09aea00c966b9e6d41d423b60c82e45ef6604533493e95afce071e02ba250447"
+      },
+      "current_source_rows": {
+        "bytes": 7598755,
+        "path": "/Users/wyf/Documents/\u6a21\u62df\u53d8\u538b\u5668AI\u53cd\u5411\u5efa\u6a21/reports/eucap15ghz_20260908T220300Z/formal6329_development_20260909_v1/data_v2/SOURCE_ROWS.csv",
+        "sha256": "8a63fe957e6bf16055f0781dc4919dbe20fc4906bc233f8ade8029c389b49e63"
+      },
+      "splits": {
+        "bytes": 1873256,
+        "path": "/Users/wyf/Documents/\u6a21\u62df\u53d8\u538b\u5668AI\u53cd\u5411\u5efa\u6a21/reports/eucap15ghz_20260908T220300Z/formal6329_development_20260909_v1/data_v2/splits.json",
+        "sha256": "92ba524fd139dfb6f9ab93bd745aa26bc7fdcde68687ae132ac1cc0b63064433"
+      }
+    },
+    "known_pool": {
+      "file": {
+        "bytes": 4156509,
+        "path": "/Users/wyf/Documents/\u6a21\u62df\u53d8\u538b\u5668AI\u53cd\u5411\u5efa\u6a21/reports/eucap15ghz_20260908T220300Z/production256_successor_20260912_v1/run_v1/EXCLUSION_METADATA.json",
+        "sha256": "c5943cd4d8c8e0102b4e8ee443f7664be36b7844a802a56799bf7a1e36abf9af"
+      },
+      "manifest": {
+        "bytes": 2651,
+        "path": "/Users/wyf/Documents/\u6a21\u62df\u53d8\u538b\u5668AI\u53cd\u5411\u5efa\u6a21/reports/eucap15ghz_20260908T220300Z/production256_successor_20260912_v1/run_v1/MANIFEST.json",
+        "sha256": "569e1abda082a070db657d83f90327fe4815bd8a25b290fb6f5cc2230faf9740"
+      }
+    },
+    "path_map": {
+      "/Users/wyf/Documents/\u6a21\u62df\u53d8\u538b\u5668AI\u53cd\u5411\u5efa\u6a21/github_worktrees/eucap15-mlp-capacity-20260909/research/broadband56_nn/data.py": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_fixed48_20260912T060818729473Z/inputs/55bd9580b61512da8d2e550b556717842b227acaf15319ecd8ec762e78383295/data.py",
+      "/Users/wyf/Documents/\u6a21\u62df\u53d8\u538b\u5668AI\u53cd\u5411\u5efa\u6a21/github_worktrees/eucap15-mlp-capacity-20260909/research/broadband56_nn/eucap15_acquisition.py": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_fixed48_20260912T060818729473Z/inputs/d55eedd5955a6654966fd3dd0ad32074cae4376ef2709ffdbbcfe8edee431f0a/eucap15_acquisition.py",
+      "/Users/wyf/Documents/\u6a21\u62df\u53d8\u538b\u5668AI\u53cd\u5411\u5efa\u6a21/github_worktrees/eucap15-mlp-capacity-20260909/research/broadband56_nn/evaluation.py": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_fixed48_20260912T060818729473Z/inputs/50c36b0ca636fe992b1e7d1eebc76341129ec395c571e1a3c9226685130e456e/evaluation.py",
+      "/Users/wyf/Documents/\u6a21\u62df\u53d8\u538b\u5668AI\u53cd\u5411\u5efa\u6a21/github_worktrees/eucap15-mlp-capacity-20260909/research/broadband56_nn/frequency_large_eval.py": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_fixed48_20260912T060818729473Z/inputs/05930823b7ce914f1dc5ec8dd6466fadb785cc4602f5d258db00d44b488f276c/frequency_large_eval.py",
+      "/Users/wyf/Documents/\u6a21\u62df\u53d8\u538b\u5668AI\u53cd\u5411\u5efa\u6a21/github_worktrees/eucap15-mlp-capacity-20260909/research/broadband56_nn/physics.py": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_fixed48_20260912T060818729473Z/inputs/0e58daf60c20b8b079289efed67e564320c4837d8cc3cc5ad3ed7a5e62fa3e9c/physics.py",
+      "/Users/wyf/Documents/\u6a21\u62df\u53d8\u538b\u5668AI\u53cd\u5411\u5efa\u6a21/reports/eucap15_native_owner_20260909T062500Z/qualified15_train_partition_v2/geometry_helpers.py": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_fixed48_20260912T060818729473Z/inputs/b6311d77e65b514d8a186394f6352500f7e717cc02507c0190e401ccd197bf98/geometry_helpers.py",
+      "/Users/wyf/Documents/\u6a21\u62df\u53d8\u538b\u5668AI\u53cd\u5411\u5efa\u6a21/reports/eucap15ghz_20260908T220300Z/formal6329_development_20260909_v1/data_v2/SOURCE_ROWS.csv": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_fixed48_20260912T060818729473Z/inputs/8a63fe957e6bf16055f0781dc4919dbe20fc4906bc233f8ade8029c389b49e63/SOURCE_ROWS.csv",
+      "/Users/wyf/Documents/\u6a21\u62df\u53d8\u538b\u5668AI\u53cd\u5411\u5efa\u6a21/reports/eucap15ghz_20260908T220300Z/formal6329_development_20260909_v1/data_v2/splits.json": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_fixed48_20260912T060818729473Z/inputs/92ba524fd139dfb6f9ab93bd745aa26bc7fdcde68687ae132ac1cc0b63064433/splits.json",
+      "/Users/wyf/Documents/\u6a21\u62df\u53d8\u538b\u5668AI\u53cd\u5411\u5efa\u6a21/reports/eucap15ghz_20260908T220300Z/formal6329_development_20260909_v1/trials/3x256_seed17/forward/attempt_0001/contract.json": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_fixed48_20260912T060818729473Z/inputs/09aea00c966b9e6d41d423b60c82e45ef6604533493e95afce071e02ba250447/contract.json",
+      "/Users/wyf/Documents/\u6a21\u62df\u53d8\u538b\u5668AI\u53cd\u5411\u5efa\u6a21/reports/eucap15ghz_20260908T220300Z/production256_successor_20260912_v1/INTENT.json": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_fixed48_20260912T060818729473Z/inputs/4257a113f15112606e290bf039d25bb83d270376b3db81cdf0634239c841c98f/INTENT.json",
+      "/Users/wyf/Documents/\u6a21\u62df\u53d8\u538b\u5668AI\u53cd\u5411\u5efa\u6a21/reports/eucap15ghz_20260908T220300Z/production256_successor_20260912_v1/run_v1/CANDIDATE_INDEX.csv": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_fixed48_20260912T060818729473Z/inputs/e8831ef7f2d43c7bbd2cdc3b838184074cdd03e478f4fe2b9e56b4b497910c6a/CANDIDATE_INDEX.csv",
+      "/Users/wyf/Documents/\u6a21\u62df\u53d8\u538b\u5668AI\u53cd\u5411\u5efa\u6a21/reports/eucap15ghz_20260908T220300Z/production256_successor_20260912_v1/run_v1/EXCLUSION_METADATA.json": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_fixed48_20260912T060818729473Z/inputs/c5943cd4d8c8e0102b4e8ee443f7664be36b7844a802a56799bf7a1e36abf9af/EXCLUSION_METADATA.json",
+      "/Users/wyf/Documents/\u6a21\u62df\u53d8\u538b\u5668AI\u53cd\u5411\u5efa\u6a21/reports/eucap15ghz_20260908T220300Z/production256_successor_20260912_v1/run_v1/GEOMETRY_CONTRACT.json": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_fixed48_20260912T060818729473Z/inputs/09aea00c966b9e6d41d423b60c82e45ef6604533493e95afce071e02ba250447/GEOMETRY_CONTRACT.json",
+      "/Users/wyf/Documents/\u6a21\u62df\u53d8\u538b\u5668AI\u53cd\u5411\u5efa\u6a21/reports/eucap15ghz_20260908T220300Z/production256_successor_20260912_v1/run_v1/INPUT_PINS.json": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_fixed48_20260912T060818729473Z/inputs/c0873883783e609e9810579f8133a9c0b67adcea43b17105ee8daa77dde9c0a1/INPUT_PINS.json",
+      "/Users/wyf/Documents/\u6a21\u62df\u53d8\u538b\u5668AI\u53cd\u5411\u5efa\u6a21/reports/eucap15ghz_20260908T220300Z/production256_successor_20260912_v1/run_v1/MANIFEST.json": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_fixed48_20260912T060818729473Z/inputs/569e1abda082a070db657d83f90327fe4815bd8a25b290fb6f5cc2230faf9740/MANIFEST.json",
+      "/Users/wyf/Documents/\u6a21\u62df\u53d8\u538b\u5668AI\u53cd\u5411\u5efa\u6a21/reports/eucap15ghz_20260908T220300Z/production256_successor_20260912_v1/run_v1/PREPARATION_RECEIPT.json": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_fixed48_20260912T060818729473Z/inputs/9ab28bb9ce3bcf2ba942a6b764e4d5b29e0eb8f2a48b4d360eb5eb44e328dd1b/PREPARATION_RECEIPT.json",
+      "/Users/wyf/Documents/\u6a21\u62df\u53d8\u538b\u5668AI\u53cd\u5411\u5efa\u6a21/reports/eucap15ghz_20260908T220300Z/production256_successor_20260912_v1/run_v1/RESOURCE_CHECK.json": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_fixed48_20260912T060818729473Z/inputs/6dd097b03f0cca1c30d0f8ba0c9d715e5f8850cb9e047b89630554f38f33ed4d/RESOURCE_CHECK.json",
+      "/Users/wyf/Documents/\u6a21\u62df\u53d8\u538b\u5668AI\u53cd\u5411\u5efa\u6a21/reports/eucap15ghz_20260908T220300Z/production256_successor_20260912_v1/run_v1/SELECTED_CANDIDATES.jsonl": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_fixed48_20260912T060818729473Z/inputs/3145554ab5c609900ba1fd6f4813d2b61c2b01d902f1c8b390bfb8eb3034e293/SELECTED_CANDIDATES.jsonl"
+    },
+    "prior_batches": [
+      {
+        "candidates": {
+          "bytes": 933170,
+          "path": "/Users/wyf/Documents/\u6a21\u62df\u53d8\u538b\u5668AI\u53cd\u5411\u5efa\u6a21/reports/eucap15ghz_20260908T220300Z/production256_successor_20260912_v1/run_v1/SELECTED_CANDIDATES.jsonl",
+          "sha256": "3145554ab5c609900ba1fd6f4813d2b61c2b01d902f1c8b390bfb8eb3034e293"
+        },
+        "manifest": {
+          "bytes": 2651,
+          "path": "/Users/wyf/Documents/\u6a21\u62df\u53d8\u538b\u5668AI\u53cd\u5411\u5efa\u6a21/reports/eucap15ghz_20260908T220300Z/production256_successor_20260912_v1/run_v1/MANIFEST.json",
+          "sha256": "569e1abda082a070db657d83f90327fe4815bd8a25b290fb6f5cc2230faf9740"
+        }
+      }
+    ],
+    "recipe": {
+      "bytes": 7698,
+      "path": "/Users/wyf/Documents/\u6a21\u62df\u53d8\u538b\u5668AI\u53cd\u5411\u5efa\u6a21/reports/eucap15ghz_20260908T220300Z/production256_successor_20260912_v1/INTENT.json",
+      "sha256": "4257a113f15112606e290bf039d25bb83d270376b3db81cdf0634239c841c98f"
+    },
+    "research_root": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_fixed48_20260912T060818729473Z/factory_repo",
+    "schema": "eucap15_successor_factory_request.v1",
+    "seeds": {
+      "doe": null,
+      "neighbor": null,
+      "split": 17
+    },
+    "sources": {
+      "acquisition": {
+        "path": "/Users/wyf/Documents/\u6a21\u62df\u53d8\u538b\u5668AI\u53cd\u5411\u5efa\u6a21/github_worktrees/eucap15-mlp-capacity-20260909/research/broadband56_nn/eucap15_acquisition.py",
+        "sha256": "d55eedd5955a6654966fd3dd0ad32074cae4376ef2709ffdbbcfe8edee431f0a"
+      },
+      "data_split": {
+        "path": "/Users/wyf/Documents/\u6a21\u62df\u53d8\u538b\u5668AI\u53cd\u5411\u5efa\u6a21/github_worktrees/eucap15-mlp-capacity-20260909/research/broadband56_nn/data.py",
+        "sha256": "55bd9580b61512da8d2e550b556717842b227acaf15319ecd8ec762e78383295"
+      },
+      "evaluation": {
+        "path": "/Users/wyf/Documents/\u6a21\u62df\u53d8\u538b\u5668AI\u53cd\u5411\u5efa\u6a21/github_worktrees/eucap15-mlp-capacity-20260909/research/broadband56_nn/evaluation.py",
+        "sha256": "50c36b0ca636fe992b1e7d1eebc76341129ec395c571e1a3c9226685130e456e"
+      },
+      "frequency_large_eval": {
+        "path": "/Users/wyf/Documents/\u6a21\u62df\u53d8\u538b\u5668AI\u53cd\u5411\u5efa\u6a21/github_worktrees/eucap15-mlp-capacity-20260909/research/broadband56_nn/frequency_large_eval.py",
+        "sha256": "05930823b7ce914f1dc5ec8dd6466fadb785cc4602f5d258db00d44b488f276c"
+      },
+      "physics": {
+        "path": "/Users/wyf/Documents/\u6a21\u62df\u53d8\u538b\u5668AI\u53cd\u5411\u5efa\u6a21/github_worktrees/eucap15-mlp-capacity-20260909/research/broadband56_nn/physics.py",
+        "sha256": "0e58daf60c20b8b079289efed67e564320c4837d8cc3cc5ad3ed7a5e62fa3e9c"
+      },
+      "production_geometry_helpers": {
+        "path": "/Users/wyf/Documents/\u6a21\u62df\u53d8\u538b\u5668AI\u53cd\u5411\u5efa\u6a21/reports/eucap15_native_owner_20260909T062500Z/qualified15_train_partition_v2/geometry_helpers.py",
+        "sha256": "b6311d77e65b514d8a186394f6352500f7e717cc02507c0190e401ccd197bf98"
+      }
+    }
+  },
+  "first_registration": {
+    "bytes": 8675,
+    "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_endpoint_v2_claimwait_20260912T093632216029Z/batch_registry/569e1abda082a070db657d83f90327fe4815bd8a25b290fb6f5cc2230faf9740.json",
+    "sha256": "d5ab16a321b4e37d76c5b07d655dd919315cacee9017be0aeaa76b76f27457f5"
+  },
+  "formal_ledger": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/qualified15_single_member_v1/records",
+  "initial_release": {
+    "bytes": 51885,
+    "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/production256_integrated_20260912T032852585189Z/recoveries/fixed48_20260912T053459913198Z/owner/RELEASE.json",
+    "sha256": "7f1bdbbefd126468fa00ea9b7ac6fcb27eb7ef120539f570cc8d667b75c910ba"
+  },
+  "python": "/volumes/research-localdata/ywang3652/rfic-transformer-inverse-design-mars56-s4p-20260702/.venv/bin/python",
+  "replaces_continuation": {
+    "deployment": {
+      "bytes": 26764,
+      "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_endpoint_v2_20260912T090023519751Z/DEPLOYMENT.json",
+      "sha256": "b4de425891bd248e965fcb803508d94c13b28cd0d80e36cc75e25e96da743306"
+    },
+    "failure": {
+      "bytes": 412,
+      "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_endpoint_v2_20260912T090023519751Z/CONTINUATION_FAILURE.json",
+      "sha256": "8b06ffecd481dca94b61b208829cfeef746d6008f17eee43cea011ae4dd01581"
+    },
+    "install": {
+      "bytes": 17155,
+      "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_endpoint_v2_20260912T090023519751Z/INSTALL_RECEIPT.json",
+      "sha256": "f8b80632ba1fac0d1ab85bcf629f010bfde7bb310a5b4e629827babf938ccc40"
+    }
+  },
+  "runtime_sources": [
+    {
+      "bytes": 8877,
+      "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_permit_release_20260912T105802513957Z/runtime/batch_registration.py",
+      "sha256": "27f3f0822db9654f692764efa4616a018db176a5b953a32859644d90ac8faa4a"
+    },
+    {
+      "bytes": 5234,
+      "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_permit_release_20260912T105802513957Z/runtime/closed_export.py",
+      "sha256": "3a228ad2800380f28ea41fbb211459d486059079326e620420f970c61372c3ad"
+    },
+    {
+      "bytes": 14111,
+      "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_permit_release_20260912T105802513957Z/runtime/continue_batches.py",
+      "sha256": "ac3e4033fce1116c1a6add13ac034f5e5e23878479f54460b1f7207fdeb5532a"
+    },
+    {
+      "bytes": 14878,
+      "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_permit_release_20260912T105802513957Z/runtime/controlled_execution.py",
+      "sha256": "5f5d1a12b662fa074117de417e5f5e36ea1066e7a74baef4ea2b5043b676b858"
+    },
+    {
+      "bytes": 8337,
+      "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_permit_release_20260912T105802513957Z/runtime/controlled_metadata.py",
+      "sha256": "1d57e2d1b5f1460037816ebc980f81e6073a3eadfa4c24c1925126303b3c9330"
+    },
+    {
+      "bytes": 10572,
+      "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_permit_release_20260912T105802513957Z/runtime/controlled_result.py",
+      "sha256": "eb5036f6f0f830d30e81fb0f118f63999d87e8d90cacd11fa653a555eb354426"
+    },
+    {
+      "bytes": 5893,
+      "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_permit_release_20260912T105802513957Z/runtime/endpoint_upgrade.py",
+      "sha256": "9e88b903c8b111db224c6be7d5edefbdd721d000e71eb5726fa42306ea817dba"
+    },
+    {
+      "bytes": 5697,
+      "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_permit_release_20260912T105802513957Z/runtime/fixed48_amendment.py",
+      "sha256": "7204cd57fc70d9e20eb48a44dede2e413dad1fc7ddd475c3a7eb6558fd755e27"
+    },
+    {
+      "bytes": 7241,
+      "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_permit_release_20260912T105802513957Z/runtime/fixed48_capacity.py",
+      "sha256": "e9154715ec5c13eea95ee96f1bb015223f6e946a015005a990c5bcfcd4b2f545"
+    },
+    {
+      "bytes": 15755,
+      "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_permit_release_20260912T105802513957Z/runtime/fixed48_runtime.py",
+      "sha256": "0ad043b6b90ce164f4954a329069f283a560fd5919dd707c8eec471f5c124161"
+    },
+    {
+      "bytes": 2938,
+      "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_permit_release_20260912T105802513957Z/runtime/geometry_helpers.py",
+      "sha256": "b6311d77e65b514d8a186394f6352500f7e717cc02507c0190e401ccd197bf98"
+    },
+    {
+      "bytes": 501,
+      "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_permit_release_20260912T105802513957Z/runtime/history1000_helpers.py",
+      "sha256": "0bb77f4e0a1e259ba93d5c4a319d0cb1abdf2862450dddc8dca6877fcaa75807"
+    },
+    {
+      "bytes": 1834,
+      "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_permit_release_20260912T105802513957Z/runtime/live_dedup.py",
+      "sha256": "002438c7a13165d69b79be90013c6b7ebedeaf397b12ce3ad6a23dc5896e961a"
+    },
+    {
+      "bytes": 8540,
+      "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_permit_release_20260912T105802513957Z/runtime/native_birth.py",
+      "sha256": "e269d337f7892f94444efe4004f420dabfe26c85f1a75ad55147fffa913a41f2"
+    },
+    {
+      "bytes": 5588,
+      "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_permit_release_20260912T105802513957Z/runtime/native_resource_probe.py",
+      "sha256": "2b4e525ee3bd75c42a4182333f9e868d67fd2f251e8af16fecb163b9ad0b038c"
+    },
+    {
+      "bytes": 8955,
+      "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_permit_release_20260912T105802513957Z/runtime/prepare_controlled_owner.py",
+      "sha256": "f8859cc103f2f97cca34d690860481c4fd3067ef819247b0d6983f2da31fca68"
+    },
+    {
+      "bytes": 6579,
+      "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_permit_release_20260912T105802513957Z/runtime/prepare_fixed48.py",
+      "sha256": "313367b5077fc2bde2a6602897d187f19588dcb34091151dc25bcbf93f3ca863"
+    },
+    {
+      "bytes": 5435,
+      "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_permit_release_20260912T105802513957Z/runtime/prepare_recovery.py",
+      "sha256": "2c0c7cfb34a9897b039fc3e544a905bbb75891585ba39c0869845621b03393ba"
+    },
+    {
+      "bytes": 5750,
+      "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_permit_release_20260912T105802513957Z/runtime/prepare_successor.py",
+      "sha256": "fada7a1331cec7d8e4fefa23d1da8f6ee20d42b708dd9bc130e98b86aa5ade92"
+    },
+    {
+      "bytes": 2252,
+      "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_permit_release_20260912T105802513957Z/runtime/quiescent_handoff.py",
+      "sha256": "31e68a27a43db260b028cf43b625231d12aa3a11b7c8a14e23e120bcc332331d"
+    },
+    {
+      "bytes": 3082,
+      "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_permit_release_20260912T105802513957Z/runtime/recovery_inventory.py",
+      "sha256": "9177af47975d018d2c2ccd49012091b89f729c92cd5f116d2c84ce05a75080a3"
+    },
+    {
+      "bytes": 107,
+      "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_permit_release_20260912T105802513957Z/runtime/research/broadband56_nn/__init__.py",
+      "sha256": "5a92c9c5e8d4b52be5a906699c504341cc62f0e9634f41b9857ce2256e9f9c99"
+    },
+    {
+      "bytes": 9268,
+      "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_permit_release_20260912T105802513957Z/runtime/research/broadband56_nn/eucap15_acquisition_context.py",
+      "sha256": "481892e11c27b2fff63ff077ee9f3ba7968be08fa39bea1ae2a65966aa8a1caa"
+    },
+    {
+      "bytes": 8364,
+      "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_permit_release_20260912T105802513957Z/runtime/research/broadband56_nn/eucap15_controlled_context.py",
+      "sha256": "22d9127e7e8cbdb6735e51909b252a06b04ed9b15cee02512394e10d00e99f26"
+    },
+    {
+      "bytes": 13649,
+      "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_permit_release_20260912T105802513957Z/runtime/research/broadband56_nn/eucap15_development_context.py",
+      "sha256": "14505b40c2e57566c3d49962d9c177d9f1634195ca6430abf1cd7242bd9820cd"
+    },
+    {
+      "bytes": 24745,
+      "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_permit_release_20260912T105802513957Z/runtime/research/broadband56_nn/eucap15_selected_context.py",
+      "sha256": "2f7b9f05d6036ee53fe834abfdaf1232f838097c401029d545d95874a2749964"
+    },
+    {
+      "bytes": 4663,
+      "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_permit_release_20260912T105802513957Z/runtime/research/broadband56_nn/eucap15_selected_requests.py",
+      "sha256": "0ef7d91141391ec1445a260914f555c06317654df0095490f0242e8a5615d831"
+    },
+    {
+      "bytes": 4445,
+      "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_permit_release_20260912T105802513957Z/runtime/research/broadband56_nn/frequency_research_calibre.py",
+      "sha256": "bd3677abd32db35201d010e799cbdaaa22077974a246971981fcb810919bb020"
+    },
+    {
+      "bytes": 43115,
+      "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_permit_release_20260912T105802513957Z/runtime/research/broadband56_nn/frequency_research_emx.py",
+      "sha256": "e72f8f392305ffb6d412eef2e5321ea1f5b79fc88ed0a80ed7f2a6b32585db4a"
+    },
+    {
+      "bytes": 32029,
+      "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_permit_release_20260912T105802513957Z/runtime/research/broadband56_nn/frequency_research_gds_audit.py",
+      "sha256": "6251d5976600a382abdc967140fcc424c603154525d5115c54d4b9146fd8da23"
+    },
+    {
+      "bytes": 2465,
+      "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_permit_release_20260912T105802513957Z/runtime/research/broadband56_nn/io.py",
+      "sha256": "0b92e0bfcf0d3f5ec6882a07e3578e004fa44bf3c32c5999050ade7530b00abb"
+    },
+    {
+      "bytes": 22448,
+      "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_permit_release_20260912T105802513957Z/runtime/research/broadband56_nn/physics.py",
+      "sha256": "0e58daf60c20b8b079289efed67e564320c4837d8cc3cc5ad3ed7a5e62fa3e9c"
+    },
+    {
+      "bytes": 15499,
+      "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_permit_release_20260912T105802513957Z/runtime/run_controlled_native.py",
+      "sha256": "a8c04db050ee64ba828c9c0ad8fe614b32b0c79bc0f08e49023755945598e68d"
+    },
+    {
+      "bytes": 15760,
+      "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_permit_release_20260912T105802513957Z/runtime/run_development_native.py",
+      "sha256": "b6184aeccdcc59bcf2a7d29e4b5064145e4b40b346b24b89cb346f4123f0202a"
+    },
+    {
+      "bytes": 9060,
+      "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_permit_release_20260912T105802513957Z/runtime/run_fixed48_native.py",
+      "sha256": "5da87cc5206e314e0aa0ec40989fa45ccb2ff2e91643c0ffe6d874a1a3adbfb5"
+    },
+    {
+      "bytes": 8272,
+      "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_permit_release_20260912T105802513957Z/runtime/start_slots.py",
+      "sha256": "a6206fc9969e118997003391fd82c8531fab81f0eade99ac48a7e9a12f393ffc"
+    }
+  ],
+  "same_batch_resume": {
+    "bytes": 2323,
+    "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_endpoint_v2_claimwait_20260912T093632216029Z/SAME_BATCH_RESUME.json",
+    "sha256": "160a7b2deeefa2876184be2f63ca3199a3ffd93c5202abba92a23b5e68aa2b41"
+  },
+  "schema": "eucap15_sequential_fixed48_deployment.v1",
+  "target_qualified": 100000,
+  "utc": "2026-09-12T11:05:34.960947+00:00"
+}
