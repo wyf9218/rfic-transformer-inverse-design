@@ -1,0 +1,105 @@
+{
+  "schema": "eucap15_received_increment.m38.v1",
+  "status": "PASS_INCREMENT_RECEIVED_NOT_NATIVE_ADMISSION",
+  "observed_utc": "2026-09-12T15:56:29.716024+00:00",
+  "baseline_utc": "2026-09-12T15:40:34.027770+00:00",
+  "completed_utc": "2026-09-12T16:01:11.586038+00:00",
+  "source": {
+    "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/storage_claim_wait_v1/budget_walk_v1/increment_20260912T155629323624Z/OBSERVATION.json",
+    "sha256": "f7062e2b5e8cfe27a923119b817971836f39346e9f2bafcf0800518df972af80",
+    "bytes": 1342742
+  },
+  "counts": {
+    "received_terminal": 107,
+    "emx_completed": 100,
+    "strict_in_range": 49,
+    "formal_admitted": 48,
+    "pending_formal": 1,
+    "formal_train": 23,
+    "formal_validation": 13,
+    "formal_test": 12,
+    "pending_formal_train": 1,
+    "pending_formal_validation": 0,
+    "pending_formal_test": 0,
+    "strict_valid": 62,
+    "analytic_not_dispatched": 5,
+    "candidate_failure_retained": 2,
+    "prior_formal_backfill": 0,
+    "history_formal": 0,
+    "ledger_window_fresh_formal": 48
+  },
+  "formal_union_lower_bound": 7183,
+  "formal_head": {
+    "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/qualified15_single_member_v1/records/007183.json",
+    "sha256": "cfca4b2e339c6c620192ef9eb184fc858aacba540ec630312af78cac58bb440d",
+    "bytes": 189898
+  },
+  "pending_request_ids": [
+    "eucap15_continuous_doe_neighborhood_20260912_batch000007-GEOMETRY_DOE-070"
+  ],
+  "source_script": {
+    "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/landing_increment_m38_new107_v1/receive_m38.py",
+    "sha256": "723775e5d05b5e0626385465c7cd52970c173b73b6de5ae28c96429054e3051d",
+    "bytes": 7833
+  },
+  "by_source": {
+    "GEOMETRY_DOE": {
+      "received_terminal": 82,
+      "emx_completed": 75,
+      "strict_in_range": 26,
+      "formal_admitted": 25,
+      "pending_formal": 1,
+      "formal_train": 13,
+      "formal_validation": 6,
+      "formal_test": 6,
+      "pending_formal_train": 1,
+      "pending_formal_validation": 0,
+      "pending_formal_test": 0
+    },
+    "TRAIN_NEIGHBORHOOD": {
+      "received_terminal": 25,
+      "emx_completed": 25,
+      "strict_in_range": 23,
+      "formal_admitted": 23,
+      "pending_formal": 0,
+      "formal_train": 10,
+      "formal_validation": 7,
+      "formal_test": 6,
+      "pending_formal_train": 0,
+      "pending_formal_validation": 0,
+      "pending_formal_test": 0
+    }
+  },
+  "train_descriptive": {
+    "eligible_new_train_rows": 23,
+    "train_landings_in_baseline_empty_cells": 0,
+    "train_landings_in_baseline_underfilled_cells": 0,
+    "train_k_above_point8": 0,
+    "train_q10_20": 23,
+    "train_max_k": 0.4309996986907686,
+    "train_max_q": 16.80336073881646
+  },
+  "artifacts": [
+    {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/landing_increment_m38_new107_v1/RECEIVED_NEW107_VIEW.json",
+      "sha256": "df4bd60614efa17503c7f1342fae4db66a3f515735dcc23e893e0b039d214e9c",
+      "bytes": 1408230
+    },
+    {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/landing_increment_m38_new107_v1/ACTUAL_LANDINGS.json",
+      "sha256": "c2a68213c760911509d4345e209b4fbff8bc0322e6b2d9bf7b75945ca55efad3",
+      "bytes": 1453502
+    },
+    {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/landing_increment_m38_new107_v1/TRAIN_SOURCE_ROWS.json",
+      "sha256": "69048b6ac6a6100a7f85eb3272f4f68fdbaf0016c67d7e67592ffe5f006eda52",
+      "bytes": 92258
+    }
+  ],
+  "native_calls": 0,
+  "training_calls": 0,
+  "physical_sources_reextracted": false,
+  "formal_writes": 0,
+  "existing_completed_windows_rerun": 0,
+  "note": "Formal certification is read from sole owner ledger headers; only exact new joins here. 49core is not49 certified unique."
+}

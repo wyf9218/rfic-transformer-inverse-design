@@ -1,0 +1,26 @@
+# 15 GHz EuCAP 当前运行状态
+
+- 记录2026-09-12 16:02:35 UTC；最新现场15:56:29，Git/聊天时间不刷新存活。
+- Goal ACTIVE；100K合格唯一真实EM、FINAL冻结后独立10K尚未完成。
+- 申请/执行容量48独立EMX×2CPU，Cadence8/Calibre8；最新cut实际EMX0，不宣称48已跑满。
+- 第6→7批已实际自动接续；第7批owner2931050、metadata2931054在cut健康。
+- 窗口15:40:34→15:56:29：107新终态=100fresh+5解析+2候选失败，失败不替换。
+- strict62、范围strict49；48确认唯一正式（23train/13validation/12test）。
+- DOE070范围strict但尚待正式提交，不能计入新增唯一正式或train。
+- fresh正式新增48；历史复用0；旧补登0；认证并集可靠下界7183。
+- batch7已107/256终态；149未终态=16待EMX+8待Calibre+25待Cadence+100无tool intent。
+- 资源PASS20/5，额外EMX39仅容量重放，不是已派发或同时运行。
+- singlewalk新鲜合并遍历：9项本地PASS0.030s、9项Linux针对检查PASS0.028s；旧QA未重跑。
+- 新包runtime43bf57a6c6f296ae5822ceffb23e11bb982bef2430fe0732190b062547763698已实际stage，但未切入。
+- 单installer3842834/start403246900已预约边界，原接续2919841为T_RESERVED；健康孩子信号0。
+- 普通程序最多3600s等整批/metadata自然收尾；退役前超时或可处理失败恢复原父，不留第二controller。
+- 当前生产仍fdc74运行包；INSTALL/TERMINAL/RESUMED无，不能用测试填造allocation_scan或提速。
+- FS可用400946356224B；批已用921776128B+预约3863879680B<5GiB；quotaUNKNOWN，无清理。
+- 新23train仅资格接收，4148→4171；163/512格、欠填1903不变，K>.8新增0，不宣称覆盖优势。
+- 下一checkpoint SHA0304052b881f5f61de682f2726d94fc785fb94e45767f9668ec007f1b6c5b39f。
+- 接收：/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/landing_increment_m38_new107_v1/RECEIPT.json SHA0166f3dc1ece6eafea1863da53d7a847adc27860927f0f50a0e82b134fdeb7c0。
+- 覆盖：/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/train_coverage_received_m38_v1/RECEIPT.json SHAa9037bf98b9a1bb6661f2f8a759120ced95f90c3cff1303c38c69a1afff98541。
+- M37的19EMX/10正式已单独接收，不能再次并入本窗口；M38两个入口各一次成功。
+- 覆盖首次直接脚本启动因相对import在输入前失败，已保存FAIL；改用原package -m后成功，无重复数据处理。
+- M37/M38增量Git正在发布；此前102f77eab8cf85c8b9120429aa267857c020f49c，生产不等Git。
+- 下一只接同一installer实际边界事件/新结果和DOE070正式状态；不AI守同一日志。

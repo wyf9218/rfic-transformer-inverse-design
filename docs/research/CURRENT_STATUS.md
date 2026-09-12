@@ -1,5 +1,13 @@
 # 当前研究和生产状态
 
+## 2026-09-12 M38：新增100份EMX、48正式；singlewalk已预约安全部署
+
+15:56:29 UTC相对15:40:34，新增100fresh、5解析失败及2保留候选失败；62strict、49范围strict候选，48确认唯一正式（23train/13validation/12test），DOE070待正式。fresh正式+48/history0/旧补登0，认证下界7183。实际EMX0，16等待EMX；39额外资源份数只是诊断，不是实际并发。[接收](production_increment_m37_m38_20260912/M38_LANDING_RECEIPT.json)、[现场](production_increment_m37_m38_20260912/M38_NATIVE_COMPACT.json)。
+
+singlewalk43bf版本已实际stage，9Linux针对检查PASS，唯一installer3842834已预约原接续父2919841；第7批健康owner/metadata无信号。当前仍父fdc74运行包，尚无INSTALL终态或提速证明；原程序等自然边界后接续/退役前补偿，不另起控制器。[部署证据](production_increment_m37_m38_20260912/SINGLEWALK_HANDOFF.json)、[最小改动源码](production_increment_m37_m38_20260912/fixed48_runtime.py)。
+
+23新train资格4148→4171，占格163/512、欠填1903不变，K>.8新增0，不宣称覆盖优势。[覆盖图源](production_increment_m37_m38_20260912/COVERAGE_AFTER.csv)。M37另有19fresh/10正式（含旧2补登）已单独闭合，不重复并入M38窗口。[M37接收](production_increment_m37_m38_20260912/M37_LANDING_RECEIPT.json)。[SHA256SUMS](production_increment_m37_m38_20260912/SHA256SUMS)。以下为历史截面。
+
 ## 2026-09-12 M36：51新EMX、25正式入账；实际4路
 
 15:30:41 UTC相对15:19:37，51fresh+3解析终态；32strict，27范围strict候选，25确认唯一正式（18train/6validation/1test），邻域057/058两条尚待正式合并，不计新增认证或train。fresh正式+25/history0/补登0，下界7125。[接收证据](production_increment_m36_20260912/LANDING_RECEIPT.json)。

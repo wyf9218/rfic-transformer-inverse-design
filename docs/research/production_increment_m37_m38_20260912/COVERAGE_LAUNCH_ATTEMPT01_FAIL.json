@@ -1,0 +1,12 @@
+{
+  "schema": "eucap15_command_failure.v1",
+  "recorded_utc": "2026-09-12T16:01:28Z",
+  "command": "\"/Users/wyf/Documents/模拟变压器AI反向建模/reports/broadband56_nn_v2_20260907T212216Z/environment/bin/python\" -B \"/Users/wyf/Documents/模拟变压器AI反向建模/github_worktrees/eucap15-mlp-capacity-20260909/research/broadband56_nn/eucap15_train_coverage_received.py\" --coverage \"/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/train_coverage_received_m37_v1/COVERAGE_AFTER.csv\" --coverage-sha 7b097fe1d5c716dce2ad7b100c22f0aeb93e90d3cf9f7c8e7725e0c0d3bb762d --received \"/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/landing_increment_m38_new107_v1/TRAIN_SOURCE_ROWS.json\" --received-sha 69048b6ac6a6100a7f85eb3272f4f68fdbaf0016c67d7e67592ffe5f006eda52 --checkpoint \"/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/train_coverage_received_m37_v1/CHECKPOINT.json\" --checkpoint-sha a1025016851cb95b7dcae1392d07a5610072807eb3115b8492af29ed60432394 --out \"/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/train_coverage_received_m38_v1\"",
+  "tool_chunk": "221371",
+  "exit_code": 1,
+  "stderr": "Traceback (most recent call last):\n  File \"/Users/wyf/Documents/模拟变压器AI反向建模/github_worktrees/eucap15-mlp-capacity-20260909/research/broadband56_nn/eucap15_train_coverage_received.py\", line 18, in <module>\n    from . import eucap15_acquisition as coverage\nImportError: attempted relative import with no known parent package\n",
+  "phase": "IMPORT_BEFORE_INPUT_OR_OUTPUT",
+  "inputs_read": false,
+  "output_directory_created": false,
+  "next": "Execute existing package with -m in research worktree; no data reprocessing has occurred."
+}

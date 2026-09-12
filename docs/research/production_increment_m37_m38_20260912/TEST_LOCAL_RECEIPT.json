@@ -1,0 +1,44 @@
+{
+  "schema": "eucap15_singlewalk_storage_targeted_test.v1",
+  "recorded_utc": "2026-09-12T15:49:28Z",
+  "status": "PASS_LOCAL_NOT_DEPLOYED",
+  "runtime": {
+    "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/storage_claim_wait_v1/budget_walk_v1/singlewalk_storage_m37_v1/runtime/fixed48_runtime.py",
+    "sha256": "43bf57a6c6f296ae5822ceffb23e11bb982bef2430fe0732190b062547763698",
+    "bytes": 20206
+  },
+  "tests": {
+    "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/storage_claim_wait_v1/budget_walk_v1/singlewalk_storage_m37_v1/test_singlewalk_storage.py",
+    "sha256": "b2abafab6d85dfd51b82124e5ec54612e9580fa18d04130e8b61e224ac38f247",
+    "bytes": 6501
+  },
+  "command": "\"/Users/wyf/Documents/模拟变压器AI反向建模/reports/broadband56_nn_v2_20260907T212216Z/environment/bin/python\" -B \"/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/storage_claim_wait_v1/budget_walk_v1/singlewalk_storage_m37_v1/test_singlewalk_storage.py\"",
+  "tool_chunk": "f80d9a",
+  "exit_code": 0,
+  "tests_run": 9,
+  "tests_pass": 9,
+  "elapsed_test_seconds": 0.03,
+  "changes": [
+    "one fresh full-budget walk computes inode-deduplicated whole-root and per-claim allocated bytes",
+    "no allocation caching",
+    "unreadable subtree fails instead of silent omission"
+  ],
+  "checked": [
+    "actual filesystem and cross-candidate hardlinks parity",
+    "missing candidate zero",
+    "fresh file growth",
+    "symlink rejection",
+    "out-of-root rejection",
+    "permission error fail closed",
+    "claim reservation and durable snapshot",
+    "exact hard budget threshold",
+    "resource age after scan and normal permit path"
+  ],
+  "limits": [
+    "local synthetic fixtures, not MARS throughput or 48 simultaneous EMX proof",
+    "existing source identity checks and physical standards unchanged",
+    "active package not modified; sole native owner deployment remains pending"
+  ],
+  "native_calls": 0,
+  "production_data_modified": false
+}
