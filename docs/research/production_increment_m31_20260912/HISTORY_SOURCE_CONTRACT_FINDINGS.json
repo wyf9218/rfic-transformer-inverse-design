@@ -1,0 +1,216 @@
+{
+  "source": {
+    "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/storage_claim_wait_v1/budget_walk_v1/strict112_four_20260912T142344723294Z/historical_generation_config.yaml",
+    "sha256": "4bd1492ba9dc0e429de31c16e9be86ace5df706477dfeacd52f1dab19c4c04aa",
+    "bytes": 3285,
+    "original_source_path": "/volumes/research-localdata/ywang3652/mars56_s4p_million_campaign_outputs_20260705/mars56_s4p_million_20260705_1256/status/strict_portgate_recovery_20260718/fresh_emx_closure_foundry_layout_pilot2_input_20260719/mars_s4p_grounded_powerline_foundry_layout_pilot2.yaml"
+  },
+  "target": {
+    "topology_mode": "1t1t",
+    "f0_hz": 15000000000.0,
+    "lp_h": 1e-09,
+    "ls_h": 1e-09,
+    "k_target": 0.5,
+    "q_target_mode": "max",
+    "frequency_start_hz": 5000000000.0,
+    "frequency_stop_hz": 60000000000.0,
+    "frequency_step_hz": 500000000.0,
+    "band_points": 111,
+    "fractional_bandwidth": 0.2
+  },
+  "topology": {
+    "primary": {
+      "turns": 1,
+      "center_tap": true,
+      "vdd_bar": {
+        "enabled": true,
+        "bar_layer": 74,
+        "width_um": 10.0,
+        "offset_um": 12.0
+      }
+    },
+    "secondary": {
+      "turns": 1,
+      "center_tap": true,
+      "vdd_bar": {
+        "enabled": true,
+        "bar_layer": 39,
+        "width_um": 10.0,
+        "offset_um": 12.0
+      }
+    }
+  },
+  "process_file_declared": "/volumes/research-localdata/PDKs/TSMC65_05_12_26/RC_IRCX_CRN65G+_1P9M+UT-ALRDL_6X1Z1U_MiM_typical.proc",
+  "port_mode": "single_ended_shield_grounded",
+  "pin_purpose": 51,
+  "differential_port_pairs": "1,2:3,4",
+  "power_line_8port": {
+    "enabled": true,
+    "touchstone_mode": "signal_4_grounded_aux",
+    "bridge_width_um": 10.0,
+    "vertical_length_diameter_ratio": 1.5,
+    "bridge_y_policy": "center",
+    "bridge_motion_axis": "x_only",
+    "port_ground_reference": "shield",
+    "port_map": [
+      "P001",
+      "P002",
+      "P003",
+      "P004"
+    ],
+    "role_labels": {
+      "primary_top": "P001",
+      "primary_bottom": "P002",
+      "secondary_top": "P003",
+      "secondary_bottom": "P004",
+      "left_power_top": "P005",
+      "left_power_bottom": "P006",
+      "right_power_top": "P007",
+      "right_power_bottom": "P008"
+    }
+  },
+  "foundry_layout": {
+    "enabled": true,
+    "manufacturing_grid_um": 0.005,
+    "power_line_stitch_pad_depth_um": 6.0,
+    "shield_strap_width_um": 10.0,
+    "shield_strap_pitch_um": 20.0
+  },
+  "solver_args": [
+    "--edge-width=1",
+    "--accuracy=standard",
+    "--verbose=2",
+    "--parallel=2",
+    "--simultaneous-frequencies=0"
+  ],
+  "geometry_bounds": {
+    "primary": {
+      "outer_width_um": [
+        160.0,
+        520.0
+      ],
+      "outer_height_um": [
+        160.0,
+        520.0
+      ],
+      "trace_width_um": [
+        3.0,
+        12.0
+      ],
+      "spacing_um": [
+        2.0,
+        14.0
+      ],
+      "terminal_y_span_um": [
+        20.0,
+        90.0
+      ],
+      "feed_extension_um": [
+        100.0,
+        320.0
+      ]
+    },
+    "secondary": {
+      "outer_width_um": [
+        160.0,
+        520.0
+      ],
+      "outer_height_um": [
+        160.0,
+        520.0
+      ],
+      "trace_width_um": [
+        3.0,
+        12.0
+      ],
+      "spacing_um": [
+        2.0,
+        14.0
+      ],
+      "terminal_y_span_um": [
+        20.0,
+        90.0
+      ],
+      "feed_extension_um": [
+        100.0,
+        320.0
+      ]
+    },
+    "offset_um": [
+      -90.0,
+      90.0
+    ]
+  },
+  "actual_generation_width_lower_um": {
+    "primary": 3.0,
+    "secondary": 3.0
+  },
+  "current_geometry_width_lower_required_um": 3.05,
+  "selected_member_width_unknown_until_source_geometry_read": true,
+  "historical_vs_current_contract": "111_POINTS_AND_3.0UM_GENERATION_BOUND_NOT_CURRENT_56_POINT_OR_3.05UM_BOUND_PROOF",
+  "executed_process_bytes_and_current_port_compatibility": "UNPROVEN_CONFIG_ONLY",
+  "historical_q_target_mode_not_applied_to_current_research": true,
+  "historical_drc_batch": {
+    "automatic_execution_authorized": false,
+    "blocking_drc_violation_count": 0,
+    "calibre_command": "calibre",
+    "calibre_module": "mentor/2025",
+    "calibre_version": "Calibre v2025.4_18.11    Wed Oct 1 14:55:53 PDT 2025",
+    "candidate_count": 112,
+    "checks": {
+      "calibre_version_present": true,
+      "candidate_count_within_limit": true,
+      "candidate_ids_unique": true,
+      "candidate_ids_valid_sha256": true,
+      "foundry_archive_exists": true,
+      "foundry_archive_hash_matches": true,
+      "input_index_columns_complete": true,
+      "input_index_exists": true,
+      "input_index_nonempty": true,
+      "source_deck_hash_matches": true,
+      "source_deck_process_exact": true,
+      "user_guide_hash_matches": true
+    },
+    "decision": "FOUNDRY_MACRO_IP_BACK_END_DRC_PASS_WITH_DOCUMENTED_WARNINGS",
+    "diagnostics": [],
+    "documented_warning_count": 112,
+    "drc_index_csv": "/volumes/research-localdata/ywang3652/mars56_s4p_million_campaign_outputs_20260705/mars56_s4p_million_20260705_1256/status/strict_portgate_recovery_20260718/fresh_emx_closure_foundry_layout_calibre_112_v5_20260719/drc_index.csv",
+    "drc_index_sha256": "27d614de99d3ec6f14e96fb3de24b077d652a54c8924f7ef80cd492384bee3fd",
+    "drc_scope": "foundry_macro_ip_back_end",
+    "fail_count": 0,
+    "foundry_archive_path": "/volumes/research-localdata/PDKs/TSMC65_05_12_26/MSRF_General_Purpose_Plus/DRC_Command_File/Mentor Graphics/tn65cldr001c1_2_6_2a/DRC_Calibre_65nm_V26_2a.tar.gz",
+    "foundry_archive_sha256": "226e33d43c2a9bc3222cb0d2c1a7fa10ad9bf437f5f7ddfcd2d7a58bcb8c55b0",
+    "foundry_deck_member": "MAIN_DRC_TopMu/CLN65S_9M_6X1Z1U.26_2a",
+    "foundry_source_deck_path": "/volumes/research-localdata/ywang3652/mars56_s4p_million_campaign_outputs_20260705/mars56_s4p_million_20260705_1256/status/strict_portgate_recovery_20260718/fresh_emx_closure_foundry_layout_calibre_112_v5_20260719/foundry_source_deck.svrf",
+    "foundry_source_deck_sha256": "8252a77efecf92d3b187d83f7047df45433ce662c53683996c175b2aa80653ef",
+    "foundry_user_guide_path": "/volumes/research-localdata/ywang3652/mars56_s4p_million_campaign_outputs_20260705/mars56_s4p_million_20260705_1256/status/strict_portgate_recovery_20260718/fresh_emx_closure_foundry_layout_calibre_112_v5_20260719/foundry_user_guide.txt",
+    "foundry_user_guide_sha256": "c76b1bcf7aa7b421e45036ae5c7d3283916cc94b390b642f733f0b9b671f97bf",
+    "generated_utc": "2026-07-19T08:42:35.929522+00:00",
+    "input_index_csv": "/volumes/research-localdata/ywang3652/mars56_s4p_million_campaign_outputs_20260705/mars56_s4p_million_20260705_1256/status/strict_portgate_recovery_20260718/fresh_emx_closure_foundry_layout_candidate_bound_index_112_v5_20260719/candidate_bound_gds_index.csv",
+    "input_index_sha256": "3125a154d0fd6ffce727af6fcdf477e2fc3aca2a8756ec365bd2982d226e839e",
+    "overall_status": "PASS",
+    "pass_count": 112,
+    "production_campaign_modification_authorized": false,
+    "raw_drc_result_count": 112,
+    "schema": "tsmc65_calibre_macro_ip_back_end_drc_batch_v1",
+    "scientific_boundary": "PASS proves zero blocking candidate-bound foundry macro/IP back-end DRC violations for the listed GDS artifacts. Raw Calibre results and any source-deck-documented warnings remain reported separately. It does not prove full-chip DRC, EM equivalence, model accuracy, uniformity, or authorize production execution.",
+    "switch_policy": {
+      "28K_AP": true,
+      "BACK_END": true,
+      "CHECK_LOW_DENSITY": false,
+      "DFM": false,
+      "DFM_ONLY": false,
+      "FRONT_END": false,
+      "FULL_CHIP": false,
+      "GP": true,
+      "HALF_NODE": false,
+      "LP": false,
+      "LPG": false,
+      "MIXED_SCHEME": false,
+      "WLCSP_2_MASK": false,
+      "WLCSP_SEALRING": false
+    }
+  },
+  "drc_scope_not_full_chip": true,
+  "drc_and_proc_source_bytes_not_reread_here": true
+}

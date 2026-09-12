@@ -1,0 +1,1363 @@
+{
+  "schema": "eucap15_production_increment_m31.v1",
+  "status": "PROGRESS",
+  "goal_status": "ACTIVE",
+  "observed_utc": "2026-09-12T14:22:35.261671+00:00",
+  "baseline_utc": "2026-09-12T14:09:26.310757+00:00",
+  "observation": {
+    "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15_native_owner_20260909T062500Z/resume15_20260912/storage_claim_wait_v1/budget_walk_v1/increment_20260912T142234843746Z/OBSERVATION.json",
+    "sha256": "adae9d180af1df250a5248ef86fc9bf4fa35f9fc823b4156d2caef7521ed9051",
+    "bytes": 1224452
+  },
+  "window": {
+    "received_terminal": 53,
+    "emx_completed": 46,
+    "strict_in_range": 25,
+    "formal_admitted": 19,
+    "pending_formal": 6,
+    "formal_train": 14,
+    "formal_validation": 4,
+    "formal_test": 1,
+    "pending_formal_train": 4,
+    "pending_formal_validation": 0,
+    "pending_formal_test": 2,
+    "strict_valid": 36,
+    "analytic_not_dispatched": 6,
+    "candidate_failure_retained": 1,
+    "prior_formal_backfill": 1,
+    "prior_formal_backfill_test": 1,
+    "history_formal": 0,
+    "ledger_window_fresh_formal": 20,
+    "uniqueness": "19 newly completed results formally unique; 6 strict-range candidates pending merge; +1 prior test backfill not new EMX",
+    "fresh_by_original_split": {
+      "train": 28,
+      "validation": 7,
+      "test": 11
+    },
+    "new_formal_by_split": {
+      "train": 14,
+      "validation": 4,
+      "test": 1
+    },
+    "prior_backfill": {
+      "request_id": "eucap15_continuous_doe_neighborhood_20260912_batch000004-GEOMETRY_DOE-156",
+      "split": "test",
+      "sequence": 6885,
+      "utc": "2026-09-12T14:09:29.404010Z",
+      "sha256": "df84786650b1a1f3487791f5d9f000fa22fef54e1e86c36d3db79befaf90cd5a"
+    }
+  },
+  "formal_union_lower_bound": 6904,
+  "formal_head": {
+    "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/qualified15_single_member_v1/records/006904.json",
+    "sha256": "cfe2f2bedaf6fde43fb7c6f84735458541e54faf695236d630e20281baf3a3d9",
+    "bytes": 189924
+  },
+  "referenced_frequency_rows": 386624,
+  "native": {
+    "requested_concurrency": 48,
+    "executor_capacity": 48,
+    "actual_emx": 26,
+    "cpu_per_emx": 2,
+    "tool_caps": {
+      "cadence": 8,
+      "calibre": 8,
+      "emx": 48
+    },
+    "pipeline": 64,
+    "owner": {
+      "pid": 3581696,
+      "ppid": 1041957,
+      "state": "S",
+      "start_ticks": 402643948,
+      "uid": 2259579,
+      "argv": [
+        "/volumes/research-localdata/ywang3652/rfic-transformer-inverse-design-mars56-s4p-20260702/.venv/bin/python",
+        "-B",
+        "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_registry_recovery_20260912T131535395596Z/runtime/run_fixed48_native.py",
+        "--release",
+        "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_registry_recovery_20260912T131535395596Z/batches/eucap15_continuous_doe_neighborhood_20260912_batch000005/owner/RELEASE.json"
+      ]
+    },
+    "metadata": {
+      "pid": 3581701,
+      "ppid": 1041957,
+      "state": "S",
+      "start_ticks": 402643949,
+      "uid": 2259579,
+      "argv": [
+        "/volumes/research-localdata/ywang3652/rfic-transformer-inverse-design-mars56-s4p-20260702/.venv/bin/python",
+        "-B",
+        "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_fixed48_20260912T060818729473Z/publication_tools/metadata_worker.py",
+        "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_registry_recovery_20260912T131535395596Z/publication_workers/575a2e097dbab5c64ee2d86ebe7160e1a29aa47ddff764fce9c6bcfa5ca006bc/DEPLOYMENT.json"
+      ]
+    },
+    "continuation": {
+      "pid": 1041957,
+      "ppid": 1,
+      "state": "S",
+      "start_ticks": 402286569,
+      "uid": 2259579,
+      "argv": [
+        "/volumes/research-localdata/ywang3652/rfic-transformer-inverse-design-mars56-s4p-20260702/.venv/bin/python",
+        "-B",
+        "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_registry_recovery_20260912T131535395596Z/runtime/continue_batches.py",
+        "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_registry_recovery_20260912T131535395596Z"
+      ]
+    },
+    "release": {
+      "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_registry_recovery_20260912T131535395596Z/batches/eucap15_continuous_doe_neighborhood_20260912_batch000005/owner/RELEASE.json",
+      "sha256": "575a2e097dbab5c64ee2d86ebe7160e1a29aa47ddff764fce9c6bcfa5ca006bc",
+      "bytes": 17600
+    },
+    "config": {
+      "bytes": 173152,
+      "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_registry_recovery_20260912T131535395596Z/batches/eucap15_continuous_doe_neighborhood_20260912_batch000005/owner/CONFIG.json",
+      "sha256": "cfcef3a3b0f29baf675e9846ec2a6de085f55c5812fae768a6f9d3b6a861bbc0"
+    },
+    "runtime": {
+      "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_registry_recovery_20260912T131535395596Z/runtime/fixed48_runtime.py",
+      "sha256": "23eddf702afb6c3f5ee64ac9c415c56376199857dd6fe915f67856a456f8b99f",
+      "bytes": 15770
+    },
+    "permit_counts": {
+      "emx": 26,
+      "cadence": 3
+    },
+    "stage_counts": {
+      "TERMINAL_AT_CUT": 21,
+      "EMX_PERMITTED": 26,
+      "EMX_WAITING_ADMISSION": 8,
+      "CALIBRE_WAITING_ADMISSION": 8,
+      "CADENCE_PERMITTED": 3,
+      "CADENCE_WAITING_ADMISSION": 4,
+      "NO_TOOL_INTENT": 186
+    }
+  },
+  "batch": {
+    "old_batch4_terminal_utc": "2026-09-12T14:14:20.955027Z",
+    "old_batch4_terminal": {
+      "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_registry_recovery_20260912T131535395596Z/batches/eucap15_continuous_doe_neighborhood_20260912_batch000004/owner/BATCH_RECEIPT.json",
+      "sha256": "d118226b703b52dea569f121e85641cb473d6713c06ee7e012b4f54f0ffb83f2",
+      "bytes": 109277
+    },
+    "old_batch4_new_terminal": 32,
+    "old_batch4_new_fresh": 31,
+    "old_batch4_candidate_failure_retained": 1,
+    "current_batch5_terminal": 21,
+    "current_batch5_remaining_unterminal": 235,
+    "current_batch5_new_fresh": 15,
+    "current_batch5_analytic_fail": 6,
+    "budgets_preserved": true
+  },
+  "resource": {
+    "pin": {
+      "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_registry_recovery_20260912T131535395596Z/batches/eucap15_continuous_doe_neighborhood_20260912_batch000005/owner/fixed48/RESOURCE_20260912T142220158373Z.json",
+      "sha256": "79c32bc8be797c7c3df270527b4c0db01ba946f89e9232be888f4f948af8569f",
+      "bytes": 19525
+    },
+    "value": {
+      "available_memory_bytes": 461913436160,
+      "binding": {
+        "owner": {
+          "pid": 3581696,
+          "start_ticks": 402643948,
+          "uid": 2259579
+        },
+        "release": {
+          "bytes": 17600,
+          "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_registry_recovery_20260912T131535395596Z/batches/eucap15_continuous_doe_neighborhood_20260912_batch000005/owner/RELEASE.json",
+          "sha256": "575a2e097dbab5c64ee2d86ebe7160e1a29aa47ddff764fce9c6bcfa5ca006bc"
+        }
+      },
+      "checks": {
+        "cpu": true,
+        "iowait": true,
+        "isolation": true,
+        "memory": true,
+        "oom": true,
+        "sample": true,
+        "storage": true,
+        "swap": true
+      },
+      "competing_processes": [],
+      "cpu_deltas": [
+        79865,
+        566053,
+        125186,
+        369117,
+        119,
+        6964,
+        2722,
+        0
+      ],
+      "cpu_sample_valid": true,
+      "failed_checks": [],
+      "free_disk_bytes": 457694666752,
+      "free_license_slots": {
+        "cadence": 3600,
+        "calibre": 85,
+        "emx": 270
+      },
+      "idle_cpu_equivalents": 61.62509717171612,
+      "interval_seconds": 60.00210865912959,
+      "iowait_percent": 0.010347592141395063,
+      "license_evidence": {
+        "cadence": {
+          "free": {
+            "111": 4199,
+            "206": 300,
+            "276": 300,
+            "940": 600,
+            "945": 600,
+            "12141": 300,
+            "21060": 300,
+            "21400": 300,
+            "32150": 300,
+            "32760": 300,
+            "32_28nm_to_10nm": 300,
+            "ace_100": 600,
+            "ade_sim_manager": 600,
+            "adv_ibis_mod_20": 300,
+            "adv_ibis_modeling": 300,
+            "advanced_ff_modeling": 300,
+            "advanced_modeling_20": 300,
+            "advanced_sub_10nm_modeling": 300,
+            "advancedpi": 600,
+            "advancedpi_20": 300,
+            "advancedpi_ti_20": 300,
+            "advancedsi": 300,
+            "advancedsi_20": 300,
+            "advpi_20_systempi_opt": 300,
+            "affirma_sim_analysis_env": 2400,
+            "allegro_auth_multistyle_opt": 600,
+            "allegro_design_publisher": 300,
+            "allegro_pcb_harmony_option": 300,
+            "allegro_pcb_productivity_tb": 300,
+            "allegro_pcb_rf": 300,
+            "allegro_pcb_router_610": 300,
+            "allegro_performance": 300,
+            "allegro_performance_designer": 300,
+            "allegro_studio": 600,
+            "allegro_teamdesign_auth_option": 600,
+            "allegro_venture_pcb_designer": 300,
+            "allegro_venture_pcb_designer2": 300,
+            "allegro_viewer_plus": 600,
+            "allegro_x_designer": 300,
+            "allegro_x_designer_layout": 300,
+            "allegro_x_platinum": 300,
+            "allegro_x_platinum_layout": 300,
+            "ams_designer_link": 300,
+            "ams_environment": 300,
+            "ams_utilities": 300,
+            "ana_001": 600,
+            "ana_003": 300,
+            "ana_100": 300,
+            "ana_300": 300,
+            "apl_100": 300,
+            "apl_110": 300,
+            "apl_130": 600,
+            "asr_100": 600,
+            "aurora": 300,
+            "aurora_20": 300,
+            "aurorapkg_20": 300,
+            "base_verilog_lib": 300,
+            "cadence_analytics_developer": 600,
+            "cadence_analytics_streaming": 600,
+            "cadence_framework_runtime": 300,
+            "cal_100": 600,
+            "cdns_esw_dbg": 300,
+            "celsius_ec_solver": 300,
+            "celsius_ec_solverg": 300,
+            "celsius_studio_asolver_v8": 300,
+            "celsius_studio_asolverg_v8": 300,
+            "celsius_thermal": 300,
+            "celsius_thermalg": 300,
+            "certus_client": 300,
+            "certus_solution_xl": 300,
+            "clarity_3dsolver": 300,
+            "clarity_3dsolverg": 300,
+            "clarity_fdtd": 300,
+            "clarity_fdtd_g": 300,
+            "conformal_asic": 300,
+            "conformal_custom": 300,
+            "conformal_datapath": 300,
+            "conformal_eco_gxl": 300,
+            "conformal_ldd": 300,
+            "conformal_lec": 300,
+            "conformal_low_power": 300,
+            "conformal_low_power_gxl": 300,
+            "conformal_lvr": 300,
+            "conformal_mem": 300,
+            "conformal_ultra": 300,
+            "conformal_vhd": 300,
+            "conformal_vlg": 300,
+            "dfm_core_technology": 600,
+            "dfsverifault": 300,
+            "emx_modelgen": 300,
+            "emx_solver": 270,
+            "encounter_c": 600,
+            "expgen": 300,
+            "extended_verilog_lib": 300,
+            "fil_350": 300,
+            "genus_cpu_opt": 300,
+            "genus_low_power_opt": 300,
+            "genus_physical_opt": 300,
+            "genus_synthesis": 300,
+            "helium_base_lib": 300,
+            "helium_build_batch": 300,
+            "helium_build_gui": 300,
+            "helium_sw_debug": 300,
+            "helium_swd_gui": 300,
+            "helium_system_debug": 300,
+            "helium_virtual_runtime": 300,
+            "icp_extract_20": 300,
+            "indago_esw_dbg": 300,
+            "innovus_20nm_opt": 300,
+            "innovus_3nm_opt": 300,
+            "innovus_7nm_opt": 300,
+            "innovus_automotive_opt": 300,
+            "innovus_c": 300,
+            "innovus_cpu_opt": 300,
+            "innovus_dfm": 300,
+            "innovus_gigaplace_gxl_opt": 300,
+            "innovus_gigaplace_xl_opt": 300,
+            "innovus_hfr_opt": 300,
+            "innovus_hier_opt": 300,
+            "innovus_impl_system": 300,
+            "innovus_low_power_syn_opt": 300,
+            "innovus_ms_opt": 300,
+            "innovus_physical_syn_opt": 300,
+            "innovus_pi_opt": 300,
+            "innovus_synthesis": 300,
+            "integrated_metrics_center": 600,
+            "interposer_extract_20": 300,
+            "jasper_advp": 300,
+            "jasper_dao": 300,
+            "jasper_dint": 300,
+            "jasper_fao": 300,
+            "jasper_fst": 300,
+            "jasper_interactive": 300,
+            "jasper_lint": 600,
+            "jasper_papp": 300,
+            "jasper_pcov": 300,
+            "jasper_pint": 300,
+            "jasper_unr": 300,
+            "jasper_vao": 300,
+            "joules_implementation_opt": 300,
+            "joules_mcpu": 300,
+            "joules_xl": 300,
+            "leapfrog-cv": 900,
+            "liberate_unified_cell": 3600,
+            "litho_dp_client": 2700,
+            "litho_hotspot_fixing": 300,
+            "litho_physical_analyzer": 300,
+            "litmus_compare_opt": 300,
+            "litmus_const_mgmt_opt": 300,
+            "litmus_cpu_opt": 300,
+            "litmus_signoff": 300,
+            "litmus_sva_gen_opt": 300,
+            "lnx_100": 300,
+            "lpl_100": 600,
+            "lsf_001": 600,
+            "midas_user": 300,
+            "modus_atpg": 300,
+            "modus_atpg_mcpu": 300,
+            "modus_common_ui": 300,
+            "modus_dft_opt": 300,
+            "modus_hierarchical_opt": 300,
+            "mp_hpc_token_v8": 300,
+            "ms_debug_option": 300,
+            "mti_opt_incisive_specman_sim": 300,
+            "mwo_010": 900,
+            "mwo_228": 600,
+            "oasis_rfde": 300,
+            "oasis_simulation_interface": 300,
+            "opt_exp_ess": 300,
+            "orbitio_sys_planc": 300,
+            "orcad_pcb_router": 300,
+            "orcad_x_pcb_professional_plus": 300,
+            "orcad_x_professional_plus": 300,
+            "pas_errorcell_generator": 300,
+            "pas_graphical_tech_editor": 300,
+            "pas_pcell_generator": 300,
+            "pcb_design_studio": 600,
+            "pcb_extract_20": 300,
+            "pcb_librarian_expert": 300,
+            "pcomp": 300,
+            "pegasus_16nm": 300,
+            "pegasus_3d_system": 300,
+            "pegasus_advdrc": 300,
+            "pegasus_advlvs": 300,
+            "pegasus_custom_fill": 300,
+            "pegasus_designreview": 300,
+            "pegasus_designreview_layout": 300,
+            "pegasus_designreview_mask": 300,
+            "pegasus_dfmfill": 300,
+            "pegasus_drc": 300,
+            "pegasus_int": 600,
+            "pegasus_lpa": 300,
+            "pegasus_lpa_fixing": 300,
+            "pegasus_lvs": 300,
+            "pegasus_mpt": 300,
+            "pegasus_perc": 300,
+            "pegasus_quickview": 300,
+            "pegasus_rv": 2100,
+            "pegasus_ui": 2100,
+            "plotversa": 900,
+            "powersi": 300,
+            "powersi_ii": 300,
+            "pspicestudio": 300,
+            "qrc_advanced_analysis": 300,
+            "qrc_advanced_modeling": 300,
+            "qrc_advanced_modeling_20": 300,
+            "qrc_advanced_node_modeling": 300,
+            "qrcx_display_technology_option": 300,
+            "quickview_ch_sl": 300,
+            "quickview_gdsii": 300,
+            "quickview_gl1": 300,
+            "quickview_hitachi": 300,
+            "quickview_jeol": 300,
+            "quickview_laff": 300,
+            "quickview_mebes": 300,
+            "quickview_oa": 300,
+            "quickview_oasis": 300,
+            "quickview_semip10": 300,
+            "quickview_toshiba": 300,
+            "rdr_100": 300,
+            "relxpert": 300,
+            "rfp_100": 300,
+            "sip_digital_architect_xl": 300,
+            "sip_layout_bundle_1": 300,
+            "sip_rf_layout_option": 300,
+            "sip_wlcsp": 300,
+            "skilldev": 300,
+            "slnk": 5700,
+            "spc_100": 300,
+            "spectre_ams_mmsim_lk": 1800,
+            "spectre_amsd_lk": 300,
+            "spectre_char_opt": 3000,
+            "spectre_interactive_mode": 300,
+            "spectre_x_mmsim_lk": 1800,
+            "spectre_xps": 300,
+            "speedeme": 900,
+            "speedemg": 300,
+            "sps_100": 300,
+            "spt_100": 300,
+            "stb_100": 300,
+            "stn_100": 300,
+            "stratus_floatingpoint": 300,
+            "stratus_hls_l": 300,
+            "stratus_hls_xl": 300,
+            "stratus_ide": 300,
+            "sws_100": 300,
+            "systemsi_testbench": 300,
+            "tempus_advanced_analysis": 300,
+            "tempus_timing_signoff_l": 300,
+            "tempus_timing_signoff_mp": 300,
+            "tempus_timing_signoff_pi_opt": 300,
+            "tempus_timing_signoff_tso": 300,
+            "tempus_timing_signoff_xl": 300,
+            "topxp_20": 300,
+            "transformal_ltx": 300,
+            "vcs_100": 600,
+            "vcs_opt_incisive_specman_sim": 300,
+            "venture_pcb_schematic": 300,
+            "ver_100": 600,
+            "verifault": 300,
+            "verisium_debug": 300,
+            "verisium_manager": 300,
+            "vip_100": 300,
+            "virtuoso_ade_artist": 300,
+            "virtuoso_ade_assembler": 300,
+            "virtuoso_ade_explorer": 300,
+            "virtuoso_ade_verifier": 300,
+            "virtuoso_adv_node_framework": 3299,
+            "virtuoso_adv_node_opt_lay_std": 300,
+            "virtuoso_adv_node_opt_layout": 300,
+            "virtuoso_aps_mmsim_lk": 1800,
+            "virtuoso_dfm_option": 300,
+            "virtuoso_digital_implem": 300,
+            "virtuoso_drc_opt": 300,
+            "virtuoso_indesign_pegasus_drc": 300,
+            "virtuoso_indesign_pegasus_fill": 300,
+            "virtuoso_ipvs_adv_ana_opt": 300,
+            "virtuoso_iqi": 300,
+            "virtuoso_layout_suite_ead": 300,
+            "virtuoso_layout_suite_exl": 299,
+            "virtuoso_layout_suite_gxl": 3600,
+            "virtuoso_layout_suite_mxl": 300,
+            "virtuoso_mmsim_cpu_accelerator": 300,
+            "virtuoso_mmsim_pwr_opt": 300,
+            "virtuoso_multi_mode_simulation": 1800,
+            "virtuoso_multitech_framework": 300,
+            "virtuoso_photonics_option": 300,
+            "virtuoso_power_manager": 300,
+            "virtuoso_qrc_extraction_xl": 300,
+            "virtuoso_rf_platform": 300,
+            "virtuoso_schematic_editor_xl": 300,
+            "virtuoso_spectre_gxl_mmsim_lk": 1800,
+            "virtuoso_vale_framework": 12000,
+            "virtuoso_variation_analysis_op": 300,
+            "virtuoso_variation_option": 300,
+            "virtuoso_visual_analysis_xl": 300,
+            "virtuoso_xps_mmsim_lk": 1800,
+            "vmanager_client": 1500,
+            "vmanager_project": 300,
+            "vmanager_safety_client": 300,
+            "voltus_power_integrity_3dic": 300,
+            "voltus_power_integrity_aa": 300,
+            "voltus_power_integrity_esd": 300,
+            "voltus_power_integrity_mp": 300,
+            "voltus_power_integrity_xl": 300,
+            "voltus_xfi_analysis": 300,
+            "voltus_xfi_cockpit": 300,
+            "vss_350": 300,
+            "w5g_100": 300,
+            "xcelium_safety_sim": 300,
+            "xcelium_sc_dms_option": 600,
+            "xcelium_single_core": 300,
+            "xem_001": 600,
+            "xem_100": 300,
+            "xpw_100": 300,
+            "xtractim": 300,
+            "xtractim_20": 300
+          },
+          "pass_query": true,
+          "response_sha256": "a6949c0df8be94ad06f238e8945ef3e113dd0e14b2dd0c0b873254c63c06eaf4"
+        },
+        "calibre": {
+          "free": {
+            "admsrfic": 75,
+            "amssvadvsim_c": 75,
+            "amssvsc_c": 75,
+            "amssvsim_c": 75,
+            "amssvsvx_c": 75,
+            "caldesignrev": 85,
+            "caldfmproperty": 85,
+            "calibreadp": 85,
+            "calibredrc": 85,
+            "calibrehdrc": 85,
+            "calibrehlvs": 85,
+            "calibrehlvsadv": 10,
+            "calibrelvs": 85,
+            "calibreperc": 85,
+            "calibrepercadv": 10,
+            "calibrepercsp": 85,
+            "calibreqdb": 85,
+            "calibrexact": 85,
+            "calibrexact3d": 85,
+            "calibrexl": 10,
+            "calibrexrc": 85,
+            "calibrexrctoxact": 85,
+            "calinteractive": 85,
+            "calmpgold": 10,
+            "calpmatch": 85,
+            "calrealtime": 10,
+            "calrealtimedig": 10,
+            "calreconlvs": 10,
+            "calwaiver": 10,
+            "calyieldanalyze": 85,
+            "calyieldenhance": 85,
+            "calyieldserver": 85,
+            "cataihls4ml_c": 75,
+            "catapultcov_c": 375,
+            "catapultcpc_c": 75,
+            "catapulthls_c": 75,
+            "catapultlb_c": 75,
+            "catapultlbfarm_c": 3750,
+            "catapultultra_c": 75,
+            "catapultvis_c": 75,
+            "developer": 75,
+            "developerls": 75,
+            "edsadvnode": 75,
+            "edsdesign": 75,
+            "edshed": 75,
+            "edsleditic": 75,
+            "edsleditmems": 75,
+            "edsleditphoto": 75,
+            "edssedit": 75,
+            "edstspicevams": 75,
+            "edstspicex": 75,
+            "eldokernel_c": 75,
+            "eldopsf": 75,
+            "eldorfic": 75,
+            "erdconfig": 75,
+            "fastscan": 75,
+            "genieartist": 75,
+            "hdldesigner_c": 75,
+            "leospeclgen": 75,
+            "leospecliopt": 75,
+            "leospecls3": 75,
+            "leospecls3asic": 75,
+            "leospecls3veri": 75,
+            "leospecls3vhdl": 75,
+            "msimcdebug": 150,
+            "msimcompare": 225,
+            "msimcoverage": 225,
+            "msimdataflow": 225,
+            "msimhdlmix": 150,
+            "msimhdlsim": 150,
+            "msimpevsim": 75,
+            "msimpevsimvlog": 75,
+            "msimprofile": 75,
+            "msimreguvm": 75,
+            "msimsystemc": 75,
+            "msimviewer": 225,
+            "mtautogratpg_c": 75,
+            "mtcellmodgenpl_c": 75,
+            "mtdefectsim": 75,
+            "mtdefectsimspice": 75,
+            "mtdiagnosis_c": 75,
+            "mtfastscan_c": 75,
+            "mtijtag_c": 75,
+            "mtiverification": 75,
+            "mtmissionmode_c": 75,
+            "mtnslogicbist_c": 75,
+            "mtscanpro_c": 75,
+            "mttestkompress_c": 75,
+            "mttsacjtag_c": 75,
+            "mttsbscan_c": 75,
+            "mttsmembrepair_c": 75,
+            "mttsmemorybist_c": 75,
+            "mttsmfieldprog_c": 75,
+            "mttsminsystem_c": 75,
+            "peproassertions": 150,
+            "pnrnitro": 75,
+            "pnrtanner": 75,
+            "pplscpbpldmgc_c": 75,
+            "psyncore": 150,
+            "psyncpbpldmgc_c": 75,
+            "psyndft": 150,
+            "psynfloorplan": 150,
+            "psynmxdb": 150,
+            "psynpower": 150,
+            "qdbg3p": 75,
+            "qdbgadvanced": 75,
+            "qdbgcovdebug": 75,
+            "qdbgcoverage": 75,
+            "qdbgpa": 75,
+            "qdbgsoc": 75,
+            "qdbgtbx": 75,
+            "qdbguvmsvtx": 75,
+            "qdebug": 75,
+            "qonedebug": 75,
+            "qonesim": 75,
+            "qpasim": 75,
+            "qvip5g_c": 75,
+            "qvipamba_c": 75,
+            "qvipautom_c": 75,
+            "qvipcore_c": 75,
+            "qvipddr_c": 75,
+            "qvipdisplay_c": 75,
+            "qvipethernet_c": 75,
+            "qviplgcy_c": 75,
+            "qviplgcyddr_c": 75,
+            "qvipmipi_c": 75,
+            "qvippcie_c": 75,
+            "qvipserial_c": 75,
+            "qvipusb_c": 75,
+            "qvman": 75,
+            "qvrm": 75,
+            "qxprop": 75,
+            "reqtracer_c": 75,
+            "secureip": 150,
+            "sg_c": 75,
+            "signofflec_c": 75,
+            "sptgui": 75,
+            "spttransformer": 75,
+            "sptvip1553b": 75,
+            "sptvipace": 75,
+            "sptvipahb": 75,
+            "sptvipahci": 75,
+            "sptvipapb3": 75,
+            "sptvipaxi": 75,
+            "sptvipaxi4": 75,
+            "sptvipcan": 75,
+            "sptvipcec": 75,
+            "sptvipcphy": 75,
+            "sptvipcpri": 75,
+            "sptvipcsi": 75,
+            "sptvipcsi3": 75,
+            "sptvipddr2": 75,
+            "sptvipddr3": 75,
+            "sptvipddr4": 75,
+            "sptvipddrx": 75,
+            "sptvipdfi": 75,
+            "sptvipdgrf": 75,
+            "sptvipdp": 75,
+            "sptvipdphy": 75,
+            "sptvipdsi": 75,
+            "sptvipemmc": 75,
+            "sptvipeth": 75,
+            "sptvipeth100m": 75,
+            "sptvipeth10g": 75,
+            "sptvipeth1g": 75,
+            "sptviphbm": 75,
+            "sptviphdmi": 75,
+            "sptviphmc": 75,
+            "sptviphsi": 75,
+            "sptvipi2c": 75,
+            "sptvipi2s": 75,
+            "sptvipi3c": 75,
+            "sptvipilkn": 75,
+            "sptvipj204b": 75,
+            "sptvipjtag": 75,
+            "sptviplli": 75,
+            "sptviplpddr2": 75,
+            "sptviplpddr3": 75,
+            "sptviplpddr4": 75,
+            "sptvipmphy": 75,
+            "sptvipnvme": 75,
+            "sptvipocp": 75,
+            "sptvipocp22": 75,
+            "sptvippci": 75,
+            "sptvippcie": 75,
+            "sptvipsata": 75,
+            "sptvipscard": 75,
+            "sptvipslmb": 75,
+            "sptvipspi": 75,
+            "sptvipspi42": 75,
+            "sptvipspwire": 75,
+            "sptvipsrio": 75,
+            "sptvipuart": 75,
+            "sptvipufs": 75,
+            "sptvipupro": 75,
+            "sptvipusb": 75,
+            "sptvipusb20": 75,
+            "sptvipvby1": 75,
+            "sptvipwideio": 75,
+            "sptvipwideio2": 75,
+            "svcanphysi_c": 75,
+            "svrnm": 75,
+            "svsimsvr": 75,
+            "svverification": 75,
+            "svwreal": 75,
+            "testkomp": 75,
+            "txanalysis": 75,
+            "verifdataport": 85,
+            "verilogacomp": 75,
+            "verilogart": 75,
+            "vhamsdev": 75,
+            "vhamsmod": 75,
+            "vhamsrt": 75,
+            "visbasecdc": 75,
+            "visbaseformal": 75,
+            "visbasestatic": 75,
+            "visframework": 75,
+            "vistaarchitect_c": 75,
+            "xcalibrate": 75,
+            "xcpcb": 75,
+            "xdesigner051_c": 75,
+            "xelga_c": 75,
+            "xpamssv_c": 75,
+            "yieldaedtdiag": 75,
+            "yieldascandiag": 75,
+            "znautocheckcomp": 75,
+            "znautocheckfe": 75,
+            "zncdcbase": 75,
+            "zncdcfv": 75,
+            "zncdcfvcomp": 75,
+            "zncdcfvmc": 75,
+            "zncompccl": 75,
+            "zncompcdc": 75,
+            "zncompckl": 75,
+            "zncompcsl": 75,
+            "znconfirm": 75,
+            "zncovercheck": 75,
+            "zncw": 75,
+            "zncwcompiler": 75,
+            "zncwmbase": 75,
+            "znformal": 75,
+            "znformalbase": 75,
+            "znformalseed": 75,
+            "znfx": 75,
+            "znfxsim": 75,
+            "zngui": 75,
+            "znhiercdc": 75,
+            "znhiercdcilm": 75,
+            "znpacdc": 75,
+            "znprove": 75,
+            "znpsl": 75,
+            "znqlint": 75,
+            "znramgen": 75,
+            "znreplaysim": 75,
+            "znresetcheck": 75,
+            "znsearch": 75,
+            "znsec": 75,
+            "znsecuritycheck": 75,
+            "znseed": 75,
+            "znsim": 75,
+            "znsva": 75,
+            "znsynthnl": 75,
+            "znview": 75,
+            "znvisualizer": 75,
+            "znxcheck": 75
+          },
+          "pass_query": true,
+          "response_sha256": "014b5845f72a65f7dca00563071219c0d69e40df09b7b862fcdd850720e7ab2f"
+        }
+      },
+      "load": [
+        109.53662109375,
+        94.23046875,
+        120.9619140625
+      ],
+      "logical_cpus": 192,
+      "memory_fraction": 0.7606509004474182,
+      "normalized_load1": 0.5705032348632812,
+      "normalized_load5": 0.49078369140625,
+      "started_utc": "2026-09-12T14:21:18.747534+00:00",
+      "status": "PASS",
+      "swap_deltas": {
+        "oom_kill": 0,
+        "pswpin": 91202,
+        "pswpout": 0
+      },
+      "total_memory_bytes": 607260749824,
+      "utc": "2026-09-12T14:22:20.158332+00:00"
+    }
+  },
+  "storage": {
+    "pin": {
+      "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_registry_recovery_20260912T131535395596Z/batches/eucap15_continuous_doe_neighborhood_20260912_batch000005/owner/fixed48/STORAGE_20260912T142232335097Z.json",
+      "sha256": "47a14a1c63884d9813c24388c96343ea9c4dae06171cfcd5c7fd0a32aa8aa3a9",
+      "bytes": 15576
+    },
+    "value": {
+      "allocation_by_candidate": {
+        "eucap15_continuous_doe_neighborhood_20260912_batch000005-GEOMETRY_DOE-000": 6201344,
+        "eucap15_continuous_doe_neighborhood_20260912_batch000005-GEOMETRY_DOE-002": 6381568,
+        "eucap15_continuous_doe_neighborhood_20260912_batch000005-GEOMETRY_DOE-003": 6201344,
+        "eucap15_continuous_doe_neighborhood_20260912_batch000005-GEOMETRY_DOE-005": 6393856,
+        "eucap15_continuous_doe_neighborhood_20260912_batch000005-GEOMETRY_DOE-006": 6193152,
+        "eucap15_continuous_doe_neighborhood_20260912_batch000005-GEOMETRY_DOE-007": 6389760,
+        "eucap15_continuous_doe_neighborhood_20260912_batch000005-GEOMETRY_DOE-008": 6193152,
+        "eucap15_continuous_doe_neighborhood_20260912_batch000005-GEOMETRY_DOE-009": 6381568,
+        "eucap15_continuous_doe_neighborhood_20260912_batch000005-GEOMETRY_DOE-010": 6197248,
+        "eucap15_continuous_doe_neighborhood_20260912_batch000005-GEOMETRY_DOE-011": 6201344,
+        "eucap15_continuous_doe_neighborhood_20260912_batch000005-GEOMETRY_DOE-012": 6201344,
+        "eucap15_continuous_doe_neighborhood_20260912_batch000005-GEOMETRY_DOE-013": 6189056,
+        "eucap15_continuous_doe_neighborhood_20260912_batch000005-GEOMETRY_DOE-014": 6201344,
+        "eucap15_continuous_doe_neighborhood_20260912_batch000005-GEOMETRY_DOE-015": 6201344,
+        "eucap15_continuous_doe_neighborhood_20260912_batch000005-GEOMETRY_DOE-016": 6209536,
+        "eucap15_continuous_doe_neighborhood_20260912_batch000005-GEOMETRY_DOE-018": 6205440,
+        "eucap15_continuous_doe_neighborhood_20260912_batch000005-GEOMETRY_DOE-019": 6197248,
+        "eucap15_continuous_doe_neighborhood_20260912_batch000005-GEOMETRY_DOE-021": 6205440,
+        "eucap15_continuous_doe_neighborhood_20260912_batch000005-GEOMETRY_DOE-022": 6201344,
+        "eucap15_continuous_doe_neighborhood_20260912_batch000005-GEOMETRY_DOE-023": 6201344,
+        "eucap15_continuous_doe_neighborhood_20260912_batch000005-GEOMETRY_DOE-024": 6197248,
+        "eucap15_continuous_doe_neighborhood_20260912_batch000005-GEOMETRY_DOE-025": 6197248,
+        "eucap15_continuous_doe_neighborhood_20260912_batch000005-GEOMETRY_DOE-026": 6197248,
+        "eucap15_continuous_doe_neighborhood_20260912_batch000005-GEOMETRY_DOE-027": 6205440,
+        "eucap15_continuous_doe_neighborhood_20260912_batch000005-GEOMETRY_DOE-028": 6197248,
+        "eucap15_continuous_doe_neighborhood_20260912_batch000005-GEOMETRY_DOE-030": 6189056,
+        "eucap15_continuous_doe_neighborhood_20260912_batch000005-GEOMETRY_DOE-031": 6103040,
+        "eucap15_continuous_doe_neighborhood_20260912_batch000005-GEOMETRY_DOE-032": 6090752,
+        "eucap15_continuous_doe_neighborhood_20260912_batch000005-GEOMETRY_DOE-033": 6098944,
+        "eucap15_continuous_doe_neighborhood_20260912_batch000005-GEOMETRY_DOE-035": 6090752,
+        "eucap15_continuous_doe_neighborhood_20260912_batch000005-GEOMETRY_DOE-036": 6098944,
+        "eucap15_continuous_doe_neighborhood_20260912_batch000005-GEOMETRY_DOE-037": 806912,
+        "eucap15_continuous_doe_neighborhood_20260912_batch000005-GEOMETRY_DOE-038": 823296,
+        "eucap15_continuous_doe_neighborhood_20260912_batch000005-GEOMETRY_DOE-039": 6098944,
+        "eucap15_continuous_doe_neighborhood_20260912_batch000005-GEOMETRY_DOE-040": 823296,
+        "eucap15_continuous_doe_neighborhood_20260912_batch000005-GEOMETRY_DOE-041": 53248,
+        "eucap15_continuous_doe_neighborhood_20260912_batch000005-GEOMETRY_DOE-042": 815104,
+        "eucap15_continuous_doe_neighborhood_20260912_batch000005-GEOMETRY_DOE-043": 815104,
+        "eucap15_continuous_doe_neighborhood_20260912_batch000005-GEOMETRY_DOE-044": 32768,
+        "eucap15_continuous_doe_neighborhood_20260912_batch000005-GEOMETRY_DOE-045": 32768,
+        "eucap15_continuous_doe_neighborhood_20260912_batch000005-GEOMETRY_DOE-046": 823296,
+        "eucap15_continuous_doe_neighborhood_20260912_batch000005-GEOMETRY_DOE-047": 32768,
+        "eucap15_continuous_doe_neighborhood_20260912_batch000005-GEOMETRY_DOE-050": 6197248,
+        "eucap15_continuous_doe_neighborhood_20260912_batch000005-GEOMETRY_DOE-051": 32768,
+        "eucap15_continuous_doe_neighborhood_20260912_batch000005-GEOMETRY_DOE-052": 6197248,
+        "eucap15_continuous_doe_neighborhood_20260912_batch000005-TRAIN_NEIGHBORHOOD-000": 6414336,
+        "eucap15_continuous_doe_neighborhood_20260912_batch000005-TRAIN_NEIGHBORHOOD-001": 6418432,
+        "eucap15_continuous_doe_neighborhood_20260912_batch000005-TRAIN_NEIGHBORHOOD-002": 6418432,
+        "eucap15_continuous_doe_neighborhood_20260912_batch000005-TRAIN_NEIGHBORHOOD-003": 6205440,
+        "eucap15_continuous_doe_neighborhood_20260912_batch000005-TRAIN_NEIGHBORHOOD-004": 6205440,
+        "eucap15_continuous_doe_neighborhood_20260912_batch000005-TRAIN_NEIGHBORHOOD-005": 6213632,
+        "eucap15_continuous_doe_neighborhood_20260912_batch000005-TRAIN_NEIGHBORHOOD-006": 6221824,
+        "eucap15_continuous_doe_neighborhood_20260912_batch000005-TRAIN_NEIGHBORHOOD-007": 6221824,
+        "eucap15_continuous_doe_neighborhood_20260912_batch000005-TRAIN_NEIGHBORHOOD-008": 6217728,
+        "eucap15_continuous_doe_neighborhood_20260912_batch000005-TRAIN_NEIGHBORHOOD-009": 6197248,
+        "eucap15_continuous_doe_neighborhood_20260912_batch000005-TRAIN_NEIGHBORHOOD-010": 2592768,
+        "eucap15_continuous_doe_neighborhood_20260912_batch000005-TRAIN_NEIGHBORHOOD-011": 6111232,
+        "eucap15_continuous_doe_neighborhood_20260912_batch000005-TRAIN_NEIGHBORHOOD-012": 802816,
+        "eucap15_continuous_doe_neighborhood_20260912_batch000005-TRAIN_NEIGHBORHOOD-013": 815104,
+        "eucap15_continuous_doe_neighborhood_20260912_batch000005-TRAIN_NEIGHBORHOOD-014": 45056,
+        "eucap15_continuous_doe_neighborhood_20260912_batch000005-TRAIN_NEIGHBORHOOD-015": 32768,
+        "eucap15_continuous_doe_neighborhood_20260912_batch000005-TRAIN_NEIGHBORHOOD-016": 6418432
+      },
+      "binding": {
+        "owner": {
+          "pid": 3581696,
+          "start_ticks": 402643948,
+          "uid": 2259579
+        },
+        "release": {
+          "bytes": 17600,
+          "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_registry_recovery_20260912T131535395596Z/batches/eucap15_continuous_doe_neighborhood_20260912_batch000005/owner/RELEASE.json",
+          "sha256": "575a2e097dbab5c64ee2d86ebe7160e1a29aa47ddff764fce9c6bcfa5ca006bc"
+        }
+      },
+      "budget_root": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_registry_recovery_20260912T131535395596Z/batches/eucap15_continuous_doe_neighborhood_20260912_batch000005",
+      "ceiling_bytes": 5368709120,
+      "claims": {
+        "eucap15_continuous_doe_neighborhood_20260912_batch000005-GEOMETRY_DOE-000": {
+          "peak": 67108864,
+          "remaining": 60907520
+        },
+        "eucap15_continuous_doe_neighborhood_20260912_batch000005-GEOMETRY_DOE-002": {
+          "peak": 67108864,
+          "remaining": 60727296
+        },
+        "eucap15_continuous_doe_neighborhood_20260912_batch000005-GEOMETRY_DOE-003": {
+          "peak": 67108864,
+          "remaining": 60907520
+        },
+        "eucap15_continuous_doe_neighborhood_20260912_batch000005-GEOMETRY_DOE-005": {
+          "peak": 67108864,
+          "remaining": 60715008
+        },
+        "eucap15_continuous_doe_neighborhood_20260912_batch000005-GEOMETRY_DOE-006": {
+          "peak": 67108864,
+          "remaining": 60915712
+        },
+        "eucap15_continuous_doe_neighborhood_20260912_batch000005-GEOMETRY_DOE-007": {
+          "peak": 67108864,
+          "remaining": 60719104
+        },
+        "eucap15_continuous_doe_neighborhood_20260912_batch000005-GEOMETRY_DOE-008": {
+          "peak": 67108864,
+          "remaining": 60915712
+        },
+        "eucap15_continuous_doe_neighborhood_20260912_batch000005-GEOMETRY_DOE-009": {
+          "peak": 67108864,
+          "remaining": 60727296
+        },
+        "eucap15_continuous_doe_neighborhood_20260912_batch000005-GEOMETRY_DOE-010": {
+          "peak": 67108864,
+          "remaining": 60911616
+        },
+        "eucap15_continuous_doe_neighborhood_20260912_batch000005-GEOMETRY_DOE-011": {
+          "peak": 67108864,
+          "remaining": 60907520
+        },
+        "eucap15_continuous_doe_neighborhood_20260912_batch000005-GEOMETRY_DOE-012": {
+          "peak": 67108864,
+          "remaining": 60907520
+        },
+        "eucap15_continuous_doe_neighborhood_20260912_batch000005-GEOMETRY_DOE-013": {
+          "peak": 67108864,
+          "remaining": 60919808
+        },
+        "eucap15_continuous_doe_neighborhood_20260912_batch000005-GEOMETRY_DOE-014": {
+          "peak": 67108864,
+          "remaining": 60907520
+        },
+        "eucap15_continuous_doe_neighborhood_20260912_batch000005-GEOMETRY_DOE-015": {
+          "peak": 67108864,
+          "remaining": 60907520
+        },
+        "eucap15_continuous_doe_neighborhood_20260912_batch000005-GEOMETRY_DOE-016": {
+          "peak": 67108864,
+          "remaining": 60899328
+        },
+        "eucap15_continuous_doe_neighborhood_20260912_batch000005-GEOMETRY_DOE-018": {
+          "peak": 67108864,
+          "remaining": 60903424
+        },
+        "eucap15_continuous_doe_neighborhood_20260912_batch000005-GEOMETRY_DOE-019": {
+          "peak": 67108864,
+          "remaining": 60911616
+        },
+        "eucap15_continuous_doe_neighborhood_20260912_batch000005-GEOMETRY_DOE-021": {
+          "peak": 67108864,
+          "remaining": 60903424
+        },
+        "eucap15_continuous_doe_neighborhood_20260912_batch000005-GEOMETRY_DOE-022": {
+          "peak": 67108864,
+          "remaining": 60907520
+        },
+        "eucap15_continuous_doe_neighborhood_20260912_batch000005-GEOMETRY_DOE-023": {
+          "peak": 67108864,
+          "remaining": 60907520
+        },
+        "eucap15_continuous_doe_neighborhood_20260912_batch000005-GEOMETRY_DOE-024": {
+          "peak": 67108864,
+          "remaining": 60911616
+        },
+        "eucap15_continuous_doe_neighborhood_20260912_batch000005-GEOMETRY_DOE-025": {
+          "peak": 67108864,
+          "remaining": 60911616
+        },
+        "eucap15_continuous_doe_neighborhood_20260912_batch000005-GEOMETRY_DOE-026": {
+          "peak": 67108864,
+          "remaining": 60911616
+        },
+        "eucap15_continuous_doe_neighborhood_20260912_batch000005-GEOMETRY_DOE-027": {
+          "peak": 67108864,
+          "remaining": 60903424
+        },
+        "eucap15_continuous_doe_neighborhood_20260912_batch000005-GEOMETRY_DOE-028": {
+          "peak": 67108864,
+          "remaining": 60911616
+        },
+        "eucap15_continuous_doe_neighborhood_20260912_batch000005-GEOMETRY_DOE-030": {
+          "peak": 67108864,
+          "remaining": 60919808
+        },
+        "eucap15_continuous_doe_neighborhood_20260912_batch000005-GEOMETRY_DOE-031": {
+          "peak": 67108864,
+          "remaining": 61005824
+        },
+        "eucap15_continuous_doe_neighborhood_20260912_batch000005-GEOMETRY_DOE-032": {
+          "peak": 67108864,
+          "remaining": 61018112
+        },
+        "eucap15_continuous_doe_neighborhood_20260912_batch000005-GEOMETRY_DOE-033": {
+          "peak": 67108864,
+          "remaining": 61009920
+        },
+        "eucap15_continuous_doe_neighborhood_20260912_batch000005-GEOMETRY_DOE-035": {
+          "peak": 67108864,
+          "remaining": 61018112
+        },
+        "eucap15_continuous_doe_neighborhood_20260912_batch000005-GEOMETRY_DOE-036": {
+          "peak": 67108864,
+          "remaining": 61009920
+        },
+        "eucap15_continuous_doe_neighborhood_20260912_batch000005-GEOMETRY_DOE-037": {
+          "peak": 67108864,
+          "remaining": 66301952
+        },
+        "eucap15_continuous_doe_neighborhood_20260912_batch000005-GEOMETRY_DOE-038": {
+          "peak": 67108864,
+          "remaining": 66285568
+        },
+        "eucap15_continuous_doe_neighborhood_20260912_batch000005-GEOMETRY_DOE-039": {
+          "peak": 67108864,
+          "remaining": 61009920
+        },
+        "eucap15_continuous_doe_neighborhood_20260912_batch000005-GEOMETRY_DOE-040": {
+          "peak": 67108864,
+          "remaining": 66285568
+        },
+        "eucap15_continuous_doe_neighborhood_20260912_batch000005-GEOMETRY_DOE-041": {
+          "peak": 67108864,
+          "remaining": 67055616
+        },
+        "eucap15_continuous_doe_neighborhood_20260912_batch000005-GEOMETRY_DOE-042": {
+          "peak": 67108864,
+          "remaining": 66293760
+        },
+        "eucap15_continuous_doe_neighborhood_20260912_batch000005-GEOMETRY_DOE-043": {
+          "peak": 67108864,
+          "remaining": 66293760
+        },
+        "eucap15_continuous_doe_neighborhood_20260912_batch000005-GEOMETRY_DOE-044": {
+          "peak": 67108864,
+          "remaining": 67076096
+        },
+        "eucap15_continuous_doe_neighborhood_20260912_batch000005-GEOMETRY_DOE-045": {
+          "peak": 67108864,
+          "remaining": 67076096
+        },
+        "eucap15_continuous_doe_neighborhood_20260912_batch000005-GEOMETRY_DOE-046": {
+          "peak": 67108864,
+          "remaining": 66285568
+        },
+        "eucap15_continuous_doe_neighborhood_20260912_batch000005-GEOMETRY_DOE-047": {
+          "peak": 67108864,
+          "remaining": 67076096
+        },
+        "eucap15_continuous_doe_neighborhood_20260912_batch000005-GEOMETRY_DOE-050": {
+          "peak": 67108864,
+          "remaining": 60911616
+        },
+        "eucap15_continuous_doe_neighborhood_20260912_batch000005-GEOMETRY_DOE-051": {
+          "peak": 67108864,
+          "remaining": 67076096
+        },
+        "eucap15_continuous_doe_neighborhood_20260912_batch000005-GEOMETRY_DOE-052": {
+          "peak": 67108864,
+          "remaining": 60911616
+        },
+        "eucap15_continuous_doe_neighborhood_20260912_batch000005-TRAIN_NEIGHBORHOOD-000": {
+          "peak": 67108864,
+          "remaining": 60694528
+        },
+        "eucap15_continuous_doe_neighborhood_20260912_batch000005-TRAIN_NEIGHBORHOOD-001": {
+          "peak": 67108864,
+          "remaining": 60690432
+        },
+        "eucap15_continuous_doe_neighborhood_20260912_batch000005-TRAIN_NEIGHBORHOOD-002": {
+          "peak": 67108864,
+          "remaining": 60690432
+        },
+        "eucap15_continuous_doe_neighborhood_20260912_batch000005-TRAIN_NEIGHBORHOOD-003": {
+          "peak": 67108864,
+          "remaining": 60903424
+        },
+        "eucap15_continuous_doe_neighborhood_20260912_batch000005-TRAIN_NEIGHBORHOOD-004": {
+          "peak": 67108864,
+          "remaining": 60903424
+        },
+        "eucap15_continuous_doe_neighborhood_20260912_batch000005-TRAIN_NEIGHBORHOOD-005": {
+          "peak": 67108864,
+          "remaining": 60895232
+        },
+        "eucap15_continuous_doe_neighborhood_20260912_batch000005-TRAIN_NEIGHBORHOOD-006": {
+          "peak": 67108864,
+          "remaining": 60887040
+        },
+        "eucap15_continuous_doe_neighborhood_20260912_batch000005-TRAIN_NEIGHBORHOOD-007": {
+          "peak": 67108864,
+          "remaining": 60887040
+        },
+        "eucap15_continuous_doe_neighborhood_20260912_batch000005-TRAIN_NEIGHBORHOOD-008": {
+          "peak": 67108864,
+          "remaining": 60891136
+        },
+        "eucap15_continuous_doe_neighborhood_20260912_batch000005-TRAIN_NEIGHBORHOOD-009": {
+          "peak": 67108864,
+          "remaining": 60911616
+        },
+        "eucap15_continuous_doe_neighborhood_20260912_batch000005-TRAIN_NEIGHBORHOOD-010": {
+          "peak": 67108864,
+          "remaining": 64516096
+        },
+        "eucap15_continuous_doe_neighborhood_20260912_batch000005-TRAIN_NEIGHBORHOOD-011": {
+          "peak": 67108864,
+          "remaining": 60997632
+        },
+        "eucap15_continuous_doe_neighborhood_20260912_batch000005-TRAIN_NEIGHBORHOOD-012": {
+          "peak": 67108864,
+          "remaining": 66306048
+        },
+        "eucap15_continuous_doe_neighborhood_20260912_batch000005-TRAIN_NEIGHBORHOOD-013": {
+          "peak": 67108864,
+          "remaining": 66293760
+        },
+        "eucap15_continuous_doe_neighborhood_20260912_batch000005-TRAIN_NEIGHBORHOOD-014": {
+          "peak": 67108864,
+          "remaining": 67063808
+        },
+        "eucap15_continuous_doe_neighborhood_20260912_batch000005-TRAIN_NEIGHBORHOOD-015": {
+          "peak": 67108864,
+          "remaining": 67076096
+        },
+        "eucap15_continuous_doe_neighborhood_20260912_batch000005-TRAIN_NEIGHBORHOOD-016": {
+          "peak": 67108864,
+          "remaining": 60690432
+        }
+      },
+      "remaining_projected_bytes": 3865198592,
+      "reservations_are_estimates_not_hard_peak_bounds": true,
+      "schema": "eucap15_fixed48_inflight_storage.v1",
+      "total_allocated_bytes": 329867264,
+      "utc": "2026-09-12T14:22:32.335034+00:00"
+    }
+  },
+  "capacity_diagnostic_not_admission": {
+    "reflected_permits": {
+      "cadence": 0,
+      "calibre": 0,
+      "emx": 4
+    },
+    "pending_permits": {
+      "cadence": 3,
+      "calibre": 0,
+      "emx": 22
+    },
+    "cpu_after_reservations": 7.625097171716121,
+    "memory_after_reservations_bytes": 125712921395.20001,
+    "idle_cpu_measured": 61.62509717171612,
+    "memory_available_measured": 461913436160,
+    "per_tool": {
+      "cadence": {
+        "executor": 5,
+        "licenses": 3597,
+        "cpu": 3,
+        "memory": 14
+      },
+      "calibre": {
+        "executor": 8,
+        "licenses": 85,
+        "cpu": 3,
+        "memory": 14
+      },
+      "emx": {
+        "executor": 22,
+        "licenses": 248,
+        "cpu": 3,
+        "memory": 14
+      }
+    },
+    "additional_shared_double_cpu_tools": 3,
+    "not_extra_three_each_tool": true
+  },
+  "continuation": {
+    "status": "ACTUAL_AUTOMATIC_BATCH4_TO_BATCH5_CONFIRMED",
+    "pid": 1041957,
+    "old_owner_naturally_exited": true,
+    "no_restart_or_budget_reset": true
+  },
+  "timing_change": {
+    "status": "WAITING_FOR_SUPPORTED_BOUNDARY",
+    "installer": {
+      "start": {
+        "pin": {
+          "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_admission_timing_20260912T140817241525Z/BOUNDARY_INSTALLER_START.json",
+          "sha256": "18ba5300fa155476e66a0a1c862b1633c025610f78192f2d9b17c26715b0e951",
+          "bytes": 1024
+        },
+        "value": {
+          "maximum_wait_seconds": 5400,
+          "native_actions": 0,
+          "previous_start": {
+            "bytes": 969,
+            "path": "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_registry_recovery_20260912T131535395596Z/CONTINUATION_START.json",
+            "sha256": "6701d6aea7183ac1520c56aefa39fdd614ed7c2f6a4ed8db621b711a85775a50"
+          },
+          "process": {
+            "argv": [
+              "/volumes/research-localdata/ywang3652/rfic-transformer-inverse-design-mars56-s4p-20260702/.venv/bin/python",
+              "-B",
+              "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_admission_timing_20260912T140817241525Z/install_at_boundary.py",
+              "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_admission_timing_20260912T140817241525Z"
+            ],
+            "pid": 3297923,
+            "ppid": 3297132,
+            "start_ticks": 402602726,
+            "state": "R",
+            "uid": 2259579
+          },
+          "supported_boundary": "BATCH_TERMINAL_AND_OWNER_EXIT",
+          "utc": "2026-09-12T14:08:18.394716+00:00"
+        }
+      },
+      "live": {
+        "pid": 3297923,
+        "ppid": 1,
+        "state": "S",
+        "start_ticks": 402602726,
+        "uid": 2259579,
+        "argv": [
+          "/volumes/research-localdata/ywang3652/rfic-transformer-inverse-design-mars56-s4p-20260702/.venv/bin/python",
+          "-B",
+          "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_admission_timing_20260912T140817241525Z/install_at_boundary.py",
+          "/volumes/research-localdata/ywang3652/eucap15_native_owner_20260909T062500Z/continuous_admission_timing_20260912T140817241525Z"
+        ]
+      },
+      "install": null,
+      "failure": null
+    },
+    "continuation": null,
+    "install_receipt": null,
+    "fail_receipt": null,
+    "first_normal_permit_timing": null,
+    "active_runtime_sha256": "23eddf702afb6c3f5ee64ac9c415c56376199857dd6fe915f67856a456f8b99f",
+    "not_hot_reloaded": true,
+    "no_ai_boundary_polling": true
+  },
+  "landing": {
+    "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/landing_increment_m31_new53_v1/RECEIPT.json",
+    "sha256": "07f85f45d3de61d0a0caa6c73eeeae197117bcd324880be084e860f9f61ecd11",
+    "bytes": 23152
+  },
+  "received_training_eligible_union": {
+    "receipt": {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/train_coverage_received_m31_v1/RECEIPT.json",
+      "sha256": "43a61f384fbcf19d68079f5087d43b9103f9a27c6dcd69d9f86b328346d54d4d",
+      "bytes": 7206
+    },
+    "before": 3998,
+    "after": 4012,
+    "new": 14,
+    "not_gradient_training": true,
+    "occupied_before": 163,
+    "occupied_after": 163,
+    "total_cells": 512,
+    "deficit_before": 1907,
+    "deficit_after": 1907,
+    "q10_20_new": 14,
+    "high_k_gt_0_8_new": 0,
+    "newly_occupied_cells": 0,
+    "scope": "RECEIVED_SOURCE_UNION_NOT_FULL_PRODUCTION",
+    "checkpoint": {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/train_coverage_received_m31_v1/CHECKPOINT.json",
+      "sha256": "356ca2d4d87ab0321ab38d21cf4b23d380137a3484f1d30ceda5fd35d7e3e53d",
+      "bytes": 293947
+    },
+    "coverage": {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/train_coverage_received_m31_v1/COVERAGE_AFTER.csv",
+      "sha256": "3870691e169fa0ef9c80ec080e8490d48d482cfcccb768336443ac173937de12",
+      "bytes": 51726
+    }
+  },
+  "remaining_production_issue": "At the observed resource cut only 7.625097 CPU cores remained after reservations, sufficient for 3 additional shared double-CPU tools, not all 22 unused EMX slots; ordinary resource admission continues.",
+  "no_repeat": {
+    "root_native_calls": 0,
+    "old_model_training": 0,
+    "old_physics": 0,
+    "old_qa": 0,
+    "full_pool_scans": 0,
+    "paper_repackaging": 0,
+    "new_images": 0
+  },
+  "next_safe_action": "Existing program continues batch5, incremental formal callbacks and later batches; receive only new terminal/formal deltas and six exact pending backfills. Historical selected-member read and qualification are independent and cannot block production.",
+  "history": {
+    "status": "112_INDEX_JOIN_COMPLETE_FIRST_MEMBER_ARTIFACT_READ_IN_PROGRESS",
+    "source": "ISOLATED_STRICT_RECOVERY112_P215_MEMBERSHIP_UNPROVEN",
+    "authority_rows": 112,
+    "drc_rows": 112,
+    "exact_id_matches": 112,
+    "duplicate_ids": 0,
+    "missing_ids": 0,
+    "same_original_ordinal_count": 1,
+    "pairs": 56,
+    "arms": {
+      "multiseed_portfolio": 56,
+      "fixed_seed_baseline": 56
+    },
+    "raw_emx_gds_equals_drc_gds": 0,
+    "normalized_index_binding_matches": 112,
+    "actual_gds_byte_binding_verified": 0,
+    "current_qualified_unique": null,
+    "formal_added": 0,
+    "receipt": {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/history_strict112_actual_index_m31_v1/RECEIPT.json",
+      "sha256": "4abfc0b459eb6129bdd983abbf21122f2194d0770069b2c206202cf20f518b2f",
+      "bytes": 7388
+    },
+    "bindings": {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/history_strict112_actual_index_m31_v1/ROW_BINDINGS.json",
+      "sha256": "84a41da1563b1641832a4f6c5e9e6a9548b54b4c9254360b5d60be97fd1dc833",
+      "bytes": 525019
+    },
+    "selected_candidate_id": "0237778524f43c8c89534835d13e934586c5b84a43c0de2cd357af4ddd2619d5",
+    "selected_original_ordinal": 0,
+    "split": "UNKNOWN_BENCHMARK_RESERVATION_RETAINED",
+    "minimum_read_request": {
+      "path": "/Users/wyf/Documents/模拟变压器AI反向建模/reports/eucap15ghz_20260908T220300Z/batch_qualification_resume_20260912_v1/history_strict112_actual_index_m31_v1/MINIMUM_MEMBER_READ_REQUEST.json",
+      "sha256": "82ea035cdf26f3b5076384ee7558a10b359951165a831ab07c65ea068ef490ee",
+      "bytes": 7190,
+      "status": "SENT_TO_SOLE_OWNER_IN_PROGRESS",
+      "owner_turn": "01a09606-e158-7110-baa1-0b2d71c04f4f",
+      "file_limit": 5,
+      "total_byte_limit": 8388608
+    },
+    "not_current_qualification": "Source metadata and normalized hash strings cannot replace actual GDS/DRC/S4P, current process and port binding, exact original split and cross-source uniqueness.",
+    "production_dependency": false,
+    "old_full112_materializer_not_run": true
+  },
+  "publication_diagnostic": {
+    "file": "COVERAGE_AFTER.csv",
+    "first_copy": "SHA_MISMATCH",
+    "source_unchanged": true,
+    "reason": "apply_patch normalized original CSV CRLF to LF; one formatting-only restoration to original CRLF before publication.",
+    "affects_numeric_values": false
+  }
+}
