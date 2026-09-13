@@ -1,0 +1,49 @@
+{
+  "schema": "eucap15_public_m43.v1",
+  "observed_utc": "2026-09-13T23:23:17.447166+00:00",
+  "status": "MEASURED_DISPATCH_FIX_BOUNDARY_RESERVED_NOT_ACTUAL48",
+  "current_batch": 19,
+  "actual_native_emx": 0,
+  "batch19_cumulative": {
+    "terminal": 28,
+    "fresh_s4p": 23,
+    "analytic_fail": 5,
+    "strict_in_range_candidates": 13
+  },
+  "formal_unique_lower_bound": 8522,
+  "formal_head_sha256": "8f77d11df0fdd81c8cf3bc189538dfb94867714db04a74e45616d45bbec762a0",
+  "requested_emx": 48,
+  "cpu_per_emx": 2,
+  "executor_emx": 48,
+  "maintenance": {
+    "installed_utc": "2026-09-13T23:12:36.361605+00:00",
+    "stop_new_dispatch": "2026-09-14T22:00:00-05:00",
+    "timezone": "America/Chicago"
+  },
+  "scanner": {
+    "old_seconds": 3.857546839863062,
+    "new_seconds": 0.3579431129619479,
+    "all_256_candidate_allocations_equal": true,
+    "total_bytes": 2613182464,
+    "comparison": "One sequential pair on a completed fixed batch. OS cache/order not randomized. Not a production throughput or actual48 result.",
+    "linux_targeted_tests_pass": 4,
+    "helper_sha256": "874f6a31f30cbe5fc9c5c95b035d95b57f18bba75eedb9078f4bfd1013f76de3",
+    "manager_sha256": "0d8e4a861b47b32da3a93e985833ab3fff59038b36a11449130079c46c30c019",
+    "status": "BOUNDARY_RESERVED_NOT_INSTALLED",
+    "stage_sha256": "58f6549b490961417883f862d49439338f56faf6f3c43b3c455842adb3624f90",
+    "reservation_sha256": "01cb534cf49559a11baba98676655667a94ea5496140aa53b55654bbe1ba9381",
+    "probe_sha256": "f38b8720040affea2a715e840778cf6245bbdc877106301a802acd096bc26afc"
+  },
+  "private_run_receipt_sha256": "f8baba734d44482e939c1d05c022676e007e8dc3e452ef39796cd112d225348d",
+  "constraints_preserved": [
+    "fresh allocation scan",
+    "global and per-candidate inode dedup",
+    "no symlink following",
+    "atomic storage reservations",
+    "resource/license admission",
+    "physical gates",
+    "maintenance pause",
+    "original batch budgets"
+  ],
+  "old_experiments_repeated": false
+}

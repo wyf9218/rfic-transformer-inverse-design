@@ -1,0 +1,1 @@
+{"status":"FAIL_TEST_REFERENCE_SELECTION_NOT_PRODUCTION","tool_chunk":"8c7bd6","tests":4,"pass":2,"errors":2,"reason":"ALLOCATION_BASE_RUNTIME pointed at pre-singlewalk module without allocated_snapshot; production unchanged, reference binding corrected next.","native_actions":0,"signals":0}
