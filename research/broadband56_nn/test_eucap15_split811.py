@@ -4,7 +4,12 @@ import unittest
 from pathlib import Path
 from unittest.mock import patch
 import numpy as np
-from .eucap15_split811 import assignments, make_policy, build, validate_training_split, POLICY
+from .eucap15_split811 import assignments, make_policy as current_policy, build, validate_training_split, POLICY, LEGACY_EXPOSURE_POLICY
+
+# These retained tests exercise the immutable sequence-cutoff v1 contract.
+# Actual-usage v2 behavior has separate targeted tests; old results stay valid.
+def make_policy(*args, **kwargs):
+    return current_policy(*args, **kwargs, exposure_policy=LEGACY_EXPOSURE_POLICY)
 
 def row(i, *, parent=None, source='GEOMETRY_DOE'):
     h=f'{i:064x}'

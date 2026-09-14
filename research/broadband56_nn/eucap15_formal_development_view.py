@@ -302,6 +302,7 @@ def main():
     parser.add_argument('--snapshot',action='append',help='New formal committed ledger snapshot; default 80/10/10 entry')
     parser.add_argument('--exposure-cutoff',type=int)
     parser.add_argument('--first-doe-batch',type=int)
+    parser.add_argument('--exposure-map',help='Pinned actual-usage evidence overlay for formal 80/10/10')
     parser.add_argument('--legacy-622-replay',action='store_true',help='Explicit historical preparation only; not a new formal experiment')
     parser.add_argument("--handoff-manifest-pin",help="Legacy JSON object path/sha256/bytes")
     parser.add_argument("--old-splits-pin",help="Legacy JSON object path/sha256/bytes")
@@ -313,7 +314,7 @@ def main():
         if args.exposure_cutoff is None or args.first_doe_batch is None:parser.error('exposure cutoff and first prospective DOE batch required')
         contract=checked(json.loads(args.contract_pin))
         print(json.dumps(build(args.snapshot,args.out,contract_path=contract,
-            policy=make_policy(args.exposure_cutoff,args.first_doe_batch))))
+            policy=make_policy(args.exposure_cutoff,args.first_doe_batch),exposure_mapping=args.exposure_map)))
         return
     if not args.legacy_622_replay:parser.error('New formal preparation requires --snapshot (80/10/10); historical 6/2/2 requires explicit --legacy-622-replay')
     print(json.dumps(prepare(json.loads(args.handoff_manifest_pin),json.loads(args.old_splits_pin),
