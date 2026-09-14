@@ -81,5 +81,29 @@ class ActualExposureTests(unittest.TestCase):
             main()
         self.assertEqual(builder.call_args.kwargs['exposure_mapping'],'usage.json')
 
+    def test_exploration_exact_fixed_lhs_recipe_can_reserve_without_relabelling(self):
+        r=row(1,source='EXPLORATION')
+        r['exposure'].update(proposal_method='FIXED_GEOMETRY_LHS',no_proxy_selection=True,
+            geometry_recipe_ref=dict(path='/fixture/frozen_recipe.json',sha256='b'*64))
+        self.assertEqual(exposure_status(r),'PROVEN_UNUSED_INDEPENDENT_DOE')
+        self.assertEqual(r['source'],'EXPLORATION')
+
+    def test_exploration_missing_recipe_or_proxy_evidence_stays_unknown(self):
+        for updates in ({},dict(proposal_method='FIXED_GEOMETRY_LHS',no_proxy_selection=True),
+                dict(proposal_method='FIXED_GEOMETRY_LHS',no_proxy_selection=False,
+                    geometry_recipe_ref=dict(path='/fixture/recipe',sha256='b'*64))):
+            r=row(1,source='EXPLORATION');r['exposure'].update(updates)
+            self.assertEqual(exposure_status(r),'UNKNOWN_EXPOSURE_OR_FAMILY')
+
+    def test_compact_unknown_proposal_flag_needs_exact_recipe_closure(self):
+        for source in ('GEOMETRY_DOE','EXPLORATION'):
+            r=row(1,source=source,model_used_for_proposal=None)
+            self.assertEqual(exposure_status(r),'UNKNOWN_EXPOSURE_OR_FAMILY')
+            r['exposure'].update(proposal_method='FIXED_GEOMETRY_LHS',no_proxy_selection=True,
+                proposal_model_used=False,geometry_recipe_ref=dict(path='/fixture/recipe',sha256='b'*64))
+            self.assertEqual(exposure_status(r),'PROVEN_UNUSED_INDEPENDENT_DOE')
+            r['model_used_for_proposal']=True
+            self.assertEqual(exposure_status(r),'DEVELOPMENT_DERIVED_FAMILY')
+
 
 if __name__=='__main__':unittest.main()

@@ -70,10 +70,21 @@ def exposure_status(row):
     refs=e.get('evidence_refs', [])
     pinned=bool(refs) and all(isinstance(p,dict) and p.get('path') and
         re.fullmatch('[0-9a-f]{64}', p.get('sha256','')) for p in refs)
+    recipe=e.get('geometry_recipe_ref', {})
+    pinned_recipe=(isinstance(recipe,dict) and recipe.get('path') and
+        re.fullmatch('[0-9a-f]{64}',recipe.get('sha256','')))
+    fixed_lhs_exploration=(row.get('source')=='EXPLORATION' and
+        e.get('proposal_method')=='FIXED_GEOMETRY_LHS' and e.get('no_proxy_selection') is True and
+        pinned_recipe)
+    no_proposal_model=(row.get('model_used_for_proposal') is False or
+        (row.get('model_used_for_proposal') is None and pinned_recipe and
+         e.get('proposal_method')=='FIXED_GEOMETRY_LHS' and e.get('no_proxy_selection') is True and
+         e.get('proposal_model_used') is False))
     if (pinned and e.get('usage_scope_complete') is True and
             all(e.get(k) is False for k in (*USAGE_FIELDS, 'model_preprocessing_fit')) and
             e.get('family_status')=='INDEPENDENT_DOE_ROOT' and
-            row.get('source')=='GEOMETRY_DOE' and row.get('model_used_for_proposal') is False):
+            (row.get('source')=='GEOMETRY_DOE' or fixed_lhs_exploration) and
+            no_proposal_model):
         return 'PROVEN_UNUSED_INDEPENDENT_DOE'
     return 'UNKNOWN_EXPOSURE_OR_FAMILY'
 
