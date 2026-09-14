@@ -94,7 +94,7 @@ def test_physical_backend_must_bind_all_candidates_and_selects_fresh_emx(
     backend = tmp_path / "backend.py"
     backend.write_text(
         """
-import argparse, json
+import argparse, json, hashlib
 from pathlib import Path
 p=argparse.ArgumentParser(); p.add_argument('--request-json'); p.add_argument('--out-dir')
 a=p.parse_args(); request=json.loads(Path(a.request_json).read_text()); root=Path(a.out_dir)
@@ -105,6 +105,12 @@ for item in request['candidates']:
     target=item['target_features']
     rows.append({'candidate_id':item['candidate_id'],'q_target':q,'geometry_sha256':item['geometry_sha256'],
       'features_15ghz':{'Lp_nH':target['Lp_nH']+abs(q-17)*0.1,'Ls_nH':target['Ls_nH'],'Qp':q,'Qs':q,'K_abs':target['K_abs']},
+      'operating_point_evidence':{'candidate_id':item['candidate_id'],'frequency_hz':15e9,
+        'physical15':{'lp_nh':target['Lp_nH']+abs(q-17)*0.1,'ls_nh':target['Ls_nH'],'qmin':q,'k_abs':target['K_abs']},
+        'descriptor_valid':True,'strict_valid':False,'below_half_srf':False,'s_z_roundtrip_abs_max':1e-12,
+        'passivity_sigma_max':.99,'reciprocity_abs_max':0.},
+      'physical_gate_evidence':{'geometry_sha256':item['geometry_sha256'],'gds_sha256':hashlib.sha256(gds.read_bytes()).hexdigest(),
+        's4p_sha256':hashlib.sha256(s4p.read_bytes()).hexdigest(),'current_structure_compatible':True,'drc_zero_blocking':True,'original_GDS_DRC_EMX_binding':True},
       'artifacts':{'gds':str(gds.relative_to(root)),'s4p':str(s4p.relative_to(root))}})
 (root/'physical_results.json').write_text(json.dumps({'schema':'rfic_q_sweep_physical_results.v1','label_source':'FRESH_REAL_EMX','results':rows}))
 """,

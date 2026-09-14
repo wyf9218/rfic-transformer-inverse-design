@@ -119,13 +119,19 @@ def load_request(request_path):
     freeze = read_json(sources["qscan_freeze"]["path"])
     require(freeze.get("schema") == "frequency_qscan_freeze.v1" and
             freeze.get("status") == "FROZEN_BEFORE_QSCAN_AND_NEW_EMX", "Qscan is not frozen")
+    # New requests bind the operating-point policy. Explicit old freeze files
+    # remain historical protocols, not a source of new15GHz eligibility.
+    from .operating_point15 import LABEL_POLICY, LABEL_MODE
+    operating = freeze['config'].get('label_policy') == LABEL_POLICY
+    if operating:
+        require(context['frequency_ghz'] == 15, 'operating-point route is exact15GHz')
     for actual, expected, name in (
         (freeze["frequency_ghz"], context["frequency_ghz"], "frequency"),
         (freeze["model_id"], context["model_id"], "model"),
         (freeze["config"]["dataset_scope"], context["dataset_scope"], "scope"),
         (freeze["config"]["frequency_ghz"], context["frequency_ghz"], "config frequency"),
         (freeze["protocol"]["q_values"], list(range(10, 21)), "Q grid"),
-        (freeze["config"]["label_mode"], "STRICT_LUMPED", "label mode"),
+        (freeze["config"]["label_mode"], LABEL_MODE if operating else "STRICT_LUMPED", "label mode"),
         (freeze["protocol"]["q_scalar"], "min(Qp,Qs)", "Q scalar"),
     ):
         require(actual == expected, "freeze/request mismatch: " + name)

@@ -19,7 +19,7 @@ FEATURES = ("Lp_nH", "Ls_nH", "Qmin", "K_abs")
 UNITS = ("nH", "nH", "dimensionless", "dimensionless")
 SPANS = (2.5, 2.5, 20.0, 0.8)
 TOLERANCE = 0.05
-LABEL_MODES = ("STRICT_LUMPED", "POINTWISE_DESCRIPTOR_EXPERIMENTAL")
+LABEL_MODES = ("STRICT_LUMPED", "POINTWISE_DESCRIPTOR_EXPERIMENTAL", "OPERATING_POINT_15GHZ")
 
 
 def pin(path):
@@ -52,6 +52,8 @@ def protocol_identity():
 def _frequency(frequency_ghz, label_mode):
     if type(frequency_ghz) is not int or not 5 <= frequency_ghz <= 60 or label_mode not in LABEL_MODES:
         raise ValueError("exact integer 5..60 GHz and explicit supported label mode required")
+    if label_mode == 'OPERATING_POINT_15GHZ' and frequency_ghz != 15:
+        raise ValueError('operating_point_15ghz_v1 is exact15GHz only')
 
 
 def _identity(data_root, forward_checkpoint, inverse_checkpoint, frequency_ghz, label_mode):
@@ -65,7 +67,7 @@ def _identity(data_root, forward_checkpoint, inverse_checkpoint, frequency_ghz, 
 
 
 def freeze_frequency_evaluation(data_root, forward_checkpoint, inverse_checkpoint, out_path, *,
-                                frequency_ghz=15, label_mode="STRICT_LUMPED", validation_summary=None):
+                                frequency_ghz=15, label_mode="OPERATING_POINT_15GHZ", validation_summary=None):
     """Metadata-only freeze, without model loading or test-label evaluation."""
     identity = _identity(data_root, forward_checkpoint, inverse_checkpoint, frequency_ghz, label_mode)
     validation = None
@@ -190,7 +192,7 @@ def _number(value):
 
 
 def evaluate_frequency(data_root, forward_checkpoint, inverse_checkpoint, out_dir, *, frequency_ghz=15,
-                       label_mode="STRICT_LUMPED", split="validation", device="cpu", micro_batch=32,
+                       label_mode="OPERATING_POINT_15GHZ", split="validation", device="cpu", micro_batch=32,
                        configuration_freeze=None):
     if split not in ("validation", "test") or type(micro_batch) is not int or micro_batch < 1:
         raise ValueError("explicit held-out split and positive micro batch required")
@@ -219,13 +221,8 @@ def evaluate_frequency(data_root, forward_checkpoint, inverse_checkpoint, out_di
             raise ValueError("inverse is not bound to this exact frozen forward")
         forward.eval().requires_grad_(False); inverse.eval().requires_grad_(False)
         population = np.flatnonzero(bundle.arrays["split"] == (1 if split == "validation" else 2))
-        if label_mode == "STRICT_LUMPED":
-            eligible = bundle.arrays["y_valid"][:, at].all(1)
-            if "strict_lumped_valid" in bundle.arrays:
-                eligible &= bundle.arrays["strict_lumped_valid"][:, at]
-        else:
-            eligible = bundle.arrays["broadband_descriptor_valid"][:, at].copy()
-        eligible &= np.isfinite(bundle.arrays["y"][:, at]).all(1)
+        from .frequency_profile import frequency_mask
+        eligible = frequency_mask(bundle, frequency_ghz, label_mode)
         indices = population[eligible[population]]
         if not len(indices):
             raise ValueError("NO_ELIGIBLE_HELDOUT_LABELS")
@@ -302,7 +299,7 @@ def main(argv=None):
     parser.add_argument("action",choices=("freeze","evaluate"))
     for name in ("data","forward","inverse","out"): parser.add_argument("--"+name,required=True)
     parser.add_argument("--frequency-ghz",type=int,default=15)
-    parser.add_argument("--label-mode",choices=LABEL_MODES,default="STRICT_LUMPED")
+    parser.add_argument("--label-mode",choices=LABEL_MODES,default="OPERATING_POINT_15GHZ")
     parser.add_argument("--split",choices=("validation","test"),default="validation")
     parser.add_argument("--device",default="cpu"); parser.add_argument("--micro-batch",type=int,default=32)
     parser.add_argument("--configuration-freeze"); parser.add_argument("--validation-summary")

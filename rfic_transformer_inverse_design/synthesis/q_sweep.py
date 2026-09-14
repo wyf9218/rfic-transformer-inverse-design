@@ -17,6 +17,7 @@ from typing import Any, Iterable
 import numpy as np
 
 from .frozen_mlp import FrozenTandemMLP, GEOMETRY_COLUMNS
+from ..analysis.operating_point15 import LABEL_POLICY, classify as operating_point_classify
 
 
 Q_SWEEP_VALUES = tuple(range(10, 21))
@@ -93,6 +94,8 @@ class QSweepResult:
 
     def record(self) -> dict[str, Any]:
         value = asdict(self)
+        value['label_policy'] = LABEL_POLICY
+        value['srf_role'] = 'OPTIONAL_DIAGNOSTIC_NOT_A_GATE'
         value["q_values"] = list(self.q_values)
         value["candidates"] = [asdict(item) for item in self.candidates]
         return value
@@ -431,6 +434,7 @@ def _run_physical_backend(
             row.get("artifacts") or {},
             candidate_id,
         )
+        _operating_point_backend_gate(row, physical, artifacts)
         target_vector = np.asarray(
             [proxy_item.target_features[name] for name in FEATURE_NAMES], dtype=float
         )
@@ -464,9 +468,34 @@ def _run_physical_backend(
         scientific_boundary=(
             "The selected candidate minimizes the fixed declared-range-normalized "
             "four-feature score across eleven fresh real-EMX evaluations at 15 GHz. "
-            "Foundry DRC and independent HFSS correlation remain separate gates."
+            "This full-Q physical diagnostic is not the final preselected-q_proxy experiment. "
+            "15GHz operating-point descriptors use no half-SRF gate; independent HFSS correlation remains separate."
         ),
     )
+
+
+def _operating_point_backend_gate(row, physical, artifacts):
+    """Require saved numerical QA and candidate-bound physical gate evidence.
+
+    Missing SRF/old strict fields are irrelevant. Missing actual QA/provenance
+    is not equivalent to physical invalidity and must be supplied by backend.
+    """
+    feature = row.get('operating_point_evidence')
+    if not isinstance(feature, dict):
+        raise ValueError('MISSING_OPERATING_POINT_QA_EVIDENCE: backend must return the original audited15GHz feature receipt')
+    if feature.get('candidate_id') != row['candidate_id']:
+        raise ValueError('operating-point candidate identity mismatch')
+    verdict = operating_point_classify(feature)
+    wanted = [verdict['physical15'][k] for k in ('lp_nh','ls_nh','qmin','k_abs')]
+    if not verdict['operating_point_valid'] or not np.allclose(physical, wanted, rtol=0, atol=1e-12):
+        raise ValueError('OPERATING_POINT_NUMERICAL_REJECTION_OR_FEATURE_MISMATCH')
+    proof = row.get('physical_gate_evidence', {})
+    if (proof.get('geometry_sha256') != row['geometry_sha256'] or
+            proof.get('gds_sha256') != artifacts['gds_sha256'] or proof.get('s4p_sha256') != artifacts['s4p_sha256'] or
+            proof.get('current_structure_compatible') is not True or proof.get('drc_zero_blocking') is not True or
+            proof.get('original_GDS_DRC_EMX_binding') is not True):
+        raise ValueError('MISSING_OR_INCOMPATIBLE_GDS_DRC_EMX_BINDING')
+    return verdict
 
 
 def _candidate_metrics(
@@ -538,6 +567,11 @@ def _write_backend_request(path: Path, model: FrozenTandemMLP, result: QSweepRes
         "target_frequency_ghz": model.target_frequency_ghz,
         "q_values": list(result.q_values),
         "required_label_source": "FRESH_REAL_EMX",
+        "label_policy": LABEL_POLICY,
+        "srf_required": False,
+        "q_proxy": result.selected_q,
+        "selection_scope": "FULL11Q_DIAGNOSTIC_NOT_FINAL_PRESELECTED_Q_PROXY_VALIDATION",
+        "required_evidence": ["operating_point_evidence", "physical_gate_evidence"],
         "required_outputs": ["GDS", "S4P", "Lp", "Ls", "Qp", "Qs", "K_abs"],
         "candidates": [
             {

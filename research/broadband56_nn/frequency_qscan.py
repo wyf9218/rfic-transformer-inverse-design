@@ -68,8 +68,12 @@ def prepare(config, out):
         raise ValueError('10000 random requests and 1..100 holdout audit requests required')
     if config['batch_requests'] < 1 or config['batch_requests'] > 32:
         raise ValueError('bounded batch of 1..32 requests required')
-    if not 5 <= config['frequency_ghz'] <= 20 or config['label_mode'] != 'STRICT_LUMPED':
-        raise ValueError('current scope is exact integer 5..20 GHz STRICT_LUMPED')
+    if config['frequency_ghz'] == 15:
+        from .operating_point15 import LABEL_POLICY, LABEL_MODE
+        if config.get('label_policy') != LABEL_POLICY or config['label_mode'] != LABEL_MODE:
+            raise ValueError('new15GHz Q scans require operating_point_15ghz_v1; old frozen scans remain unchanged')
+    elif not 5 <= config['frequency_ghz'] <= 20 or config['label_mode'] != 'STRICT_LUMPED':
+        raise ValueError('unsupported legacy frequency route')
     out = Path(out)
     if out.exists():
         raise FileExistsError(out)
@@ -245,7 +249,7 @@ def run(out, *, max_new_batches=None):
             from .frequency_tandem import load_frequency_pair
             torch.set_num_threads(2)
             forward,inverse,_,_=load_frequency_pair(freeze['identity']['forward']['path'],freeze['identity']['inverse']['path'],
-                frequency_ghz=freeze['frequency_ghz'],label_mode='STRICT_LUMPED',device='cpu')
+                frequency_ghz=freeze['frequency_ghz'],label_mode=freeze['config']['label_mode'],device='cpu')
             for number,(root,batch) in enumerate(todo):
                 if max_new_batches is not None and number>=max_new_batches:
                     return dict(status='PARTIAL_SHARDS_COMMITTED',completed_shards=len(receipts),remaining_shards=len(todo)-number)

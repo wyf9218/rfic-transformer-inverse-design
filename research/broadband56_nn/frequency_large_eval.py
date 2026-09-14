@@ -119,7 +119,7 @@ def _load_context(config):
     from .training import Bundle
     from .bb00 import prepare_bb00
     f, mode = config["frequency_ghz"], config["label_mode"]
-    if type(f) is not int or not 5 <= f <= 60 or mode not in LABEL_MODES:
+    if type(f) is not int or not 5 <= f <= 60 or mode not in (*LABEL_MODES, 'OPERATING_POINT_15GHZ'):
         raise ValueError("exact integer frequency and explicit label mode required")
     bundle = Bundle(config["data_root"])
     # Deserialization only: do not construct models or predict in prepare.

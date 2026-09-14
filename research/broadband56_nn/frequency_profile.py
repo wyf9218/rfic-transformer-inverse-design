@@ -62,7 +62,9 @@ def frequency_mask(bundle, frequency_ghz, label_mode="STRICT_LUMPED"):
         from .operating_point15 import LABEL_POLICY
         if frequency_ghz != 15 or bundle.manifest.get('label_policy') != LABEL_POLICY or 'operating_point_valid' not in arrays:
             raise ValueError('explicit 15GHz operating point policy and mask required')
-        return arrays['operating_point_valid'][:, index] & arrays['y_valid'][:, index].all(axis=1) & finite
+        # y_valid in historical bundles can include the old half-SRF mask.
+        # The explicit audited operating-point mask is authoritative here.
+        return arrays['operating_point_valid'][:, index] & finite
     if label_mode == "STRICT_LUMPED":
         return arrays["strict_lumped_valid"][:, index] & arrays["y_valid"][:, index].all(axis=1) & finite
     return arrays["broadband_descriptor_valid"][:, index] & finite
