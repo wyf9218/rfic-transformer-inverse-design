@@ -11,6 +11,8 @@ import hashlib, json, math, re
 from pathlib import Path
 import numpy as np
 from .data import SPLIT_NAMES, Y_COLUMNS, PHYSICAL_COLUMNS, _fit_scale, _write_json, sha256
+from .eucap15_range_policy import (POLICY as RANGE_POLICY, POLICY_IDS as RANGE_POLICY_IDS,
+    make_range_policy, resolve_range_policy, classify_physical15, train_coverage_bounds)
 
 POLICY = 'EUCAP15_FORMAL_GEOMETRY_FAMILY_811_V1'
 DEFAULT_FRACTIONS = (.8, .1, .1)
@@ -21,12 +23,14 @@ def pin(p):
     p=Path(p).resolve()
     return dict(path=str(p),sha256=sha256(p),bytes=p.stat().st_size)
 
-def make_policy(cutoff, first_doe_batch, *, target_total=DEFAULT_TARGET_TOTAL, seed=DEFAULT_SEED):
+def make_policy(cutoff, first_doe_batch, *, target_total=DEFAULT_TARGET_TOTAL, seed=DEFAULT_SEED,
+                physical_range_policy=RANGE_POLICY):
     if type(target_total) is not int or target_total <= 0 or target_total % 10:
         raise ValueError('target_total must be a positive multiple of ten')
     return dict(schema=POLICY, requested_fractions=list(DEFAULT_FRACTIONS), seed=seed,
         target_total=target_total, target_counts=dict(train=target_total*8//10,validation=target_total//10,test=target_total//10),
         exposure_cutoff_sequence=cutoff, first_prospective_doe_batch=first_doe_batch,
+        physical_range_policy=resolve_range_policy(physical_range_policy),
         pre_policy_assignment='TRAIN_ONLY_NOT_INDEPENDENT_HOLDOUT',
         independent_doe_rule='future production DOE; no model or parent; preserved fixed DOE recipe; no subsequent holdout labels in sampling',
         final_independent_10000_request_emx='SEPARATE_NOT_PART_OF_MODELING_100K')
@@ -126,6 +130,7 @@ def build(snapshot_paths, out, *, contract_path, policy, previous_mapping=None):
         _write_json(out/'PREPARATION_FAILED.json',dict(status='FAIL_PRESERVED',error=str(exc)));raise
 
 def _build(snapshot_paths,out,contract_path,policy,previous_mapping):
+    range_policy=resolve_range_policy(policy.get('physical_range_policy'),legacy_if_missing=True)
     snapshots=[json.loads(Path(p).read_text()) for p in snapshot_paths]
     rows=[r for x in snapshots for r in x['members']]
     seq=sorted(r['sequence'] for r in rows)
@@ -143,7 +148,8 @@ def _build(snapshot_paths,out,contract_path,policy,previous_mapping):
     for r in selected:
         p=r['physical15']
         if r['frequency_hz']!=15000000000 or r['geometry_fields']!=fields:raise ValueError('geometry/frequency contract mismatch')
-        if not (.5<=p['lp_nh']<=2 and .5<=p['ls_nh']<=2 and .2<=p['k_abs']<=.85):raise ValueError('qualified physical range mismatch')
+        range_result=classify_physical15(p,range_policy)
+        if not range_result['range_eligible']:raise ValueError('qualified physical range mismatch: '+','.join(range_result['reasons']))
         if not math.isclose(p['qmin'],min(p['qp'],p['qs']),rel_tol=1e-12,abs_tol=1e-12):raise ValueError('Qmin definition mismatch')
     g=np.array([r['geometry'] for r in selected],dtype=np.float64)
     y=np.array([[r['physical15'][k] for k in Y_COLUMNS] for r in selected],dtype=np.float64)[:,None,:]
@@ -155,13 +161,17 @@ def _build(snapshot_paths,out,contract_path,policy,previous_mapping):
     ym,ys=_fit_scale(y[train]);norm=dict(schema='bb_normalizer.v1',fit_split='train',training_geometries=int(train.sum()),
         g_min=g[train].min(0).tolist(),g_max=g[train].max(0).tolist(),y_mean=ym,y_scale=ys,
         field_names=fields,geometry_fields=fields,y_columns=list(Y_COLUMNS),s_mean=None,s_scale=None,
-        s_columns=[],s_status='NOT_INCLUDED',contract_bounds_um=dict(lower=contract['lower'],upper=contract['upper']),split_policy=POLICY)
+        s_columns=[],s_status='NOT_INCLUDED',contract_bounds_um=dict(lower=contract['lower'],upper=contract['upper']),split_policy=POLICY,
+        physical_range_policy=range_policy)
     arrays=dict(geometry=g,y=y,geometry_ids=np.array(ids),geometry_sha256=np.array(hashes),split=split,
         frequency_hz=np.array([15000000000],dtype=np.int64),y_valid=np.ones_like(y,dtype=bool),
         strict_lumped_valid=np.ones((len(g),1),dtype=bool),broadband_descriptor_valid=np.ones((len(g),1),dtype=bool))
     with (out/'dataset.npz').open('xb') as f:np.savez_compressed(f,**arrays)
     sources=dict(schema='eucap15_formal811_sources.v1',snapshots=[pin(p) for p in snapshot_paths],contract=pin(contract_path),previous_mapping=pin(previous_mapping) if previous_mapping else None)
     _write_json(out/'SOURCE_MANIFEST.json',sources);_write_json(out/'normalizer.json',norm)
+    _write_json(out/'PHYSICAL_RANGE_POLICY.json',range_policy)
+    _write_json(out/'TRAIN_COVERAGE_BOUNDS.json',train_coverage_bounds(
+        [r['physical15'] for r,s in zip(selected,split) if s==0]))
     splits=dict(schema='bb_splits.v1',seed=policy['seed'],method=POLICY,requested_fractions=list(DEFAULT_FRACTIONS),counts=mapped['counts'],
         by_geometry_sha256=mapped['by_geometry_sha256'],geometry_id_to_sha256=dict(zip(ids,hashes)),
         ids={s:[i for i,h in zip(ids,hashes) if mapped['by_geometry_sha256'][h]==s] for s in SPLIT_NAMES},
@@ -169,9 +179,9 @@ def _build(snapshot_paths,out,contract_path,policy,previous_mapping):
     _write_json(out/'splits.json',splits)
     _write_json(out/'geometry_provenance.json',dict(rows=[dict(sequence=r['sequence'],geometry_sha256=r['geometry_sha256'],source=r['source'],original_split=r['split'],record=r['record']) for r in selected]))
     (out/'contract.json').write_bytes(Path(contract_path).read_bytes())
-    artifacts={n:dict(path=n,sha256=sha256(out/n),size_bytes=(out/n).stat().st_size) for n in ('dataset.npz','splits.json','SPLIT_MAPPING.json','SPLIT_POLICY.json','normalizer.json','geometry_provenance.json','contract.json')}
+    artifacts={n:dict(path=n,sha256=sha256(out/n),size_bytes=(out/n).stat().st_size) for n in ('dataset.npz','splits.json','SPLIT_MAPPING.json','SPLIT_POLICY.json','normalizer.json','geometry_provenance.json','contract.json','PHYSICAL_RANGE_POLICY.json','TRAIN_COVERAGE_BOUNDS.json')}
     counts=mapped['counts'];balanced=counts['validation']==counts['test'] and counts['train']==8*counts['test'] and counts['test']>0
-    manifest=dict(schema='bb_data_manifest.v1',status='PASS',split_policy=POLICY,source_manifest=pin(out/'SOURCE_MANIFEST.json'),
+    manifest=dict(schema='bb_data_manifest.v1',status='PASS',split_policy=POLICY,physical_range_policy=range_policy,source_manifest=pin(out/'SOURCE_MANIFEST.json'),
         contract_fingerprint_sha256=selected[0]['scientific_contract_fingerprint'],unique_geometries=len(g),frequency_rows=len(g),
         geometry_dim=len(fields),geometry_fields=fields,geometry_field_order=fields,geometry_units='um',frequency_hz=[15000000000],
         target_columns=list(Y_COLUMNS),split_counts=counts,normalizer_fit_split='train',artifacts=artifacts,
@@ -188,7 +198,8 @@ def _build(snapshot_paths,out,contract_path,policy,previous_mapping):
             if p.name!='SHA256SUMS':f.write(sha256(p)+'  '+p.name+'\n')
     return receipt
 
-def validate_training_split(data_root, *, legacy_resume=False, expected_mapping_sha=None):
+def validate_training_split(data_root, *, legacy_resume=False, expected_mapping_sha=None,
+                            expected_range_policy=None):
     """Called by the actual F/I training entry before any model update."""
     root=Path(data_root);manifest=json.loads((root/'data_manifest.json').read_text())
     if manifest.get('split_policy')!=POLICY:
@@ -198,6 +209,11 @@ def validate_training_split(data_root, *, legacy_resume=False, expected_mapping_
     actual=sha256(root/'SPLIT_MAPPING.json')
     if actual!=splits['mapping']['sha256'] or (expected_mapping_sha and actual!=expected_mapping_sha):raise ValueError('split mapping identity differs')
     if mapping['policy']['requested_fractions']!=list(DEFAULT_FRACTIONS):raise ValueError('80/10/10 required')
+    range_policy=resolve_range_policy(mapping['policy'].get('physical_range_policy'),legacy_if_missing=True)
+    if manifest.get('physical_range_policy',range_policy)!=range_policy:
+        raise ValueError('manifest response range policy differs from split mapping')
+    if expected_range_policy is not None and resolve_range_policy(expected_range_policy)!=range_policy:
+        raise ValueError('training response range policy differs from dataset')
     families=defaultdict(set)
     for r in mapping['rows']:
         if r['split'] in SPLIT_NAMES:families[r['family']].add(r['split'])
@@ -205,16 +221,20 @@ def validate_training_split(data_root, *, legacy_resume=False, expected_mapping_
     with np.load(root/'dataset.npz',allow_pickle=False) as a:
         expected=np.array([SPLIT_NAMES.index(mapping['by_geometry_sha256'][str(h)]) for h in a['geometry_sha256']])
         if not np.array_equal(a['split'],expected):raise ValueError('arrays do not use the new mapping')
+        for values in a['y'][:,0,:]:
+            if not classify_physical15(dict(zip(Y_COLUMNS,values)),range_policy)['range_eligible']:
+                raise ValueError('training data response range mismatch')
         counts={s:int((expected==i).sum()) for i,s in enumerate(SPLIT_NAMES)}
     if counts!=mapping['counts'] or counts!=splits['counts']:raise ValueError('split count mismatch')
     if not counts['test'] or counts['train']!=8*counts['test'] or counts['validation']!=counts['test']:
         raise ValueError('WAITING_FOR_INDEPENDENT_HOLDOUT_QUOTAS: incomplete pool is not an 80/10/10 training set')
-    return dict(status='PASS',mapping_sha256=actual,counts=counts)
+    return dict(status='PASS',mapping_sha256=actual,counts=counts,physical_range_policy=range_policy)
 
 def main():
     p=argparse.ArgumentParser(description=__doc__);p.add_argument('--snapshot',action='append',required=True);p.add_argument('--out',required=True)
     p.add_argument('--contract',required=True);p.add_argument('--exposure-cutoff',type=int,required=True);p.add_argument('--first-doe-batch',type=int,required=True)
     p.add_argument('--target-total',type=int,default=DEFAULT_TARGET_TOTAL);p.add_argument('--seed',type=int,default=DEFAULT_SEED);p.add_argument('--previous-mapping')
-    a=p.parse_args();print(json.dumps(build(a.snapshot,a.out,contract_path=a.contract,policy=make_policy(a.exposure_cutoff,a.first_doe_batch,target_total=a.target_total,seed=a.seed),previous_mapping=a.previous_mapping)))
+    p.add_argument('--physical-range-policy',choices=RANGE_POLICY_IDS,default=RANGE_POLICY)
+    a=p.parse_args();print(json.dumps(build(a.snapshot,a.out,contract_path=a.contract,policy=make_policy(a.exposure_cutoff,a.first_doe_batch,target_total=a.target_total,seed=a.seed,physical_range_policy=a.physical_range_policy),previous_mapping=a.previous_mapping)))
 
 if __name__=='__main__':main()

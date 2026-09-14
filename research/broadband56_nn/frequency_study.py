@@ -218,7 +218,8 @@ def run(request_path, *, resume=False):
                         any((root / role).glob('attempt_*/checkpoint_step_*.pt'))
                         for role in ('forward', 'inverse'))
                     validate_training_split(data, legacy_resume=legacy_continuation,
-                        expected_mapping_sha=request.get('split_mapping_sha256'))
+                        expected_mapping_sha=request.get('split_mapping_sha256'),
+                        expected_range_policy=request.get('physical_range_policy'))
                 except ValueError as error:
                     return _state(root, 'WAITING_DATA_SPLIT_811', reason=str(error))
             data_sha = request.get("dataset_sha256") or read_json(Path(data)/"data_manifest.json")["artifacts"]["dataset.npz"]["sha256"]
@@ -252,6 +253,9 @@ def run(request_path, *, resume=False):
                     config['split_policy'] = POLICY
                     mapping_path = Path(data) / 'SPLIT_MAPPING.json'
                     if mapping_path.exists(): config['split_mapping_sha256'] = sha256(mapping_path)
+                    data_manifest = read_json(Path(data) / 'data_manifest.json')
+                    if data_manifest.get('physical_range_policy'):
+                        config['physical_range_policy'] = data_manifest['physical_range_policy']
                 train = dict(request["train"], role=role, log_progress=True)
                 if role == "inverse":
                     train["forward_checkpoint"] = inverse_forward["best"]["path"]

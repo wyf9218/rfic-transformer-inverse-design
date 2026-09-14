@@ -47,7 +47,8 @@ def train_from_config(config_path, out, *, resume_checkpoint=None, resume_probe=
         if not resume_checkpoint and document.get('split_policy', POLICY) != POLICY:
             raise ValueError('New 15GHz training defaults to formal 80/10/10; old ratios are replay/resume only')
         validate_training_split(document['data_root'], legacy_resume=resume_checkpoint is not None,
-                                expected_mapping_sha=document.get('split_mapping_sha256'))
+                                expected_mapping_sha=document.get('split_mapping_sha256'),
+                                expected_range_policy=document.get('physical_range_policy'))
     # BB00 retains optimizer/scheduler/RNG, response warmup/ramp/EMA, sampler,
     # valid-train normalizer, best/last and exact continuation source identity.
     return train_bb00(document["data_root"], out, config, document["contract_path"],
