@@ -89,17 +89,27 @@ def exposure_status(row):
     return 'UNKNOWN_EXPOSURE_OR_FAMILY'
 
 def reserve_doe_families(rows, policy, previous=None):
-    """Reserve a pinned, unlabeled DOE queue before qualification outcomes.
+    """Reserve a pinned, unlabeled queue against existing family context.
 
     Keep rejected/pending candidates in this reservation; qualify them later
     without rerolling their split or selecting replacement test successes.
+    Previously mapped families retain their actual exposure. New independent
+    DOE may fill holdouts; new train-derived neighbors remain train-only.
+    Reservation counts are not qualified/independent evaluation counts.
     """
     if policy.get('exposure_policy') != EXPOSURE_POLICY:
         raise ValueError('DOE reservation requires actual usage policy')
-    if any('physical15' in r or exposure_status(r)!='PROVEN_UNUSED_INDEPENDENT_DOE' for r in rows):
+    prior=set(previous['by_geometry_sha256']) if previous else set()
+    # Previously frozen families are context, not new unlabeled DOE requests.
+    # Pending old families are context too and must retain their evidence.
+    if previous:prior.update(r['geometry_sha256'] for r in previous['rows'])
+    new=[r for r in rows if r['geometry_sha256'] not in prior]
+    if any('physical15' in r or exposure_status(r) not in
+           ('PROVEN_UNUSED_INDEPENDENT_DOE','DEVELOPMENT_DERIVED_FAMILY') for r in new):
         raise ValueError('reserve only proven independent DOE before reading its response')
     result=assignments(rows,policy,previous)
     result['reservation_scope']='PRE_RESPONSE_QUEUE_KEEP_ALL_FAILURE_AND_PENDING_IDENTITIES'
+    result['counts_are_reservations_not_qualified_samples']=True
     return result
 
 def _batch(row):

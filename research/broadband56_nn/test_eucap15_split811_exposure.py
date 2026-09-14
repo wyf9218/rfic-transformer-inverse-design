@@ -71,6 +71,23 @@ class ActualExposureTests(unittest.TestCase):
         m=assignments([a,b],make_policy(0,0,target_total=10))
         self.assertEqual({r['split'] for r in m['rows']},{'PENDING_EXPOSURE'})
 
+    def test_reservation_continues_with_existing_development_context(self):
+        a=row(1);a['exposure']['gradient_training']=True
+        policy=make_policy(0,0,target_total=100)
+        prior=assignments([a],policy)
+        neighbor=row(3,source='TRAIN_NEIGHBORHOOD',base_train_id=a['geometry_sha256'])
+        result=reserve_doe_families([a,row(2),neighbor],policy,prior)
+        self.assertEqual(result['by_geometry_sha256'][a['geometry_sha256']],'train')
+        self.assertEqual(result['by_geometry_sha256'][neighbor['geometry_sha256']],'train')
+        self.assertTrue(result['counts_are_reservations_not_qualified_samples'])
+
+    def test_new_response_still_rejected_with_existing_context(self):
+        a=row(1);a['exposure']['gradient_training']=True
+        policy=make_policy(0,0,target_total=100);prior=assignments([a],policy)
+        new=row(2);new['physical15']={}
+        with self.assertRaisesRegex(ValueError,'before reading its response'):
+            reserve_doe_families([a,new],policy,prior)
+
     def test_formal_entry_forwards_actual_evidence_overlay(self):
         from .eucap15_formal_development_view import main
         args=['formal-view','--snapshot','snapshot.json','--out','out','--contract-pin','{}',
