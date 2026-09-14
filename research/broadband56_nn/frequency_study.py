@@ -34,7 +34,8 @@ def _data(request, root):
         if not (data_root / 'data_manifest.json').exists():
             source = request['formal811_source']
             build(source['snapshots'], data_root, contract_path=request['contract_path'],
-                  policy=source['policy'], previous_mapping=source.get('previous_mapping'))
+                  policy=source['policy'], previous_mapping=source.get('previous_mapping'),
+                  label_policy=request.get('label_policy','operating_point_15ghz_v1'))
         return str(data_root)
     if request.get("data_root"):
         from .training import Bundle
@@ -217,9 +218,12 @@ def run(request_path, *, resume=False):
                     legacy_continuation = resume and any(
                         any((root / role).glob('attempt_*/checkpoint_step_*.pt'))
                         for role in ('forward', 'inverse'))
+                    if not legacy_continuation and request['train']['label_mode'] != 'OPERATING_POINT_15GHZ':
+                        raise ValueError('new 15GHz study requires OPERATING_POINT_15GHZ; historical resume unchanged')
                     validate_training_split(data, legacy_resume=legacy_continuation,
                         expected_mapping_sha=request.get('split_mapping_sha256'),
-                        expected_range_policy=request.get('physical_range_policy'))
+                        expected_range_policy=request.get('physical_range_policy'),
+                        expected_label_policy=None if legacy_continuation else 'operating_point_15ghz_v1')
                 except ValueError as error:
                     return _state(root, 'WAITING_DATA_SPLIT_811', reason=str(error))
             data_sha = request.get("dataset_sha256") or read_json(Path(data)/"data_manifest.json")["artifacts"]["dataset.npz"]["sha256"]

@@ -19,7 +19,7 @@ from .io import read_json, sha256
 from .training import Bundle
 
 
-LABEL_MODES = ("STRICT_LUMPED", "POINTWISE_DESCRIPTOR_EXPERIMENTAL")
+LABEL_MODES = ("STRICT_LUMPED", "POINTWISE_DESCRIPTOR_EXPERIMENTAL", "OPERATING_POINT_15GHZ")
 
 
 def training_config(document):
@@ -43,12 +43,17 @@ def train_from_config(config_path, out, *, resume_checkpoint=None, resume_probe=
     document = read_json(config_path)
     config = training_config(document)
     if config.frequency_ghz == 15:
+        from .operating_point15 import LABEL_POLICY, LABEL_MODE
+        if not resume_checkpoint and (config.label_mode != LABEL_MODE or
+                document.get('label_policy', LABEL_POLICY) != LABEL_POLICY):
+            raise ValueError('New 15GHz training requires operating_point_15ghz_v1; old modes are replay/resume only')
         from .eucap15_split811 import POLICY, validate_training_split
         if not resume_checkpoint and document.get('split_policy', POLICY) != POLICY:
             raise ValueError('New 15GHz training defaults to formal 80/10/10; old ratios are replay/resume only')
         validate_training_split(document['data_root'], legacy_resume=resume_checkpoint is not None,
                                 expected_mapping_sha=document.get('split_mapping_sha256'),
-                                expected_range_policy=document.get('physical_range_policy'))
+                                expected_range_policy=document.get('physical_range_policy'),
+                                expected_label_policy=None if resume_checkpoint else LABEL_POLICY)
     # BB00 retains optimizer/scheduler/RNG, response warmup/ramp/EMA, sampler,
     # valid-train normalizer, best/last and exact continuation source identity.
     return train_bb00(document["data_root"], out, config, document["contract_path"],

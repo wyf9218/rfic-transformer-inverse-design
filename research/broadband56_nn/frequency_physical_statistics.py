@@ -447,10 +447,69 @@ def build(manifest_path, capture_paths, output_newdir):
         raise
 
 
+def operating_point_rows(requests, *, analysis_kind):
+    """Fixed preselected Q only. Keep all failures/pending in request denominator.
+
+    Input entries bind request_id, q_proxy, original feature receipt or None.
+    Historical analyses must explicitly say POST_HOC; this never replaces the
+    old strict report or selects a different Q from EMX results.
+    """
+    from .operating_point15 import classify, LABEL_POLICY
+    require(analysis_kind in ('PREDECLARED_OPERATING_POINT','POST_HOC_ORIGINAL_PROTOCOL_PRESERVED'),
+            'explicit protocol timing required')
+    require(requests and len({r['request_id'] for r in requests})==len(requests),'unique original requests required')
+    rows=[]
+    for r in requests:
+        require(type(r['q_proxy']) is int and 10<=r['q_proxy']<=20,'original integer Q proxy required')
+        f=r.get('feature');row=dict(request_id=r['request_id'],q_proxy=r['q_proxy'],
+            label_policy=LABEL_POLICY,operating_point_valid=False,joint_hit=False,
+            original_status=r['status'],source_pin=r.get('feature_pin'))
+        if f is not None:
+            require(f['frequency_ghz']==15 and f['candidate_id']==r['candidate_id'] and
+                    f['q_proxy']==r['q_proxy'],'selected candidate identity/Q changed')
+            v=classify(f);actual=f['actual_fresh_emx'];target=f['target'];proxy=f['proxy_self']
+            tau=f['absolute_hit_tolerances']
+            require(all(len(x)==4 for x in (actual,target,proxy,tau)) and all(finite(t) and t>0 for t in tau),'four original tolerances required')
+            errors=[a-t if finite(a) and finite(t) else None for a,t in zip(actual,target)]
+            row.update(operating_point_valid=v['operating_point_valid'],policy_evidence=v,
+                actual=actual,target=target,frozen_proxy=proxy,emx_minus_target=errors,
+                emx_minus_proxy=[a-p if finite(a) and finite(p) else None for a,p in zip(actual,proxy)],
+                joint_hit=v['operating_point_valid'] and all(finite(x) and abs(x)<=t for x,t in zip(errors,tau)))
+        rows.append(row)
+    good=[r for r in rows if r['operating_point_valid']];hits=sum(r['joint_hit'] for r in rows)
+    metrics={}
+    for field in ('emx_minus_target','emx_minus_proxy'):
+        metrics[field]=[]
+        for i,key in enumerate(FEATURES):
+            values=sorted(abs(r[field][i]) for r in good if finite(r[field][i]))
+            # Same explicit linear absolute-error quantile, without requiring a plotting library.
+            index=.95*(len(values)-1) if values else 0;lo=int(index);hi=min(lo+1,len(values)-1)
+            p95=values[lo]+(index-lo)*(values[hi]-values[lo]) if values else None
+            metrics[field].append(dict(feature=key,n=len(values),mae=mean(values) if values else None,
+                p95=p95,absolute_error_cdf_source=values))
+    return dict(label_policy=LABEL_POLICY,analysis_kind=analysis_kind,rows=rows,
+        original_request_count=len(rows),operating_point_valid_count=len(good),joint_hit_count=hits,
+        full_denominator_joint_hit_fraction=hits/len(rows),metrics_conditional_on_operating_point=metrics,
+        evidence_scope='Saved feature receipt reanalysis; original chain provenance retained, not newly certified',
+        new_EMX_starts=0,new_inference_calls=0,model_accuracy_improvement_claim=False)
+
+
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--manifest',required=True);parser.add_argument('--captures',required=True);parser.add_argument('--out',required=True)
-    args=parser.parse_args();print(json.dumps(build(args.manifest,args.captures,args.out),sort_keys=True))
+    parser.add_argument('--manifest');parser.add_argument('--captures');parser.add_argument('--out',required=True)
+    parser.add_argument('--operating-point-input',help='new versioned fixed-request JSON; does not alter legacy report')
+    args=parser.parse_args()
+    if args.operating_point_input:
+        source=pin(args.operating_point_input);spec=verified_read(source)
+        requests=[]
+        for r in spec['requests']:
+            r=dict(r);r['feature']=verified_read(r['feature_pin']) if r.get('feature_pin') else None;requests.append(r)
+        result=operating_point_rows(requests,analysis_kind=spec['analysis_kind']);result['source']=source
+        out=Path(args.out);out.mkdir(parents=True,exist_ok=False);save(out/'OPERATING_POINT_STATISTICS.json',result)
+        print(json.dumps(pin(out/'OPERATING_POINT_STATISTICS.json')))
+    else:
+        require(args.manifest and args.captures,'legacy manifest/captures or explicit operating point input required')
+        print(json.dumps(build(args.manifest,args.captures,args.out),sort_keys=True))
 
 
 if __name__=='__main__':main()

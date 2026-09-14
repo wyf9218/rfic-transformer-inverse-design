@@ -53,11 +53,16 @@ def _frequency_index(bundle, frequency_ghz):
 
 def frequency_mask(bundle, frequency_ghz, label_mode="STRICT_LUMPED"):
     """Exact per-frequency label eligibility, never prediction-based filtering."""
-    if label_mode not in LABEL_MODES:
+    if label_mode not in (*LABEL_MODES, 'OPERATING_POINT_15GHZ'):
         raise ValueError("explicit supported label mode required")
     index = _frequency_index(bundle, frequency_ghz)
     arrays = bundle.arrays
     finite = np.isfinite(arrays["y"][:, index]).all(axis=1)
+    if label_mode == 'OPERATING_POINT_15GHZ':
+        from .operating_point15 import LABEL_POLICY
+        if frequency_ghz != 15 or bundle.manifest.get('label_policy') != LABEL_POLICY or 'operating_point_valid' not in arrays:
+            raise ValueError('explicit 15GHz operating point policy and mask required')
+        return arrays['operating_point_valid'][:, index] & arrays['y_valid'][:, index].all(axis=1) & finite
     if label_mode == "STRICT_LUMPED":
         return arrays["strict_lumped_valid"][:, index] & arrays["y_valid"][:, index].all(axis=1) & finite
     return arrays["broadband_descriptor_valid"][:, index] & finite

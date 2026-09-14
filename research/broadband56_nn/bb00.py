@@ -137,7 +137,7 @@ def prepare_bb00(bundle, contract, spans, allow_io_adaptation=False, *, frequenc
                  label_mode="STRICT_LUMPED"):
     if isinstance(frequency_ghz, bool) or not isinstance(frequency_ghz, int) or not 5 <= frequency_ghz <= 60:
         raise ValueError("integer frequency_ghz in 5..60 required; no nearest-frequency routing")
-    if label_mode not in ("STRICT_LUMPED", "POINTWISE_DESCRIPTOR_EXPERIMENTAL"):
+    if label_mode not in ("STRICT_LUMPED", "POINTWISE_DESCRIPTOR_EXPERIMENTAL", "OPERATING_POINT_15GHZ"):
         raise ValueError("explicit supported label_mode required")
     if contract["field_names"] != bundle.norm["field_names"]:
         raise ValueError("geometry field order differs")
@@ -150,7 +150,14 @@ def prepare_bb00(bundle, contract, spans, allow_io_adaptation=False, *, frequenc
     if len(frequencies) != 1:
         raise ValueError("exact single requested source frequency required")
     frequency = int(frequencies[0])
-    if label_mode == "POINTWISE_DESCRIPTOR_EXPERIMENTAL":
+    if label_mode == "OPERATING_POINT_15GHZ":
+        from .operating_point15 import LABEL_POLICY
+        if frequency_ghz != 15 or bundle.manifest.get('label_policy') != LABEL_POLICY:
+            raise ValueError('operating-point mode requires the versioned 15GHz dataset')
+        if 'operating_point_valid' not in bundle.arrays:
+            raise ValueError('new operating-point mask absent; never infer from old strict mask')
+        domain = bundle.arrays['operating_point_valid'][:, frequency]
+    elif label_mode == "POINTWISE_DESCRIPTOR_EXPERIMENTAL":
         if "broadband_descriptor_valid" not in bundle.arrays or "strict_lumped_valid" not in bundle.arrays:
             raise ValueError("descriptor experiment requires both original descriptor and strict masks")
         domain = bundle.arrays["broadband_descriptor_valid"][:, frequency]
@@ -189,6 +196,9 @@ def prepare_bb00(bundle, contract, spans, allow_io_adaptation=False, *, frequenc
                       **({"eligible15ghz_geometries": int(((bundle.arrays["split"] == code) & valid).sum())}
                          if frequency_ghz == 15 else {})}
                 for part, code in (("train", 0), ("validation", 1), ("test", 2))}
+    if label_mode == 'OPERATING_POINT_15GHZ':
+        norm['label_policy'] = bundle.manifest['label_policy']
+        norm['srf_role'] = 'OPTIONAL_DIAGNOSTIC_NOT_A_GATE'
     return norm, train, val, frequency, exposure
 
 

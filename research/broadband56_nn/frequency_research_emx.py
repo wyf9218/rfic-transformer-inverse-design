@@ -498,6 +498,9 @@ def _extract(request_path, output):
         original_56_summary=result.summary, original_frequency_row=row, original_candidate_statuses=proof['original_candidate_statuses'],
         q_optimum_status='NOT_COMPUTED_BY_SINGLE_CANDIDATE_ADAPTER_REQUIRE_ORIGINAL_11_VALID', generated_utc=utc_now(),
         nonfinite_values_preserved_in_csv=True, json_nonfinite_representation='null', production_membership=False))
+    if proof['frequency_ghz'] == 15:
+        from .operating_point15 import feature_annotations
+        value.update(feature_annotations(value))
     target.mkdir(exist_ok=False)
     with (target / 'features_56.csv').open('x', newline='') as stream:
         writer = csv.DictWriter(stream, fieldnames=list(rows[0])); writer.writeheader(); writer.writerows(rows)

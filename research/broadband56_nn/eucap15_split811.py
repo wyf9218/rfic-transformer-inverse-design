@@ -207,14 +207,17 @@ def assignments(rows, policy, previous=None):
         pending=Counter(r['split'] for r in out if r['split'] not in SPLIT_NAMES),
         old_splits_modified=False,old_training_repeated=False)
 
-def build(snapshot_paths, out, *, contract_path, policy, previous_mapping=None, exposure_mapping=None):
+def build(snapshot_paths, out, *, contract_path, policy, previous_mapping=None, exposure_mapping=None,
+          label_policy='operating_point_15ghz_v1'):
     """The formal dataset construction entry. All output is no-clobber."""
     out=Path(out);out.mkdir(parents=True,exist_ok=False)
-    try:return _build(snapshot_paths,out,contract_path,policy,previous_mapping,exposure_mapping)
+    try:return _build(snapshot_paths,out,contract_path,policy,previous_mapping,exposure_mapping,label_policy)
     except Exception as exc:
         _write_json(out/'PREPARATION_FAILED.json',dict(status='FAIL_PRESERVED',error=str(exc)));raise
 
-def _build(snapshot_paths,out,contract_path,policy,previous_mapping,exposure_mapping):
+def _build(snapshot_paths,out,contract_path,policy,previous_mapping,exposure_mapping,label_policy):
+    from .operating_point15 import LABEL_POLICY, LEGACY_LABEL_POLICY
+    if label_policy not in (LABEL_POLICY, LEGACY_LABEL_POLICY):raise ValueError('unknown label policy')
     range_policy=resolve_range_policy(policy.get('physical_range_policy'),legacy_if_missing=True)
     snapshots=[json.loads(Path(p).read_text()) for p in snapshot_paths]
     rows=[r for x in snapshots for r in x['members']]
@@ -239,6 +242,13 @@ def _build(snapshot_paths,out,contract_path,policy,previous_mapping,exposure_map
     selected=list(chosen.values());contract=json.loads(Path(contract_path).read_text());fields=contract['field_names']
     for r in selected:
         p=r['physical15']
+        if label_policy == LABEL_POLICY:
+            proof=r.get('operating_point_policy_evidence',{})
+            if (r.get('label_policy') != LABEL_POLICY or proof.get('label_policy') != LABEL_POLICY or
+                    proof.get('fully_qualified') is not True or proof.get('operating_point_valid') is not True or
+                    proof.get('compatibility_status') != 'COMPATIBLE_PROVEN' or proof.get('physical15') !=
+                    {k:p[k] for k in ('lp_nh','ls_nh','qmin','k_abs')}):
+                raise ValueError('new dataset requires per-member operating-point and compatibility evidence')
         if r['frequency_hz']!=15000000000 or r['geometry_fields']!=fields:raise ValueError('geometry/frequency contract mismatch')
         range_result=classify_physical15(p,range_policy)
         if not range_result['range_eligible']:raise ValueError('qualified physical range mismatch: '+','.join(range_result['reasons']))
@@ -254,12 +264,20 @@ def _build(snapshot_paths,out,contract_path,policy,previous_mapping,exposure_map
         g_min=g[train].min(0).tolist(),g_max=g[train].max(0).tolist(),y_mean=ym,y_scale=ys,
         field_names=fields,geometry_fields=fields,y_columns=list(Y_COLUMNS),s_mean=None,s_scale=None,
         s_columns=[],s_status='NOT_INCLUDED',contract_bounds_um=dict(lower=contract['lower'],upper=contract['upper']),split_policy=POLICY,
-        physical_range_policy=range_policy)
+        physical_range_policy=range_policy,label_policy=label_policy)
     arrays=dict(geometry=g,y=y,geometry_ids=np.array(ids),geometry_sha256=np.array(hashes),split=split,
         frequency_hz=np.array([15000000000],dtype=np.int64),y_valid=np.ones_like(y,dtype=bool),
         strict_lumped_valid=np.ones((len(g),1),dtype=bool),broadband_descriptor_valid=np.ones((len(g),1),dtype=bool))
+    if label_policy == LABEL_POLICY:
+        proofs=[r['operating_point_policy_evidence'] for r in selected]
+        arrays['operating_point_valid']=np.array([[p['operating_point_valid']] for p in proofs],dtype=bool)
+        arrays['strict_lumped_valid']=np.array([[p['legacy_strict_lumped_valid'] is True] for p in proofs],dtype=bool)
+        arrays['strict_lumped_known']=np.array([[p['legacy_strict_lumped_valid'] is not None] for p in proofs],dtype=bool)
+        arrays['below_half_srf']=np.array([[p['below_half_srf'] is True] for p in proofs],dtype=bool)
+        arrays['below_half_srf_known']=np.array([[type(p['below_half_srf']) is bool] for p in proofs],dtype=bool)
+        arrays['y_valid']=np.broadcast_to(arrays['operating_point_valid'][...,None],y.shape).copy()
     with (out/'dataset.npz').open('xb') as f:np.savez_compressed(f,**arrays)
-    sources=dict(schema='eucap15_formal811_sources.v1',snapshots=[pin(p) for p in snapshot_paths],contract=pin(contract_path),previous_mapping=pin(previous_mapping) if previous_mapping else None,
+    sources=dict(schema='eucap15_formal811_sources.v1',label_policy=label_policy,snapshots=[pin(p) for p in snapshot_paths],contract=pin(contract_path),previous_mapping=pin(previous_mapping) if previous_mapping else None,
         exposure_mapping=pin(exposure_mapping) if exposure_mapping else None)
     _write_json(out/'SOURCE_MANIFEST.json',sources);_write_json(out/'normalizer.json',norm)
     _write_json(out/'PHYSICAL_RANGE_POLICY.json',range_policy)
@@ -274,7 +292,7 @@ def _build(snapshot_paths,out,contract_path,policy,previous_mapping,exposure_map
     (out/'contract.json').write_bytes(Path(contract_path).read_bytes())
     artifacts={n:dict(path=n,sha256=sha256(out/n),size_bytes=(out/n).stat().st_size) for n in ('dataset.npz','splits.json','SPLIT_MAPPING.json','SPLIT_POLICY.json','normalizer.json','geometry_provenance.json','contract.json','PHYSICAL_RANGE_POLICY.json','TRAIN_COVERAGE_BOUNDS.json')}
     counts=mapped['counts'];balanced=counts['validation']==counts['test'] and counts['train']==8*counts['test'] and counts['test']>0
-    manifest=dict(schema='bb_data_manifest.v1',status='PASS',split_policy=POLICY,physical_range_policy=range_policy,source_manifest=pin(out/'SOURCE_MANIFEST.json'),
+    manifest=dict(schema='bb_data_manifest.v1',status='PASS',label_policy=label_policy,split_policy=POLICY,physical_range_policy=range_policy,source_manifest=pin(out/'SOURCE_MANIFEST.json'),
         contract_fingerprint_sha256=selected[0]['scientific_contract_fingerprint'],unique_geometries=len(g),frequency_rows=len(g),
         geometry_dim=len(fields),geometry_fields=fields,geometry_field_order=fields,geometry_units='um',frequency_hz=[15000000000],
         target_columns=list(Y_COLUMNS),split_counts=counts,normalizer_fit_split='train',artifacts=artifacts,
@@ -292,9 +310,11 @@ def _build(snapshot_paths,out,contract_path,policy,previous_mapping,exposure_map
     return receipt
 
 def validate_training_split(data_root, *, legacy_resume=False, expected_mapping_sha=None,
-                            expected_range_policy=None):
+                            expected_range_policy=None, expected_label_policy=None):
     """Called by the actual F/I training entry before any model update."""
     root=Path(data_root);manifest=json.loads((root/'data_manifest.json').read_text())
+    if expected_label_policy is not None and manifest.get('label_policy') != expected_label_policy:
+        raise ValueError('training label policy differs from prepared dataset')
     if manifest.get('split_policy')!=POLICY:
         if legacy_resume:return dict(status='LEGACY_EXACT_RESUME_NOT_NEW_811')
         raise ValueError('NEW_TRAINING_REQUIRES_FORMAL_811_MAPPING; historical replay/resume remains separate')
@@ -330,6 +350,7 @@ def main():
     p.add_argument('--physical-range-policy',choices=RANGE_POLICY_IDS,default=RANGE_POLICY)
     p.add_argument('--exposure-policy',choices=(EXPOSURE_POLICY,LEGACY_EXPOSURE_POLICY),default=EXPOSURE_POLICY)
     p.add_argument('--exposure-map')
-    a=p.parse_args();print(json.dumps(build(a.snapshot,a.out,contract_path=a.contract,policy=make_policy(a.exposure_cutoff,a.first_doe_batch,target_total=a.target_total,seed=a.seed,physical_range_policy=a.physical_range_policy,exposure_policy=a.exposure_policy),previous_mapping=a.previous_mapping,exposure_mapping=a.exposure_map)))
+    p.add_argument('--label-policy',choices=('operating_point_15ghz_v1','strict_lumped_15ghz_v1'),default='operating_point_15ghz_v1')
+    a=p.parse_args();print(json.dumps(build(a.snapshot,a.out,contract_path=a.contract,policy=make_policy(a.exposure_cutoff,a.first_doe_batch,target_total=a.target_total,seed=a.seed,physical_range_policy=a.physical_range_policy,exposure_policy=a.exposure_policy),previous_mapping=a.previous_mapping,exposure_mapping=a.exposure_map,label_policy=a.label_policy)))
 
 if __name__=='__main__':main()
