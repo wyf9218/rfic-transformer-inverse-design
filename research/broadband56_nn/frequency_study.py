@@ -28,6 +28,14 @@ def _state(root, status, **details):
 
 
 def _data(request, root):
+    if request.get('formal811_source'):
+        from .eucap15_split811 import build
+        data_root = root / 'data_811'
+        if not (data_root / 'data_manifest.json').exists():
+            source = request['formal811_source']
+            build(source['snapshots'], data_root, contract_path=request['contract_path'],
+                  policy=source['policy'], previous_mapping=source.get('previous_mapping'))
+        return str(data_root)
     if request.get("data_root"):
         from .training import Bundle
         bundle = Bundle(request["data_root"])
@@ -203,6 +211,16 @@ def run(request_path, *, resume=False):
             data = _data(request, root)
             if data is None:
                 return read_json(root / "RUN_STATE.json")
+            if request['train']['frequency_ghz'] == 15:
+                from .eucap15_split811 import validate_training_split
+                try:
+                    legacy_continuation = resume and any(
+                        any((root / role).glob('attempt_*/checkpoint_step_*.pt'))
+                        for role in ('forward', 'inverse'))
+                    validate_training_split(data, legacy_resume=legacy_continuation,
+                        expected_mapping_sha=request.get('split_mapping_sha256'))
+                except ValueError as error:
+                    return _state(root, 'WAITING_DATA_SPLIT_811', reason=str(error))
             data_sha = request.get("dataset_sha256") or read_json(Path(data)/"data_manifest.json")["artifacts"]["dataset.npz"]["sha256"]
             records = {}
             for role in ("forward", "inverse"):
@@ -229,6 +247,11 @@ def run(request_path, *, resume=False):
                 attempt = role_root / f"attempt_{len(attempts)+1:04d}"
                 config = {k: request[k] for k in ("contract_path", "legacy_replay_receipt", "legacy_replay_sha256")}
                 config.update(schema="frequency_tandem_train.v1", data_root=data, resource_admission=resources)
+                if request['train']['frequency_ghz'] == 15:
+                    from .eucap15_split811 import POLICY
+                    config['split_policy'] = POLICY
+                    mapping_path = Path(data) / 'SPLIT_MAPPING.json'
+                    if mapping_path.exists(): config['split_mapping_sha256'] = sha256(mapping_path)
                 train = dict(request["train"], role=role, log_progress=True)
                 if role == "inverse":
                     train["forward_checkpoint"] = inverse_forward["best"]["path"]
