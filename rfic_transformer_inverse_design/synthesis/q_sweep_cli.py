@@ -15,7 +15,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         description=(
             "Hold Lp/Ls/|K| fixed, scan Q=10..20 through one frozen MLP, "
-            "and select by proxy or fresh real-EMX error."
+            "and select by proxy, structured-GDS export, or fresh real-EMX error."
         )
     )
     parser.add_argument(
@@ -29,7 +29,17 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--lp-nh", type=float, required=True)
     parser.add_argument("--ls-nh", type=float, required=True)
     parser.add_argument("--k-abs", type=float, required=True)
-    parser.add_argument("--mode", choices=("proxy", "physical"), default="proxy")
+    parser.add_argument(
+        "--mode", choices=("proxy", "layout", "physical"), default="proxy"
+    )
+    parser.add_argument(
+        "--layout-backend-command",
+        default=os.environ.get("RFIC_Q_SWEEP_LAYOUT_BACKEND"),
+        help=(
+            "Packaged same-runtime structured-GDS backend command. It exports "
+            "all eleven candidates without EMX."
+        ),
+    )
     parser.add_argument(
         "--physical-backend-command",
         default=os.environ.get("RFIC_Q_SWEEP_PHYSICAL_BACKEND"),
@@ -64,6 +74,7 @@ def main(argv: list[str] | None = None) -> int:
         output_dir=args.out_dir,
         mode=args.mode,
         physical_backend_command=args.physical_backend_command,
+        layout_backend_command=args.layout_backend_command,
     )
     print(
         json.dumps(

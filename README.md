@@ -1,3 +1,21 @@
+# 15 GHz Transformer Inverse Design — Research Handover
+
+**Current entry point · 12 October 2026 · English, self-service handover for Professor Liu and successors.**
+
+- [Research handover: methods, results, challenges and software inventory](docs/handover/HANDOVER_EN.md)
+- [Start here: installation, dataset access, model loading, GUI, plots and future training](docs/handover/QUICKSTART.md)
+- [Private dataset and model repository](https://github.com/wyf9218/rfic-transformer-inverse-design-data) — requires an invitation to your own GitHub account
+- [Delivered asset map and omissions](docs/handover/ASSET_MAP.md)
+- [What was actually verified for this release](docs/handover/VERIFICATION.md)
+
+Public code and private research assets are separate. The private companion includes the original 100,000-row 15 GHz table, preserved splits, frozen models and completed experiment results. No new training or EM simulation is required to read or reproduce the supplied result plots. Native-tool access, proprietary process files and the full raw GDS/S4P corpus are **not** included.
+
+The original100K, real10k and symmetric-recipe100K models are distinct. Proxy predictions, held-out EM labels and fresh-EMX validation are not interchangeable. The guide records these boundaries and provides commands that fail on mismatched identities. Local browser GUI/CLI packaging is included; native physical mode is not accepted for unattended use.
+
+## Archived project README (before this handover)
+
+Everything below is timestamped history. Earlier production goals, process observations and continuation instructions are **not current authorization or live status**. Use the English handover above for the current research-transfer scope. Historical content is preserved to keep provenance and prior failures visible.
+
 # RFIC Transformer AI Inverse Design
 
 Research-grade Python tooling for parameterized RFIC transformer layout,

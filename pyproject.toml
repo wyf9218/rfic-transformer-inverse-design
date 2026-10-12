@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "rfic-transformer-inverse-design"
-version = "0.1.0"
+version = "0.1.1"
 description = "RFIC transformer layout, EMX evaluation, and optimization toolkit"
 readme = "README.md"
 requires-python = ">=3.10"
@@ -52,6 +52,8 @@ rfic-transformer-inverse-design = "rfic_transformer_inverse_design.interfaces.cl
 rfic-transformer-inverse-design-gui = "rfic_transformer_inverse_design.interfaces:gui_main"
 rfic-transformer-q-sweep = "rfic_transformer_inverse_design.synthesis.q_sweep_cli:main"
 rfic-transformer-q-sweep-gui = "rfic_transformer_inverse_design.synthesis.q_sweep_gui:main"
+rfic-transformer-q-sweep-layout-backend = "rfic_transformer_inverse_design.synthesis.q_sweep_layout_backend:main"
+rfic-transformer-q-sweep-physical-backend = "rfic_transformer_inverse_design.synthesis.q_sweep_physical_backend:main"
 
 [project.urls]
 Repository = "https://github.com/wyf9218/rfic-transformer-inverse-design"
@@ -67,6 +69,7 @@ include = ["rfic_transformer_inverse_design*"]
 rfic_transformer_inverse_design = [
   "process/assets/proc/*.proc",
   "synthesis/*.json",
+  "synthesis/*.html",
 ]
 
 [tool.pytest.ini_options]

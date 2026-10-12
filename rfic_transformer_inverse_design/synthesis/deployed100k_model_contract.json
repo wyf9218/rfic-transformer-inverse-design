@@ -1,0 +1,50 @@
+{
+  "schema": "rfic_frozen_tandem_mlp_public_contract.v1",
+  "model_id": "current_foundry_qmin_response_only_seed20260713",
+  "display_name": "Deployed 100k · seed 20260713",
+  "model_seed": 20260713,
+  "target_frequency_ghz": 15.0,
+  "q_training_definition": "min(Qp, Qs)",
+  "q_target_semantics": "minimum",
+  "q_training_margin_physical": 2.0,
+  "inference_q_input_transform": "identity_no_margin_no_clipping",
+  "source_table_rows": 100000,
+  "row_counts": {"source": 100000, "train": 78891, "validation": 9740, "test": 11369},
+  "model_acceptance_status": "REVIEW_REQUIRED_VALIDATION_ONLY",
+  "input_columns": [
+    "input__lp_nh_center", "input__ls_nh_center", "input__q_center", "input__k_abs_center"
+  ],
+  "input_units": ["nH", "nH", "dimensionless", "dimensionless"],
+  "geometry_unit": "um",
+  "geometry_columns": [
+    "geom__primary_outer_width_um", "geom__primary_outer_height_um",
+    "geom__secondary_outer_width_um", "geom__secondary_outer_height_um",
+    "geom__line_width_um", "geom__primary_terminal_y_span_um",
+    "geom__secondary_terminal_y_span_um", "geom__offset_um",
+    "geom__primary_feed_extension_um", "geom__secondary_feed_extension_um"
+  ],
+  "declared_support_lower": [0.5, 0.5, 5.0, 0.0],
+  "declared_support_upper": [3.0, 3.0, 25.0, 0.8],
+  "architecture": {
+    "inverse_mlp": [4, 512, 512, 256, 10],
+    "forward_surrogate": [10, 256, 256, 128, 4],
+    "hidden_activation": "gelu",
+    "geometry_projection": "hard_feasible_topology_v1"
+  },
+  "artifacts": {
+    "summary": {
+      "filename": "physical_feature_tandem_inverse_summary.json",
+      "sha256": "f05c4c0b3937bf9107f95d38d14679995aedc936071852ac7696f9838c5d43c1"
+    },
+    "weights": {
+      "filename": "physical_feature_tandem_inverse_weights.npz",
+      "sha256": "c61a93d56136ad21686863aae72984c49eb0d33ce766923c8ec2d03d9c3177dd"
+    },
+    "training_table": {
+      "sha256": "fe94d15b0d083330fe7a64d3e059d083a5aa32d73394c85fc4b881e9904e68a2"
+    }
+  },
+  "reference_bundle_manifest_sha256": "37a47545bc94193f4d2ef0afed9697fcd0b1b2a5f579aeaf118330d526fb396c",
+  "reference_runtime_sha256": "d962de6f923234d5e9702556a1df16ff63d84df59c2684f3b46e469f2fe39eb9",
+  "scientific_boundary": "This is the historical deployed 100k model, not the real10k model or a new 200k model. The inverse was trained with minimum-Q semantics and a fixed training margin. GUI Q=10..20 ranking retains its separate exact symmetric score. Inputs receive no additional Q margin. Forward output remains a proxy diagnostic, not fresh EMX, DRC, or HFSS evidence."
+}
