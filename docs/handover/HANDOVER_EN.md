@@ -2,15 +2,19 @@
 
 Prepared for Professor Liu and the next researcher · 12 October 2026
 
+| Author profile | GitHub |
+|---|---|
+| **Yufeng Wang** | [@wyf9218](https://github.com/wyf9218) |
+
 This document replaces the proposed in-person handover. It explains what has been completed, how to access and reproduce it asynchronously, and what remains unresolved. It does not authorize or automatically launch training, layout generation, or electromagnetic simulation. Existing results should be inspected before repeating any experiment.
 
-For exact commands, start with [QUICKSTART](QUICKSTART.md). For relocated private assets, see [ASSET_MAP](ASSET_MAP.md). The GitHub README at the code repository is the current entry point; dated production instructions remain archival.
+For exact commands, start with [QUICKSTART](QUICKSTART.md). For relocated research assets, see [ASSET_MAP](ASSET_MAP.md). The GitHub README at the code repository is the current entry point; dated production instructions remain archival.
 
 ## 1. Repository and access model
 
-The public code repository is [rfic-transformer-inverse-design](https://github.com/wyf9218/rfic-transformer-inverse-design). The real dataset, model weights, and private experiment evidence belong in the separate, access-controlled companion repository: [rfic-transformer-inverse-design-data](https://github.com/wyf9218/rfic-transformer-inverse-design-data). Professor Liu and nominated researchers need an explicit invitation to that repository. A public clone alone is not a complete research installation.
+The public code repository is [rfic-transformer-inverse-design](https://github.com/wyf9218/rfic-transformer-inverse-design). The real dataset, model weights, and curated experiment evidence are in the separate, also-public companion repository: [rfic-transformer-inverse-design-data](https://github.com/wyf9218/rfic-transformer-inverse-design-data). Neither repository requires an invitation to read or clone. Clone both for the supplied reproduction workflow; the code repository alone does not contain the research assets. The companion was initially published privately and made public by the owner's explicit 12 October 2026 instruction; dated transfer records retain that history.
 
-Use the published asset manifest to resolve dataset, model, split, result, and archive locations. Publication paths take precedence over historical workstation paths. The paths below identify existing code entries or archive members; an archive member is not a claim that it is present in the public repository. Preserve the manifest's original identifiers and recorded hashes when relocating files.
+Use the published asset manifest to resolve dataset, model, split, result, and archive locations. Publication paths take precedence over historical workstation paths. The paths below identify existing code entries or archive members; an archive member belongs in the data companion, not necessarily in the code repository. Preserve the manifest's original identifiers and recorded hashes when relocating files.
 
 Credentials, SSH keys, authentication cookies, license files, and proprietary process-design-kit contents are not part of either research handover package. Licensed tools and process data must be provided through the institution's authorized environment. Access to a CSV does not automatically provide access to every raw S-parameter file referenced inside it.
 
@@ -89,9 +93,9 @@ The completed paired64 trial belongs to original100K one-shot/minimum-Q inferenc
 
 ## 6. Software packaging and entry-point inventory
 
-Paths without an `archive:` prefix are relative to the public code repository. `archive:` identifies a member whose delivered location is resolved by the private companion manifest. This inventory describes existing implementations; it does not claim that every entry has been retested in the recipient's environment.
+Paths without an `archive:` prefix are relative to the public code repository. `archive:` identifies a member whose delivered location is resolved by the public data companion's manifest. This inventory describes existing implementations; it does not claim that every entry has been retested in the recipient's environment.
 
-| Component | Purpose and entry | Required private dependencies | Verified status and limitation |
+| Component | Purpose and entry | Additional dependencies | Verified status and limitation |
 |---|---|---|---|
 | Web GUI | `synthesis/q_sweep_gui.py` and `synthesis/q_sweep_ui.html` under `rfic_transformer_inverse_design/`; launcher `apps/mlp_q_sweep_gui/START_LOCAL.sh` | Matching model bundle; writable private output directory | Existing proxy/layout/physical modes. Start in proxy mode; historical software checks are not a new installation test. |
 | CLI/toolkit | `rfic-transformer-q-sweep`; archive: `bin/transformer-synth` | Correct model contract and weights | Historical original100K single-inference smoke succeeded. Toolkit inference is not the same as GUI eleven-Q processing. |
@@ -106,13 +110,13 @@ The GUI physical mode historically evaluates all eleven Q candidates and can ran
 
 ## 7. Asynchronous reproduction sequence
 
-1. **Obtain access and pin identities.** Clone the public release and private companion, record both commit IDs, and verify transferred assets against their supplied manifests. A missing asset is a transfer issue, not a reason to regenerate data. Never edit expected hashes to suppress a mismatch.
+1. **Clone and pin identities.** Clone both public repositories, record both commit IDs, and verify transferred assets against their supplied manifests. A missing asset is a transfer issue, not a reason to regenerate data. Never edit expected hashes to suppress a mismatch.
 2. **Read one dataset row.** Run the supplied inspector with `--dataset <CSV> --rows 1`. Expect row identity, four physical labels, ten geometry values, and the raw-response reference. Explain the units and original split before proceeding.
 3. **Replot one existing result without models.** Use the delivered `replot_repeat_csv.py`, supplied aggregate CSVs, original completion identity, and a new output directory. Expect SVG/PNG files plus source/render receipts. Open the previews; file creation alone does not verify presentation quality.
 4. **Load one explicitly selected bundle.** Use the archived original100K toolkit's `--mode infer`, or the documented public loader with an explicit contract. Use a new private output directory. The historical example is `--lp-nh 0.833 --ls-nh 0.620 --q-min 10 --k-abs 0.487`. Expect `geometry_candidates.csv`, `inference_results.json`, and `run_manifest.json`; verify seed20260713 and physical status `NOT_RUN`. This example intentionally demonstrates the historical minimum-Q model.
 5. **Inspect before extending.** Trace one figure to its CSV, target frame, model, evaluator, and failed-request denominator. Trace one physical case to candidate identity, actual GDS cell/hash, DRC evidence, EMX command, and S4P. Only then define any new experiment.
 
-Exact runnable commands and relocated asset paths belong in the release's command guide and private manifest. Do not run archived training commands against completed output directories. Some `check` commands write receipts. Existing `resume` semantics mainly reuse completed stages; arbitrary-update Adam/RNG-state continuation is not guaranteed.
+Exact runnable commands and relocated asset paths belong in the release's command guide and data companion manifest. Do not run archived training commands against completed output directories. Some `check` commands write receipts. Existing `resume` semantics mainly reuse completed stages; arbitrary-update Adam/RNG-state continuation is not guaranteed.
 
 ## 8. Physical structure, limitations, and next decisions
 
@@ -128,7 +132,7 @@ The next researcher should first choose the paper's primary protocol: historical
 
 The recipient can return this checklist asynchronously with output paths and concise observations; no meeting is required.
 
-- [ ] Both repository commit IDs and private access are recorded; required datasets and weights are actually downloadable.
+- [ ] Both public repository commit IDs are recorded; required datasets and weights are actually downloaded and verified.
 - [ ] The original100K row, geometry order, units, split, and one raw-response reference can be located independently.
 - [ ] A selected model's identity, normalizer, decoder, Q objective, and checkpoint are explained correctly.
 - [ ] One CSV-only figure is reproduced in a fresh directory with its original sample count and evidence class.

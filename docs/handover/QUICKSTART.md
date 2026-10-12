@@ -4,7 +4,7 @@ This guide is for Professor Liu and a successor using their own accounts. No mee
 
 ## 1. Obtain both repositories
 
-The owner must invite your GitHub account to the private repository. A 404 for the private link usually means you are signed out or not invited; it does not mean the data were deleted. Never request or send another person's password, authentication cookie or SSH private key.
+Both repositories are public. No invitation or account sharing is required to read or clone them. If a link is unavailable, check the exact repository URL and service/network availability rather than assuming the dataset was deleted. Never request or send another person's password, authentication cookie or SSH private key.
 
 ```bash
 git clone https://github.com/wyf9218/rfic-transformer-inverse-design.git
@@ -14,7 +14,7 @@ git rev-parse HEAD
 git -C ../rfic-transformer-inverse-design-data rev-parse HEAD
 ```
 
-Record both commit IDs with any reproduced output. See [verification](VERIFICATION.md) for the tested release and scope. Do not upload the private repository or its outputs to a public issue.
+Record both commit IDs with any reproduced output. See [verification](VERIFICATION.md) for the tested release and scope. Public availability of this curated release does not authorize uploading credentials, proprietary process material, or other unapproved private artifacts in issues or future releases.
 
 ## 2. Install the public package
 
@@ -28,7 +28,7 @@ export RFIC_PRIVATE_REPO="$(cd ../rfic-transformer-inverse-design-data && pwd)"
 export RFIC_HANDOVER_WORK="$(mktemp -d "${TMPDIR:-/tmp}/rfic-handover.XXXXXX")"
 ```
 
-Keep this shell open so the two variables remain available. Choose permanent private storage instead of a temporary directory for new research results. Do not reuse a completed run's output directory.
+Keep this shell open so the two variables remain available. `RFIC_PRIVATE_REPO` is a preserved legacy variable name for the now-public data companion; it does not indicate a current invitation requirement. Choose permanent local storage instead of a temporary directory for new research results. Do not reuse a completed run's output directory.
 
 ## 3. Verify and access the real dataset
 
@@ -115,10 +115,10 @@ python tools/handover/prepare_training.py resume \
   --out "$RFIC_HANDOVER_WORK/new_training" --arm D10k
 ```
 
-Outputs are under `new_training/frozen/research/dataset_size_811_20260921_v1/runs/D10k/`: console log, entry receipts, history, selected weights and stage checkpoints. D50k/D100k use the same explicit entry. Resume reuses completed stages; it is **not** arbitrary-update Adam/RNG continuation. The run reports validation-only results; test evaluation remains a separate, frozen-choice step. Numerical identity across NumPy versions is not promised. Symmetric/width/repeat recipes are preserved in the private research archive but do not yet have this new portable launch wrapper; adapt their recorded location/budget fields explicitly before any future run.
+Outputs are under `new_training/frozen/research/dataset_size_811_20260921_v1/runs/D10k/`: console log, entry receipts, history, selected weights and stage checkpoints. D50k/D100k use the same explicit entry. Resume reuses completed stages; it is **not** arbitrary-update Adam/RNG continuation. The run reports validation-only results; test evaluation remains a separate, frozen-choice step. Numerical identity across NumPy versions is not promised. Symmetric/width/repeat recipes are preserved in the public data companion's research archive but do not yet have this new portable launch wrapper; adapt their recorded location/budget fields explicitly before any future run.
 
 ## 8. Written acceptance and next work
 
-Return only: both commit IDs, asset-verification result, successful model ID, GUI/CSV-replot outcome, and any missing file or permission. Use a private channel for data/logs. No live meeting is required by this guide.
+Return only: both commit IDs, asset-verification result, successful model ID, GUI/CSV-replot outcome, and any missing file or permission. Keep institution-specific access details and sensitive logs in an approved private channel; a public issue may describe a sanitized reproduction problem. No live meeting is required by this guide.
 
 The next researcher should select the paper's primary protocol, inspect existing data-support gaps, and decide whether a controlled experiment or new paired physical validation is needed. There is no completed 10,000-candidate fresh-EMX result to cite. Existing server tasks were neither inspected for liveness nor changed as part of this release; do not infer their current state from archived logs.

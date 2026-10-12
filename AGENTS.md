@@ -3,7 +3,8 @@
 Before continuing, read `docs/handover/HANDOVER_EN.md`, `QUICKSTART.md`, `ASSET_MAP.md` and `VERIFICATION.md` in the same directory. The pre-handover README and dated production reports are historical, not live execution authority.
 
 - Inspect current Git status; preserve unrelated/uncommitted work.
-- Public code and private data/model repositories are separate. Never publish private data, weights, credentials, process decks or site paths in the public repository.
+- The code repository and the curated data/model companion repository are both public under the owner's explicit 12 October 2026 publication instruction; no invitation is needed to read or clone them. Keep their roles separate and preserve existing scientific identities.
+- This authorization covers the existing curated companion release, not unrestricted future publication of private material. Never add credentials, SSH keys, authentication cookies, licenses, proprietary PDK/process decks or unapproved site/private artifacts. Do not assign new licenses or imply sole authorship when updating author information.
 - Check existing manifests and completed outputs before starting any expensive work. Use new no-clobber output directories.
 - Keep source rows, gradient-training rows, validation rows and test rows separate.
 - Original100K minimum-Q, real10k symmetric matching and reconstructed symmetric100K are distinct protocols. Do not silently substitute contracts, weights, splits, normalizers or decoders.

@@ -1,6 +1,6 @@
 # Delivered asset map
 
-All paths in this table are relative to the **private** repository [rfic-transformer-inverse-design-data](https://github.com/wyf9218/rfic-transformer-inverse-design-data). Public code remains in the separate code repository. Original files are copied unchanged unless explicitly labelled a relocation contract or compressed representation. `ASSET_MANIFEST.json` records source-to-destination mappings and SHA-256 values.
+All paths in this table are relative to the **public** repository [rfic-transformer-inverse-design-data](https://github.com/wyf9218/rfic-transformer-inverse-design-data); no invitation is needed to read or clone it. Public code remains in the separate code repository. Original files are copied unchanged unless explicitly labelled a relocation contract or compressed representation. `ASSET_MANIFEST.json` records source-to-destination mappings and SHA-256 values. The initial private-transfer status in dated records is historical.
 
 | Asset | Delivered path | What it enables / limit |
 |---|---|---|
@@ -20,7 +20,7 @@ All paths in this table are relative to the **private** repository [rfic-transfo
 | Paired64 result evidence | `results/paired64_final/`, `results/paper_paired64_v1/` | Final response/receipt tables and figures; raw GDS/S4P not included in this compact transfer |
 | Distribution and methods | `results/paper_distribution_v1/`, `results/paper_methods_v1/` | Existing paper sources and captions, not new experiments |
 | CSV-only replot | `replot/` | Frozen replot and aggregator; exact commands in QUICKSTART |
-| Prior detailed notes | `historical_notes/` | Chinese archival algorithm/structure notes and private original paths; English handover is the current entry |
+| Prior detailed notes | `historical_notes/` | Chinese archival algorithm/structure notes and historical site-path references; English handover is the current entry |
 
 The three-seed aggregate directories are:
 
@@ -29,7 +29,7 @@ The three-seed aggregate directories are:
 
 ## Not bundled, and why
 
-The complete raw GDS/S-parameter corpus, foundry PDK/process decks, native licenses, credentials and SSH keys are **not uploaded**. CSVs and receipts retain the original private raw-artifact references. An institutional account and access to the original storage are required to inspect those raw artifacts or run a new physical experiment. The private manifest does not assert that those historical remote paths remain accessible to a new user.
+The complete raw GDS/S-parameter corpus, foundry PDK/process decks, native licenses, credentials and SSH keys are **not uploaded**. CSVs and receipts retain original site-local raw-artifact references. An institutional account and access to the original storage are required to inspect those raw artifacts or run a new physical experiment. Public availability of the manifest does not make those remote paths accessible or grant licensed-tool/process rights to a new user.
 
 The exact original real10k trainer bytes have not been recovered. Its weights can be loaded; the September symmetric recipe is a reconstruction, not a bitwise replay. No handover command silently substitutes another model or normalizer.
 

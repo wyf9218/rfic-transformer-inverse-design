@@ -2,13 +2,19 @@
 
 **Current entry point · 12 October 2026 · English, self-service handover for Professor Liu and successors.**
 
+### Author profile
+
+| Name | GitHub |
+|---|---|
+| **Yufeng Wang** | [@wyf9218](https://github.com/wyf9218) |
+
 - [Research handover: methods, results, challenges and software inventory](docs/handover/HANDOVER_EN.md)
 - [Start here: installation, dataset access, model loading, GUI, plots and future training](docs/handover/QUICKSTART.md)
-- [Private dataset and model repository](https://github.com/wyf9218/rfic-transformer-inverse-design-data) — requires an invitation to your own GitHub account
+- [Public dataset and model repository](https://github.com/wyf9218/rfic-transformer-inverse-design-data) — no invitation required to read or clone
 - [Delivered asset map and omissions](docs/handover/ASSET_MAP.md)
 - [What was actually verified for this release](docs/handover/VERIFICATION.md)
 
-Public code and private research assets are separate. The private companion includes the original 100,000-row 15 GHz table, preserved splits, frozen models and completed experiment results. No new training or EM simulation is required to read or reproduce the supplied result plots. Native-tool access, proprietary process files and the full raw GDS/S4P corpus are **not** included.
+Both repositories are public: code and curated research assets remain separate. The data companion includes the original 100,000-row 15 GHz table, preserved splits, frozen models and completed experiment results. No new training or EM simulation is required to read or reproduce the supplied result plots. Credentials, native-tool access, proprietary process files and the full raw GDS/S4P corpus are **not** included. Public visibility does not grant licenses to omitted institutional or third-party material.
 
 The original100K, real10k and symmetric-recipe100K models are distinct. Proxy predictions, held-out EM labels and fresh-EMX validation are not interchangeable. The guide records these boundaries and provides commands that fail on mismatched identities. Local browser GUI/CLI packaging is included; native physical mode is not accepted for unattended use.
 

@@ -2,10 +2,12 @@
 
 This page records publication checks, not new scientific experiments.
 
-## Published private assets
+## Published research assets
 
-- Repository: [rfic-transformer-inverse-design-data](https://github.com/wyf9218/rfic-transformer-inverse-design-data), **private**.
-- Pinned publication commit: `5ccde8a44ff6749b81dab9d638d6fadc6d76def5`.
+- Repository: [rfic-transformer-inverse-design-data](https://github.com/wyf9218/rfic-transformer-inverse-design-data), **public**; no invitation required to read or clone.
+- Visibility history: initially transferred privately, then made public under the owner's explicit 12 October 2026 instruction. Existing dated private-transfer records are retained as history, not current access requirements.
+- Public visibility was verified through both authenticated and anonymous GitHub API access at **2026-10-12 19:01:29 UTC**; the observed repository flag changed from `private=true` to `private=false`.
+- Pinned asset-publication commit: `5ccde8a44ff6749b81dab9d638d6fadc6d76def5` (before the later visibility and author-card documentation update).
 - Manifest SHA-256: `10ce24d19ee3239c5cc139c87b0936bf63eaae64b8769e31b466a3dea3dd79f6`.
 - 934 manifest entries, 586,922,682 bytes of curated research assets. The 37 final-weight file copies represent **20 distinct weight hashes**, not 37 independent experiments. Duplicate archival copies preserve their original context.
 - Original 100K CSV compressed without changing its decompressed bytes; recorded row/unique-geometry census and splits preserved. The new extraction command reproduced the exact original SHA.
@@ -26,10 +28,10 @@ This page records publication checks, not new scientific experiments.
 | Fresh virtual-environment wheel installation | **PASS** | Separate Python3.12 environment; no dependency on dirty editable checkout |
 | Installed wheel original100K load | **PASS** | Explicit deployed100k profile; one inference |
 | Installed GUI HTTP/asset smoke | **PASS** | HTTP200, self-contained HTML and model context; zero jobs submitted, zero native tools |
-| Whitespace and new-source privacy scan | **PASS** | Changed public sources only; private data remain in the private repository |
+| Whitespace and new-source privacy scan | **PASS** | Changed code sources only; curated data are in the separate companion, now public by owner instruction |
 | Whole historical public test runner | **NOT PASS: 54 collection errors** | Archived tests require absent site modules/files and contaminate imports across historical trees; four skips, one deselection; no clean full-suite claim |
 
-Earlier local GUI test attempts exposed cross-checkout editable-environment imports. The final focused run pinned the new worktree and passed. This does not erase those failed attempts. A private-archive whitespace check reported original CSV CRLF/trailing whitespace; archived data bytes were deliberately not reformatted.
+Earlier local GUI test attempts exposed cross-checkout editable-environment imports. The final focused run pinned the new worktree and passed. This does not erase those failed attempts. The initial private-transfer archive check reported original CSV CRLF/trailing whitespace; archived data bytes were deliberately not reformatted. The later visibility/documentation update did not rerun these software checks or change scientific results.
 
 The native GUI producer does not yet emit the current `operating_point_evidence` and `physical_gate_evidence`. The operating-point gate is preserved. Physical GUI requests requiring that unsupported producer fail before dispatch with `NOT_NATIVE_ACCEPTED`; no fake evidence is generated. Package installation is **not** native physical acceptance.
 
@@ -47,4 +49,4 @@ The local archived CSV-only plotting entry had already been exercised before thi
 
 ## Remaining access/continuation items
 
-Professor Liu's GitHub username is still required for an invitation to the private repository. Native simulation additionally needs institution-approved accounts, raw-artifact storage permissions and licensed configurations. Completing the QA/DRC evidence producer and validating it on the matching physical contract is a specific software continuation task, not an installation step silently run by this guide.
+No GitHub invitation is required for the public code or data/model companion. Native simulation still needs institution-approved accounts, raw-artifact storage permissions and licensed configurations. Completing the QA/DRC evidence producer and validating it on the matching physical contract is a specific software continuation task, not an installation step silently run by this guide. This release does not authorize unrestricted future publication of private artifacts or assign a new license to third-party material.
